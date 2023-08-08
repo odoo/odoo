@@ -1448,6 +1448,7 @@ export function isEditorTab(node) {
 }
 export function isMediaElement(node) {
     return (
+        node.nodeName === 'IMG' ||
         isIconElement(node) ||
         (node.classList &&
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
@@ -1476,12 +1477,12 @@ export function isProtected(node) {
 const VOID_ELEMENT_NAMES = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG',
     'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
 
-export function isArtificialVoidElement(node) {
-    return isMediaElement(node) || node.nodeName === 'HR';
+export function isArtificialVoidElement(node, noVoid = true) {
+    return isMediaElement(node) && (!noVoid || !VOID_ELEMENT_NAMES.includes(node.nodeName));
 }
 
 export function isNotAllowedContent(node) {
-    return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
+    return isArtificialVoidElement(node, false) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
 export function containsUnremovable(node) {

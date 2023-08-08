@@ -66,8 +66,8 @@ import {
     splitTextNode,
     isEditorTab,
     isMacOS,
+    isMediaElement,
     isProtected,
-    isArtificialVoidElement,
     cleanZWS,
     isZWS,
     setCursorEnd,
@@ -2552,9 +2552,9 @@ export class OdooEditor extends EventTarget {
         const editableAreas = this.options.getContentEditableAreas(this);
         for (const node of editableAreas) {
             if (!node.isContentEditable) {
-                if (isArtificialVoidElement(node) || node.nodeName === 'IMG') {
+                if (isMediaElement(node)) {
                     node.classList.add('o_editable_media');
-                } else {
+                } else if (!isNotAllowedContent(node)) {
                     node.setAttribute('contenteditable', true);
                 }
             }
