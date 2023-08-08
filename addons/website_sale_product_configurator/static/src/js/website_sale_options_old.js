@@ -3,7 +3,7 @@
 import ajax from "@web/legacy/js/core/ajax";
 import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { ProductConfiguratorDialog } from "@sale_product_configurator/js/product_configurator_dialog/product_configurator_dialog";
+import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "@website_sale/js/website_sale";
 import wsUtils from "@website_sale/js/website_sale_utils";
 
@@ -19,27 +19,22 @@ publicWidget.registry.WebsiteSale.include({
         if (this.isBuyNow) {
             return this._submitForm();
         }
-        this.call("dialog", "add", ProductConfiguratorDialog, {
-            productTemplateId: this.props.record.data.product_template_id[0],
-            quantity: this.rootProduct.product_id.product_id, //ok
-            currencyId: this.props.record.data.currency_id[0],
-            soDate: serializeDateTime(saleOrderRecord.data.date_order),
-            edit: false,
-            save: async (mainProduct, optionalProducts) => {
-                await this.props.record.update(mainProduct);
-                this._onProductUpdate();
-                for (const optionalProduct of optionalProducts) {
-                    const line = await saleOrderRecord.data.order_line.addNew({
-                        position: 'bottom',
-                    });
-                    line.update(optionalProduct);
-                }
-                saleOrderRecord.data.order_line.unselectRecord();
-            },
-            discard: () => {
-                saleOrderRecord.data.order_line.removeRecord(this.props.record);
-            },
-        });
+        this.optionalProductsModal = new OptionalProductsModal(this.$form, {
+            rootProduct: this.rootProduct,
+            isWebsite: true,
+            okButtonText: _t('Proceed to Checkout'),
+            cancelButtonText: _t('Continue Shopping'),
+            title: _t('Add to cart'),
+            context: this._getContext(),
+            forceDialog: this.forceDialog,
+        }).open();
+
+        this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));
+        this.optionalProductsModal.on('update_quantity', null, this._onOptionsUpdateQuantity.bind(this));
+        this.optionalProductsModal.on('confirm', null, this._onModalSubmit.bind(this, true));
+        this.optionalProductsModal.on('back', null, this._onModalSubmit.bind(this, false));
+
+        return this.optionalProductsModal.opened();
     },
     /**
      * Overridden to resolve _opened promise on modal

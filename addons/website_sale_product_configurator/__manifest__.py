@@ -24,6 +24,12 @@
             'website_sale/static/src/scss/product_configurator.scss',
             'website_sale_product_configurator/static/src/scss/website_sale_options.scss',
             'website_sale_product_configurator/static/src/js/website_sale_options.js',
+            'sale_product_configurator/static/src/js/badge_extra_price/*',
+            'sale_product_configurator/static/src/js/product/*',
+            'sale_product_configurator/static/src/js/product_configurator_dialog/*',
+            'sale_product_configurator/static/src/js/product_list/*',
+            'sale_product_configurator/static/src/js/product_template_attribute_line/*',
+            'web/static/src/views/fields/formatters.js',
         ],
         'web.assets_tests': [
             'website_sale_product_configurator/static/tests/**/*',
