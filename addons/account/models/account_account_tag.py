@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo import osv
+from odoo.exceptions import ValidationError
 
 
 class AccountAccountTag(models.Model):
@@ -46,6 +47,13 @@ class AccountAccountTag(models.Model):
             ('country_id', '=', country_id),
             ('applicability', '=', 'taxes')
         ]
+
+    def write(self, vals):
+        for record in self:
+            applicability = vals.get('applicability', False)
+            if applicability and applicability != 'taxes' and record._origin.applicability == 'taxes' and record._get_related_tax_report_expressions():
+                raise ValidationError(_("You cannot update applicability"))
+        return super().write(vals)
 
     def _get_related_tax_report_expressions(self):
         if not self:
