@@ -543,6 +543,20 @@
             </field>
         </record>
 
+        <record id="product_product_expense_kanban_view" model="ir.ui.view">
+            <field name="name">product.product.kanban.expense</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="mode">primary</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='product_lst_price']" position="after">
+                    <div name="product_standard_price" class="mt-1">
+                        Cost: <field name="standard_price"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
         <record id="product_product_expense_tree_view" model="ir.ui.view">
             <field name="name">product.product.expense.tree</field>
             <field name="model">product.product</field>
@@ -600,6 +614,7 @@
         <record id="hr_expense_product_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">kanban</field>
+            <field name="view_id" ref="product_product_expense_kanban_view"/>
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
 
