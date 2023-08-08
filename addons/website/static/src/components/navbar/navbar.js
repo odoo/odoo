@@ -44,11 +44,18 @@ patch(NavBar.prototype, 'website_navbar', {
         useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', renderAndAdapt);
     },
 
+    get shouldDisplayWebsiteSystray() {
+        return this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor;
+    },
+
+    // Somehow a setter is needed in `patch()` to avoid an owl error.
+    set shouldDisplayWebsiteSystray(_) {},
+
     /**
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor) {
+        if (this.shouldDisplayWebsiteSystray) {
             return websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
