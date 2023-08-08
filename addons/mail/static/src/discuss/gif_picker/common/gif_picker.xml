@@ -79,13 +79,13 @@
             <i
                 t-if="!store.guest"
                 class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
-                t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif), 'fa-star o-starred': isFavorite(gif) }"
-                t-on-click="() => this.onClickFavorite(gif)"
+                t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
+                t-on-click="() => this.onClickFavorite(gif_value)"
             />
             <img
                 class="img-fluid"
-                t-att-src="gif.media_formats.tinygif.url"
-                t-on-click="() => this.onClickGif(gif)"
+                t-att-src="gif_value.media_formats.tinygif.url"
+                t-on-click="() => this.onClickGif(gif_value)"
                 loading="lazy"
                 alt="GIF"
             />
