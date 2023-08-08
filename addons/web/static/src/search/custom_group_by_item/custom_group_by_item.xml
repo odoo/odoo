@@ -12,11 +12,13 @@
                 </select>
             </div>
             <div class="px-3 py-2">
-                <button class="btn btn-primary w-100"
-                    t-on-click="() => props.onAddCustomGroup(state.fieldName)"
-                    >
+                <DropdownItem
+                    class="'btn btn-primary w-100'"
+                    onSelected="() => props.onAddCustomGroup(state.fieldName)"
+                    closingMode="props.closingMode"
+                >
                     Apply
-                </button>
+                </DropdownItem>
             </div>
         </AccordionItem>
     </t>

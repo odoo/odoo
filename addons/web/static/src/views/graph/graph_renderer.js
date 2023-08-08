@@ -12,6 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const NO_DATA = _t("No data");
 
@@ -765,5 +766,5 @@ export class GraphRenderer extends Component {
 }
 
 GraphRenderer.template = "web.GraphRenderer";
-GraphRenderer.components = { Dropdown, DropdownItem };
+GraphRenderer.components = { Dropdown, DropdownItem, ReportViewMeasures };
 GraphRenderer.props = ["class?", "model", "buttonTemplate"];
