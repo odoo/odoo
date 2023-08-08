@@ -700,7 +700,7 @@ class Users(models.Model):
         }
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
-        values = user.read(list(name_to_key), load=False)[0]
+        values = user.with_context(prefetch_fields=False).read(list(name_to_key), load=False)[0]
 
         context = {
             key: values[name]
