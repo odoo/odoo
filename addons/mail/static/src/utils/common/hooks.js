@@ -440,22 +440,32 @@ export function useSequential() {
     let inProgress = false;
     let nextFunction;
     let nextResolve;
+    let nextReject;
     async function call() {
         const resolve = nextResolve;
+        const reject = nextReject;
         const func = nextFunction;
         nextResolve = undefined;
+        nextReject = undefined;
         nextFunction = undefined;
         inProgress = true;
-        const data = await func();
+        try {
+            const data = await func();
+            resolve(data);
+        } catch (e) {
+            reject(e);
+        }
         inProgress = false;
-        resolve(data);
         if (nextFunction && nextResolve) {
             call();
         }
     }
     return (func) => {
         nextResolve?.();
-        const prom = new Promise((resolve) => (nextResolve = resolve));
+        const prom = new Promise((resolve, reject) => {
+            nextResolve = resolve;
+            nextReject = reject;
+        });
         nextFunction = func;
         if (!inProgress) {
             call();
