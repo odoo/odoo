@@ -29,7 +29,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'body_html': '<p>TemplateBody for <t t-out="object.name"></t><t t-out="object.invoice_user_id.signature or \'\'"></t></p>',
             'description': 'Sent to customers with their invoices in attachment',
             'email_from': "{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}",
-            'mail_server_id': cls.mail_server_global.id,
+            'mail_server_id': cls.mail_server_default.id,
             'model_id': cls.env['ir.model']._get_id('account.move'),
             'name': "Invoice: Test Sending",
             'partner_to': "{{ object.partner_id.id }}",
@@ -124,9 +124,6 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
     def setUp(self):
         super().setUp()
 
-        # setup mail gateway to simulate complete reply-to computation
-        self._init_mail_gateway()
-
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
         self.flush_tracking()
@@ -200,7 +197,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                         'auto_delete': True,
                         'email_from': self.user_account_other.email_formatted,
                         'is_notification': True,  # should keep logs by default
-                        'mail_server_id': self.mail_server_global,
+                        'mail_server_id': self.mail_server_default,
                         'subject': _exp_subject,
                         'reply_to': formataddr((
                             f'{move.company_id.name} {_exp_move_name}',
@@ -286,7 +283,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'auto_delete': True,
                 'email_from': self.user_account_other.email_formatted,
                 'is_notification': True,  # should keep logs by default
-                'mail_server_id': self.mail_server_global,
+                'mail_server_id': self.mail_server_default,
                 'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
                 'reply_to': formataddr((
                     f'{test_move.company_id.name} {test_move.display_name}',
@@ -373,7 +370,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 'auto_delete': True,
                 'email_from': self.user_account_other.email_formatted,
                 'is_notification': True,  # should keep logs by default
-                'mail_server_id': self.mail_server_global,
+                'mail_server_id': self.mail_server_default,
                 'subject': f'SpanishSubject for {test_move.name}',  # translated version
                 'reply_to': formataddr((
                     f'{test_move.company_id.name} {test_move.display_name}',
