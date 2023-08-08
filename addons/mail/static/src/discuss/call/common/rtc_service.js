@@ -91,21 +91,19 @@ export class Rtc {
     notifications = reactive(new Map());
     timeouts = new Map();
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.notification = services.notification;
         this.rpc = services.rpc;
-        /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
-        /** @type {import("@mail/core/common/sound_effects_service").SoundEffects} */
         this.soundEffectsService = services["mail.sound_effects"];
-        /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         this.state = reactive({
             hasPendingRequest: false,
@@ -203,38 +201,46 @@ export class Rtc {
                 session.playAudio();
             }
         });
-        browser.addEventListener("keydown", (ev) => {
-            if (
-                !this.state.channel ||
-                this.userSettingsService.isRegisteringKey ||
-                !this.userSettingsService.usePushToTalk ||
-                !this.userSettingsService.isPushToTalkKey(ev)
-            ) {
-                return;
-            }
-            browser.clearTimeout(this.state.pttReleaseTimeout);
-            if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
-            }
-            this.setTalking(true);
-        }, { capture: true });
-        browser.addEventListener("keyup", (ev) => {
-            if (
-                !this.state.channel ||
-                !this.userSettingsService.usePushToTalk ||
-                !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
-                !this.state.selfSession.isTalking
-            ) {
-                return;
-            }
-            if (!this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
-            }
-            this.state.pttReleaseTimeout = browser.setTimeout(
-                () => this.setTalking(false),
-                this.userSettingsService.voiceActiveDuration || 0
-            );
-        }, { capture: true });
+        browser.addEventListener(
+            "keydown",
+            (ev) => {
+                if (
+                    !this.state.channel ||
+                    this.userSettingsService.isRegisteringKey ||
+                    !this.userSettingsService.usePushToTalk ||
+                    !this.userSettingsService.isPushToTalkKey(ev)
+                ) {
+                    return;
+                }
+                browser.clearTimeout(this.state.pttReleaseTimeout);
+                if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
+                    this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+                }
+                this.setTalking(true);
+            },
+            { capture: true }
+        );
+        browser.addEventListener(
+            "keyup",
+            (ev) => {
+                if (
+                    !this.state.channel ||
+                    !this.userSettingsService.usePushToTalk ||
+                    !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
+                    !this.state.selfSession.isTalking
+                ) {
+                    return;
+                }
+                if (!this.state.selfSession.isMute) {
+                    this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                }
+                this.state.pttReleaseTimeout = browser.setTimeout(
+                    () => this.setTalking(false),
+                    this.userSettingsService.voiceActiveDuration || 0
+                );
+            },
+            { capture: true }
+        );
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
@@ -1543,6 +1549,10 @@ export const rtcService = {
         "notification",
         "rpc",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const rtc = new Rtc(env, services);
         services["bus_service"].subscribe(

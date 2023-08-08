@@ -100,7 +100,6 @@ export class Composer extends Component {
         }
         this.messageService = useState(useService("mail.message"));
         this.personaService = useState(useService("mail.persona"));
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.rpc = useService("rpc");

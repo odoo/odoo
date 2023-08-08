@@ -59,7 +59,6 @@ export class Thread extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.state = useState({ isReplyingTo: false, showJumpPresent: false });
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         if (!this.env.inChatter || !this.props.hasScrollAdjust) {
             useAutoScroll("messages", () => {

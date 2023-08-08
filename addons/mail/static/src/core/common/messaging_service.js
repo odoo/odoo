@@ -9,25 +9,22 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 
-/**
- * @typedef {Messaging} Messaging
- */
 export class Messaging {
     constructor(...args) {
         this.setup(...args);
     }
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     setup(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         this.router = services.router;
         this.isReady = new Deferred();
@@ -120,6 +117,9 @@ export class Messaging {
     // actions that can be performed on the messaging system
     // -------------------------------------------------------------------------
 
+    /**
+     * @return {import("@mail/core/common/persona_model").Persona[]}
+     */
     async searchPartners(searchStr = "", limit = 10) {
         let partners = [];
         const searchTerm = cleanTerm(searchStr);
@@ -188,6 +188,10 @@ export const messagingService = {
         "mail.message",
         "mail.persona",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const messaging = new Messaging(env, services);
         messaging.initialize();

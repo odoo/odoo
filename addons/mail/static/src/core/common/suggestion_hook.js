@@ -8,7 +8,6 @@ import { useService } from "@web/core/utils/hooks";
 export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
-    /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
         clearRawMentions() {

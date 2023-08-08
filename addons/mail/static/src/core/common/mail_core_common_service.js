@@ -8,24 +8,19 @@ import { markup, reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class MailCoreCommon {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        Object.assign(this, {
-            env,
-            busService: services.bus_service,
-        });
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
+        this.env = env;
+        this.busService = services.bus_service;
         this.attachmentService = services["mail.attachment"];
-        /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
     }
 
@@ -145,6 +140,10 @@ export const mailCoreCommon = {
         "mail.thread",
         "mail.user_settings",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const mailCoreCommon = reactive(new MailCoreCommon(env, services));
         mailCoreCommon.setup();

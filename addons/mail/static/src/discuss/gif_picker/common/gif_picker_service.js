@@ -8,8 +8,11 @@ import { useService } from "@web/core/utils/hooks";
 export class GifPickerService {
     hasGifPickerFeature = false;
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
     }
 
@@ -22,17 +25,17 @@ export class GifPickerService {
 
 export const gifPickerService = {
     dependencies: ["mail.messaging"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
-        /** @type {import('@mail/discuss/gif_picker/common/gif_picker_service').GifPickerService} */
-        const gifPickerService = new reactive(new GifPickerService(env, services));
+        const gifPickerService = reactive(new GifPickerService(env, services));
         gifPickerService.setup();
         return gifPickerService;
     },
 };
 
-/**
- * @returns {import('@mail/discuss/gif_picker/common/gif_picker_service').GifPickerService}
- */
 export function useGifPickerService() {
     return useState(useService("discuss.gifPicker"));
 }

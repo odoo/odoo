@@ -29,27 +29,29 @@ const FETCH_LIMIT = 30;
 
 export class ThreadService {
     nextId = 0;
-
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.setup(env, services);
     }
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     setup(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentsService = services["mail.attachment"];
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.rpc = services.rpc;
         this.notificationService = services.notification;
         this.router = services.router;
         this.ui = services.ui;
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = services["mail.message"];
         // this prevents cyclic dependencies between mail.thread and other services
         this.env.bus.addEventListener("mail.thread/insert", ({ detail }) => {
@@ -1140,6 +1142,10 @@ export const threadService = {
         "mail.message",
         "ui",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new ThreadService(env, services);
     },

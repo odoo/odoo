@@ -6,10 +6,14 @@ import { removeFromArray } from "@mail/utils/common/arrays";
 import { registry } from "@web/core/registry";
 
 export class ChannelMemberService {
-    constructor(env, { "mail.store": store, "mail.persona": personaService }) {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
+    constructor(env, services) {
         this.env = env;
-        this.store = store;
-        this.personaService = personaService;
+        this.store = services["mail.store"];
+        this.personaService = services["mail.persona"];
     }
 
     /**
@@ -77,6 +81,10 @@ export class ChannelMemberService {
 
 export const channelMemberService = {
     dependencies: ["mail.store", "mail.persona"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new ChannelMemberService(env, services);
     },

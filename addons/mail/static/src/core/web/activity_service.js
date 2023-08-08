@@ -8,6 +8,10 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
 export class ActivityService {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         try {
             // useful for synchronizing activity data between multiple tabs
@@ -18,7 +22,6 @@ export class ActivityService {
             this.broadcastChannel = null;
         }
         this.env = env;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
     }
@@ -133,6 +136,10 @@ export class ActivityService {
 
 export const activityService = {
     dependencies: ["mail.store", "orm"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new ActivityService(env, services);
     },

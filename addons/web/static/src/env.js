@@ -10,7 +10,7 @@ import { EventBus } from "@odoo/owl";
 
 /**
  * @typedef {Object} OdooEnv
- * @property {Object} services
+ * @property {import("services").Services} services
  * @property {EventBus} bus
  * @property {QWeb} qweb
  * @property {string} debug

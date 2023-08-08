@@ -28,7 +28,6 @@ export class MessageConfirmDialog extends Component {
     static template = "mail.MessageConfirmDialog";
 
     setup() {
-        /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
     }
 

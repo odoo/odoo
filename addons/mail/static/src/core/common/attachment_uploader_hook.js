@@ -13,7 +13,6 @@ function dataUrlToBlob(data, type) {
 
 export class AttachmentUploader {
     constructor(thread, { composer, onFileUploaded } = {}) {
-        /** @type {import("@mail/core/common/attachment_upload_service").AttachmentUploadService} */
         this.attachmentUploadService = useService("mail.attachment_upload");
         Object.assign(this, { thread, composer, onFileUploaded });
     }

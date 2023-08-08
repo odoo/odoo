@@ -19,7 +19,6 @@ export class SuggestedRecipient extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        /** @type {import("@mail/core/common/thread_service").ThreadService)}*/
         this.threadService = useService("mail.thread");
     }
 

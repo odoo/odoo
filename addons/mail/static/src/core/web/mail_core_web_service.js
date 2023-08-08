@@ -7,18 +7,16 @@ import { markup, reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        /** @type {import("@web/env").OdooEnv} */
         this.env = env;
-        /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
-        this.busService = services["bus_service"];
-        /** @type {import("@mail/core/common/message_service").MessageService} */
+        this.busService = services.bus_service;
         this.messageService = services["mail.message"];
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        /** @type {ReturnType<typeof import("@web/core/network/rpc_service").rpcService.start>} */
         this.rpc = services.rpc;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
     }
 
@@ -130,6 +128,10 @@ export class MailCoreWeb {
 
 export const mailCoreWeb = {
     dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "rpc"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const mailCoreWeb = reactive(new MailCoreWeb(env, services));
         mailCoreWeb.setup();

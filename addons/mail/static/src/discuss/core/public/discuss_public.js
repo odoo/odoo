@@ -15,7 +15,6 @@ export class DiscussPublic extends Component {
 
     setup() {
         this.messaging = useMessaging();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.store = useStore();
         this.state = useState({

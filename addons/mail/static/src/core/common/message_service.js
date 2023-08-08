@@ -18,16 +18,17 @@ import { sprintf } from "@web/core/utils/strings";
 const { DateTime } = luxon;
 
 export class MessageService {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
         this.userService = services.user;
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
     }
 

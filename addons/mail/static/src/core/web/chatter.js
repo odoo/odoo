@@ -87,9 +87,7 @@ export class Chatter extends Component {
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
         this.messaging = useMessaging();
-        /** @type {import("@mail/activity/activity_service").ActivityService} */
         this.activityService = useState(useService("mail.activity"));
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.store = useStore();
         this.orm = useService("orm");

@@ -6,17 +6,16 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { registry } from "@web/core/registry";
 
 export class SuggestionService {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        /** @type {import("@web/env").OdooEnv} env */
         this.env = env;
         this.orm = services.orm;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
     }
 
@@ -249,6 +248,10 @@ export class SuggestionService {
 
 export const suggestionService = {
     dependencies: ["orm", "mail.store", "mail.thread", "mail.persona", "discuss.channel.member"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new SuggestionService(env, services);
     },

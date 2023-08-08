@@ -17,11 +17,10 @@ export class AttachmentView extends Component {
     static props = ["threadId", "threadModel"];
 
     setup() {
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
-            /** @type {import("@mail/core/common/thread_model").Thread} */
+            /** @type {import("@mail/core/common/thread_model").Thread|undefined} */
             thread: undefined,
         });
         useEffect(() => {

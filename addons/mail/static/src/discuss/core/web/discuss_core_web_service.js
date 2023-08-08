@@ -8,22 +8,19 @@ import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreWeb {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        Object.assign(this, {
-            busService: services.bus_service,
-            env,
-            notificationService: services.notification,
-            ui: services.ui,
-        });
-        /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
+        this.env = env;
+        this.busService = services.bus_service;
+        this.notificationService = services.notification;
+        this.ui = services.ui;
         this.chatWindowService = services["mail.chat_window"];
-        /** @type {import("@mail/discuss/core/common/discuss_core_common_service").DiscussCoreCommon} */
         this.discussCoreCommonService = services["discuss.core.common"];
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
     }
 
@@ -122,6 +119,10 @@ export const discussCoreWeb = {
         "notification",
         "ui",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const discussCoreWeb = reactive(new DiscussCoreWeb(env, services));
         discussCoreWeb.setup();
