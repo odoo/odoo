@@ -24,6 +24,9 @@ QUnit.module("Fields", (hooks) => {
                         { id: 3, float_field: -3.89859 },
                         { id: 4, float_field: false },
                         { id: 5, float_field: 9.1 },
+                        { id: 100, float_field: 2.034567e3 },
+                        { id: 101, float_field: 3.75675456e6 },
+                        { id: 102, float_field: 6.67543577586e12 },
                     ],
                 },
             },
@@ -33,6 +36,66 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.module("FloatField");
+
+    QUnit.test("human readable format 1", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 101,
+            arch: `<form><field name="float_field" options="{'human_readable': 'true'}"/></form>`,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "4M",
+            "The value should be rendered in human readable format (k, M, G, T)."
+        );
+    });
+
+    QUnit.test("human readable format 2", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 100,
+            arch: `<form><field name="float_field" options="{'human_readable': 'true', 'decimals': 1}"/></form>`,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "2.0k",
+            "The value should be rendered in human readable format (k, M, G, T)."
+        );
+    });
+    
+    QUnit.test("human readable format 3", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 102,
+            arch: `<form><field name="float_field" options="{'human_readable': 'true', 'decimals': 4}"/></form>`,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "6.6754T",
+            "The value should be rendered in human readable format (k, M, G, T)."
+        );
+    });
+
+    QUnit.test("still human readable when readonly", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 102,
+            arch: `<form><field readonly="true" name="float_field" options="{'human_readable': 'true', 'decimals': 4}"/></form>`,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_widget span").textContent,
+            "6.6754T",
+            "The value should be rendered in human readable format when input is readonly."
+        );
+    });
 
     QUnit.test("unset field should be set to 0", async function (assert) {
         await makeView({

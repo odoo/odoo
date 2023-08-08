@@ -91,6 +91,7 @@ export function formatChar(value, options) {
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
  *   insert `thousandsSep`. See `insertThousandsSep` method.
+ * @param {number} [options.decimals] used for humanNumber formmatter
  * @param {boolean} [options.noTrailingZeros=false] if true, the decimal part
  *   won't contain unnecessary trailing zeros.
  * @returns {string}
@@ -190,6 +191,7 @@ export function formatFloatTime(value, options = {}) {
  * @param {boolean} [options.isPassword=false] if returns true, acts like
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
+ * @param {number} [options.decimals] used for humanNumber formmatter
  *   insert `thousandsSep`. See `insertThousandsSep` method.
  * @returns {string}
  */
