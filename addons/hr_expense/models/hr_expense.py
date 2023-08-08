@@ -766,7 +766,13 @@ class HrExpenseSheet(models.Model):
         return self.env['account.journal'].search([('type', 'in', ['cash', 'bank']), ('company_id', '=', default_company_id)], limit=1)
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
-    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
+    expense_line_ids = fields.One2many(
+        comodel_name='hr.expense',
+        inverse_name='sheet_id',
+        string='Expense Lines',
+        copy=False,
+        states={'post': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]}
+    )
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submitted'),
