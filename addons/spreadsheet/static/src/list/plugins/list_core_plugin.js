@@ -39,7 +39,7 @@ export default class ListCorePlugin extends CorePlugin {
         this.lists = {};
 
         globalFiltersFieldMatchers["list"] = {
-            geIds: () => this.getters.getListIds(),
+            getIds: () => this.getters.getListIds(),
             getDisplayName: (listId) => this.getters.getListName(listId),
             getTag: (listId) => sprintf(_t("List #%s"), listId),
             getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
@@ -241,8 +241,12 @@ export default class ListCorePlugin extends CorePlugin {
         }
     }
 
-    _addList(id, definition, fieldMatching = {}) {
+    _addList(id, definition, fieldMatching = undefined) {
         const lists = { ...this.lists };
+        if (!fieldMatching) {
+            const model = definition.metaData.resModel;
+            fieldMatching = this.getters.getFieldMatchingForModel(model);
+        }
         lists[id] = {
             id,
             definition,

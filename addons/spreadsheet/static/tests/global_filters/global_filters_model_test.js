@@ -7,6 +7,7 @@ import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
+import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 
@@ -18,12 +19,18 @@ import {
     setCellContent,
     setGlobalFilterValue,
 } from "@spreadsheet/../tests/utils/commands";
-import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
+import {
+    createSpreadsheetWithPivot,
+    insertPivotInSpreadsheet,
+} from "@spreadsheet/../tests/utils/pivot";
 import {
     createSpreadsheetWithChart,
     insertChartInSpreadsheet,
 } from "@spreadsheet/../tests/utils/chart";
-import { createSpreadsheetWithList } from "@spreadsheet/../tests/utils/list";
+import {
+    createSpreadsheetWithList,
+    insertListInSpreadsheet,
+} from "@spreadsheet/../tests/utils/list";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import {
@@ -195,6 +202,59 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.deepEqual(result, DispatchResult.Success);
     });
 
+    QUnit.test(
+        "Adding new DataSource will set its fieldMatching according to other ones with the same model",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot();
+            await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+                pivot: {
+                    1: { chain: "created_on", type: "date", offset: 1 },
+                },
+            });
+            const filterId = THIS_YEAR_GLOBAL_FILTER.filter.id;
+
+            let fieldMatching = model.getters.getPivotFieldMatching("1", filterId);
+            assert.equal(fieldMatching.chain, "created_on");
+            assert.equal(fieldMatching.type, "date");
+            assert.equal(fieldMatching.offset, 1);
+
+            await insertPivotInSpreadsheet(model, { arch: getBasicPivotArch() });
+            fieldMatching = model.getters.getPivotFieldMatching("2", filterId);
+            assert.equal(fieldMatching.chain, "created_on");
+            assert.equal(fieldMatching.type, "date");
+            assert.equal(fieldMatching.offset, undefined);
+
+            insertListInSpreadsheet(model, { model: "partner", columns: ["foo"] });
+            fieldMatching = model.getters.getListFieldMatching("1", filterId);
+            assert.equal(fieldMatching.chain, "created_on");
+            assert.equal(fieldMatching.type, "date");
+            assert.equal(fieldMatching.offset, undefined);
+
+            insertChartInSpreadsheet(model);
+            const chartId = model.getters.getOdooChartIds()[0];
+            fieldMatching = model.getters.getOdooChartFieldMatching(chartId, filterId);
+            assert.equal(fieldMatching.chain, "created_on");
+            assert.equal(fieldMatching.type, "date");
+            assert.equal(fieldMatching.offset, undefined);
+        }
+    );
+
+    QUnit.test(
+        "Adding new DataSource with a different model won't set up its field matching",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivot();
+            await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+                pivot: {
+                    1: { chain: "created_on", type: "date", offset: 1 },
+                },
+            });
+            const filterId = THIS_YEAR_GLOBAL_FILTER.filter.id;
+
+            insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
+            const fieldMatching = model.getters.getListFieldMatching("1", filterId);
+            assert.deepEqual(fieldMatching, undefined);
+        }
+    );
     QUnit.test("Can save a value to an existing global filter", async function (assert) {
         assert.expect(8);
 

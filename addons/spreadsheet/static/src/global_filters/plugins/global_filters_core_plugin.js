@@ -128,6 +128,37 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
         return this.getGlobalFilter(id).defaultValue;
     }
 
+    /**
+     * Returns the field matching for a given model by copying the matchings of another DataSource that
+     * share the same model, including only the chain and type.
+     */
+    getFieldMatchingForModel(newModel) {
+        const globalFilters = this.getGlobalFilters();
+        if (globalFilters.length === 0) {
+            return {};
+        }
+
+        for (const matcher of Object.values(globalFiltersFieldMatchers)) {
+            for (const dataSourceId of matcher.getIds()) {
+                const model = matcher.getModel(dataSourceId);
+                if (model === newModel) {
+                    const fieldMatching = {};
+                    for (const filter of globalFilters) {
+                        const matchedField = matcher.getFieldMatching(dataSourceId, filter.id);
+                        if (matchedField) {
+                            fieldMatching[filter.id] = {
+                                chain: matchedField.chain,
+                                type: matchedField.type,
+                            };
+                        }
+                    }
+                    return fieldMatching;
+                }
+            }
+        }
+        return {};
+    }
+
     // ---------------------------------------------------------------------
     // Handlers
     // ---------------------------------------------------------------------
@@ -231,4 +262,5 @@ GlobalFiltersCorePlugin.getters = [
     "getGlobalFilters",
     "getGlobalFilterDefaultValue",
     "getGlobalFilterLabel",
+    "getFieldMatchingForModel",
 ];
