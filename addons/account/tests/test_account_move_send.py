@@ -473,17 +473,6 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
 
-    def test_send_mail_warning_message(self):
-        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-        self.partner_a.email = None
-        wizard = self.create_send_and_print(invoice)
-        self.assertTrue(wizard.send_mail_warning_message)
-
-        # Fix the partner.
-        self.partner_a.email = "turlututu@tsointsoin"
-        wizard.invalidate_recordset(fnames=['send_mail_warning_message'])
-        self.assertFalse(wizard.send_mail_warning_message)
-
     def test_invoice_single(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice)
@@ -498,6 +487,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mail_lang': 'en_US',
             'mail_partner_ids': wizard.move_ids.partner_id.ids,
         }])
+        self.assertFalse(wizard.send_mail_warning_message)
         self.assertTrue(wizard.mail_subject)
         self.assertTrue(wizard.mail_body)
         self._assert_mail_attachments_widget(wizard, [{
@@ -542,6 +532,23 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', False),
         ])
         self.assertFalse(invoice_attachments)
+
+    def test_invoice_single_readonly_and_checkbox(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        self.partner_a.email = None
+        wizard = self.create_send_and_print(invoice)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': True,
+            'checkbox_send_mail': False,
+        }])
+
+        self.partner_a.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
 
     def test_invoice_multi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
@@ -618,6 +625,35 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', 'invoice_pdf_report_file'),
         ])
         self.assertEqual(len(invoice_attachments), 1)
+
+    def test_invoice_multi_readonly_checkbox_warning_message(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        self.partner_a.email = None
+        self.partner_b.email = None
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': True,
+            'checkbox_send_mail': False,
+        }])
+
+        self.partner_a.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
+
+        self.partner_b.email = "turlututu@tsointsoin"
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertRecordValues(wizard, [{
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+        }])
 
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

@@ -8,11 +8,24 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='standard_options']" position="inside">
                 <field name="enable_send_by_post" invisible="1"/>
+                <field name="send_by_post_readonly" invisible="1"/>
+
                 <div name="option_send_by_post"
                      attrs="{'invisible': [('enable_send_by_post', '=', False)]}">
-                    <field name="checkbox_send_by_post"
-                           attrs="{'readonly': [('send_by_post_warning_message', '!=', False)]}"/>
-                    <b><label for="checkbox_send_by_post"/></b>
+                    <field name="checkbox_send_by_post" attrs="{'readonly': [('send_by_post_readonly', '=', True)]}"/>
+                    <b><label for="checkbox_send_by_post" class="mr4"/></b>
+                    <i class="fa fa-question-circle"
+                        role="img"
+                        aria-label="Warning"
+                        title="The address is unknown on the partner"
+                        attrs="{'invisible': [('send_by_post_readonly', '=', False)]}"/>
+
+                    <span attrs="{'invisible': ['|', ('send_by_post_cost', 'in', (0, 1)), ('checkbox_send_by_post', '=', False)]}">
+                        <b>(
+                            <field name="send_by_post_cost" options="{'digits':[0,0]}" class="mr4"/>
+                            <label for="send_by_post_cost"/>
+                        )</b>
+                    </span>
                 </div>
             </xpath>
             <xpath expr="//div[@name='warnings']" position="inside">
