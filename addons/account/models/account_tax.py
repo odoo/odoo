@@ -344,11 +344,13 @@ class AccountTax(models.Model):
             fname = f"{doc_type}_repartition_line_ids"
             if fname in sanitized:
                 repartition = sanitized.setdefault('repartition_line_ids', [])
-                repartition.extend([
-                    (command, id, {'document_type': doc_type, **v}) if command in (Command.CREATE, Command.UPDATE)
-                    else (command, id, v)
-                    for command, id, v in sanitized.pop(fname)
-                ])
+                for command_vals in sanitized.pop(fname):
+                    if command_vals[0] == Command.CREATE:
+                        repartition.append(Command.create({'document_type': doc_type, **command_vals[2]}))
+                    elif command_vals[0] == Command.UPDATE:
+                        repartition.append(Command.update(command_vals[1], {'document_type': doc_type, **command_vals[2]}))
+                    else:
+                        repartition.append(command_vals)
                 sanitized[fname] = []
         return sanitized
 
