@@ -1724,6 +1724,61 @@ export function splitAroundUntil(elements, limitAncestor) {
     return beforeSplit || afterSplit || limitAncestor;
 }
 
+/**
+ * Splits the nodes within the specified 'block' by splitting them
+ * at occurrences of 'br' elements.
+ *
+ * @see splitAroundUntil
+ * @param {Node} editable
+ * @param {Node} block
+ * @returns {Array of Nodes} An array containing the nodes that have been split.
+ */
+export function splitAroundBrs(editable, block) {
+    const range = getDeepRange(editable, { correctTripleClick: true });
+    const { startContainer, startOffset, endContainer, endOffset } = range;
+    const selectedNodes = getTraversedNodes(editable, range);
+    const blockDescendants = descendants(block);
+
+    let currentBlock = [];
+    let splitedNodes = [];
+
+    for (let i = 0; i < blockDescendants.length; i++) {
+        const currentNode = blockDescendants[i];
+
+        if (isVisible(currentNode)) {
+            currentBlock.push(currentNode);
+        }
+
+        const isNonOdooBr = currentNode.nodeName === 'BR' && !currentNode.classList.contains('oe_linebreak');
+        if (isNonOdooBr || i === blockDescendants.length - 1) {
+            if (currentBlock.length && currentBlock.some(n => selectedNodes.includes(n))) {
+                const block = closestBlock(currentBlock[0]);
+
+                // We cannot directly split TD and DIV elements in the same way as the other elements.
+                if (['TD', 'DIV'].includes(block.nodeName)) {
+                    const newNode = document.createElement('p');
+                    for (const node of [...block.childNodes]) {
+                        newNode.append(node);
+                    }
+                    block.prepend(newNode);
+                    const splitResult = splitAroundUntil(currentBlock, newNode);
+                    splitedNodes.push(splitResult);
+                    currentNode.nodeName === 'BR' && currentNode.remove();
+                    splitResult.previousElementSibling && unwrapContents(splitResult.previousElementSibling);
+                    splitResult.nextElementSibling && unwrapContents(splitResult.nextElementSibling);
+                } else {
+                    const splitResult = splitAroundUntil(currentBlock, block);
+                    splitedNodes.push(splitResult);
+                    currentNode.nodeName === 'BR' && currentNode.remove();
+                }
+            }
+            currentBlock = [];
+        }
+    }
+    setSelection(startContainer, startOffset, endContainer, endOffset);
+    return splitedNodes;
+}
+
 export function insertText(sel, content) {
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
         const pos = [sel.anchorNode.parentElement, splitTextNode(sel.anchorNode, sel.anchorOffset)];

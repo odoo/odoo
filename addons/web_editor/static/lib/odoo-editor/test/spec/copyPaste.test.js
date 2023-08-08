@@ -723,14 +723,14 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>1ab<span>c12<br>34[]</span>f</div>',
+                    contentAfter: '<div>1ab<span>c12<br class="oe_linebreak">34[]</span>f</div>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<div>2a[b<span>c]d</span>ef</div>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>2a12<br>34[]<span>d</span>ef</div>',
+                    contentAfter: '<div>2a12<br class="oe_linebreak">34[]<span>d</span>ef</div>',
                 });
             });
             it('should paste a text when selection leave a span (2)', async () => {
@@ -767,7 +767,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>2a<span>b12<br>34[]</span>e<br>f</div>',
+                    contentAfter: '<div>2a<span>b12<br class="oe_linebreak">34[]</span>e<br>f</div>',
                 });
             });
         });
@@ -996,14 +996,14 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>1ab<span>c12<i><br>ii</i>[]</span>f</div>',
+                    contentAfter: '<div>1ab<span>c12<i><br class="oe_linebreak">ii</i>[]</span>f</div>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<div>2a[b<span>c]d</span>ef</div>',
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>2a12<i><br>ii</i>[]<span>d</span>ef</div>',
+                    contentAfter: '<div>2a12<i><br class="oe_linebreak">ii</i>[]<span>d</span>ef</div>',
                 });
             });
             it('should paste a text when selection leave a span (2)', async () => {
@@ -1037,7 +1037,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, complexHtmlData);
                     },
-                    contentAfter: '<div>2a<span>b12<i><br>ii</i>[]</span>e<br>f</div>',
+                    contentAfter: '<div>2a<span>b12<i><br class="oe_linebreak">ii</i>[]</span>e<br>f</div>',
                 });
             });
         });

@@ -3397,7 +3397,7 @@ export class OdooEditor extends EventTarget {
                         for (const textFragment of textFragments) {
                             this._applyCommand('insertText', textFragment);
                             if (textIndex < textFragments.length) {
-                                this._applyCommand('oShiftEnter');
+                                this._applyCommand('oShiftEnter', false);
                             }
                             textIndex++;
                         }

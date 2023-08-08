@@ -43,6 +43,7 @@ import {
     isEmptyBlock,
     unwrapContents,
     getCursorDirection,
+    splitAroundBrs,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -350,8 +351,15 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName) {
         const restoreCursor = preserveCursor(editor.document);
-        const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        const selectedNodes = getTraversedNodes(editor.editable);
+        let selectedBlocks = [...new Set(selectedNodes.map(closestBlock))].filter(n => (
+            [...n.querySelectorAll('br')].some(n => !n.classList.contains('oe_linebreak') && !isEmptyBlock(n.parentNode))
+        ));
+        for (const block of selectedBlocks) {
+            splitAroundBrs(editor.editable, block);
+        }
+        let range = getDeepRange(editor.editable, { correctTripleClick: true });
+        selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant))
         ));
@@ -513,10 +521,16 @@ export const editorCommands = {
         return true;
     },
     toggleList: (editor, mode) => {
+        const selectedNodes = getTraversedNodes(editor.editable);
+        let selectedBlocks = [...new Set(selectedNodes.map(closestBlock))].filter(n => (
+            [...n.querySelectorAll('br')].some(n => !n.classList.contains('oe_linebreak') && !isEmptyBlock(n.parentNode))
+        ));
+        for (const block of selectedBlocks) {
+            splitAroundBrs(editor.editable, block);
+        }
         const li = new Set();
         const blocks = new Set();
-
-        const selectedBlocks = getTraversedNodes(editor.editable);
+        selectedBlocks = getTraversedNodes(editor.editable);
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant))
         ));

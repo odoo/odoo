@@ -901,6 +901,34 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
             });
         });
+        it('should convert a heading 1 into a paragraph completely if brs contains class "ol_linebreak"', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1>abcd<br class="oe_linebreak">efgh<br class="oe_linebreak">ijkl[]</h1>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<p>abcd<br class="oe_linebreak">efgh<br class="oe_linebreak">ijkl[]</p>'
+            });
+        });
+        it('should convert first line of heading 1 seperated by br tag without class "oe_linebreak" into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1>abcd[]<br>efgh<br>ijkl</h1>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<p>abcd[]</p><h1>efgh<br>ijkl</h1>'
+            });
+        });
+        it('should convert middle line of heading 2 seperated by br tag without class "oe_linebreak" into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h2>abcd<br>efgh[]<br>ijkl</h2>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<h2>abcd<br></h2><p>efgh[]</p><h2>ijkl</h2>',
+            });
+        });
+        it('should convert last line of heading 3 seperated by br tag withoug class "oe_linebreak" into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h3>abcd<br>efgh<br>ijkl[]</h3>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<h3>abcd<br>efgh<br></h3><p>ijkl[]</p>'
+            })
+        });
     });
     describe('to heading 1', () => {
         it('should turn a paragraph into a heading 1', async () => {
@@ -943,6 +971,62 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'h1'),
                 contentAfter: '<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>',
+            });
+        });
+        it('should convert a paragraph into a heading 1 completely if brs contains class "ol_linebreak"', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd<br class="oe_linebreak">efgh<br class="oe_linebreak">ijkl[]</p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1>abcd<br class="oe_linebreak">efgh<br class="oe_linebreak">ijkl[]</h1>',
+            });
+        });
+        it('should convert selected line of paragraph seperated by br tag without class "oe_linebreak" into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd[]<br>efgh<br>ijkl</p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1>abcd[]</h1><p>efgh<br>ijkl</p>',
+            });
+        });
+        it('should convert the selected lines of a paragraph seperated by br tag without class "oe_linebreak" into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[bcd<br>efgh<br>ijkl]</p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1>a[bcd</h1><h1>efgh</h1><h1>ijkl]</h1>',
+            });
+        });
+        it('should convert the selected lines of a heading 2 seperated by br tag withoug class "oe_linebreak" into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h2>[abcd<br>efgh]<br>ijkl</h2>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1>[abcd</h1><h1>efgh]</h1><h2>ijkl</h2>',
+            });
+        });
+        it('should convert the selected lines of a heading 3 seperated by br tag withoug class "oe_linebreak" into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h3>abcd<br>e[fgh<br>ijkl]</h3>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h3>abcd<br></h3><h1>e[fgh</h1><h1>ijkl]</h1>',
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a table cell into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td>ab[]cd<br>efgh</td><td></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<table><tbody><tr><td><h1>ab[]cd</h1>efgh</td><td></td></tr></tbody></table>',
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a table cell into a heading 1 (2)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td>abcd<br>[efgh]</td><td></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<table><tbody><tr><td>abcd<br><h1>[efgh]</h1></td><td></td></tr></tbody></table>',
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a table cell into a heading 1 (3)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td>[abcd<br>efgh]</td><td></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<table><tbody><tr><td><h1>[abcd</h1><h1>efgh]</h1></td><td></td></tr></tbody></table>',
             });
         });
     });
@@ -989,6 +1073,62 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h2>[a</h2></td><td><h2>b</h2></td><td><h2>c]</h2></td></tr></tbody></table>',
             });
         });
+        it('should convert a paragraph with combinations of br with and without class "oe_linebreak" properly to heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd<br class="oe_linebreak">efgh[]<br>ijkl</p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<h2>abcd<br class="oe_linebreak">efgh[]</h2><p>ijkl</p>',
+            });
+        });
+        it('should convert a paragraph with combinations of br with and without class "oe_linebreak" properly to heading 2 (2)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd<br>efgh[]<br class="oe_linebreak">ijkl</p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<p>abcd<br></p><h2>efgh[]<br class="oe_linebreak">ijkl</h2>',
+            });
+        });
+        it('should convert a deeply nested text containing br inside a paragraph into a heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><strong><font><u>[abcd</u></font><br><span><font>efgh]</font></span></strong></p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<h2><strong><font><u>[abcd</u></font></strong></h2><h2><strong><span><font>efgh]</font></span></strong></h2>'
+            });
+        });
+        it('should convert a deeply nested text containing br inside a paragraph into a heading 2 (2)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><strong><font><u>[abcd]</u></font><br><span><font>efgh</font></span></strong></p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<h2><strong><font><u>[abcd]</u></font></strong></h2><p><strong><span><font>efgh</font></span></strong></p>'
+            });
+        });
+        it('should convert a deeply nested text containing br inside a paragraph into a heading 2 (3)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><strong><font><u>abcd</u></font><br><span><font>[efgh]</font></span></strong></p>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<p><strong><font><u>abcd</u></font><br></strong></p><h2><strong><span><font>[efgh]</font></span></strong></h2>'
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a div into a heading 2 (1)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><span>[abcd]</span><br>efgh</div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<div><h2><span>[abcd]</span></h2>efgh</div>',
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a div into a heading 2 (2)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><span>abcd</span><br>[efgh]</div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<div><span>abcd</span><br><h2>[efgh]</h2></div>',
+            });
+        });
+        it('should convert selected text seperated by br without class "oe_linebreak" inside a div into a heading 2 (2)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div>[abcd<br>efgh]</div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<div><h2>[abcd</h2><h2>efgh]</h2></div>',
+            });
+        });
     });
     describe('to heading 3', () => {
         it('should turn a heading 1 into a heading 3', async () => {
@@ -1031,6 +1171,71 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'h3'),
                 contentAfter: '<table><tbody><tr><td><h3>[a</h3></td><td><h3>b</h3></td><td><h3>c]</h3></td></tr></tbody></table>',
+            });
+        });
+        it('should convert a paragraph with styles, seperated by br without class "oe_linebreak" into heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <p>
+                    [a
+                    <font style="color: red;">b</font>
+                    <font style="color: green;">c</font>
+                    <font style="color: blue;">d</font>
+                    <br>
+                    e
+                    <font style="color: yellow">fg]</font>
+                    h
+                    <br>
+                </p>
+                `),
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                contentAfter: unformat(`
+                <h3>
+                    [a
+                    <font style="color: red;">b</font>
+                    <font style="color: green;">c</font>
+                    <font style="color: blue;">d</font>
+                </h3>
+                <h3>
+                    e
+                    <font style="color: yellow">fg]</font>
+                    h
+                </h3>
+                `)
+            });
+        });
+        it('should convert a paragraph with styles, seperated by br without class "oe_linebreak" into heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <p>
+                    a[]
+                    <font style="color: red;">b</font>
+                    <font style="color: green;">c</font>
+                    <font style="color: blue;">d</font>
+                    <br>
+                    e
+                    <font style="color: yellow">fg]</font>
+                    h
+                    <br>
+                    ijkl
+                </p>
+                `),
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                contentAfter: unformat(`
+                <h3>
+                    a[]
+                    <font style="color: red;">b</font>
+                    <font style="color: green;">c</font>
+                    <font style="color: blue;">d</font>
+                </h3>
+                <p>
+                    e
+                    <font style="color: yellow">fg]</font>
+                    h
+                    <br>
+                    ijkl
+                </p>
+                `)
             });
         });
     });

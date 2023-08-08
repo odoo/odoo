@@ -115,7 +115,7 @@ describe('Link', () => {
                         await insertLineBreak(editor);
                     },
                     // Writing at the end of a link writes outside the link.
-                    contentAfter: '<p>a<a href="#">link</a>b<br>[]c</p>',
+                    contentAfter: '<p>a<a href="#">link</a>b<br class="oe_linebreak">[]c</p>',
                 });
             });
             it('should insert a link and write a character insert a <br> and another character', async () => {
@@ -128,7 +128,7 @@ describe('Link', () => {
                         await insertText(editor, 'c');
                     },
                     // Writing at the end of a link writes outside the link.
-                    contentAfter: '<p>a<a href="#">link</a>b<br>c[]d</p>',
+                    contentAfter: '<p>a<a href="#">link</a>b<br class="oe_linebreak">c[]d</p>',
                 });
             });
             it('should insert a <br> inside a link', async () => {
@@ -137,7 +137,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await insertLineBreak(editor);
                     },
-                    contentAfter: '<p><a href="#">a<br>[]b</a></p>',
+                    contentAfter: '<p><a href="#">a<br class="oe_linebreak">[]b</a></p>',
                 });
             });
         });
@@ -245,7 +245,7 @@ describe('Link', () => {
                         await insertLineBreak(editor);
                         await insertText(editor, 'odoo.com')
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google.com<br>odoo.com[]</a></p>',
+                    contentAfter: '<p>a<a href="https://google.com">google.com<br class="oe_linebreak">odoo.com[]</a></p>',
                 });
             });
         });

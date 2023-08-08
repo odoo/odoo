@@ -94,6 +94,48 @@ describe('List', () => {
                             `),
                         });
                     });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd[]<br>efgh<br>ijkl</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>abcd[]</li></ul><p>efgh<br>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>efgh[]<br>ijkl</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<p>abcd<br></p><ul><li>efgh[]</li></ul><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>efgh<br>ijkl[]</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<p>abcd<br>efgh<br></p><ul><li>ijkl[]</li></ul>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[abcd<br>efgh]<br>ijkl</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>[abcd</li><li>efgh]</li></ul><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>[efgh<br>ijkl]</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<p>abcd<br></p><ul><li>[efgh</li><li>ijkl]</li></ul>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[abcd<br>efgh<br>ijkl]</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>[abcd</li><li>efgh</li><li>ijkl]</li></ul>',
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -301,6 +343,48 @@ describe('List', () => {
                                     </tbody>
                                 </table>
                             `),
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd[]<br>efgh<br>ijkl</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<ol><li>abcd[]</li></ol><p>efgh<br>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>efgh[]<br>ijkl</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<p>abcd<br></p><ol><li>efgh[]</li></ol><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>efgh<br>ijkl[]</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<p>abcd<br>efgh<br></p><ol><li>ijkl[]</li></ol>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[abcd<br>efgh]<br>ijkl</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<ol><li>[abcd</li><li>efgh]</li></ol><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>abcd<br>[efgh<br>ijkl]</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<p>abcd<br></p><ol><li>[efgh</li><li>ijkl]</li></ol>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[abcd<br>efgh<br>ijkl]</p>',
+                            stepFunction: toggleOrderedList,
+                            contentAfter: '<ol><li>[abcd</li><li>efgh</li><li>ijkl]</li></ol>',
                         });
                     });
                 });
@@ -560,6 +644,54 @@ describe('List', () => {
                                     </tbody>
                                 </table>
                             `),
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>abcd[]<br>efgh<br>ijkl</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<ul class="o_checklist"><li>abcd[]</li></ul><p>efgh<br>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>abcd<br>efgh[]<br>ijkl</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<p>abcd<br></p><ul class="o_checklist"><li>efgh[]</li></ul><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>abcd<br>efgh<br>ijkl[]</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<p>abcd<br>efgh<br></p><ul class="o_checklist"><li>ijkl[]</li></ul>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>[abcd<br>efgh]<br>ijkl</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<ul class="o_checklist"><li>[abcd</li><li>efgh]</li></ul><p>ijkl</p>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (2)', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>abcd<br>[efgh<br>ijkl]</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<p>abcd<br></p><ul class="o_checklist"><li>[efgh</li><li>ijkl]</li></ul>',
+                        });
+                    });
+                    it('should convert the selected text between br without class "oe_linebreak" in a paragraph into a list (3)', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: '<p>[abcd<br>efgh<br>ijkl]</p>',
+                            stepFunction: toggleCheckList,
+                            contentAfter: '<ul class="o_checklist"><li>[abcd</li><li>efgh</li><li>ijkl]</li></ul>',
                         });
                     });
                 });
@@ -6608,21 +6740,21 @@ describe('List', () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>[]<br></li></ul>',
                         stepFunction: insertLineBreak,
-                        contentAfter: '<ul><li><br>[]<br></li></ul>',
+                        contentAfter: '<ul><li><br class="oe_linebreak">[]<br></li></ul>',
                     });
                 });
                 it('should insert a <br> at the beggining of a list item', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>[]abc</li></ul>',
                         stepFunction: insertLineBreak,
-                        contentAfter: '<ul><li><br>[]abc</li></ul>',
+                        contentAfter: '<ul><li><br class="oe_linebreak">[]abc</li></ul>',
                     });
                 });
                 it('should insert a <br> within a list item', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>ab[]cd</li></ul>',
                         stepFunction: insertLineBreak,
-                        contentAfter: '<ul><li>ab<br>[]cd</li></ul>',
+                        contentAfter: '<ul><li>ab<br class="oe_linebreak">[]cd</li></ul>',
                     });
                 });
                 it('should insert a line break (2 <br>) at the end of a list item', async () => {
@@ -6631,7 +6763,7 @@ describe('List', () => {
                         stepFunction: insertLineBreak,
                         // The second <br> is needed to make the first
                         // one visible.
-                        contentAfter: '<ul><li>abc<br>[]<br></li></ul>',
+                        contentAfter: '<ul><li>abc<br class="oe_linebreak">[]<br class="oe_linebreak"></li></ul>',
                     });
                 });
             });
@@ -6640,7 +6772,7 @@ describe('List', () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>ab[cd]ef</li></ul>',
                         stepFunction: insertLineBreak,
-                        contentAfter: '<ul><li>ab<br>[]ef</li></ul>',
+                        contentAfter: '<ul><li>ab<br class="oe_linebreak">[]ef</li></ul>',
                     });
                 });
             });
