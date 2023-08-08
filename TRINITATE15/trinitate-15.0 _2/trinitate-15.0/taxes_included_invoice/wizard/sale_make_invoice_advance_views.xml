@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="sale_view_sale_advance_payment_inv_trinitate">
+        <field name="name">trinitate.sale.advance.payment.inv_form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field
+                    name="taxes_included"
+                    attrs="{
+                    'invisible': [('advance_payment_method', '!=', 'fixed')]}"
+                    class="oe_inline"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

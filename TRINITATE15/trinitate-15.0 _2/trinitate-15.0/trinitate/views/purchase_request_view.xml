@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="purchase_request_line_form_trinitate">
+        <field name="name">trinitate.purchase.request_form</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_qty']" position="after">
+                <field name="included_in_budget" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

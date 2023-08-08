@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="pos_session_view_buttons" model="ir.ui.view">
+        <field name="name">pos.session.view.buttons</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_pos_session_closing_control']" position="after">
+                <button string="open reconcile" name="action_open_reconcile" type="object" class="btn btn-primary">
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

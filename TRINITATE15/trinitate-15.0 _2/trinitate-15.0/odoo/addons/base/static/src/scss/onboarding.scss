@@ -1,0 +1,159 @@
+// = Onboarding Panel
+// ============================================================================
+$o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
+
+.o_onboarding_main {
+    background: white center top;
+    background-size: cover;
+
+    .o_onboarding_btn_close {
+        color: #fff;
+    }
+
+    // = Color Variations
+    // ------------------------------------------------------------------------
+    @each $key, $values in $o-onboarding-colors {
+        &.o_onboarding_#{$key} {
+            $-bg: map-get($values, 'bg');
+            $-ui: map-get($values, 'ui');
+
+            @include print-variable('o-onboarding-done-color', nth($-ui, 1));
+            @include print-variable('o-onboarding-todo-color', nth($-ui, 2));
+            @include print-variable('o-onboarding-bg_1-color', fade-out(nth($-bg, 1), 0.5));
+            @include print-variable('o-onboarding-bg_2-color', nth($-bg, 2));
+        }
+    }
+
+    .o_onboarding_wrap {
+        overflow-x: auto;
+        background-color: var(--o-onboarding-bg_1-color);
+        background-image: linear-gradient(to bottom, var(--o-onboarding-bg_1-color), var(--o-onboarding-bg_2-color));
+    }
+
+    .o_onboarding_completed_message {
+        box-shadow: 0 -7px 20px -5px rgba(#000, 0.3);
+        animation: o_onboarding_slideInUp $o-onboarding-base-time ease-out;
+    }
+
+    // = Step Design
+    // ------------------------------------------------------------------------
+    .o_onboarding_step {
+        flex: 1 1 0;
+
+        @for $i from 1 through 5 {
+            &.o_onboarding_step__todo:nth-child(#{$i}) {
+                @include print-variable('o-onboarding-animation-delay', $i * .15s);
+            }
+        }
+
+        .o_onboarding_step_content {
+            width: $o-onboarding-step-width;
+        }
+
+        .o_onboarding_step_action {
+            min-width: $o-onboarding-step-width * .5;
+            border: $border-width solid #fff;
+        }
+
+        .o_onboarding_progress {
+            height: $o-onboarding-progress-size;
+            width: calc(100% - #{$o-onboarding-dot-size});
+            background: var(--o-onboarding-todo-color, #{$o-brand-odoo});
+            transform:
+                translateX(-100%)
+                translateY($o-onboarding-dot-size * .5 - $o-onboarding-progress-size * .5);
+        }
+
+        .o_onboarding_dot {
+            width: $o-onboarding-dot-size;
+            height: $o-onboarding-dot-size;
+            padding-top: .5em;
+            background-color: var(--o-onboarding-todo-color, $o-brand-odoo);
+            color: transparent;
+            transition: all $o-onboarding-base-time ease;
+            transform: scale3d(.5, .5, .5);
+        }
+
+        &:first-of-type .o_onboarding_progress {
+            display: none;
+        }
+
+        .o_onboarding_step_title,
+        .o_onboarding_step_action,
+        .o_onboarding_step_action__done,
+        .o_onboarding_dot_isChecked {
+            color: #fff;
+        }
+
+        // = "To do" Step Design
+        // --------------------------------------------------------------------
+        &[data-step-state="not_done"] {
+            .o_onboarding_step_content_info {
+                animation: o_onboarding_zoomIn ($o-onboarding-base-time * 1.5) both;
+                animation-delay: var(--o-onboarding-animation-delay, 0);
+            }
+
+            .o_onboarding_step_action {
+                animation: o_onboarding_slideInUp ($o-onboarding-base-time * 2) both;
+                animation-delay: var(--o-onboarding-animation-delay, 0);
+            }
+        }
+
+        // = "Done" Step Design
+        // --------------------------------------------------------------------
+        &:not([data-step-state="not_done"])  {
+            .o_onboarding_dot, + .o_onboarding_step:not([data-step-state="not_done"]) .o_onboarding_progress {
+                background: var(--o-onboarding-done-color, #{$o-brand-primary});
+            }
+
+            .o_onboarding_dot {
+                transform: scale3d(1, 1, 1);
+            }
+        }
+
+        // = "Just Done" Step Design
+        // --------------------------------------------------------------------
+        &[data-step-state="just_done"] {
+            .o_onboarding_step_content_info {
+                animation: o_onboarding_fadeIn ($o-onboarding-base-time * 3);
+            }
+
+            .o_onboarding_step_action__done {
+                animation: bounceIn ($o-onboarding-base-time * 2);
+            }
+
+            .o_onboarding_confetti {
+                animation: o_onboarding_fadeInOut ($o-onboarding-base-time * 3) ease 0s 1 forwards;
+            }
+        }
+    }
+
+    // = Animations
+    // ------------------------------------------------------------------------
+    @keyframes o_onboarding_slideInUp {
+        from {
+            transform: translate3d(0, 20%, 0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes o_onboarding_zoomIn {
+        from {
+            transform: scale3d(0.8, 0.8, 0.8);
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes o_onboarding_fadeIn {
+        10%, 66% { opacity: 0; }
+        0%, 100% { opacity: 1; }
+    }
+
+    @keyframes o_onboarding_fadeInOut {
+        10%, 66% { opacity: 1; }
+        0%, 100% { opacity: 0; }
+    }
+}

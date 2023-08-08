@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="wizard_report_sale_order">
+        <field name="name">wizard_report_sale_order.form</field>
+        <field name="model">wizard.report.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Kardex of orders">
+                <group>
+                    <field name="operating_unit_ids" string='Operating unit' required="1" widget="many2many_tags" />
+                    <field name="see_all_ou" invisible="1" />
+                    <field name="user_id" invisible="1" />
+                </group>
+                <group>
+                    <label for="date_from" string="Date" />
+                    <div class="o_row">
+                        <field
+                            name="date_from"
+                            widget="daterange"
+                            nolabel="1"
+                            class="oe_inline"
+                            options="{'related_end_date': 'date_to'}"
+                        />
+                        <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
+                        <field
+                            name="date_to"
+                            widget="daterange"
+                            nolabel="1"
+                            class="oe_inline"
+                            options="{'related_start_date': 'date_from'}"
+                        />
+                    </div>
+                </group>
+                <footer>
+                    <button string='view report' name="open_table" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_stock_picking_change_date_wizard" model="ir.actions.act_window">
+        <field name="name">wizard to Kardex of orders</field>
+        <field name="res_model">wizard.report.sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_report_sale_order" />
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="sale.report_sale_order"
+        name="Report Kardex of orders"
+        parent="sale.menu_sale_report"
+        action="action_view_stock_picking_change_date_wizard"
+        groups="report_sale_order_trinitate.res_groups_kardex_of_orders"
+    />
+</odoo>

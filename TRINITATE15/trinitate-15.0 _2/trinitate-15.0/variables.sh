@@ -1,0 +1,13 @@
+export BASE_IMAGE="vauxoo/odoo-150-image"
+export DOCKER_IMAGE_REPO="quay.io/jarsa/trinitate"
+export PSQL_VERSION="11"
+export VERSION="15.0"
+export ODOO_REPO="jarsa/odoo"
+export ODOO_BRANCH="15.0"
+export MAIN_APP="trinitate"
+export TRAVIS_PYTHON_VERSION="3.8"
+export TRAVIS_REPO_SLUG="Jarsa/"
+export COUNTRY="MX"
+export CUSTOMER="trinitate"
+export COVERAGE_MIN=20
+export COVERAGE_PRECISION=2

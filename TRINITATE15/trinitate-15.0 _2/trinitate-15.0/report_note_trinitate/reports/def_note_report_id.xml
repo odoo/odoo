@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="def_note_report_id">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report_note_trinitate.note_report_id" />
+            </t>
+        </t>
+    </template>
+    <template id="note_report_id">
+        <t t-set="cfdi_vals" t-value="doc._l10n_mx_edi_decode_cfdi()" />
+                <t t-set="is_cfdi_signed" t-value="bool(doc._get_l10n_mx_edi_signed_edi_document())" />
+                <div class="page">
+                    <div t-attf-class="header o_company_#{doc.company_id}_layout" t-att-style="report_header_style">
+                        <div class="row">
+                            <div class="col-4">
+                                <img
+                            t-if="doc.company_id.logo"
+                            t-att-src="image_data_uri(doc.company_id.logo)"
+                            style="max-height:120px;margin-left:20px;margin-left:20px;"
+                            alt="Logo"
+                        />
+                            </div>
+                            <div class="col-4" align="right" t-field="doc.company_id.company_details" name="moto" />
+                            <div class="col-4" align="right" style="margin-bottom:20px;" name="sale_information">
+                                <table style="border-top: 1px solid;">
+                                    <tr>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <b>Invoice: </b>
+                                        </td>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+
+                                            <span t-field="doc.name" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <b>Date: </b>
+                                        </td>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <span t-field="doc.invoice_date" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <b>Shipping location: </b>
+                                        </td>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <br />
+                                            <span t-esc="doc.partner_id.zip" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                            <b>Type of voucher: </b>
+                                        </td>
+                                        <t t-if="doc.move_type == 'out_invoice'">
+                                            <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                                Sale note
+                                            </td>
+                                        </t>
+                                        <t t-else="doc.move_type == 'out_refund'">
+                                            <td style="border-bottom: 1px solid; background-color: #dedede;">
+                                                Credit note
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div t-if="doc.company_id.logo or doc.company_id.company_details" class="row_zero_min_height">
+                            <div class="col-12">
+                                <div style="border-bottom: 1px solid black;" />
+                            </div>
+                        </div>
+
+                        <table style="margin-top:20px; width: 100%;">
+                            <thead>
+                                <th
+                            style="background-color: #dedede; text-align:center; font-size:20px; font-style: italic;"
+                            colspan="3"
+                        >EMITTER</th>
+                            </thead>
+                            <tbody class="emisor_tbody">
+                                <!-- Lines associated -->
+                                <tr>
+                                    <td>
+                                        <b>RFC: </b>
+                                        <span t-field="doc.company_id.vat" />
+                                    </td>
+                                    <td>
+                                        <b>Name: </b>
+                                        <span t-field="doc.company_id.name" />
+                                    </td>
+                                    <td>
+                                        <b>Fiscal Regime: <span
+                                        t-esc="doc.company_id.l10n_mx_edi_fiscal_regime"
+                                    /> - </b>
+                                        <span t-field="doc.company_id.l10n_mx_edi_fiscal_regime" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="margin-top:10px; width: 100%;">
+                            <thead>
+                                <th
+                            style="background-color: #dedede; text-align:center; font-size:20px; font-style: italic;"
+                            colspan="3"
+                        >RECEIVER</th>
+                            </thead>
+                            <tbody class="receptor_tbody">
+                                <!-- Lines associated -->
+                                <tr>
+                                    <td>
+                                        <b t-if="doc.partner_id.country_id.code == 'MX'">RFC: </b>
+                                        <b t-if="doc.partner_id.country_id.code != 'MX'">NumRegIdTrib: </b>
+                                        <span t-field="doc.partner_id.vat" />
+                                    </td>
+                                    <td>
+                                        <b>Name: </b>
+                                        <span t-field="doc.partner_id.name" />
+                                    </td>
+                                    <td>
+                                        <b>CFDI Usage: <span t-esc="doc.l10n_mx_edi_usage" /> - </b>
+                                        <span t-field="doc.l10n_mx_edi_usage" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <b>Fiscal Residence: </b>
+                                        <span t-field="doc.company_id.vat" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="margin-top:10px; width: 100%;">
+                            <thead>
+                                <th
+                            style="background-color: #dedede; text-align:center; font-size:20px; font-style: italic;"
+                            colspan="3"
+                        >GENERAL DATA</th>
+                            </thead>
+                            <tbody class="general_data_tbody">
+                                <!-- Lines associated -->
+                                <tr>
+                                    <td>
+                                        <b>Currency: <span t-field="doc.currency_id.name" /> - </b>
+                                        <span t-field="doc.currency_id.full_name" />
+                                    </td>
+                                    <td t-if="doc.currency_id.name != 'MXN'">
+                                        <t t-set="total_price" t-value="doc.amount_total * 18.75" />
+                                        <b>Change: MXN$</b>
+                                        <span t-esc="'%.2f'% doc.currency_id.rate_ids[0].inverse_company_rate" />
+                                    </td>
+                                    <td>
+                                        <b>Confirmation key: </b>
+                                        <span t-field="doc.name" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <b>Form of Payment: <span
+                                        t-esc="doc.l10n_mx_edi_payment_method_id.code"
+                                    /> - </b>
+                                        <span t-esc="doc.l10n_mx_edi_payment_method_id.name" />
+                                    </td>
+                                    <td>
+                                        <b>Payment method: </b>
+                                        <span t-esc="doc.l10n_mx_edi_payment_policy" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table style="margin-top:10px; width: 100%;">
+                            <th
+                        style="background-color: #dedede; text-align:center; font-size:20px; font-style: italic;"
+                        colspan="3"
+                    >OBSERVATIONS</th>
+                        </table>
+
+                        <table style="margin-top:10px; width: 100%;">
+                            <!--  -->
+                            <thead>
+                                <th
+                            style="background-color: #dedede; text-align:center; font-size:20px; font-style: italic;"
+                            colspan="8"
+                        >VOUCHER ITEMS</th>
+                            </thead>
+                            <thead>
+                                <tr>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Identification No.</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Quantity</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Unit key</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Unit</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Description</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Unit value</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Import</b>
+                                    </th>
+                                    <th
+                                class="text-center"
+                                style="padding-top: 10px; padding-bottom: 10px; border:1px solid;"
+                            >
+                                        <b>Discount</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="general_data_tbody">
+                                <!-- Lines associated -->
+                                <t t-set="final_subtotal" t-value="0" />
+                                <t t-set="final_discount" t-value="0" />
+                                <t t-set="final_taxes" t-value="0" />
+                                <t t-as="l" t-foreach="doc.invoice_line_ids">
+                                    <tr>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.product_id.code" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="'%i' %l.quantity" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.product_id.uom_id.unspsc_code_id.code" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.product_id.uom_id.unspsc_code_id.name" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.name" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.price_unit" />
+                                        </td>
+                                        <td class="text-right" style="border:1px solid; padding-right: 5px">
+                                            <t t-set="import_unit" t-value="l.price_unit * l.quantity" />
+                                            <span t-esc="import_unit" />
+                                            <t t-set="final_subtotal" t-value="final_subtotal + import_unit" />
+                                        </td>
+                                        <td class="text-right" style="border:1px solid; padding-right: 5px">
+                                            <t t-set="disc_unit" t-value="import_unit * (l.discount/100)" />
+                                            <span t-esc="'%.2f'% disc_unit" />
+                                            <t t-set="final_discount" t-value="final_discount + disc_unit" />
+                                        </td>
+                                    </tr>
+
+                                    <tr style="background-color: #dedede;">
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            TRANSFERRED TAX
+                                        </th>
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            Base
+                                        </th>
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            Tax
+                                        </th>
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            Factor type
+                                        </th>
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            Fee
+                                        </th>
+                                        <th style="border:1px solid; padding-left: 5px">
+                                            Import
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <td />
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <t t-set="val_unit" t-value="import_unit - disc_unit" />
+                                            <span t-esc="'%.2f'% val_unit" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.tax_ids['description']" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.tax_ids['l10n_mx_tax_type']" />
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <span t-esc="l.tax_ids['amount']" /> %
+                                        </td>
+                                        <td style="border:1px solid; padding-left: 5px">
+                                            <t
+                                        t-set="tax_import_unit"
+                                        t-value="(l.tax_ids['amount']/100) * val_unit"
+                                    />
+                                            <span t-esc="'%.2f'% tax_import_unit" />
+                                            <t t-set="final_taxes" t-value="final_taxes + tax_import_unit" />
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <table style="width:100%;margin-top:20px;">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" style="border-left:1px solid;width:60%;">
+                                        <b>Total amount with letter</b>
+                                    </td>
+                                    <td style="text-align:right;border-left:1px solid;">
+                                        Subtotal:
+                                    </td>
+                                    <td style="text-align:right;padding-right: 5px;border-right:1px solid;">
+                                        <span t-esc="doc.currency_id.symbol" />
+                                        <span t-esc="final_subtotal" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                class="text-center"
+                                style="border-left:1px solid;border-bottom:1px solid;width:60%;"
+                            >
+                                        <span t-esc="doc.company_id.currency_id.amount_to_text(doc.amount_total)" />
+
+                                    </td>
+                                    <td style="text-align:right;border-left:1px solid;">
+                                        Discount:
+                                    </td>
+                                    <td style="text-align:right; padding-right:5px;border-right:1px solid;">
+                                        <span t-esc="doc.currency_id.symbol" />
+                                        <span t-esc="'%.2f'% final_discount" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td />
+                                    <td style="text-align:right;border-left:1px solid;">
+                                        Total Taxes Transferred:
+                                    </td>
+                                    <td style="text-align:right;padding-right:5px;border-right:1px solid;">
+                                        <span t-esc="doc.currency_id.symbol" />
+                                        <span t-esc="'%.2f'% final_taxes" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td />
+                                    <td style="text-align:right;border-left:1px solid;border-bottom:1px solid;">
+                                        <b>Total: </b>
+                                    </td>
+                                    <td
+                                style="text-align:right;padding-right:5px;border-right:1px solid;border-bottom:1px solid;"
+                            >
+                                        <span t-esc="doc.currency_id.symbol" />
+                                        <span t-esc="'%.2f'% doc.amount_total" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row border-bottom mt-3 pt-2 pb-3" id='complement'>
+                            <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
+                                <img
+                            alt="Barcode"
+                            t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(
+                                    'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(
+                                        re=cfdi_vals.get('supplier_rfc'), rr=cfdi_vals.get('customer_rfc'), tt=0.00, id=cfdi_vals.get('uuid'))
+                                        + '&amp;fe=%s' % quote_plus(cfdi_vals['sello'][-8:], 'utf-8', 'strict', '=/').replace('%2B', '+'))"
+                        />
+                            </div>
+                            <div class="complement-details col-9">
+                                <div class="digital-stamp">
+                                    <span>Digital stamp of the emitter</span>
+                                </div>
+                                <div class="digital-stamp-content">
+                                    <span t-esc="cfdi_vals.get('sello')" />
+                                </div>
+                                <div class="digital-stamp">
+                                    <span>Digital stamp SAT</span>
+                                </div>
+                                <div class="digital-stamp-content">
+                                    <span t-esc="cfdi_vals.get('sello_sat')" />
+                                </div>
+                                <div class="digital-stamp">
+                                    <span>Original chain complement of digital certification SAT</span>
+                                </div>
+                                <div class="digital-stamp-content">
+                                    <span class="nowrap" t-esc="cfdi_vals.get('cadena')" />
+                                </div>
+                                <div class="digital-stamp">
+                                    <span>Extra Info</span>
+                                </div>
+                                <div class="digital-stamp-content">
+                                    <span>Emitter certificate:</span> <span
+                                t-esc="cfdi_vals.get('certificate_number')"
+                            />
+                                    <span> | SAT Certificate:</span> <span
+                                t-esc="cfdi_vals.get('certificate_sat_number')"
+                            />
+                                    <span> | Expedition place:</span> <span t-esc="cfdi_vals.get('expedition')" />
+                                    <span> | Fiscal Regime:</span><span t-esc="cfdi_vals.get('fiscal_regime')" />
+                                    <span> | Emission Date:</span> <span t-esc="cfdi_vals.get('emission_date_str')" />
+                                    <span> | Certification Date:</span> <span t-esc="cfdi_vals.get('stamp_date')" />
+                                    <span> | Fiscal Folio:</span> <span t-esc="cfdi_vals.get('uuid')" />
+                                </div>
+                                <div class="digital-stamp-content text-center">
+                                    <strong>This document is a printed representation of a CFDI</strong>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                </div>
+    </template>
+</odoo>

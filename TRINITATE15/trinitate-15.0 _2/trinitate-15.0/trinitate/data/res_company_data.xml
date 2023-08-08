@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record id="data_res_partner_invoice_address_trinitate" model="res.partner">
+        <field name="type">invoice</field>
+        <field name="parent_id" ref="base.main_partner" />
+        <field name="street">EST FFCC LA TRINIDAD</field>
+        <field name="street2">LOS LOPEZ</field>
+        <field name="city">León</field>
+        <field name="zip">37680</field>
+        <field name="phone">4773948003</field>
+        <field name="email">contabilidad@trinitate.mx</field>
+        <field name="state_id" ref="base.state_mx_gto" />
+        <field name="country_id" ref="base.mx" />
+    </record>
+
+    <record id="base.main_company" model="res.company">
+        <field name="name">CERAMISTAS UNIDOS SA DE CV</field>
+        <field name="street">EST FFCC LA TRINIDAD</field>
+        <field name="street2">LOS LOPEZ</field>
+        <field name="zip">37680</field>
+        <field name="city">León</field>
+        <field name="phone">4773948003</field>
+        <field name="vat">CUN991015D26</field>
+        <field name="email">contabilidad@trinitate.mx</field>
+        <field name="website">www.trinitate.mx</field>
+        <field name="currency_id" ref="base.MXN" />
+        <field name="state_id" ref="base.state_mx_gto" />
+        <field name="country_id" ref="base.mx" />
+        <field name="logo" type="base64" file="trinitate/static/img/logo.png" />
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+</odoo>

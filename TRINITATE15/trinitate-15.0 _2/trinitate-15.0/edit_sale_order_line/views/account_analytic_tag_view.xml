@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!--inicio de vista de arbol-->
+        <record model="ir.ui.view" id="view_account_analytic_tag_tree">
+            <field name="name">account.analytic.tag.tree</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="product_tag"/>
+                </tree>
+            </field>
+        </record>
+        <!-- fin de vista de arbol-->
+        <!--inicio de vista de formulario-->
+        <record model="ir.ui.view" id="view_account_analytic_tag_form">
+            <field name="name">account.analytic.tag.form</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="product_tag"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--fin de vista de formulario-->
+        <!--inicio vista grafica -->
+        <record id="account_analytic_tag_view_graph" model="ir.ui.view">
+            <field name="name">account_analytic_tag.view.graph</field>
+            <field name="model">account_analytic_tag</field>
+            <field name="arch" type="xml">
+                <graph string="" type="bar">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="product_tag" />
+                </graph>
+            </field>
+        </record>
+        <!--fin de vista grafica -->
+        <!--boton de accion-->
+        <record model="ir.actions.act_window" id="action_account_analytic_tag_tree">
+            <field name="name">Account Analytic Tags</field>
+            <field name="res_model">account.analytic.tag</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+        <!-- Definición del menú para acceder a la vista de árbol -->
+        <menuitem id="menu_account_analytic_tags" name="Account Analytic Tags" parent="base.menu_reporting" sequence="20"/>
+        <menuitem id="menu_account_analytic_tags_tree" name="Tags" parent="menu_account_analytic_tags" action="action_account_analytic_tag_tree"/>
+    </data>
+</odoo>

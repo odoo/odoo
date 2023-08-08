@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="pending_transfers_view_tree" model="ir.ui.view">
+        <field name="name">view pending transfers tree</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <header>
+                    <button string="Check Availability" name="action_assign" type="object" class="oe_highlight" />
+                    <button string="Validate" name="button_validate" type="object" />
+                    <button string="Set quantities" name="action_set_quantities_to_reservation" type="object" />
+                    <button string="Unreserve" name="do_unreserve" type="object" />
+                    <button string="Cancel" name="action_cancel" type="object" />
+                </header>
+                <field name="name" optional="show" />
+                <field name="product_id" optional="show" />
+                <field name="location_id" optional="show" />
+                <field name="location_dest_id" optional="show" />
+                <field name="partner_id" optional="show" />
+                <field name="scheduled_date" optional="show" />
+                <field name="origin" optional="show" />
+                <field name="analytic_account_id" optional="hide" />
+                <field name="analytic_tag_ids" widget="many2manytags" optional="hide" />
+                <field
+                    name="state"
+                    decoration-success="state =='assigned'"
+                    decoration-warning="state in ('waiting','confirmed')"
+                    optional="show"
+                    widget="badge"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="report_pending_transfers_view_search" model="ir.ui.view">
+        <field name="name">report.pending.transfers.view.search</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <search string="">
+                <filter
+                    name="onlypendings"
+                    string="Pendings"
+                    domain="[('location_id', '=', 8),('location_dest_id','=',17)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_report_pending_transfers" model="ir.actions.act_window">
+        <field name="name">Pending Transfers</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_id" ref="pending_transfers_view_tree" />
+        <field name="search_view_id" ref="report_pending_transfers_view_search" />
+        <field name="context">{'search_default_onlypendings':1}</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('state','not in',('draft','cancel','done'))]</field>
+    </record>
+
+
+
+    <menuitem
+        id="menu_repo_pending_transfers"
+        name="Pending transfers"
+        parent="mrp.menu_mrp_reporting"
+        action="action_report_pending_transfers"
+        sequence="10"
+    />
+
+</odoo>

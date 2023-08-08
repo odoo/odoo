@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model='ir.ui.view' id='sale_order_report_tree'>
+        <field name='name'>sale_order_report.tree</field>
+        <field name='model'>report_sale_order</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name="date_account_move_line" />
+                <field name="date_order" />
+                <field name="order_id" />
+                <field name="operating_unit_id" string="U. Operative" optional="show" />
+                <field name="user_id" optional="show" />
+                <field name="create_date" optional="show" />
+                <field name="partner_id" />
+                <field name="invoice_name" />
+                <field name="invoice_date" />
+                <field name="product_id" />
+                <field name="product_uom_qty" sum="Total quantity" />
+                <field name="qty_delivered" sum="Total delivered" />
+                <field name="product_uom" />
+                <field name="partial" />
+                <field name="street_name" optional="show" />
+                <field name="l10n_mx_edi_colony" optional="show" />
+                <field name="city_id" optional="show" />
+                <field name="state_id" optional="show" />
+                <field name="zip" optional="show" />
+                <field name="country_id" optional="show" />
+                <field name="purchase_price_unit" string="costo por producto" optional="show" />
+                <field name="quantity" sum="Total quantity" />
+                <field name="price_total_invoice" sum="Total price_total_invoice" />
+                <field name="purchase_cost" string="coste" />
+                <field
+                    name="utility"
+                    groups="report_sale_order_trinitate.res_groups_can_view_own_fields_compute"
+                    sum="Total utility"
+                />
+                <field
+                    name="estimated_commission"
+                    groups="report_sale_order_trinitate.res_groups_can_view_own_fields_compute"
+                    sum="Total comission"
+                />
+                <field
+                    name="margin"
+                    widget="percentage"
+                    groups="report_sale_order_trinitate.res_groups_can_view_own_fields_compute"
+                    sum="Total margin"
+                />
+            </tree>
+        </field>
+    </record>
+    <record id="view_sale_order_report_filter" model="ir.ui.view">
+        <field name="name">report_sale_order.search</field>
+        <field name="model">report_sale_order</field>
+        <field name="arch" type="xml">
+            <search string="Order Groups">
+                <field name="operating_unit_id" />
+                <filter name="vendor_group" context="{'group_by':'user_id'}" string="Vendor" />
+                <filter name="ref_group" context="{'group_by':'order_id'}" string="Pedido" />
+            </search>
+        </field>
+    </record>
+</odoo>

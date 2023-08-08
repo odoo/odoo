@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_analytic_tag_trinitate" model="ir.ui.view">
+        <field name="name">account.analytic.tag.trinitateform</field>
+        <field name="model">account.analytic.tag</field>
+        <field name='inherit_id' ref='analytic.account_analytic_tag_form_view' />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="code" />
+                <field name="prouct_tags_ids" /> <!-- linea creada isai -->
+                <field name="name" /> <!-- linea creada isai -->
+            </field>
+        </field>
+    </record>
+</odoo>

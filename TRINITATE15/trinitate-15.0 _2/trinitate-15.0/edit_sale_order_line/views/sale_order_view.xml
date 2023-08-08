@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- inicio de vista de lista-->
+    <record id="model_name_view_tree" model="ir.ui.view">    
+        <field name="name">account.analytic.tag..tree</field>
+        <field name="model">account.analytic.tag.</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="code" />
+                <field name="name" />
+                <field name="product_tag" />
+            </tree>
+        </field>
+    </record>
+    <!-- fin de vista de arbol-->
+    <!-- inicio de vista de formulario-->
+    <record id="model_name_view_form" model="ir.ui.view">
+        <field name="name">account.analytic.tag.form</field>
+        <field name="model">account.analytic.tag.</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="code" />    
+                        <field name="name" />
+                        <field name="product_tag" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- fin de vista de formulario-->
+    <record id="sale_order_form_trinitate" model="ir.ui.view">
+        <field name="name">sale.order.form.trinitate</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <field name="can_modify" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('can_modify','!=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- inicia vista de graficos-->
+    <record id="account_analytic_tag_view_graph" model="ir.ui.view">
+        <field name="name">account_analytic_tag.view.graph</field>
+        <field name="model">account_analytic_tag</field>
+        <field name="arch" type="xml">
+            <graph string="" type="bar">
+                <field name="code" />
+                <field name="name" />
+                <field name="product_tag" />
+            </graph>
+        </field>
+    </record>
+    <!-- fin de vista de graficos-->
+    <!-- inicio de ventana de accion-->
+    <record id="overdue_reminder_result_action" model="ir.actions.act_window">
+        <field name="name">Invoice Reminder Results</field>
+        <field name="res_model">overdue.reminder.result</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+    <!--fin de ventana de accion-->
+</odoo>
