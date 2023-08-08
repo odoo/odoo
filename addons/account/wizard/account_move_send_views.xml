@@ -17,6 +17,16 @@
                 <field name="send_mail_readonly" invisible="1"/>
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
+                <field name="mail_partner_ids" widget="many2many_tags_email" class="d-none" context="{'force_email': True}"/>
+
+                <!-- Warnings -->
+                <div name="warnings">
+                    <div class="alert alert-warning"
+                        role="alert"
+                        attrs="{'invisible': [('send_mail_warning_message', '=', False)]}">
+                        <field name="send_mail_warning_message"/>
+                    </div>
+                </div>
 
                 <!-- Options -->
                 <div name="options" class="row">
@@ -31,18 +41,14 @@
                             <field name="checkbox_send_mail"
                                 attrs="{'readonly': [('send_mail_readonly', '=', True)]}"/>
                             <b><label for="checkbox_send_mail"/></b>
+                            <i class="fa fa-question-circle ml4"
+                                role="img"
+                                aria-label="Warning"
+                                title="The email address is unknown on the partner"
+                                attrs="{'invisible': [('send_mail_readonly', '=', False)]}"/>
                         </div>
                     </div>
                     <div name="advanced_options" class="col-3"/>
-                </div>
-
-                <!-- Warnings -->
-                <div name="warnings">
-                    <div class="alert alert-warning"
-                        role="alert"
-                        attrs="{'invisible': [('send_mail_warning_message', '=', False)]}">
-                        <field name="send_mail_warning_message"/>
-                    </div>
                 </div>
 
                 <!-- Mail -->
