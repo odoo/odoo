@@ -81,6 +81,9 @@ export function setRecurringAnimationFrame(callback) {
  * Creates a version of the function where only the last call between two
  * animation frames is executed before the browser's next repaint. This
  * effectively throttles the function to the display's refresh rate.
+ * Note that the throttled function can be any callback. It is not
+ * specifically an event handler, no assumption is made about its
+ * signature.
  * NB: The first call is always called immediately (leading edge).
  *
  * @template {Function} T
