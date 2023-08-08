@@ -73,98 +73,48 @@ class TestMassMailingServer(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.addons.mass_mailing.models.mailing')
-    def test_mass_mailing_server_batch(self):
+    def test_mass_mailing_server_find(self):
         """Test that the right mail server is chosen to send the mailing.
 
         Test also the envelop and the SMTP headers.
         """
-        # Test sending mailing in batch
         mailings = self.env['mailing.mailing'].create([{
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'specific_user@test.mycompany.com',
-            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.optout'),
         }, {
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'unknown_name@test.mycompany.com',
-            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
-        }])
-        with self.mock_smtplib_connection():
-            mailings.action_send_mail()
-        self.assertEqual(self.find_mail_server_mocked.call_count, 2, 'Must be called only once per mail from')
-
-        self.assert_email_sent_smtp(
-            smtp_from='specific_user@test.mycompany.com',
-            message_from='specific_user@test.mycompany.com',
-            from_filter=self.server_user.from_filter,
-            emails_count=8,
-        )
-
-        self.assert_email_sent_smtp(
-            # Must use the bounce address here because the mail server
-            # is configured for the entire domain "test.mycompany.com"
-            smtp_from=lambda x: 'bounce' in x,
-            message_from='unknown_name@test.mycompany.com',
-            from_filter=self.server_domain.from_filter,
-            emails_count=8,
-        )
-
-    @users('user_marketing')
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.addons.mass_mailing.models.mailing')
-    def test_mass_mailing_server_default(self):
-        # We do not have a mail server for this address email, so fall back to the
-        # "notifications@domain" email.
-        mailings = self.env['mailing.mailing'].create([{
-            'subject': 'Mailing',
-            'body_html': 'Body for <t t-out="object.name" />',
-            'email_from': '"Testing" <unknow_email@unknow_domain.com>',
-            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
-        }])
-
-        with self.mock_smtplib_connection():
-            mailings.action_send_mail()
-
-        self.assertEqual(self.find_mail_server_mocked.call_count, 1)
-        self.assert_email_sent_smtp(
-            smtp_from='notifications@test.mycompany.com',
-            message_from='"Testing" <notifications@test.mycompany.com>',
-            from_filter=self.server_notification.from_filter,
-            emails_count=8,
-        )
-
-        self.assertEqual(self.find_mail_server_mocked.call_count, 1, 'Must be called only once')
-
-    @users('user_marketing')
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.addons.mass_mailing.models.mailing')
-    def test_mass_mailing_server_forced(self):
-        # We force a mail server on one mailing
-        mailings = self.env['mailing.mailing'].create([{
-            'subject': 'Mailing',
-            'body_html': 'Body for <t t-out="object.name" />',
-            'email_from': self.server_user.from_filter,
-            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.optout'),
         }, {
             'subject': 'Mailing',
             'body_html': 'Body for <t t-out="object.name" />',
+            'email_from': '"Testing" <unknow_email@unknow_domain.com>',
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.optout'),
+        }, {
+            'subject': 'Mailing Forced',
+            'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'unknow_email@unknow_domain.com',
-            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout').id,
+            'mailing_model_id': self.env['ir.model']._get_id('mailing.test.optout'),
             'mail_server_id': self.server_notification.id,
         }])
         with self.mock_smtplib_connection():
             mailings.action_send_mail()
-        self.assertEqual(self.find_mail_server_mocked.call_count, 1, 'Must not be called when mail server is forced')
+        self.assertEqual(self.find_mail_server_mocked.call_count, 3, 'Must be called only once per mail from except when forced')
 
-        self.assert_email_sent_smtp(
-            smtp_from='specific_user@test.mycompany.com',
-            message_from='specific_user@test.mycompany.com',
-            from_filter=self.server_user.from_filter,
-            emails_count=8,
-        )
-
-        self.assert_email_sent_smtp(
-            smtp_from='unknow_email@unknow_domain.com',
-            message_from='unknow_email@unknow_domain.com',
-            from_filter=self.server_notification.from_filter,
+        for (expected_smtp_from, expected_msg_from, expected_from_filter) in [
+            ('specific_user@test.mycompany.com', 'specific_user@test.mycompany.com', self.server_user.from_filter),
+            (f'{self.alias_bounce}@{self.alias_domain}', 'unknown_name@test.mycompany.com', self.server_domain.from_filter),
+            # We do not have a mail server for this address email, so fall back to the "notifications@domain" email.
+            ('notifications@test.mycompany.com', '"Testing" <notifications@test.mycompany.com>', self.server_notification.from_filter),
+            # forced sever
+            ('unknow_email@unknow_domain.com', 'unknow_email@unknow_domain.com', self.server_notification.from_filter),
+        ]:
+            self.assertSMTPEmailsSent(
+            smtp_from=expected_smtp_from,
+            message_from=expected_msg_from,
+            from_filter=expected_from_filter,
             emails_count=8,
         )

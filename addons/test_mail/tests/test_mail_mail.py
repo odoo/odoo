@@ -28,12 +28,6 @@ class TestMailMail(MailCommon):
         super(TestMailMail, cls).setUpClass()
         cls._init_mail_servers()
 
-        cls.server_domain_2 = cls.env['ir.mail_server'].create({
-            'name': 'Server 2',
-            'smtp_host': 'test_2.com',
-            'from_filter': 'test_2.com',
-        })
-
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
@@ -660,6 +654,20 @@ class TestMailMail(MailCommon):
 
             self.send_email_mocked.side_effect = _send_current
 
+@tagged('mail_mail', 'mail_server')
+class TestMailMailServer(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._init_mail_servers()
+
+        cls.server_domain_2 = cls.env['ir.mail_server'].create({
+            'from_filter': 'test_2.com',
+            'name': 'Server 2',
+            'smtp_host': 'test_2.com',
+        })
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_server(self):
         """Test that the mails are send in batch.
@@ -722,13 +730,13 @@ class TestMailMail(MailCommon):
             any_order=True,
         )
 
-        self.assert_email_sent_smtp(message_from=f'"test" <notifications@{self.alias_domain}>',
-                                    emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assert_email_sent_smtp(message_from=f'"test_2" <notifications@{self.alias_domain}>',
-                                    emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
-        self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
-        self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
+        self.assertSMTPEmailsSent(message_from=f'"test" <notifications@{self.alias_domain}>',
+                                  emails_count=5, from_filter=self.server_notification.from_filter)
+        self.assertSMTPEmailsSent(message_from=f'"test_2" <notifications@{self.alias_domain}>',
+                                  emails_count=5, from_filter=self.server_notification.from_filter)
+        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
+        self.assertSMTPEmailsSent(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
+        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
 
 @tagged('mail_mail')
