@@ -110,8 +110,8 @@
                             <group>
                                 <field name="free_member"/>
                                 <label for="membership_state"/>
-                                <div>
-                                    <field name="membership_state" class="oe_inline"/>
+                                <div class="d-flex align-items-center justify-content-start gap-3">
+                                    <field name="membership_state" class="oe_inline mb-0"/>
                                     <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership"
                                         attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
                                 </div>
