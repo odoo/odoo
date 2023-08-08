@@ -354,7 +354,7 @@ class MockSmtplibCase:
             self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
         return smtp_session.messages.pop()
 
-    def assert_email_sent_smtp(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
+    def assertSMTPEmailsSent(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
         """Check that the given email has been sent.
 
         If one of the parameter is None, it's just ignored and not used to retrieve the email.
@@ -369,22 +369,25 @@ class MockSmtplibCase:
         """
         matching_emails = filter(
             lambda email:
-                (smtp_from is None or (
-                    smtp_from(email['smtp_from'])
-                    if callable(smtp_from)
-                    else smtp_from == email['smtp_from'])
-                 )
+                (smtp_from is None or smtp_from == email['smtp_from'])
                 and (smtp_to_list is None or smtp_to_list == email['smtp_to_list'])
                 and (message_from is None or 'From: %s' % message_from in email['message'])
                 and (from_filter is None or from_filter == email['from_filter']),
             self.emails,
         )
 
+        debug_info = ''
         matching_emails_count = len(list(matching_emails))
-
-        self.assertTrue(
-            matching_emails_count == emails_count,
-            msg='Emails not sent, %i emails match the condition but %i are expected' % (matching_emails_count, emails_count),
+        if matching_emails_count != emails_count:
+            debug_info = '\n'.join(
+                f"SMTP-From: {email['smtp_from']}, SMTP-To: ({email['smtp_to_list']}) - From_filter {email['from_filter']})"
+                for email in self.emails
+            )
+        self.assertEqual(
+            matching_emails_count, emails_count,
+            msg=f'Incorrect emails sent: {matching_emails_count} found, {emails_count} expected'
+                f'\nConditions: SMTP-From {smtp_from}, SMTP-To {smtp_to_list}, Msg-From {message_from}, From_filter {from_filter}'
+                f'\n{debug_info}'
         )
 
     @classmethod
@@ -392,9 +395,11 @@ class MockSmtplibCase:
         cls.alias_bounce = 'bounce.test'
         cls.alias_domain = 'test.mycompany.com'
         cls.default_from = 'notifications'
+        cls.default_from_filter = False
         cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
         cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', cls.alias_bounce)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
 
     @classmethod
     def _init_mail_servers(cls):
