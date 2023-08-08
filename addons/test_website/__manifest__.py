@@ -25,7 +25,6 @@ models which only purpose is to run tests.""",
     'installable': True,
     'assets': {
         'test_website.test_bundle': [
-            '/web/static/lib/qweb/qweb2.js',
             'http://test.external.link/javascript1.js',
             '/web/static/lib/jquery.ui/jquery-ui.css',
             'http://test.external.link/style1.css',

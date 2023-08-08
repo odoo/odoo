@@ -9,7 +9,6 @@ import { loadJS } from "@web/core/assets";
 
 
 var _t = core._t;
-var qweb = core.qweb;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
 // configuration, currencies (wtf?), user permissions...). They should be
@@ -63,7 +62,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     session_bind: function (origin) {
         this.setup(origin);
-        qweb.default_dict._s = this.origin;
         this.uid = null;
         this.username = null;
         this.user_context= {};
