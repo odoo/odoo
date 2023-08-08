@@ -16,6 +16,7 @@
             <record id="account_tax_report_line_01_vn" model="account.report.line">
                 <field name="name">Purchase of Goods and Services</field>
                 <field name="aggregation_formula">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES.balance + UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_01_01_vn" model="account.report.line">
                         <field name="name">VAT on purchase of goods and services</field>
@@ -102,6 +103,7 @@
             <record id="account_tax_report_line_02_vn" model="account.report.line">
                 <field name="name">Sales of Goods and Services</field>
                 <field name="aggregation_formula">VAT_ON_SALES_OF_GOODS_AND_SERVICES.balance + UNTAXED_SALES_OF_GOODS_AND_SERVICES.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_01_02_vn" model="account.report.line">
                         <field name="name">VAT on sales of goods and services</field>

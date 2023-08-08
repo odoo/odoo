@@ -16,6 +16,7 @@
             <record id="l10n_jp_tax_report_to_pay" model="account.report.line">
                 <field name="name">Total Tax Amount</field>
                 <field name="aggregation_formula">GST_SALE_AMOUNT.balance + GST_PURCHASE_AMOUNT.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_jp_tax_report_to_pay_temp_tx" model="account.report.line">
                         <field name="name">GST Sale Amount</field>
@@ -124,6 +125,7 @@
             <record id="l10n_jp_tax_report_comp_basis" model="account.report.line">
                 <field name="name">Taxable Amount</field>
                 <field name="aggregation_formula">SALE_AMOUNT.balance + PURCHASE_AMOUNT.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_jp_tax_report_comp_basis_sales" model="account.report.line">
                         <field name="name">Sale Amount</field>

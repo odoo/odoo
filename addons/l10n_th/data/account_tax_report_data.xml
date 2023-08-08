@@ -16,6 +16,7 @@
             <record id="tax_report_out_tax_title" model="account.report.line">
                 <field name="name">Output Tax</field>
                 <field name="aggregation_formula">OUTPUTTAX_SALEAMOUNT.balance + OUTPUTTAX_SALE_ZERO.balance + OUTPUTTAX_EXEMPTED.balance + OUTPUTTAX_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_out_tax_sale" model="account.report.line">
                         <field name="name">1. Sales amount</field>
@@ -71,6 +72,7 @@
                 <field name="name">Input Tax</field>
                 <field name="code">INPUTTAX</field>
                 <field name="aggregation_formula">6_PURCHASE_AMOUNT_THAT_IS_ENTITLED_TO_DEDUCTION_OF_INPUT_TAX_FROM_OUTPUT_TAX_IN_TAX_COMPUTATION.balance + INPUTTAX_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_input_tax_purchase_from_out_tax" model="account.report.line">
                         <field name="name">6. Purchase amount that is entitled to deduction of input tax from output tax in tax computation</field>
@@ -99,6 +101,7 @@
             <record id="tax_report_vat" model="account.report.line">
                 <field name="name">Value Added Tax</field>
                 <field name="aggregation_formula">10_EXCESS_TAX_PAYMENT_CARRIED_FORWARD_FROM_LAST_PERIOD.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_vat_payable" model="account.report.line">
                         <field name="name">8. Tax payable (5. minus 7. (if 5. is greater than 7.))</field>
@@ -139,6 +142,7 @@
             <record id="tax_report_net_vat" model="account.report.line">
                 <field name="name">Net Tax</field>
                 <field name="aggregation_formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance + 12_NET_EXCESS_TAX_PAYABLE_IF_10_IS_GREATER_THAN_8_OR_9_PLUS_10.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_net_vat_payable" model="account.report.line">
                         <field name="name">11. Net tax payable (if 8. is greater than 10.)</field>

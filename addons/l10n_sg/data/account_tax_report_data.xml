@@ -16,6 +16,7 @@
             <record id="account_tax_report_line_supplies" model="account.report.line">
                 <field name="name">Supplies</field>
                 <field name="aggregation_formula">BOX1.balance + BOX2.balance + BOX3.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_std_rated_supplies" model="account.report.line">
                         <field name="name">Box 1 - Total value of standard-rated supplies</field>
@@ -59,6 +60,7 @@
             <record id="account_tax_report_line_purchases" model="account.report.line">
                 <field name="name">Purchases</field>
                 <field name="aggregation_formula">BOX_5.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_total_taxable_purchases" model="account.report.line">
                         <field name="name">Box 5 - Total value of taxable purchases</field>
@@ -76,6 +78,7 @@
             <record id="account_tax_report_line_taxes" model="account.report.line">
                 <field name="name">Taxes</field>
                 <field name="aggregation_formula">BOX6.balance + BOX7.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_output_tax_due" model="account.report.line">
                         <field name="name">Box 6 - Output tax due</field>
@@ -108,6 +111,7 @@
             <record id="account_tax_report_line_applicable" model="account.report.line">
                 <field name="name">Applicable to Taxable Persons under Major Exported Scheme / Approved 3rd Party Logistics Company / Other Approved Schemes Only</field>
                 <field name="aggregation_formula">BOX_9.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_applicable_goods_imported_value" model="account.report.line">
                         <field name="name">Box 9 - Total value of goods imported under this scheme</field>
@@ -125,6 +129,7 @@
             <record id="account_tax_report_line_revenues" model="account.report.line">
                 <field name="name">Revenue</field>
                 <field name="aggregation_formula">BOX_13.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_revenues_accounting_period" model="account.report.line">
                         <field name="name">Box 13 - Revenue for the accounting period</field>

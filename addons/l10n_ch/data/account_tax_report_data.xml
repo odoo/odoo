@@ -16,6 +16,7 @@
             <record id="account_tax_report_line_chiffre_af" model="account.report.line">
                 <field name="name">I – TURNOVER</field>
                 <field name="sequence" eval="0"/> <!-- Sequence is force to avoid order problem when updating within the same version. -->
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_chtax_200" model="account.report.line">
                         <field name="name">200 Total amount of agreed or collected consideration incl. from supplies opted for taxation, transfer of supplies acc. to the notification procedure and supplies provided abroad (worldwide turnover)</field>
@@ -108,10 +109,12 @@
                 <field name="name">299 Taxable turnover (Ref. 200 minus Ref. 289)</field>
                 <field name="aggregation_formula">tax_ch_302a.balance + tax_ch_303a.balance + tax_ch_312a.balance + tax_ch_313a.balance + tax_ch_342a.balance + tax_ch_343a.balance</field>
                 <field name="sequence" eval="9"/>
+                <field name="hierarchy_level">0</field>
             </record>
             <record id="account_tax_report_line_calc_impot" model="account.report.line">
                 <field name="name">II - TAX CALCULATION</field>
                 <field name="sequence" eval="10"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_calc_impot_chiffre" model="account.report.line">
                         <field name="name">Taxable turnover</field>
@@ -358,6 +361,7 @@
                 <field name="code">tax_ch_479</field>
                 <field name="aggregation_formula">tax_ch_400.balance + tax_ch_405.balance + tax_ch_410.balance + tax_ch_415.balance + tax_ch_420.balance</field>
                 <field name="sequence" eval="32"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_chtax_400" model="account.report.line">
                         <field name="name">400 Input tax on cost of materials and supplies of services</field>
@@ -424,6 +428,7 @@
             <record id="account_tax_report_line_chtax_solde" model="account.report.line">
                 <field name="name">AMOUNT PAYABLE</field>
                 <field name="sequence" eval="38"/>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_chtax_solde_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -463,6 +468,7 @@
                 <field name="name">OTHER CASH FLOWS (art. 18 para. 2)</field>
                 <field name="aggregation_formula">tax_ch_900.balance + tax_ch_910.balance</field>
                 <field name="sequence" eval="41"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_chtax_900" model="account.report.line">
                         <field name="name">900 Subsidies, tourist funds collected by tourist offices, contributions from cantonal water, sewage or waste funds (art. 18 para. 2 lit. a to c)</field>

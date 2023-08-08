@@ -17,6 +17,7 @@
                 <field name="name">VAT due</field>
                 <field name="code">DUE_VAT</field>
                 <field name="aggregation_formula">DK_SALES_VAT.balance + REVERSE_CHARGE_MERCHANDISES_PURCHASED_OUT_DK.balance + REVERSE_CHARGE_SERVICES_PURCHASED_OUT_DK.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_sales_tax" model="account.report.line">
                         <field name="name">Sales VAT (output VAT)</field>
@@ -57,6 +58,7 @@
                 <field name="name">Deductions</field>
                 <field name="code">VAT_TO_DEDUCED</field>
                 <field name="aggregation_formula">PURCHASE_VAT.balance + OIL_AND_BOTTLED_GAS_TAX.balance + ELECTRICITY_TAX.balance + NATURAL_AND_CITY_GAS_TAX.balance + COAL_TAX.balance + CO2_TAX.balance + WATER_TAX.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_deduction_purchase_tax" model="account.report.line">
                         <field name="name">Purchase VAT (input VAT)</field>
@@ -140,9 +142,11 @@
             <record id="account_tax_report_line_vat_statement" model="account.report.line">
                 <field name="name">VAT declaration (positive amount = pay, negative amount = money owed)</field>
                 <field name="aggregation_formula">DUE_VAT.balance - VAT_TO_DEDUCED.balance</field>
+                <field name="hierarchy_level">0</field>
             </record>
             <record id="account_tax_report_line_additional_info" model="account.report.line">
                 <field name="name">Supplementary information</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_section_a_products" model="account.report.line">
                         <field name="name">Category A: goods (EU)</field>

@@ -16,6 +16,7 @@
             <record id="account_tax_report_line_ostali_porezi" model="account.report.line">
                 <field name="name">Ostali porezi, carine, trošarine i sl.</field>
                 <field name="aggregation_formula">POREZ_NA_POTROSNJU.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_porez" model="account.report.line">
                         <field name="name">Porez na potrošnju</field>
@@ -34,6 +35,7 @@
             <record id="account_tax_report_line_pdv" model="account.report.line">
                 <field name="name">PDV</field>
                 <field name="aggregation_formula">(((koje.balance + (izvozne.balance + isporuke.balance + tuzemne.balance + ostale.balance) + isporuke_po.balance) + (izdani_10.balance + izdani_25.balance)) + (pretporez_10.balance + (0.7 * pretporez_25_70.balance + 0.3 * pretporez_25_30.balance) + placeni_uvozu.balance + placeni_usluge_10.balance + placeni_usluge_25.balance + pretporez_0.balance)) + (((izdani_racuni.balance + izdani_racuni_25.balance) + (pretporez_10_tax.balance + pretporez_25_tax.balance + placeni_uvozu_tax.balance + placeni_usluge_10_tax.balance + placeni_usluge_25_ta.balance))) + ((nepriznati_pretporez_25_other.balance + (0.3 * nepriznati_pretporez_25_30.balance) + (0.7 * nepriznati_pretporez_25_70.balance)) + pretporez_koji.balance + (nepriznati_pretporez_25_tax.balance) + (pretporez_koji_neplaceni.balance + pretporez_koji_neplaceni_25.balance + pretporez_koji_neplaceni_usluge_25.balance))</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_obrazac_pdv" model="account.report.line">
                         <field name="name">OBRAZAC PDV</field>

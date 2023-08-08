@@ -16,6 +16,7 @@
             <record id="account_tax_report_base_impb" model="account.report.line">
                 <field name="name">Taxable income</field>
                 <field name="aggregation_formula">BASE_IMPONIBLE_COMPRAS.balance + BASE_IMPONIBLE_VENTAS.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_base_impb_cmprs" model="account.report.line">
                         <field name="name">Tax Base Purchases</field>
@@ -124,6 +125,7 @@
             <record id="account_tax_report_sldo_iva" model="account.report.line">
                 <field name="name">VAT balance</field>
                 <field name="aggregation_formula">IVA_COMPRAS__PAGADO.balance + UYTAX_040102.balance + IVA_VENTAS__PERCIBIDO.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_iva_cmprs_pagdo" model="account.report.line">
                         <field name="name">VAT Purchases - paid</field>

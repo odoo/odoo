@@ -17,6 +17,7 @@
                 <field name="name">Base - Total C</field>
                 <field name="aggregation_formula">PLTAXC_01_10.balance + PLTAXC_02_11.balance + PLTAXC_03_13.balance + PLTAXC_04_15.balance + PLTAXC_05_17.balance + PLTAXC_06_19.balance + PLTAXC_07_21.balance + PLTAXC_08_22.balance + PLTAXC_09_23.balance + PLTAXC_10_25.balance + PLTAXC_11_27.balance + PLTAXC_12_31.balance</field>
                 <field name="sequence">10</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_kraj_zwolnione" model="account.report.line">
                         <field name="name">Base - Supply of goods/services, domestic, exempt</field>
@@ -215,6 +216,7 @@
                 <field name="name">Base - Total D</field>
                 <field name="aggregation_formula">PLTAXD_02_40.balance + PLTAXD_02_42.balance</field>
                 <field name="sequence">170</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_uslug_s_trwale" model="account.report.line">
                         <field name="name">Basis - Acquisition of goods and services, fixed assets</field>
@@ -247,6 +249,7 @@
                 <field name="code">PLTAX</field>
                 <field name="aggregation_formula" eval="False"/>
                 <field name="sequence">200</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_do_przeniesienia_formula" model="account.report.expression">
                         <field name="label">balance</field>

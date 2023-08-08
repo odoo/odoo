@@ -17,6 +17,7 @@
             <record id="tax_report_montant_op_realisees" model="account.report.line">
                 <field name="name">A. Amount of operations carried out</field>
                 <field name="sequence" eval="1"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_op_imposables_ht" model="account.report.line">
                         <field name="name">Taxable transactions (excl. VAT)</field>
@@ -335,6 +336,7 @@
             <record id="tax_report_decompte_tva" model="account.report.line">
                 <field name="name">B. Settlement of VAT to be paid</field>
                 <field name="sequence" eval="29"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_tva_brute" model="account.report.line">
                         <field name="name">Gross VAT</field>
@@ -1102,6 +1104,7 @@
             <record id="tax_report_credit" model="account.report.line">
                 <field name="name">Credit</field>
                 <field name="sequence" eval="97"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_25" model="account.report.line">
                         <field name="name">25 - VAT credit</field>
@@ -1134,6 +1137,7 @@
             <record id="tax_report_regularisation" model="account.report.line">
                 <field name="name">Regularisation of domestic consumption taxes (TIC)</field>
                 <field name="sequence" eval="100"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_credit_constate" model="account.report.line">
                         <field name="name">Recognised credit</field>
@@ -1314,6 +1318,7 @@
             <record id="tax_report_determination" model="account.report.line">
                 <field name="name">Determining the amount to be paid and/or VAT and/or TIC credits</field>
                 <field name="sequence" eval="121"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_26" model="account.report.line">
                         <field name="name">26 - Repayment of credit requested on form n°3519 attached</field>

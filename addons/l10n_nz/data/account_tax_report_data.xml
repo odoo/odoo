@@ -16,6 +16,7 @@
             <record id="tax_report_sale_and_income" model="account.report.line">
                 <field name="name">Sales and Income</field>
                 <field name="aggregation_formula">NZBOX5.balance + NZBOX6.balance + NZBOX9.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_box5" model="account.report.line">
                         <field name="name">[BOX 5] Total sales and income for the period(including GST and zero-rated Supplies)</field>
@@ -70,6 +71,7 @@
             <record id="tax_report_purchases_and_expenses" model="account.report.line">
                 <field name="name">Purchases and Expenses</field>
                 <field name="aggregation_formula">NZBOX11.balance + NZBOX13.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_box11" model="account.report.line">
                         <field name="name">[BOX 11] Total purchases and expenses(including GST) for which tax invoicing requirements have been met</field>
@@ -109,6 +111,7 @@
             <record id="tax_report_box15" model="account.report.line">
                 <field name="name">[BOX 15] Difference between BOX10 and BOX14</field>
                 <field name="aggregation_formula">NZBOX10.balance - NZBOX14.balance</field>
+                <field name="hierarchy_level">0</field>
             </record>
         </field>
     </record>
