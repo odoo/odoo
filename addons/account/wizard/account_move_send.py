@@ -185,29 +185,21 @@ class AccountMoveSend(models.Model):
         for wizard in self:
             wizard.checkbox_download = wizard.enable_download and wizard.company_id.invoice_is_download
 
-    @api.depends('move_ids')
+    @api.depends('mode', 'checkbox_send_mail')
     def _compute_send_mail_extra_fields(self):
         for wizard in self:
             wizard.enable_send_mail = wizard.mode in ('invoice_single', 'invoice_multi')
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
-            send_mail_readonly = False
+            wizard.send_mail_warning_message = False
 
-            display_messages = []
-            if wizard.enable_send_mail:
-                invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
-                if invoices_without_mail_data:
-                    if wizard.mode == 'invoice_multi':
-                        display_messages.append(_(
-                            "The following invoice(s) will not be sent by email, because the customers don't have email "
-                            "address: "
-                        ))
-                        display_messages.append(", ".join(invoices_without_mail_data.mapped('name')))
-                        send_mail_readonly = True
-                    else:
-                        display_messages.append(_("Please add an email address for your partner"))
+            invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
+            wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
 
-            wizard.send_mail_readonly = send_mail_readonly
-            wizard.send_mail_warning_message = "".join(display_messages) if display_messages else None
+            if wizard.mode == 'invoice_multi' and wizard.checkbox_send_mail and invoices_without_mail_data:
+                wizard.send_mail_warning_message = _(
+                    "The partners on the following invoices have no email address, "
+                    "so those invoices will not be sent: %s"
+                ) % ", ".join(invoices_without_mail_data.mapped('name'))
 
     @api.depends('move_ids')
     def _compute_checkbox_send_mail(self):
@@ -608,7 +600,7 @@ class AccountMoveSend(models.Model):
                 self._generate_invoice_fallback_documents(errors)
 
             # Send mail.
-            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
+            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error') and move.partner_id.email}
             if success:
                 self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
