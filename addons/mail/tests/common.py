@@ -52,10 +52,15 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self.mail_unlink_sent = mail_unlink_sent
         self._init_mail_mock()
 
-        def _ir_mail_server_build_email(model, *args, **kwargs):
-            self._mails.append(kwargs)
-            self._mails_args.append(args)
-            return build_email_origin(model, *args, **kwargs)
+        def _ir_mail_server_build_email(model, email_from, email_to, subject, body, **kwargs):
+            self._mails.append({
+                'email_from': email_from,
+                'email_to': email_to,
+                'subject': subject,
+                'body': body,
+                **kwargs,
+            })
+            return build_email_origin(model, email_from, email_to, subject, body, **kwargs)
 
         def _mail_mail_create(model, *args, **kwargs):
             res = mail_create_origin(model, *args, **kwargs)
@@ -79,39 +84,24 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     def _init_mail_mock(self):
         self._mails = []
-        self._mails_args = []
         self._new_mails = self.env['mail.mail'].sudo()
 
     @classmethod
     def _init_mail_gateway(cls):
+        super()._init_mail_gateway()
         cls.alias_domain = 'test.mycompany.com'
         cls.alias_catchall = 'catchall.test'
         cls.alias_bounce = 'bounce.test'
-        cls.default_from = 'notifications'
+        cls.default_from = 'notifications.test'
+        cls.default_from_filter = False
         cls.env['ir.config_parameter'].set_param('mail.bounce.alias', cls.alias_bounce)
         cls.env['ir.config_parameter'].set_param('mail.catchall.domain', cls.alias_domain)
         cls.env['ir.config_parameter'].set_param('mail.catchall.alias', cls.alias_catchall)
         cls.env['ir.config_parameter'].set_param('mail.default.from', cls.default_from)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
 
         # mailer daemon email preformatting
         cls.mailer_daemon_email = formataddr(('MAILER-DAEMON', '%s@%s' % (cls.alias_bounce, cls.alias_domain)))
-
-    @classmethod
-    def _init_outgoing_gateway(cls):
-        cls.env['ir.mail_server'].search([]).unlink()
-        cls.mail_server_domain, cls.mail_server_global = cls.env['ir.mail_server'].create([
-            {'from_filter': cls.alias_domain,
-             'name': 'Domain Based Server',
-             'smtp_encryption': 'none',
-             'smtp_host': 'smtp_host',
-            },
-            {'from_filter': False,
-             'name': 'No FromFilter Server',
-             'smtp_encryption': 'none',
-             'smtp_host': 'smtp_host',
-            }
-        ])
-        cls.mail_servers = cls.mail_server_domain + cls.mail_server_global
 
     # ------------------------------------------------------------
     # GATEWAY TOOLS
@@ -1106,7 +1096,7 @@ class MailCommon(common.TransactionCase, MailCase):
 
         # give default values for all email aliases and domain
         cls._init_mail_gateway()
-        cls._init_outgoing_gateway()
+        cls._init_mail_servers()
 
         # by default avoid rendering restriction complexity
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', False)
