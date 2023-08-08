@@ -2,6 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderReceipt" owl="1">
+        <t t-set="receipt" t-value="props.order.export_for_printing()"/>
         <div class="pos-receipt d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
             <t t-if="receipt.company.logo">
                 <img class="pos-receipt-logo" t-att-src="receipt.company.logo" alt="Logo"/>
@@ -49,7 +50,7 @@
 
             <!-- Subtotal -->
 
-            <t t-if="!isTaxIncluded">
+            <t t-if="!isTaxIncluded(receipt)">
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
                 <div>Subtotal<span t-esc="env.utils.formatCurrency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
@@ -104,7 +105,7 @@
                     <span t-esc="env.utils.formatCurrency(receipt.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
-            <div t-if="isTaxIncluded" class="pos-receipt-taxes">
+            <div t-if="isTaxIncluded(receipt)" class="pos-receipt-taxes">
                 <span />
                 <span>VAT%</span>
                 <span>VAT</span>
@@ -166,10 +167,10 @@
             </div>
 
             <br/>
-            <t t-if="shippingDate">
+            <t t-if="receipt.shippingDate">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="shippingDate" /></div>
+                    <div><t t-esc="receipt.shippingDate" /></div>
                 </div>
             </t>
 
