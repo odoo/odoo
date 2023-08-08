@@ -31,7 +31,7 @@ export class TodoFormController extends FormController {
             filteredActions.push({
                 description: this.env._t("Convert to Task"),
                 callback: () => {
-                    this.model.actionService.doAction(
+                    this.model.action.doAction(
                         "project_todo.project_task_action_convert_todo_to_task",
                         {
                             props: {
