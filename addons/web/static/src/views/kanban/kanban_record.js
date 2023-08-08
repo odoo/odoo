@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { evalDomain } from "@web/core/domain";
 import { ColorList } from "@web/core/colorlist/colorlist";
+import { evalDomain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -9,6 +9,7 @@ import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 import { Field } from "@web/views/fields/field";
 import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -24,7 +25,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -106,7 +107,13 @@ function getValue(record, fieldName) {
 }
 
 export function getFormattedRecord(record) {
-    const formattedRecord = {};
+    const formattedRecord = {
+        id: {
+            value: record.resId,
+            raw_value: record.resId,
+        },
+    };
+
     for (const fieldName of record.fieldNames) {
         formattedRecord[fieldName] = {
             value: getValue(record, fieldName),
@@ -195,13 +202,21 @@ export class KanbanRecord extends Component {
             });
         }
 
-        this.createRecordAndWidget(this.props);
+        this.dataState = useState({ record: {}, widget: {} });
+        this.createWidget(this.props);
+        onWillUpdateProps(this.createWidget);
+        useRecordObserver((record) =>
+            Object.assign(this.dataState.record, getFormattedRecord(record))
+        );
         this.rootRef = useRef("root");
         onMounted(() => {
             // FIXME: this needs to be changed to an attribute on the root node...
             this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
         });
-        onWillUpdateProps(this.createRecordAndWidget);
+    }
+
+    get record() {
+        return this.dataState.record;
     }
 
     getFormattedValue(fieldId) {
@@ -211,20 +226,18 @@ export class KanbanRecord extends Component {
     }
 
     /**
-     * Assigns both "record" and "widget" properties on the kanban record.
+     * Assigns "widget" properties on the kanban record.
      *
      * @param {Object} props
      */
-    createRecordAndWidget(props) {
+    createWidget(props) {
         const { archInfo, list } = props;
         const { activeActions } = archInfo;
-
-        this.record = getFormattedRecord(this.props.record);
         // Widget
         const deletable =
             activeActions.delete && (!list.groupByField || list.groupByField.type !== "many2many");
         const editable = activeActions.edit;
-        this.widget = {
+        this.dataState.widget = {
             deletable,
             editable,
             isHtmlEmpty,
@@ -357,10 +370,10 @@ export class KanbanRecord extends Component {
             kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
             luxon,
             read_only_mode: this.props.readonly,
-            record: this.record,
+            record: this.dataState.record,
             selection_mode: this.props.forceGlobalClick,
             user_context: this.user.context,
-            widget: this.widget,
+            widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
         };
     }
