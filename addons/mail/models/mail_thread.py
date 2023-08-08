@@ -868,6 +868,8 @@ class MailThread(models.AbstractModel):
                     self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False
 
+        else:
+            self._routing_warn(_('model %s alias does not match or does not exist', model), message_id, route, raise_exception)
         return (model, thread_id, route[2], route[3], route[4])
 
     @api.model
