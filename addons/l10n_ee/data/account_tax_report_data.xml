@@ -16,6 +16,7 @@
             <record id="tax_report_line_1" model="account.report.line">
                 <field name="name">1 - Acts and transactions subject to tax at a rate of 20%</field>
                 <field name="code">l10n_ee_vat_1</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -27,6 +28,7 @@
             <record id="tax_report_line_2" model="account.report.line">
                 <field name="name">2 - Acts and transactions subject to tax at a rate of 9%</field>
                 <field name="code">l10n_ee_vat_2</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_2_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -38,6 +40,7 @@
             <record id="tax_report_line_2_1" model="account.report.line">
                 <field name="name">2¹ - Acts and transactions subject to tax at a rate of 5%</field>
                 <field name="code">l10n_ee_vat_2_1</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_2_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -49,6 +52,7 @@
             <record id="tax_report_line_3" model="account.report.line">
                 <field name="name">3 - Acts and transactions subject to tax at a rate of 0%, incl.</field>
                 <field name="code">l10n_ee_vat_3</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_3_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -142,6 +146,7 @@
             <record id="tax_report_line_4" model="account.report.line">
                 <field name="name">4 - Total amount of value added tax</field>
                 <field name="code">l10n_ee_vat_4</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_4_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -153,6 +158,7 @@
             <record id="tax_report_line_4_1" model="account.report.line">
                 <field name="name">4¹ - Value added tax payable upon the import of the goods</field>
                 <field name="code">l10n_ee_vat_4_1</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_4_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -164,6 +170,7 @@
             <record id="tax_report_line_5" model="account.report.line">
                 <field name="name">5 - Total amount of input VAT subject to deduction pursuant to law, incl.</field>
                 <field name="code">l10n_ee_vat_5</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_5_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -254,6 +261,7 @@
             <record id="tax_report_line_6" model="account.report.line">
                 <field name="name">6 - Intra-Community acquisitions of goods and services received from a taxable person of another Member State, total, incl.</field>
                 <field name="code">l10n_ee_vat_6</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_6_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -283,6 +291,7 @@
             <record id="tax_report_line_7" model="account.report.line">
                 <field name="name">7 - Acquisition of other goods and services subject to VAT, incl.</field>
                 <field name="code">l10n_ee_vat_7</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_7_balance" model="account.report.expression">
                         <field name="label">balance</field>
@@ -312,6 +321,7 @@
             <record id="tax_report_line_8" model="account.report.line">
                 <field name="name">8 - Supply exempt from tax</field>
                 <field name="code">l10n_ee_vat_8</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_8_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -323,6 +333,7 @@
             <record id="tax_report_line_9" model="account.report.line">
                 <field name="name">9 - Supply of immovables, scrap metal, precious metal and metal products subject to value added tax under the special arrangements (VAT Act §41¹) and taxable value of goods to be installed or assembled in another Member State</field>
                 <field name="code">l10n_ee_vat_9</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_9_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -334,6 +345,7 @@
             <record id="tax_report_line_10" model="account.report.line">
                 <field name="name">10 - Adjustments (+)</field>
                 <field name="code">l10n_ee_vat_10</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_10_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -345,6 +357,7 @@
             <record id="tax_report_line_11" model="account.report.line">
                 <field name="name">11 - Adjustments (-)</field>
                 <field name="code">l10n_ee_vat_11</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_11_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -355,6 +368,7 @@
             </record>
             <record id="tax_report_line_12" model="account.report.line">
                 <field name="name">12 - Value added tax payable</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_12_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -366,6 +380,7 @@
             </record>
             <record id="tax_report_line_13" model="account.report.line">
                 <field name="name">13 - Overpaid value added tax</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_13_formula" model="account.report.expression">
                         <field name="label">balance</field>

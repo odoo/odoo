@@ -17,6 +17,7 @@
             <record id="tax_report_title_operations" model="account.report.line">
                 <field name="name">Amount of fee without VAT</field>
                 <field name="sequence" eval="1"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_title_operations_turnover" model="account.report.line">
                         <field name="name">I. Trade of goods and services</field>
@@ -143,6 +144,7 @@
             <record id="tax_report_title_VAT" model="account.report.line">
                 <field name="name">VAT</field>
                 <field name="sequence" eval="13"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_title_VAT_turnover" model="account.report.line">
                         <field name="name">I. Trade of goods and services</field>

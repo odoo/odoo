@@ -17,6 +17,7 @@
                 <field name="name">Block A – Momspliktig försäljning eller uttag exklusive moms</field>
                 <field name="code">se_a</field>
                 <field name="aggregation_formula">se_05.balance + se_06.balance + se_07.balance + se_08.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_05" model="account.report.line">
                         <field name="name">Fält 05 – Momspliktig försäljning som inte ingår i fält 06, 07 eller 08</field>
@@ -68,6 +69,7 @@
                 <field name="name">Block B – Utgående moms på försäljning eller uttag i fält 05–08</field>
                 <field name="code">se_b</field>
                 <field name="aggregation_formula">se_10.balance + se_11.balance + se_12.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_10" model="account.report.line">
                         <field name="name">Fält 10 – Utgående moms 25 %</field>
@@ -108,6 +110,7 @@
                 <field name="name">Block C – Momspliktiga inköp vid omvänd skattskyldighet</field>
                 <field name="code">se_c</field>
                 <field name="aggregation_formula">se_20.balance + se_21.balance + se_22.balance + se_23.balance + se_24.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_20" model="account.report.line">
                         <field name="name">Fält 20 – Inköp av varor från annat EU-land</field>
@@ -170,6 +173,7 @@
                 <field name="name">Block D – Utgående moms på inköp i fält 20–24</field>
                 <field name="code">se_d</field>
                 <field name="aggregation_formula">se_30.balance + se_31.balance + se_32.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_30" model="account.report.line">
                         <field name="name">Fält 30 – Utgående moms 25 %</field>
@@ -210,6 +214,7 @@
                 <field name="name">Block H - moms vid import</field>
                 <field name="code">se_h</field>
                 <field name="aggregation_formula">se_50.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_50" model="account.report.line">
                         <field name="name">Fält 50 - Beskattningsunderlag vid import</field>
@@ -228,6 +233,7 @@
                 <field name="name">Block I - Utgående moms på import i fält 50</field>
                 <field name="code">se_i</field>
                 <field name="aggregation_formula">se_60.balance + se_61.balance + se_62.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_60" model="account.report.line">
                         <field name="name">Fält 60 – Utgående moms 25 %</field>
@@ -268,6 +274,7 @@
                 <field name="name">Block E – Försäljning m.m. som är undantagen från moms</field>
                 <field name="code">se_e</field>
                 <field name="aggregation_formula">se_35.balance + se_36.balance + se_37.balance + se_38.balance + se_39.balance + se_40.balance + se_41.balance + se_42.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_35" model="account.report.line">
                         <field name="name">Fält 35 – Försäljning av varor till ett annat EU-land</field>
@@ -363,6 +370,7 @@
                 <field name="name">Block F – Ingående moms</field>
                 <field name="code">se_f</field>
                 <field name="aggregation_formula">se_48.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_48" model="account.report.line">
                         <field name="name">Fält 48 – Ingående moms att dra av</field>
@@ -381,6 +389,7 @@
                 <field name="name">Block G – Moms att betala eller få tillbaka</field>
                 <field name="code">se_g</field>
                 <field name="aggregation_formula">se_b.balance+se_i.balance+se_d.balance+se_f.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_49" model="account.report.line">
                         <field name="name">Fält 49 – Moms att betala eller få tillbaka</field>
