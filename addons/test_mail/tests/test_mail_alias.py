@@ -117,6 +117,14 @@ class TestMailAlias(TestMailAliasCommon):
                 'alias_model_id': alias_model_id,
                 'alias_name': 'unused.test.alias',
             })
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            self.env['mail.alias'].create([
+                {
+                    'alias_model_id': alias_model_id,
+                    'alias_name': alias_name,
+                }
+                for alias_name in ('new.alias.1', 'new.alias.2', 'new.alias.1')
+            ])
         with self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint(), mute_logger('odoo.sql_db'):
             new_mail_alias.copy({'alias_name': 'unused.test.alias'})
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():

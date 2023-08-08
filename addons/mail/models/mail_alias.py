@@ -194,11 +194,21 @@ class Alias(models.Model):
         :param list sanitized_names: a list of names (considered as sanitized
           and ready to be sent to DB);
         """
+        valid_names = list(filter(None, sanitized_names))
+
+        # list itself should be unique obviously
+        seen = set()
+        dupes = [name for name in valid_names if name in seen or seen.add(name)]
+        if dupes:
+            raise UserError(
+                _('Email aliases %(alias_name)s cannot be used on several records at the same time. Please update records one by one.',
+                  alias_name=', '.join(dupes))
+            )
+
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         valid_domain_aliases = filter(None, (bounce_alias, catchall_alias))
-        valid_names = list(filter(None, sanitized_names))
 
         # matches catchall or bounce alias
         for sanitized_name in sanitized_names:
