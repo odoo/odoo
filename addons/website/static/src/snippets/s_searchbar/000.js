@@ -3,8 +3,7 @@
 import concurrency from '@web/legacy/js/core/concurrency';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
-import { qweb } from "@web/legacy/js/services/core";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToElement, renderToString } from "@web/core/utils/render";
 import { Markup } from '@web/legacy/js/core/utils';
 import { debounce } from '@web/core/utils/timing';
 
@@ -148,7 +147,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             const results = res['results'];
             let template = 'website.s_searchbar.autocomplete';
             const candidate = template + '.' + this.searchType;
-            if (qweb.has_template(candidate)) {
+            if (candidate in renderToString.app.rawTemplates) {
                 template = candidate;
             }
             this.$menu = $(renderToElement(template, {
