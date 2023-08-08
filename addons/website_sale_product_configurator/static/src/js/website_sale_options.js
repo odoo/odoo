@@ -1,10 +1,14 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import wSaleUtils from "@website_sale/js/website_sale_utils";
-import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
+import { ProductConfiguratorDialog } from "@sale_product_configurator/js/product_configurator_dialog/product_configurator_dialog";
 import "@website_sale/js/website_sale";
+import { getCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
+
+import { serializeDateTime } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
+
 
 publicWidget.registry.WebsiteSale.include({
 
@@ -16,23 +20,41 @@ publicWidget.registry.WebsiteSale.include({
         if (this.isBuyNow) {
             return this._submitForm();
         }
-        this.optionalProductsModal = new OptionalProductsModal(this.$form, {
-            rootProduct: this.rootProduct,
-            isWebsite: true,
-            okButtonText: _t('Proceed to Checkout'),
-            cancelButtonText: _t('Continue Shopping'),
-            title: _t('Add to cart'),
-            context: this._getContext(),
-            forceDialog: this.forceDialog,
-        }).open();
+        this.call("dialog", "add", ProductConfiguratorDialog, {
+            productTemplateId: this.rootProduct.product_template_id,
+            ptavIds: this.rootProduct.variant_values,
+            customAttributeValues: this.rootProduct.product_custom_attribute_values.map(
+                data => {
+                    return {
+                        ptavId: data.custom_product_template_attribute_value_id,
+                        value: data.custom_value,
+                    }
+                }
+            ),
+            quantity: this.rootProduct.quantity, //ok
+            currencyId: this.rootProduct.currency_id, //ok
+            soDate: serializeDateTime(DateTime.now()),
+            edit: false,
+            save: async (mainProduct, optionalProducts) => {
+                if (optionalProducts.length) this._trackOptionalProducts(optionalProducts);
 
-        this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));
-        this.optionalProductsModal.on('update_quantity', null, this._onOptionsUpdateQuantity.bind(this));
-        this.optionalProductsModal.on('confirm', null, this._onModalSubmit.bind(this, true));
-        this.optionalProductsModal.on('back', null, this._onModalSubmit.bind(this, false));
-
-        return this.optionalProductsModal.opened();
+                const values = await this.rpc('/shop/cart/update_option', {
+                    main_product: JSON.stringify(mainProduct),
+                    optional_products: JSON.stringify(optionalProducts),
+                    ...this._getOptionalCombinationInfoParam(),
+                });
+                if (goToShop) {
+                    window.location.pathname = "/shop/cart";
+                } else {
+                    wSaleUtils.updateCartNavBar(values);
+                    wSaleUtils.showCartNotification(callService, values.notification_info);
+                }
+                this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
+            },
+            discard: () => {},
+        });
     },
+
     /**
      * Overridden to resolve _opened promise on modal
      * when stayOnPageOption is activated.
@@ -48,76 +70,74 @@ publicWidget.registry.WebsiteSale.include({
         }
         return ret;
     },
-    /**
-     * Update web shop base form quantity
-     * when quantity is updated in the optional products window
-     *
-     * @private
-     * @param {integer} quantity
-     */
-    _onOptionsUpdateQuantity: function (quantity) {
-        var $qtyInput = this.$form
-            .find('.js_main_product input[name="add_qty"]')
-            .first();
 
-        if ($qtyInput.length) {
-            $qtyInput.val(quantity).trigger('change');
-        } else {
-            // This handles the case when the "Select Quantity" customize show
-            // is disabled, and therefore the above selector does not find an
-            // element.
-            // To avoid duplicating all RPC, only trigger the variant change if
-            // it is not already done from the above trigger.
-            this.optionalProductsModal.triggerVariantChange(this.optionalProductsModal.$el);
+    /**
+     * Serialize the product into a format understandable by `sale.order.line`.
+     * TODO VCR
+     * @param {Object} product - The product to serialize.
+     * @return {Object} - The serialized product.
+     */
+    _serializeProduct(product) {
+        // before: [{"product_id":12,"product_template_id":9,"quantity":1,"unique_id":"5","product_custom_attribute_values":[],"no_variant_attribute_values":[]}]
+        // after:  [{"product_tmpl_id":9,"id":12,"description_sale":"160x80cm, with large legs.","display_name":"[FURN_0096] Customizable Desk (Steel, White)","price":750,"quantity":5,"attribute_lines":[{"id":1,"attribute":{"id":1,"name":"Legs","display_type":"radio"},"attribute_values":[{"id":1,"name":"Steel","html_color":false,"is_custom":false,"price_extra":0,"excluded":false},{"id":2,"name":"Aluminium","html_color":false,"is_custom":false,"price_extra":50.4,"excluded":false},{"id":7,"name":"Custom","html_color":false,"is_custom":true,"price_extra":0,"excluded":false}],"selected_attribute_value_ids":[1],"create_variant":"always"},{"id":2,"attribute":{"id":2,"name":"Color","display_type":"color"},"attribute_values":[{"id":3,"name":"White","html_color":"#FFFFFF","is_custom":false,"price_extra":0,"excluded":false},{"id":4,"name":"Black","html_color":"#000000","is_custom":false,"price_extra":0,"excluded":false}],"selected_attribute_value_ids":[3],"create_variant":"always"}],"exclusions":{"1":[],"2":[4],"3":[],"4":[2],"7":[]},"archived_combinations":[],"parent_exclusions":{}}]
+        let serializedProduct = {  //ok
+            product_id: product.id,
+            product_template_id: product.product_tmpl_id,
+            quantity: product.quantity,
         }
+
+        // TODO VCR
+        // handle custom values & no variants
+        let customValuesCommands = [{ operation: "DELETE_ALL" }];
+        for (const ptal of product.attribute_lines) {
+            const selectedCustomPTAV = ptal.attribute_values.find(
+                ptav => ptav.is_custom && ptav.id === ptal.selected_attribute_value_id
+            );
+            if (selectedCustomPTAV) customValuesCommands.push({
+                operation: "CREATE",
+                context: [
+                    {
+                        default_custom_product_template_attribute_value_id: selectedCustomPTAV.id,
+                        default_custom_value: ptal.customValue,
+                    },
+                ],
+            });
+        }
+        serializedProduct.product_custom_attribute_value_ids = {
+            operation: "MULTI",
+            commands: customValuesCommands,
+        };
+
+        let noVariantCommands = [{ operation: "DELETE_ALL" }];
+        const noVariantPTAVIds = product.attribute_lines.filter(
+            ptal => ptal.create_variant === "no_variant"
+        ).map(ptal => { return {id: ptal.selected_attribute_value_id}});
+        if (noVariantPTAVIds.length) noVariantCommands.push({
+            operation: "ADD_M2M",
+            ids: noVariantPTAVIds,
+        });
+        serializedProduct.product_no_variant_attribute_value_ids = {
+            operation: "MULTI",
+            commands: noVariantCommands,
+        };
+
+        return JSON.stringify(serializedProduct);
     },
 
-    /**
-     * Submits the form with additional parameters
-     * - lang
-     * - product_custom_attribute_values: The products custom variant values
-     *
-     * @private
-     * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
-     */
-    _onModalSubmit: function (goToShop) {
-        const mainProduct = this.$('.js_product.in_cart.main_product').children('.product_id');
-        const productTrackingInfo = mainProduct.data('product-tracking-info');
-        if (productTrackingInfo) {
-            const currency = productTrackingInfo['currency'];
-            const productsTrackingInfo = [];
-            this.$('.js_product.in_cart').each((i, el) => {
-                productsTrackingInfo.push({
-                    'item_id': el.getElementsByClassName('product_id')[0].value,
-                    'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
-                    'quantity': el.getElementsByClassName('js_quantity')[0].value,
-                    'currency': currency,
-                    'price': el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent,
-                });
+    _trackOptionalProducts: function (optionalProducts) {
+        // TODO VCR: check that the main product is tracked at the opening of the modal
+        const currency = this.rootProduct.currency_id; // TODO VCR the currency name is not in the session so the tracking can't be done on the name anymore
+        const productsTrackingInfo = [];
+        for(const product in optionalProducts) {
+            productsTrackingInfo.push({
+                'item_id': product.id,
+                'item_name': product.display_name,
+                'quantity': product.quantity,
+                'currency': currency,
+                'price': product.price,
             });
-            if (productsTrackingInfo) {
-                this.$el.trigger('add_to_cart_event', productsTrackingInfo);
-            }
         }
-
-        const callService = this.call.bind(this)
-        this.optionalProductsModal.getAndCreateSelectedProducts()
-            .then((products) => {
-                const productAndOptions = JSON.stringify(products);
-                this.rpc('/shop/cart/update_option', {
-                    product_and_options: productAndOptions,
-                    ...this._getOptionalCombinationInfoParam(),
-                }).then(function (values) {
-                    if (goToShop) {
-                        window.location.pathname = "/shop/cart";
-                    } else {
-                        wSaleUtils.updateCartNavBar(values);
-                        wSaleUtils.showCartNotification(callService, values.notification_info);
-                    }
-                }).then(() => {
-                    this._getCombinationInfo($.Event('click', {target: $("#add_to_cart")}));
-                });
-            });
+        this.$el.trigger('add_to_cart_event', productsTrackingInfo);
     },
 });
 

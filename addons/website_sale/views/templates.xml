@@ -242,6 +242,8 @@
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
+            <input name="product_template_id" t-att-value="product.id" type="hidden"/>
+            <input name="currency_id" t-att-value="website.currency_id.id" type="hidden"/>
             <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
                 <a t-if="product._website_show_quick_add()"
                    href="#" role="button" class="btn btn-primary a-submit" aria-label="Shopping cart" title="Shopping cart">
@@ -1083,6 +1085,7 @@
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
+                                        <input type="hidden" name="currency_id" t-att-value="website.currency_id.id" />
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
                                         <t t-call="website_sale.variants">
                                             <t t-set="ul_class" t-valuef="flex-column" />

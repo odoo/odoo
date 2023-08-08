@@ -726,6 +726,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _updateRootProduct($form, productId) {
         this.rootProduct = {
             product_id: productId,
+            product_template_id: parseInt($form.find('input[name="product_template_id"]').val(), 10),
+            currency_id: parseInt($form.find('input[name="currency_id"]').val(), 10),
             quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
             product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
             variant_values: this.getSelectedVariantValues($form.find('.js_product')),
