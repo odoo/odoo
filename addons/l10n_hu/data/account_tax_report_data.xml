@@ -16,6 +16,7 @@
             <record id="tax_report_alap" model="account.report.line">
                 <field name="name">Tax base</field>
                 <field name="aggregation_formula">BASE_PAYABLE.balance + BASE_RECOVERABLE.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_base_pay" model="account.report.line">
                         <field name="name">Payable</field>
@@ -234,6 +235,7 @@
             <record id="tax_report_fizetndo" model="account.report.line">
                 <field name="name">VAT payable/recoverable</field>
                 <field name="aggregation_formula">VAT_PAYABLE.balance + VAT_RECOVERABLE.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_vat_pay" model="account.report.line">
                         <field name="name">Payable</field>

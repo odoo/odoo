@@ -16,6 +16,7 @@
             <record id="tax_report_icms" model="account.report.line">
                 <field name="name">ICMS</field>
                 <field name="aggregation_formula">TRIBUTADA_INTEGRALMENTE.balance + TRIBUTADA_E_COM_COBRANCA_DO_ICMS_POR_SUBSTITUICAO_TRIBUTARIA.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_icms_tributada" model="account.report.line">
                         <field name="name">Taxed in full</field>
@@ -58,6 +59,7 @@
             <record id="tax_report_icmsst" model="account.report.line">
                 <field name="name">ICMS Subist</field>
                 <field name="aggregation_formula">ICMSST_1.balance + ICMSST_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_icmsst_1" model="account.report.line">
                         <field name="name">ICMSST base</field>
@@ -86,6 +88,7 @@
             <record id="tax_report_irpj" model="account.report.line">
                 <field name="name">IRPJ</field>
                 <field name="aggregation_formula">IRPJ_1.balance + IRPJ_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_irpj_1" model="account.report.line">
                         <field name="name">IRPJ base</field>
@@ -114,6 +117,7 @@
             <record id="tax_report_ir" model="account.report.line">
                 <field name="name">IR</field>
                 <field name="aggregation_formula">IR_1.balance + IR_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_ir_1" model="account.report.line">
                         <field name="name">IR base</field>
@@ -142,6 +146,7 @@
             <record id="tax_report_issqn" model="account.report.line">
                 <field name="name">ISSQN</field>
                 <field name="aggregation_formula">ISSQN_1.balance + ISSQN_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_issqn_1" model="account.report.line">
                         <field name="name">ISSQN base</field>
@@ -170,6 +175,7 @@
             <record id="tax_report_csll" model="account.report.line">
                 <field name="name">CSLL</field>
                 <field name="aggregation_formula">CSLL_1.balance + CSLL_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_csll_1" model="account.report.line">
                         <field name="name">CSLL base</field>
@@ -198,6 +204,7 @@
             <record id="tax_report_cofins" model="account.report.line">
                 <field name="name">COFINS</field>
                 <field name="aggregation_formula">COFINS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_cofins_oper_bas" model="account.report.line">
                         <field name="name">Taxable Transaction with Basic Rate</field>
@@ -233,6 +240,7 @@
             <record id="tax_report_pis" model="account.report.line">
                 <field name="name">PIS</field>
                 <field name="aggregation_formula">PIS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_pis_oper_tri_basica" model="account.report.line">
                         <field name="name">Taxable Transaction with Basic Rate</field>
@@ -269,6 +277,7 @@
                 <field name="name">IPI</field>
                 <field name="code">BRTAX07</field>
                 <field name="aggregation_formula">ENTRADA_COM_RECUPERACAO_DE_CREDITO.balance + ENTRADA_TRIBUTADA_COM_ALIQUOTA_ZERO.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_ipi_extrada_com" model="account.report.line">
                         <field name="name">Purchase with Credit Recovery</field>
@@ -311,6 +320,7 @@
             <record id="tax_report_ii" model="account.report.line">
                 <field name="name">II</field>
                 <field name="aggregation_formula">II_1.balance + II_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_ii_1" model="account.report.line">
                         <field name="name">II base</field>
@@ -339,6 +349,7 @@
             <record id="tax_report_inss" model="account.report.line">
                 <field name="name">INSS</field>
                 <field name="aggregation_formula">INSS_1.balance + INSS_2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_inss_1" model="account.report.line">
                         <field name="name">INSS base</field>

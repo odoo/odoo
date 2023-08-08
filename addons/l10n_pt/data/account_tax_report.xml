@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="trp_base" model="account.report.line">
                 <field name="name">Base</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="trp_base_section_1" model="account.report.line">
                         <field name="name">1 - Transmissions of goods and services on which you paid tax</field>
@@ -157,6 +158,7 @@
             </record>
             <record id="trp_tax_favor_company" model="account.report.line">
                 <field name="name">Tax in favor of the taxable entity</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="trp_tax_favor_company5" model="account.report.line">
                         <field name="name">5 - Tax deductible</field>
@@ -271,6 +273,7 @@
             </record>
             <record id="trp_tax_favor_state" model="account.report.line">
                 <field name="name">Tax in favor of the State</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="trp_tax_favor_state_1" model="account.report.line">
                         <field name="name">1 - Transmissions of goods and services on which you paid tax</field>
@@ -392,6 +395,7 @@
             </record>
             <record id="trp_totais" model="account.report.line">
                 <field name="name">Totals</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="trp_tax_favor_state_total_93" model="account.report.line">
                         <field name="name">[93] Tax to be paid to the State</field>
@@ -419,6 +423,7 @@
             </record>
             <record id="trp_quadro_06A" model="account.report.line">
                 <field name="name">Table 06A</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="trp_quadro_06A_A" model="account.report.line">
                         <field name="name">A - Operations located in Portugal where, as the acquirer, you have paid the VAT due</field>

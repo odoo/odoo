@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="account_tax_report_gstrpt_sale_total" model="account.report.line">
                 <field name="name">GST amounts you owe the Tax Office from sales</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_gstrpt_g1" model="account.report.line">
                         <field name="name">G1: Total Sales (including any GST)</field>
@@ -99,6 +100,7 @@
             </record>
             <record id="account_tax_report_gstrpt_purchase_total" model="account.report.line">
                 <field name="name">GST amounts the Tax Office owes you from purchases</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_gstrpt_g10" model="account.report.line">
                         <field name="name">G10: Capital purchases (including any GST)</field>
@@ -215,6 +217,7 @@
             </record>
             <record id="account_tax_report_gstrpt_summary" model="account.report.line">
                 <field name="name">Summary</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_gstrpt_summary_1a" model="account.report.line">
                         <field name="name">1A: GST on sales</field>
@@ -234,6 +237,7 @@
             </record>
             <record id="account_tax_report_gstrpt_comparison" model="account.report.line">
                 <field name="name">Comparison</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_gstrpt_comparison_worksheet" model="account.report.line">
                         <field name="name">GST from worksheet (G20-G9)</field>

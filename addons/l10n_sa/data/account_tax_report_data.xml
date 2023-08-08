@@ -16,6 +16,7 @@
             <record id="tax_report_line_vat_all_sales_base" model="account.report.line">
                 <field name="name">VAT on Sales and all other Outputs (Base)</field>
                 <field name="aggregation_formula">SA_STD_SALE_B.balance + SA_SPCL_SALE_B.balance + SA_ZERO_SALE_B.balance + SA_EXP_SALE_B.balance + SA_EXM_SALE_B.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_standard_rated_15_base" model="account.report.line">
                         <field name="name">1. Standard Rated 15% (Base)</field>
@@ -81,6 +82,7 @@
             <record id="tax_report_line_vat_all_sales_tax" model="account.report.line">
                 <field name="name">VAT on Sales and all other Outputs (Tax)</field>
                 <field name="aggregation_formula">SA_STD_SALE_T.balance + SA_SPCL_SALE_T.balance + SA_ZERO_SALE_T.balance + SA_EXP_SALE_T.balance + SA_EXM_SALE_T.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_standard_rated_15_tax" model="account.report.line">
                         <field name="name">1. Standard Rated 15% (Tax)</field>
@@ -146,6 +148,7 @@
             <record id="tax_report_line_vat_all_expenses_base" model="account.report.line">
                 <field name="name">VAT on Expenses and all other Inputs (Base)</field>
                 <field name="aggregation_formula">SA_STD_PUR_B.balance + SA_CUST_PUR_B.balance + SA_RCM_PUR_B.balance + SA_ZER_PUR_B.balance + SA_EXM_PUR_B.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_standard_rated_15_purchases_base" model="account.report.line">
                         <field name="name">7. Standard rated 15% Purchases (Base)</field>
@@ -211,6 +214,7 @@
             <record id="tax_report_line_vat_all_expenses_tax" model="account.report.line">
                 <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
                 <field name="aggregation_formula">SA_STD_PUR_T.balance + SA_CUST_PUR_T.balance + SA_RCM_PUR_T.balance + SA_ZER_PUR_T.balance + SA_EXM_PUR_T.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_standard_rated_15_purchases_tax" model="account.report.line">
                         <field name="name">7. Standard rated 15% Purchases (Tax)</field>
@@ -275,6 +279,7 @@
             </record>
             <record id="tax_report_line_net_vat_due" model="account.report.line">
                 <field name="name">Net VAT Due</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_net_vat_due_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -316,6 +321,7 @@
             <record id="tax_report_line_withholding_tax_on_purchased_services_base" model="account.report.line">
                 <field name="name">Withholding Tax on Purchased Services (Base)</field>
                 <field name="aggregation_formula">SA_RENTB.balance + SA_AIRB.balance + SA_SEAB.balance + SA_TELEB.balance + SA_DIVB.balance + SA_CONB.balance + SA_ROLB.balance + SA_INSB.balance + SA_ROYB.balance + SA_MAIB.balance + SA_BRAB.balance + SA_OTHB.balance + SA_MAGB.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_withholding_tax_5_rental_base" model="account.report.line">
                         <field name="name">Withholding Tax 5% (Rental) (Base)</field>
@@ -469,6 +475,7 @@
             <record id="tax_report_line_withholding_tax_on_purchased_services_tax" model="account.report.line">
                 <field name="name">Withholding Tax on Purchased Services (Tax)</field>
                 <field name="aggregation_formula">SA_RENTT.balance + SA_AIRT.balance + SA_SEAT.balance + SA_TELET.balance + SA_DIVT.balance + SA_CONT.balance + SA_ROLT.balance + SA_INST.balance + SA_ROYT.balance + SA_MAIT.balance + SA_BRAT.balance + SA_OTHT.balance + SA_MAGT.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_withholding_tax_5_rental_tax" model="account.report.line">
                         <field name="name">Withholding Tax 5% (Rental) (Tax)</field>

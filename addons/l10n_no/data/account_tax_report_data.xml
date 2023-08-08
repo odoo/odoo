@@ -18,6 +18,7 @@
             <record id="tax_report_line_sales_goods_services_homeland" model="account.report.line">
                 <field name="name">Sales of goods and services in Norway</field>
                 <field name="sequence" eval="1"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_3" model="account.report.line">
                         <field name="name">3 Sales and withdrawals of goods and services (high rate 25%) - base</field>
@@ -120,6 +121,7 @@
             <record id="tax_report_line_sales_goods_services_abroad" model="account.report.line">
                 <field name="name">Sales of goods and services abroad</field>
                 <field name="sequence" eval="10"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_52" model="account.report.line">
                         <field name="name">52 Sales of goods and services abroad exempt from VAT (0%)</field>
@@ -138,6 +140,7 @@
             <record id="tax_report_line_purchases_goods_services_homeland" model="account.report.line">
                 <field name="name">Purchases of goods and services in Norway</field>
                 <field name="sequence" eval="12"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_1" model="account.report.line">
                         <field name="name">1 Purchases of goods and services with right of deduction (high rate 25%)</field>
@@ -180,6 +183,7 @@
             <record id="tax_report_line_purchases_goods_abroad" model="account.report.line">
                 <field name="name">Purchases of goods from abroad (imports)</field>
                 <field name="sequence" eval="16"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_14" model="account.report.line">
                         <field name="name">14 Deduction on purchases of goods from abroad (VAT paid on importation, high rate 25%)</field>
@@ -318,6 +322,7 @@
             <record id="tax_report_line_purchases_services_abroad" model="account.report.line">
                 <field name="name">Purchases of services from abroad (imports)</field>
                 <field name="sequence" eval="28"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_86" model="account.report.line">
                         <field name="name">86 Purchase of services from abroad with right of deduction (high rate 25%) - base</field>
@@ -420,6 +425,7 @@
             <record id="tax_report_line_fish_etc" model="account.report.line">
                 <field name="name">Fish, etc.</field>
                 <field name="sequence" eval="37"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_12" model="account.report.line">
                         <field name="name">12 Purchase of fish and other marine wildlife resources (11.11%)</field>
@@ -462,6 +468,7 @@
             <record id="tax_report_line_emission_and_gold" model="account.report.line">
                 <field name="name">Carbon credits and gold</field>
                 <field name="sequence" eval="41"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_code_51" model="account.report.line">
                         <field name="name">51 Sale of carbon credits and gold to traders (0%)</field>
@@ -528,6 +535,7 @@
             <record id="tax_report_line_sum" model="account.report.line">
                 <field name="name">Sum</field>
                 <field name="sequence" eval="47"/>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_to_be_paid" model="account.report.line">
                         <field name="name">Tax to pay</field>

@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="tax_report_line_parent_line_report_1" model="account.report.line">
                 <field name="name">SUMMARY OF SALES AND OTHER TRANSACTIONS FOR THE REPORTING PERIOD</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_parent_line_report_2" model="account.report.line">
                         <field name="name">Local sales (excluding fixed assets) taxed at a rate different from zero</field>
@@ -417,6 +418,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_48" model="account.report.line">
                 <field name="name">VAT LIQUIDATION IN THE MONTH</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_104_480" model="account.report.line">
                         <field name="name">Total transfers taxed at non-zero cash rate this month(480)</field>
@@ -496,6 +498,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_56" model="account.report.line">
                 <field name="name">SUMMARY OF PURCHASES AND PAYMENTS FOR THE REPORTING PERIOD</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_parent_line_report_57" model="account.report.line">
                         <field name="name">Acquisitions and payments (excluding fixed assets) taxed at a rate different from zero (with the right to tax credits)</field>
@@ -1015,6 +1018,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_113" model="account.report.line">
                 <field name="name">TAX SUMMARY: AGENT FOR THE COLLECTION OF VALUE ADDED TAX</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_104_601" model="account.report.line">
                         <field name="name">Tax incurred (if the difference in fields 499-564 is greater than zero)(601)</field>
@@ -1217,6 +1221,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_133" model="account.report.line">
                 <field name="name">TAX ON FOREIGN EXCHANGE OUTFLOWS FOR PURPOSES OF REFUND TO REGULAR EXPORTERS OF GOODS</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_parent_line_report_134" model="account.report.line">
                         <field name="name">Imports of raw materials, inputs and capital goods that are incorporated in the production processes of goods to be exported</field>
@@ -1249,6 +1254,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_137" model="account.report.line">
                 <field name="name">VALUE ADDED TAX WITHHOLDING AGENT</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_104_721" model="account.report.line">
                         <field name="name">10% withholding(721)</field>
@@ -1383,6 +1389,7 @@
         <field name="line_ids">
             <record id="tax_report_line_parent_line_report_150" model="account.report.line">
                 <field name="name">FOR PAYMENTS MADE TO RESIDENTS AND PERMANENT ESTABLISHMENTS</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_parent_line_report_151" model="account.report.line">
                         <field name="name">In a dependency relationship that exceeds or does not exceed the tax-deductible basis</field>
@@ -2412,6 +2419,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_267" model="account.report.line">
                 <field name="name">FOR PAYMENTS TO NON-RESIDENTS</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_parent_line_report_268" model="account.report.line">
                         <field name="name">Con convenio de doble tributación</field>
@@ -3241,6 +3249,7 @@
             </record>
             <record id="tax_report_line_parent_line_report_364" model="account.report.line">
                 <field name="name">SUBTOTAL FOREIGN OPERATIONS</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_103_487" model="account.report.line">
                         <field name="name">Taxable income(487)</field>

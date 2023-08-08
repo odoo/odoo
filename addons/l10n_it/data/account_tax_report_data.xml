@@ -16,6 +16,7 @@
             <record id="tax_report_line_operazione_imponibile" model="account.report.line">
                 <field name="name">Taxable transaction</field>
                 <field name="code">h1</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_vp2" model="account.report.line">
                         <field name="name">VP2 - Total active transactions</field>
@@ -44,6 +45,7 @@
             <record id="tax_report_line_iva" model="account.report.line">
                 <field name="name">VAT</field>
                 <field name="code">h2</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_vp4" model="account.report.line">
                         <field name="name">VP4 - VAT due</field>
