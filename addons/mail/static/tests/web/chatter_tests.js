@@ -761,3 +761,9 @@ QUnit.test("upload attachment on draft record", async (assert) => {
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
     await waitUntil("button[aria-label='Attach files']:contains(1)");
 });
+
+QUnit.test("Follower count of draft record is set to 0", async (assert) => {
+    const { openView } = await start();
+    await openView({ res_model: "res.partner", views: [[false, "form"]] });
+    assert.containsOnce($, ".o-mail-Followers:contains(0)");
+});

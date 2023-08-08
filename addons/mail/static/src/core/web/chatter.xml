@@ -34,9 +34,9 @@
                     <t t-else="" t-call="mail.Chatter.attachFiles"/>
                     <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
                         <t t-set-slot="toggler">
-                            <i class="fa fa-user-o" role="img"/>
-                            <i t-if="state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <span t-else="" class="o-mail-Followers-counter ps-1" t-esc="state.thread.followersCount"/>
+                            <i class="fa fa-user-o me-1" role="img"/>
+                            <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <span t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
                         </t>
                         <t t-set-slot="default">
                             <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread"/>
