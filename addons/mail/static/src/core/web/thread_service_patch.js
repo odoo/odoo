@@ -13,14 +13,15 @@ import { patch } from "@web/core/utils/patch";
 let nextId = 1;
 
 patch(ThreadService.prototype, {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     setup(env, services) {
         super.setup(env, services);
         this.action = services.action;
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
-        /** @type {import("@mail/core/web/activity_service").ActivityService} */
         this.activityService = services["mail.activity"];
-        /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
         this.chatWindowService = services["mail.chat_window"];
     },
     /**

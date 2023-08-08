@@ -12,6 +12,10 @@ export class PersonaService {
         this.setup(...args);
     }
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     setup(env, services) {
         this.env = env;
         this.rpc = services.rpc;
@@ -84,6 +88,10 @@ export class PersonaService {
 
 export const personaService = {
     dependencies: ["rpc", "mail.store"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new PersonaService(env, services);
     },

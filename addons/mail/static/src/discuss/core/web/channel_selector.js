@@ -23,12 +23,9 @@ export class ChannelSelector extends Component {
 
     setup() {
         this.discussCoreCommonService = useDiscussCoreCommon();
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = useStore();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
-        /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
         this.sequential = useSequential();

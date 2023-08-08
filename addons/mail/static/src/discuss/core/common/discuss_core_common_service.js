@@ -11,24 +11,21 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 
 export class DiscussCoreCommon {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
-        Object.assign(this, {
-            busService: services.bus_service,
-            env,
-            notificationService: services.notification,
-            orm: services.orm,
-            presence: services.presence,
-            rpc: services.rpc,
-        });
-        /** @type {import("@mail/core/common/message_service").MessageService} */
+        this.busService = services.bus_service;
+        this.env = env;
+        this.notificationService = services.notification;
+        this.orm = services.orm;
+        this.presence = services.presence;
+        this.rpc = services.rpc;
         this.messageService = services["mail.message"];
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         this.messagingService = services["mail.messaging"];
-        /** @type {import("@mail/core/common/out_of_focus_service").OutOfFocusService} */
         this.outOfFocusService = services["mail.out_of_focus"];
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
     }
 
@@ -316,6 +313,10 @@ export const discussCoreCommon = {
         "presence",
         "rpc",
     ],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const discussCoreCommon = reactive(new DiscussCoreCommon(env, services));
         discussCoreCommon.setup();
@@ -323,9 +324,6 @@ export const discussCoreCommon = {
     },
 };
 
-/**
- * @returns {DiscussCoreCommon}
- */
 export function useDiscussCoreCommon() {
     return useState(useService("discuss.core.common"));
 }

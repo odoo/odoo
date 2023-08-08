@@ -22,7 +22,6 @@ export class MessageReactionMenu extends Component {
     static template = "mail.MessageReactionMenu";
 
     setup() {
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.root = useRef("root");
         this.store = useStore();

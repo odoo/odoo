@@ -21,7 +21,12 @@ export const notificationPermissionService = {
         }
     },
 
-    async start(env, { notification }) {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
+    async start(env, services) {
+        const notification = services.notification;
         let permission;
         try {
             permission = await browser.navigator?.permissions?.query({

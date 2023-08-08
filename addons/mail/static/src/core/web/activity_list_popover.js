@@ -33,9 +33,7 @@ export class ActivityListPopover extends Component {
         this.orm = useService("orm");
         this.messaging = useMessaging();
         this.user = useService("user");
-        /** @type {import("@mail/core/web/activity_service").ActivityService} */
         this.activity = useService("mail.activity");
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = useStore();
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));

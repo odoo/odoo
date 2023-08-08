@@ -33,9 +33,7 @@ export class Activity extends Component {
 
     setup() {
         this.messaging = useMessaging();
-        /** @type {import("@mail/core/web/activity_service").ActivityService} */
         this.activityService = useService("mail.activity");
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });
         this.popover = usePopover(ActivityMarkAsDone, { position: "right" });

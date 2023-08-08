@@ -6,6 +6,10 @@ import { registry } from "@web/core/registry";
 export class UserSettings {
     id;
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.orm = services.orm;
         this.store = services["mail.store"];
@@ -253,6 +257,10 @@ export class UserSettings {
 
 export const userSettingsService = {
     dependencies: ["orm", "mail.store"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new UserSettings(env, services);
     },

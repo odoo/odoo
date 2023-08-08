@@ -9,12 +9,18 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
 export class Store {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
     constructor(env) {
         this.setup(env);
         this.lastChannelSubscription = "";
         this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
     setup(env) {
         this.env = env;
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
@@ -158,6 +164,10 @@ export class Store {
 
 export const storeService = {
     dependencies: ["bus_service", "ui"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const res = reactive(new Store(env, services));
         onChange(res, "threads", () => res.updateBusSubscription());
