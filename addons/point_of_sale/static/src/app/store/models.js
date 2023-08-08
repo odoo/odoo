@@ -934,7 +934,7 @@ export class Orderline extends PosModel {
         const taxDetails = this.get_tax_details();
         return productTaxes
             .filter((tax) => tax.price_include)
-            .reduce((sum, tax) => sum + taxDetails[tax.id], 0);
+            .reduce((sum, tax) => sum + taxDetails[tax.id].amount, 0);
     }
     _map_tax_fiscal_position(tax, order = false) {
         return this.pos._map_tax_fiscal_position(tax, order);
@@ -2233,7 +2233,7 @@ export class Order extends PosModel {
                     if (!(taxId in groupTaxes)) {
                         groupTaxes[taxId] = 0;
                     }
-                    groupTaxes[taxId] += taxDetails[taxId];
+                    groupTaxes[taxId] += taxDetails[taxId].amount;
                 }
             });
 
