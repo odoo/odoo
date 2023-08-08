@@ -30,11 +30,12 @@ DialogCommand.template = xml`
 
 commandProviderRegistry.add("mail.partner", {
     namespace: "@",
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
     async provide(env, options) {
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         const messaging = env.services["mail.messaging"];
         const threadService = env.services["mail.thread"];
-        /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         const suggestionService = env.services["mail.suggestion"];
         const results = await messaging.searchPartners(options.searchValue);
         return suggestionService
@@ -65,8 +66,10 @@ commandSetupRegistry.add("#", {
 
 commandProviderRegistry.add("discuss.channel", {
     namespace: "#",
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
     async provide(env, options) {
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
         const messaging = env.services["mail.messaging"];
         const threadService = env.services["mail.thread"];
         const domain = [

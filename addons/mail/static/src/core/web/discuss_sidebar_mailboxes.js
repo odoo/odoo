@@ -20,7 +20,6 @@ export class DiscussSidebarMailboxes extends Component {
 
     setup() {
         this.store = useStore();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
     }
 

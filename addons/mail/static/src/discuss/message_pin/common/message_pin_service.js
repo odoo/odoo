@@ -27,26 +27,18 @@ export class MessagePin {
     /** @type {import("@mail/core/common/store_service").Store} */
     storeService;
 
-    constructor(
-        env,
-        {
-            bus_service: busService,
-            dialog: dialogService,
-            "mail.message": messageService,
-            "mail.store": storeService,
-            orm: ormService,
-            rpc: rpcService,
-        }
-    ) {
-        Object.assign(this, {
-            busService,
-            dialogService,
-            env,
-            messageService,
-            ormService,
-            rpcService,
-            storeService,
-        });
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
+    constructor(env, services) {
+        this.env = env;
+        this.busService = services.bus_service;
+        this.dialogService = services.dialog;
+        this.messageService = services["mail.message"];
+        this.ormService = services.orm;
+        this.rpcService = services.rpc;
+        this.storeService = services["mail.store"];
     }
 
     setup() {
@@ -230,6 +222,10 @@ export class MessagePin {
 
 export const messagePinService = {
     dependencies: ["bus_service", "dialog", "mail.message", "mail.store", "orm", "rpc"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const messagePin = reactive(new MessagePin(env, services));
         messagePin.setup();
@@ -239,9 +235,6 @@ export const messagePinService = {
 
 registry.category("services").add("discuss.message.pin", messagePinService);
 
-/**
- * @returns {MessagePin}
- * */
 export function useMessagePinService() {
     return useState(useService("discuss.message.pin"));
 }

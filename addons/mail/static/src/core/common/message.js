@@ -95,11 +95,8 @@ export class Message extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        /** @type {import("@mail/core/common/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = useService("mail.attachment");
         this.user = useService("user");
         this.dialog = useService("dialog");

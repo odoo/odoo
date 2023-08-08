@@ -24,7 +24,6 @@ export class ChannelInvitation extends Component {
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
-        /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
         this.inputRef = useRef("input");
@@ -48,10 +47,12 @@ export class ChannelInvitation extends Component {
     }
 
     async fetchPartnersToInvite() {
-        const results = await this.sequential(() => this.messaging.orm.call("res.partner", "search_for_channel_invite", [
-            this.searchStr,
-            this.props.thread.id,
-        ]));
+        const results = await this.sequential(() =>
+            this.messaging.orm.call("res.partner", "search_for_channel_invite", [
+                this.searchStr,
+                this.props.thread.id,
+            ])
+        );
         if (!results) {
             return;
         }

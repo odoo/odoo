@@ -238,7 +238,6 @@ export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatch
  */
 export function useMessageHighlight(duration = 2000) {
     let timeout;
-    /** @type {import("@mail/core/common/thread_service").ThreadService} */
     const threadService = useService("mail.thread");
     const state = useState({
         async highlightMessage(msgId, thread) {

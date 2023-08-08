@@ -14,6 +14,10 @@ const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
  * @typedef {Messaging} Messaging
  */
 export class OutOfFocusService {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.env = env;
         this.audio = new Audio();
@@ -145,6 +149,10 @@ export class OutOfFocusService {
 
 export const outOfFocusService = {
     dependencies: ["bus_service", "multi_tab", "notification"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const service = new OutOfFocusService(env, services);
         return service;

@@ -21,7 +21,6 @@ export class FollowerList extends Component {
     setup() {
         this.action = useService("action");
         this.messaging = useMessaging();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         this.loadMoreState = useVisible("load-more", () => {
             if (this.loadMoreState.isVisible) {

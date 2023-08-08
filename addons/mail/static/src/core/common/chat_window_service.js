@@ -12,13 +12,20 @@ export const CHAT_WINDOW_WIDTH = 360; // same value as $o-mail-ChatWindow-width
 export const CHAT_WINDOW_HIDDEN_WIDTH = 55;
 
 export class ChatWindowService {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     constructor(env, services) {
         this.setup(env, services);
     }
 
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     setup(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.ui = services.ui;
@@ -167,6 +174,10 @@ export class ChatWindowService {
 
 export const chatWindowService = {
     dependencies: ["mail.store", "orm", "ui"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         return new ChatWindowService(env, services);
     },

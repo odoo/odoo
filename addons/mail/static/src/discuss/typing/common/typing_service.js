@@ -19,12 +19,13 @@ export class Typing {
     /** @type {import("@mail/core/common/store_service").Store} */
     storeService;
 
-    constructor({
-        bus_service: busService,
-        "discuss.channel.member": channelMemberService,
-        "mail.store": storeService,
-    }) {
-        Object.assign(this, { busService, channelMemberService, storeService });
+    /**
+     * @param {Partial<import("services").Services>} services
+     */
+    constructor(services) {
+        this.busService = services.bus_service;
+        this.channelMemberService = services["discuss.channel.member"];
+        this.storeService = services["mail.store"];
     }
 
     setup() {
@@ -91,6 +92,10 @@ export class Typing {
 
 export const discussTypingService = {
     dependencies: ["bus_service", "discuss.channel.member", "mail.store"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Partial<import("services").Services>} services
+     */
     start(env, services) {
         const typing = reactive(new Typing(services));
         typing.setup();
@@ -100,9 +105,6 @@ export const discussTypingService = {
 
 registry.category("services").add("discuss.typing", discussTypingService);
 
-/**
- * @returns {Typing}
- */
 export function useTypingService() {
     return useState(useService("discuss.typing"));
 }
