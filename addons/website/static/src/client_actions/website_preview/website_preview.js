@@ -14,7 +14,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { sprintf } from "@web/core/utils/strings";
 import wUtils from 'website.utils';
 
-const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
+const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState, useExternalListener } = owl;
 
 class BlockPreview extends Component {}
 BlockPreview.template = 'website.BlockPreview';
@@ -46,6 +46,7 @@ export class WebsitePreview extends Component {
 
         useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
+        useExternalListener(window, "keydown", this._onKeydownRefresh.bind(this));
 
         onWillStart(async () => {
             const [backendWebsiteRepr] = await Promise.all([
@@ -433,6 +434,8 @@ export class WebsitePreview extends Component {
                 // CTRL-K from within the iframe.
                 ev.preventDefault();
             }
+            // Check if it's a refresh first as we want to prevent default in that case.
+            this._onKeydownRefresh(ev);
             this.iframe.el.dispatchEvent(new KeyboardEvent('keydown', ev));
         });
         this.iframe.el.contentDocument.addEventListener('keyup', ev => {
@@ -478,6 +481,25 @@ export class WebsitePreview extends Component {
         // by the websitePreview could trigger a `pagehide`, so for safety,
         // it is set to undefined again.
         this.websiteService.websiteRootInstance = undefined;
+    }
+    /**
+     * Handles refreshing while the website preview is active.
+     * Makes it possible to stay in the backend after an F5 or CTRL-R keypress.
+     *
+     * @param  {KeyboardEvent} ev
+     * @private
+     */
+    _onKeydownRefresh(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey !== 'control+r' && hotkey !== 'f5') {
+            return;
+        }
+        ev.preventDefault();
+        const path = this.websiteService.contentWindow.location;
+        const debugMode = this.env.debug ? `?debug=${odoo.debug}` : "";
+        this.router.redirect(
+            `/web${debugMode}#action=website.website_preview&path=${encodeURIComponent(path)}`
+        );
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';
