@@ -57,8 +57,8 @@ class AuthSignupHome(Home):
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
-                    _logger.error("%s", e)
-                    qcontext['error'] = _("Could not create a new account.")
+                    _logger.warning("%s", e)
+                    qcontext['error'] = _("Could not create a new account.") + "\n" + str(e)
 
         elif 'signup_email' in qcontext:
             user = request.env['res.users'].sudo().search([('email', '=', qcontext.get('signup_email')), ('state', '!=', 'new')], limit=1)
