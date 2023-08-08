@@ -135,8 +135,11 @@ class IrQWeb(models.AbstractModel):
             return atts
 
         name = self.URL_ATTRS.get(tagName)
-        if request and name and name in atts:
-            atts[name] = url_for(atts[name])
+        if request:
+            if name and name in atts:
+                atts[name] = url_for(atts[name])
+            # Adapt background-image URL in the same way as image src.
+            atts = self._adapt_style_background_image(atts, url_for)
 
         if not website.cdn_activated:
             return atts
@@ -148,10 +151,14 @@ class IrQWeb(models.AbstractModel):
                 atts[name] = website.get_cdn_url(atts[name])
             if data_name in atts:
                 atts[data_name] = website.get_cdn_url(atts[data_name])
+        atts = self._adapt_style_background_image(atts, website.get_cdn_url)
+
+        return atts
+
+    def _adapt_style_background_image(self, atts, url_adapter):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts = OrderedDict(atts)
-            atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m.group(1), website.get_cdn_url(m.group(2))), atts['style'])
-
+            atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m.group(1), url_adapter(m.group(2))), atts['style'])
         return atts
 
     def _pregenerate_assets_bundles(self):
