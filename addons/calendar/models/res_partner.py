@@ -52,7 +52,7 @@ class Partner(models.Model):
                     if partner in self:
                         meetings[partner.id] |= meetings[p.id]
                     partner = partner.parent_id
-            return {p.id: list(meetings[p.id]) for p in self}
+            return {p_id: list(meetings[p_id]) for p_id in self.ids}
         return {}
 
     def get_attendee_detail(self, meeting_ids):
