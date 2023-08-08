@@ -503,19 +503,28 @@ export function useRecordObserver(callback) {
     let alive = true;
     const fct = (props) => {
         const def = new Deferred();
+        let firstCall = true;
         effect(
-            batched(
-                async (record) => {
-                    if (!alive) {
-                        // effect doesn't clean up when the component is unmounted.
-                        // We must do it manually.
-                        return;
-                    }
+            async (record) => {
+                if (firstCall) {
+                    firstCall = false;
                     await callback(record);
                     def.resolve();
-                },
-                () => new Promise((resolve) => window.requestAnimationFrame(resolve))
-            ),
+                } else {
+                    return batched(
+                        async (record) => {
+                            if (!alive) {
+                                // effect doesn't clean up when the component is unmounted.
+                                // We must do it manually.
+                                return;
+                            }
+                            await callback(record);
+                            def.resolve();
+                        },
+                        () => new Promise((resolve) => window.requestAnimationFrame(resolve))
+                    )(record);
+                }
+            },
             [props.record]
         );
         return def;
