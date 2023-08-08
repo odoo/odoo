@@ -344,12 +344,11 @@
                 }
                 .o_input_dropdown,
                 .o_datepicker {
-                    > .o_input {
-                        padding-right: 15px; // to prevent caret overlapping
+                    > .dropdown .o_input {
+                        padding-right: ($caret-width * 2.5) + $o-input-padding-x;; // to prevent caret overlapping
                     }
                     > .o_dropdown_button,
                     .o_datepicker_button {
-                        margin-right: 5px;
                         @include o-position-absolute(0, 0);
                     }
                 }
