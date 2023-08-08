@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="l10n_bg_tax_report_a" model="account.report.line">
                 <field name="name">Section A: Data on value added tax charged</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_bg_tax_report_01" model="account.report.line">
                         <field name="name">[01] Total amount of the tax bases for VAT taxation (amount from class 11 to class 16)</field>
@@ -206,6 +207,7 @@
             </record>
             <record id="l10n_bg_tax_report_b" model="account.report.line">
                 <field name="name">Section B: Data on the exercised right to a tax credit</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_bg_tax_report_30" model="account.report.line">
                         <field name="name">[30] Tax base and tax on the received deliveries, VAT, the received deliveries under art. 82, para. 2-6 of the VAT Act and imports without the right to a tax credit or without tax</field>
@@ -300,6 +302,7 @@
             </record>
             <record id="l10n_bg_tax_report_c" model="account.report.line">
                 <field name="name">Section C: Result for the period</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_bg_tax_report_50" model="account.report.line">
                         <field name="name">[50] VAT to be paid (class 20 - class 40) >= 0</field>

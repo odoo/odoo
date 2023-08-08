@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="l10n_mz_tax_report_frame_5" model="account.report.line">
                 <field name="name">Frame 5 - CALCULATION OF THE TAX REGARDING THE PERIOD TO WHICH THE DECLARATION REFERS</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_mz_tax_report_line_1" model="account.report.line">
                         <field name="name">1. Transfer of goods and/or rendering of services carried out by the taxable person and respective tax assessed</field>
@@ -227,6 +228,7 @@
             </record>
             <record id="l10n_mz_tax_report_frame_6" model="account.report.line">
                 <field name="name">Frame 6 - Tax to be delivered to the state (This table should only be completed if field 14 of table 05 has been completed)</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_mz_tax_report_field_18" model="account.report.line">
                         <field name="name">Field 18 - Payable VAT</field>
@@ -261,6 +263,7 @@
             </record>
             <record id="l10n_mz_tax_report_frame_7" model="account.report.line">
                 <field name="name">Frame 7 - Tax to be recovered by taxable person</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_mz_tax_report_field_21" model="account.report.line">
                         <field name="name">Field 21 - Tax credit</field>

@@ -19,6 +19,7 @@
         <field name="line_ids">
             <record id="l10n_kz_tr_title_vat_calculation" model="account.report.line">
                 <field name="name">VAT accrual</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kz_tr_line_300_00_001" model="account.report.line">
                         <field name="name">300.00.001. Sales turnover subject to VAT, including</field>
@@ -221,6 +222,7 @@
             </record>
             <record id="l10n_kz_tr_title_vat_sum" model="account.report.line">
                 <field name="name">The amount of VAT to be credited</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kz_tr_line_300_00_013" model="account.report.line">
                         <field name="name">300.00.013. Goods, works, services purchased with VAT in the Republic of Kazakhstan, including:</field>
@@ -635,6 +637,7 @@
             </record>
             <record id="l10n_kz_tr_title_vat_tax_period" model="account.report.line">
                 <field name="name">VAT calculations for the tax period</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kz_tr_line_300_00_030" model="account.report.line">
                         <field name="name">300.00.030. Calculated amount of VAT for the tax period:</field>

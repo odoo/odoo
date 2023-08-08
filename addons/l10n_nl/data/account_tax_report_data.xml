@@ -17,6 +17,7 @@
                 <field name="name">Section 1: Domestic performance</field>
                 <field name="sequence">10</field>
                 <field name="aggregation_formula">1A_OMZET.balance + 1B_OMZET.balance + 1C_OMZET.balance + 1D_OMZET.balance + 1E_OMZET.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_1a" model="account.report.line">
                         <field name="name">1a. Supplies/services taxed at high rate (turnover)</field>
@@ -84,6 +85,7 @@
                 <field name="name">Section 2: Domestic reverse charge arrangements (turnover)</field>
                 <field name="sequence">100</field>
                 <field name="aggregation_formula">2A_OMZET.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_2a" model="account.report.line">
                         <field name="name">2a. Supplies/services where the collection of turnover tax has been transferred to you (turnover)</field>
@@ -103,6 +105,7 @@
                 <field name="name">Section 3: Performance to or from abroad (turnover)</field>
                 <field name="sequence">200</field>
                 <field name="aggregation_formula">3A_OMZET.balance + 3B_OMZET.balance + 3C_OMZET.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_3a" model="account.report.line">
                         <field name="name">3a. Deliveries to countries outside the EU (exports) (turnover)</field>
@@ -166,6 +169,7 @@
                 <field name="name">Section 4: Services provided to you from abroad (turnover)</field>
                 <field name="sequence">300</field>
                 <field name="aggregation_formula">4A_OMZET.balance + 4B_OMZET.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_4a" model="account.report.line">
                         <field name="name">4a. Supplies/services from countries outside the EU (imports) (turnover)</field>
@@ -198,6 +202,7 @@
                 <field name="code">NLTAX_B1</field>
                 <field name="sequence">400</field>
                 <field name="aggregation_formula">1A_BTW.balance + 1B_BTW.balance + 1C_BTW.balance + 1D_BTW.balance + 1E_BTW.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_1a" model="account.report.line">
                         <field name="name">1a. Supplies/services taxed at 21% (VAT)</field>
@@ -265,6 +270,7 @@
                 <field name="name">Section 2: Domestic reverse charge (VAT) schemes</field>
                 <field name="sequence">500</field>
                 <field name="aggregation_formula">NLTAX_B2.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_2a" model="account.report.line">
                         <field name="name">2a. Supplies/services where the levy of Sales Tax has been transferred to you (VAT)</field>
@@ -284,6 +290,7 @@
                 <field name="name">Section 4: Services provided to you from abroad (VAT)</field>
                 <field name="sequence">600</field>
                 <field name="aggregation_formula">NLTAX_B4a.balance + NLTAX_B4b.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_4a" model="account.report.line">
                         <field name="name">4a. Supplies/services from countries outside the EU (VAT)</field>
@@ -315,6 +322,7 @@
                 <field name="name">Section 5: Input tax, small business scheme and total (VAT)</field>
                 <field name="sequence">700</field>
                 <field name="aggregation_formula">NLTAX_B5b.balance + NLTAX_B5d.balance + NLTAX_B5e.balance + NLTAX_B5f.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_5a" model="account.report.line">
                         <field name="name">5a. Sales tax payable (headings 1a to 4b) (VAT)</field>

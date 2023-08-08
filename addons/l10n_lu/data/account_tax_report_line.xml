@@ -15,6 +15,7 @@
         <field name="line_ids">
             <record id="account_tax_report_line_1_assessment_taxable_turnover" model="account.report.line">
                 <field name="name">I. ASSESSMENT OF TAXABLE TURNOVER</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_1a_overall_turnover" model="account.report.line">
                         <field name="name">012 - Overall turnover</field>
@@ -205,6 +206,7 @@
             </record>
             <record id="account_tax_report_line_2_assesment_of_tax_due" model="account.report.line">
                 <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.report.line">
                         <field name="name">037 - Breakdown of taxable turnover – base</field>
@@ -1449,6 +1451,7 @@
             </record>
             <record id="account_tax_report_line_3_assessment_deducible_tax" model="account.report.line">
                 <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_3a_total_input_tax" model="account.report.line">
                         <field name="name">093 - Total input tax</field>
@@ -1583,6 +1586,7 @@
             </record>
             <record id="account_tax_report_line_4_tax_tobe_paid_or_reclaimed" model="account.report.line">
                 <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_4a_total_tax_due" model="account.report.line">
                         <field name="name">103 - Total tax due</field>

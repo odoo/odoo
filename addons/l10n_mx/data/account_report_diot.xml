@@ -64,6 +64,7 @@
             <record id="diot_report_line" model="account.report.line">
                 <field name="name">DIOT</field>
                 <field name="groupby">partner_id, id</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_mx_diot_paid_16_tag" model="account.report.expression">
                         <field name="label">paid_16</field>

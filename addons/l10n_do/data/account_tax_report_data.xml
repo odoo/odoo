@@ -16,6 +16,7 @@
             <record id="account_tax_report_total_operaciones" model="account.report.line">
                 <field name="name">II-1 TOTAL OPERATIONS FOR THE PERIOD</field>
                 <field name="aggregation_formula">IIA_UNTAXED.balance + IIB_TAXED.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_2A" model="account.report.line">
                         <field name="name">II.A NON-TAXABLE</field>
@@ -168,6 +169,7 @@
             <record id="account_tax_report_3" model="account.report.line">
                 <field name="name">III SETTLEMENT</field>
                 <field name="aggregation_formula">III_21.balance + III_25.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_3_21_total" model="account.report.line">
                         <field name="name">III.21 TOTAL ITBIS COLLECTED (Add Boxes 16+17+18+19+20)</field>
@@ -276,6 +278,7 @@
             <record id="account_tax_report_A" model="account.report.line">
                 <field name="name">A ITBIS WITHHELD</field>
                 <field name="aggregation_formula">A39.balance + A50.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_A39_base" model="account.report.line">
                         <field name="name">A.39 Services Subject to Withholding Individuals = Individuals and Entity</field>

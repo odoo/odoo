@@ -14,6 +14,7 @@
             <record id="tax_report_I" model="account.report.line">
                 <field name="name">I. Supplies of goods and services (values excluding VAT)</field>
                 <field name="sequence">1000</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_I_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -99,6 +100,7 @@
             <record id="tax_report_II" model="account.report.line">
                 <field name="name">II. VAT charged</field>
                 <field name="sequence">2000</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_II_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -268,6 +270,7 @@
             <record id="tax_report_III" model="account.report.line">
                 <field name="name">III. Purchases of goods and services (values excluding VAT)</field>
                 <field name="sequence">3000</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_III_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -365,6 +368,7 @@
             <record id="tax_report_IV" model="account.report.line">
                 <field name="name">IV. VAT deduction</field>
                 <field name="sequence">4000</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_IV_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -426,6 +430,7 @@
             <record id="tax_report_51" model="account.report.line">
                 <field name="name">51. VAT liability</field>
                 <field name="sequence">5100</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_51_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -438,6 +443,7 @@
             <record id="tax_report_52" model="account.report.line">
                 <field name="name">52. VAT surplus</field>
                 <field name="sequence">5200</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_52_formula" model="account.report.expression">
                         <field name="label">balance</field>

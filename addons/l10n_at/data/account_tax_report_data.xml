@@ -16,6 +16,7 @@
             <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.report.line">
                 <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
                 <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance)</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_4_1" model="account.report.line">
                         <field name="name">4.1 Gesamtbetrag der Bemessungsgrundlage für Lieferungen und sonstige Leistungen [000]</field>
@@ -528,6 +529,7 @@
             <record id="tax_report_line_l10n_at_tva_purchase_report_title" model="account.report.line">
                 <field name="name">5. Berechnung der abziehbaren Vorsteuer</field>
                 <field name="aggregation_formula">AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_5_1" model="account.report.line">
                         <field name="name">5.1 Gesamtbetrag der Vorsteuern (ohne die nachstehend gesondert anzuführenden Beträge) [060]</field>
@@ -670,6 +672,7 @@
             <record id="tax_report_line_l10n_at_tva_final_report_title" model="account.report.line">
                 <field name="name">6. Sonstige Berichtigungen</field>
                 <field name="aggregation_formula">AT_090.balance</field>
+                <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_6" model="account.report.line">
                         <field name="name">Sonstige Berichtigungen [090]</field>
@@ -687,6 +690,7 @@
             <record id="tax_report_line_l10n_at_tva_line_7" model="account.report.line">
                 <field name="name">7. Zahllast (-) bzw. Gutschrift/Überschuss (+) [095]</field>
                 <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance + AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance) + AT_090.balance</field>
+                <field name="hierarchy_level">0</field>
             </record>
         </field>
     </record>

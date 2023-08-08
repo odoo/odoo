@@ -20,6 +20,7 @@
             <record id="tax_report_title_vat_calculation" model="account.report.line">
                 <field name="name">Vat calculation of supplied goods and services - total value(i. + ii.)</field>
                 <field name="code">c_0_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_0_0_tag_column1" model="account.report.expression">
                         <field name="label">tax_base</field>
@@ -36,6 +37,7 @@
             <record id="tax_report_title_transactions0" model="account.report.line">
                 <field name="name">I. Transactions not subject to vat and exempt - total value (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.)</field>
                 <field name="code">c_I_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_I_0_tag_column1" model="account.report.expression">
                         <field name="label">tax_base</field>
@@ -159,6 +161,7 @@
             <record id="tax_report_title_transactions1" model="account.report.line">
                 <field name="name">II. Taxable transactions – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13.+14.+15.)</field>
                 <field name="code">c_II_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_II_0_tag_column1" model="account.report.expression">
                         <field name="label">tax_base</field>
@@ -417,6 +420,7 @@
             <record id="tax_report_title_calculed_vat" model="account.report.line">
                 <field name="name">III. Calculated input vat – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13. +14.+15.)</field>
                 <field name="code">c_III_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_III_0_tag_column1" model="account.report.expression">
                         <field name="label">tax_base</field>
@@ -670,6 +674,7 @@
             <record id="tax_report_title_vat_liab" model="account.report.line">
                 <field name="name">IV. Vat liability in the calculation period: to pay (ii. - iii.) or to refund (iii. - ii.)</field>
                 <field name="code">c_IV_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_IV_0_tag_column2" model="account.report.expression">
                         <field name="label">tax_amount</field>
@@ -707,6 +712,7 @@
             <record id="tax_report_title_prev_calculation" model="account.report.line">
                 <field name="name">V. According to the previous calculation: unpaid vat to the day of submitting of this return-overpaid-tax credit</field>
                 <field name="code">c_V_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_V_0_tag_column2" model="account.report.expression">
                         <field name="label">tax_amount</field>
@@ -742,6 +748,7 @@
             <record id="tax_report_title_total_dif" model="account.report.line">
                 <field name="name">VI. Total difference: to pay/to refund</field>
                 <field name="code">c_VI_total</field>
+                <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="tax_report_line_VI_0_tag_column2" model="account.report.expression">
                         <field name="label">tax_amount</field>
