@@ -75,11 +75,11 @@
     },
     ...wTourUtils.clickOnSave(),
     {
-        trigger: ".o_menu_systray_item.o_mobile_preview",
+        trigger: ".o_menu_systray_item.o_mobile_preview > a",
         content: markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
         position: "bottom",
     }, {
-        trigger: ".o_menu_systray_item.o_mobile_preview",
+        trigger: ".o_menu_systray_item.o_mobile_preview > a",
         extra_trigger: '.o_website_preview.o_is_mobile',
         content: _t("Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"),
         position: "right",

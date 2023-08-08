@@ -68,7 +68,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     },
     {
         content: "Toggle the mobile view",
-        trigger: '.o_mobile_preview',
+        trigger: '.o_mobile_preview > a',
     },
     {
         content: "Check that we have the good TOC on mobile",
