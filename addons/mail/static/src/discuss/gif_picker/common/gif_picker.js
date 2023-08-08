@@ -2,7 +2,7 @@
 
 import { useStore } from "@mail/core/common/messaging_hook";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-import { useOnBottomScrolled } from "@mail/utils/common/hooks";
+import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
@@ -78,6 +78,7 @@ export class GifPicker extends Component {
         this.orm = useService("orm");
         this.store = useStore();
         this.userService = useService("user");
+        this.sequential = useSequential();
         useAutofocus();
         useOnBottomScrolled(
             "scroller",
@@ -85,7 +86,7 @@ export class GifPicker extends Component {
                 if (!this.state.showCategories) {
                     this.state.loadingGif = true;
                     if (!this.showFavorite) {
-                        this.searchDebounced();
+                        this.search();
                     } else {
                         this.loadFavoritesDebounced(this.offset);
                     }
@@ -109,19 +110,18 @@ export class GifPicker extends Component {
             loadingGif: false,
             loadingError: false,
             evenGif: {
-                /** @type {TenorGif[]} */
-                gifs: [],
+                /** @type {Map<Number, TenorGif>} */
+                gifs: new Map(),
                 /** Size, in pixel, of the column. */
                 columnSize: 0,
             },
             oddGif: {
-                /** @type {TenorGif[]} */
-                gifs: [],
+                /** @type {Map<Number, TenorGif>} */
+                gifs: new Map(),
                 /** Size, in pixel, of the column. */
                 columnSize: 0,
             },
         });
-        this.searchDebounced = useDebounced(this.search, 200);
         this.loadFavoritesDebounced = useDebounced(this.loadFavorites, 200);
         onWillStart(() => {
             this.loadCategories();
@@ -165,7 +165,6 @@ export class GifPicker extends Component {
         if (!this.state.searchTerm) {
             return;
         }
-        this.state.loadingGif = true;
         try {
             const params = {
                 country: this.userService.lang.slice(3, 5),
@@ -175,19 +174,25 @@ export class GifPicker extends Component {
             if (this.next) {
                 params.position = this.next;
             }
-            const { results, next } = await this.rpc("/discuss/gif/search", params, {
-                silent: true,
+            const res = await this.sequential(() => {
+                this.state.loadingGif = true;
+                const res = this.rpc("/discuss/gif/search", params, {
+                    silent: true,
+                });
+                this.state.loadingGif = false;
+                return res;
             });
-            if (results) {
+            if (res) {
+                const { next, results } = res;
                 this.next = next;
                 for (const gif of results) {
                     this.pushGif(gif);
                 }
+                this.state.loadingError = false;
             }
         } catch {
             this.state.loadingError = true;
         }
-        this.state.loadingGif = false;
     }
 
     /**
@@ -195,10 +200,10 @@ export class GifPicker extends Component {
      */
     pushGif(gif) {
         if (this.state.evenGif.columnSize <= this.state.oddGif.columnSize) {
-            this.state.evenGif.gifs.push(gif);
+            this.state.evenGif.gifs.set(gif.id, gif);
             this.state.evenGif.columnSize += gif.media_formats.tinygif.dims[1];
         } else {
-            this.state.oddGif.gifs.push(gif);
+            this.state.oddGif.gifs.set(gif.id, gif);
             this.state.oddGif.columnSize += gif.media_formats.tinygif.dims[1];
         }
     }
@@ -206,7 +211,7 @@ export class GifPicker extends Component {
     onInput() {
         this.clear();
         this.state.loadingGif = true;
-        this.searchDebounced();
+        this.search();
         if (this.state.searchTerm) {
             this.closeCategories();
         } else {
@@ -227,9 +232,9 @@ export class GifPicker extends Component {
     }
 
     clear() {
-        this.state.evenGif.gifs = [];
+        this.state.evenGif.gifs.clear();
         this.state.evenGif.columnSize = 0;
-        this.state.oddGif.gifs = [];
+        this.state.oddGif.gifs.clear();
         this.state.oddGif.columnSize = 0;
     }
 

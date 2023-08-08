@@ -210,3 +210,22 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-Composer-footer .o-discuss-GifPicker");
     }
 );
+
+QUnit.test("Searching for a GIF with a failling RPC should display an error", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    const { openDiscuss } = await start({
+        mockRPC(route) {
+            if (route === "/discuss/gif/search") {
+                throw new Error("Rpc failed");
+            }
+            if (route === "/discuss/gif/categories") {
+                return rpc.categories;
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await insertText("input[placeholder='Search for a gif']", "search");
+    assert.containsOnce($, ".o-discuss-GifPicker-error");
+});
