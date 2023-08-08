@@ -2068,6 +2068,9 @@ const Wysiwyg = Widget.extend({
         finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
             ? finalOptions.autohideToolbar
             : !finalOptions.snippets;
+        if (finalOptions.inlineStyle) {
+            finalOptions.dropImageAsAttachment = false;
+        }
 
         return finalOptions;
     },
