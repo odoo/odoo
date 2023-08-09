@@ -5,7 +5,6 @@
     'name': 'Germany - Accounting',
     "version": "2.0",
     'author': 'openbig.org',
-    'version': '1.1',
     'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations',
     'description': """
