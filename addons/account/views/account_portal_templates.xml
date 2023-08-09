@@ -13,14 +13,18 @@
     </template>
 
     <template id="portal_my_home_invoice" name="Show Invoices &amp; Bills" inherit_id="portal.portal_my_home" customize_show="True" priority="30">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
                 <t t-set="title">Invoices &amp; Bills</t>
                 <t t-set="url" t-value="'/my/invoices'"/>
                 <t t-set="text">Follow, download or pay your invoices</t>
+                <t t-set="placeholder_count" t-value="'invoice_count'"/>
             </t>
-        </xpath>
+        </div>
     </template>
 
     <template id="portal_my_invoices" name="My Invoices and Payments">

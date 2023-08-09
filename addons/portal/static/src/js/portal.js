@@ -99,7 +99,7 @@ export const PortalHomeCounters = publicWidget.Widget.extend({
                 documentsCounterEl.textContent = documentsCountersData[counterName];
                 // The element is hidden by default, only show it if its counter is > 0 or if it's in the list of counters always shown
                 if (documentsCountersData[counterName] !== 0 || countersAlwaysDisplayed.includes(counterName)) {
-                    documentsCounterEl.parentElement.classList.remove('d-none');
+                    documentsCounterEl.closest('#portal_card').classList.remove('d-none');
                 }
             });
             return documentsCountersData;

@@ -185,7 +185,7 @@
                                     <div class="o_portal_my_details">
                                         <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
                                     </div>
-                                    <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit informations</a>
+                                    <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
                                     <hr t-if="sales_user"/>
                                     <div class="o_my_contact" t-if="sales_user">
                                         <t t-call="portal.portal_contact"/>
@@ -248,7 +248,26 @@
                 <div class="o_portal_docs row g-2">
                     <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
                     <p class="o_portal_no_doc_message d-none">No Documents to display</p>
-                    <div class="py-2 py-lg-1 order-1"/>
+                    <div t-if="portal_alert_category_enable" class="o_portal_category row g-2" id="portal_alert_category"/>
+                    <div t-if="portal_client_category_enable" class="o_portal_category row g-2" id="portal_client_category"/>
+                    <div t-if="portal_service_category_enable" class="o_portal_category row g-2" id="portal_service_category"/>
+                    <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2" id="portal_vendor_category"/>
+                    <div class="o_portal_category row g-2" id="portal_common_category">
+                        <t t-call="portal.portal_docs_entry">
+                            <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
+                            <t t-set="title">Addresses</t>
+                            <t t-set="text">Add, remove or modify your addresses</t>
+                            <t t-set="url" t-value="'/my/account'"/>
+                            <t t-set="config_card" t-value="True"/>
+                        </t>
+                        <t t-call="portal.portal_docs_entry">
+                            <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
+                            <t t-set="title">Connection &amp; Security</t>
+                            <t t-set="text">Configure your connection parameters</t>
+                            <t t-set="url" t-value="'/my/security'"/>
+                            <t t-set="config_card" t-value="True"/>
+                        </t>
+                    </div>
                 </div>
             </div>
             <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
