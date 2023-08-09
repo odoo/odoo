@@ -122,8 +122,10 @@ class StockPicking(models.Model):
             picking._find_auto_batch()
         return res
 
-    def _action_done(self):
-        res = super()._action_done()
+    def button_validate(self):
+        res = super().button_validate()
+        if res is not True:
+            return res
         to_assign_ids = set()
         if self and self.env.context.get('pickings_to_detach'):
             self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
