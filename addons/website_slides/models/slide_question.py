@@ -15,6 +15,7 @@ class SlideQuestion(models.Model):
     question = fields.Char("Question Name", required=True, translate=True)
     slide_id = fields.Many2one('slide.slide', string="Content", required=True, ondelete='cascade')
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer", copy=True)
+    answers_validation_error = fields.Char("Error on Answers", compute='_compute_answers_validation_error')
     # statistics
     attempts_count = fields.Integer(compute='_compute_statistics', groups='website_slides.group_website_slides_officer')
     attempts_avg = fields.Float(compute="_compute_statistics", digits=(6, 2), groups='website_slides.group_website_slides_officer')
@@ -22,11 +23,15 @@ class SlideQuestion(models.Model):
 
     @api.constrains('answer_ids')
     def _check_answers_integrity(self):
-        for question in self:
-            if len(question.answer_ids.filtered(lambda answer: answer.is_correct)) != 1:
-                raise ValidationError(_('Question "%s" must have 1 correct answer', question.question))
-            if len(question.answer_ids) < 2:
-                raise ValidationError(_('Question "%s" must have 1 correct answer and at least 1 incorrect answer', question.question))
+        questions_to_fix = [
+            f'- {question.slide_id.name}: {question.question}'
+            for question in self
+            if question.answers_validation_error
+        ]
+        if questions_to_fix:
+            raise ValidationError(_(
+                'All questions must have at least one correct answer and one incorrect answer: \n%s\n',
+                '\n'.join(questions_to_fix)))
 
     @api.depends('slide_id')
     def _compute_statistics(self):
@@ -45,12 +50,19 @@ class SlideQuestion(models.Model):
             question.attempts_avg = stats.get('attempts_count', 0) / stats.get('attempts_unique', 1) if stats else 0
             question.done_count = stats.get('done_count', 0) if stats else 0
 
+    @api.depends('answer_ids', 'answer_ids.is_correct')
+    def _compute_answers_validation_error(self):
+        for question in self:
+            correct = question.answer_ids.filtered('is_correct')
+            question.answers_validation_error = _(
+                'This question must have at least one correct answer and one incorrect answer.'
+            ) if not correct or correct == question.answer_ids else ''
 
 class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"
     _description = "Slide Question's Answer"
-    _order = 'question_id, sequence'
+    _order = 'question_id, sequence, id'
 
     sequence = fields.Integer("Sequence")
     question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
