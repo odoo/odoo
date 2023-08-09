@@ -42,7 +42,7 @@ class ChangeProductionQty(models.TransientModel):
             if self._need_quantity_propagation(move, qty):
                 push_moves |= move.copy({'product_uom_qty': qty})
             else:
-                move.write({'product_uom_qty': move.product_uom_qty + qty})
+                self._update_product_qty(move, qty)
 
         if push_moves:
             push_moves._action_confirm()._action_assign()
@@ -52,6 +52,10 @@ class ChangeProductionQty(models.TransientModel):
     @api.model
     def _need_quantity_propagation(self, move, qty):
         return move.move_dest_ids and not float_is_zero(qty, precision_rounding=move.product_uom.rounding)
+
+    @api.model
+    def _update_product_qty(self, move, qty):
+        move.write({'product_uom_qty': move.product_uom_qty + qty})
 
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
