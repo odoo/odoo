@@ -20713,6 +20713,14 @@
                     if (dirY < 0) {
                         this.dnd.y = dndInitialY + figure.height * fraction;
                     }
+                    if (this.dnd.x < 0) {
+                        this.dnd.width += this.dnd.x;
+                        this.dnd.x = 0;
+                    }
+                    if (this.dnd.y < 0) {
+                        this.dnd.height += this.dnd.y;
+                        this.dnd.y = 0;
+                    }
                 };
             }
             else {
@@ -20727,6 +20735,14 @@
                     }
                     if (dirY < 0) {
                         this.dnd.y = dndInitialY - deltaY;
+                    }
+                    if (this.dnd.x < 0) {
+                        this.dnd.width += this.dnd.x;
+                        this.dnd.x = 0;
+                    }
+                    if (this.dnd.y < 0) {
+                        this.dnd.height += this.dnd.y;
+                        this.dnd.y = 0;
                     }
                 };
             }
@@ -29341,7 +29357,7 @@
             this.sizes = {};
         }
         handle(cmd) {
-            var _a, _b, _c;
+            var _a, _b;
             switch (cmd.type) {
                 case "CREATE_SHEET": {
                     const computedSizes = this.computeSheetSizes(cmd.sheetId);
@@ -29429,7 +29445,8 @@
                     }
                     break;
                 case "UPDATE_CELL":
-                    if (!((_c = (_b = (_a = this.sizes[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a["ROW"]) === null || _b === void 0 ? void 0 : _b[cmd.row]) === null || _c === void 0 ? void 0 : _c.manualSize)) {
+                    const row = (_b = (_a = this.sizes[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a["ROW"]) === null || _b === void 0 ? void 0 : _b[cmd.row];
+                    if (row && !row.manualSize) {
                         const { sheetId, row } = cmd;
                         this.history.update("sizes", sheetId, "ROW", row, "computedSize", lazy(() => this.getRowTallestCellSize(sheetId, row)));
                     }
@@ -32577,6 +32594,7 @@
                     this.filterValues[cmd.sheetId] = {};
                     break;
                 case "HIDE_COLUMNS_ROWS":
+                case "UNHIDE_COLUMNS_ROWS":
                     this.updateHiddenRows();
                     break;
                 case "UPDATE_FILTER":
@@ -34504,9 +34522,17 @@
                 case "REPLACE_ALL_SEARCH":
                     this.replaceAll(cmd.replaceWith);
                     break;
+                case "EVALUATE_CELLS":
+                case "UPDATE_CELL":
+                case "REMOVE_FILTER_TABLE":
+                case "UPDATE_FILTER":
+                    this.isSearchDirty = true;
+                    break;
                 case "UNDO":
                 case "REDO":
                 case "REMOVE_COLUMNS_ROWS":
+                case "HIDE_COLUMNS_ROWS":
+                case "UNHIDE_COLUMNS_ROWS":
                 case "ADD_COLUMNS_ROWS":
                 case "EVALUATE_CELLS":
                 case "UPDATE_CELL":
@@ -34642,37 +34668,31 @@
         // ---------------------------------------------------------------------------
         // Replace
         // ---------------------------------------------------------------------------
+        replaceMatch(selectedMatch, replaceWith) {
+            if (!this.currentSearchRegex) {
+                return;
+            }
+            const sheetId = this.getters.getActiveSheetId();
+            const cell = this.getters.getCell({ sheetId, ...selectedMatch });
+            const { col, row } = selectedMatch;
+            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && !this.searchOptions.searchFormulas) {
+                return;
+            }
+            const replaceRegex = new RegExp(this.currentSearchRegex.source, this.currentSearchRegex.flags + "g");
+            const toReplace = this.getSearchableString({ sheetId, col, row });
+            const content = toReplace.replace(replaceRegex, replaceWith);
+            this.dispatch("UPDATE_CELL", { sheetId, col, row, content });
+        }
         /**
          * Replace the value of the currently selected match
          */
         replace(replaceWith) {
-            if (this.selectedMatchIndex === null || !this.currentSearchRegex) {
+            if (this.selectedMatchIndex === null) {
                 return;
             }
-            const matches = this.searchMatches;
-            const selectedMatch = matches[this.selectedMatchIndex];
-            const sheetId = this.getters.getActiveSheetId();
-            const cell = this.getters.getCell({ sheetId, ...selectedMatch });
-            if ((cell === null || cell === void 0 ? void 0 : cell.isFormula) && !this.searchOptions.searchFormulas) {
-                this.selectNextCell(Direction.next);
-            }
-            else {
-                const replaceRegex = new RegExp(this.currentSearchRegex.source, this.currentSearchRegex.flags + "g");
-                const toReplace = this.getSearchableString({
-                    sheetId,
-                    col: selectedMatch.col,
-                    row: selectedMatch.row,
-                });
-                const newContent = toReplace.replace(replaceRegex, replaceWith);
-                this.dispatch("UPDATE_CELL", {
-                    sheetId: this.getters.getActiveSheetId(),
-                    col: selectedMatch.col,
-                    row: selectedMatch.row,
-                    content: newContent,
-                });
-                this.searchMatches.splice(this.selectedMatchIndex, 1);
-                this.selectNextCell(Direction.current);
-            }
+            const selectedMatch = this.searchMatches[this.selectedMatchIndex];
+            this.replaceMatch(selectedMatch, replaceWith);
+            this.selectNextCell(Direction.next);
         }
         /**
          * Apply the replace function to all the matches one time.
@@ -34680,7 +34700,7 @@
         replaceAll(replaceWith) {
             const matchCount = this.searchMatches.length;
             for (let i = 0; i < matchCount; i++) {
-                this.replace(replaceWith);
+                this.replaceMatch(this.searchMatches[i], replaceWith);
             }
         }
         getSearchableString(position) {
@@ -45387,9 +45407,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.11';
-    __info__.date = '2023-07-26T13:06:13.105Z';
-    __info__.hash = '0d46dde';
+    __info__.version = '16.2.13';
+    __info__.date = '2023-08-09T11:59:06.622Z';
+    __info__.hash = '5620a2e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
