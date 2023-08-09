@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class ProductTemplate(models.Model):
@@ -9,6 +10,18 @@ class ProductTemplate(models.Model):
 
     can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "product_template", "can_be_expensed"):
+            create_column(self.env.cr, "product_template", "can_be_expensed", "boolean")
+            self.env.cr.execute(
+                """
+                UPDATE product_template
+                SET can_be_expensed = false
+                WHERE type NOT IN ('consu', 'service')
+                """
+            )
+        return super()._auto_init()
 
     @api.model
     def default_get(self, fields):
