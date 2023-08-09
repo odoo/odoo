@@ -68,6 +68,9 @@ const ODOO_PIVOT = {
     computeFormat: function (pivotId, measureName, ...domain) {
         pivotId = toString(pivotId.value);
         const measure = toString(measureName.value);
+        if (measure === "__count") {
+            return "0";
+        }
         const field = this.getters.getPivotDataSource(pivotId).getField(measure);
         if (!field) {
             return undefined;
@@ -99,7 +102,7 @@ const ODOO_PIVOT_HEADER = {
         const args = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
         assertDomainLength(args);
-        return this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale);
+        return this.getters.getPivotHeaderValue(pivotId, args, this.locale);
     },
     computeFormat: function (pivotId, ...domain) {
         pivotId = toString(pivotId.value);

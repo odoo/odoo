@@ -293,6 +293,41 @@ export class SpreadsheetPivotModel extends PivotModel {
     }
 
     /**
+     * Get the cell value for the given field-value
+     *
+     * @param {string} groupFieldString Name of the field
+     * @param {string} groupValueString Value of the group by
+     * @returns {string | number}
+     */
+    getPivotHeaderValue(groupFieldString, groupValueString, locale = DEFAULT_LOCALE) {
+        if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
+            return "";
+        }
+        if (groupFieldString === "measure") {
+            // the value is actually the measure field name
+            return this.getMeasureDisplayName(groupValueString);
+        }
+        const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
+        const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
+        if (this._isDateField(field)) {
+            const adapter = pivotTimeAdapter(aggregateOperator);
+            return adapter.toValue(value, locale);
+        }
+        return this.getGroupByDisplayLabel(groupFieldString, groupValueString, locale);
+    }
+
+    /**
+     * @param {string} measure
+     * @returns {string}
+     */
+    getMeasureDisplayName(measure) {
+        if (groupValueString === "__count") {
+            return _t("Count");
+        }
+        return this.parseGroupField(groupValueString).field.string;
+    }
+
+    /**
      * Get the label the given field-value
      *
      * @param {string} groupFieldString Name of the field
@@ -304,11 +339,8 @@ export class SpreadsheetPivotModel extends PivotModel {
             return "";
         }
         if (groupFieldString === "measure") {
-            if (groupValueString === "__count") {
-                return _t("Count");
-            }
             // the value is actually the measure field name
-            return this.parseGroupField(groupValueString).field.string;
+            return this.getMeasureDisplayName(groupValueString);
         }
         const { field, aggregateOperator } = this.parseGroupField(groupFieldString);
         const value = toNormalizedPivotValue(field, groupValueString, aggregateOperator);
@@ -340,7 +372,7 @@ export class SpreadsheetPivotModel extends PivotModel {
      *
      * @param {string[]} domain Domain of the formula
      */
-    getPivotHeaderValue(domain) {
+    getPivotHeaderValueFIIIII(domain) {
         const groupFieldString = domain[domain.length - 2];
         if (groupFieldString.startsWith("#")) {
             const { field } = this.parseGroupField(groupFieldString);

@@ -98,6 +98,9 @@ const dayAdapter = {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
         return formatValue(value, { locale, format: locale.dateFormat });
     },
+    toValue(normalizedValue) {
+        return toNumber(normalizedValue, DEFAULT_LOCALE);
+    },
 };
 
 /**
@@ -126,6 +129,9 @@ const weekAdapter = {
         const [year, week] = normalizedValue.split("/");
         return sprintf(_t("W%(week)s %(year)s"), { week, year });
     },
+    toValue(normalizedValue) {
+        return this.format(normalizedValue);
+    },
 };
 
 /**
@@ -151,6 +157,9 @@ const monthAdapter = {
     format(normalizedValue, locale) {
         const value = toNumber(normalizedValue, DEFAULT_LOCALE);
         return formatValue(value, { locale, format: "mmmm yyyy" });
+    },
+    toValue(normalizedValue) {
+        return toNumber(normalizedValue, DEFAULT_LOCALE);
     },
 };
 
@@ -179,6 +188,9 @@ const quarterAdapter = {
         const [quarter, year] = normalizedValue.split("/");
         return sprintf(_t("Q%(quarter)s %(year)s"), { quarter, year });
     },
+    toValue(normalizedValue) {
+        return this.format(normalizedValue);
+    },
 };
 /**
  * @type {PivotTimeAdapter}
@@ -195,6 +207,9 @@ const yearAdapter = {
     },
     format(normalizedValue, locale) {
         return formatValue(normalizedValue, { locale, format: "0" });
+    },
+    toValue(normalizedValue) {
+        return normalizedValue;
     },
 };
 

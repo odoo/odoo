@@ -224,14 +224,14 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
      * @param {string} pivotId Id of a pivot
      * @param {Array<string>} domain Domain
      */
-    getDisplayedPivotHeaderValue(pivotId, domain) {
+    getPivotHeaderValue(pivotId, domain) {
         const dataSource = this.getters.getPivotDataSource(pivotId);
         dataSource.markAsHeaderUsed(domain);
         const len = domain.length;
         if (len === 0) {
             return _t("Total");
         }
-        return dataSource.getDisplayedPivotHeaderValue(domain);
+        return dataSource.sqdqsf(domain);
     }
 
     /**
@@ -281,7 +281,8 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
-                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(-2));
+                //
+                let value = dataSource.getPivotHeaderValueFIIIII(evaluatedArgs.slice(-2));
                 if (value === NO_RECORD_AT_THIS_POSITION) {
                     continue;
                 }
@@ -425,7 +426,7 @@ PivotUIPlugin.getters = [
     "getAsyncPivotDataSource",
     "getSelectedPivotId",
     "getPivotComputedDomain",
-    "getDisplayedPivotHeaderValue",
+    "getPivotHeaderValue",
     "getPivotIdFromPosition",
     "getPivotCellValue",
     "getPivotGroupByValues",
