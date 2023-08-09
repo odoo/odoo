@@ -1604,3 +1604,95 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(reverser_customer_payment_entry[1].balance, -4.0)
         self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
         self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
+
+    def test_close_session_with_cancelled_order(self):
+        self.pos_config.open_ui()
+
+        current_session = self.pos_config.current_session_id
+        current_session.set_cashbox_pos(0, None)
+
+        untax, atax = self.compute_tax(self.led_lamp, 0.9)
+        carrot_order_data = {
+            'data': {
+                'amount_paid': untax + atax,
+                'amount_return': 0,
+                'amount_tax': atax,
+                'amount_total': untax + atax,
+                'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+                'fiscal_position_id': False,
+                'lines': [[0, 0, {
+                    'discount': 0,
+                    'pack_lot_ids': [],
+                    'price_unit': 0.9,
+                    'product_id': self.led_lamp.id,
+                    'price_subtotal': 0.9,
+                    'price_subtotal_incl': 1.04,
+                    'qty': 1,
+                    'tax_ids': [(6, 0, self.led_lamp.taxes_id.ids)],
+                }]],
+                'name': 'Order 00042-003-0014',
+                'partner_id': False,
+                'pos_session_id': current_session.id,
+                'sequence_number': 2,
+                'statement_ids': [[0, 0, {
+                    'amount': untax + atax,
+                    'name': fields.Datetime.now(),
+                    'payment_method_id': self.bank_payment_method.id,
+                }]],
+                'uid': '00042-003-0014',
+                'user_id': self.env.uid,
+            },
+            'to_invoice': False,
+        }
+
+        untax, atax = self.compute_tax(self.whiteboard_pen, 1.2)
+        zucchini_order_data = {
+            'data': {
+                'amount_paid': untax + atax,
+                'amount_return': 0,
+                'amount_tax': atax,
+                'amount_total': untax + atax,
+                'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+                'fiscal_position_id': False,
+                'lines': [[0, 0, {
+                    'discount': 0,
+                    'pack_lot_ids': [],
+                    'price_unit': 1.2,
+                    'product_id': self.whiteboard_pen.id,
+                    'price_subtotal': 1.2,
+                    'price_subtotal_incl': 1.38,
+                    'qty': 1,
+                    'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.ids)],
+                }]],
+                'name': 'Order 00043-003-0014',
+                'partner_id': self.partner1.id,
+                'pos_session_id': current_session.id,
+                'sequence_number': self.pos_config.journal_id.id,
+                'statement_ids': [[0, 0, {
+                    'amount': untax + atax,
+                    'name': fields.Datetime.now(),
+                    'payment_method_id': self.credit_payment_method.id
+                }]],
+                'uid': '00043-003-0014',
+                'user_id': self.env.uid,
+            },
+            'to_invoice': False,
+        }
+
+        create_result = self.PosOrder.create_from_ui([carrot_order_data, zucchini_order_data])
+        self.assertEqual(2, len(current_session.order_ids), 'Submitted order not encoded')
+
+        print("\n # test_point_of_sale_flow.py:1677 - ():  create_result :", create_result)
+        carrot_order_id = next(result_order_data for result_order_data in create_result if result_order_data['pos_reference'] == carrot_order_data['data']['name'])['id']
+        self.PosOrder.remove_from_ui([carrot_order_id])
+        self.assertEqual(self.env['pos.order'].search([('id', '=', carrot_order_id)], limit=1).state, 'cancel')
+
+        total_cash_payment = sum(current_session.order_ids.filtered(lambda o: o.state != 'cancel').payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        print("\n # test_point_of_sale_flow.py:1690 - ():  total_cash_payment :", total_cash_payment)
+        current_session.post_closing_cash_details(total_cash_payment)
+        close_result = current_session.close_session_from_ui()
+        print("\n # test_point_of_sale_flow.py:1693 - ():  statement_line_ids:", current_session.statement_line_ids)
+        print("\n # test_point_of_sale_flow.py:1693 - ():  cash_real_transaction:", current_session.cash_real_transaction)
+
+        self.assertTrue(close_result['successful'])
+        self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')

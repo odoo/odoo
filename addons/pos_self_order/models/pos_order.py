@@ -34,6 +34,7 @@ class PosOrder(models.Model):
     @api.model
     def remove_from_ui(self, server_ids):
         order_ids = self.env['pos.order'].browse(server_ids)
+        print("\n # pos_order.py:35 - self order ():  server_ids :", server_ids)
         order_ids.state = 'cancel'
         self._send_notification(order_ids)
 

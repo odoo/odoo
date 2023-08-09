@@ -1051,11 +1051,19 @@ class PosOrder(models.Model):
         :type server_ids: list.
         :returns: list -- list of db-ids for the removed orders.
         """
-        orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
-        orders.write({'state': 'cancel'})
+        orders = self.search([('id', 'in', server_ids), ('state', 'in', ['draft', 'cancel'])])
+        print("\n # pos_order.py:1054 - remove_from_ui():  orders :", orders)
         # TODO Looks like delete cascade is a better solution.
-        orders.mapped('payment_ids').sudo().unlink()
-        orders.sudo().unlink()
+        orders_with_payment = orders.filtered('payment_ids')
+        print("\n # pos_order.py:1057 - ():  orders_with_payment :", orders_with_payment)
+        orders_without_payment = orders - orders_with_payment
+        print("\n # pos_order.py:1059 - ():  orders_without_payment :", orders_without_payment)
+        if orders_with_payment:
+            orders_with_payment.sudo().unlink()
+        if orders_without_payment:
+            orders_without_payment.write({'state': 'cancel'})
+
+        print("\n # pos_order.py:1054 - remove_from_ui():  AFT unlink: orders :", orders)
         return orders.ids
 
     @api.model
