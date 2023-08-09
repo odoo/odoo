@@ -154,6 +154,9 @@ class AccountMove(models.Model):
     def _get_l10n_es_tbai_id(self):
         """Get the TicketBAI ID (TBAID) as defined in the TicketBAI doc."""
         self.ensure_one()
+        if not self._l10n_es_tbai_is_in_chain():
+            return ''
+
         signature, registration_date = self._get_l10n_es_tbai_signature_and_date()
         company = self.company_id
         tbai_id_no_crc = '-'.join([
