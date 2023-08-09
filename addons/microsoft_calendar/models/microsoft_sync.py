@@ -42,9 +42,8 @@ def after_commit(func):
                 env = api.Environment(cr, uid, context)
                 try:
                     func(self.with_env(env), *args, **kwargs)
-                except Exception as e:
-                    _logger.warning("Could not sync record now: %s" % self)
-                    _logger.exception(e)
+                except TypeError:
+                    _logger.warning("Could not sync record now: %s", self, exc_info=True)
 
     return wrapped
 
