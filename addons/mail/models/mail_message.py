@@ -876,11 +876,7 @@ class Message(models.Model):
                 thread_ids_by_model_name[message.model].add(message.res_id)
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            author = {
-                'id': message_sudo.author_id.id,
-                'is_company': message_sudo.author_id.is_company,
-                'name': message_sudo.author_id.name,
-            } if message_sudo.author_id else [('clear',)]
+            author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id) if message_sudo.author_id else [('clear',)]
             guestAuthor = {
                 'id': message_sudo.author_guest_id.id,
                 'name': message_sudo.author_guest_id.name,

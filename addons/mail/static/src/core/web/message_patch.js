@@ -13,15 +13,16 @@ import {
 } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
-import { useState } from "@odoo/owl";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
         this.action = useService("action");
         this.userService = useService("user");
-        this.messaging = useState(useService("mail.messaging"));
+        this.avatarCard = usePopover(AvatarCardPopover);
     },
     get authorAvatarAttClass() {
         return {
@@ -30,18 +31,20 @@ patch(Message.prototype, {
         };
     },
     getAuthorText() {
-        return this.hasAuthorClickable() ? _t("Open profile") : undefined;
+        return this.hasAuthorClickable() ? _t("Open card") : undefined;
     },
     hasAuthorClickable() {
-        return this.message.author && !this.message.isSelfAuthored;
+        return this.message.author?.user;
     },
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
             markEventHandled(ev, "Message.ClickAuthor");
-            this.messaging.openDocument({
-                model: "res.partner",
-                id: this.message.author.id,
-            });
+            const target = ev.currentTarget;
+            if (!this.avatarCard.isOpen) {
+                this.avatarCard.open(target, {
+                    id: this.message.author.user.id,
+                });
+            }
         }
     },
     openRecord() {

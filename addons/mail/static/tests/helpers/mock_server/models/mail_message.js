@@ -200,11 +200,17 @@ patch(MockServer.prototype, {
                 const [author] = this.getRecords("res.partner", [["id", "=", message.author_id]], {
                     active_test: false,
                 });
+                const [user] = this.getRecords("res.users", [
+                    ["partner_id", "=", message.author_id],
+                ]);
                 formattedAuthor = {
                     id: author.id,
                     is_company: author.is_company,
                     name: author.name,
                 };
+                if (user) {
+                    formattedAuthor["user"] = { id: user.id };
+                }
             } else {
                 formattedAuthor = [["clear"]];
             }

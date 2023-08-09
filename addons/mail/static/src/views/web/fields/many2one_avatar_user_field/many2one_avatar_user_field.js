@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
 import { _t } from "@web/core/l10n/translation";
@@ -12,50 +11,31 @@ import {
     kanbanMany2OneAvatarField,
 } from "@web/views/fields/many2one_avatar/many2one_avatar_field";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { browser } from "@web/core/browser/browser";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 const WithUserChatter = (T) =>
     class extends T {
         setup() {
             super.setup(...arguments);
-            this.openChat = useOpenChat(this.relation);
             if (this.props.withCommand) {
                 useAssignUserCommand();
             }
-            this.avatarCard = usePopover(AvatarCardPopover, {
-                closeOnHoverAway: true,
-            });
-            this.openTimeout = false;
+            this.avatarCard = usePopover(AvatarCardPopover);
         }
 
-        onClickAvatar() {
+        onClickAvatar(ev) {
             const id = this.props.record.data[this.props.name][0] ?? false;
             if (id !== false) {
-                this.openChat(id);
-            }
-        }
-
-        openCard(ev) {
-            if (this.env.isSmall || this.relation !== "res.users") {
-                return;
-            }
-            const target = ev.currentTarget;
-            if (!target.querySelector(":scope > img")) {
-                return;
-            }
-            this.openTimeout = browser.setTimeout(() => {
+                if (this.env.isSmall || this.relation !== "res.users") {
+                    return;
+                }
+                const target = ev.currentTarget;
                 if (!this.avatarCard.isOpen) {
                     this.avatarCard.open(target, {
                         id: this.props.record.data[this.props.name][0],
                     });
                 }
-            }, 350);
-        }
-
-        clearTimeout() {
-            browser.clearTimeout(this.openTimeout);
-            delete this.openTimeout;
+            }
         }
     };
 

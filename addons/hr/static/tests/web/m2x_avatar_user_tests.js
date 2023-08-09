@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
 import { start } from "@mail/../tests/helpers/test_utils";
-import { patchWithCleanup, triggerEvent, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { click, patchWithCleanup, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { EventBus } from "@odoo/owl";
@@ -71,6 +70,7 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
                 "email", 
                 "phone", 
                 "im_status",
+                "share",
                 "work_phone",
                 "work_email",
                 "job_title",
@@ -107,13 +107,12 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
             },
         });
         // Open card
-        await triggerEvent(target, ".o_m2o_avatar > img", "mouseover");
-        assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
+        await click(document, ".o_m2o_avatar > img");
+        assert.verifySteps(["setTimeout of 250ms", "user read"]);
         assert.containsOnce(target, ".o_avatar_card");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', ' Mario@odoo.pro', ' +585555555']);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', 'Mario@odoo.pro', '+585555555']);
         // Close card
-        await triggerEvent(target, ".o_control_panel", "mouseover");
-        assert.verifySteps(["setTimeout of 400ms"]);
+        await click(document, ".o_action_manager");
         assert.containsNone(target, ".o_avatar_card");
     });
 });

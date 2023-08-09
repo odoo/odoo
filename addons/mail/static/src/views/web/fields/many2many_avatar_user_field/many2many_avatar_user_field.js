@@ -1,12 +1,10 @@
 /* @odoo-module */
 
-import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { browser } from "@web/core/browser/browser";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import {
     Many2ManyTagsAvatarField,
@@ -21,30 +19,24 @@ import {
 export class Many2ManyAvatarUserTagsList extends TagsList {}
 Many2ManyAvatarUserTagsList.template = "mail.Many2ManyAvatarUserTagsList";
 
-const WithUserChatter = (T) => class UserChatterMixin extends T {
-    setup() {
-        super.setup(...arguments);
-        this.openChat = useOpenChat(this.relation);
-        if (this.props.withCommand) {
-            useAssignUserCommand();
+const WithUserChatter = (T) =>
+    class UserChatterMixin extends T {
+        setup() {
+            super.setup(...arguments);
+            if (this.props.withCommand) {
+                useAssignUserCommand();
+            }
+            this.avatarCard = usePopover(AvatarCardPopover);
         }
-        this.avatarCard = usePopover(AvatarCardPopover, {
-            closeOnHoverAway: true,
-        });
-        this.openTimeout = false;
-        this.lastOpenedId = 0;
-    }
 
-    getTagProps(record) {
-        return {
-            ...super.getTagProps(...arguments),
-            onImageClicked: () => this.openChat(record.resId),
-            openCard: (ev) => {
-                if (this.env.isSmall || this.relation !== "res.users") {
-                    return;
-                }
-                const target = ev.currentTarget;
-                this.openTimeout = browser.setTimeout(() => {
+        getTagProps(record) {
+            return {
+                ...super.getTagProps(...arguments),
+                onImageClicked: (ev) => {
+                    if (this.env.isSmall || this.relation !== "res.users") {
+                        return;
+                    }
+                    const target = ev.currentTarget;
                     if (
                         !this.avatarCard.isOpen ||
                         (this.lastOpenedId && record.resId !== this.lastOpenedId)
@@ -54,15 +46,10 @@ const WithUserChatter = (T) => class UserChatterMixin extends T {
                         });
                         this.lastOpenedId = record.resId;
                     }
-                }, 350);
-            },
-            clearTimeout: () => {
-                browser.clearTimeout(this.openTimeout);
-                delete this.openTimeout;
-            },
-        };
-    }
-}
+                },
+            };
+        }
+    };
 
 export class Many2ManyTagsAvatarUserField extends WithUserChatter(Many2ManyTagsAvatarField) {
     static components = {
@@ -83,7 +70,9 @@ export class KanbanMany2ManyAvatarUserTagsList extends KanbanMany2ManyTagsAvatar
     static template = "mail.KanbanMany2ManyAvatarUserTagsList";
 }
 
-export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(KanbanMany2ManyTagsAvatarField) {
+export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
+    KanbanMany2ManyTagsAvatarField
+) {
     static template = "mail.KanbanMany2ManyTagsAvatarUserField";
     static components = {
         ...KanbanMany2ManyTagsAvatarField.components,
@@ -100,7 +89,9 @@ export const kanbanMany2ManyTagsAvatarUserField = {
 };
 registry.category("fields").add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
 
-export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(ListMany2ManyTagsAvatarField) {
+export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
+    ListMany2ManyTagsAvatarField
+) {
     static template = "mail.ListMany2ManyTagsAvatarUserField";
     static components = {
         ...ListMany2ManyTagsAvatarField.components,
