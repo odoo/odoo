@@ -464,7 +464,7 @@ export class PosStore extends Reactive {
                 delete this.toRefundLines[line.refunded_orderline_id];
             }
         }
-        if (this.isOpenOrderShareable() && removeFromServer) {
+        if (removeFromServer) {
             if (this.ordersToUpdateSet.has(order)) {
                 this.ordersToUpdateSet.delete(order);
             }
@@ -690,8 +690,7 @@ export class PosStore extends Reactive {
             );
             this.set_synch("connected");
             this._postRemoveFromServer(removedOrdersIds, removeOrdersResponseData);
-        } catch (reason) {
-            const error = reason.message;
+        } catch (error) {
             if (error.code === 200) {
                 // Business Logic Error, not a connection problem
                 //if warning do not need to display traceback!!

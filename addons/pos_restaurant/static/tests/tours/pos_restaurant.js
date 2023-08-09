@@ -11,15 +11,15 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("web_tour.tours")
-    .add("pos_restaurant_sync", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("pos_restaurant_sync", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
 
             startSteps();
-            
+
             ProductScreen.do.confirmOpeningPopup();
-            
+
             // Create first order
             FloorScreen.do.clickTable("5");
             ProductScreen.check.orderBtnIsPresent();
@@ -34,7 +34,7 @@ registry
             ProductScreen.check.orderlinesHaveNoChange();
             ProductScreen.check.isPrintingError();
             ProductScreen.check.totalAmountIs("4.40");
-            
+
             // Create 2nd order (paid)
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
@@ -48,13 +48,13 @@ registry
             PaymentScreen.do.clickPaymentMethod("Cash");
             PaymentScreen.do.clickValidate();
             ReceiptScreen.do.clickNextOrder();
-            
+
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
             FloorScreen.check.orderCountSyncedInTableIs("5", "1");
             FloorScreen.do.clickTable("5");
             ProductScreen.check.totalAmountIs("4.40");
-            
+
             // Create another draft order and go back to floor
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
@@ -64,10 +64,10 @@ registry
             ProductScreen.do.clickDisplayedProduct("Minute Maid");
             ProductScreen.check.selectedOrderlineHas("Minute Maid");
             Chrome.do.backToFloor();
-            
+
             // At floor screen, there should be 2 synced draft orders
             FloorScreen.check.orderCountSyncedInTableIs("5", "2");
-            
+
             // Delete the first order then go back to floor
             FloorScreen.do.clickTable("5");
             ProductScreen.check.isShown();
@@ -77,37 +77,38 @@ registry
             Chrome.do.confirmPopup();
             Chrome.check.isSyncStatusPending();
             Chrome.check.isSyncStatusConnected();
+            TicketScreen.check.isMissing("-0001");
             TicketScreen.do.selectOrder("-0003");
             Chrome.do.backToFloor();
-            
+
             // There should be 1 synced draft order.
             FloorScreen.check.orderCountSyncedInTableIs("5", "2");
-            return getSteps(); 
-        } 
+            return getSteps();
+        }
     });
-    
+
 /* pos_restaurant_sync_second_login
 *
 * This tour should be run after the first tour is done.
 */
 registry
     .category("web_tour.tours")
-    .add("pos_restaurant_sync_second_login", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("pos_restaurant_sync_second_login", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
-        
+
             startSteps();
-            
-            
+
+
             // There is one draft synced order from the previous tour
             FloorScreen.do.clickTable("5");
             ProductScreen.check.totalAmountIs("4.40");
-            
+
             // Test transfering an order
             ProductScreen.do.clickTransferButton();
             FloorScreen.do.clickTable("4");
-            
+
             // Test if products still get merged after transfering the order
             ProductScreen.do.clickDisplayedProduct("Coca-Cola");
             ProductScreen.check.selectedOrderlineHas("Coca-Cola", "2.0");
@@ -119,7 +120,7 @@ registry
             PaymentScreen.do.clickValidate();
             ReceiptScreen.do.clickNextOrder();
             // At this point, there are no draft orders.
-            
+
             FloorScreen.do.clickTable("2");
             ProductScreen.check.isShown();
             ProductScreen.check.orderIsEmpty();
@@ -129,6 +130,6 @@ registry
             ProductScreen.check.totalAmountIs("2.20");
             Chrome.do.backToFloor();
             FloorScreen.check.orderCountSyncedInTableIs("4", "1");
-            return getSteps(); 
-        } 
+            return getSteps();
+        }
     });

@@ -9,9 +9,9 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("web_tour.tours")
-    .add("PosResTicketScreenTour", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("PosResTicketScreenTour", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
             startSteps();
 
@@ -21,7 +21,7 @@ registry
             Chrome.do.clickTicketButton();
             TicketScreen.check.noNewTicketButton();
             TicketScreen.do.clickDiscard();
-            
+
             // Deleting the last order in the table brings back to floorscreen
             FloorScreen.do.clickTable("4");
             ProductScreen.check.isShown();
@@ -30,7 +30,7 @@ registry
             TicketScreen.check.nthRowContains(2, "-0001");
             TicketScreen.do.deleteOrder("-0001");
             TicketScreen.do.clickDiscard();
-            
+
             // Create 2 items in a table. From floorscreen, delete 1 item. Then select the other item.
             // Correct order and screen should be displayed and the BackToFloorButton is shown.
             FloorScreen.do.clickTable("2");
@@ -47,11 +47,12 @@ registry
             Chrome.do.clickTicketButton();
             TicketScreen.do.deleteOrder("-0003");
             Chrome.do.confirmPopup();
+            TicketScreen.check.isMissing("-0003");
             TicketScreen.do.selectOrder("-0002");
             ProductScreen.check.isShown();
             ProductScreen.check.totalAmountIs("2.0");
             Chrome.do.backToFloor();
-            
+
             // Make sure that order is deleted properly.
             FloorScreen.do.clickTable("5");
             ProductScreen.exec.addOrderline("Minute Maid", "1", "3");
@@ -62,10 +63,11 @@ registry
             Chrome.do.clickTicketButton();
             TicketScreen.do.deleteOrder("-0004");
             Chrome.do.confirmPopup();
+            TicketScreen.check.isMissing("-0004");
             TicketScreen.do.clickDiscard();
             FloorScreen.check.isShown();
             FloorScreen.do.clickTable("5");
             ProductScreen.check.orderIsEmpty();
-            return getSteps(); 
+            return getSteps();
         }
     });

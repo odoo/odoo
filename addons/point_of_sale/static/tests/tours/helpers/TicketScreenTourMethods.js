@@ -230,6 +230,14 @@ class Check {
             },
         ];
     }
+    isMissing(orderName) {
+        return [
+            {
+                trigger: `.ticket-screen:not(:has(.order-row > .col:nth-child(2):contains("${orderName}")))`,
+                isCheck: true,
+            },
+        ];
+    }
 }
 
 class Execute {}

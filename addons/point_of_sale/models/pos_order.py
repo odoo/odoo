@@ -1245,19 +1245,25 @@ class PosOrder(models.Model):
 
     @api.model
     def remove_from_ui(self, server_ids):
-        """ Remove orders from the frontend PoS application
-
-        Remove orders from the server by id.
-        :param server_ids: list of the id's of orders to remove from the server.
-        :type server_ids: list.
-        :returns: list -- list of db-ids for the removed orders.
+        """ Removes orders from the server by id if they have no payment,
+            otherwise their state is set to 'cancel'.
+            This method is called when removing orders from the frontend PoS application.
+            :param server_ids: list of orders id to cancel.
+            :type server_ids: list(int)
+            :return: list of orders id that were cancelled.
+            :rtype: list(int)
         """
-        orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
-        orders.write({'state': 'cancel'})
+        orders = self.search(['&', ('id', 'in', server_ids), ('state', 'in', ['draft', 'cancel'])])
+        orders_id = orders.ids
         # TODO Looks like delete cascade is a better solution.
-        orders.mapped('payment_ids').sudo().unlink()
-        orders.sudo().unlink()
-        return orders.ids
+        orders_with_payment = orders.filtered('payment_ids')
+        orders_without_payment = orders - orders_with_payment
+        if orders_with_payment:
+            orders_with_payment.sudo().write({'state': 'cancel'})
+        if orders_without_payment:
+            orders_without_payment.sudo().unlink()
+
+        return orders_id
 
     @api.model
     def search_paid_order_ids(self, config_id, domain, limit, offset):
