@@ -2,14 +2,18 @@
 <odoo>
 
     <template id="portal_my_home_productions" name="Productions" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_vendor_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_vendor_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/mrp_subcontracting/static/src/img/manufacturing.svg'"/>
                 <t t-set="title">Manufacturing Orders</t>
                 <t t-set="text">Follow manufacturing orders you have to fulfill</t>
                 <t t-set="url" t-value="'/my/productions'"/>
+                <t t-set="placeholder_count" t-value="'production_count'"/>
             </t>
-        </xpath>
+        </div>
     </template>
 
     <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">

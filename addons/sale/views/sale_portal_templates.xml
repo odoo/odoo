@@ -19,20 +19,28 @@
     </template>
 
     <template id="portal_my_home_sale" name="Show Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+            <t t-set="portal_alert_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_alert_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="bg_color" t-value="'alert alert-primary'"/>
                 <t t-set="placeholder_count" t-value="'quotation_count'"/>
                 <t t-set="title">Quotation(s) to review</t>
                 <t t-set="url" t-value="'/my/quotes'"/>
+                <t t-set="show_count" t-value="True"/>
             </t>
+        </div>
+        <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
                 <t t-set="title">Sales Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
                 <t t-set="text">Follow, view or pay your orders</t>
+                <t t-set="placeholder_count" t-value="'order_count'"/>
             </t>
-        </xpath>
+        </div>
     </template>
 
     <template id="portal_my_quotations" name="My Quotations">
