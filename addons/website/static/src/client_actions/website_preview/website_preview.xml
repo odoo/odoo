@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-<t t-name="website.BlockPreview" owl="1">
+<t t-name="website.BlockPreview">
     <div class="o_blockUI o_block_preview position-fixed d-flex justify-content-center align-items-center flex-column h-100 w-100 bg-black-50">
         <div class="o_spinner mb-4">
             <img src="/web/static/img/spin.svg" alt="Loading..."/>
@@ -8,7 +8,7 @@
     </div>
 </t>
 
-<t t-name="website.WebsitePreview" owl="1">
+<t t-name="website.WebsitePreview">
     <div class="o_website_preview" t-ref="container"
          t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded,
                         'o_is_blocked': this.blockedState.isBlocked,

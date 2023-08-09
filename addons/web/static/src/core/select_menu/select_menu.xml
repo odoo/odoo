@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="web.SelectMenu" owl="1">
+    <t t-name="web.SelectMenu">
         <Dropdown
             class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
             togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
@@ -54,7 +54,7 @@
         </Dropdown>
     </t>
 
-    <t t-name="web.SelectMenu.ChoiceItem" owl="1">
+    <t t-name="web.SelectMenu.ChoiceItem">
         <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
             <span t-esc="choice.label" />
             <hr class="bg-primary mt-2 mb-1" />

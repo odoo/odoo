@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <tr t-name="mrp.BomOverviewSpecialLine" owl="1">
+    <tr t-name="mrp.BomOverviewSpecialLine">
         <td name="td_mrp_bom">
             <span t-attf-style="margin-left: {{ data.level * 20 }}px"/>
             <button t-if="hasFoldButton" t-on-click="props.toggleFolded" t-attf-class="o_mrp_bom_{{ props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}">

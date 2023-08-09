@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.CalendarCommonRenderer" owl="1">
+    <t t-name="web.CalendarCommonRenderer">
         <div class="o_calendar_widget" t-ref="fullCalendar" />
     </t>
 
-    <t t-name="web.CalendarCommonRenderer.event" owl="1">
+    <t t-name="web.CalendarCommonRenderer.event">
         <div class="fc-content">
             <t t-if="!isTimeHidden">
                 <span class="fc-time" t-esc="startTime" />

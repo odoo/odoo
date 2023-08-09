@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="account_peppol.VerificationCodeWidget" owl="1">
+    <t t-name="account_peppol.VerificationCodeWidget">
         <div class="row w-50 mt-0 pt-0" t-on-focusout="_save">
             <t t-foreach="[...Array(6).keys()]" t-as="i" t-key="i">
                 <input class="verification_code col border border-2 rounded m-1 p-0 text-center"

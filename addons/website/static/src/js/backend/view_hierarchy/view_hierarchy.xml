@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="website.view_hierarchy" owl="1">
+<t t-name="website.view_hierarchy">
     <Layout display="{controlPanel: { 'top-right': false, 'bottom-right': false, 'bottom-left': false }}" className="'overflow-auto h-100'">
             <HierarchyNavbar
                 toggleInactive.bind="toggleInactive"
@@ -27,7 +27,7 @@
     </Layout>
 </t>
 
-<t t-name="website.report_viewhierarchy_children" owl="1">
+<t t-name="website.report_viewhierarchy_children">
     <p t-on-click="() => this.onCollapseClick(viewTree)"
     t-attf-class="o_tree_entry mb-0 d-flex align-items-center {{viewTree.active ? '': 'text-muted fw-normal'}} {{viewTree.inherit_children.length ? 'o_has_child' : ''}} {{state.searchedView.id === viewTree.id ? 'o_search_found border border-info rounded px-2': ''}}">
         <i t-if="hasChildToUnfold(viewTree)" t-attf-class="js_fold o_fold_icon fa {{ viewTree.collapsed ? 'fa-plus-square-o' : 'fa-minus-square-o' }} me-1"/>

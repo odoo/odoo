@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="sale_project.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension" owl="1">
+    <t t-name="sale_project.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension">
         <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="before">
             <ProjectRightSidePanelSection
                 name="'sales'"
                 show="!!state.data.sale_items?.data"
                 dataClassName="'py-3'"
             >
-                <t t-set-slot="title" owl="1">
+                <t t-set-slot="title">
                     Sales
                 </t>
                 <span t-if="!state.data.sale_items.data.length" class="text-muted fst-italic">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="web_editor.FileSelectorControlPanel" owl="1">
+<t t-name="web_editor.FileSelectorControlPanel">
     <div class="d-flex flex-wrap gap-2 mt-4 mb-2 align-items-end">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
         <div class="d-flex gap-3 justify-content-start align-items-center">
@@ -36,7 +36,7 @@
     </div>
 </t>
 
-<t t-name="web_editor.FileSelector" owl="1">
+<t t-name="web_editor.FileSelector">
     <div>
         <FileSelectorControlPanel uploadText="uploadText"
             accept="fileMimetypes"

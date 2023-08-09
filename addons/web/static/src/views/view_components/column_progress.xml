@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ColumnProgress" owl="1">
+    <t t-name="web.ColumnProgress">
         <div class="o_column_progress progress bg-300 w-75">
             <t t-set="maxWidth" t-value="100 - Math.max(0, props.progressBar.bars.filter(x => x.count > 0).length - 1) * 5"/>
             <t t-foreach="props.progressBar.bars" t-as="bar" t-key="bar.value">

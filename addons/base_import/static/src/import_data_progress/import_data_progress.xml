@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="ImportDataProgress" owl="1">
+    <t t-name="ImportDataProgress">
         <div t-if="props.importProgress.step > 1" class="o_import_data_progress d-flex align-items-center flex-column">
             <div class="o_import_progress_dialog_batch text-center">
                 Batch <span class="o_import_progress_dialog_batch_count"><t t-esc="props.importProgress.step"/></span> out of <span t-esc="props.totalSteps"/>...

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.CustomerFacingDisplayHead" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayHead">
         <div class="resources">
             <base t-att-href="origin" />
             <meta http-equiv="cache-control" content="no-cache" />
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayNoOrder" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayNoOrder">
         <t t-call="point_of_sale.CustomerFacingDisplayHead" />
 
         <div class="pos-customer_facing_display pos-no-order pos-palette_01" t-attf-style="background-image: #{backgroundImageCSSValue};">
@@ -40,7 +40,7 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayOrder" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrder">
         <!-- Header -->
         <t t-call="point_of_sale.CustomerFacingDisplayHead" />
 
@@ -87,7 +87,7 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayMainContainer" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayMainContainer">
         <div class="pos_orderlines">
             <t t-if="order">
                 <t t-if="order.get_current_screen_data().name != 'ReceiptScreen'">
@@ -102,7 +102,7 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines">
         <t t-if="order.get_orderlines().length > 0">
             <div class="pos-order_top_bar">
                 <span>Your Order</span>
@@ -166,7 +166,7 @@
         </t>
     </t>
 
-    <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines">
         <div class="pos-paymentlines">
             <t t-if="order">
                 <t t-foreach="order.get_paymentlines()" t-as="paymentline"  t-key="paymentline_index">

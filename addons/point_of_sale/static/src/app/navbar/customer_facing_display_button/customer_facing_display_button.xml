@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.CustomerFacingDisplayButton" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayButton">
         <button class="menu-item navbar-button btn btn-light rounded-0 d-flex align-items-center px-3 cursor-pointer" t-on-click="() => {customerDisplay.connect(); this.displayMessage(message);}">
             <div t-if="customerDisplay.status === 'warning'" class="js_warning oe_icon oe_orange text-warning">
                 <i class="fa fa-fw fa-desktop" role="img" t-attf-aria-label="Customer Screen Warning : {{message}}" t-attf-title="Customer Screen Warning : {{message}}"></i>

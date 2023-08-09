@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanRecordQuickCreate" owl="1">
+    <t t-name="web.KanbanRecordQuickCreate">
         <KanbanQuickCreateController t-if="state.isLoaded" t-props="quickCreateProps" />
     </t>
 
-    <t t-name="web.KanbanQuickCreateController" owl="1">
+    <t t-name="web.KanbanQuickCreateController">
         <div
             class="o_kanban_quick_create o_field_highlight shadow"
             t-att-class="{ o_disabled: state.disabled, 'w-100 mx-0': props.listIsGrouped }"

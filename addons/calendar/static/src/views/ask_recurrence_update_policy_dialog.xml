@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="calendar.AskRecurrenceUpdatePolicyDialog" owl="1">
+    <t t-name="calendar.AskRecurrenceUpdatePolicyDialog">
         <Dialog size="'sm'" title="env._t('Edit Recurrent event')">
             <t t-foreach="Object.entries(possibleValues)" t-as="value" t-key="value[0]">
                 <t t-set="name" t-value="value[0]"/>
@@ -10,7 +10,7 @@
                     <label class="form-check-label o_form_label" t-att-for="name" t-esc="state.label"/>
                 </div>
             </t>
-            <t t-set-slot="footer" owl="1">
+            <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="confirm">
                     Confirm
                 </button>

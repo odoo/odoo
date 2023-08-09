@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="web.UpgradeDialog" owl="1">
+    <t t-name="web.UpgradeDialog">
         <Dialog size="'md'" title="'Odoo Enterprise'">
             <div class="row" role="status">
                 <div class="col-6">
@@ -18,7 +18,7 @@
                     <img class="img-fluid" t-att-src="'/web/static/img/enterprise_upgrade.jpg'" draggable="false" alt="Upgrade to enterprise"/>
                 </div>
             </div>
-            <t t-set-slot="footer" owl="1">
+            <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_confirmUpgrade">Upgrade now</button>
                 <button class="btn btn-secondary" t-on-click="this.props.close">Cancel</button>
             </t>

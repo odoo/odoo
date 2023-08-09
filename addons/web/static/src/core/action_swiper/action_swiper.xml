@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.ActionSwiper" owl="1">
+    <t t-name="web.ActionSwiper">
         <t t-if="props.onRightSwipe || props.onLeftSwipe">
             <div class="o_actionswiper" t-on-touchend="_onTouchEndSwipe" t-on-touchmove="_onTouchMoveSwipe" t-on-touchstart="_onTouchStartSwipe" t-ref="root">
                 <div class="o_actionswiper_overflow_container position-relative overflow-hidden">

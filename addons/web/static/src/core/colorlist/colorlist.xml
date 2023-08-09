@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ColorList" owl="1">
+    <t t-name="web.ColorList">
         <div class="o_colorlist d-flex flex-wrap align-items-center mw-100 gap-2" aria-atomic="true" t-ref="colorlist">
             <t t-if="!props.forceExpanded and !state.isExpanded">
                 <button t-on-click="onToggle" role="menuitem" t-att-title="colors[props.selectedColor]" t-att-data-color="props.selectedColor" t-att-aria-label="colors[props.selectedColor]" t-attf-class="btn p-0 rounded-0 o_colorlist_toggler o_colorlist_item_color_{{ props.selectedColor }}"/>

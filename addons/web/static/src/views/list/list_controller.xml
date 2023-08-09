@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ListView" owl="1">
+    <t t-name="web.ListView">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                 <t t-set-slot="control-panel-create-button">
@@ -74,7 +74,7 @@
         </div>
     </t>
 
-    <t t-name="web.ListView.Buttons" owl="1">
+    <t t-name="web.ListView.Buttons">
         <div t-if="props.showButtons" class="o_list_buttons d-flex gap-1 d-empty-none align-items-baseline" role="toolbar" aria-label="Main actions">
             <t t-if="model.root.editedRecord">
                 <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
@@ -87,7 +87,7 @@
         </div>
     </t>
 
-    <t t-name="web.ListView.Selection" owl="1">
+    <t t-name="web.ListView.Selection">
         <div class="o_list_selection_box list-group flex-row me-2" role="alert">
             <span class="list-group-item active d-flex align-items-center alisgn-self-stretch pe-0 py-0 rounded-1 lh-1">
                 <span t-if="isDomainSelected">All <b t-esc="nbTotal"/> selected</span>

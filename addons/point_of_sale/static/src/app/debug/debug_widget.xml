@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.DebugWidget" owl="1">
+    <t t-name="point_of_sale.DebugWidget">
         <Transition visible="props.state.showWidget" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
             <div class="debug-widget bg-100 p-2 shadow-lg" t-att-class="transition.className" t-ref="root" t-att-style="style">
                 <header class="drag-handle">

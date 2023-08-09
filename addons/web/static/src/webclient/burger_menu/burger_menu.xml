@@ -3,7 +3,7 @@
 
 <!-- Owl Templates -->
 
-<div t-name="web.BurgerMenu" owl="1">
+<div t-name="web.BurgerMenu">
     <button
         class="o_mobile_menu_toggle o_nav_entry o-no-caret d-md-none border-0 pe-3"
         title="Toggle menu" aria-label="Toggle menu"
@@ -46,7 +46,7 @@
     </t>
 </div>
 
-<t t-name="web.BurgerSection" owl="1">
+<t t-name="web.BurgerSection">
     <li t-if="section.childrenTree.length" class="ps-0">
         <div class="bg-transparent"
             t-att-class="{

@@ -5,7 +5,7 @@
     <!--=================-->
 
     <!-- Editor toolbar -->
-    <t t-name="web_editor.toolbar" owl="1">
+    <t t-name="web_editor.toolbar">
         <div id="toolbar" class="oe-toolbar oe-floating">
             <div t-if="props.showStyle" id="style" t-attf-class="btn-group {{ props.dropDirection }}">
                 <button type="button" class="btn dropdown-toggle"
@@ -218,7 +218,7 @@
     </t>
 
     <!-- Editor Toolbar -->
-    <!-- <t t-inherit="web_editor.toolbar" t-inherit-mode="extension" owl="1">
+    <!-- <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
         <xpath expr="//div[@id='checklist']" position="replace">aoeu</xpath>
         <xpath expr="//div[@id='list']" position="inside">
             <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>coucou4

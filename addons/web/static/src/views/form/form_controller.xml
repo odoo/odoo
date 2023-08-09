@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.FormView" owl="1">
+    <t t-name="web.FormView">
         <div t-att-class="className" t-ref="root">
             <div class="o_form_view_container">
                 <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
@@ -57,7 +57,7 @@
         </div>
     </t>
 
-    <t t-name="web.FormView.Buttons" owl="1">
+    <t t-name="web.FormView.Buttons">
         <div class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
             <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
                 <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">

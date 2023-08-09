@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ControlPanel" owl="1">
+    <t t-name="web.ControlPanel">
         <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root">
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
@@ -74,7 +74,7 @@
         </div>
     </t>
 
-    <t t-name="web.Breadcrumbs" owl="1">
+    <t t-name="web.Breadcrumbs">
         <t t-set="currentBreadcrumbs" t-value="breadcrumbs.slice(-1)"/>
         <t t-set="visiblePathBreadcrumbs" t-value="breadcrumbs.slice(-3, -1)"/>
         <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3).reverse()"/>
@@ -126,13 +126,13 @@
         <t t-slot="control-panel-status-indicator" />
     </t>
 
-    <t t-name="web.Breadcrumb.Actions" owl="1">
+    <t t-name="web.Breadcrumb.Actions">
         <div class="o_control_panel_breadcrumbs_actions d-inline-flex">
             <t t-slot="control-panel-additional-actions"/>
         </div>
     </t>
 
-    <t t-name="web.Breadcrumb.Name" owl="1">
+    <t t-name="web.Breadcrumb.Name">
         <t t-if="breadcrumb.name" t-out="breadcrumb.name"/>
         <em t-else="" class="text-warning">Unnamed</em>
     </t>

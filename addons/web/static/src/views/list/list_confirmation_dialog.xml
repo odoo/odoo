@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ListView.ConfirmationModal" owl="1">
+    <t t-name="web.ListView.ConfirmationModal">
         <Dialog size="'md'" title="props.title">
             <main role="alert">
                 <p>
@@ -31,7 +31,7 @@
                     </table>
                 </div>
             </main>
-            <t t-set-slot="footer" owl="1">
+            <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_confirm" t-ref="autofocus">
                 Confirm
                 </button>

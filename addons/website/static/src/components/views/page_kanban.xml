@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.PageKanbanRenderer" t-inherit="web.KanbanRenderer" owl="1">
+<t t-name="website.PageKanbanRenderer" t-inherit="web.KanbanRenderer">
     <xpath expr="//t[@t-if='groupOrRecord.group']//KanbanRecord" position="attributes">
         <attribute name="t-if">recordFilter(record, props.list.records)</attribute>
     </xpath>
@@ -10,7 +10,7 @@
     </xpath>
 </t>
 
-<t t-name="website.PageKanbanView" t-inherit="web.KanbanView" owl="1">
+<t t-name="website.PageKanbanView" t-inherit="web.KanbanView">
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>

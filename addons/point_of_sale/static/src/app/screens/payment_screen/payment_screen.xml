@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.PaymentScreen" owl="1">
+    <t t-name="point_of_sale.PaymentScreen">
         <t t-if="ui.isSmall">
             <div class="payment-screen screen d-flex flex-column h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
                 <PaymentScreenStatus order="currentOrder" />
@@ -33,7 +33,7 @@
     </t>
 
 
-    <t t-name="point_of_sale.PaymentScreenTop" owl="1">
+    <t t-name="point_of_sale.PaymentScreenTop">
         <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
             <div class="button back btn btn-lg btn-secondary" t-on-click="() => pos.showScreen('ProductScreen')">
                 <i class="fa fa-angle-double-left me-2" />
@@ -45,7 +45,7 @@
         </div>
     </t>
 
-    <t t-name="point_of_sale.PaymentScreenValidate" owl="1">
+    <t t-name="point_of_sale.PaymentScreenValidate">
         <t t-if="ui.isSmall">
             <div class="switchpane d-flex">
                 <button class="btn-switchpane validation-button btn btn-primary flex-fill py-5 rounded-0 fw-bolder"
@@ -67,7 +67,7 @@
     </t>
 
 
-    <t t-name="point_of_sale.PaymentScreenButtons" owl="1">
+    <t t-name="point_of_sale.PaymentScreenButtons">
         <div class="payment-buttons d-flex flex-column flex-wrap">
             <button class="button partner-button btn btn-light py-3 text-start rounded-0 border-bottom" 
                 t-att-class="{ 'highlight text-bg-primary': currentOrder.get_partner() }" 
@@ -101,7 +101,7 @@
     </t>
 
 
-    <t t-name="point_of_sale.PaymentScreenMethods" owl="1">
+    <t t-name="point_of_sale.PaymentScreenMethods">
         <div class="paymentmethods-container overflow-y-auto flex-grow-1">
             <div class="paymentmethods d-flex flex-column">
                 <h4 class="title-category pt-3 pb-2 px-3 m-0 bg-view border-bottom border-2">Payment method</h4>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="web.FileUploadProgressKanbanRecord" owl="1">
+    <t t-name="web.FileUploadProgressKanbanRecord">
         <t t-set="progressTexts" t-value="getProgressTexts()"/>
         <div class="o_kanban_record d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0">
             <div class="o_kanban_progress_card o_kanban_attachment position-relative p-0 cursor-pointer">
@@ -30,7 +30,7 @@
         </div>
     </t>
 
-    <t t-name="web.FileUploadProgressDataRow" owl="1">
+    <t t-name="web.FileUploadProgressDataRow">
         <t t-set="progressTexts" t-value="getProgressTexts()"/>
         <div class="o_data_row o_list_progress_card position-relative align-middle p-0">
             <span class="o_file_upload_upload_title" t-esc="props.fileUpload.title"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="discuss.CallMenu" owl="1">
+    <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
             <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="() => this.threadService.open(this.rtc.state.channel)">
                 <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center">

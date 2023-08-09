@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.CalendarFilterPanel" owl="1">
+    <t t-name="web.CalendarFilterPanel">
         <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
             <t t-if="section.filters.length gt 0">
                 <div
@@ -68,7 +68,7 @@
         </t>
     </t>
 
-    <t t-name="web.CalendarFilterPanel.filter" owl="1">
+    <t t-name="web.CalendarFilterPanel.filter">
         <div
             class="o_calendar_filter_item w-100 position-relative mb-2"
             t-att-class="getFilterColor(filter)"

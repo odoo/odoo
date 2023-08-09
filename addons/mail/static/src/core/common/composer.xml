@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.Composer" owl="1">
+<t t-name="mail.Composer">
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
@@ -101,7 +101,7 @@
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
-<t t-name="mail.Composer.sendButton" owl="1">
+<t t-name="mail.Composer.sendButton">
     <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last border-start-0"
         t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
         t-on-click="sendMessage"
@@ -114,7 +114,7 @@
     </button>
 </t>
 
-    <t t-name="mail.Composer.suggestionPartner" owl="1">
+    <t t-name="mail.Composer.suggestionPartner">
         <t t-set="partner" t-value="option.partner"/>
         <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
@@ -123,13 +123,13 @@
         <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
     </t>
 
-    <t t-name="mail.Composer.suggestionThread" owl="1">
+    <t t-name="mail.Composer.suggestionThread">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             #<t t-esc="option.label"/>
         </strong>
     </t>
 
-    <t t-name="mail.Composer.suggestionChannelCommand" owl="1">
+    <t t-name="mail.Composer.suggestionChannelCommand">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.label"/>
         </strong>
@@ -138,7 +138,7 @@
         </em>
     </t>
 
-    <t t-name="mail.Composer.suggestionCannedResponse" owl="1">
+    <t t-name="mail.Composer.suggestionCannedResponse">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.name"/>
         </strong>

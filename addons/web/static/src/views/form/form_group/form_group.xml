@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="web.Form.OuterGroup" owl="1">
+<t t-name="web.Form.OuterGroup">
     <div class="o_group row align-items-start" t-attf-class="{{ allClasses }}" t-att-style="props.style">
         <t t-slot="title" t-if="props.slots and props.slots.title" />
         <t t-foreach="getItems()" t-as="item" t-key="item_index">
@@ -11,7 +11,7 @@
     </div>
 </t>
 
-<t t-name="web.Form.InnerGroup" owl="1">
+<t t-name="web.Form.InnerGroup">
     <div t-attf-class="{{ allClasses }}" class="o_inner_group grid" t-att-style="props.style">
         <div t-if="props.slots and props.slots.title" t-attf-class="g-col-sm-{{ props.maxCols }}">
             <t t-slot="title" />
@@ -38,7 +38,7 @@
     </div>
 </t>
 
-<t t-name="web.Form.InnerGroup.ItemComponent" owl="1">
+<t t-name="web.Form.InnerGroup.ItemComponent">
     <t t-if="cell.props.fieldInfo.field.component.name !== 'BooleanField'">
         <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>

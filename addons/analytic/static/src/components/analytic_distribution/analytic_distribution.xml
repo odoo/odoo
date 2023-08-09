@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="analytic.AnalyticDistribution" owl="1">
+    <t t-name="analytic.AnalyticDistribution">
         <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
             <TagsList tags="this.tags"/>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
@@ -12,7 +12,7 @@
         </div>
     </t>
 
-    <t t-name="analytic.AnalyticDistributionPopup" owl="1">
+    <t t-name="analytic.AnalyticDistributionPopup">
         <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header sticky-top">
                 <div class="d-flex">

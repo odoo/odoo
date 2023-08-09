@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mrp_subcontracting.BomOverviewSpecialLine" t-inherit="mrp.BomOverviewSpecialLine" t-inherit-mode="extension" owl="1">
+    <t t-name="mrp_subcontracting.BomOverviewSpecialLine" t-inherit="mrp.BomOverviewSpecialLine" t-inherit-mode="extension">
         <xpath expr="//td[@name='td_mrp_bom']" position="inside">
             <t t-if="props.type == 'subcontracting'">Subcontracting: <a href="#" t-on-click.prevent="goToSubcontractor" t-esc="subcontracting.name"/></t>
         </xpath>

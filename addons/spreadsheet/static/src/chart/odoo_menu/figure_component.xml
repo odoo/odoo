@@ -1,5 +1,5 @@
 <odoo>
-    <div t-name="spreadsheet.FigureComponent" t-inherit="o-spreadsheet-FigureComponent" t-inherit-mode="extension" owl="1">
+    <div t-name="spreadsheet.FigureComponent" t-inherit="o-spreadsheet-FigureComponent" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-figure-menu-item')]" position="before">
             <div
                 t-if="hasOdooMenu and !env.isDashboard()"

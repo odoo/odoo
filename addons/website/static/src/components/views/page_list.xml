@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" owl="1">
+<t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
     <xpath expr="//Field//ancestor::td/*[1]" position="before">
         <t t-if="column.name === 'name' and record.data.is_homepage and record.mode !== 'edit'">
             <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
@@ -12,7 +12,7 @@
     </xpath>
 </t>
 
-<t t-name="website.PageListView" t-inherit="web.ListView" owl="1">
+<t t-name="website.PageListView" t-inherit="web.ListView">
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>
@@ -23,7 +23,7 @@
     </xpath>
 </t>
 
-<t t-name="website.RecordFilter" owl="1">
+<t t-name="website.RecordFilter">
     <div t-if="websiteSelection.length > 1" class="o_dropdown_container o_website_menu w-100 w-lg-auto px-3 border-start">
         <div class="px-3 fs-5 mb-2">
             <i class="me-2 fa fa-globe"/>

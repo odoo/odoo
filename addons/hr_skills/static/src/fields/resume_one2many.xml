@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <t t-name="hr_skills.ResumeListRenderer" owl="1" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer">
+    <t t-name="hr_skills.ResumeListRenderer" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer">
         <xpath expr="//table" position="attributes">
             <attribute name="t-attf-class" add="table-borderless {{ !showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
         </xpath>
@@ -13,7 +13,7 @@
         </xpath>
     </t>
 
-    <t t-name="hr_skills.ResumeListRenderer.Rows" owl="1" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer.Rows">
+    <t t-name="hr_skills.ResumeListRenderer.Rows" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer.Rows">
         <xpath expr="//tr" position="attributes">
             <attribute name="class" add="o_resume_group_header" separator=" "/>
         </xpath>
@@ -22,7 +22,7 @@
         </xpath>
     </t>
 
-    <t t-name="hr_skills.ResumeListRenderer.RecordRow" owl="1" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
+    <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//t[@t-foreach='getColumns(record)']" position="replace">
             <t t-set="data" t-value="record.data"/>
             <td class="o_resume_timeline_cell position-relative pe-lg-2">

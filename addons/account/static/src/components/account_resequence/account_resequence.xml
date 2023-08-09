@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
 
-    <t t-name="account.ResequenceRenderer" owl="1" >
+    <t t-name="account.ResequenceRenderer" >
             <table t-if="data.changeLines.length" class="table table-sm">
                 <thead><tr>
                     <th>Date</th>
@@ -16,7 +16,7 @@
             </table>
     </t>
 
-    <t t-name="account.ResequenceChangeLine" owl="1">
+    <t t-name="account.ResequenceChangeLine">
         <tr>
             <td t-out="props.changeLine.date"/>
             <td t-out="props.changeLine.current_name"/>

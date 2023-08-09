@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="discuss.PinnedMessagesPanel" owl="1">
+    <t t-name="discuss.PinnedMessagesPanel">
         <ActionPanel title="title">
             <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': !messagePinService.hasPinnedMessages(props.thread) }" t-ref="message-list">
                 <div class="card mb-3" t-foreach="messagePinService.getPinnedMessages(props.thread)" t-as="message" t-key="message.id">
