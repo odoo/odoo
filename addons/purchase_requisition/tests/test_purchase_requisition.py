@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import Form
 
 from datetime import timedelta
@@ -351,15 +351,17 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_12_alternative_po_line_different_currency(self):
         """ Check alternative PO with different currency is compared correctly"""
-
         currency_eur = self.env.ref("base.EUR")
         currency_usd = self.env.ref("base.USD")
+        (currency_usd | currency_eur).active = True
 
         # 1 USD = 0.5 EUR
         self.env['res.currency.rate'].create([{
+            'name': fields.Datetime.today(),
             'currency_id': self.env.ref('base.USD').id,
             'rate': 1,
         }, {
+            'name': fields.Datetime.today(),
             'currency_id': self.env.ref('base.EUR').id,
             'rate': 0.5,
         }])
