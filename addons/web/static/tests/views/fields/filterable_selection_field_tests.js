@@ -34,7 +34,7 @@ QUnit.module("Fields", (hooks) => {
         setupViewRegistries();
     });
 
-    QUnit.module("Loyalty > FilterableSelectionField");
+    QUnit.module("utils");
 
     QUnit.test("FilterableSelectionField test whitelist", async (assert) => {
         await makeView({
