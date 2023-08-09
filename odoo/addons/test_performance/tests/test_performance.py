@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import json
+from unittest.mock import patch
 import logging
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger, json_default, sql
+from odoo.tools import mute_logger, sql
 from odoo import Command
 
 _logger = logging.getLogger(__name__)
@@ -622,6 +622,18 @@ class TestPerformance(SavepointCaseWithUserDemo):
             self.env.invalidate_all()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(result, expected)
+
+        # Modify the data so that each record has the same partner,
+        # and test that the name_get is called once with a correct recordset.
+        all_records = model.search([])
+        all_records.partner_id = all_records[0].partner_id
+
+        old_name_get = self.registry['res.partner'].name_get
+
+        with patch.object(self.registry['res.partner'], 'name_get', side_effect=old_name_get, autospec=True) as name_get_spy:
+            model.read_group([], ['__count'], ['partner_id', 'value'], lazy=False)
+            name_get_spy.assert_called_once()
+            self.assertEqual(name_get_spy.call_args.args[0].id, all_records[0].partner_id.id)
 
 
 @tagged('bacon_and_eggs')
