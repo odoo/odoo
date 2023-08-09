@@ -32,20 +32,21 @@ class Event(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids),
-                ('price_subtotal', '!=', 0)],
+            [('event_id', 'in', self.ids), ('price_subtotal', '!=', 0)],
             ['event_id', 'currency_id'],
             ['price_subtotal:sum'],
         )
-
-        self.sale_price_subtotal = 0
+        event_subtotals_mapping = dict.fromkeys(self._origin, 0)
         for event, currency, sum_price_subtotal in event_subtotals:
-            event.sale_price_subtotal += event.currency_id._convert(
+            event_subtotals_mapping[event] += event.currency_id._convert(
                 sum_price_subtotal,
                 currency,
                 event.company_id,
                 date_now,
             )
+
+        for event in self:
+            event.sale_price_subtotal = event_subtotals_mapping.get(event._origin, 0)
 
     def action_view_linked_orders(self):
         """ Redirects to the orders linked to the current events """
