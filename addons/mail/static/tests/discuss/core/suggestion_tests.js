@@ -133,19 +133,24 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
 
 QUnit.test("suggestion are shown after deleting a character", async (assert) => {
     const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/");
-    await insertText(".o-mail-Composer-input", "hee");
-    assert.containsNone($, ".o-mail-Composer-suggestion:contains(help)");
+    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "John Da");
+    assert.containsNone($, ".o-mail-Composer-suggestion:contains(John Doe)");
     // Simulate pressing backspace
     await afterNextRender(() => {
         const textarea = document.querySelector(".o-mail-Composer-input");
         textarea.value = textarea.value.slice(0, -1);
     });
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(help)");
+    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(John Doe)");
 });
