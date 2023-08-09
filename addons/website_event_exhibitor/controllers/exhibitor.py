@@ -199,12 +199,10 @@ class ExhibitorController(WebsiteEventController):
         else:
             sponsor_data['country_name'] = False
             sponsor_data['country_id'] = False
-        if sponsor.sponsor_type_id:
-            sponsor_data['sponsor_type_name'] = sponsor.sponsor_type_id.name
-            sponsor_data['sponsor_type_id'] = sponsor.sponsor_type_id.id
-        else:
-            sponsor_data['sponsor_type_name'] = False
-            sponsor_data['sponsor_type_id'] = False
+        # needs sudo access as public users can't read the model
+        sponsor_type_sudo = sponsor.sponsor_type_id.sudo()
+        sponsor_data['sponsor_type_name'] = sponsor_type_sudo.name
+        sponsor_data['sponsor_type_id'] = sponsor_type_sudo.id
         sponsor_data['event_name'] = sponsor.event_id.name
         sponsor_data['event_is_ongoing'] = sponsor.event_id.is_ongoing
         sponsor_data['event_is_done'] = sponsor.event_id.is_done
