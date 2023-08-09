@@ -68,3 +68,4 @@ Andy Quijada andy@vauxoo.com https://github.com/ajqn9094
 Carlos Carral carlos.c@vauxoo.com https://github.com/carralc
 Luis Manuel luis.manuel@vauxoo.com https://github.com/LuisMzz
 Alejandro Mellado alejandromm@vauxoo.com https://github.com/alejandromellado
+Andrea Geraldo myrna.andrea@vauxoo.com https://github.com/AndreaGeraldo
