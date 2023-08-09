@@ -123,6 +123,8 @@ class ReturnPicking(models.TransientModel):
             vals['location_id'] = self.picking_id.location_dest_id.id
         if self.location_id:
             vals['location_dest_id'] = self.location_id.id
+        elif self.picking_id.location_id:
+            vals['location_dest_id'] = self.picking_id.location_id.id
         return vals
 
     def _create_returns(self):

@@ -6087,3 +6087,51 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(len(receipt.move_line_ids), 1)
         self.assertEqual(receipt.move_line_ids.qty_done, 1)
+
+    def test_source_and_dest_location_in_return(self):
+        """
+        Test that a return is created with the correct source and destination location
+        """
+        product_01 = self.env['product.product'].create({
+            'name': 'Product 01',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_01, self.stock_location, 1)
+
+        customer = self.env['res.partner'].create({'name': 'SuperPartner'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': customer.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        self.env['stock.move'].create({
+            'name': 'SuperMove01',
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'product_id': product_01.id,
+            'product_uom_qty': 1,
+            'product_uom': product_01.uom_id.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(picking.state, 'done')
+        # Create a return
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        self.assertEqual(return_pick.location_id, self.customer_location)
+        self.assertEqual(return_pick.location_dest_id, self.stock_location)
+        return_pick.action_assign()
+        return_pick.move_ids.quantity_done = 1
+        return_pick._action_done()
+        self.assertEqual(return_pick.state, 'done')
