@@ -481,6 +481,7 @@ QUnit.test("leave command on channel", async (assert) => {
     assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(general)"), "o-active");
     await insertText(".o-mail-Composer-input", "/leave");
     await afterNextRender(() => triggerHotkey("Enter"));
+    await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(general)");
     assert.containsOnce($, ".o-mail-Discuss:contains(No conversation selected.)");
     assert.verifySteps(["You unsubscribed from general."]);
@@ -527,6 +528,7 @@ QUnit.test("leave command on chat", async (assert) => {
     await openDiscuss(channelId);
     assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(Chuck Norris)"), "o-active");
     await insertText(".o-mail-Composer-input", "/leave");
+    await afterNextRender(() => triggerHotkey("Enter"));
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(Chuck Norris)");
     assert.containsOnce($, ".o-mail-Discuss:contains(No conversation selected.)");
