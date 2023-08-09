@@ -393,12 +393,13 @@ class Product(models.Model):
         return list(product_ids)
 
     def _compute_nbr_reordering_rules(self):
-        self.nbr_reordering_rules = self.reordering_min_qty = self.reordering_max_qty = 0
         read_group_res = self.env['stock.warehouse.orderpoint']._read_group(
             [('product_id', 'in', self.ids)],
             ['product_id'],
             ['__count', 'product_min_qty:sum', 'product_max_qty:sum'])
-        for product, count, product_min_qty_sum, product_max_qty_sum in read_group_res:
+        mapped_res = {product: aggregates for product, *aggregates in read_group_res}
+        for product in self:
+            count, product_min_qty_sum, product_max_qty_sum = mapped_res.get(product._origin, (0, 0, 0))
             product.nbr_reordering_rules = count
             product.reordering_min_qty = product_min_qty_sum
             product.reordering_max_qty = product_max_qty_sum
