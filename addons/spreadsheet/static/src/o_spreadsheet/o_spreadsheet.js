@@ -45407,9 +45407,19 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
+<<<<<<< HEAD
     __info__.version = '16.2.13';
     __info__.date = '2023-08-09T11:59:06.622Z';
     __info__.hash = '5620a2e';
+||||||| parent of d67f7fd8db6 (temp)
+    __info__.version = '16.1.16';
+    __info__.date = '2023-07-26T13:04:26.445Z';
+    __info__.hash = '96f5f09';
+=======
+    __info__.version = '16.1.18';
+    __info__.date = '2023-08-09T11:57:26.607Z';
+    __info__.hash = '2e594e3';
+>>>>>>> d67f7fd8db6 (temp)
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
