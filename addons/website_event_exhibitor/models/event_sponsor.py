@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone, utc
 
 from odoo import api, fields, models, _
@@ -153,7 +153,7 @@ class Sponsor(models.Model):
         for sponsor in self:
             if not sponsor.event_id.is_ongoing:
                 sponsor.is_in_opening_hours = False
-            elif not sponsor.hour_from or not sponsor.hour_to:
+            elif sponsor.hour_from is False or sponsor.hour_to is False:
                 sponsor.is_in_opening_hours = True
             else:
                 event_tz = timezone(sponsor.event_id.date_tz)
@@ -166,6 +166,9 @@ class Sponsor(models.Model):
                 # compute opening hours
                 opening_from_tz = event_tz.localize(datetime.combine(now_tz.date(), float_to_time(sponsor.hour_from)))
                 opening_to_tz = event_tz.localize(datetime.combine(now_tz.date(), float_to_time(sponsor.hour_to)))
+                if sponsor.hour_to == 0:
+                    # when closing 'at midnight', we consider it's at midnight the next day
+                    opening_to_tz = opening_to_tz + timedelta(days=1)
 
                 opening_from = max([dt_begin, opening_from_tz])
                 opening_to = min([dt_end, opening_to_tz])
