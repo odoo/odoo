@@ -51,6 +51,27 @@ class MailTestSimpleUnfollow(models.Model):
     email_from = fields.Char()
 
 
+class MailTestAliasOptional(models.Model):
+    """ A chatter model inheriting from the alias mixin using optional alias_id
+    field, hence no inherits. """
+    _description = 'Chatter Model using Optional Alias Mixin'
+    _name = 'mail.test.alias.optional'
+    _inherit = ['mail.alias.mixin.optional']
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
+    email_from = fields.Char()
+
+    def _alias_get_creation_values(self):
+        """ Updates itself """
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get_id('mail.test.alias.optional')
+        if self.id:
+            values['alias_force_thread_id'] = self.id
+            values['alias_defaults'] = {'company_id': self.company_id.id}
+        return values
+
+
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances. """
@@ -310,9 +331,6 @@ class MailTestContainer(models.Model):
     name = fields.Char()
     description = fields.Text()
     customer_id = fields.Many2one('res.partner', 'Customer')
-    alias_id = fields.Many2one(
-        'mail.alias', 'Alias',
-        delegate=True)
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']

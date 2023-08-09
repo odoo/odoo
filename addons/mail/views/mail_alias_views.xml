@@ -3,8 +3,8 @@
     <data>
 
         <!-- Alias Form View -->
-        <record  model="ir.ui.view" id="view_mail_alias_form">
-            <field name="name">mail.alias.form</field>
+        <record  model="ir.ui.view" id="mail_alias_view_form">
+            <field name="name">mail.alias.view.form</field>
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <form string="Alias">
@@ -50,8 +50,8 @@
         </record>
 
         <!-- Alias List View -->
-        <record  model="ir.ui.view" id="view_mail_alias_tree">
-            <field name="name">mail.alias.tree</field>
+        <record  model="ir.ui.view" id="mail_alias_view_tree">
+            <field name="name">mail.alias.view.tree</field>
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <tree string="Alias">
@@ -78,8 +78,8 @@
         </record>
 
         <!-- Alias Search View -->
-        <record  model="ir.ui.view" id="view_mail_alias_search">
-            <field name="name">mail.alias.search</field>
+        <record  model="ir.ui.view" id="mail_alias_view_search">
+            <field name="name">mail.alias.view.search</field>
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <search string="Search Alias">
@@ -102,7 +102,7 @@
             </field>
         </record>
 
-        <record id="action_view_mail_alias" model="ir.actions.act_window">
+        <record id="mail_alias_action" model="ir.actions.act_window">
             <field name="name">Aliases</field>
             <field name="res_model">mail.alias</field>
             <field name="context">{

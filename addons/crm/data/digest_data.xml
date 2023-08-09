@@ -16,9 +16,9 @@
 <div>
     <t t-set="record" t-value="object.env['crm.team'].search([('alias_name', '!=', 'False')], limit=1)" />
     <p class="tip_title">Tip: Convert incoming emails into opportunities</p>
-    <t t-if="record and record.alias_domain">
-        <p class="tip_content">Did you know emails sent to <t t-out="record.alias_id.display_name or ''"></t> generate opportunities in your pipeline?<br/>
-        <a t-attf-href="mailto:{{record.alias_id.display_name}}" target="_blank">Try sending an email</a> to your CRM. This email address is configurable by sales team members.</p>
+    <t t-if="record.alias_email">
+        <p class="tip_content">Did you know emails sent to <t t-out="record.alias_email"></t> generate opportunities in your pipeline?<br/>
+        <a t-attf-href="mailto:{{record.alias_email}}" target="_blank">Try sending an email</a> to your CRM. This email address is configurable by sales team members.</p>
     </t>
     <t t-else="">
         <p class="tip_content">Did you know emails sent to a Sales Team alias generate opportunities in your pipeline?</p>

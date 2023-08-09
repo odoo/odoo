@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from ast import literal_eval
+
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
@@ -8,13 +11,6 @@ import logging
 import re
 
 _logger = logging.getLogger(__name__)
-
-def is_encodable_as_ascii(string):
-    try:
-        remove_accents(string).encode('ascii')
-    except UnicodeEncodeError:
-        return False
-    return True
 
 
 class AccountJournalGroup(models.Model):
@@ -37,7 +33,11 @@ class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
     _order = 'sequence, type, code'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin',
+                'mail.alias.mixin.optional',
+                'mail.thread',
+                'mail.activity.mixin',
+               ]
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
     _rec_names_search = ['name', 'code']
@@ -81,7 +81,6 @@ class AccountJournal(models.Model):
             ('bank', 'Bank'),
             ('general', 'Miscellaneous'),
         ], required=True,
-        inverse='_inverse_type',
         help="Select 'Sale' for customer invoices journals.\n"\
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
@@ -186,11 +185,9 @@ class AccountJournal(models.Model):
     sale_activity_note = fields.Text('Activity Summary')
 
     # alias configuration for journals
-    alias_id = fields.Many2one('mail.alias', string='Email Alias', help="Send one separate email for each invoice.\n\n"
-                                                                  "Any file extension will be accepted.\n\n"
-                                                                  "Only PDF and XML files will be interpreted by Odoo", copy=False)
-    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain')
-    alias_name = fields.Char('Alias Name', copy=False, compute='_compute_alias_name', inverse='_inverse_type', help="It creates draft invoices and bills by sending an email.")
+    alias_id = fields.Many2one(help="Send one separate email for each invoice.\n\n"
+                                    "Any file extension will be accepted.\n\n"
+                                    "Only PDF and XML files will be interpreted by Odoo")
 
     journal_group_ids = fields.Many2many('account.journal.group',
         check_company=True,
@@ -358,52 +355,14 @@ class AccountJournal(models.Model):
             else:
                 journal.suspense_account_id = False
 
-    def _inverse_type(self):
-        # Create an alias for purchase/sales journals
-        for journal in self:
-            if journal.type not in ('purchase', 'sale'):
-                if journal.alias_id:
-                    journal.alias_id.sudo().unlink()
-                continue
-
-            alias_name = next(string for string in (
-                journal.alias_name,
-                journal.name,
-                journal.code,
-                journal.type,
-            ) if string and is_encodable_as_ascii(string))
-
-            if journal.company_id != self.env.ref('base.main_company'):
-                if is_encodable_as_ascii(journal.company_id.name):
-                    alias_name = f"{alias_name}-{journal.company_id.name}"
-                else:
-                    alias_name = f"{alias_name}-{journal.company_id.id}"
-
-            alias_values = {
-                'alias_defaults': {
-                    'move_type': 'in_invoice' if journal.type == 'purchase' else 'out_invoice',
-                    'company_id': journal.company_id.id,
-                    'journal_id': journal.id,
-                },
-                'alias_parent_thread_id': journal.id,
-                'alias_name': alias_name,
-            }
-            if journal.alias_id:
-                journal.alias_id.sudo().write(alias_values)
-            else:
-                alias_values['alias_model_id'] = self.env['ir.model']._get('account.move').id
-                alias_values['alias_parent_model_id'] = self.env['ir.model']._get('account.journal').id
-                journal.alias_id = self.env['mail.alias'].sudo().create(alias_values)
-        self.invalidate_recordset(['alias_name'])
-
-    @api.depends('name')
-    def _compute_alias_domain(self):
-        self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
-
-    @api.depends('alias_id', 'alias_id.alias_name')
-    def _compute_alias_name(self):
-        for journal in self:
-            journal.alias_name = journal.alias_id.alias_name
+    @api.onchange('type')
+    def _onchange_type_for_alias(self):
+        self.filtered(lambda journal: journal.type not in {'sale', 'purchase'}).alias_name = False
+        for journal in self.filtered(lambda journal: (
+            not journal.alias_name and journal.type in {'sale', 'purchase'})
+        ):
+            journal.alias_name = self._alias_prepare_alias_name(
+                False, journal.name, journal.code, journal.type, journal.company_id)
 
     @api.constrains('account_control_ids')
     def _constrains_account_control_ids(self):
@@ -512,7 +471,6 @@ class AccountJournal(models.Model):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
-        self.mapped('alias_id').sudo().unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
@@ -549,6 +507,14 @@ class AccountJournal(models.Model):
         return super(AccountJournal, self).copy(default)
 
     def write(self, vals):
+        # for journals, force a readable name instead of a sanitized name e.g. non ascii in journal names
+        if vals.get('alias_name') and 'type' not in vals:
+            # will raise if writing name on more than 1 record, using self[0] is safe
+            if (not self.env['mail.alias']._is_encodable(vals['alias_name']) or
+                not self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])):
+                vals['alias_name'] = self._alias_prepare_alias_name(
+                    False, vals.get('name', self.name), vals.get('code', self.code), self[0].type, self[0].company_id)
+
         for journal in self:
             company = journal.company_id
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
@@ -573,6 +539,16 @@ class AccountJournal(models.Model):
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
 
+        # Ensure alias coherency when changing type
+        if 'type' in vals:
+            for journal in self:
+                alias_vals = journal._alias_get_creation_values()
+                alias_vals = {
+                    'alias_defaults': alias_vals['alias_defaults'],
+                    'alias_name': alias_vals['alias_name'],
+                }
+                journal.update(alias_vals)
+
         # Ensure the liquidity accounts are sharing the same foreign currency.
         if 'currency_id' in vals:
             for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash')):
@@ -587,6 +563,37 @@ class AccountJournal(models.Model):
                 record._create_secure_sequence(['secure_sequence_id'])
 
         return result
+
+    def _alias_get_creation_values(self):
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get_id('account.move')
+        if self.id:
+            values['alias_name'] = self._alias_prepare_alias_name(self.alias_name, self.name, self.code, self.type, self.company_id)
+            values['alias_defaults'] = defaults = literal_eval(self.alias_defaults or "{}")
+            defaults['company_id'] = self.company_id.id
+            defaults['move_type'] = 'in_invoice' if self.type == 'purchase' else 'out_invoice'
+            defaults['journal_id'] = self.id
+        return values
+
+    @api.model
+    def _alias_prepare_alias_name(self, alias_name, name, code, jtype, company):
+        """ Tool method generating standard journal alias, to ensure uniqueness
+        and readability;  reset for other journals than purchase / sale """
+        if jtype not in ('purchase', 'sale'):
+            return False
+
+        alias_name = next(
+            (
+                string for string in (alias_name, name, code, jtype)
+                if (string and self.env['mail.alias']._is_encodable(string) and
+                    self.env['mail.alias']._sanitize_alias_name(string))
+            ), False
+        )
+        if company != self.env.ref('base.main_company'):
+            company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
+            if f'-{company_identifier}' not in alias_name:
+                alias_name = f"{alias_name}-{company_identifier}"
+        return self.env['mail.alias']._sanitize_alias_name(alias_name)
 
     @api.model
     def get_next_bank_cash_default_code(self, journal_type, company, cache=None):
@@ -660,6 +667,12 @@ class AccountJournal(models.Model):
         # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
+
+        # === Fill missing alias name for sale / purchase, to force alias creation ===
+        if journal_type in {'sale', 'purchase'} and 'alias_name' not in vals:
+            vals['alias_name'] = self._alias_prepare_alias_name(
+                False, vals.get('name'), vals.get('code'), journal_type, company
+            )
 
     @api.model_create_multi
     def create(self, vals_list):

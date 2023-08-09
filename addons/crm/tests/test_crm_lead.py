@@ -627,7 +627,7 @@ class TestCRMLead(TestCrmCommon):
         new_lead = self.format_and_process(
             INCOMING_EMAIL,
             'unknown.sender@test.example.com',
-            '%s@%s' % (self.sales_team_1.alias_name, self.alias_domain),
+            self.sales_team_1.alias_email,
             subject='Delivery cost inquiry',
             target_model='crm.lead',
         )
