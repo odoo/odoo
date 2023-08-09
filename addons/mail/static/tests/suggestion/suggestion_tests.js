@@ -187,3 +187,31 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
     await deferred;
     assert.verifySteps(["get_mention_suggestions"]);
 });
+
+QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await insertText(".o-mail-Composer-input", "NonExistingUser");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
+    await insertText(".o-mail-Composer-input", " ");
+    await insertText(".o-mail-Composer-input", "@");
+    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+});
+
+QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "#");
+    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await insertText(".o-mail-Composer-input", "NonExistingChannel");
+    assert.containsNone($, ".o-mail-Composer-suggestion");
+    await insertText(".o-mail-Composer-input", " ");
+    await insertText(".o-mail-Composer-input", "#");
+    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(General)");
+});
