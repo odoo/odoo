@@ -92,7 +92,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         # check values before closing the session
         self.assertEqual(3, self.pos_session.order_count)
         orders_total = sum(order.amount_total for order in self.pos_session.order_ids)
-        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, 'Total order amount should be equal to the total payment amount.')
+        self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
         # close the session
         self.pos_session.action_pos_session_validate()
