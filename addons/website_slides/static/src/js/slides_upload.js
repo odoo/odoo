@@ -69,6 +69,17 @@ var SlideUploadDialog = Dialog.extend({
 
         this.orm = this.bindService("orm");
     },
+    willStart: function () {
+        const slideCategoriesPromise = rpc('/slides/category/search_read', {
+            fields: ['name'],
+            domain: [['channel_id', '=', this.channelID]],
+        }).then((result) => { this.slideCategories =  result; });
+
+        return Promise.all([
+            this._super.apply(this, arguments),
+            slideCategoriesPromise
+        ]);
+    },
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
@@ -105,15 +116,12 @@ var SlideUploadDialog = Dialog.extend({
      * @private
      */
     _bindSelect2Dropdown: function () {
-        var self = this;
-        this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false,
-            function () {
-                return rpc('/slides/category/search_read', {
-                    fields: ['name'],
-                    domain: [['channel_id', '=', self.channelID]],
-                });
-            })
-        );
+        this.$('#category_id').select2(this._select2Wrapper(_t('Section'), false, () => Promise.resolve(this.slideCategories)));
+        const sections = this.slideCategories.read_results;
+        if (sections && sections.length !== 0) {
+            const latestSection = sections[sections.length - 1];
+            this.$('#category_id').select2('data', { id: latestSection.id, text: latestSection.name });
+        }
         this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
             return rpc('/slides/tag/search_read', {
                 fields: ['name'],
