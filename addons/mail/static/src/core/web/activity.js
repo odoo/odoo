@@ -4,6 +4,7 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
@@ -34,6 +35,7 @@ export class Activity extends Component {
         this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });
         this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
+        this.avatarCard = usePopover(AvatarCardPopover);
         onMounted(() => {
             this.updateDelayAtNight();
         });
@@ -81,6 +83,15 @@ export class Activity extends Component {
         await this.activityService.markAsDone(this.props.data, [attachmentId]);
         this.props.onUpdate();
         await this.threadService.fetchNewMessages(this.thread);
+    }
+
+    onClickAvatar(ev) {
+        const target = ev.currentTarget;
+        if (!this.avatarCard.isOpen) {
+            this.avatarCard.open(target, {
+                id: this.props.data.user_id[0],
+            });
+        }
     }
 
     async edit() {

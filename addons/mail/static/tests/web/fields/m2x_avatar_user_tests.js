@@ -10,8 +10,8 @@ import { browser } from "@web/core/browser/browser";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
-import { patchWithCleanup, triggerHotkey, getNodesTextContent } from "@web/../tests/helpers/utils";
-import { click, contains, triggerEvents } from "@web/../tests/utils";
+import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, contains } from "@web/../tests/utils";
 
 const fakeMultiTab = {
     start() {
@@ -409,7 +409,7 @@ QUnit.test("avatar card preview", async (assert) => {
     });
     const mockRPC = (route, args) => {
         if (route === "/web/dataset/call_kw/res.users/read") {
-            assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status"]);
+            assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status", "share"]);
             assert.step("user read");
         }
     };
@@ -440,17 +440,14 @@ QUnit.test("avatar card preview", async (assert) => {
         },
     });
     // Open card
-    await triggerEvents(".o_m2o_avatar > img", ["mouseover"]);
+    await click(".o_m2o_avatar > img");
     await contains(".o_avatar_card");
-    assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
-    assert.deepEqual(getNodesTextContent(document.querySelectorAll(".o_card_user_infos > *")), [
-        "Mario",
-        " Mario@odoo.test",
-        " +78786987",
-    ]);
+    await contains(".o_card_user_infos > span:contains(Mario)");
+    await contains(".o_card_user_infos > a:contains(Mario@odoo.test)");
+    await contains(".o_card_user_infos > a:contains(+78786987)");
+    assert.verifySteps(["setTimeout of 250ms", "user read"]);
     // Close card
-    await triggerEvents(".o_control_panel", ["mouseover"]);
-    assert.verifySteps(["setTimeout of 400ms"]);
+    await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });
 });
 
@@ -478,7 +475,12 @@ QUnit.test("avatar_user widget displays the appropriate user image in form view"
 QUnit.test("many2one_avatar_user widget in list view", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
-    const userId = pyEnv["res.users"].create({ name: "Mario", partner_id: partnerId });
+    const userId = pyEnv["res.users"].create({
+        name: "Mario",
+        partner_id: partnerId,
+        email: "Mario@partner.com",
+        phone: "+45687468",
+    });
     pyEnv["m2x.avatar.user"].create({ user_id: userId });
     const views = {
         "m2x.avatar.user,false,list":
@@ -490,13 +492,21 @@ QUnit.test("many2one_avatar_user widget in list view", async () => {
         views: [[false, "list"]],
     });
     await click(".o_data_cell .o_m2o_avatar > img");
-    await contains(".o-mail-ChatWindow-name", { text: "Partner 1" });
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span:contains(Mario)");
+    await contains(".o_card_user_infos > a:contains(Mario@partner.com)");
+    await contains(".o_card_user_infos > a:contains(+45687468)");
 });
 
 QUnit.test("many2many_avatar_user widget in form view", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
-    const userId = pyEnv["res.users"].create({ name: "Mario", partner_id: partnerId });
+    const userId = pyEnv["res.users"].create({
+        name: "Mario",
+        partner_id: partnerId,
+        email: "Mario@partner.com",
+        phone: "+45687468",
+    });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
     const views = {
         "m2x.avatar.user,false,form": `
@@ -511,5 +521,8 @@ QUnit.test("many2many_avatar_user widget in form view", async () => {
         views: [[false, "form"]],
     });
     await click(".o_field_many2many_avatar_user .o_avatar img");
-    await contains(".o-mail-ChatWindow-name", { text: "Partner 1" });
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span:contains(Mario)");
+    await contains(".o_card_user_infos > a:contains(Mario@partner.com)");
+    await contains(".o_card_user_infos > a:contains(+45687468)");
 });

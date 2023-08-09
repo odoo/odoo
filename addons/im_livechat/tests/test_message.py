@@ -58,6 +58,10 @@ class TestImLivechatMessage(HttpCase):
                 'id': self.users[1].partner_id.id,
                 'is_company': self.users[1].partner_id.is_company,
                 'name': "test1",
+                'user': {
+                    'id': self.users[1].id,
+                    'isInternalUser': self.users[1]._is_internal(),
+                }
             },
             'body': message.body,
             'date': message.date,

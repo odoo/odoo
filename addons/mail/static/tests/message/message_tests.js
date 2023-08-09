@@ -665,10 +665,15 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     await contains(".o-mail-Message:contains(body2) .o-mail-Message-sidebar .o-mail-Message-date");
 });
 
-QUnit.test("redirect to author (open chat)", async () => {
+QUnit.test("open author avatar card", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        name: "Demo",
+        email: "demo@example.com",
+        phone: "+5646548",
+    });
     const [channelId_1] = pyEnv["discuss.channel"].create([
         { name: "General" },
         {
@@ -691,32 +696,10 @@ QUnit.test("redirect to author (open chat)", async () => {
     await contains(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
 
     await click(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Demo" });
-});
-
-QUnit.test("open chat from avatar should not work on self-authored messages", async () => {
-    const pyEnv = await startServer();
-    const [channelId] = pyEnv["discuss.channel"].create([
-        { name: "General" },
-        {
-            channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
-            channel_type: "chat",
-        },
-    ]);
-    pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-Message-avatarContainer:not(.cursor-pointer)");
-    await contains(".o-mail-Message-author:not(.cursor-pointer)");
-    await click(".o-mail-Message-avatar");
-    // weak test, no guarantee that we waited long enough to open the chat/view
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { count: 0, text: "Mitchell Admin" });
-    await contains(".breadcrumb", { count: 0, text: "Mitchell Admin" });
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span:contains(Demo)");
+    await contains(".o_card_user_infos > a:contains(demo@example.com)");
+    await contains(".o_card_user_infos > a:contains(+5646548)");
 });
 
 QUnit.test("toggle_star message", async (assert) => {
@@ -1126,32 +1109,47 @@ QUnit.test("allow attachment image download on message", async () => {
     await contains(".o-mail-AttachmentImage .fa-download");
 });
 
-QUnit.test("chat with author should be opened after clicking on their avatar", async (assert) => {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { name: "Partner_1" },
-        { name: "Partner_2" },
-    ]);
-    pyEnv["res.users"].create({ partner_id: partnerId_2 });
-    pyEnv["mail.message"].create({
-        author_id: partnerId_2,
-        body: "not empty",
-        model: "res.partner",
-        res_id: partnerId_1,
-    });
-    const { openFormView } = await start();
-    openFormView("res.partner", partnerId_1);
-    await contains(".o-mail-Message-avatar");
-    assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
-    await click(".o-mail-Message-avatar");
-    await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", { text: "Partner_2" });
-});
+QUnit.test(
+    "avatar card from author should be opened after clicking on their avatar",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Partner_1" },
+            { name: "Partner_2" },
+        ]);
+        pyEnv["res.users"].create({
+            partner_id: partnerId_2,
+            name: "Partner_2",
+            email: "partner2@mail.com",
+            phone: "+15968415",
+        });
+        pyEnv["mail.message"].create({
+            author_id: partnerId_2,
+            body: "not empty",
+            model: "res.partner",
+            res_id: partnerId_1,
+        });
+        const { openFormView } = await start();
+        await openFormView("res.partner", partnerId_1);
+        await contains(".o-mail-Message-avatar");
+        assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
+        await click(".o-mail-Message-avatar");
+        await contains(".o_avatar_card");
+        await contains(".o_card_user_infos > span:contains(Partner_2)");
+        await contains(".o_card_user_infos > a:contains(partner2@mail.com)");
+        await contains(".o_card_user_infos > a:contains(+15968415)");
+    }
+);
 
-QUnit.test("chat with author should be opened after clicking on their name", async () => {
+QUnit.test("avatar card from author should be opened after clicking on their name", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        name: "Demo",
+        email: "demo@example.com",
+        phone: "+5646548",
+    });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
@@ -1159,12 +1157,14 @@ QUnit.test("chat with author should be opened after clicking on their name", asy
         res_id: partnerId,
     });
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message span", { text: "Demo User" });
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message span", { text: "Demo" });
 
-    await click(".o-mail-Message span", { text: "Demo User" });
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-name", { text: "Demo User" });
+    await click(".o-mail-Message span:contains(Demo)");
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span:contains(Demo)");
+    await contains(".o_card_user_infos > a:contains(demo@example.com)");
+    await contains(".o_card_user_infos > a:contains(+5646548)");
 });
 
 QUnit.test("subtype description should be displayed if it is different than body", async () => {
@@ -1237,36 +1237,6 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await contains(".o-mail-ChatWindow-content");
     await contains(".o-mail-ChatWindow-name", { text: "Test Partner" });
 });
-
-QUnit.test(
-    "open chat with author on avatar click should be disabled when currently chatting with the author",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "test" });
-        pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "test",
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "chat",
-        });
-        pyEnv["mail.message"].create({
-            author_id: partnerId,
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Message-avatar");
-        assert.doesNotHaveClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
-        await click(".o-mail-Message-avatar");
-        // weak test, no guarantee that we waited long enough for the potential chat window to show
-        await contains(".o-mail-ChatWindow", { count: 0 });
-    }
-);
 
 QUnit.test("Channel should be opened after clicking on its mention", async () => {
     const pyEnv = await startServer();

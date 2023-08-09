@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mail.Many2ManyAvatarUserTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
-            <attribute name="t-att-title"></attribute>
-        </xpath>
         <img position="attributes">
             <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
-            <attribute name="t-on-mouseleave">tag.clearTimeout</attribute>
-            <attribute name="t-on-mouseover.stop.prevent">tag.openCard</attribute>
         </img>
     </t>
 
     <t t-name="mail.KanbanMany2ManyAvatarUserTagsList" t-inherit="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
-            <attribute name="t-att-title"></attribute>
-        </xpath>
         <img position="attributes">
             <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
-            <attribute name="t-on-mouseleave">tag.clearTimeout</attribute>
-            <attribute name="t-on-mouseover.stop.prevent">tag.openCard</attribute>
         </img>
     </t>
 
