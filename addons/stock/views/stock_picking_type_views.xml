@@ -100,7 +100,7 @@
                             <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id" string="Returns Type"/>
                             <field name="default_location_return_id" attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' groups="stock.group_stock_multi_locations"/>
                             <field name="create_backorder"/>
-                            <field name="show_operations"/>
+                            <field name="show_operations" attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}'/>
                             <field name="show_reserved" attrs="{'invisible': [('code', '!=', 'incoming')]}"/>
                         </group>
                     </group>

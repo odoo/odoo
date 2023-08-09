@@ -20,6 +20,17 @@
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
     </record>
 
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="show_operations" position="attributes">
+                <attribute name="attrs">{"invisible": [("code", "not in", ["incoming", "outgoing", "internal", "dropship"])]}</attribute>
+            </field>
+        </field>
+    </record>
+
     <menuitem id="dropship_picking" name="Dropships" parent="stock.menu_stock_transfers"
         action="action_picking_tree_dropship" sequence="30"
         groups="stock.group_stock_manager,stock.group_stock_user"/>
