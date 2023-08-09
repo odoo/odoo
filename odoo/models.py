@@ -2478,8 +2478,8 @@ class BaseModel(metaclass=MetaModel):
                 or a string 'field:granularity'. Right now, the only supported granularities
                 are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
-        :param int offset: optional number of records to skip
-        :param int limit: optional max number of records to return
+        :param int offset: optional number of groups to skip
+        :param int limit: optional max number of groups to return
         :param str orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
