@@ -156,7 +156,12 @@ QUnit.test(
 QUnit.test("Click on avatar opens its partner chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        name: "testPartner",
+        email: "test@partner.com",
+        phone: "+45687468",
+    });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "Test",
@@ -168,7 +173,10 @@ QUnit.test("Click on avatar opens its partner chat window", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
     await click(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
-    await contains(".o-mail-ChatWindow-name", { text: "testPartner" });
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span:contains(testPartner)");
+    await contains(".o_card_user_infos > a:contains(test@partner.com)");
+    await contains(".o_card_user_infos > a:contains(+45687468)");
 });
 
 QUnit.test("Can use channel command /who", async () => {

@@ -78,7 +78,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/core_ui/**/*',
             'im_livechat/static/src/discuss_app/**/*',
             'im_livechat/static/src/messaging_menu/**/*',
-            'im_livechat/static/src/web/**/*',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],
