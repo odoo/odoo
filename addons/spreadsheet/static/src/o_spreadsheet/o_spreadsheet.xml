@@ -983,11 +983,9 @@
       <t t-if="env.model.getters.getEditionMode() === 'inactive'">
         <Autofill position="getAutofillPosition()" isVisible="isAutofillVisible"/>
       </t>
-      <t t-if="env.model.getters.getEditionMode() !== 'inactive'">
-        <t t-foreach="env.model.getters.getHighlights()" t-as="highlight" t-key="highlight_index">
-          <t t-if="highlight.sheetId === env.model.getters.getActiveSheetId()">
-            <Highlight zone="highlight.zone" color="highlight.color"/>
-          </t>
+      <t t-foreach="env.model.getters.getHighlights()" t-as="highlight" t-key="highlight_index">
+        <t t-if="highlight.sheetId === env.model.getters.getActiveSheetId()">
+          <Highlight zone="highlight.zone" color="highlight.color"/>
         </t>
       </t>
       <Menu
@@ -2263,7 +2261,8 @@
         class="o-popover"
         t-ref="popover"
         t-on-wheel="props.onMouseWheel"
-        t-att-style="popoverStyle">
+        t-att-style="popoverStyle"
+        t-on-click.stop="">
         <t t-slot="default"/>
       </div>
     </t>
@@ -3019,18 +3018,20 @@
       <t t-if="rule.operator !== 'IsEmpty' and rule.operator !== 'IsNotEmpty'">
         <input
           type="text"
-          placeholder="Value"
+          placeholder="Value or formula"
           t-model="rule.values[0]"
           t-att-class="{ 'o-invalid': isValue1Invalid }"
           class="o-input o-cell-is-value o-required"
+          t-on-keydown="(ev) => this.onKeydown(ev)"
         />
         <t t-if="rule.operator === 'Between' || rule.operator === 'NotBetween'">
           <input
             type="text"
-            placeholder="and value"
+            placeholder="and value or formula"
             t-model="rule.values[1]"
             t-att-class="{ 'o-invalid': isValue2Invalid }"
             class="o-input o-cell-is-value o-required"
+            t-on-keydown="(ev) => this.onKeydown(ev)"
           />
         </t>
       </t>
@@ -3945,11 +3946,12 @@
       position="state.menuState.position"
       menuItems="state.menuState.menuItems"
       onClose="() => this.closeMenus()"
+      onMenuClicked="() => this.props.onClick()"
     />
   </t>
 </odoo>
 <!--
-  __info__.version = '16.5.0-alpha.1';
-  __info__.date = '2023-07-26T13:08:50.508Z';
-  __info__.hash = '9160731';
+  __info__.version = '16.5.0-alpha.3';
+  __info__.date = '2023-08-09T12:01:17.859Z';
+  __info__.hash = 'b0e8fd5';
 -->
