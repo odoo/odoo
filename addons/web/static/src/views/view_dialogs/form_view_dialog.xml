@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="web.FormViewDialog" owl="1">
+  <t t-name="web.FormViewDialog">
     <Dialog size="props.size" title="props.title" withBodyPadding="false" modalRef="modalRef">
       <View t-props="viewProps"/>
       <t t-set-slot="footer">
@@ -15,14 +15,14 @@
     </Dialog>
   </t>
 
-  <t t-name="web.FormViewDialog.ToMany.buttons" t-inherit="web.FormView.Buttons" owl="1">
+  <t t-name="web.FormViewDialog.ToMany.buttons" t-inherit="web.FormView.Buttons">
     <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
       <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save &amp; Close</button>
       <button class="btn btn-primary o_form_button_save_new" t-on-click="() => this.saveButtonClicked({saveAndNew: true})" data-hotkey="n">Save &amp; New</button>
     </xpath>
   </t>
 
-  <t t-name="web.FormViewDialog.ToOne.buttons" t-inherit="web.FormView.Buttons" owl="1">
+  <t t-name="web.FormViewDialog.ToOne.buttons" t-inherit="web.FormView.Buttons">
     <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
       <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Save &amp; Close</button>
     </xpath>

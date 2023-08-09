@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="website.ThemePreviewForm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+    <t t-name="website.ThemePreviewForm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
         <div class="d-none d-md-flex align-items-end justify-content-end order-2 order-lg-1 w-100 gap-1" role="group">
                 <input class="btn-check" id="themeViewerDesktop" type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked='checked'/>
@@ -11,7 +11,7 @@
         </xpath>
     </t>
 
-    <t t-name="website.ThemePreviewFormController" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
+    <t t-name="website.ThemePreviewFormController" t-inherit="web.FormView" t-inherit-mode="primary">
         <xpath expr="//Layout" position="inside">
             <t t-set-slot="layout-actions">
                 <div>
@@ -30,7 +30,7 @@
         </xpath>
     </t>
 
-    <t t-name="website.ThemePreviewKanban.ControlPanel.BreadCrumbs" owl="1">
+    <t t-name="website.ThemePreviewKanban.ControlPanel.BreadCrumbs">
             <div class="o_breadcrumb d-flex gap-1">
                 <div class="active d-flex flex-column">
                     <div class="text-truncate">Pick a Theme</div>
@@ -39,7 +39,7 @@
             </div>
     </t>
 
-    <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+    <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
         <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
             <t t-call="website.ThemePreviewKanban.ControlPanel.BreadCrumbs"/>
         </xpath>

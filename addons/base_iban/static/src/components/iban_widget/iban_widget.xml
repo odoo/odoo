@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="base_iban.iban" t-inherit="web.CharField" owl="1">
+    <t t-name="base_iban.iban" t-inherit="web.CharField">
         <xpath expr="//input" position="attributes">
             <attribute name="class" add="o_iban_input_with_validator" separator=" "/>
             <attribute name="t-on-input">validateIbanDebounced</attribute>

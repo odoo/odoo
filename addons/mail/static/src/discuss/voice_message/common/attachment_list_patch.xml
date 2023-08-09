@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.AttachmentList" t-inherit-mode="extension" owl="1">
+    <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='nonImageMain']" position="replace">
             <t t-if="attachment.isVoice" class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 bg-100">
                 <VoicePlayer attachment="attachment"/>

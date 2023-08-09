@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.DomainSelector.AutoCompleteWithSources" owl="1" >
+    <t t-name="web.DomainSelector.AutoCompleteWithSources" >
         <AutoComplete
             value="props.value"
             autoSelect="true"
@@ -13,7 +13,7 @@
         />
     </t>
 
-    <t t-name="web.DomainSelector.DomainSelectorAutocomplete" owl="1" >
+    <t t-name="web.DomainSelector.DomainSelectorAutocomplete" >
         <div class="o_input d-flex flex-wrap h-100 gap-1">
             <TagsList tags="tags"/>
             <AutoCompleteWithSources
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="web.DomainSelector.DomainSelectorSingleAutocomplete" owl="1" >
+    <t t-name="web.DomainSelector.DomainSelectorSingleAutocomplete" >
         <AutoCompleteWithSources
             resModel="props.resModel"
             value="displayName"

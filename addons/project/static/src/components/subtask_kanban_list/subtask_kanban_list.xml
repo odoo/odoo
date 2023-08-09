@@ -2,7 +2,7 @@
 
 <templates>
 
-    <t t-name="project.SubtaskKanbanList" owl="1">
+    <t t-name="project.SubtaskKanbanList">
         <div class="subtask_list">
             <t t-foreach="subTasksRead" t-as="subTask" t-key="subTask.id">
                 <Record resModel="'project.task'"

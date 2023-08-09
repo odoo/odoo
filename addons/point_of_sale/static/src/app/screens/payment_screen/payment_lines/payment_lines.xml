@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.PaymentScreenPaymentLines" owl="1">
+    <t t-name="point_of_sale.PaymentScreenPaymentLines">
             <div class="paymentlines d-flex flex-column">
                 <h4 class="title-category pt-3 pb-2 px-3 m-0 bg-view border-bottom border-2">Summary</h4>
                 <t t-foreach="props.paymentLines" t-as="line" t-key="line.cid">

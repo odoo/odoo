@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="web._ModelFieldSelector" owl="1">
+    <t t-name="web._ModelFieldSelector">
         <div class="o_model_field_selector flex d-flex" aria-atomic="true" t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode o_input'" t-on-click="(ev) => this.openPopover(ev.currentTarget)">
             <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="state.displayNames.join(' > ')" data-tooltip-position="top">
                 <t t-foreach="state.displayNames" t-as="displayName" t-key="displayName_index">

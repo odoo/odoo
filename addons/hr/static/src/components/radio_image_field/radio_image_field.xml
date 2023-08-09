@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="hr_homeworking.RadioImageField" owl="1">
+    <t t-name="hr_homeworking.RadioImageField">
         <div role="radiogroup" class="d-flex flex-wrap" t-att-aria-label="string">
             <t t-foreach="items" t-as="item" t-key="item[0]">
                 <t t-if="['office', 'home', 'other'].includes(item[0])">

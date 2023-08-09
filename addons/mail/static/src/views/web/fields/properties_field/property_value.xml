@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates xml:space="preserve">
     <!-- Many2one -->
-    <t t-inherit="web.PropertyValue" t-inherit-mode="extension" owl="1">
+    <t t-inherit="web.PropertyValue" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_field_property_many2one_value')]//img" position="attributes">
             <attribute name="t-on-click.prevent.stop">_onAvatarClicked</attribute>
             <attribute name="t-att-comodel">props.comodel</attribute>
@@ -9,7 +9,7 @@
     </t>
     <!-- Many2many -->
     <t t-name="mail.Many2manyPropertiesTagsList" t-inherit="web.TagsList"
-        t-inherit-mode="primary" owl="1">
+        t-inherit-mode="primary">
         <img position="attributes">
             <attribute name="t-on-click.prevent.stop">() => this._onAvatarClicked(tag_index)</attribute>
             <attribute name="t-att-comodel">tag.comodel</attribute>

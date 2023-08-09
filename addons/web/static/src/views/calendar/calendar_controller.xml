@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.CalendarController" owl="1">
+    <t t-name="web.CalendarController">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
                 <t t-set-slot="control-panel-additional-actions">
@@ -53,6 +53,6 @@
         </div>
     </t>
 
-    <t t-name="web.CalendarController.controlButtons" owl="1"/>
+    <t t-name="web.CalendarController.controlButtons"/>
 
 </templates>

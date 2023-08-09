@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.ChatWindow" owl="1">
+<t t-name="mail.ChatWindow">
     <div class="o-mail-ChatWindow"
         t-att-style="style"
         t-att-class="{
@@ -68,11 +68,11 @@
     </div>
 </t>
 
-<t t-name="mail.ChatWindow.dropdownAction" owl="1">
+<t t-name="mail.ChatWindow.dropdownAction">
     <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="itemClass" t-att-title="action.name" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon"/></button>
 </t>
 
-<t t-name="mail.ChatWindow.headerContent" owl="1">
+<t t-name="mail.ChatWindow.headerContent">
     <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
         <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
     </div>

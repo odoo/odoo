@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web.SearchPanel" owl="1">
+<t t-name="web.SearchPanel">
     <t t-if="env.isSmall">
         <t t-call="web.SearchPanel.Small" />
     </t>
@@ -10,7 +10,7 @@
     </t>
 </t>
 
-<t t-name="web.SearchPanelContent" owl="1">
+<t t-name="web.SearchPanelContent">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto" t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
             <p class="mt-3 small text-muted">No quick filter available.</p>
@@ -91,9 +91,9 @@
     </div>
 </t>
 
-<t t-name="web.SearchPanel.Regular" t-inherit="web.SearchPanelContent" t-inherit-mode="primary" owl="1"/>
+<t t-name="web.SearchPanel.Regular" t-inherit="web.SearchPanelContent" t-inherit-mode="primary"/>
 
-<t t-name="web.SearchPanel.Small" owl="1">
+<t t-name="web.SearchPanel.Small">
     <t t-if="state.showMobileSearch">
         <t t-portal="'body'">
             <div class="o_search_panel o_searchview o_mobile_search" t-ref="root">
@@ -157,7 +157,7 @@
     </t>
 </t>
 
-<t t-name="web.SearchPanel.Category" owl="1">
+<t t-name="web.SearchPanel.Category">
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
         <li class="o_search_panel_category_value list-group-item py-1 o_cursor_pointer border-0"
@@ -206,7 +206,7 @@
     </t>
 </t>
 
-<t t-name="web.SearchPanel.FiltersGroup" owl="1">
+<t t-name="web.SearchPanel.FiltersGroup">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
         class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
         t-att-class="{ 'ps-2' : isChildList }"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="web._DomainSelector" owl="1">
+    <t t-name="web._DomainSelector">
         <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-att-class="className" t-ref="root">
             <t t-if="tree">
                 <t t-set="node" t-value="tree" />
@@ -38,7 +38,7 @@
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.controls" owl="1">
+    <t t-name="web._DomainSelector.controls">
         <div class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
             <button
                 class="btn o_domain_add_node_button"
@@ -73,7 +73,7 @@
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.connector" owl="1">
+    <t t-name="web._DomainSelector.connector">
         <div class="o_domain_node o_domain_tree">
             <div class="o_domain_tree_header o_domain_selector_row">
                 <t t-if="!props.readonly">
@@ -86,7 +86,7 @@
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.connector.dropdown" owl="1">
+    <t t-name="web._DomainSelector.connector.dropdown">
         <t t-set="title">
             <t t-if="node.value === '|'">
                 <t t-if="node.negate">none</t>
@@ -115,7 +115,7 @@
         </t>
     </t>
 
-    <t t-name="web._DomainSelector.connector.children" owl="1">
+    <t t-name="web._DomainSelector.connector.children">
         <div class="o_domain_node_children_container">
             <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
                 <t t-call="web._DomainSelector.{{ child.type }}">
@@ -126,7 +126,7 @@
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.condition" owl="1">
+    <t t-name="web._DomainSelector.condition">
         <div class="o_domain_node o_domain_leaf o_domain_selector_row">
             <t t-if="props.readonly">
                 <div class="o_domain_leaf_info">
@@ -142,7 +142,7 @@
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.condition:readonly" owl="1">
+    <t t-name="web._DomainSelector.condition:readonly">
         <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" />
         <t t-set="description" t-value="getDescription(node)"/>
         <span class="o_domain_leaf_operator"> <t t-esc="description.operatorDescription" /> </span>
@@ -159,7 +159,7 @@
         </t>
     </t>
 
-    <t t-name="web._DomainSelector.condition:editable" owl="1">
+    <t t-name="web._DomainSelector.condition:editable">
         <PathEditor path="node.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">

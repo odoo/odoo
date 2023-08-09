@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.SettingsConfirmationDialog" owl="1">
+    <t t-name="web.SettingsConfirmationDialog">
         <Dialog size="'md'" title="props.title" modalRef="modalRef">
             <t t-esc="props.body" />
-            <t t-set-slot="footer" owl="1">
+            <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_confirm">
                     Save
                 </button>

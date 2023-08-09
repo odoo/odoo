@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mrp.BomOverviewComponentsBlock" owl="1">
+    <t t-name="mrp.BomOverviewComponentsBlock">
         <t name="components" t-if="hasComponents">
             <t t-foreach="data.components" t-as="line" t-key="line.index">
                 <BomOverviewLine

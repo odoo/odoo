@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-<t t-name="website.NewContentElement" owl="1">
+<t t-name="website.NewContentElement">
     <div class="o_new_content_element col-md-4 mb8" t-att-name="props.name">
         <a href="#"
                 t-on-click="onClick"
@@ -13,7 +13,7 @@
     </div>
 </t>
 
-<t t-name="website.NewContentModal" owl="1">
+<t t-name="website.NewContentModal">
     <div id="o_new_content_menu_choices">
         <div class="container pt32 pb32">
             <div class="row">
@@ -39,14 +39,14 @@
     </div>
 </t>
 
-<t t-name="website.NewContentSystray" owl="1">
+<t t-name="website.NewContentSystray">
     <div class="o_menu_systray_item o_new_content_container d-none d-md-block" t-on-click="onClick">
         <a href="#" accesskey="c" class="o_nav_entry"><span class="fa fa-plus me-2"/>New</a>
         <NewContentModal t-if="websiteContext.showNewContentModal"/>
     </div>
 </t>
 
-<t t-name="website.InstallModuleDialog" owl="1">
+<t t-name="website.InstallModuleDialog">
     <WebsiteDialog close="props.close"
         title="props.title"
         primaryTitle="installButton"

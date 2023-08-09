@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.SettingsFormView" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
+    <t t-name="web.SettingsFormView" t-inherit="web.FormView" t-inherit-mode="primary">
         <xpath expr="./div[@t-ref='root']" position="attributes">
             <attribute name="class">o-settings-form-view o_field_highlight</attribute>
         </xpath>
@@ -36,7 +36,7 @@
         </xpath>
     </t>
 
-    <t t-name="web.SettingsFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary" owl="1">
+    <t t-name="web.SettingsFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_cp_buttons')]" position="attributes">
             <attribute name="class" add="order-first w-auto" separator=" "/>
         </xpath>

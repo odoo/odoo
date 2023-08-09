@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="stock.TraceabilityReport" owl="1">
+    <t t-name="stock.TraceabilityReport">
         <div class="o_action">
             <Layout display="display">
                 <t t-set-slot="layout-buttons">
@@ -41,7 +41,7 @@
         </div>
     </t>
 
-    <t t-name="stock.ReportMRPLines" owl="1">
+    <t t-name="stock.ReportMRPLines">
         <t t-foreach="lines" t-as="line" t-key="line.id">
             <t t-set="column" t-value="0" />
             <tr t-att-class="line.model === 'stock.move.line' ? 'o_stock_reports_level0' : 'o_stock_reports_default_style'">

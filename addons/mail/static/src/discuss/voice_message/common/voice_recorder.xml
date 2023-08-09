@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.VoiceRecorder" owl="1">
+    <t t-name="mail.VoiceRecorder">
         <div class="o-mail-VoiceRecorder d-flex align-items-center" t-att-class="{ 'o-recording rounded': state.recording }">
             <t t-set="title"><t t-if="!state.recording">Voice Message</t><t t-else="">Stop Recording</t></t>
             <div class="o-mail-VoiceRecorder-elapsed" t-att-class="{

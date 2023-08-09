@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="web_editor.HtmlField" owl="1">
+    <t t-name="web_editor.HtmlField">
         <t t-if="props.readonly || props.notEditable || (sandboxedPreview and !state.showCodeView)">
             <t t-if="this.showIframe">
                 <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"

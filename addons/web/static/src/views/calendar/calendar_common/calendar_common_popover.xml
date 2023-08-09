@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.CalendarCommonPopover" owl="1">
+    <t t-name="web.CalendarCommonPopover">
         <t t-if="env.isSmall">
             <Dialog title="props.record.title">
                 <t t-call="{{ constructor.subTemplates.body }}" />
@@ -15,7 +15,7 @@
         </t>
     </t>
 
-    <t t-name="web.CalendarCommonPopover.popover" owl="1">
+    <t t-name="web.CalendarCommonPopover.popover">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
             <h4 class="p-0 pt-1">
                 <span class="popover-header border-0" t-esc="props.record.title" />
@@ -32,7 +32,7 @@
         </div>
     </t>
 
-    <t t-name="web.CalendarCommonPopover.body" owl="1">
+    <t t-name="web.CalendarCommonPopover.body">
         <ul class="list-group list-group-flush">
             <li t-if="date" class="list-group-item">
                 <i class="fa fa-fw fa-calendar-o" />
@@ -69,7 +69,7 @@
         </ul>
     </t>
 
-    <t t-name="web.CalendarCommonPopover.footer" owl="1">
+    <t t-name="web.CalendarCommonPopover.footer">
         <t t-if="isEventEditable">
             <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">Edit</a>
         </t>

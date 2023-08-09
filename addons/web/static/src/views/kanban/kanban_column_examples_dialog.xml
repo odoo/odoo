@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanExamplesNotebookTemplate" owl="1">
+    <t t-name="web.KanbanExamplesNotebookTemplate">
         <div t-if="props.description" class="o_kanban_examples_description" t-out="props.description"/>
         <div class="o_kanban_examples d-flex p-2">
             <t t-foreach="columns" t-as="column" t-key="column.title">
@@ -18,7 +18,7 @@
     </t>
 
     <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
-    <t t-name="web.KanbanColumnExamplesDialog" owl="1">
+    <t t-name="web.KanbanColumnExamplesDialog">
         <Dialog contentClass="'o_kanban_examples_dialog'" title="this.constructor.title">
             <Notebook orientation="'vertical'" pages="pages" onPageUpdate.bind="onPageUpdate" />
             <t t-set-slot="footer">

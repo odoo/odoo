@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web.MobileSwitchCompanyMenu" owl="1">
+<t t-name="web.MobileSwitchCompanyMenu">
     <div class="o_burger_menu_companies p-3 bg-100">
         <div class="o_burger_menu_user_title h6 mb-3">Companies</div>
         <t t-foreach="Object.values(companyService.availableCompanies)
@@ -13,7 +13,7 @@
     </div>
 </t>
 
-<t t-name="web.MobileSwitchCompanyItem" owl="1">
+<t t-name="web.MobileSwitchCompanyItem">
     <t t-set="id" t-value="props.company.id"/>
     <t t-set="displayName" t-value="props.company.name"/>
     <t t-set="isCompanySelected" t-value="selectedCompanies.includes(id)"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ImageField" owl="1">
+    <t t-name="web.ImageField">
         <div class="d-inline-block position-relative opacity-trigger-hover">
             <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
                 <t t-if="!props.readonly">
@@ -46,7 +46,7 @@
         </div>
     </t>
 
-    <t t-name="web.ImageZoomTooltip" owl="1">
+    <t t-name="web.ImageZoomTooltip">
         <div class="o_image_zoom">
             <img t-att-src="url" />
         </div>

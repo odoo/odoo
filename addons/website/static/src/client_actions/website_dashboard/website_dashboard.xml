@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="website.WebsiteDashboardMain" owl="1">
+<t t-name="website.WebsiteDashboardMain">
     <div class="o_dashboards" t-att-class="{'has_plausible': state.dashboards.plausible_share_url}">
         <Layout display="display">
             <t t-set-slot="control-panel-navigation-additional">
@@ -28,7 +28,7 @@
     </div>
 </t>
 
-<t t-name="website.plausible_content" owl="1">
+<t t-name="website.plausible_content">
     <div class="row o_dashboard_visits" t-if="state.groups.website_designer">
         <div t-if="state.dashboards.plausible_share_url" class="col-12">
             <div class="container">
