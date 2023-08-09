@@ -3369,7 +3369,7 @@ class BaseModel(metaclass=MetaModel):
                     except MissingError:
                         vals.clear()
 
-                results = field.convert_to_read_multi(values_list, self.browse(records), use_display_name)
+                results = field.convert_to_read_multi(values_list, self.browse(records))
                 for record_read_vals, convert_result in zip(data, results):
                     record_read_vals[1][name] = convert_result
                 continue

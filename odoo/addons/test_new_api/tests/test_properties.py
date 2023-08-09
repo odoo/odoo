@@ -646,14 +646,6 @@ class PropertiesCase(TestPropertiesMixin):
             msg='Definition must be present when reading child')
         self.assertEqual(many2one_property['value'], (self.partner.id, self.partner.display_name))
 
-        # disable the display_name
-        properties_values = (self.message_1 | self.message_3).read(['attributes'], load=None)
-        many2one_property = properties_values[0]['attributes'][1]
-
-        self.assertEqual(
-            many2one_property['value'], self.partner.id,
-            msg='If display_name is disable, should only return the record id')
-
     def test_properties_field_many2one_basic(self):
         """Test the basic (read, write...) of the many2one property."""
         self.message_2.attributes = [
@@ -1065,6 +1057,9 @@ class PropertiesCase(TestPropertiesMixin):
             'comodel': 'test_new_api.partner',
         }]
 
+        def name_get(records):
+            return list(zip(records._ids, records.mapped('display_name')))
+
         with self.assertQueryCount(4):
             self.message_1.attributes = [
                 {
@@ -1075,18 +1070,18 @@ class PropertiesCase(TestPropertiesMixin):
                     "value": list(zip(partners[:10]._ids, partners[:10].mapped('display_name'))),
                 }
             ]
-            attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
-            self.assertEqual(attributes[0]['value'], partners[:10].ids)
+            attributes = self.message_1.read(['attributes'])[0]['attributes']
+            self.assertEqual(attributes[0]['value'], name_get(partners[:10]))
 
         partners[:5].unlink()
-        with self.assertQueryCount(4):
-            attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
-            self.assertEqual(attributes[0]['value'], partners[5:10].ids)
+        with self.assertQueryCount(5):
+            attributes = self.message_1.read(['attributes'])[0]['attributes']
+            self.assertEqual(attributes[0]['value'], name_get(partners[5:10]))
 
         partners[5].unlink()
         with self.assertQueryCount(5):
             properties = self.message_1.read(['attributes'])[0]['attributes']
-        self.assertEqual(properties[0]['value'], list(zip(partners[6:10]._ids, partners[6:10].mapped('display_name'))))
+        self.assertEqual(properties[0]['value'], name_get(partners[6:10]))
 
         # need to wait next write to clean data in database
         # a single read won't clean the removed many2many
@@ -1096,14 +1091,6 @@ class PropertiesCase(TestPropertiesMixin):
 
         sql_values = self._get_sql_properties(self.message_1)
         self.assertEqual(sql_values, {'moderator_partner_ids': partners[6:10].ids})
-
-        # read and disable display_name
-        properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
-        self.assertEqual(
-            properties[0]['value'],
-            partners[6:10].ids,
-            msg='Should not return the partners name',
-        )
 
         # Check that duplicated ids are removed
         self.env.flush_all()
@@ -1122,7 +1109,7 @@ class PropertiesCase(TestPropertiesMixin):
         properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
         self.assertEqual(
             properties[0]['value'],
-            partners[6:10].ids,
+            name_get(partners[6:10]),
             msg='Should removed duplicated ids',
         )
 

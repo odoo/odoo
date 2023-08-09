@@ -11,6 +11,7 @@ from xmlrpc.client import MAXINT
 import ast
 import base64
 import copy
+import contextlib
 import binascii
 import enum
 import itertools
@@ -3334,9 +3335,9 @@ class Properties(Field):
     #       }]
     #
     def convert_to_read(self, value, record, use_display_name=True):
-        return self.convert_to_read_multi([value], record, use_display_name)[0]
+        return self.convert_to_read_multi([value], record)[0]
 
-    def convert_to_read_multi(self, values, records, use_display_name=True):
+    def convert_to_read_multi(self, values, records):
         if not records:
             return values
         assert len(values) == len(records)
@@ -3351,15 +3352,14 @@ class Properties(Field):
                 assert isinstance(value, dict), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
 
-        res_ids_per_model = self._get_res_ids_per_model(records, result, use_display_name)
+        res_ids_per_model = self._get_res_ids_per_model(records, result)
 
         # value is in record format
         for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
 
-        if use_display_name:
-            for value in result:
-                self._add_display_name(value, records.env)
+        for value in result:
+            self._add_display_name(value, records.env)
 
         return result
 
@@ -3382,7 +3382,7 @@ class Properties(Field):
             record._cache[self.definition_record] = snapshot[self.definition_record].id or None
         return super().convert_to_onchange(value, record, names)
 
-    def _get_res_ids_per_model(self, records, values_list, use_display_name=True):
+    def _get_res_ids_per_model(self, records, values_list):
         """Read everything needed in batch for the given records.
 
         To retrieve relational properties names, or to check their existence,
@@ -3419,13 +3419,10 @@ class Properties(Field):
             recs = records.env[model].browse(ids).exists()
             res_ids_per_model[model] = set(recs.ids)
 
-            if use_display_name:
-                for record in recs:
-                    # read a field to pre-fetch the recordset
-                    try:
-                        record.display_name
-                    except AccessError:
-                        pass
+            for record in recs:
+                # read a field to pre-fetch the recordset
+                with contextlib.suppress(AccessError):
+                    record.display_name
 
         return res_ids_per_model
 
