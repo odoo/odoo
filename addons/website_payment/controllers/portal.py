@@ -23,8 +23,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
         kwargs['is_donation'] = True
-        kwargs['currency_id'] = int(kwargs.get('currency_id', request.env.company.currency_id.id))
-        kwargs['amount'] = float(kwargs.get('amount', 25))
+        kwargs['currency_id'] = self._cast_as_int(kwargs.get('currency_id')) or request.env.company.currency_id.id
+        kwargs['amount'] = self._cast_as_float(kwargs.get('amount')) or 25.0
         kwargs['donation_options'] = kwargs.get('donation_options', json_safe.dumps(dict(customAmount="freeAmount")))
 
         if request.env.user._is_public():
