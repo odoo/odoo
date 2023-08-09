@@ -24,3 +24,11 @@ def _check_exists_collaborators_for_project_sharing(env):
 def _project_post_init(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     _check_exists_collaborators_for_project_sharing(env)
+
+def uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    project_wizard_ids = env['project.share.wizard'].search([])
+    if project_wizard_ids:
+        env.cr.execute(
+            'delete from project_share_wizard_res_partner_rel where project_share_wizard_id in %s',
+            (tuple(project_wizard_ids.ids),))

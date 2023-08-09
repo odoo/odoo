@@ -57,6 +57,7 @@
     'auto_install': False,
     'application': True,
     'post_init_hook': '_project_post_init',
+    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'project/static/src/burndown_chart/*',
