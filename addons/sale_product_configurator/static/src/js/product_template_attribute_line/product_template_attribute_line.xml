@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <!-- Attributes line template -->
-    <t t-name="saleProductConfigurator.ptal" owl="1">
+    <t t-name="saleProductConfigurator.ptal">
         <!-- If the attribute line contains only one attribute value, we don't show the attribute
              value template or the attribute line title unless the single attribute value is custom,
              whereas in this case, only the title of the attribute line and the custom value
@@ -20,7 +20,7 @@
         />
     </t>
     <!-- Attributes value templates -->
-    <t t-name="saleProductConfigurator.ptav-select" owl="1">
+    <t t-name="saleProductConfigurator.ptav-select">
         <select class="form-select"
             t-on-change="updateSelectedPTAV"
             t-att-name="'ptal-' + this.props.id">
@@ -34,7 +34,7 @@
                 t-att-class="{ 'css_not_available': ptav.excluded }"/>
         </select>
     </t>
-    <t t-name="saleProductConfigurator.ptav-radio" owl="1">
+    <t t-name="saleProductConfigurator.ptav-radio">
         <ul class="list-inline list-unstyled">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item mb-3">
@@ -61,7 +61,7 @@
             </li>
         </ul>
     </t>
-    <t t-name="saleProductConfigurator.ptav-pills" owl="1">
+    <t t-name="saleProductConfigurator.ptav-pills">
          <ul t-attf-class="list-inline list-unstyled">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 t-att-class="{'active': ptav.id === this.props.selected_attribute_value_id}"
@@ -88,7 +88,7 @@
             </li>
         </ul>
     </t>
-    <t t-name="saleProductConfigurator.ptav-color" owl="1">
+    <t t-name="saleProductConfigurator.ptav-color">
         <ul class="list-inline">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-1">

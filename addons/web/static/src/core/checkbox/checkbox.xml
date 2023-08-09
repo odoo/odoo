@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="web.CheckBox" owl="1">
+<t t-name="web.CheckBox">
     <div class="o-checkbox form-check" t-attf-class="{{ props.slots ? 'form-check' : '' }}"  t-att-class="props.className" t-on-click="onClick" t-ref="root">
         <input
             t-att-id="props.id or id"

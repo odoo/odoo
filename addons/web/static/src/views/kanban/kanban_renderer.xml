@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanRenderer" owl="1">
+    <t t-name="web.KanbanRenderer">
         <div class="o_kanban_renderer o_renderer d-flex"
             t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
             t-ref="root"
@@ -124,7 +124,7 @@
         </div>
     </t>
 
-    <t t-name="web.KanbanColorPicker" owl="1">
+    <t t-name="web.KanbanColorPicker">
         <ul t-if="this.dataState.widget.editable" class="oe_kanban_colorpicker">
             <!--
                 Used in KanbanRecord
@@ -139,7 +139,7 @@
         </ul>
     </t>
 
-    <t t-name="web.KanbanDropdownMenuWrapper" owl="1">
+    <t t-name="web.KanbanDropdownMenuWrapper">
         <div t-on-click="onClick" style="display:contents">
             <t t-slot="default"/>
         </div>

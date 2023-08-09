@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="calendar.AttendeeCalendarCommonPopover.body" t-inherit="web.CalendarCommonPopover.body" t-inherit-mode="primary" owl="1">
+    <t t-name="calendar.AttendeeCalendarCommonPopover.body" t-inherit="web.CalendarCommonPopover.body" t-inherit-mode="primary">
         <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]" position="attributes">
             <attribute name="t-if">isEventDetailsVisible</attribute>
         </xpath>
     </t>
 
-    <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary" owl="1">
+    <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='isEventEditable']" position="after">
             <t t-elif="isEventViewable">
                 <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">View</a>

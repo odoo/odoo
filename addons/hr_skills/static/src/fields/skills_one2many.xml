@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <t t-name="hr_skills.SkillsListRenderer" owl="1" t-inherit-mode="primary" t-inherit="web.ListRenderer">
+    <t t-name="hr_skills.SkillsListRenderer" t-inherit-mode="primary" t-inherit="web.ListRenderer">
         <xpath expr="//table" position="attributes">
             <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} {{ !showTable ? 'd-none' : ''}} o_skill_table" separator=" "/>
         </xpath>
@@ -16,7 +16,7 @@
         </xpath>
     </t>
 
-    <t t-name="hr_skills.SkillsListRenderer.Rows" owl="1">
+    <t t-name="hr_skills.SkillsListRenderer.Rows">
         <t t-foreach="Object.entries(groupedList)" t-as="skill_group" t-key="skill_group[0]">
             <tr class="o_group_has_content o_group_header">
                 <th tabindex="-1" class="o_group_name" t-att-colspan="colspan">

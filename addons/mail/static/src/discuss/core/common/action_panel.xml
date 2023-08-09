@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ActionPanel" owl="1">
+    <t t-name="mail.ActionPanel">
         <div class="overflow-auto d-flex flex-column flex-shrink-0 bg-view position-relative p-3 pt-0 h-100">
             <div class="position-sticky top-0 py-3 d-flex align-items-baseline bg-view" style="z-index: 1;" >
                 <button t-if="env.closeActionPanel" class="o-mail-ActionPanel-backButton btn opacity-75 opacity-100-hover ps-0 py-0 fs-5" title="Close panel" t-on-click.stop="env.closeActionPanel">

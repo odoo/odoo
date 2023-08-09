@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ListRenderer" owl="1">
+    <t t-name="web.ListRenderer">
         <div
             class="o_list_renderer o_renderer table-responsive"
             tabindex="-1"
@@ -94,7 +94,7 @@
         </div>
     </t>
 
-    <t t-name="web.ListRenderer.Rows" owl="1">
+    <t t-name="web.ListRenderer.Rows">
         <t t-if="!list.isGrouped">
             <t t-foreach="list.records" t-as="record" t-key="record.id">
                 <t t-call="{{ constructor.recordRowTemplate }}"/>
@@ -162,7 +162,7 @@
         </t>
     </t>
 
-    <t t-name="web.ListRenderer.GroupRow" owl="1">
+    <t t-name="web.ListRenderer.GroupRow">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
             t-on-click="() => this.toggleGroup(group)"
         >
@@ -209,7 +209,7 @@
         </tr>
     </t>
 
-    <t t-name="web.ListRenderer.RecordRow" owl="1">
+    <t t-name="web.ListRenderer.RecordRow">
         <tr class="o_data_row"
             t-att-class="getRowClass(record)"
             t-att-data-id="record.id"

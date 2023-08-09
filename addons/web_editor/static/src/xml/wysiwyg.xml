@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="web_editor.Wysiwyg" owl="1">
+    <t t-name="web_editor.Wysiwyg">
         <div style="display: contents;" t-ref="toolbar">
             <Toolbar t-props="this.state.toolbarProps" t-if="this.state.showToolbar"/>
         </div>
@@ -16,7 +16,7 @@
     <!--=================-->
 
     <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
-    <div t-name="web_editor.LinkDialog" owl="1">
+    <div t-name="web_editor.LinkDialog">
         <Dialog size="'xl'">
             <div  class="o_link_dialog">
                 <div class="row" t-ref="linkComponentWrapper">
@@ -107,7 +107,7 @@
         </Dialog>
     </div>
 
-    <we-customizeblock-option t-name="web_editor.LinkTools" owl="1">
+    <we-customizeblock-option t-name="web_editor.LinkTools">
         <div style="display: contents" t-ref="linkComponentWrapper">
             <we-row id="url_row" t-attf-class="#{state.isButton ? ' d-none' : ''}">
                 <we-input class="o_we_user_value_widget o_we_sublevel_1">
@@ -299,7 +299,7 @@
     <div t-name="web_editor.ImageCrop" class="o_we_crop_widget" contenteditable="false"
         t-att-class="this.state.active ? '' : 'd-none'"
         t-ref="el"
-        owl="1">
+       >
         <div class="o_we_cropper_wrapper">
             <img class="o_we_cropper_img"/>
             <div class="o_we_crop_buttons text-center mt16 position-fixed o_we_no_overlay" contenteditable="false">

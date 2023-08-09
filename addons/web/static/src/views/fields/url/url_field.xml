@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.UrlField" owl="1">
+    <t t-name="web.UrlField">
         <t t-if="props.readonly">
             <a class="o_field_widget o_form_uri" t-on-click.stop="" t-att-href="formattedHref" t-esc="props.text || props.record.data[props.name] || ''" target="_blank"/>
         </t>

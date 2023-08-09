@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="views.ViewButton" owl="1">
+  <t t-name="views.ViewButton">
     <t t-tag="props.tag"
         t-att="props.attrs"
         t-att-id="props.id"
@@ -23,7 +23,7 @@
     </t>
   </t>
 
-  <t t-name="views.ViewButtonTooltip" owl="1">
+  <t t-name="views.ViewButtonTooltip">
       <t t-if="debug || button.help">
         <div class="o-tooltip--string" t-if="debug || button.string" role="tooltip">
             <t t-if="debug">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.Many2OneField.CreateConfirmationDialog" owl="1">
+    <t t-name="web.Many2OneField.CreateConfirmationDialog">
         <Dialog title="title" size="'md'">
             <div>
                 Create <strong t-esc="props.value"/> as a new <t t-esc="props.name"/>?
@@ -13,7 +13,7 @@
         </Dialog>
     </t>
 
-    <t t-name="web.Many2OneField" owl="1">
+    <t t-name="web.Many2OneField">
         <t t-if="props.readonly">
             <t t-if="!props.canOpen">
                 <span>

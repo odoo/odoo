@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="hr_expense.ExpenseDashboard" owl="1">
+    <t t-name="hr_expense.ExpenseDashboard">
         <div class="o_expense_container position-sticky start-0 d-flex o_form_statusbar">
             <t t-foreach="Object.entries(state.expenses)" t-as="expense" t-key="expense[0]">
                 <t t-set="name" t-value="expense[0]"/>

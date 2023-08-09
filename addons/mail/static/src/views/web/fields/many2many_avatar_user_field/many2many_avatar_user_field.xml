@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="mail.Many2ManyAvatarUserTagsList" t-inherit="web.TagsList" t-inherit-mode="primary" owl="1">
+    <t t-name="mail.Many2ManyAvatarUserTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_tag')]" position="attributes">
             <attribute name="t-att-title"></attribute>
         </xpath>
@@ -11,7 +11,7 @@
         </img>
     </t>
 
-    <t t-name="mail.KanbanMany2ManyAvatarUserTagsList" t-inherit="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit-mode="primary" owl="1">
+    <t t-name="mail.KanbanMany2ManyAvatarUserTagsList" t-inherit="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_tag')]" position="attributes">
             <attribute name="t-att-title"></attribute>
         </xpath>
@@ -22,13 +22,13 @@
         </img>
     </t>
 
-    <t t-name="mail.ListMany2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">
+    <t t-name="mail.ListMany2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <TagsList position="attributes">
             <attribute name="displayText">displayText</attribute>
         </TagsList>
     </t>
 
-    <t t-name="mail.KanbanMany2ManyTagsAvatarUserField" t-inherit="web.KanbanMany2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">
+    <t t-name="mail.KanbanMany2ManyTagsAvatarUserField" t-inherit="web.KanbanMany2ManyTagsAvatarField" t-inherit-mode="primary">
         <TagsList position="attributes">
             <attribute name="displayText">displayText</attribute>
         </TagsList>

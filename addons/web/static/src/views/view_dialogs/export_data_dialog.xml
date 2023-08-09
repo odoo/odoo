@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.DeleteExportListDialog" owl="1">
+    <t t-name="web.DeleteExportListDialog">
         <Dialog title="'Confirmation'" size="'md'">
             <div t-esc="props.text" />
             <t t-set-slot="footer">
@@ -11,7 +11,7 @@
         </Dialog>
     </t>
 
-    <t t-name="web.ExportDataItem" owl="1">
+    <t t-name="web.ExportDataItem">
         <div t-att-data-field_id="props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.subfields.length ? 'o_expanded mb-2' : '' }} {{ props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(props.field.id)">
             <div t-attf-class="o_tree_column d-flex align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
                 <span t-if="props.isFieldExpandable(props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small oi {{ state.subfields.length ? 'oi-chevron-down' : 'oi-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="web.ExportDataDialog" owl="1">
+    <t t-name="web.ExportDataDialog">
         <Dialog contentClass="'o_export_data_dialog'" title="title" size="'lg'">
             <div class="row w-100">
                 <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ThreadIcon" owl="1">
+    <t t-name="mail.ThreadIcon">
         <div class="o-mail-ThreadIcon d-flex justify-content-center flex-shrink-0" t-att-class="props.className">
             <t t-if="props.thread.type === 'channel'">
                 <div t-if="props.thread.authorizedGroupFullName" class="fa fa-fw fa-hashtag" t-att-title="props.thread.accessRestrictedToGroupText"/>

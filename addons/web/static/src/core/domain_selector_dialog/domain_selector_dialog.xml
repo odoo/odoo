@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="web.DomainSelectorDialog" owl="1">
+    <t t-name="web.DomainSelectorDialog">
         <Dialog title="dialogTitle">
             <div t-if="props.text" class="mb-3" t-out="props.text"/>
             <DomainSelector t-props="domainSelectorProps" />

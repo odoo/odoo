@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="hr.DepartmentChart" owl="1">
+    <t t-name="hr.DepartmentChart">
         <div class="o_hr_department_chart">
             <div class="o_horizontal_separator mb-3 text-uppercase fw-bolder small">Department Organization</div>
             <t t-if="state.hierarchy.self">
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="hr.DepartmentChart.Department" owl="1">
+    <t t-name="hr.DepartmentChart.Department">
         <t t-if="dept">
             <div t-attf-class="#{hideTree?'':'o_treeEntry'} mb-0 ps-4">
                 <div class="d-flex justify-content-between">

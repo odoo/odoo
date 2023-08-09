@@ -2,7 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="account.AccountPaymentField" owl="1">
+    <t t-name="account.AccountPaymentField">
         <div>
             <t t-if="outstanding">
                 <div>
@@ -61,7 +61,7 @@
         </div>
     </t>
 
-    <t t-name="account.AccountPaymentPopOver" owl="1">
+    <t t-name="account.AccountPaymentPopOver">
         <div class="account_payment_popover">
             <h3 t-if="props.title" class="o_popover_header"><t t-out="props.title"/></h3>
             <div class="px-2">

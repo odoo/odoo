@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="mail.FollowerList" owl="1">
+<t t-name="mail.FollowerList">
     <t t-if="props.thread.hasWriteAccess">
         <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
             Add Followers
@@ -27,7 +27,7 @@
     </div>
 </t>
 
-<t t-name="mail.Follower" owl="1">
+<t t-name="mail.Follower">
     <div class="dropdown-item o-mail-Follower d-flex justify-content-between p-0">
         <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 o-min-width-0" t-att-class="{ 'o-inactive fst-italic opacity-25': !follower.isActive }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev, follower)">
             <img class="o-mail-Follower-avatar me-2 rounded" t-att-src="threadService.avatarUrl(follower.partner, props.thread)" alt=""/>

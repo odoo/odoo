@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="project.ProjectTaskNameWithSubtaskCountCharField" t-inherit="web.CharField" t-inherit-mode="primary" owl="1">
+    <t t-name="project.ProjectTaskNameWithSubtaskCountCharField" t-inherit="web.CharField" t-inherit-mode="primary">
         <xpath expr="//span[@t-esc='formattedValue']" position="after">
             <span class="text-muted ms-2 fw-normal">
                 <t t-if="props.record.data.subtask_count">

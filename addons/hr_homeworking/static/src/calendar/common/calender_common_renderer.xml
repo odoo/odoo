@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="hr.homeworking.CalendarCommonRenderer.worklocation" owl="1">
+    <t t-name="hr.homeworking.CalendarCommonRenderer.worklocation">
         <t t-if="multiCalendar">
             <div class="o_homework_multi">
                 <t t-foreach="records" t-as="record" t-key="record.id">
@@ -31,7 +31,7 @@
         </t>
     </t>
 
-    <t t-name="hr.homeworking.CalendarCommonRenderer.buttonWorklocation" owl="1">
+    <t t-name="hr.homeworking.CalendarCommonRenderer.buttonWorklocation">
         <div class="btnWorklocation w-100">
             <button class='rounded-pill o_month text-nowrap bg-info-light'>
                 <i class="fa fa-map-marker" aria-hidden="true"></i>
