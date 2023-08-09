@@ -90,7 +90,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(billed)},
         )
 
         expense_sheet.action_sheet_move_create()
@@ -118,7 +118,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(billed)},
         )
 
         self.assertDictEqual(
@@ -144,7 +144,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(billed)},
         )
 
         self.assertDictEqual(
@@ -192,7 +192,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(billed), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(billed)},
         )
 
         expense_sheet._do_refuse('Test Cancel Expense')
@@ -203,7 +203,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability.get('costs', {}),
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(-expense_foreign.untaxed_amount_currency * 0.2), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(-expense_foreign.untaxed_amount_currency * 0.2)},
         )
 
         invoice = self.env['sale.advance.payment.inv'].with_context({
@@ -236,7 +236,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': expense.currency_id.round(-expense_foreign.untaxed_amount_currency * 0.2), 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': 0.0, 'to_bill': expense.currency_id.round(-expense_foreign.untaxed_amount_currency * 0.2)},
         )
 
         expense_sheet_foreign._do_refuse('Test Cancel Expense')
