@@ -311,7 +311,7 @@ export class Record extends DataPoint {
         const unsetRequiredFields = [];
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
-            if (this._isInvisible(fieldName)) {
+            if (this._isInvisible(fieldName) || this.fields[fieldName].relatedPropertyField) {
                 continue;
             }
             switch (fieldType) {
@@ -603,9 +603,9 @@ export class Record extends DataPoint {
                 if (field.type === "properties") {
                     for (const property of parsedValues[fieldName]) {
                         const fieldPropertyName = `${fieldName}.${property.name}`;
-                        if (property.type === "one2many" || property.type === "many2many") {
+                        if (property.type === "many2many") {
                             const staticList = this._createStaticListDatapoint(
-                                property.value.map((record) => ({
+                                (property.value || []).map((record) => ({
                                     id: record[0],
                                     display_name: record[1],
                                 })),
@@ -788,7 +788,8 @@ export class Record extends DataPoint {
     async _save({ noReload, onError } = {}) {
         // before saving, abandon new invalid, untouched records in x2manys
         for (const fieldName in this.activeFields) {
-            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+            const field = this.fields[fieldName];
+            if (["one2many", "many2many"].includes(field.type) && !field.relatedPropertyField) {
                 this.data[fieldName]._abandonRecords();
             }
         }
