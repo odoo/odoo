@@ -17,6 +17,11 @@ QUnit.module("utils", () => {
         );
         const compiledTemplate = renderToElement("test.render.template.1");
         assert.strictEqual(
+            compiledTemplate.parentElement,
+            null,
+            "compiledTemplate.parentElement must be empty"
+        );
+        assert.strictEqual(
             compiledTemplate.nodeType,
             Node.ELEMENT_NODE,
             "compiledTemplate must be an element"
