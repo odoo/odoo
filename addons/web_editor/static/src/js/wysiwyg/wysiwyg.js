@@ -1153,7 +1153,7 @@ export class Wysiwyg extends Component {
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            const {res_model: resModel, res_id: resId} = this.options.recordInfo;
             // When saving a webp, o_b64_image_to_save is turned into
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -2924,6 +2924,8 @@ export class Wysiwyg extends Component {
                 name: el.dataset.fileName || '',
                 data: el.getAttribute('src').split(',')[1],
                 is_image: true,
+                res_model: resModel,
+                res_id: resId,
             },
         );
         if (attachment.mimetype === 'image/webp') {
@@ -2933,7 +2935,19 @@ export class Wysiwyg extends Component {
             el.dataset.fileName = attachment.name;
             this._saveModifiedImage(el, resModel, resId);
         } else {
-            el.setAttribute('src', attachment.image_src);
+            let src = attachment.image_src;
+            if (!attachment.public) {
+                let accessToken = attachment.access_token;
+                if (!accessToken) {
+                    [accessToken] = await this.orm.call(
+                        'ir.attachment',
+                        'generate_access_token',
+                        [attachment.id],
+                    );
+                }
+                src += `?access_token=${encodeURIComponent(accessToken)}`;
+            }
+            el.setAttribute('src', src);
         }
         el.classList.remove('o_b64_image_to_save');
     }
