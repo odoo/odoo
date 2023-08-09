@@ -10,6 +10,8 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
+import { CommandPalette } from "@web/core/commands/command_palette";
+import { commandService } from "@web/core/commands/command_service";
 import {
     click,
     getFixture,
@@ -17,7 +19,9 @@ import {
     mount,
     nextTick,
     patchWithCleanup,
+    triggerHotkey,
 } from "../helpers/utils";
+import { editSearchBar } from "./commands/command_service_tests";
 import { Dialog } from "../../src/core/dialog/dialog";
 
 import { Component, onMounted, xml } from "@odoo/owl";
@@ -50,6 +54,7 @@ QUnit.module("DialogManager", {
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("l10n", makeFakeLocalizationService());
+        serviceRegistry.add("command", commandService);
 
         env = await makeTestEnv();
     },
@@ -252,4 +257,97 @@ QUnit.test("dialog component crashes", async (assert) => {
     assert.verifySteps(["error"]);
     assert.containsOnce(target, ".modal");
     assert.containsOnce(target, ".modal .o_dialog_error");
+});
+
+QUnit.test("close dialogs on command pallet", async function (assert) {
+    assert.expect(13);
+    // create first dialog box
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog title="props.title">dialog content</Dialog>`;
+
+    await mount(PseudoWebClient, target, { env });
+    env.services.dialog.add(CustomDialog, { title: "Dialog1" });
+    await nextTick();
+    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+
+    // create second dialog box
+    env.services.dialog.add(CustomDialog, { title: "Dialog2" });
+    await nextTick();
+    assert.containsN(target, ".o_dialog_container .o_dialog", 2);
+
+    const action = () => {
+        assert.step("C1");
+    };
+    const providers = [
+        {
+            namespace: "/",
+            provide: () => [
+                {
+                    name: "Command1",
+                    action,
+                },
+                {
+                    name: "Command2",
+                    action,
+                },
+            ],
+        },
+        {
+            namespace: "@",
+            provide: () => [
+                {
+                    name: "Command3",
+                    action,
+                },
+                {
+                    name: "Command4",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+
+    //edit the search bar with '@'
+    await editSearchBar("@");
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command3", "Command4"]
+    );
+
+    // click on enter key to execute command
+    triggerHotkey("enter");
+    await nextTick();
+
+    // command pallet closes but not the dialogs
+    assert.containsN(target, ".o_dialog", 2);
+    assert.containsNone(target, ".o_command_pallet");
+
+    // open the control panel again
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+
+    //edit the search bar with '/'
+    await editSearchBar("/");
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Command1", "Command2"]
+    );
+
+    triggerHotkey("enter");
+    await nextTick();
+    assert.containsNone(target, ".o_dialog");
+    assert.containsNone(target, ".o_command_pallet");
+    assert.verifySteps(["C1", "C1"]);
 });

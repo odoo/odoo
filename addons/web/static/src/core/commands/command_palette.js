@@ -103,6 +103,7 @@ export class CommandPalette extends Component {
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
         this.inputRef = useAutofocus();
+        this.dialogService = useService("dialog");
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
         useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
@@ -265,9 +266,13 @@ export class CommandPalette extends Component {
      */
     async executeCommand(command) {
         const config = await command.action();
+        const switchViews = ['/','?'];
         if (config) {
             this.setCommandPaletteConfig(config);
-        } else {
+        }else if(switchViews.includes(this.state.namespace)){
+            this.dialogService.closeAllDialogs();
+        }
+        else {
             this.props.close();
         }
     }
