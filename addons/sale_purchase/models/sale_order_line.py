@@ -211,7 +211,7 @@ class SaleOrderLine(models.Model):
 
     def _purchase_service_match_supplier(self, warning=True):
         # determine vendor of the order (take the first matching company and product)
-        suppliers = self.product_id._select_seller(quantity=self.product_uom_qty, uom_id=self.product_uom)
+        suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom)
         if warning and not suppliers:
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (self.product_id.display_name,))
         return suppliers[0]
@@ -232,6 +232,12 @@ class SaleOrderLine(models.Model):
         if not purchase_order:
             purchase_order = self._create_purchase_order(supplierinfo)
         return purchase_order
+
+    def _retrieve_purchase_partner(self):
+        """ In case we want to explicitely name a partner from whom we want to buy or receive products
+        """
+        self.ensure_one()
+        return False
 
     def _purchase_service_create(self, quantity=False):
         """ On Sales Order confirmation, some lines (services ones) can create a purchase order line and maybe a purchase order.
