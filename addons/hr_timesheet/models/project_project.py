@@ -169,7 +169,7 @@ class Project(models.Model):
         if len(self.env.context.get('allowed_company_ids', [])) <= 1:
             return res
         name_mapping = dict(res)
-        for project in self & self:
+        for project in self:
             if project.is_internal_project:
                 name_mapping[project.id] = f'{name_mapping[project.id]} - {project.company_id.name}'
         return list(name_mapping.items())
