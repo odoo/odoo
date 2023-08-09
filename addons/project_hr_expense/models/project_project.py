@@ -96,20 +96,26 @@ class Project(models.Model):
         if not expenses_read_group or not expenses_read_group[0].get('ids'):
             return {}
         expense_ids = []
-        amount_billed = 0.0
+        amount_billed = amount_to_bill = 0.0
         all_currencies = {res['currency_id'] for res in expenses_read_group}
         for res in expenses_read_group:
             if can_see_expense:
                 expense_ids.extend(res['ids'])
-            amount_billed += self.env['res.currency'].browse(res['currency_id']).with_prefetch(all_currencies)._convert(
+            amount_to_bill += self.env['res.currency'].browse(res['currency_id']).with_prefetch(all_currencies)._convert(
                 from_amount=res['untaxed_amount'],
                 to_currency=self.currency_id,
                 company=self.company_id,
             )
 
+        expenses = self.env['hr.expense'].browse(expense_ids)
+        for expense in expenses:
+            if expense.sheet_id.state in ['post', 'done']:
+                amount_to_bill -= expense.sheet_id.untaxed_amount
+                amount_billed -= expense.sheet_id.untaxed_amount
+
         section_id = 'expenses'
         expense_profitability_items = {
-            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -amount_billed, 'to_bill': 0.0},
+            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_billed, 'to_bill': -amount_to_bill},
         }
         if can_see_expense:
             args = [section_id, [('id', 'in', expense_ids)]]

@@ -64,8 +64,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency}],
-                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0}],
+                    'total': {'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
@@ -97,10 +97,10 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                     'data': [{
                         'id': 'expenses',
                         'sequence': expense_sequence,
-                        'to_bill': 0.0,
-                        'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2
+                        'to_bill': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2,
+                        'billed': 0.0
                     }],
-                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2},
+                    'total': {'to_bill': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
@@ -112,8 +112,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2}],
-                    'total': {'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': -expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0}],
+                    'total': {'to_bill': -expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },

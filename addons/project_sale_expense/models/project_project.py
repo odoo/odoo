@@ -33,10 +33,10 @@ class Project(models.Model):
                 expense_ids.extend(res['ids'])
             dict_amount_per_currency[res['currency_id']] += res['untaxed_amount_currency']
 
-        amount_billed = 0.0
+        amount_billed = amount_to_bill = 0.0
         for currency_id in dict_amount_per_currency:
             currency = self.env['res.currency'].browse(currency_id).with_prefetch(dict_amount_per_currency)
-            amount_billed += currency._convert(dict_amount_per_currency[currency_id], self.currency_id, self.company_id)
+            amount_to_bill += currency._convert(dict_amount_per_currency[currency_id], self.currency_id, self.company_id)
 
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
@@ -64,14 +64,20 @@ class Project(models.Model):
             total_amount_expense_to_invoice += currency._convert(revenues['to_invoice'], self.currency_id, self.company_id)
             total_amount_expense_invoiced += currency._convert(revenues['invoiced'], self.currency_id, self.company_id)
 
+        expenses = self.env['hr.expense'].browse(expense_ids)
+        for expense in expenses:
+            if expense.sheet_id.state in ['post', 'done']:
+                amount_to_bill -= expense.sheet_id.untaxed_amount
+                amount_billed -= expense.sheet_id.untaxed_amount
+
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
         expense_data = {
             'costs': {
                 'id': section_id,
                 'sequence': sequence,
-                'billed': -amount_billed,
-                'to_bill': 0.0,
+                'billed': amount_billed,
+                'to_bill': -amount_to_bill,
             },
         }
         if reinvoice_expense_ids:
