@@ -75,8 +75,6 @@ publicWidget.registry.websiteSaleDelivery.include({
         if (!atLeastOneOptionAvailable) {
             this.warning.classList.remove('d-none');
             disabledReasons.noOptionAvailableOnsite = true;
-        } else if (this.paymentOptions.length === 1) {
-            $(this.paymentOptions[0]).click(); // Make sure the option is selected if that's the only one, because the input is hidden in that case.
         }
         $payButton.data('disabled_reasons', disabledReasons);
     }
