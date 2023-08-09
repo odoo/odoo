@@ -793,7 +793,10 @@ class ProductTemplate(models.Model):
             'archived_combinations': [
                 product.product_template_attribute_value_ids.ids
                 for product in archived_products
-                if product.product_template_attribute_value_ids
+                if product.product_template_attribute_value_ids and all(
+                    ptav.ptav_active
+                    for ptav in product.product_template_attribute_value_ids
+                )
             ],
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination),
             'parent_combination': parent_combination.ids,
