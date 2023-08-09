@@ -174,6 +174,7 @@ export function getActionManagerServerData() {
             xml_id: "action_3",
             name: "Partners",
             res_model: "partner",
+            mobile_view_mode: "kanban",
             type: "ir.actions.act_window",
             views: [
                 [false, "list"],
