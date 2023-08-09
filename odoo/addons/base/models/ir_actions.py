@@ -272,6 +272,7 @@ class IrActionsActWindow(models.Model):
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     view_mode = fields.Char(required=True, default='tree,form',
                             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)")
+    mobile_view_mode = fields.Char(default="kanban", help="First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)")
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
     view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='No of Views')
@@ -327,9 +328,8 @@ class IrActionsActWindow(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "context", "domain", "filter", "groups_id", "limit", "res_id",
-            "res_model", "search_view_id", "target", "view_id",
-            "view_mode", "views",
+            "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
+            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
             "flags"

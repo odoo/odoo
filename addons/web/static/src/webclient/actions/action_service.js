@@ -943,11 +943,10 @@ function makeActionManager(env) {
         }
 
         if (env.isSmall) {
-            if (!view.isMobileFriendly) {
-                view = _findMobileView(views, view.multiRecord) || view;
-            }
-            if (lazyView && !lazyView.isMobileFriendly) {
-                lazyView = _findMobileView(views, lazyView.multiRecord) || lazyView;
+            view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
+            if (lazyView) {
+                lazyView =
+                    _findView(views, lazyView.multiRecord, action.mobile_view_mode) || lazyView;
             }
         }
 
@@ -984,15 +983,14 @@ function makeActionManager(env) {
     }
 
     /**
-     * Helper function to find the first mobile-friendly view, if any.
-     *
      * @private
      * @param {Array} views an array of views
      * @param {boolean} multiRecord true if we search for a multiRecord view
-     * @returns {Object|undefined} first mobile-friendly view found
+     * @param {string} viewType type of the view to search
+     * @returns {Object|undefined} the requested view if it could be found
      */
-    function _findMobileView(views, multiRecord) {
-        return views.find((view) => view.isMobileFriendly && view.multiRecord === multiRecord);
+    function _findView(views, multiRecord, viewType) {
+        return views.find((v) => v.type === viewType && v.multiRecord == multiRecord);
     }
 
     // ---------------------------------------------------------------------------
