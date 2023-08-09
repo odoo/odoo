@@ -755,3 +755,36 @@ class TestUnityRead(TransactionCase):
                 'm2o_reference_model': False,
             }
         ])
+
+    def test_properties(self):
+        """Check that the display name of the relational properties are always loaded."""
+        discussion = self.env['test_new_api.discussion'].create({
+            'name': 'Test Discussion',
+            'attributes_definition': [{
+                'name': 'discussion_color_code',
+                'string': 'Color Code',
+                'type': 'char',
+                'default': 'blue',
+            }, {
+                'name': 'moderator_partner_id',
+                'string': 'Partner',
+                'type': 'many2one',
+                'comodel': 'test_new_api.partner',
+            }],
+            'participants': [Command.link(self.env.user.id)],
+        })
+        partner = self.env['test_new_api.partner'].create({'name': 'Test Partner Properties'})
+        message = self.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': discussion.id,
+            'author': self.env.user.id,
+            'attributes': {
+                'discussion_color_code': 'Test',
+                'moderator_partner_id': partner.id,
+            },
+        })
+        values = message.web_read({'attributes': False})[0]['attributes']
+        self.assertEqual(len(values), 2)
+        self.assertEqual(values[0]['name'], 'discussion_color_code')
+        self.assertEqual(values[1]['name'], 'moderator_partner_id')
+        self.assertEqual(values[1]['value'], (partner.id, 'Test Partner Properties'))
