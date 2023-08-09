@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
+    let pendingFetchCount = 0;
     /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
@@ -35,10 +36,21 @@ export function useSuggestion() {
             if (self.search.position !== undefined && self.search.position < selectionStart) {
                 candidatePositions.push(self.search.position);
             }
-            // consider the char before the current cursor position if the
+            // consider the chars before the current cursor position if the
             // current delimiter is no longer valid (or if there is none)
-            if (selectionStart > 0) {
-                candidatePositions.push(selectionStart - 1);
+            let numberOfSpaces = 0;
+            for (let index = selectionStart - 1; index >= 0; --index) {
+                if (/\s/.test(content[index])) {
+                    numberOfSpaces++;
+                    if (numberOfSpaces === 2) {
+                        // The consideration stops after the second space since
+                        // a majority of partners have a two-word name. This
+                        // removes the need to check for mentions following a
+                        // delimiter used earlier in the content.
+                        break;
+                    }
+                }
+                candidatePositions.push(index);
             }
             const supportedDelimiters = suggestionService.getSupportedDelimiters(self.thread);
             for (const candidatePosition of candidatePositions) {
@@ -103,7 +115,7 @@ export function useSuggestion() {
             count: 0,
             items: undefined,
         }),
-        update() {
+        update({ clearSearchOnEmpty = true } = {}) {
             if (!self.search.delimiter) {
                 return;
             }
@@ -114,7 +126,11 @@ export function useSuggestion() {
             );
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             if (!mainSuggestions.length && !extraSuggestions.length) {
-                self.state.items = undefined;
+                if (clearSearchOnEmpty) {
+                    self.clearSearch();
+                } else {
+                    self.state.items = undefined;
+                }
                 return;
             }
             // arbitrary limit to avoid displaying too many elements at once
@@ -130,21 +146,26 @@ export function useSuggestion() {
     };
     useEffect(
         () => {
-            self.update();
+            self.update({ clearSearchOnEmpty: false });
             sequential(async () => {
                 if (self.search.position === undefined || !self.search.delimiter) {
                     return; // ignore obsolete call
                 }
-                await suggestionService.fetchSuggestions(self.search, {
-                    thread: self.thread,
-                    onFetched() {
-                        if (owl.status(comp) === "destroyed") {
-                            return;
-                        }
-                        self.update();
-                    },
-                });
-                self.update();
+                pendingFetchCount++;
+                try {
+                    await suggestionService.fetchSuggestions(self.search, {
+                        thread: self.thread,
+                        onFetched() {
+                            if (owl.status(comp) === "destroyed") {
+                                return;
+                            }
+                            self.update({ clearSearchOnEmpty: pendingFetchCount === 0 });
+                        },
+                    });
+                } finally {
+                    pendingFetchCount--;
+                }
+                self.update({ clearSearchOnEmpty: pendingFetchCount === 0 });
             });
         },
         () => {
