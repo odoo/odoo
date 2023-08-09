@@ -9,6 +9,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
 
@@ -218,8 +219,12 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_domain and records:
-            domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
-            return records.sudo().filtered_domain(domain).with_env(records.env), domain
+            try:
+                domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
+                values = records.sudo().filtered_domain(domain).with_env(records.env)
+            except TypeError:
+                raise ValidationError(_("Invalid domain %s in base automation") % domain)
+            return values, domain
         else:
             return records, None
 
