@@ -214,6 +214,8 @@ export class RelationalModel extends Model {
                                 propertyName: property.name,
                                 relation: property.comodel,
                             };
+                        }
+                        if (!config.activeFields[propertyFieldName]) {
                             config.activeFields[propertyFieldName] =
                                 createPropertyActiveField(property);
                         }
