@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class RecruitmentSource(models.Model):
@@ -12,11 +12,12 @@ class RecruitmentSource(models.Model):
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     has_domain = fields.Char(compute='_compute_has_domain')
     job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
-    alias_id = fields.Many2one('mail.alias', "Alias ID")
+    alias_id = fields.Many2one('mail.alias', "Alias ID", ondelete='restrict')
     medium_id = fields.Many2one('utm.medium', default=lambda self: self.env.ref('utm.utm_medium_website'))
 
     def _compute_has_domain(self):
-        self.has_domain = bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
+        for source in self:
+            source.has_domain = bool(source.alias_id.alias_domain)
 
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
@@ -36,10 +37,9 @@ class RecruitmentSource(models.Model):
             }
             source.alias_id = self.env['mail.alias'].create(vals)
 
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'tree' and not bool(self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")):
-            email = arch.xpath("//field[@name='email']")[0]
-            email.getparent().remove(email)
-        return arch, view
+    def unlink(self):
+        """ Cascade delete aliases to avoid useless / badly configured aliases. """
+        aliases = self.alias_id
+        res = super().unlink()
+        aliases.sudo().unlink()
+        return res

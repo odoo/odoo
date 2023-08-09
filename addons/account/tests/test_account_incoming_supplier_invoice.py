@@ -28,17 +28,6 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
         cls.journal = cls.company_data['default_journal_purchase']
 
-        journal_alias = cls.env['mail.alias'].create({
-            'alias_name': 'test-bill',
-            'alias_model_id': cls.env.ref('account.model_account_move').id,
-            'alias_defaults': json.dumps({
-                'move_type': 'in_invoice',
-                'company_id': cls.env.user.company_id.id,
-                'journal_id': cls.journal.id,
-            }),
-        })
-        cls.journal.write({'alias_id': journal_alias.id})
-
     def test_supplier_invoice_mailed_from_supplier(self):
         message_parsed = {
             'message_id': 'message-id-dead-beef',

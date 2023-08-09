@@ -30,10 +30,10 @@
                         <div t-else="" class="o_image_64_cover float-start me-3 d-lg-block d-md-none"/>
                         <div class="d-flex flex-row">
                             <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong>
-                            <div t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain"
+                            <div t-if="group.alias_email"
                                 class="d-flex align-items-center ms-3">
                                 <i class="fa fa-envelope-o me-1" role="img" aria-label="Alias" title="Alias"/>
-                                <a class="text-break" t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}" t-field="group.alias_id"/>
+                                <a class="text-break" t-attf-href="mailto:#{group.alias_email}" t-field="group.alias_email"/>
                             </div>
                         </div>
                         <div t-field="group.description" class="text-muted d-flex"/>
@@ -277,9 +277,9 @@
 
     <template id="group_name">
         <h1 class="text-center" t-esc="group.name"/>
-        <h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.sudo().alias_name and group.alias_id.sudo().alias_domain">
+        <h4 class="text-center text-muted" t-if="group.alias_email">
             <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"/>
-            <a class="text-break" t-attf-href="mailto:#{group.alias_id.sudo().display_name}" t-field="group.alias_id"/>
+            <a class="text-break" t-attf-href="mailto:#{group.alias_email}" t-field="group.alias_email"/>
         </h4>
     </template>
 
