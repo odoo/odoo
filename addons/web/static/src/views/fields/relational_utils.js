@@ -449,6 +449,7 @@ export class X2ManyFieldDialog extends Component {
         this.record = this.props.record;
         this.title = this.props.title;
         useSubEnv({ config: this.props.config });
+        this.env.dialogData.close = () => this.discard();
 
         useBus(this.record.model, "update", () => this.render(true));
 
