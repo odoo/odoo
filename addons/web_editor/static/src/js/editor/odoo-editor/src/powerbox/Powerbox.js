@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
 import { getRangePosition } from '../utils/utils.js';
+import { fuzzyLookup } from '@web/core/utils/search';
 
 const REGEX_RESERVED_CHARS = /[\\^$.*+?()[\]{}|]/g;
 /**
@@ -112,7 +113,6 @@ export class Powerbox {
             commands = filter(commands);
         }
         commands = commands.filter(command => !command.isDisabled || !command.isDisabled()).sort(order);
-        commands = this._groupCommands(commands, categories).flatMap(group => group[1]);
 
         this._context = {
             commands, categories, filteredCommands: commands, selectedCommand: undefined,
@@ -120,7 +120,7 @@ export class Powerbox {
             lastText: undefined,
         }
         this.isOpen = true;
-        this._render(this._context.commands, this._context.categories);
+        this._render(this._context.commands);
         this._bindEvents();
         this.show();
     }
@@ -166,52 +166,42 @@ export class Powerbox {
      * @param {PowerboxCommand[]} commands
      * @param {Array<{name: string, priority: number}} categories
      */
-    _render(commands, categories) {
+    _render(commands) {
         const parser = new DOMParser();
         this._mainWrapperElement.innerHTML = '';
         this._hoverActive = false;
         this._mainWrapperElement.classList.toggle('oe-powerbox-noResult', commands.length === 0);
         this._context.selectedCommand = commands.find(command => command === this._context.selectedCommand) || commands[0];
-        for (const [category, categoryCommands] of this._groupCommands(commands, categories)) {
-            const categoryWrapperEl = parser.parseFromString(`
-                <div class="oe-powerbox-categoryWrapper">
-                    <div class="oe-powerbox-category mx-3 my-1 text-uppercase"></div>
-                </div>`, 'text/html').body.firstChild;
-            this._mainWrapperElement.append(categoryWrapperEl);
-            categoryWrapperEl.firstElementChild.innerText = category;
-            for (const command of categoryCommands) {
-                const commandElWrapper = document.createElement('div');
-                commandElWrapper.className = 'oe-powerbox-commandWrapper d-flex align-items-center px-3 py-2 cursor-pointer';
-                commandElWrapper.classList.toggle('active', this._context.selectedCommand === command);
-                commandElWrapper.replaceChildren(...parser.parseFromString(`
-                    <div class="oe-powerbox-commandLeftCol border rounded">
-                        <i class="oe-powerbox-commandImg d-flex align-items-center justify-content-center fa"></i>
-                    </div>
-                    <div class="oe-powerbox-commandRightCol ms-3">
-                        <div class="oe-powerbox-commandName"></div>
-                        <div class="oe-powerbox-commandDescription"></div>
-                    </div>`, 'text/html').body.children);
-                commandElWrapper.querySelector('.oe-powerbox-commandImg').classList.add(command.fontawesome);
-                commandElWrapper.querySelector('.oe-powerbox-commandName').innerText = command.name;
-                commandElWrapper.querySelector('.oe-powerbox-commandDescription').innerText = command.description;
-                categoryWrapperEl.append(commandElWrapper);
-                // Handle events on command (activate and pick).
-                commandElWrapper.addEventListener('mousemove', () => {
-                    this.el.querySelector('.oe-powerbox-commandWrapper.active').classList.remove('active');
-                    this._context.selectedCommand = command;
-                    commandElWrapper.classList.add('active');
-                });
-                commandElWrapper.addEventListener('click', ev => {
-                        ev.preventDefault();
-                        ev.stopImmediatePropagation();
-                        this._pickCommand(command);
-                    }, true,
-                );
-            }
-        }
-        // Hide category name if there is only a single one.
-        if (this._mainWrapperElement.childElementCount === 1) {
-            this._mainWrapperElement.querySelector('.oe-powerbox-category').style.display = 'none';
+        for (const command of commands) {
+            const commandElWrapper = document.createElement('div');
+            commandElWrapper.className = 'oe-powerbox-commandWrapper d-flex align-items-center px-3 py-2 cursor-pointer';
+            commandElWrapper.classList.toggle('active', this._context.selectedCommand === command);
+            commandElWrapper.replaceChildren(...parser.parseFromString(`
+                <div class="oe-powerbox-commandLeftCol border rounded">
+                    <i class="oe-powerbox-commandImg d-flex align-items-center justify-content-center fa"></i>
+                </div>
+                <div class="oe-powerbox-commandRightCol ms-3">
+                    <div class="oe-powerbox-commandName"></div>
+                    <div class="oe-powerbox-commandDescription"></div>
+                    <div class="oe-powerbox-commandCategory"></div>
+                </div>`, 'text/html').body.children);
+            commandElWrapper.querySelector('.oe-powerbox-commandImg').classList.add(command.fontawesome);
+            commandElWrapper.querySelector('.oe-powerbox-commandName').innerText = command.name;
+            commandElWrapper.querySelector('.oe-powerbox-commandDescription').innerText = command.description;
+            commandElWrapper.querySelector('.oe-powerbox-commandCategory').innerText = command.category;
+            this._mainWrapperElement.append(commandElWrapper);
+            // Handle events on command (activate and pick).
+            commandElWrapper.addEventListener('mousemove', () => {
+                this.el.querySelector('.oe-powerbox-commandWrapper.active').classList.remove('active');
+                this._context.selectedCommand = command;
+                commandElWrapper.classList.add('active');
+            });
+            commandElWrapper.addEventListener('click', ev => {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    this._pickCommand(command);
+                }, true,
+            );
         }
         this._resetPosition();
     }
@@ -234,32 +224,7 @@ export class Powerbox {
         }
         this.close();
     };
-    /**
-     * Takes a list of commands and returns an object whose keys are all
-     * existing category names and whose values are each of these categories'
-     * commands. Categories with no commands are removed.
-     *
-     * @private
-     * @param {PowerboxCommand[]} commands
-     * @param {Array<{name: string, priority: number}} categories
-     * @returns {{Array<[string, PowerboxCommand[]]>}>}
-     */
-    _groupCommands(commands, categories) {
-        const groups = [];
-        for (const category of categories) {
-            const categoryCommands = commands.filter(command => command.category === category.name);
-            commands = commands.filter(command => command.category !== category.name);
-            groups.push([category.name, categoryCommands]);
-        }
-        // If commands remain, it means they declared categories that didn't
-        // exist. Add these categories alphabetically at the end of the list.
-        const remainingCategories = [...new Set(commands.map(command => command.category))];
-        for (const categoryName of remainingCategories.sort((a, b) => a.localeCompare(b))) {
-            const categoryCommands = commands.filter(command => command.category === categoryName);
-            groups.push([categoryName, categoryCommands]);
-        }
-        return groups.filter(group => group[1].length);
-    }
+    
     /**
      * Take an array of commands or categories and return a reordered copy of
      * it, based on their respective priorities.
@@ -339,17 +304,11 @@ export class Powerbox {
                     .replaceAll('\u200B', '')
                     .replace(REGEX_RESERVED_CHARS, '\\$&');
                 if (term.length) {
-                    const exactRegex = new RegExp(term, 'i');
-                    const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
-                    this._context.filteredCommands = this._context.commands.filter(command => {
-                        const commandText = (command.category + ' ' + command.name);
-                        const commandDescription = command.description.replace(/\s/g, '');
-                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
-                    });
+                    this._context.filteredCommands = fuzzyLookup(term, this._context.commands, (command) => command.name, { threshold: 0.4 });
                 } else {
                     this._context.filteredCommands = this._context.commands;
                 }
-                this._render(this._context.filteredCommands, this._context.categories);
+                this._render(this._context.filteredCommands);
             }
         }
     }
@@ -384,7 +343,7 @@ export class Powerbox {
             } else {
                 this._context.selectedCommand = undefined;
             }
-            this._render(this._context.filteredCommands, this._context.categories);
+            this._render(this._context.filteredCommands);
             const activeCommand = this.el.querySelector('.oe-powerbox-commandWrapper.active');
             if (activeCommand) {
                 activeCommand.scrollIntoView({block: 'nearest', inline: 'nearest'});
