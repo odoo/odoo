@@ -309,6 +309,38 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             extras.append(f'+{test_queries} test')
         if extra_queries:
             extras.append(f'+{extra_queries} other')
+        user_demo = env.ref('base.user_demo', raise_if_not_found=False)
+        valid_groups = [
+            'Contact Creation',
+            'Internal User',
+            'Mail Template Editor',
+            'Technical Features',
+            'Access to export feature',
+            'Manage Product Variants',
+            'Display CV on application form',
+            'Display payslip PDF',
+            'Basic Pricelists',
+            'Multi Companies',
+            'Multi Currencies',
+            'Use Milestones',
+            'Manage Lots / Serial Numbers',
+            'Multi-website',
+            'Send an automatic reminder email to confirm delivery',
+            'Delivery Address',
+            'Discount on lines',
+        ]
+        if user_demo and 'groups_id' in user_demo and user_demo.groups_id.filtered(lambda g: g.name not in valid_groups):
+            very_bad_groups = user_demo.groups_id.filtered(lambda g: g.name not in valid_groups)
+            print("WATCH OUT BROL", very_bad_groups._get_external_ids())
+            goulou = ', '.join(f"(3, ref('{xmlid[0]}'))" for xmlid in very_bad_groups._get_external_ids().values())
+            print("""
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[%s]"/>
+        </record>
+    </data>""" % (goulou))
+            # user_demo.groups_id -= very_bad_groups
+            # import pdb; pdb.set_trace()
         _logger.log(
             module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
             module_name, time.time() - module_t0,

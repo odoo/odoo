@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('base.group_sanitize_override')),
+                (3, ref('website.group_website_designer')),
+                (3, ref('website.group_website_restricted_editor'))]"/>
+        </record>
+    </data>
+
     <data>
         <record id="bs_debug_view" model="ir.ui.view">
             <field name="name">BS Debug</field>

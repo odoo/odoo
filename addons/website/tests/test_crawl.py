@@ -96,6 +96,11 @@ class Crawler(HttpCaseWithUserDemo):
         _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
+        self.env['res.users'].search([('login', '=', 'demo')]).write({
+            'groups_id': [
+                (4, group.id) for group in self.env.ref('base.default_user').groups_id
+            ],
+        })
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
         self.authenticate('demo', 'demo')

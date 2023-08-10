@@ -223,5 +223,11 @@
             <field eval="450.58" name="total_amount"/>
         </record>
 
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[
+                (3, ref('hr_expense.group_hr_expense_team_approver')),
+                (3, ref('hr_expense.group_hr_expense_user')),
+                (3, ref('hr_expense.group_hr_expense_manager'))]"/>
+        </record>
     </data>
 </odoo>

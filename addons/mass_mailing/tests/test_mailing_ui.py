@@ -17,6 +17,11 @@ class TestMailingUi(MassMailCommon, HttpCase):
                 (4, cls.env.ref('mail.group_mail_template_editor').id),
             ],
         })
+        cls.env['res.users'].search([('login', '=', 'demo')]).write({
+            'groups_id': [
+                (4, cls.env.ref('mass_mailing.group_mass_mailing_user').id),
+            ],
+        })
 
     def test_mailing_campaign_tour(self):
         self.user_marketing.write({
