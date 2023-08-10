@@ -1264,7 +1264,7 @@ class TranslationImporter:
         if xmlids and not isinstance(xmlids, set):
             xmlids = set(xmlids)
         for row in reader:
-            if not row.get('value') or not row.get('src'):  # ignore empty translations
+            if (not row.get('value') and not row.get('src')) or (row.get('value') and not row.get('src')):  # ignore empty translations
                 continue
             if row.get('type') == 'code':  # ignore code translations
                 continue
@@ -1345,7 +1345,7 @@ class TranslationImporter:
                         else:
                             # keep existing translations
                             for term_en, translations in record_dictionary.items():
-                                translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
+                                translations.update({k: v for k, v in record_dictionary[term_en].items() if v != term_en})
                                 translation_dictionary[term_en] = translations
 
                         for lang in langs:
