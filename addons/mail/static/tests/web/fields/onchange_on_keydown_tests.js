@@ -1,24 +1,34 @@
 /* @odoo-module */
 
-import { nextTick } from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    getFixture,
+    mockTimeout,
+    nextTick,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
 let serverData;
+let target;
 
 QUnit.module("onchange on keydown", {
     async beforeEach() {
+        target = getFixture();
         serverData = {
             models: {
                 "res.partner": {
                     fields: {
                         id: { type: "integer" },
                         description: { type: "text" },
+                        display_name: { type: "char" },
                     },
                     records: [
                         {
                             id: 1,
                             description: "",
+                            display_name: "first record",
                         },
                     ],
                     onchanges: {
@@ -72,5 +82,33 @@ QUnit.test(
         // for real use cases there will be a debounce delay set to avoid spamming the event
         await dom.triggerEvent(textarea, "keydown");
         await nextTick();
+    }
+);
+
+QUnit.test(
+    "Editing a text field with the onchange_on_keydown option disappearing shouldn't trigger a crash",
+    async function (assert) {
+        const { execRegisteredTimeouts } = mockTimeout();
+        await makeView({
+            type: "form",
+            resModel: "res.partner",
+            serverData,
+            resId: 1,
+            arch: `
+            <form>
+                <field name="description" onchange_on_keydown="True" attrs="{'invisible': [('display_name','=','yop')]}"/>
+                <field name="display_name"/>
+            </form>`,
+            mockRPC(route, params) {
+                if (params.method === "onchange") {
+                    assert.step("onchange");
+                }
+            },
+        });
+
+        await triggerEvent(target, 'textarea[id="description_0"]', "keydown", { key: "a" });
+        await editInput(target, "[name=display_name] input", "yop");
+        await execRegisteredTimeouts();
+        assert.verifySteps([]);
     }
 );
