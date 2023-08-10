@@ -429,6 +429,45 @@ QUnit.test("open 3 different chat windows: not enough screen width", async (asse
     );
 });
 
+QUnit.test("closing hidden chat window", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "Ch_1" },
+        { name: "Ch_2" },
+        { name: "Ch_3" },
+        { name: "Ch_4" },
+    ]);
+    patchUiSize({ width: 900 });
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH < 900,
+        "should have enough space to open 2 chat windows simultaneously"
+    );
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2 >
+            900,
+        "should not have enough space to open 3 chat windows simultaneously"
+    );
+    await start();
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_1)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_3)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_4)");
+    await click(".o-mail-ChatWindowHiddenToggler");
+    assert.containsOnce($, ":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
+    assert.containsOnce($, ".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_2)");
+    assert.containsOnce($, ".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
+    assert.containsOnce($, ":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
+    await click(".o-mail-ChatWindow:contains(Ch_2) [title='Close Chat Window']");
+    assert.containsOnce($, ":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
+    assert.containsNone($, ".o-mail-ChatWindow:contains(Ch_2)");
+    assert.containsOnce($, ".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
+    assert.containsOnce($, ":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
+});
+
 QUnit.test(
     "focus next visible chat window when closing current chat window with ESCAPE [REQUIRE FOCUS]",
     async (assert) => {
