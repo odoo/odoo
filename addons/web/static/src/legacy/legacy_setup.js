@@ -10,7 +10,6 @@ import {
     makeLegacyDropdownService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
-import AbstractService from "@web/legacy/js/core/abstract_service";
 import legacyEnv from "@web/legacy/js/env";
 import session from "web.session";
 import { templates } from "@web/core/assets";
@@ -25,7 +24,6 @@ export const legacySetupProm = new Promise((resolve) => {
 // build the legacy env and set it on Component (this was done in main.js,
 // with the starting of the webclient)
 (async () => {
-    AbstractService.prototype.deployServices(legacyEnv);
     Component.env = legacyEnv;
     const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
     const serviceRegistry = registry.category("services");

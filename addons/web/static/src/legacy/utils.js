@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "../core/browser/browser";
-import AbstractStorageService from "@web/legacy/js/core/abstract_storage_service";
 import {
     ConnectionAbortedError,
     RPCError,
@@ -169,14 +168,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
         prom.abort = rejection;
         return prom;
     };
-    // Storages
-    function mapStorage(storage) {
-        const StorageService = AbstractStorageService.extend({ storage });
-        return new StorageService();
-    }
 
-    legacyEnv.services.local_storage = mapStorage(browser.localStorage);
-    legacyEnv.services.session_storage = mapStorage(browser.sessionStorage);
     legacyEnv.services.dialog = wowlEnv.services.dialog;
     // map WebClientReady
     wowlEnv.bus.addEventListener("WEB_CLIENT_READY", () => {

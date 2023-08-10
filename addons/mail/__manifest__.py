@@ -174,7 +174,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
             'web/static/src/env.js',
-            ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',

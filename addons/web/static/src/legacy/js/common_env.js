@@ -50,6 +50,25 @@
         device,
         isDebug,
         services: {
+            ajax: {
+                rpc(route, args, options, target) {
+                    let rpcPromise = null;
+                    const promise = new Promise(function (resolve, reject) {
+                        rpcPromise = session.rpc(route, args, options);
+                        rpcPromise.then(function (result) {
+                            if (!target.isDestroyed()) {
+                                resolve(result);
+                            }
+                        }).guardedCatch(function (reason) {
+                            if (!target.isDestroyed()) {
+                                reject(reason);
+                            }
+                        });
+                    });
+                    promise.abort = rpcPromise.abort.bind(rpcPromise);
+                    return promise;
+                },
+            },
             ajaxJsonRPC() {
                 return jsonRpc(...arguments);
             },

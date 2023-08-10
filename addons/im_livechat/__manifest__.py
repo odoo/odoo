@@ -116,7 +116,6 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
             'web/static/src/env.js',
-            ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
             ('remove', 'web/static/src/legacy/js/common_env.js'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/views/fields/formatters.js',
