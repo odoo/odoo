@@ -44,10 +44,11 @@ class GoogleCalendarController(http.Controller):
             # If App authorized, and user access accepted, We launch the synchronization
             need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
 
-            # If synchronization has been stopped
-            if not need_refresh and request.env.user.google_synchronization_stopped:
+            # If synchronization has been stopped or paused
+            sync_status = request.env.user._get_google_sync_status()
+            if not need_refresh and sync_status != "sync_active":
                 return {
-                    "status": "sync_stopped",
+                    "status": sync_status,
                     "url": ''
                 }
             return {

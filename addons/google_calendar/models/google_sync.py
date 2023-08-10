@@ -70,9 +70,10 @@ class GoogleSync(models.AbstractModel):
             vals['need_sync'] = True
 
         result = super().write(vals)
-        for record in self.filtered('need_sync'):
-            if record.google_id:
-                record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
+        if self.env.user._get_google_sync_status() != "sync_paused":
+            for record in self:
+                if record.need_sync and record.google_id:
+                    record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
 
         return result
 
@@ -86,9 +87,10 @@ class GoogleSync(models.AbstractModel):
         records = super().create(vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
-        records_to_sync = records.filtered(lambda r: r.need_sync and r.active)
-        for record in records_to_sync:
-            record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
+        if self.env.user._get_google_sync_status() != "sync_paused":
+            for record in records:
+                if record.need_sync and record.active:
+                    record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
         return records
 
     def unlink(self):
@@ -129,12 +131,14 @@ class GoogleSync(models.AbstractModel):
 
         updated_records = records_to_sync.filtered('google_id')
         new_records = records_to_sync - updated_records
-        for record in cancelled_records.filtered(lambda e: e.google_id and e.need_sync):
-            record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
-        for record in new_records:
-            record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
-        for record in updated_records:
-            record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
+        if self.env.user._get_google_sync_status() != "sync_paused":
+            for record in cancelled_records:
+                if record.google_id and record.need_sync:
+                    record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
+            for record in new_records:
+                record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
+            for record in updated_records:
+                record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
 
     def _cancel(self):
         self.google_id = False

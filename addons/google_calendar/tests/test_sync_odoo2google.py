@@ -674,3 +674,89 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event_2.action_mass_archive('self_only')
         self.assertFalse(event_2.active)
         self.assertFalse(recurrence.active)
+
+    @patch_api
+    def test_create_event_with_sync_config_paused(self):
+        """
+        Creates an event with the synchronization paused, its field 'need_sync'
+        must be True for later synchronizing it with Google Calendar.
+        """
+        # Set synchronization as active and unpause the synchronization.
+        self.env.user.google_synchronization_stopped = False
+        self.env.user.sudo().pause_google_synchronization()
+
+        # Create record and call synchronization method.
+        record = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2023, 6, 29, 8, 0),
+            'stop': datetime(2023, 6, 29, 18, 0),
+            'need_sync': True
+        })
+        record._sync_odoo2google(self.google_service)
+
+        # Assert that synchronization is paused, insert wasn't called and record is waiting to be synced.
+        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
+        self.assertTrue(record.need_sync, "Sync variable must be true for updating event when sync re-activates")
+        self.assertGoogleEventNotInserted()
+
+    @patch_api
+    def test_update_synced_event_with_sync_config_paused(self):
+        """
+        Updates a synced event with synchronization paused, event must be modified and have its
+        field 'need_sync' as True for later synchronizing it with Google Calendar.
+        """
+        # Set synchronization as active and unpause it.
+        self.env.user.google_synchronization_stopped = False
+        self.env.user.sudo().unpause_google_synchronization()
+
+        # Setup synced record in Calendar.
+        record = self.env['calendar.event'].create({
+            'google_id': 'aaaaaaaaa',
+            'name': "Event",
+            'start': datetime(2023, 6, 29, 8, 0),
+            'stop': datetime(2023, 6, 29, 18, 0),
+            'need_sync': False
+        })
+
+        # Pause synchronization and update synced event. It will only update it locally.
+        self.env.user.sudo().pause_google_synchronization()
+        record.write({'name': "Updated Event"})
+        record._sync_odoo2google(self.google_service)
+
+        # Assert that synchronization is paused, patch wasn't called and record is waiting to be synced.
+        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
+        self.assertEqual(record.name, "Updated Event", "Assert that event name was updated in Odoo Calendar")
+        self.assertTrue(record.need_sync, "Sync variable must be true for updating event when sync re-activates")
+        self.assertGoogleEventNotPatched()
+
+    @patch_api
+    def test_delete_synced_event_with_sync_config_paused(self):
+        """
+        Deletes a synced event with synchronization paused, event must be archived in Odoo and
+        have its field 'need_sync' as True for later synchronizing it with Google Calendar.
+        """
+        # Set synchronization as active and then pause synchronization.
+        self.env.user.google_synchronization_stopped = False
+        self.env.user.sudo().unpause_google_synchronization()
+
+        # Setup synced record in Calendar.
+        record = self.env['calendar.event'].create({
+            'google_id': 'aaaaaaaaa',
+            'name': "Event",
+            'start': datetime(2023, 6, 29, 8, 0),
+            'stop': datetime(2023, 6, 29, 18, 0),
+            'need_sync': False
+        })
+
+        # Pause synchronization and delete synced event.
+        self.env.user.sudo().pause_google_synchronization()
+        record.unlink()
+
+        # Assert that synchronization is paused, delete wasn't called and record was archived in Odoo.
+        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
+        self.assertFalse(record.active, "Event must be archived in Odoo after unlinking it")
+        self.assertTrue(record.need_sync, "Sync variable must be true for updating event in Google when sync re-activates")
+        self.assertGoogleEventNotDeleted()
