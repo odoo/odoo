@@ -74,9 +74,11 @@ export const uploadService = {
                     } else if (fileSize < 1024) {
                         fileSize = fileSize.toFixed(2) + " bytes";
                     } else if (fileSize < 1048576) {
-                        fileSize = (fileSize / 1024).toFixed(2) + " KB";
+                        fileSize = (fileSize / 1024).toFixed(2) + " KiB";
+                    } else if (fileSize < 1073741824) {
+                        fileSize = (fileSize / 1048576).toFixed(2) + " MiB";
                     } else {
-                        fileSize = (fileSize / 1048576).toFixed(2) + " MB";
+                        fileSize = (fileSize / 1073741824).toFixed(2) + " GiB";
                     }
 
                     const id = ++fileId;

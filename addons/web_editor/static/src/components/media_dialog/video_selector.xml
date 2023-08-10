@@ -1,56 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="web_editor.VideoOption" owl="1">
-    <div class="mb-1">
-        <label class="o_switch" t-on-change="props.onChangeOption">
-            <input type="checkbox" t-att-checked="props.value"/><span/>
-            <span t-esc="props.label"/>
-            <span t-if="props.description" class="small text-muted ms-auto" t-esc="props.description"/>
-        </label>
-    </div>
-</t>
+    <t t-name="web_editor.VideoOption" owl="1">
+        <div class="mb-1 d-flex">
+            <label class="o_switch" t-on-change="props.onChangeOption">
+                <input type="checkbox" t-att-checked="props.value" />
+                <span /> <!-- emtpy span required for the switch -->
+                <span class="ps-1" t-esc="props.label" />
+            </label>
+            <span t-if="props.description" class="small text-muted ms-auto"
+                t-esc="props.description" />
+        </div>
+    </t>
 
-<t t-name="web_editor.VideoSelector" owl="1">
-    <div class="row">
-        <div class="col mt-4 o_video_dialog_form">
-            <div class="mb-2">
-                <label class="col-form-label" for="o_video_text">
-                    <b>Video code </b>(URL or Embed)
-                </label>
-                <div class="text-start">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+    <t t-name="web_editor.VideoAttachement" owl="1">
+        <div
+            class="o_existing_attachment_cell w-25 p-1 position-relative cursor-pointer opacity-trigger-hover"
+            t-on-click="props.selectAttachment">
+            <RemoveButton model="props.model" remove="() => this.remove()" />
+            <div class="o_we_media_dialog_img_wrapper ratio ratio-16x9">
+                <img t-ref="auto-resize-image"
+                    class="img rounded img-fluid w-100"
+                    style="transition: all 0.05s ease-in-out;"
+                    t-att-class="{ o_we_attachment_selected: props.selected, border: !props.selected }"
+                    t-att-src="'/web/content/thumbnail/' + props.id"
+                    t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy" />
+            </div>
+            <img t-att-src="'/web/image/web_editor.s_platform_' + props.platform"
+                class="position-absolute bottom-0 start-0 m-2" style="width: 18px; height: 18px;" />
+        </div>
+    </t>
+
+    <t t-name="web_editor.VideoSelector" owl="1">
+        <FileSelectorControlPanel uploadText="uploadText"
+            accept="fileMimetypes"
+            addText="addText"
+            urlPlaceholder="urlPlaceholder"
+            searchPlaceholder="searchPlaceholder"
+            validateUrl="validateUrl"
+            uploadUrl="(url) => this.uploadUrl(url)"
+            uploadFiles="(files) => this.uploadFiles(files)"
+            changeSearchService="service => this.state.searchService = service"
+            searchService="state.searchService"
+            needle="state.needle"
+            search="(needle) => this.handleSearch(needle)"
+            useMediaLibrary="props.useMediaLibrary"
+            multiSelect="props.multiSelect" />
+
+        <div class="d-flex">
+            <div class="d-flex flex-column w-50">
+                <div class="text-end">
+                    <small class="text-muted"><i>MP4</i> and <i>WEBM</i> up to <i>128MB</i> are supported</small>
                 </div>
-                <textarea t-model="state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="onChangeUrl" t-att-class="{ 'is-valid': state.urlInput and !this.state.errorMessage, 'is-invalid': state.urlInput and this.state.errorMessage }"/>
-            </div>
-            <div t-if="shownOptions.length" class="o_video_dialog_options mt-4">
-                <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
-                    value="option.value"
-                    onChangeOption="() => this.onChangeOption(option.id)"
-                    label="option.label"
-                    description="option.description"/>
-            </div>
-            <t t-if="state.vimeoPreviews.length">
-                <span class="fw-bold">Suggestions</span>
-                <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
-                    <t t-foreach="state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
-                        <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
-                            <img class="mw-100 mh-100 p-1" t-att-src="vimeoPreview.thumbnailSrc"/>
+                <div class="flex-grow overflow-auto">
+                    <t t-call="{{ constructor.attachmentsListTemplate }}" />
+                    <div name="load_more_attachments"
+                        class="mt-4 text-center mx-auto o_we_load_more"
+                        t-ref="load-more-button">
+                        <button t-if="canLoadMore" class="btn btn-odoo o_load_more" type="button"
+                            t-on-click="handleLoadMore">Load more...</button>
+                        <div t-if="hasContent and !canLoadMore" class="mt-4 o_load_done_msg">
+                            <span>
+                                <i t-esc="allLoadedText" />
+                            </span>
                         </div>
-                    </t>
+                    </div>
                 </div>
-            </t>
-        </div>
-        <div class="col-md-6">
-            <div class="o_video_preview position-relative border-0 p-3">
-                <div t-if="this.state.src and !this.state.errorMessage" class="o_video_dialog_preview_text mb-2">Preview</div>
-                <div class="media_iframe_video">
-                    <div class="media_iframe_video_size"/>
-                    <iframe t-if="this.state.src and !this.state.errorMessage" height="720" width="1280" class="o_video_dialog_iframe mw-100 mh-100 overflow-hidden shadow" allowfullscreen="allowfullscreen" frameborder="0" t-att-src="this.state.src"/>
-                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-esc="this.state.errorMessage"/>
+            </div>
+
+            <div class="ps-4 w-50">
+                <div class="sticky-top">
+                    <h3>Preview</h3>
+                    <div class="border rounded overflow-hidden ratio ratio-16x9 media_iframe_video">
+                        <iframe t-if="state.src" t-att-src="state.src"
+                            frameborder="0"
+                            allowfullscreen="true"></iframe>
+                        <img t-else=""
+                            src="/web/image/web_editor.s_video_placeholder"
+                            width="100%" />
+                    </div>
+
+                    <div t-if="shownOptions.length" class="pt-4">
+                        <h3>Options</h3>
+                        <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
+                            value="option.value"
+                            onChangeOption="() => this.onChangeOption(option.id)"
+                            label="option.label"
+                            description="option.description" />
+                    </div>
+
+                    <div t-if="!state.src" class="pt-2">
+                        <em>Select a video or paste an URL on the left side to preview it</em>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</t>
+    </t>
+
+    <t t-name="web_editor.VideoSelector.attachments" owl="1">
+        <div class="o_we_existing_attachments o_we_documents">
+            <div t-if="!hasContent" class="o_nocontent_help">
+                <p class="o_empty_folder_image">No documents found.</p>
+                <p class="o_empty_folder_subtitle">
+                    You can upload documents with the button located in the top left of the screen
+                    or use one of the suggested documents below.
+                </p>
+            </div>
+            <div t-else="" class="d-flex flex-wrap">
+                <t t-foreach="state.attachments" t-as="attachment" t-key="attachment.id">
+                    <VideoAttachement url="attachment.url"
+                        title="attachment.name"
+                        mimetype="attachment.mimetype"
+                        id="attachment.id"
+                        platform="attachment.platform"
+                        onRemoved="(attachmentId) => this.onRemoved(attachmentId)"
+                        selected="this.selectedAttachmentIds.includes(attachment.id)"
+                        selectAttachment="() => this.onClickVideo(attachment)" />
+                </t>
+            </div>
+        </div>
+    </t>
+
 </templates>
