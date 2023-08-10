@@ -9,17 +9,35 @@ export class SaleOrderLineProductField extends Many2OneField {
     setup() {
         super.setup();
         let isMounted = false;
+        let isInternalUpdate = false;
         const relation = this.props.record.fields[this.props.name].relation;
-        useEffect(value => {   
+        const super_update = this.update;
+        this.update = (recordlist) => {
+            isInternalUpdate = true;
+            super_update(recordlist);
+        };
+        if (this.props.canQuickCreate) {
+            this.quickCreate = (name, params = {}) => {
+                if (params.triggeredOnBlur) {
+                    return this.openConfirmationDialog(name);
+                }
+                isInternalUpdate = true;
+                return this.updateRecord([false, name]);
+            };
+        }
+        useEffect(value => {
             if (!isMounted) {
                 isMounted = true;
-            } else if (value) {
+            } else if (value && isInternalUpdate) {
+                // we don't want to trigger product update when update comes from an external sources,
+                // such as an onchange, or the product configuration dialog itself
                 if (relation === 'product.template') {
                     this._onProductTemplateUpdate();
                 } else {
                     this._onProductUpdate();
                 }
             }
+            isInternalUpdate = false;
         }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
