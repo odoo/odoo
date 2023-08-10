@@ -137,7 +137,10 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                                            <span t-if="forced_vat" t-esc="forced_vat"/>
+                                            <span t-else="" t-field="company.vat"/>
+                                        </li>
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                         <div t-field="company.report_footer"/>
                                     </ul>
