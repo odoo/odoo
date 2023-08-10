@@ -256,6 +256,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/commands/default_providers.js',
             'web/static/src/core/commands/command_palette.js',
             'web/static/src/public/error_notifications.js',
+            'web/static/src/public/public_component_service.js',
             'web/static/src/public/datetime_picker_widget.js',
             'web/static/src/libs/pdfjs.js',
 
@@ -436,6 +437,7 @@ This module provides the core of the Odoo Web Client.
         'web.tests_assets': [
             ('include', 'web.assets_backend'),
 
+            'web/static/src/public/public_component_service.js',
             'web/static/tests/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
@@ -491,6 +493,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/tests/views/calendar/helpers.js'),
             'web/static/tests/webclient/**/*.js',
             ('remove', 'web/static/tests/webclient/**/helpers.js'),
+            'web/static/tests/public/**/*.js',
 
             # Legacy
             'web/static/tests/legacy/**/*.js',
