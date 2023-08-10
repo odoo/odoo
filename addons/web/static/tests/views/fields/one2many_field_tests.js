@@ -4265,6 +4265,46 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
+    QUnit.test("discard O2M field with close button", async function (assert) {
+        serverData.models.partner.records[0].p = [2];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "second record");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_dialog");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=display_name] input").value,
+            "second record"
+        );
+
+        await editInput(target, ".modal .o_field_widget[name=display_name] input", "plop");
+        await click(target.querySelector(".modal .btn-close"));
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "second record");
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_dialog");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_widget[name=display_name] input").value,
+            "second record"
+        );
+    });
+
     QUnit.test("editable one2many list, adding line when only one page", async function (assert) {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
         await makeView({
