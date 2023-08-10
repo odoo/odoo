@@ -191,7 +191,7 @@ class AccountMoveLine(models.Model):
                     out_qty_to_invoice = 0
                 aml = initial_pdiff_svl.account_move_line_id
                 parent_layer = initial_pdiff_svl.stock_valuation_layer_id
-                layer_price_unit = parent_layer.value / parent_layer.quantity
+                layer_price_unit = parent_layer._get_layer_price_unit()
             else:
                 sign = 1
                 # get the invoiced qty of the layer without considering `self`
@@ -199,7 +199,7 @@ class AccountMoveLine(models.Model):
                 remaining_out_qty_to_invoice = max(0, out_layer_qty - invoiced_layer_qty)
                 out_qty_to_invoice = min(remaining_out_qty_to_invoice, invoicing_layer_qty)
                 qty_to_correct = invoicing_layer_qty - out_qty_to_invoice
-                layer_price_unit = layer.value / layer.quantity
+                layer_price_unit = layer._get_layer_price_unit()
                 aml = self
 
             aml_gross_price_unit = aml._get_gross_unit_price()

@@ -14,3 +14,9 @@ class AccountMoveLine(models.Model):
             components_cost -= sum(subcontract_production.move_raw_ids.stock_valuation_layer_ids.mapped('value'))
             price_unit_val_dif = price_unit_val_dif + components_cost / relevant_qty
         return price_unit_val_dif, relevant_qty
+
+    def _get_valued_in_moves(self):
+        res = super()._get_valued_in_moves()
+        # subcontracted move valuations are not linked to the PO move but its orig move (the MO finished move)
+        res |= res.filtered(lambda m: m.is_subcontract).move_orig_ids
+        return res

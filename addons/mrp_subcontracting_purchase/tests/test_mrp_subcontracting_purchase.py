@@ -292,3 +292,44 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         # price diff line should be 100 - 50 - 10 - 20
         price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
         self.assertEqual(price_diff_line.credit, 20)
+
+    def test_subcontract_product_price_change(self):
+        """ Create a PO for subcontracted product, receive the product (finish MO),
+            create vendor bill and edit the product price, confirm the bill.
+            An extra SVL should be created to correct the valuation of the product
+            Also check account move data for real time inventory
+        """
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'fifo'
+        product_category_all.property_valuation = 'real_time'
+        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        purchase = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 10,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+
+        purchase.button_confirm()
+        # receive product
+        receipt = purchase.picking_ids
+        receipt.move_ids.quantity_done = 10
+        receipt.button_validate()
+        # create bill
+        purchase.action_create_invoice()
+        aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase.order_line.id)])
+        # add 0.5 per unit ( 0.5 x 10 ) = 5 extra valuation
+        aml.price_unit = 1.5
+        aml.move_id.invoice_date = Date.today()
+        aml.move_id.action_post()
+        svl = aml.stock_valuation_layer_ids
+        self.assertEqual(len(svl), 1)
+        self.assertEqual(svl.value, 5)
+        # check for the automated inventory valuation
+        account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
+        self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
+        self.assertEqual(account_move_credit_line.credit, 5)
