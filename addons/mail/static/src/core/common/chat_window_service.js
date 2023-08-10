@@ -153,7 +153,7 @@ export class ChatWindowService {
     }
 
     close(chatWindow, { escape = false } = {}) {
-        if (this.maxVisible < this.store.chatWindows.length) {
+        if (!chatWindow.hidden && this.maxVisible < this.store.chatWindows.length) {
             const swaped = this.hidden[0];
             swaped.hidden = false;
             swaped.folded = false;
