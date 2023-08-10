@@ -426,10 +426,15 @@ export class FormController extends Component {
     async shouldExecuteAction(item) {
         const dirty = await this.model.root.isDirty();
         if ((dirty || this.model.root.isNew) && !item.skipSave) {
-            return this.model.root.save({
+            let hasError = false;
+            const isSaved = await this.model.root.save({
                 stayInEdition: true,
-                onError: this.onSaveError.bind(this),
+                onError: (...args) => {
+                    hasError = true;
+                    return this.onSaveError(...args);
+                },
             });
+            return isSaved && !hasError;
         }
         return true;
     }
