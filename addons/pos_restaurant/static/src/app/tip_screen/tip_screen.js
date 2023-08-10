@@ -113,7 +113,7 @@ export class TipScreen extends Component {
         for (let i = 0; i < receipts.length; i++) {
             const data = receipts[i];
             var receipt = renderToElement("pos_restaurant.TipReceipt", {
-                receipt: this.currentOrder.getOrderReceiptEnv().receipt,
+                receipt: this.currentOrder.export_for_printing(),
                 data: data,
                 total: this.env.utils.formatCurrency(this.totalAmount),
             });
