@@ -1968,6 +1968,13 @@
       <text x="9" y="15.9" class="small-text">A</text>
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.DATA_CLEANUP" owl="1">
+    <svg class="o-icon" fill="currentColor">
+      <path
+        d="m13.6 6.4-2.1-2.1c-.4-.4-1-.4-1.4 0l-8.8 8.9c-.4.4-.4 1 0 1.4l2.1 2.1c.4.4 1 .4 1.4 0l8.8-8.9c.4-.4.4-1 0-1.4M8 8.5 10.5 6l1.4 1.4-2.5 2.5m3-7 1.8.8.8 1.8.8-1.8 1.8-.8-1.8-.8L14.9.4l-.8 1.8M3.5 4l1.7.7.8 1.8.8-1.8 1.8-.8-1.8-.8-.8-1.8-.8 1.8zm13.5 7.7-1.8-.8-.8-1.8-.8 1.8-1.8.8 1.8.8.8 1.8.7-1.8"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.FILTER_ICON" owl="1">
     <svg
       class="o-cf-icon filter-icon"
@@ -3616,6 +3623,58 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-RemoveDuplicatesPanel" owl="1">
+    <div class="o-remove-duplicates">
+      <div class="o-section">
+        <div class="o-section-subtitle" t-esc='selectionStatisticalInformation'/>
+        <div class="o-checkbox">
+          <label>
+            <input type="checkbox" t-att-checked="state.hasHeader" t-on-change="toggleHasHeader"/>
+            Data has header row
+          </label>
+        </div>
+      </div>
+
+      <div class="o-section">
+        <div class="o-section-title">Columns to analyze</div>
+        <div class="o-checkbox-selection overflow-auto p-3 vh-50 border rounded">
+          <div class="o-checkbox">
+            <label>
+              <input t-att-checked="selectAllState" t-on-change="toggleAllColumns" type="checkbox"/>
+              Select all
+            </label>
+          </div>
+
+          <t t-foreach="Object.keys(state.columns)" t-as="colIndex" t-key="colIndex">
+            <div class="o-checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  t-att-checked="state.columns[colIndex].isSelected"
+                  t-on-change="() => this.toggleColumn(colIndex)"
+                />
+                <t t-esc="state.columns[colIndex].label"/>
+              </label>
+            </div>
+          </t>
+        </div>
+      </div>
+
+      <div class="o-sidePanelButtons">
+        <button
+          class="o-sidePanelButton"
+          t-att-class="{'o-disabled': !canConfirm}"
+          t-on-click="onRemoveDuplicates">
+          Remove duplicates
+        </button>
+      </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
+      </div>
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-SettingsPanel" owl="1">
     <div class="o-settings-panel">
       <div class="o-section">
@@ -3676,7 +3735,7 @@
 
   <t t-name="o-spreadsheet-SidePanelErrors" owl="1">
     <t t-foreach="props.messages" t-as="msg" t-key="msg">
-      <div class="d-flex align-items-center" t-att-class="divClasses">
+      <div class="d-flex align-items-center o-side-panel-error" t-att-class="divClasses">
         <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
         <span t-esc="msg"/>
       </div>
@@ -3952,6 +4011,6 @@
 </odoo>
 <!--
   __info__.version = '16.5.0-alpha.3';
-  __info__.date = '2023-08-09T12:01:17.859Z';
-  __info__.hash = 'b0e8fd5';
+  __info__.date = '2023-08-10T10:31:17.752Z';
+  __info__.hash = 'a1fd897';
 -->
