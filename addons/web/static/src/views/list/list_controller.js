@@ -77,6 +77,7 @@ export class ListController extends Component {
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,
+            canEdit: this.archInfo.activeActions.edit,
         });
 
         this.optionalActiveFields = [];

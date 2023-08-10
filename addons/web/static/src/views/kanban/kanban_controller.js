@@ -34,6 +34,7 @@ export class KanbanController extends Component {
             openGroupsByDefault: true,
             tooltipInfo: archInfo.tooltipInfo,
             rootState,
+            canEdit: archInfo.activeActions.edit,
         });
 
         const rootRef = useRef("root");

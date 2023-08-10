@@ -8420,6 +8420,36 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getCard(0), "oe_kanban_color_9");
     });
 
+    QUnit.test("colorpicker doesnt appear when missing access rights", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "category",
+            serverData,
+            arch: `
+                <kanban edit="0">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <div class="oe_kanban_colorpicker"/>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div color="color">
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        await toggleRecordDropdown(0);
+
+        assert.containsNone(
+            target,
+            ".o_kanban_record:first-child .oe_kanban_colorpicker",
+            "there shouldn't be a color picker"
+        );
+    });
+
     QUnit.test("load more records in column", async (assert) => {
         await makeView({
             type: "kanban",

@@ -132,6 +132,7 @@ export class FormController extends Component {
                 mode,
                 beforeLoadProm,
                 component: this,
+                canEdit: this.archInfo.activeActions.edit,
             },
             {
                 ignoreUseSampleModel: true,
