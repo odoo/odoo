@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from uuid import uuid4
 
 from odoo import api, fields, models, _
-from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext, plaintext2html
 
@@ -204,11 +204,8 @@ class SendSMS(models.TransientModel):
             return self._action_send_sms_mass(records)
 
     def _action_send_sms_numbers(self):
-        self.env['sms.api']._send_sms_batch([{
-            'res_id': 0,
-            'number': number,
-            'content': self.body,
-        } for number in self.sanitized_numbers.split(',')])
+        sms_values = [{'body': self.body, 'number': number} for number in self.sanitized_numbers.split(',')]
+        self.env['sms.sms'].sudo().create(sms_values).send()
         return True
 
     def _action_send_sms_comment_single(self, records=None):
@@ -243,7 +240,6 @@ class SendSMS(models.TransientModel):
 
         sms_record_values = self._prepare_mass_sms_values(records)
         sms_all = self._prepare_mass_sms(records, sms_record_values)
-
         if sms_all and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
             log_values = self._prepare_mass_log_values(records, sms_record_values)
             records._message_log_batch(**log_values)
@@ -322,10 +318,11 @@ class SendSMS(models.TransientModel):
 
             result[record.id] = {
                 'body': all_bodies[record.id],
-                'partner_id': recipients['partner'].id,
-                'number': sanitized if sanitized else recipients['number'],
-                'state': state,
                 'failure_type': failure_type,
+                'number': sanitized if sanitized else recipients['number'],
+                'partner_id': recipients['partner'].id,
+                'state': state,
+                'uuid': uuid4().hex,
             }
         return result
 

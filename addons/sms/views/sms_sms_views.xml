@@ -9,7 +9,7 @@
                     <button name="send" string="Send Now" type="object" invisible="state != 'outgoing'" class="oe_highlight"/>
                     <button name="action_set_outgoing" string="Retry" type="object" invisible="state not in ('error', 'canceled')"/>
                     <button name="action_set_canceled" string="Cancel" type="object" invisible="state not in ('error', 'outgoing')"/>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,error,canceled"/>
                 </header>
                 <sheet>
                     <group>
@@ -23,7 +23,8 @@
                         </group>
                     </group>
                     <group>
-                        <field name="body" widget="sms_widget" string="Message" required="1"/>
+                        <field name="body" widget="sms_widget" string="Message" required="1"
+                            readonly="state in ('process', 'sent')"/>
                     </group>
                 </sheet>
             </form>

@@ -212,6 +212,8 @@ class MassMailing(models.Model):
     expected = fields.Integer(compute="_compute_statistics")
     canceled = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
+    process = fields.Integer(compute="_compute_statistics")
+    pending = fields.Integer(compute="_compute_statistics")  # used with SMS when not yet 'delivered'
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
     clicked = fields.Integer(compute="_compute_statistics")
@@ -297,8 +299,8 @@ class MassMailing(models.Model):
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
         for key in (
-            'scheduled', 'expected', 'canceled', 'sent', 'delivered', 'opened',
-            'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
+            'scheduled', 'expected', 'canceled', 'sent', 'pending', 'delivered', 'opened',
+            'process', 'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
             'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
@@ -314,6 +316,8 @@ class MassMailing(models.Model):
                 COUNT(s.sent_datetime) AS sent,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'outgoing') AS scheduled,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS canceled,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'process') AS process,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'pending') AS pending,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('sent', 'open', 'reply')) AS delivered,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('open', 'reply')) AS opened,
                 COUNT(s.links_click_datetime) AS clicked,
@@ -670,6 +674,9 @@ class MassMailing(models.Model):
 
     def action_view_traces_failed(self):
         return self._action_view_traces_filtered('failed')
+
+    def action_view_traces_process(self):
+        return self._action_view_traces_filtered('process')
 
     def action_view_traces_sent(self):
         return self._action_view_traces_filtered('sent')

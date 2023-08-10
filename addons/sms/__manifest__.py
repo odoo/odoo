@@ -3,7 +3,7 @@
 
 {
     'name': 'SMS gateway',
-    'version': '2.4',
+    'version': '3.0',
     'category': 'Hidden/Tools',
     'summary': 'SMS Text Messaging',
     'description': """

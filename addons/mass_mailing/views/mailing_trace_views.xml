@@ -12,9 +12,10 @@
                 <field name="mass_mailing_id"/>
                 <filter string="Scheduled" name="filter_scheduled" domain="[('trace_status', '=', 'outgoing')]"/>
                 <filter string="Canceled" name="filter_canceled" domain="[('trace_status', '=', 'cancel')]"/>
+                <filter string="Processing" name="filter_process" domain="[('trace_status', '=', 'process')]"/>
                 <filter string="Sent" name="filter_sent" domain="[('sent_datetime', '!=', False)]"/>
                 <filter string="Clicked" name="filter_clicked" domain="[('links_click_datetime', '!=', False)]"/>
-                <filter string="Delivered" name="filter_delivered" domain="[('sent_datetime', '!=', False), ('trace_status', 'not in', ['error', 'cancel'])]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('sent_datetime', '!=', False), ('trace_status', 'not in', ['error', 'cancel', 'process', 'pending'])]"/>
                 <filter string="Opened" name="filter_opened" domain="[('trace_status', 'in', ['open', 'reply'])]"/>
                 <filter string="Replied" name="filter_replied" domain="[('trace_status', '=', 'reply')]"/>
                 <filter string="Bounced" name="filter_bounced" domain="[('trace_status', '=', 'bounce')]"/>
@@ -76,6 +77,9 @@
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
             <form string="Mail Statistics" create="0" edit="0">
+                <header>
+                    <field name="trace_status" widget="statusbar" statusbar_visible="outgoing,sent,error"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_contact"
@@ -87,7 +91,6 @@
                     </div>
                     <group>
                         <group string="Status">
-                            <field name="trace_status"/>
                             <field name="failure_type" invisible="not failure_type"/>
                             <field name="sent_datetime" invisible="not sent_datetime"/>
                             <field name="links_click_datetime" invisible="not links_click_datetime"/>

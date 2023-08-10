@@ -334,9 +334,9 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'sent'},
+            {'partner': self.partner_1, 'state': 'pending'},
             {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_credit'},
-            {'partner': self.partner_3, 'state': 'sent'},
+            {'partner': self.partner_3, 'state': 'pending'},
         ], self._test_body, messages)
 
     def test_message_sms_crash_server_crash(self):
@@ -366,9 +366,9 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'sent'},
+            {'partner': self.partner_1, 'state': 'pending'},
             {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_acc'},
-            {'partner': self.partner_3, 'state': 'sent'},
+            {'partner': self.partner_3, 'state': 'pending'},
         ], self._test_body, messages)
 
     def test_message_sms_crash_wrong_number(self):
@@ -387,9 +387,9 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             messages = test_record._message_sms(self._test_body, partner_ids=(self.partner_1 | self.partner_2 | self.partner_3).ids)
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'sent'},
+            {'partner': self.partner_1, 'state': 'pending'},
             {'partner': self.partner_2, 'state': 'exception', 'failure_type': 'sms_number_format'},
-            {'partner': self.partner_3, 'state': 'sent'},
+            {'partner': self.partner_3, 'state': 'pending'},
         ], self._test_body, messages)
 
 

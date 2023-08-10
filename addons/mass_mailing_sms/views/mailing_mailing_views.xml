@@ -20,18 +20,18 @@
         <field name="arch" type="xml">
             <!-- Buttons / Actions -->
             <xpath expr="//button[@name='action_launch']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail' or state in ('in_queue', 'sending', 'done')</attribute>
+                <attribute name="invisible">mailing_type != 'mail' or state in ('in_queue', 'sending', 'processing', 'done')</attribute>
             </xpath>
             <xpath expr="//button[@name='action_schedule']" position="before">
                 <field name="sms_force_send" invisible="1"/>
                 <field name="schedule_type" invisible="1" readonly="state not in ['draft', 'in_queue']"/>
                 <button name="action_put_in_queue" type="object"
                     string="Send" class="oe_highlight" data-hotkey="v"
-                    invisible="mailing_type == 'mail' or state in ('in_queue', 'sending', 'done') or sms_force_send"
+                    invisible="mailing_type == 'mail' or state in ('in_queue', 'sending', 'processing', 'done') or sms_force_send"
                     confirm="This will send SMS to all recipients. Do you still want to proceed?"/>
                 <button name="action_send_mail" type="object"
                     string="Send Now" class="oe_highlight" data-hotkey="g"
-                    invisible="mailing_type == 'mail' or state in ('in_queue', 'done') or schedule_type == 'scheduled' or not sms_force_send"
+                    invisible="mailing_type == 'mail' or state in ('in_queue', 'processing', 'done') or schedule_type == 'scheduled' or not sms_force_send"
                     confirm="This will send SMS to all recipients now. Do you still want to proceed?"/>
             </xpath>
             <!-- Headers / Warnings -->
@@ -67,19 +67,25 @@
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
             <xpath expr="//span[@name='scheduled_text']" position="after">
-                <span name="scheduled_text_sms" invisible="mailing_type != 'sms'">SMS Text Message are in queue and will be sent soon.</span>
+                <span name="scheduled_text_sms" invisible="mailing_type != 'sms'">SMS Text Messages are in queue and will be sent soon.</span>
+            </xpath>
+            <xpath expr="//span[@name='process_text']" position="attributes">
+                <attribute name="invisible">mailing_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//span[@name='process_text']" position="after">
+                <span name="process_text_sms" invisible="mailing_type != 'sms'">SMS Text Messages are being processed.</span>
             </xpath>
             <xpath expr="//span[@name='sent']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
             <xpath expr="//span[@name='sent']" position="after">
-                <span name="sent_sms" invisible="mailing_type != 'sms'">SMS Text Message have been sent.</span>
+                <span name="sent_sms" invisible="mailing_type != 'sms'">SMS Text Messages have been sent.</span>
             </xpath>
             <xpath expr="//span[@name='failed_text']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
             <xpath expr="//span[@name='failed_text']" position="after">
-                <span name="failed_text_sms" invisible="mailing_type != 'sms'">SMS Text Message could not be sent.</span>
+                <span name="failed_text_sms" invisible="mailing_type != 'sms'">SMS Text Messages could not be delivered.</span>
             </xpath>
             <xpath expr="//span[@name='next_departure_text']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
