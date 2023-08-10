@@ -366,6 +366,7 @@ export async function createPublicRoot(RootWidget) {
     const wowlEnv = makeEnv();
 
     await startServices(wowlEnv);
+    await wowlEnv.services.public_component.mountComponents();
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
     const publicRoot = new RootWidget(createWidgetParent(legacyEnv));
     const app = new App(MainComponentsContainer, {
