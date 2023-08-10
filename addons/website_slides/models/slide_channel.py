@@ -14,6 +14,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
+from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -474,6 +475,9 @@ class Channel(models.Model):
                 aggregates=['partner_id:array_agg']
             )
         }
+        # Prefetch all active, when we are going to read the one2many, it will fetch active
+        all_partner = OrderedSet(partner_id for partner_ids in data.values() for partner_id in partner_ids)
+        self.env['res.partner'].browse(all_partner).fetch(['active'])
 
         for slide_channel in self:
             partner_ids = data.get((slide_channel, 'joined'), []) + data.get((slide_channel, 'ongoing'), []) + data.get((slide_channel, 'completed'), [])
