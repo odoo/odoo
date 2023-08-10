@@ -68,7 +68,7 @@
                             <field name="company_name" placeholder='e.g. "Azure Interior"'/>
                         </group>
                         <group string="Event Information" name="event">
-                            <field class="o_text_overflow" name="event_id" readonly="state != 'draft'"
+                            <field class="text-break" name="event_id" readonly="state != 'draft'"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
                             <field name="event_ticket_id" invisible="not event_id" readonly="state != 'draft'"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
