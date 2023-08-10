@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="event_report_template_foldable_badge_inherit_barcode" inherit_id="event.event_report_template_foldable_badge" priority="1">
+        <xpath expr="//div[hasclass('o_event_foldable_badge_barcode_container')]" position="inside">
+            <div class="col-12 text-center">
+                <div class="pt-3 mt-2 pb-3">
+                    <t t-if="env['ir.config_parameter'].sudo().get_param('event.use_event_barcode')=='True'">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                    <span><img class="ms-2" t-att-src="'/report/barcode/QR/%s?&amp;width=%s&amp;height=%s&amp;quiet=0' % (attendee.barcode if attendee else '12345678901234567890', 116, 116)" alt="QR Code"/></span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
