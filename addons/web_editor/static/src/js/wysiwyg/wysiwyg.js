@@ -1359,7 +1359,12 @@ const Wysiwyg = Widget.extend({
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
-        const $editable = $(OdooEditorLib.closestElement(range.startContainer, '.o_editable') || this.odooEditor.editable);
+        const $target = $(params.node || range.startContainer);
+        const $closestBrandedEditable = $target.closest(
+            '.o_editable:data(oe-model):data(oe-id),.o_editable:data(oe-media-domain)'
+        );
+        const $editable = $($closestBrandedEditable[0] || this.odooEditor.editable);
+
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
