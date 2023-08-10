@@ -24,6 +24,17 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             })]
         })
 
+        cls.pay_term_net_30_days = cls.env['account.payment.term'].create({
+            'name': 'Net 30 days',
+            'line_ids': [
+                (0, 0, {
+                    'value_amount': 100,
+                    'value': 'percent',
+                    'nb_days': 30,
+                }),
+            ],
+        })
+
     def assert_tax_totals(self, document, expected_values):
         main_keys_to_ignore = {
             'formatted_amount_total', 'formatted_amount_untaxed', 'display_tax_base', 'subtotals_order'}
@@ -689,3 +700,82 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 }) for price_unit, quantity, taxes in line_create_vals
             ]
         })
+
+    def test_register_payment_batch_with_discount_and_without_discount(self):
+        """
+        Test that a batch payment, that is
+            - not grouped
+            - with invoices having different payment terms (1 with discount, 1 without)
+        -> will not crash
+        """
+        out_invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+            'invoice_payment_term_id': self.pay_term_net_30_days.id,
+        })
+        out_invoice_2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        (out_invoice_1 + out_invoice_2).action_post()
+        active_ids = (out_invoice_1 + out_invoice_2).ids
+
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'payment_date': '2019-01-01', 'group_payment': False
+        })._create_payments()
+        self.assertTrue(all(payments.mapped('is_reconciled')))
+        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+            {'amount_currency': -2000.0},
+            {'amount_currency': -1000.0},
+            {'amount_currency': 200.0},
+            {'amount_currency': 1000},
+            {'amount_currency': 1800},
+        ])
+
+    def test_register_payment_batch_without_discount(self):
+        """
+        Test that a batch payment, that is
+            - not grouped
+            - with invoices having the same payment terms (without discount)
+        -> will not crash
+        """
+        out_invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+            'invoice_payment_term_id': self.pay_term_net_30_days.id,
+        })
+        out_invoice_2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 2000.0, 'tax_ids': []})],
+            'invoice_payment_term_id': self.pay_term_net_30_days.id,
+        })
+        (out_invoice_1 + out_invoice_2).action_post()
+        active_ids = (out_invoice_1 + out_invoice_2).ids
+
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'payment_date': '2019-01-01', 'group_payment': False
+        })._create_payments()
+        self.assertTrue(all(payments.mapped('is_reconciled')))
+        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+            {'amount_currency': -2000.0},
+            {'amount_currency': -1000.0},
+            {'amount_currency': 1000.0},
+            {'amount_currency': 2000},
+        ])
