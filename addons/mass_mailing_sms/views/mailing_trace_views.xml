@@ -52,6 +52,9 @@
         <field name="model">mailing.trace</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='trace_status']" position="attributes">
+                <attribute name="statusbar_visible">outgoing,pending,sent,error</attribute>
+            </xpath>
             <xpath expr="//field[@name='email']" position="attributes">
                 <attribute name="invisible">trace_type != 'mail'</attribute>
             </xpath>
@@ -87,8 +90,17 @@
                             <span widget="statinfo">Open Recipient</span>
                         </button>
                     </div>
-                    <div class="alert alert-info text-center" invisible="trace_status != 'error'" role="alert">
+                    <div class="alert alert-info text-center"
+                        invisible="trace_status != 'error' or
+                                   failure_type in ('sms_not_delivered', 'sms_not_allowed', 'sms_invalid_destination', 'sms_rejected', 'sms_rejected')"
+                        role="alert">
                         <strong>This SMS could not be sent.</strong>
+                    </div>
+                    <div class="alert alert-info text-center"
+                        invisible="trace_status != 'error' or
+                                   failure_type not in ('sms_not_delivered', 'sms_not_allowed', 'sms_invalid_destination', 'sms_rejected', 'sms_rejected')"
+                        role="alert">
+                        <strong>This SMS could not be delivered.</strong>
                     </div>
                     <div class="alert alert-info text-center" invisible="trace_status != 'bounce'" role="alert">
                         <strong>This number appears to be invalid.</strong>
@@ -113,7 +125,7 @@
                             <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
-                            <field name="sms_sms_id_int" groups="base.group_no_one"/>
+                            <field name="sms_sms_id" groups="base.group_no_one"/>
                         </group>
                     </group>
                 </sheet>

@@ -151,7 +151,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
     @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):
         mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
-        mailing.write({'sms_force_send': False})  # check with outgoing traces, not already sent
+        mailing.write({'sms_force_send': False})  # check with outgoing traces, not already pending
 
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
@@ -187,6 +187,71 @@ class TestMassSMSInternals(TestMassSMSCommon):
               'content': 'Dear %s this is a mass SMS' % record.display_name}
              for i, record in enumerate(self.records[5:])],
             mailing, self.records[5:],
+        )
+
+    @users('user_marketing')
+    def test_mass_sms_processing_with_force_send(self):
+        """Test that a `processing` status returned by IAP is immediately applied to traces and mailing stays sending.
+
+        The status update case where the sms are sent via the cron is done in TestSmsController.
+        """
+        with self.with_user('user_marketing'):
+            mailing = self.env['mailing.mailing'].create({
+                'name': 'Xmas Spam',
+                'subject': 'Xmas Spam',
+                'mailing_model_id': self.env['ir.model']._get('mail.test.sms').id,
+                'mailing_type': 'sms',
+                'mailing_domain': '%s' % repr([('name', 'ilike', 'MassSMSTest')]),
+                'sms_template_id': self.sms_template.id,
+                'sms_allow_unsubscribe': False,
+            })
+
+            remaining_res_ids = mailing._get_remaining_recipients()
+            self.assertEqual(set(remaining_res_ids), set(self.records.ids))
+
+            mailing.sms_force_send = True
+            with self.mockSMSGateway(moderated=True):
+                mailing.action_send_sms()
+
+        self.assertEqual(mailing.state, 'sending')
+        self.assertSMSTraces(
+            [{'partner': record.customer_id,
+              'number': self.records_numbers[i],
+              'content': 'Dear %s this is a mass SMS.' % record.display_name,
+              'trace_status': 'process',
+              } for i, record in enumerate(self.records)],
+            mailing, self.records,
+        )
+
+    @users('user_marketing')
+    def test_mass_sms_error_with_force_send(self):
+        """Test that a failed status returned by IAP is immediately applied to traces."""
+        with self.with_user('user_marketing'):
+            mailing = self.env['mailing.mailing'].create({
+                'name': 'Xmas Spam',
+                'subject': 'Xmas Spam',
+                'mailing_model_id': self.env['ir.model']._get('mail.test.sms').id,
+                'mailing_type': 'sms',
+                'mailing_domain': '%s' % repr([('name', 'ilike', 'MassSMSTest')]),
+                'sms_template_id': self.sms_template.id,
+                'sms_allow_unsubscribe': False,
+            })
+
+            remaining_res_ids = mailing._get_remaining_recipients()
+            self.assertEqual(set(remaining_res_ids), set(self.records.ids))
+
+            mailing.sms_force_send = True
+            with self.mockSMSGateway(sim_error='server_error'):
+                mailing.action_send_sms()
+
+        self.assertSMSTraces(
+            [{'partner': record.customer_id,
+              'number': self.records_numbers[i],
+              'content': 'Dear %s this is a mass SMS.' % record.display_name,
+              'trace_status': 'error',
+              'failure_type': 'sms_server'
+              } for i, record in enumerate(self.records)],
+            mailing, self.records,
         )
 
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
@@ -238,7 +303,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': self.records_numbers[i],
-              'trace_status': 'sent',
+              'trace_status': 'pending',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for i, record in enumerate(self.records)],
             mailing, self.records,
@@ -273,7 +338,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': record.customer_id.phone_sanitized,
-              'trace_status': 'sent',
+              'trace_status': 'pending',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for record in records],
             mailing, records,
@@ -298,7 +363,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': new_record.customer_id,
               'number': new_record.customer_id.phone_sanitized,
-              'trace_status': 'sent',
+              'trace_status': 'pending',
               'content': 'Dear %s this is a mass SMS with two links' % new_record.display_name
              }],
             mailing, new_record,
@@ -353,8 +418,8 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'number': '+32456000000', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
              {'number': '+32456000101', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
-             {'number': '+32456000202', 'trace_status': 'sent'},
-             {'number': '+32456000303', 'trace_status': 'sent'},
+             {'number': '+32456000202', 'trace_status': 'pending'},
+             {'number': '+32456000303', 'trace_status': 'pending'},
              {'number': '+32456000404', 'trace_status': 'cancel', 'failure_type': 'sms_blacklist'}],
             mailing, recipients
         )

@@ -72,7 +72,7 @@
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
 
-                        <field name="state" readonly="1" widget="statusbar"/>
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info" role="alert"
                             invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
@@ -93,6 +93,16 @@
                                 <strong>
                                     <field name="scheduled" class="oe_inline me-2"/>
                                     <span name="scheduled_text">emails are in queue and will be sent soon.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_process" invisible="process == 0">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_process"
+                                    type="object">
+                                <strong>
+                                    <field name="process" class="oe_inline me-2"/>
+                                    <span name="process_text">emails are being processed.</span>
                                 </strong>
                             </button>
                         </div>

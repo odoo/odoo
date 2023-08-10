@@ -27,7 +27,9 @@ class MailNotification(models.Model):
         ], string='Notification Type', default='inbox', index=True, required=True)
     notification_status = fields.Selection([
         ('ready', 'Ready to Send'),
-        ('sent', 'Sent'),
+        ('process', 'Processing'),  # being checked by intermediary like IAP for sms
+        ('pending', 'Sent'),  # used with SMS; mail does not differentiate sent from delivered
+        ('sent', 'Delivered'),
         ('bounce', 'Bounced'),
         ('exception', 'Exception'),
         ('canceled', 'Canceled')

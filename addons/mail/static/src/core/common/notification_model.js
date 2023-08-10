@@ -73,6 +73,10 @@ export class Notification extends Record {
 
     get statusIcon() {
         switch (this.notification_status) {
+            case "process":
+                return "fa fa-hourglass-half";
+            case "pending":
+                return "fa fa-paper-plane-o";
             case "sent":
                 return "fa fa-check";
             case "bounce":
@@ -89,8 +93,12 @@ export class Notification extends Record {
 
     get statusTitle() {
         switch (this.notification_status) {
-            case "sent":
+            case "process":
+                return _t("Processing");
+            case "pending":
                 return _t("Sent");
+            case "sent":
+                return _t("Delivered");
             case "bounce":
                 return _t("Bounced");
             case "exception":
