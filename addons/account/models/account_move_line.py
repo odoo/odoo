@@ -1670,10 +1670,12 @@ class AccountMoveLine(models.Model):
             and not has_zero_residual \
             and counterpart_currency != company_currency:
             rate = get_odoo_rate(aml, counterpart_currency)
-            available_residual_per_currency[counterpart_currency] = {
-                'residual': counterpart_currency.round(remaining_amount * rate),
-                'rate': rate,
-            }
+            residual_in_foreign_curr = counterpart_currency.round(remaining_amount * rate)
+            if not counterpart_currency.is_zero(residual_in_foreign_curr):
+                available_residual_per_currency[counterpart_currency] = {
+                    'residual': residual_in_foreign_curr,
+                    'rate': rate,
+                }
         elif currency == counterpart_currency \
             and currency != company_currency \
             and not has_zero_residual_currency:
