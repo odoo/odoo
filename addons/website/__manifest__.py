@@ -243,6 +243,7 @@
             'website/static/src/snippets/s_embed_code/options.js',
             'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/js/form_editor_registry.js',
+            'website/static/src/js/prompt.js',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website.editor.xml',

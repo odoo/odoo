@@ -2,7 +2,7 @@
 
 import core from "web.core";
 import options from "web_editor.snippets.options";
-import wUtils from "website.utils";
+import wUtils from "website.prompt";
 const _t = core._t;
 
 options.registry.Group = options.Class.extend({
