@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from "@web/legacy/js/core/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
@@ -1743,7 +1743,7 @@ var SnippetsMenu = Widget.extend({
         this.snippetEditors = [];
         this._enabledEditorHierarchy = [];
 
-        this._mutex = new concurrency.Mutex();
+        this._mutex = new Mutex();
 
         this._notActivableElementsSelector = [
             '#web_editor-top-edit',
