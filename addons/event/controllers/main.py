@@ -28,7 +28,6 @@ class EventController(Controller):
             ('Content-Disposition', content_disposition('%s.ics' % event.name))
         ])
 
-<<<<<<< HEAD
     @route(['/event/<int:event_id>/my_tickets'], type='http', auth='public')
     def event_my_tickets(self, event_id, registration_ids, tickets_hash, badge_mode=False, responsive_html=False):
         """ Returns a pdf response, containing all tickets for attendees in registration_ids for event_id.
@@ -77,7 +76,6 @@ class EventController(Controller):
             ('Content-Disposition', content_disposition(f'{report_name}.pdf')),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
-=======
     @route(['''/event/tickets_dl'''], type='http', auth="public")
     def event_tickets_dl(self, dl_hash, event_id, registration_ids, badge_mode=False, simplified=False):
         """ Returns a pdf response, containing all tickets for attendees in registration_ids for event_id.
@@ -137,4 +135,23 @@ class EventController(Controller):
             ('id', 'in', registration_ids),
             ('event_id', '=', event_id)
         ])
->>>>>>> 18abc323ef6b ([IMP] {website_}event{_sale,_exhibitor}: ease ticket access)
+
+    @route(['/event/init_barcode_interface'], type='json', auth="user")
+    def init_barcode_interface(self, event_id):
+        event = request.env['event.event'].browse(event_id).exists() if event_id else False
+        if event:
+            return {
+                'name': event.name,
+                'country': event.address_id.country_id.name,
+                'city': event.address_id.city,
+                'company_name': event.company_id.name,
+                'company_id': event.company_id.id
+            }
+        else:
+            return {
+                'name': _('Registration Desk'),
+                'country': False,
+                'city': False,
+                'company_name': request.env.company.name,
+                'company_id': request.env.company.id
+            }
