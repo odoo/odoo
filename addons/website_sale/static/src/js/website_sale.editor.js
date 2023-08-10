@@ -789,12 +789,24 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 message: 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants'
             });
         }
+        let extraImageEls;
         const dialog = new ComponentWrapper(this, AttachmentMediaDialogWrapper, {
             multiImages: true,
             onlyImages: true,
             // Kinda hack-ish but the regular save does not get the information we need
-            save: async () => {},
+            save: async (imgEls) => {
+                extraImageEls = imgEls;
+            },
             extraImageSave: async (attachments) => {
+                for (const index in attachments) {
+                    const attachment = attachments[index];
+                    if (attachment.mimetype.startsWith("image/")) {
+                        if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
+                            continue;
+                        }
+                        await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
+                    }
+                }
                 this._rpc({
                     route: `/shop/product/extra-images`,
                     params: {
@@ -809,6 +821,61 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             }
         });
         dialog.mount(document.body);
+    },
+
+    async _convertAttachmentToWebp(attachment, imageEl) {
+        // This method is widely adapted from onFileUploaded in ImageField.
+        // Upon change, make sure to verify whether the same change needs
+        // to be applied on both sides.
+        // Generate alternate sizes and format for reports.
+        const imgEl = document.createElement("img");
+        imgEl.src = imageEl.src;
+        await new Promise(resolve => imgEl.addEventListener("load", resolve));
+        const originalSize = Math.max(imgEl.width, imgEl.height);
+        const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
+        const webpName = attachment.name.replace(/\.(jpe?g|png)$/i, ".webp");
+        let referenceId = undefined;
+        for (const size of [originalSize, ...smallerSizes]) {
+            const ratio = size / originalSize;
+            const canvas = document.createElement("canvas");
+            canvas.width = imgEl.width * ratio;
+            canvas.height = imgEl.height * ratio;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
+            const [resizedId] = await this._rpc({
+                model: "ir.attachment",
+                method: "create_unique",
+                args: [[{
+                    name: webpName,
+                    description: size === originalSize ? "" : `resize: ${size}`,
+                    datas: canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                    res_id: referenceId,
+                    res_model: "ir.attachment",
+                    mimetype: "image/webp",
+                }]],
+            });
+            if (size === originalSize) {
+                attachment.original_id = attachment.id;
+                attachment.id = resizedId;
+                attachment.image_src = `/web/image/${resizedId}-autowebp/${attachment.name}`;
+                attachment.mimetype = "image/webp";
+            }
+            referenceId = referenceId || resizedId; // Keep track of original.
+            await this._rpc({
+                model: "ir.attachment",
+                method: "create_unique",
+                args: [[{        
+                    name: webpName.replace(/\.webp$/, ".jpg"),
+                    description: "format: jpeg",
+                    datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                    res_id: resizedId,
+                    res_model: "ir.attachment",
+                    mimetype: "image/jpeg",
+                }]],
+            });
+        }
     },
 
     /**
