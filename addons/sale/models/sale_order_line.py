@@ -1179,6 +1179,7 @@ class SaleOrderLine(models.Model):
         return dict(
             product_catalog_order_id=order.id,
             product_catalog_currency_id=order.currency_id.id,
+            product_catalog_digits=order.order_line._fields['price_unit'].get_digits(order.env),
         )
 
     #=== TOOLING ===#
