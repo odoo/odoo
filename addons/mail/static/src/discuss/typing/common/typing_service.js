@@ -37,7 +37,6 @@ export class Typing {
                 this.removeTypingMember(member);
             }
         });
-        this.busService.start();
     }
 
     /**
