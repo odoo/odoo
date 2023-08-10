@@ -13,7 +13,7 @@ class ProductTemplateAttributeLine(models.Model):
     _rec_name = 'attribute_id'
     _rec_names_search = ['attribute_id', 'value_ids']
     _description = "Product Template Attribute Line"
-    _order = 'attribute_id, id'
+    _order = 'sequence, attribute_id, id'
 
     active = fields.Boolean(default=True)
     product_tmpl_id = fields.Many2one(
@@ -22,6 +22,7 @@ class ProductTemplateAttributeLine(models.Model):
         ondelete='cascade',
         required=True,
         index=True)
+    sequence = fields.Integer("Sequence", default=10)
     attribute_id = fields.Many2one(
         comodel_name='product.attribute',
         string="Attribute",
