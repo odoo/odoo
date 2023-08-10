@@ -1347,7 +1347,7 @@ class AccountTax(models.Model):
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"
     _description = "Tax Repartition Line"
-    _order = 'sequence, repartition_type, id'
+    _order = 'document_type, repartition_type, sequence, id'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
