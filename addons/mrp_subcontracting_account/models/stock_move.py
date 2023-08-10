@@ -51,6 +51,10 @@ class StockMove(models.Model):
                 'balance': -component_cost,
                 'account_id': credit_account_id,
             }
+        # if svl passed is not linked to the move in self, the valuation is a correction and should always credit the
+        # `stock_input` account as it adds directly to the value of the subcontracted product
+        elif svl_id and self.stock_valuation_layer_ids.ids and svl_id not in self.stock_valuation_layer_ids.ids:
+            rslt['credit_line_vals']['account_id'] = self.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id
         return rslt
 
     def _get_dest_account(self, account_data):
