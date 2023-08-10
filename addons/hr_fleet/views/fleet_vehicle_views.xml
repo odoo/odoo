@@ -78,12 +78,10 @@
             <xpath expr="//field[@name='license_plate']" position="after">
                 <field name="mobility_card"/>
             </xpath>
-            <xpath expr="//field[@name='driver_id']" position="after">
-                <field name="driver_employee_id" string="Current Driver (Employee)"/>
-            </xpath>
             <xpath expr="//field[@name='log_drivers']" position="attributes">
                 <attribute name="filter_domain">[
-                    '|', '|', '|', '|',
+                    '|', '|', '|', '|','|',
+                    ('log_drivers.driver_employee_id.name', 'ilike', self),
                     ('log_drivers.driver_id.name', 'ilike', self),
                     ('driver_id.name', 'ilike', self),
                     ('future_driver_id.name', 'ilike', self),
