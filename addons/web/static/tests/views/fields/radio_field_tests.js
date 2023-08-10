@@ -213,6 +213,52 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("Two RadioField with same selection", async function (assert) {
+        serverData.models.partner.fields.color_2 = serverData.models.partner.fields.color;
+        serverData.models.partner.records[0].color = "black";
+        serverData.models.partner.records[0].color_2 = "black";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+            <form>
+                <group>
+                    <field name="color" widget="radio"/>
+                </group>
+                <group>
+                    <field name="color_2" widget="radio"/>
+                </group>
+            </form>`,
+        });
+
+        assert.hasAttrValue(
+            target.querySelector("[name='color'] input.o_radio_input:checked"),
+            "data-value",
+            "black"
+        );
+        assert.hasAttrValue(
+            target.querySelector("[name='color_2'] input.o_radio_input:checked"),
+            "data-value",
+            "black"
+        );
+
+        // click on Red
+        await click(target.querySelector("[name='color_2'] label"));
+        assert.hasAttrValue(
+            target.querySelector("[name='color'] input.o_radio_input:checked"),
+            "data-value",
+            "black"
+        );
+        assert.hasAttrValue(
+            target.querySelector("[name='color_2'] input.o_radio_input:checked"),
+            "data-value",
+            "red"
+        );
+    });
+
     QUnit.test("fieldradio widget has o_horizontal or o_vertical class", async function (assert) {
         serverData.models.partner.fields.color2 = serverData.models.partner.fields.color;
 
