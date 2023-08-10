@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import AjaxService from "@web/legacy/js/services/ajax_service";
 import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import session from "web.session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
+import env from "@web/legacy/js/common_env";
 
 QUnit.module('core', {}, function () {
 
@@ -412,10 +412,9 @@ QUnit.module('core', {}, function () {
                 return def;
             },
         });
-        var ajaxService = new AjaxService();
         testUtils.mock.intercept(parent, 'call_service', function ({ data }) {
             if (data.service === "ajax" && data.method === "rpc") {
-                data.callback(ajaxService.rpc(...data.args));
+                data.callback(env.services.ajax.rpc(...data.args));
             }
         });
         var widget = new Widget(parent);

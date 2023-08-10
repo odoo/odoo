@@ -7,7 +7,6 @@ import {getCookie} from '@web/legacy/js/core/cookie_utils';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
 
-import AbstractService from "@web/legacy/js/core/abstract_service";
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import {
@@ -361,7 +360,6 @@ owl.Component.env = legacyEnv;
  */
 export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
-    AbstractService.prototype.deployServices(legacyEnv);
     // add a bunch of mapping services that will redirect service calls from the legacy env
     // to the wowl env
     serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
