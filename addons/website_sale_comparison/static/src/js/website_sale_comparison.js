@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from "@web/legacy/js/core/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
@@ -28,7 +28,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.product_data = {};
         this.comparelist_product_ids = JSON.parse(getCookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
-        this.guard = new concurrency.Mutex();
+        this.guard = new Mutex();
     },
     /**
      * @override

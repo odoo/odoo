@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import concurrency from "@web/legacy/js/core/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 var makeTestPromise = testUtils.makeTestPromise;
@@ -12,7 +13,7 @@ QUnit.module('core', {}, function () {
 
     QUnit.test('mutex: simple scheduling', async function (assert) {
         assert.expect(5);
-        var mutex = new concurrency.Mutex();
+        var mutex = new Mutex();
 
         var prom1 = makeTestPromiseWithAssert(assert, 'prom1');
         var prom2 = makeTestPromiseWithAssert(assert, 'prom2');
@@ -33,7 +34,7 @@ QUnit.module('core', {}, function () {
 
     QUnit.test('mutex: simpleScheduling2', async function (assert) {
         assert.expect(5);
-        var mutex = new concurrency.Mutex();
+        var mutex = new Mutex();
 
         var prom1 = makeTestPromiseWithAssert(assert, 'prom1');
         var prom2 = makeTestPromiseWithAssert(assert, 'prom2');
@@ -54,7 +55,7 @@ QUnit.module('core', {}, function () {
 
     QUnit.test('mutex: reject', async function (assert) {
         assert.expect(7);
-        var mutex = new concurrency.Mutex();
+        var mutex = new Mutex();
 
         var prom1 = makeTestPromiseWithAssert(assert, 'prom1');
         var prom2 = makeTestPromiseWithAssert(assert, 'prom2');
@@ -86,7 +87,7 @@ QUnit.module('core', {}, function () {
     QUnit.test('mutex: getUnlockedDef checks', async function (assert) {
         assert.expect(9);
 
-        var mutex = new concurrency.Mutex();
+        var mutex = new Mutex();
 
         var prom1 = makeTestPromiseWithAssert(assert, 'prom1');
         var prom2 = makeTestPromiseWithAssert(assert, 'prom2');
@@ -124,7 +125,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test('mutex: error and getUnlockedDef', async function (assert) {
-        const mutex = new concurrency.Mutex();
+        const mutex = new Mutex();
         mutex.exec(async () => {
             await Promise.resolve();
             throw new Error("boom");
