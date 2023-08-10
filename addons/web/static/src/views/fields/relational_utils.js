@@ -509,6 +509,7 @@ export class X2ManyFieldDialog extends Component {
         this.title = this.props.title;
         this.contentClass = computeViewClassName("form", this.archInfo.xmlDoc);
         useSubEnv({ config: this.props.config });
+        this.env.dialogData.close = () => this.discard();
 
         useBus(this.record.model.bus, "update", () => this.render(true));
 
