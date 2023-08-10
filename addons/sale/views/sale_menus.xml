@@ -72,9 +72,27 @@
 
         <menuitem id="menu_sale_report"
             name="Reporting"
-            action="action_order_report_all"
             groups="sales_team.group_sale_manager"
-            sequence="40"/>
+            sequence="40">
+
+            <menuitem id="menu_reporting_sales"
+                name="Sales"
+                action="action_order_report_all"
+                sequence="10"/>
+            <menuitem id="menu_reporting_salespeople"
+                name="Salespersons"
+                action="action_order_report_salesperson"
+                sequence="20"/>
+            <menuitem id="menu_reporting_product"
+                name="Products"
+                action="action_order_report_products"
+                sequence="30"/>
+            <menuitem id="menu_reporting_customer"
+                name="Customers"
+                action="action_order_report_customers"
+                sequence="40"/>
+
+        </menuitem>
 
         <menuitem id="menu_sale_config"
             name="Configuration"
