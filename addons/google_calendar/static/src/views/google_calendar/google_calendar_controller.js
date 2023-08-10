@@ -11,6 +11,7 @@ patch(AttendeeCalendarController.prototype, {
         super.setup(...arguments);
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.rpc = useService("rpc");
     },
 
     async onGoogleSyncCalendar() {
@@ -59,5 +60,16 @@ patch(AttendeeCalendarController.prototype, {
                 await this.model.load();
             },
         });
+    },
+
+    onGoogleSyncUnpause() {
+        if (this.isSystemUser) {
+            this.env.services.action.doAction("base_setup.action_general_configuration");
+        } else {
+            this.dialog.add(AlertDialog, {
+                title: this.env._t("Configuration"),
+                body: this.env._t("Your administrator paused the synchronization with Google Calendar."),
+            });
+        }
     }
 });
