@@ -33,6 +33,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_unit_label': 'Diamond',
             'currency_subunit_label': 'Carbon',
         }, rate2016=6.0, rate2017=4.0)
+        cls.currency_data_3 = cls.setup_multi_currency_data(default_values={
+            'name': 'Sand',
+            'symbol': 'S',
+            'currency_unit_label': 'Sand',
+            'currency_subunit_label': 'Sand',
+        }, rate2016=0.0001, rate2017=0.00001)
 
         # ==== Cash Basis Taxes setup ====
 
@@ -1077,6 +1083,28 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertRecordValues(line_1 + line_2, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
             {'amount_residual': 40.0,       'amount_residual_currency': 40.0,   'reconciled': False},
+        ])
+
+    def test_reconcile_one_foreign_currency_fallback_company_currency(self):
+        comp_curr = self.company_data['currency']
+        foreign_curr = self.currency_data_3['currency']
+
+        line_1 = self._create_line_for_reconciliation(-10.0, -10.0, comp_curr, '2017-01-01')
+        line_2 = self._create_line_for_reconciliation(1000000.0, 100.0, foreign_curr, '2017-01-01')
+
+        res = (line_1 + line_2).reconcile()
+
+        self.assertRecordValues(res['partials'], [{
+            'amount': 10.0,
+            'debit_amount_currency': 0.0,
+            'credit_amount_currency': 10.0,
+            'debit_move_id': line_2.id,
+            'credit_move_id': line_1.id,
+        }])
+        self.assertFalse(res['partials'].exchange_move_id)
+        self.assertRecordValues(line_1 + line_2, [
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 999990.0,   'amount_residual_currency': 100.0,  'reconciled': False},
         ])
 
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_full_payment(self):
