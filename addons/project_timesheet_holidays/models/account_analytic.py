@@ -11,7 +11,6 @@ class AccountAnalyticLine(models.Model):
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request', copy=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
     task_id = fields.Many2one(domain="""[
-            ('company_id', '=', company_id),
             ('project_id', '=?', project_id),
             ('is_timeoff_task', '=', False),
             '|', ('project_id.allow_timesheets', '=', True), '&', ('project_id', '=', False), ('parent_id', '!=', False),
