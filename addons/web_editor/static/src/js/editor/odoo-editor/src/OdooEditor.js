@@ -3961,9 +3961,6 @@ export class OdooEditor extends EventTarget {
             //    wasn't changed.
             this._setLinkZws();
 
-            if (this.options.onCollaborativeSelectionChange) {
-                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
-            }
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
@@ -3995,6 +3992,13 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
+        }
+        if (
+            selection.rangeCount &&
+            selection.getRangeAt(0) &&
+            this.options.onCollaborativeSelectionChange
+        ) {
+            this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
         }
     }
 
