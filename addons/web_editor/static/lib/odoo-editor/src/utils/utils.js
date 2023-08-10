@@ -641,6 +641,10 @@ export function getSelectedNodes(editable) {
  */
 export function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
     sel = sel || editable.ownerDocument.getSelection();
+    // if browser wrongly return br element as anchor node, replace by its parent
+    if (sel.isCollapsed && sel.anchorNode && sel.anchorNode.nodeName === "BR") {
+        setCursorStart(sel.anchorNode.parentElement, false);
+    }
     range = range ? range.cloneRange() : sel.rangeCount && sel.getRangeAt(0).cloneRange();
     if (!range) return;
     let start = range.startContainer;
