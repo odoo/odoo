@@ -500,7 +500,7 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         amount = 0.0
         mode = False
-        moves = self.line_ids.move_id
+        moves = batch_result['lines'].mapped('move_id')
         for move in moves:
             if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
                 amount += move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)#todo currencies
