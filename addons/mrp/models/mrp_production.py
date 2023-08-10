@@ -2199,6 +2199,16 @@ class MrpProduction(models.Model):
             'res_id': production.id,
         }
 
+    def action_plan_with_components_availability(self):
+        for production in self.filtered(lambda p: p.state in ('draft', 'confirmed')):
+            if production.state == 'draft':
+                production.action_confirm()
+            expected_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+            if expected_date:
+                production.date_start = expected_date
+        self.button_plan()
+
+
     def _has_workorders(self):
         return self.workorder_ids
 
