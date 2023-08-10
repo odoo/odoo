@@ -322,7 +322,7 @@ class PosSession(models.Model):
                 self.env.cr.rollback()
                 return self._close_session_action(balance)
 
-            self.sudo()._post_statement_difference(cash_difference_before_statements)
+            self.sudo()._post_statement_difference(cash_difference_before_statements, False)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
@@ -331,12 +331,12 @@ class PosSession(models.Model):
                 self.move_id.sudo().unlink()
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
-            self.sudo()._post_statement_difference(self.cash_register_difference)
+            self.sudo()._post_statement_difference(self.cash_register_difference, False)
 
         self.write({'state': 'closed'})
         return True
 
-    def _post_statement_difference(self, amount):
+    def _post_statement_difference(self, amount, is_opening):
         if amount:
             if self.config_id.cash_control:
                 st_line_vals = {
@@ -352,7 +352,7 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)") + (_(' - opening') if is_opening else _(' - closing'))
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
             else:
                 # self.cash_register_difference  > 0.0
@@ -361,7 +361,7 @@ class PosSession(models.Model):
                         _('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.',
                           self.cash_journal_id.name))
 
-                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
+                st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)") + (_(' - opening') if is_opening else _(' - closing'))
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
             self.env['account.bank.statement.line'].create(st_line_vals)
@@ -1484,7 +1484,7 @@ class PosSession(models.Model):
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_balance_start
         self.cash_register_balance_start = cashbox_value
-        self.sudo()._post_statement_difference(difference)
+        self.sudo()._post_statement_difference(difference, True)
         self._post_cash_details_message('Opening', difference, notes)
 
     def _post_cash_details_message(self, state, difference, notes):
@@ -1785,6 +1785,7 @@ class PosSession(models.Model):
         config = self.env['pos.config'].search_read(**params['search_params'])[0]
         config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
                                                        or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        config['has_cash_move_permission'] = self.user_has_groups('account.group_account_invoice')
         return config
 
     def _loader_params_pos_bill(self):
@@ -1964,9 +1965,15 @@ class PosSession(models.Model):
         return products
 
     def _loader_params_product_packaging(self):
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data and self.config_id.limited_products_loading:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+
         return {
             'search_params': {
-                'domain': [('barcode', 'not in', ['', False])],
+                'domain': domain,
                 'fields': ['name', 'barcode', 'product_id', 'qty'],
             },
         }
@@ -2033,6 +2040,20 @@ class PosSession(models.Model):
         params['search_params'] = {**params['search_params'], **custom_search_params}
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
+
+    def find_product_by_barcode(self, barcode):
+        product = self.env['product.product'].search([['barcode', '=', barcode], ['sale_ok', '=', True]])
+        if product:
+            return {'product_id': [product.id]}
+
+        packaging_params = self._loader_params_product_packaging()
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search_read(**packaging_params['search_params'])
+        if packaging:
+            product_id = packaging[0]['product_id']
+            if product_id:
+                return {'product_id': [product_id[0]], 'packaging': packaging}
+        return {}
 
 
 class ProcurementGroup(models.Model):
