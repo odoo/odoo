@@ -302,4 +302,50 @@
         <field name="action" ref="event.action_event_view"/>
     </record>
 
+
+    <record id="event_barcode_action_main_view" model="ir.actions.client">
+        <field name="name">Barcode Interface</field>
+        <field name="tag">event.event_barcode_scan_view</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.barcode</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="model">event.event</field>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
+                <button name="%(event_barcode_action_main_view)d"
+                    type="action"
+                    class="oe_stat_button"
+                    icon="fa-mobile"
+                    context="{'default_event_id': active_id}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Registration Desk</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="event_registration_view_form_inherit_barcode">
+        <field name="name">event.registration.view.form.inherit.barcode</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="model">event.registration</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_id']" position="after">
+                <field name="barcode" groups="base.group_no_one" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EVENT.EVENT HEADER: REGISTRATION DESK MENU -->
+    <menuitem name="Registration Desk"
+        id="menu_event_registration_desk"
+        sequence="30"
+        action="event_barcode_action_main_view"
+        parent="event.event_main_menu"
+        groups="event.group_event_registration_desk"/>
+
 </data></odoo>

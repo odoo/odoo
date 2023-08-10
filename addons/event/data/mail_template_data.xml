@@ -263,6 +263,7 @@
                     <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
                         target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
                         Download Badge
+                    </a>
                     <a t-attf-href="/event/tickets_dl?event_id={{ object.event_id.id }}&amp;registration_ids={{ object.ids }}&amp;dl_hash={{ object.event_id._get_tickets_dl_access_hash(object.ids) }}&amp;simplified=1"
                         target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
                         View Ticket
