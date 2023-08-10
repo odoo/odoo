@@ -4557,6 +4557,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("don't duplicate if save fail", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"/></form>',
+            actionMenus: {},
+            async mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.step("create");
+                    throw makeServerError();
+                }
+                if (args.method === "copy") {
+                    assert.step("copy");
+                }
+            },
+        });
+        await editInput(target, "[name=foo] input", "new value");
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Duplicate");
+        assert.containsOnce(target, ".modal .o_error_dialog");
+        // Discard changes don't trigger Duplicate action
+        await click(target, ".modal .btn-secondary");
+
+        assert.verifySteps(["create"]);
+    });
+
     QUnit.test("clicking on stat buttons in edit mode", async function (assert) {
         let count = 0;
         const fakeActionService = {
