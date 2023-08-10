@@ -2249,7 +2249,7 @@ class AccountMoveLine(models.Model):
             return account.company_id.tax_exigibility \
                 and account.account_type in ('asset_receivable', 'liability_payable')
 
-        if not self._context.get('move_reverse_cancel'):
+        if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             for plan in plan_list:
                 if is_cash_basis_needed(plan['amls'].account_id):
                     plan['partials']._create_tax_cash_basis_moves()
