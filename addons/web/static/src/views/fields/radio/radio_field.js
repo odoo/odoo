@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
+let nextId = 0;
 export class RadioField extends Component {
     static template = "web.RadioField";
     static props = {
@@ -18,9 +19,8 @@ export class RadioField extends Component {
         orientation: "vertical",
     };
 
-    static nextId = 0;
-
     setup() {
+        this.id = `radio_field_${nextId++}`;
         this.type = this.props.record.fields[this.props.name].type;
         if (this.type === "many2one") {
             this.specialData = useSpecialData(async (orm, props) => {
