@@ -97,6 +97,7 @@ Help your customers with this chat, and analyse their feedback.
         'im_livechat.assets_core': [
             'mail/static/src/core/common/**/*',
             'mail/static/src/discuss/core/common/*',
+            'mail/static/src/discuss/typing/**/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
 
