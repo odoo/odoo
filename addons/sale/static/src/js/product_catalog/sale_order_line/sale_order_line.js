@@ -20,7 +20,7 @@ export class ProductCatalogSOL extends Component {
     }
 
     get price() {
-        return formatMonetary(this.props.price, { currencyId: this.env.currencyId });
+        return formatMonetary(this.props.price, { currencyId: this.env.currencyId, digits: this.env.digits });
     }
 
 }
