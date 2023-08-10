@@ -3,8 +3,7 @@
 
 import logging
 
-from odoo import api, models, fields
-from odoo.addons.phone_validation.tools import phone_validation
+from odoo import api, Command, models, fields
 from odoo.tools import html2plaintext, plaintext2html
 
 _logger = logging.getLogger(__name__)
@@ -307,6 +306,7 @@ class MailThread(models.AbstractModel):
                 'sms_number': sms.number,
                 'notification_type': 'sms',
                 'sms_id': sms.id,
+                'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})] if sms.state == 'outgoing' else False,
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
                 'failure_type': '' if sms.state == 'outgoing' else sms.failure_type,
@@ -324,6 +324,7 @@ class MailThread(models.AbstractModel):
                             'notification_type': 'sms',
                             'notification_status': 'ready',
                             'sms_id': sms.id,
+                            'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})],
                             'sms_number': sms.number,
                         })
 

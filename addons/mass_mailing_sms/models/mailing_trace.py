@@ -5,7 +5,6 @@ import random
 import string
 
 from odoo import api, fields, models
-from odoo.osv import expression
 
 
 class MailingTrace(models.Model):
@@ -22,20 +21,29 @@ class MailingTrace(models.Model):
         string='SMS ID (tech)',
         index='btree_not_null'
         # Integer because the related sms.sms can be deleted separately from its statistics.
-        # However the ID is needed for several action and controllers.
+        # However, the ID is needed for several action and controllers.
     )
+    sms_tracker_ids = fields.One2many('sms.tracker', 'mailing_trace_id', string='SMS Trackers')
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
+        ('sms_country_not_supported', 'Country Not Supported'),
+        ('sms_registration_needed', 'Country-specific Registration Required'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
         ('sms_optout', 'Opted Out'),
+        # delivery report errors
+        ('sms_expired', 'Expired'),
+        ('sms_invalid_destination', 'Invalid Destination'),
+        ('sms_not_allowed', 'Not Allowed'),
+        ('sms_not_delivered', 'Not Delivered'),
+        ('sms_rejected', 'Rejected'),
     ])
 
     @api.model_create_multi

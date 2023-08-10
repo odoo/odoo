@@ -43,10 +43,10 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 'numbers': ','.join(self.random_numbers),
             })
 
-            with self.mockSMSGateway():
+            with self.mockSMSGateway(sms_allow_unlink=True):
                 composer._action_send_sms()
 
-        # use sms.api directly, does not create sms.sms
+        # sms.sms was deleted as successfully sent
         self.assertNoSMS()
         self.assertSMSIapSent(self.random_numbers_san, self._test_body)
 
@@ -259,10 +259,10 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
                 'numbers': ','.join(self.random_numbers),
             })
 
-            with self.mockSMSGateway():
+            with self.mockSMSGateway(sms_allow_unlink=True):
                 composer._action_send_sms()
 
-        # use sms.api directly, does not create sms.sms
+        # sms.sms was deleted as successfully sent
         self.assertNoSMS()
         self.assertSMSIapSent(self.random_numbers_san, self._test_body)
 

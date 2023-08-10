@@ -35,14 +35,18 @@ class TestMailingStatistics(TestMassSMSCommon):
         with self.mockSMSGateway():
             mailing.action_send_sms()
 
+        # simulate some delivery reports
+        for record_idx in range(4):
+            self.gateway_sms_delivered(mailing, target_records[record_idx])
+
         # simulate some replies and clicks
-        self.gateway_sms_click(mailing, target_records[0])
-        self.gateway_sms_click(mailing, target_records[2])
-        self.gateway_sms_click(mailing, target_records[3])
+        for record_idx in (0, 2, 3):
+            self.gateway_sms_click(mailing, target_records[record_idx])
 
         # check mailing statistics
         self.assertEqual(mailing.clicked, 3)
-        self.assertEqual(mailing.delivered, 10)
+        self.assertEqual(mailing.delivered, 4)
+        self.assertEqual(mailing.received_ratio, 40)
         self.assertEqual(mailing.opened, 3)
         self.assertEqual(mailing.opened_ratio, 30)
         self.assertEqual(mailing.sent, 10)
@@ -63,7 +67,7 @@ class TestMailingStatistics(TestMassSMSCommon):
         kpi_values = body_html.xpath('//table[@data-field="sms"]//*[hasclass("kpi_value")]/text()')
         self.assertEqual(
             [t.strip().strip('%') for t in kpi_values],
-            ['100.0', str(float(mailing.opened_ratio)), str(float(mailing.replied_ratio))]
+            ['40.0', str(float(mailing.opened_ratio)), str(float(mailing.replied_ratio))]
         )
         # test body content: clicks (a bit hackish but hey we are in stable)
         kpi_click_values = body_html.xpath('//table//tr[contains(@style,"color: #888888")]/td[contains(@style,"width: 30%")]/text()')

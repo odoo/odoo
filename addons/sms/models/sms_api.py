@@ -4,7 +4,7 @@
 from odoo import _, api, models
 from odoo.addons.iap.tools import iap_tools
 
-DEFAULT_ENDPOINT = 'https://iap-sms.odoo.com'
+DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
 
 
 class SmsApi(models.AbstractModel):
@@ -20,57 +20,60 @@ class SmsApi(models.AbstractModel):
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params)
 
     @api.model
-    def _send_sms(self, numbers, message):
-        """ Send a single message to several numbers
-
-        :param numbers: list of E164 formatted phone numbers
-        :param message: content to send
-
-        :raises ? TDE FIXME
-        """
-        params = {
-            'numbers': numbers,
-            'message': message,
-        }
-        return self._contact_iap('/iap/message_send', params)
-
-    @api.model
-    def _send_sms_batch(self, messages):
+    def _send_sms_batch(self, messages, dlr=False):
         """ Send SMS using IAP in batch mode
 
-        :param messages: list of SMS to send, structured as dict [{
-            'res_id':  integer: ID of sms.sms,
-            'number':  string: E164 formatted phone number,
-            'content': string: content to send
-        }]
-
-        :return: return of /iap/sms/1/send controller which is a list of dict [{
-            'res_id': integer: ID of sms.sms,
-            'state':  string: 'insufficient_credit' or 'wrong_number_format' or 'success',
-            'credit': integer: number of credits spent to send this SMS,
-        }]
-
-        :raises: normally none
+        :param list messages: list of SMS (grouped by content) to send:
+          formatted as ```[
+              {
+                  'content' : str,
+                  'numbers' : [
+                      { 'uuid' : str, 'number' : str },
+                      { 'uuid' : str, 'number' : str },
+                      ...
+                  ]
+              }, ...
+          ]```
+        :param bool dlr: whether to receive delivery reports or not
+        :return: response from the endpoint called, which is a list of results
+          formatted as ```[
+              {
+                  uuid: UUID of the request,
+                  state: ONE of: {
+                      'success', 'processing', 'server_error', 'unregistered', 'insufficient_credit',
+                      'wrong_number_format', 'duplicate_message', 'country_not_supported', 'registration_needed',
+                  },
+                  credit: Optional: Credits spent to send SMS (provided if the actual price is known)
+              }, ...
+          ]```
         """
         params = {
-            'messages': messages
+            'messages': messages,
+            'webhook_url': dlr and (self.get_base_url() + '/sms/status')
         }
-        return self._contact_iap('/iap/sms/2/send', params)
+        return self._contact_iap('/iap/sms/3/send', params)
 
     @api.model
     def _get_sms_api_error_messages(self):
-        """ Returns a dict containing the error message to display for every known error 'state'
-        resulting from the '_send_sms_batch' method.
-        We prefer a dict instead of a message-per-error-state based method so we only call
-        the 'get_credits_url' once, to avoid extra RPC calls. """
+        """Return a mapping of `_send_sms_batch` errors to an error message.
 
-        buy_credits_url = self.sudo().env['iap.account'].get_credits_url(service_name='sms')
-        buy_credits = '<a href="%s" target="_blank">%s</a>' % (
-            buy_credits_url,
-            _('Buy credits.')
+        We prefer a dict instead of a message-per-error-state based method so that we only call
+        config parameters getters once and avoid extra RPC calls."""
+        buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
+        buy_credits = f'<a href="{buy_credits_url}" target="_blank">%s</a>' % _('Buy credits.')
+
+        sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
+        sms_account_token = self.env['iap.account'].sudo().get('sms').account_token
+        register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>' % (
+            _('Register now.')
         )
+
         return {
             'unregistered': _("You don't have an eligible IAP account."),
-            'insufficient_credit': ' '.join([_('You don\'t have enough credits on your IAP account.'), buy_credits]),
+            'insufficient_credit': ' '.join([_("You don't have enough credits on your IAP account."), buy_credits]),
             'wrong_number_format': _("The number you're trying to reach is not correctly formatted."),
+            'duplicate_message': _("This SMS has been removed as the number was already used."),
+            'country_not_supported': _("The destination country is not supported."),
+            'incompatible_content': _("The content of the message violates rules applied by our providers."),
+            'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
         }

@@ -11,3 +11,4 @@ from . import res_partner
 from . import sms_api
 from . import sms_sms
 from . import sms_template
+from . import sms_tracker

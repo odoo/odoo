@@ -13,8 +13,8 @@ class MailingTrace(models.Model):
     Note:: State management / Error codes / Failure types summary
 
       * trace_status
-        'outgoing', 'sent', 'opened', 'replied',
-        'error', 'bouce', 'cancel'
+        'outgoing', 'process', 'pending', 'sent', 'opened', 'replied',
+        'error', 'bounce', 'cancel'
       * failure_type
         # generic
         'unknown',
@@ -24,8 +24,8 @@ class MailingTrace(models.Model):
         # mass mailing mass mode specific codes
         "mail_bl", "mail_optout", "mail_dup"
         # mass_mailing_sms
-        'sms_number_missing', 'sms_number_format', 'sms_credit',
-        'sms_server', 'sms_acc'
+        'sms_number_missing', 'sms_number_format', 'sms_credit', 'sms_server',
+        'sms_acc', 'sms_country_not_supported', 'sms_registration_needed',
         # mass_mailing_sms mass mode specific codes
         'sms_blacklist', 'sms_duplicate', 'sms_optout',
       * cancel:
@@ -39,8 +39,12 @@ class MailingTrace(models.Model):
         * invalid mail / invalid sms number -> error (RECIPIENT, sms_number_format)
       * exception: set in  _postprocess_sent_message (_postprocess_iap_sent_sms)
         if mail (sms) not sent with failure type, reset if sent;
-      * sent: set in _postprocess_sent_message (_postprocess_iap_sent_sms) if
-        mail (sms) sent
+      * process: (used in sms): set in SmsTracker._update_sms_traces when held back
+        (at IAP) before actual sending to the sms_service.
+      * pending: (used in sms): default value for sent sms.
+      * sent: set in
+        * _postprocess_sent_message if mail
+        * SmsTracker._update_sms_traces if sms, when delivery report is received.
       * clicked: triggered by add_click
       * opened: triggered by add_click + blank gif (mail) + gateway reply (mail)
       * replied: triggered by gateway reply (mail)
@@ -81,7 +85,9 @@ class MailingTrace(models.Model):
     reply_datetime = fields.Datetime('Replied On')
     trace_status = fields.Selection(selection=[
         ('outgoing', 'Outgoing'),
-        ('sent', 'Sent'),
+        ('process', 'Processing'),
+        ('pending', 'Sent'),
+        ('sent', 'Delivered'),
         ('open', 'Opened'),
         ('reply', 'Replied'),
         ('bounce', 'Bounced'),
