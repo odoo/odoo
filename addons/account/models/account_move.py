@@ -3314,26 +3314,26 @@ class AccountMove(models.Model):
                     # Track the balance to handle the exchange difference.
                     open_balance -= vals['balance']
 
-        exchange_diff_sign = aml.company_currency_id.compare_amounts(open_balance, 0.0)
-        if exchange_diff_sign != 0.0:
+            exchange_diff_sign = aml.company_currency_id.compare_amounts(open_balance, 0.0)
+            if exchange_diff_sign != 0.0:
 
-            if exchange_diff_sign > 0.0:
-                exchange_line_account = aml.company_id.expense_currency_exchange_account_id
-            else:
-                exchange_line_account = aml.company_id.income_currency_exchange_account_id
+                if exchange_diff_sign > 0.0:
+                    exchange_line_account = aml.company_id.expense_currency_exchange_account_id
+                else:
+                    exchange_line_account = aml.company_id.income_currency_exchange_account_id
 
-            grouping_dict = {
-                'account_id': exchange_line_account.id,
-                'currency_id': aml.currency_id.id,
-                'partner_id': aml.partner_id.id,
-            }
-            line_vals = res['exchange_lines'].setdefault(frozendict(grouping_dict), {
-                **grouping_dict,
-                'name': _("Early Payment Discount (Exchange Difference)"),
-                'amount_currency': 0.0,
-                'balance': 0.0,
-            })
-            line_vals['balance'] += open_balance
+                grouping_dict = {
+                    'account_id': exchange_line_account.id,
+                    'currency_id': aml.currency_id.id,
+                    'partner_id': aml.partner_id.id,
+                }
+                line_vals = res['exchange_lines'].setdefault(frozendict(grouping_dict), {
+                    **grouping_dict,
+                    'name': _("Early Payment Discount (Exchange Difference)"),
+                    'amount_currency': 0.0,
+                    'balance': 0.0,
+                })
+                line_vals['balance'] += open_balance
 
         return {
             key: [
