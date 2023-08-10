@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.AvatarCardEmployeePopover" owl="1">
+        <div class="o_avatar_card">
+            <div class="card-body">
+                <div class="d-flex align-items-start gap-2">
+                    <span class="o_avatar pt-1 position-relative o_card_avatar">
+                        <img t-if="props.id"
+                            t-attf-src="/web/image/hr.employee/{{props.id}}/avatar_128"
+                            class="rounded"
+                        />
+                        <span t-if="user?.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status">
+                            <i t-if="user.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                            <i t-elif="user.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
+                            <i t-elif="user.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
+                            <i t-elif="user.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+                            <i t-elif="!user.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                        </span>
+                        <span t-elif="employee.show_hr_icon_display" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_employee_presence_status">
+                            <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                            <i t-if="employee.hr_icon_display == 'presence_present'" class="fa fa-fw fa-circle text-success" title="Present" role="img" aria-label="Employee is present"/>
+                            <!-- Employee is not present/connected and it is normal according to his work schedule -->
+                            <i t-if="employee.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle-o text-warning" title="Absent" role="img" aria-label="Employee is absent"/>
+                            <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                            <i t-if="employee.hr_icon_display == 'presence_absent_active'" class="fa fa-fw fa-circle-o text-success" title="Active but not present" role="img" aria-label="Employee is active but not present"/>
+                            <!-- Employee is not here but according to his work schedule, he should be connected -->
+                            <i t-if="employee.hr_icon_display == 'presence_to_define'" class="fa fa-fw fa-circle-o text-muted" title="No information" role="img" aria-label="No information"/>
+                        </span>
+                    </span>
+                    <div class="d-flex flex-column o_card_user_infos">
+                        <span class="fw-bold" t-esc="employee.name"/>
+                        <small class="text-muted" t-if="employee.job_title" t-esc="employee.job_title"/>
+        <span class="text-muted" t-if="employee.department_id" data-tooltip="Department" t-esc="employee.department_id[1]"/>
+                        <a t-if="email" t-att-href="'mailto:'+email">
+                            <i class="fa fa-fw fa-envelope"/> <t t-esc="email"/>
+                        </a>
+                        <a t-if="phone" t-att-href="'tel:'+phone">
+                            <i class="fa fa-fw fa-phone"/> <t t-esc="phone"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-wrap gap-2 mt-2">
+                    <div class="justify-content-end d-flex align-items-baseline">
+                        <div class="d-flex gap-2 o_avatar_card_buttons">
+                            <button class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick" t-if="user"> Send message </button>
+                            <button class="btn btn-secondary btn-sm" t-on-click.stop="onClickViewEmployee"> View profile </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
