@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_round
+from odoo.tools import float_is_zero
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -58,16 +58,10 @@ class ChangeProductionQty(models.TransientModel):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:
             production = wizard.mo_id
-            if wizard.product_qty < production.qty_produced:
-                format_qty = '%.{precision}f'.format(precision=precision)
-                raise UserError(_(
-                    "You have already processed %(quantity)s. Please input a quantity higher than %(quantity)s ",
-                    quantity=format_qty % production.qty_produced,
-                ))
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
 
-            factor = (new_production_qty - production.qty_produced) / (old_production_qty - production.qty_produced)
+            factor = new_production_qty / old_production_qty
             update_info = production._update_raw_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:
@@ -80,8 +74,12 @@ class ChangeProductionQty(models.TransientModel):
                         else:
                             documents[key] = [value]
             production._log_manufacture_exception(documents)
-            self._update_finished_moves(production, new_production_qty - production.qty_produced, old_production_qty - production.qty_produced)
+            self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
+            if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding) and\
+               not production.workorder_ids:
+                production.qty_producing = new_production_qty
+                production._set_qty_producing()
 
             for wo in production.workorder_ids:
                 operation = wo.operation_id
