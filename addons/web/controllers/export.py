@@ -331,6 +331,8 @@ class Export(http.Controller):
             if import_compat and not field_name == 'id':
                 if exclude and field_name in exclude:
                     continue
+                if field.get('type') in ('properties', 'properties_definition'):
+                    continue
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field
                     if all(dict(attrs).get('readonly', True)
