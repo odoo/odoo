@@ -60,10 +60,10 @@
                     <field name="model_id"/>
                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
                     <field name="domain_force"/>
-                    <field name="perm_read"/>
-                    <field name="perm_write"/>
-                    <field name="perm_create"/>
-                    <field name="perm_unlink"/>
+                    <field name="perm_read" width="85px"/>
+                    <field name="perm_write" width="85px"/>
+                    <field name="perm_create" width="85px"/>
+                    <field name="perm_unlink" width="85px"/>
                 </tree>
             </field>
         </record>
@@ -73,19 +73,23 @@
             <field name="arch" type="xml">
                 <search string="Record Rules">
                     <field name="name" string="Record Rule"/>
+                    <field name="domain_force"/>
                     <field name="model_id"/>
                     <field name="groups"/>
                     <filter string="Global" name="global" domain="[('global', '=', True)]"/>
+                    <filter string="Group-based" name="group_based" domain="[('global', '=', False)]"/>
                     <separator/>
-                    <filter string="Full Access Right" name="full_access_right" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
-                    <filter string="Read Access Right" name="read_access_right" domain="[('perm_read', '=', True)]"/>
-                    <filter string="Write Access Right" name="write_access_right" domain="[('perm_write', '=', True)]"/>
-                    <filter string="Create Access Right" name="create_access_right" domain="[('perm_create', '=' ,True)]"/>
-                    <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink', '=', True)]"/>
+                    <filter string="Full Access" name="full_access_right" domain="[('perm_read', '=', True), ('perm_write', '=', True), ('perm_create', '=', True), ('perm_unlink', '=', True)]"/>
+                    <filter string="Read" name="read_access_right" domain="[('perm_read', '=', True)]"/>
+                    <filter string="Write" name="write_access_right" domain="[('perm_write', '=', True)]"/>
+                    <filter string="Create" name="create_access_right" domain="[('perm_create', '=' ,True)]"/>
+                    <filter string="Delete" name="delete_access_right" domain="[('perm_unlink', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group string="Group By">
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
+                        <separator/>
+                        <filter string="Group" name="group_by_group" domain="[]" context="{'group_by': 'groups'}"/>
                     </group>
                 </search>
             </field>

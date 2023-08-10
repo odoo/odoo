@@ -20,10 +20,10 @@ class IrRule(models.Model):
     model_id = fields.Many2one('ir.model', string='Model', index=True, required=True, ondelete="cascade")
     groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', ondelete='restrict')
     domain_force = fields.Text(string='Domain')
-    perm_read = fields.Boolean(string='Apply for Read', default=True)
-    perm_write = fields.Boolean(string='Apply for Write', default=True)
-    perm_create = fields.Boolean(string='Apply for Create', default=True)
-    perm_unlink = fields.Boolean(string='Apply for Delete', default=True)
+    perm_read = fields.Boolean(string='Read', default=True)
+    perm_write = fields.Boolean(string='Write', default=True)
+    perm_create = fields.Boolean(string='Create', default=True)
+    perm_unlink = fields.Boolean(string='Delete', default=True)
 
     _sql_constraints = [
         ('no_access_rights',
