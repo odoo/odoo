@@ -16,6 +16,7 @@
                     <group>
                         <field name="cal_client_id" string="Client ID" required="external_calendar_provider == 'google'"/>
                         <field name="cal_client_secret" string="Client Secret" password="True" required="external_calendar_provider == 'google'"/>
+                        <field name="cal_sync_paused" required="external_calendar_provider == 'google'"/>
                     </group>
                 </div>
                 <div invisible="external_calendar_provider != 'microsoft'">
@@ -28,6 +29,7 @@
                     <group>
                         <field name="microsoft_outlook_client_identifier" string="Client ID" required="external_calendar_provider == 'microsoft'"/>
                         <field name="microsoft_outlook_client_secret" string="Client Secret" password="True" required="external_calendar_provider == 'microsoft'"/>
+                        <field name="microsoft_outlook_sync_paused" required="external_calendar_provider == 'microsoft'"/>
                     </group>
                 </div>
                 <footer>
