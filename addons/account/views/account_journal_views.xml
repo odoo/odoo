@@ -104,6 +104,7 @@
                                                groups="account.group_account_readonly"/>
                                     </tree>
                                 </field>
+                                <group name="incoming_payment" />
                             </page>
                             <page id="outbound_payment_settings" string="Outgoing Payments" attrs="{'invisible': [('type', 'not in', ['cash', 'bank'])]}">
                                     <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
