@@ -207,7 +207,7 @@ class Project(models.Model):
         ('done', 'Done'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id')
+    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
