@@ -10,6 +10,7 @@ import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
+import { useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -30,6 +31,7 @@ export class ProductsWidget extends Component {
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
+        this.loadDemoDataProducts = useAsyncLockedMethod(this.loadDemoDataProducts);
     }
     get hasProducts() {
         return Object.keys(this.pos.globalState.db.product_by_id).length > 0;
