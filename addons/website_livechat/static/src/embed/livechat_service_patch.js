@@ -12,9 +12,6 @@ patch(LivechatService.prototype, {
     },
 
     get displayWelcomeMessage() {
-        return (
-            (this.thread.messages.length === 0 || this.thread?.messages[0]?.isSelfAuthored) &&
-            super.displayWelcomeMessage
-        );
+        return !this.thread.requested_by_operator;
     },
 });

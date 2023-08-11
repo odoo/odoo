@@ -64,7 +64,7 @@ class WebsiteVisitor(models.Model):
         for visitor in self:
             operator = self.env.user
             country = visitor.country_id
-            visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
+            visitor_name = "Visitor #%d (%s)" % (visitor.id, country.name) if country else f"Visitor #{visitor.id}"
             members_to_add = [Command.link(operator.partner_id.id)]
             if visitor.partner_id:
                 members_to_add.append(Command.link(visitor.partner_id.id))
@@ -116,6 +116,6 @@ class WebsiteVisitor(models.Model):
                 discuss_channel = request.env["discuss.channel"].sudo().search([("uuid", "=", discuss_channel_uuid)])
                 discuss_channel.write({
                     'livechat_visitor_id': visitor_sudo.id,
-                    'anonymous_name': visitor_sudo.display_name
+                    'anonymous_name': "Visitor #%d (%s)" % (visitor_sudo.id, visitor_sudo.country_id.name) if visitor_sudo.country_id else f"Visitor #{visitor_sudo.id}"
                 })
         return visitor_id, upsert

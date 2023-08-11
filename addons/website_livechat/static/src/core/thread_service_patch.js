@@ -2,6 +2,7 @@
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { ThreadService } from "@mail/core/common/thread_service";
+import { assignDefined } from "@mail/utils/common/misc";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
@@ -13,6 +14,7 @@ patch(ThreadService.prototype, {
                 type: "visitor",
             });
         }
+        assignDefined(thread, data, ["requested_by_operator"]);
     },
     /**
      * @param {import('@mail/core/common/persona_model').Persona} persona
