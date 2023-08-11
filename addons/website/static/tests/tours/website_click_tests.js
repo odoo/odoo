@@ -29,9 +29,4 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
     wTourUtils.dragNDrop(cover),
     wTourUtils.clickOnSnippet(cover),
     ...wTourUtils.clickOnSave(),
-    {
-        content: "wait for the iframe to be ready",
-        trigger: 'iframe body:not(.editor_enable)',
-        run: () => null, // it's a check
-    }
 ]);

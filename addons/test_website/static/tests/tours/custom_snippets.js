@@ -26,12 +26,10 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     edition: true,
     test: true,
 }, () => [
-    {
-        content: "drop a snippet",
-        trigger: ".oe_snippet[name='Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        moveTrigger: ".oe_drop_zone",
-        run: "drag_and_drop iframe #wrap",
-    },
+    wTourUtils.dragNDrop({
+        id: 's_banner',
+        name: 'Banner',
+    }),
     {
         content: "customize snippet",
         trigger: "iframe #wrapwrap .s_banner h1",

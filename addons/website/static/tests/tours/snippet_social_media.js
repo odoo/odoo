@@ -150,14 +150,5 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         trigger: 'we-list table input:eq(3)',
         run: 'text_blur https://instagram.com/odoo.official/',
     },
-    {
-        content: 'Save',
-        trigger: 'button[data-action=save]',
-        run: 'click',
-    },
-    {
-        content: "Wait until save's calls are finished",
-        trigger: "iframe body:not(.editor_enable)",
-        run: function () {}, // it's a check
-    }
+    ...wTourUtils.clickOnSave()
 ]);

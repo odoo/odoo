@@ -86,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         run: 'text New Menu Item',
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     toggleMegaMenu(),
     {
         content: "The menu item should have been renamed.",

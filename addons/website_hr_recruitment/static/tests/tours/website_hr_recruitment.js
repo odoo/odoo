@@ -88,12 +88,11 @@
     }, {
         content: 'Add a new field',
         trigger: 'we-button[data-add-field]',
-    }, {
-        content: 'Save',
-        trigger: 'button[data-action="save"]',
-    }, {
+    },
+    ...wTourUtils.clickOnSave(),
+    {
         content: 'Go back to /jobs page after save',
-        trigger: 'iframe body:not(.editor_enable)',
+        trigger: 'iframe body',
         run: () => {
             window.location.href = wTourUtils.getClientActionUrl('/jobs');
         }

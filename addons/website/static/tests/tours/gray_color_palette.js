@@ -3,20 +3,13 @@ import wTourUtils from '@website/js/tours/tour_utils';
 
 function waitForCSSReload() {
     return [
-        {
-            // This step is here because the option is applied but triggers a
-            // reloading of the CC value, so if the second value is sent too
-            // soon, it will be ignored. Clicking on the snippet tab and back
-            // will ensure that the mutex is cleared, and therefore we can apply
-            // the saturation step.
-            content: "Click on the blocks tab and back on theme to ensure the changes are applied",
-            trigger: '.o_we_add_snippet_btn',
-        },
-        {
-            content: "Go back to theme options",
-            trigger: '.o_we_customize_theme_btn',
-            extra_trigger: '#o_scroll',
-        },
+        // This step is here because the option is applied but triggers a
+        // reloading of the CC value, so if the second value is sent too soon,
+        // it will be ignored. Clicking on the snippet tab and back will ensure
+        // that the mutex is cleared, and therefore we can apply the saturation
+        // step.
+        wTourUtils.goBackToBlocks(),
+        wTourUtils.goToTheme(),
     ];
 }
 
@@ -25,10 +18,7 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     url: '/',
     edition: true,
 }, () => [
-    {
-        content: "Go to theme options",
-        trigger: '.o_we_customize_theme_btn',
-    },
+    wTourUtils.goToTheme(),
     {
         content: "Toggle gray color palette",
         trigger: '.o_we_gray_preview.o_we_collapse_toggler',
