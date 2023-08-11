@@ -159,8 +159,8 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.value || false)) {
-                await component.props.update(val);
                 lastSetValue = inputRef.el.value;
+                await component.props.update(val);
                 if (component.props.setDirty) {
                     component.props.setDirty(isDirty);
                 }
