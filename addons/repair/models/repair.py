@@ -7,7 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, is_html_empty
+from odoo.tools import float_compare, is_html_empty, clean_context
 
 
 class StockMove(models.Model):
@@ -563,6 +563,9 @@ class Repair(models.Model):
         self._check_company()
         self.operations._check_company()
         self.fees_lines._check_company()
+        # Clean the context to get rid of residual default_* keys that could cause issues
+        # during the creation of stock.move.
+        self = self.with_context(clean_context(self._context))
         res = {}
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         Move = self.env['stock.move']
