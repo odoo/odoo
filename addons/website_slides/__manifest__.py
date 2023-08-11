@@ -209,7 +209,6 @@ Featuring
             'web/static/src/legacy/js/core/local_storage.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/ram_storage.js',
-            'web/static/src/legacy/js/core/registry.js',
             'web/static/src/legacy/js/core/rpc.js',
             'web/static/src/legacy/js/core/service_mixins.js',
             'web/static/src/legacy/js/core/session.js',
