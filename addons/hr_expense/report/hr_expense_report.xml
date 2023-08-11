@@ -6,29 +6,31 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Expenses Report</h2>
+                        <div class="oe_structure"></div> 
 
                         <div class="row mt32 mb32">
                             <div class="col-2">
                                 <strong>Employee:</strong>
-                                <p t-field="o.employee_id.name"/>
+                                <span t-field="o.employee_id.name">Marc Demo</span>
                             </div>
                             <div class="col-2">
                                 <strong>Date:</strong>
-                                <p t-field="o.accounting_date"/>
+                                <span t-field="o.accounting_date">2023-08-11</span>
                             </div>
                             <div class="col-3">
                                 <strong>Description:</strong>
-                                <p t-field="o.name"/>
+                                <span t-field="o.name">Business Trip</span>
                             </div>
                             <div class="col-2">
                                 <strong>Validated By:</strong>
-                                <p t-field="o.user_id"/>
+                                <span t-field="o.user_id.name">Mitchell Admin</span>
                             </div>
                             <div class="col-3">
                                 <strong>Payment By:</strong>
-                                <p t-field="o.payment_mode"/>
+                                <span t-field="o.payment_mode">Credit Card</span>
                             </div>
                         </div>
+                        <div class="oe_structure"></div>
 
                         <table class="table table-sm">
                             <thead>
@@ -45,45 +47,45 @@
                             </thead>
                             <tbody>
                                 <tr t-foreach="o.expense_line_ids" t-as="line">
-                                    <td><span t-field="line.date"/></td>
+                                    <td><span t-field="line.date"></span></td>
                                     <td>
-                                        <span t-field="line.name"/>
-                                        <span t-field="line.description"/><br/>
-                                        <span>
-                                            <div t-foreach="line.analytic_distribution" t-as="distribution">
-                                                <t t-esc="line.env['account.analytic.account'].browse(int(distribution))[0].name"/>: <t t-esc="line.analytic_distribution.get(distribution)"/>
-                                            </div>
-                                        </span>
+                                        <span t-field="line.name">Flight Ticket</span>
+                                        <span t-field="line.description">Economy Class</span><br/>
+                                        <t t-foreach="line.analytic_distribution" t-as="distribution">
+                                            <span t-out="line.env['account.analytic.account'].browse(int(distribution))[0].name">Business</span>:
+                                            <span t-out="line.analytic_distribution.get(distribution)">50%</span>
+                                        </t>
                                     </td>
                                     <td style="text-center">
-                                        <span t-field="line.reference"/>
+                                        <span t-field="line.reference">12345</span>
                                     </td>
                                     <td>
-                                        <span t-field="line.unit_amount"/>
+                                        <span t-field="line.unit_amount">$100.00</span>
                                     </td>
                                     <td>
                                         <t t-foreach="line.tax_ids" t-as="tax">
                                           <t t-if="tax.description">
-                                            <span t-field="tax.description"/>
+                                            <span t-field="tax.description">VAT</span>
                                           </t>
                                           <t t-if="not tax.description">
-                                            <span t-field="tax.name"/>
+                                            <span t-field="tax.name">Tax Name</span>
                                           </t>
                                         </t>
                                     </td>
                                     <td class="text-center">
-                                        <span t-field="line.quantity"/>
+                                        <span t-field="line.quantity">1</span>
                                     </td>
                                     <td class="text-end">
                                         <span t-field="line.total_amount"
-                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'>$120.00</span>
                                     </td>
                                     <td t-if="o.is_multiple_currency" class="text-end">
-                                        <span t-field="line.total_amount_company"/>
+                                        <span t-field="line.total_amount_company">$100.00</span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="oe_structure"></div>
 
                         <div class="row justify-content-end">
                             <div class="col-4">
@@ -91,14 +93,16 @@
                                     <tr class="border-black">
                                         <td><strong>Total</strong></td>
                                         <td class="text-end">
-                                            <span t-field="o.total_amount"
-                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$1000.00</span>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
+                        <div class="oe_structure"></div>
+
                         <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
+                        <div class="oe_structure"></div>
                     </div>
                 </t>
             </t>
