@@ -4,7 +4,7 @@ from random import randint
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare, float_is_zero, clean_context
 from odoo.tools.misc import format_date, groupby
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {
@@ -377,6 +377,9 @@ class Repair(models.Model):
         Writes repair order state to 'Repaired'.
         @return: True
         """
+        # Clean the context to get rid of residual default_* keys that could cause issues
+        # during the creation of stock.move.
+        self = self.with_context(clean_context(self._context))
         self._check_product_tracking()
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
