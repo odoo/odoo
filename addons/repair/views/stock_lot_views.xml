@@ -7,12 +7,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
                 <button class="oe_stat_button" name="action_view_ro" type="object" icon="fa-wrench" help="Repair Orders"
-                        invisible="repair_order_count == 0 or not display_complete">
+                        invisible="repair_part_count == 0 or not display_complete">
                     <div class="o_field_widget o_stat_info">
                         <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
                             <span class="o_stat_text">Repair Parts:</span>
                             <span class="o_stat_value">
-                                <field name="repair_order_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="repair_part_count" widget="statinfo" nolabel="1" class="mr4"/>
                             </span>
                         </div>
                     </div>
