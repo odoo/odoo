@@ -5,7 +5,7 @@
         <div class="d-flex gap-2 align-items-center" t-ref="root">
             <!-- Start date -->
             <t t-if="props.readonly">
-                <t t-esc="getFormattedValue(0)" />
+                <span class="text-truncate" t-esc="getFormattedValue(0)" />
             </t>
             <t t-elif="!props.required and isEmpty(startDateField) and !isEmpty(endDateField)">
                 <button
@@ -42,7 +42,7 @@
             <!-- End date -->
             <t t-if="endDateField">
                 <t t-if="props.readonly">
-                    <t t-esc="getFormattedValue(1)" />
+                    <span class="text-truncate" t-esc="getFormattedValue(1)" />
                 </t>
                 <t t-elif="!props.required and !isEmpty(startDateField) and isEmpty(endDateField)">
                     <button
