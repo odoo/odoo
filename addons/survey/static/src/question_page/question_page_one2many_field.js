@@ -102,10 +102,6 @@ class QuestionPageOneToManyField extends X2ManyField {
             }
             if (params.record) {
                 params.record = record.data[name].records.find(r => r.resId === params.record.resId);
-                // Force synchronization of fields that depend on sequence
-                // (allowed_triggering_question_ids, is_placed_before_trigger)
-                // as records may have been re-ordered before opening this one.
-                await params.record.load();
             }
             await openRecord(params);
         };
