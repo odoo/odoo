@@ -6,6 +6,7 @@ from datetime import datetime, date
 
 from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
+from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 from odoo import Command, tools
@@ -419,7 +420,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'status': 'confirmed',
             'summary': 'rrule',
             'reminders': {'useDefault': True},
-            'updated': self.now
+            'updated': self.now,
+            'guestsCanModify': True,
         }, {
             'summary': 'edited',  # Name changed
             'id': '%s_20200101' % recurrence_id,
@@ -429,6 +431,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'end': {'date': '2020-01-02'},
             'reminders': {'useDefault': True},
             'updated': self.now,
+            'guestsCanModify': True,
         }])
         self.sync(events)
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', recurrence_id)])
@@ -486,6 +489,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'end': {'date': '2020-01-7'},
             'reminders': {'useDefault': True},
             'updated': self.now,
+            'guestsCanModify': True,
         },
         {  # Third event has been moved
             'id': '%s_20200113' % recurrence_id,
@@ -495,6 +499,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'originalStartTime': {'date': '2020-01-13'},
             'reminders': {'useDefault': True},
             'updated': self.now,
+            'guestsCanModify': True,
         }])
         self.sync(events)
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', recurrence_id)])
@@ -537,6 +542,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 },
             ],
             'updated': self.now,
+            'guestsCanModify': True,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
@@ -683,6 +689,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 },
             ],
             'updated': self.now,
+            'guestsCanModify': True,
         }
 
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -776,6 +783,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 "status": "confirmed",
                 "summary": "Weekly test",
                 "updated": "2023-02-20T11:45:08.547Z",
+                'guestsCanModify': True,
             },
             {
                 "attendees": [
@@ -807,6 +815,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 "status": "confirmed",
                 "summary": "Weekly test 2",
                 "updated": "2023-02-20T11:48:00.634Z",
+                'guestsCanModify': True,
             },
         ]
         google_events = GoogleEvent(values)
@@ -1062,6 +1071,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {'dateTime': '2021-02-15T8:00:00+01:00', 'timeZone': 'Europe/Brussels'},
             'end': {'dateTime': '2021-02-15T10:00:00+01:00', 'timeZone': 'Europe/Brussels'},
+            'guestsCanModify': True,
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', google_id)])
@@ -1434,6 +1444,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 "recurrence": [f"RRULE:FREQ={frequency};COUNT={count}"],
                 "reminders": {"useDefault": True},
                 "updated": "2023-03-27T11:45:08.547Z",
+                'guestsCanModify': True,
             }]
         google_event = GoogleEvent(google_value)
         self.env['calendar.recurrence']._sync_google2odoo(google_event)
@@ -1645,3 +1656,88 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
         # Not call API
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_event_guest_modify_permission(self):
+        """
+        'guestsCanModify' is a permission set on Google side to allow or forbid guests editing the event.
+        This test states that Odoo Calendar:
+        1. forbids the updates of non-editable events by guests.
+        2. allows editable events being updated by guests.
+        3. allows guests to stop and restart their synchronizations with Google Calendars.
+        """
+        guest_user = new_test_user(self.env, login='calendar-user')
+
+        # Create an event editable only by the organizer. Guests can't modify it.
+        not_editable_event_values = {
+            'id': 'notEditableEventGoogleId',
+            'guestsCanModify': False,
+            'description': 'Editable only by organizer',
+            'organizer': {'email': self.env.user.email, 'self': True},
+            'summary': 'Editable only by organizer',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Guest User',
+                'email': guest_user.email,
+                'responseStatus': 'accepted'
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2023-07-05T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2023-07-05T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        # Create an event editable by guests and organizer.
+        editable_event_values = {
+            'id': 'editableEventGoogleId',
+            'guestsCanModify': True,
+            'description': 'Editable by everyone',
+            'organizer': {'email': self.env.user.email, 'self': True},
+            'summary': 'Editable by everyone',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Guest User',
+                'email': guest_user.email,
+                'responseStatus': 'accepted'
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2023-07-05T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2023-07-05T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        # Sync events from Google to Odoo and get them after sync.
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([not_editable_event_values, editable_event_values]))
+        not_editable_event = self.env['calendar.event'].search([('google_id', '=', not_editable_event_values.get('id'))])
+        editable_event = self.env['calendar.event'].search([('google_id', '=', editable_event_values.get('id'))])
+
+        # Assert that event is created in Odoo with proper values for guests_readonly variable.
+        self.assertFalse(editable_event.guests_readonly, "Value 'guestCanModify' received from Google must be True.")
+        self.assertTrue(not_editable_event.guests_readonly, "Value 'guestCanModify' received from Google must be False.")
+
+        # Assert that organizer can edit both events.
+        self.assertTrue(editable_event.with_user(editable_event.user_id).write({'name': 'Edited by organizer!'}))
+        self.assertTrue(not_editable_event.with_user(not_editable_event.user_id).write({'name': 'Edited by organizer!'}))
+
+        # Assert that a validation error is raised when guest updates the not editable event.
+        with self.assertRaises(ValidationError):
+            self.assertTrue(not_editable_event.with_user(guest_user).write({'name': 'Edited by attendee!'}),
+                            "Attendee shouldn't be able to modify event with 'guests_readonly' variable as 'True'.")
+
+        # Assert that normal event can be edited by guest.
+        self.assertTrue(editable_event.with_user(guest_user).write({'name': 'Edited by attendee!'}),
+                        "Attendee should be able to modify event with 'guests_readonly' variable as 'False'.")
+
+        # Assert that guest user can restart the synchronization of its calendar (containing non-editable events).
+        guest_user.sudo().stop_google_synchronization()
+        self.assertTrue(guest_user.google_synchronization_stopped)
+        guest_user.sudo().restart_google_synchronization()
+        self.assertFalse(guest_user.google_synchronization_stopped)
