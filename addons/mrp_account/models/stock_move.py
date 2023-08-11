@@ -26,6 +26,10 @@ class StockMove(models.Model):
             return distribution
         return super()._get_analytic_distribution()
 
+    def _should_force_price_unit(self):
+        self.ensure_one()
+        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
+
     def _ignore_automatic_valuation(self):
         return bool(self.raw_material_production_id)
 
