@@ -19,7 +19,6 @@ from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare, format_date
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 from odoo.osv import expression
 
