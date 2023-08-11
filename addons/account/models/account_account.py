@@ -491,7 +491,7 @@ class AccountAccount(models.Model):
         if partner_prop_acc:
             account_name = partner_prop_acc.get_by_record().display_name
             raise UserError(
-                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
+                _('You cannot remove/deactivate the account %s which is set on company properties.', account_name)
             )
         return super(AccountAccount, self).unlink()
 
