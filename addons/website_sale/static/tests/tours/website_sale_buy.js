@@ -7,15 +7,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
     test: true,
     url: '/shop',
     steps: () => [
-        {
-            content: "search conference chair",
-            trigger: 'form input[name="search"]',
-            run: "text conference chair",
-        },
-        {
-            content: "search conference chair",
-            trigger: 'form:has(input[name="search"]) .oe_search_button',
-        },
+        ...tourUtils.searchProduct("conference chair"),
         {
             content: "select conference chair",
             trigger: '.oe_product_cart:first a:contains("Conference Chair")',

@@ -6,15 +6,16 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     edition: true,
     url: "/",
     test: true,
-}, () => [{
-    content: "Drop s_test_snip snippet",
-    trigger: '#oe_snippets .oe_snippet:has(.s_test_snip) .oe_snippet_thumbnail',
-    run: "drag_and_drop iframe #wrap",
-}, {
-    content: "Drop s_text_image snippet",
-    trigger: '#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
-    run: "drag_and_drop iframe #wrap",
-}, {
+}, () => [
+    wTourUtils.dragNDrop({
+        id: 's_test_snip',
+        name: 'Test snip',
+    }),
+    wTourUtils.dragNDrop({
+        id: 's_text_image',
+        name: 'Text - Image',
+    }),
+    {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet.ui-draggable',
     run: function () {

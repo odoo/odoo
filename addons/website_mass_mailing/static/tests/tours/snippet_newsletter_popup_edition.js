@@ -22,7 +22,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     {
         content: "Check the modal has been saved, closed",
         trigger: 'iframe body:has(.o_newsletter_popup)',
-        extra_trigger: 'iframe body:not(.editor_enable)',
         run: snippetNewsletterPopupUseTour.ensurePopupNotVisible,
     }
 ]);

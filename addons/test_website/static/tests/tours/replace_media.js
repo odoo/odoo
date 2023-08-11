@@ -33,12 +33,10 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
             });
         },
     },
-    {
-        content: "drop picture snippet",
-        trigger: "#oe_snippets .oe_snippet[name='Picture'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-        moveTrigger: "iframe .oe_drop_zone",
-        run: "drag_and_drop iframe #wrap",
-    },
+    wTourUtils.dragNDrop({
+        name: 'Picture',
+        id: 's_picture'
+    }),
     {
         content: "select image",
         trigger: "iframe .s_picture figure img",

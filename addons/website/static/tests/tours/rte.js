@@ -75,11 +75,11 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "create page",
     trigger: '.modal-dialog button.btn-primary',
     extra_trigger: 'input[type="text"]:propValue(rte_translator)',
-}, {
-    content: "drop a snippet",
-    trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
-    run: 'drag_and_drop iframe #wrap',
-}, {
+},
+wTourUtils.dragNDrop({
+    id: "s_cover",
+    name: "Cover"
+}), {
     content: "change content",
     trigger: 'iframe #wrap',
     run: function () {
@@ -90,13 +90,14 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
 }, {
-    content: "save",
-    trigger: 'button[data-action=save]',
-    extra_trigger: 'iframe #wrap p:first b',
-}, {
+    content: "ensure change was applied",
+    trigger: 'iframe #wrap p:first b',
+    isCheck: true,
+},
+...wTourUtils.clickOnSave(),
+{
     content: "click language dropdown (3)",
     trigger: 'iframe .js_language_selector .dropdown-toggle',
-    extra_trigger: 'iframe body:not(.editor_enable)',
 }, {
     content: "click on Parseltongue version",
     trigger: 'iframe .js_language_selector a[data-url_code="pa_GB"]',
@@ -152,13 +153,11 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "check: input marked as translated",
     trigger: 'iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
     run: () => {},
-}, {
-    content: "save translation",
-    trigger: 'button[data-action=save]',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: "check: content is translated",
     trigger: 'iframe #wrap p font:first:contains(translated Parseltongue text)',
-    extra_trigger: 'iframe body:not(.editor_enable)',
     run: function () {}, // it's a check
 }, {
     content: "check: content with special char is translated",
@@ -208,15 +207,11 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
 // }, {
 //     content: "underline",
 //     trigger: '.oe-toolbar #underline',
-}, {
-    content: "save new change",
-    trigger: 'button[data-action=save]',
-    // See comment above.
-    // extra_trigger: '#wrap.o_dirty p span[style*="text-decoration-line: underline;"]',
-}, {
+},
+...wTourUtils.clickOnSave(),
+{
     content: "click language dropdown (4)",
     trigger: 'iframe .js_language_selector .dropdown-toggle',
-    extra_trigger: 'iframe body:not(.editor_enable)',
 }, {
     content: "return in Parseltongue",
     trigger: 'iframe html[lang="en-US"] .js_language_selector .js_change_lang[data-url_code="pa_GB"]',

@@ -108,10 +108,9 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: '.modal-footer .btn-primary',
     },
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
-        extra_trigger: "iframe body:not(.editor_enable)",
         trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
         run: () => {}, // it's a check
     },
@@ -150,7 +149,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     // Drag a block to be able to scroll later.
     wTourUtils.dragNDrop({id: 's_media_list', name: 'Media List'}),
     ...wTourUtils.clickOnSave(),
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Label should have changed",
         trigger: 'iframe #top_menu .nav-item a:contains("Modnar !!")',

@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import websiteSaleTracking from "@website_sale/js/website_sale_tracking";
+import tourUtils from "@website_sale/js/tours/tour_utils";
 
 let itemId;
 
@@ -51,14 +52,7 @@ registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     test: true,
     url: '/shop?search=Acoustic Bloc Screens',
     steps: () => [
-    {
-        content: "select Acoustic Bloc Screens",
-        trigger: '.oe_product_cart a:contains("Acoustic Bloc Screens")',
-    },
-    {
-        content: "click add to cart button on product page",
-        trigger: '#add_to_cart',
-    },
+    ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
     {
         content: 'check add to cart event',
         extra_trigger: 'body[cart-event-id]',

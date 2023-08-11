@@ -2,19 +2,18 @@
 
 import wTourUtils from '@website/js/tours/tour_utils';
 
+const snippet = {
+    id: 's_text_image',
+    name: 'Text - Image',
+};
+
 wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    wTourUtils.dragNDrop({
-        id: 's_text_image',
-        name: 'Text - Image',
-    }),
-    wTourUtils.clickOnSnippet({
-        id: 's_text_image',
-        name: 'Text - Image',
-    }),
+    wTourUtils.dragNDrop(snippet),
+    wTourUtils.clickOnSnippet(snippet),
     {
         content: "Toggle to grid mode",
         trigger: '.o_we_user_value_widget[data-name="grid_mode"]',

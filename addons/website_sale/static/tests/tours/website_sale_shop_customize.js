@@ -12,7 +12,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",
-            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: 'iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
         },
         {
@@ -48,7 +47,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             context: "check variant price",
-            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: 'iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
             run: function () {},
         },
@@ -83,7 +81,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after list of variant customization disabled",
-            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: "iframe .js_product:not(:has(.js_product_change))",
             run: function () {}, // it's a check
         },

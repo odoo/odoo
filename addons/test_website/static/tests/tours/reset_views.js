@@ -25,15 +25,10 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
             // id starting by 'oe_structure..' will actually create an inherited view
             run: "drag_and_drop iframe #oe_structure_test_website_page",
         },
-        {
-            content: "save the page",
-            extra_trigger: 'iframe #oe_structure_test_website_page.o_dirty',
-            trigger: "button[data-action=save]",
-        },
+        ...wTourUtils.clickOnSave(),
         // 2. Edit that COW'd view in the HTML editor to break it.
         {
             content: "open site menu",
-            extra_trigger: "iframe body:not(.editor_enable)",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
         },
         {

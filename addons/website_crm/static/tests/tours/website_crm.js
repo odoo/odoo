@@ -17,13 +17,11 @@
     }, {
         content: "Select 'Create an Opportunity' as form action",
         trigger: "we-select we-button:contains('Create an Opportunity')",
-    }, {
-        content: "Save the settings",
-        trigger: "button[data-action=save]",
-    }, {
+    },
+    ...wTourUtils.clickOnSave(),
+    {
         content: "Ensure form model has changed and page reload is done after save",
         trigger: "iframe section.s_website_form form[data-model_name='crm.lead']",
-        extra_trigger: "iframe body:not(.editor_enable)",
     }]);
 
     registry.category("web_tour.tours").add('website_crm_tour', {
