@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError
 
 
 class Meeting(models.Model):
@@ -15,6 +16,8 @@ class Meeting(models.Model):
 
     google_id = fields.Char(
         'Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
+    guests_readonly = fields.Boolean(
+        'Guests Event Modification Permission', default=False)
 
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
@@ -53,10 +56,21 @@ class Meeting(models.Model):
         if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
             values = dict(values, need_sync=False)
         notify_context = self.env.context.get('dont_notify', False)
+        if not notify_context and ([self.env.user.id != record.user_id.id for record in self]):
+            self._check_modify_event_permission(values)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
+
+    def _check_modify_event_permission(self, values):
+        # Check if event modification attempt by attendee is valid to avoid duplicate events creation.
+        for event in self:
+            # Edge case: when restarting the synchronization, guests can write 'need_sync=True' on events.
+            google_sync_restart = values.get('need_sync') and len(values)
+            if not google_sync_restart and (event.guests_readonly and self.env.user.id != event.user_id.id):
+                raise ValidationError(_("The following event can only be updated by the organizer "
+                                        "according to the event permissions set on Google Calendar."))
 
     def _get_sync_domain(self):
         # in case of full sync, limit to a range of 1y in past and 1y in the future by default
@@ -97,7 +111,8 @@ class Meeting(models.Model):
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
             'videocall_location': google_event.get_meeting_url(),
-            'show_as': 'free' if google_event.is_available() else 'busy'
+            'show_as': 'free' if google_event.is_available() else 'busy',
+            'guests_readonly': not bool(google_event.guestsCanModify)
         }
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
@@ -235,7 +250,7 @@ class Meeting(models.Model):
             'summary': self.name,
             'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
             'location': self.location or '',
-            'guestsCanModify': True,
+            'guestsCanModify': not self.guests_readonly,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
             'attendees': attendee_values,
             'extendedProperties': {
