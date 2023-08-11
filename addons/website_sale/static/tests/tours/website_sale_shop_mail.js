@@ -36,14 +36,7 @@ registry.category("web_tour.tours").add('shop_mail', {
             });
         },
     },
-    {
-        content: "select Acoustic Bloc Screens",
-        trigger: '.oe_product_cart a:containsExact("Acoustic Bloc Screens")',
-    },
-    {
-        content: "click add to cart",
-        trigger: '#product_details #add_to_cart',
-    },
+        ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, go to backend",

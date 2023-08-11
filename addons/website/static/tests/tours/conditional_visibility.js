@@ -103,10 +103,7 @@ wTourUtils.clickOnSnippet(snippets[1]),
 wTourUtils.changeOption("ConditionalVisibility", "we-toggler"),
 wTourUtils.changeOption("ConditionalVisibility", '[data-name="visibility_conditional"]'),
 checkEyeIcon("Banner", true),
-{
-    content: "click on 'Blocks'",
-    trigger: "#snippets_menu button:contains('Blocks')",
-},
+wTourUtils.goBackToBlocks(),
 // Drag a "Popup" snippet on the website.
 wTourUtils.dragNDrop(snippets[2]),
 {

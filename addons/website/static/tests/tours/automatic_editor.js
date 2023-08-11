@@ -85,13 +85,5 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         timeout: 30000,
         run: () => null, // it's a check
     },
-    {
-        content: "exit edit mode",
-        trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
-    },
-    {
-        content: "wait for editor to close",
-        trigger: 'iframe body:not(.editor_enable)',
-        run: () => null, // It's a check
-    }
+    ...wTourUtils.clickOnSave(),
 ]);
