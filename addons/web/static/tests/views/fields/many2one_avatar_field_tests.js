@@ -186,7 +186,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id']")),
             ["Aline", "Christine", "Aline", ""]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
@@ -204,7 +204,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id']")),
             ["Aline", "Christine", "Aline", ""]
         );
 
@@ -254,7 +254,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
-        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id']"));
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
         assert.verifySteps([]);
@@ -279,7 +279,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
-        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id']"));
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
 
         assert.verifySteps([]);
@@ -303,10 +303,22 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
         });
 
-        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id']"));
         assert.containsNone(target, ".o_selected_row");
 
         assert.verifySteps(["openRecord"]);
+    });
+
+    QUnit.test("readonly many2one_avatar should contain a link", async function (assert) {
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: `<form><field name="user_id" widget="many2one_avatar" readonly="1"/></form>`,
+        });
+
+        assert.containsOnce(target, "[name='user_id'] a");
     });
 
     QUnit.test("cancelling create dialog should clear value in the field", async function (assert) {
