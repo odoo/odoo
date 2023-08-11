@@ -1563,9 +1563,6 @@
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
-                            <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, add_qty=line.product_uom_qty)"/>
-
                             <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                                   t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
                                   t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -1575,7 +1572,7 @@
                             <t t-if="line.discount">
                                 <del t-attf-class="#{'text-danger mr8'}"
                                      style="white-space: nowrap;"
-                                     t-esc="combination_info['list_price']"
+                                     t-esc="line.price_unit"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </t>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
