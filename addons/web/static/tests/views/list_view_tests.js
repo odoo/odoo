@@ -4599,7 +4599,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_list_record_selector").offsetWidth,
-                40
+                41
             );
             const widthPage1 = target.querySelector(`th[data-name=foo]`).offsetWidth;
 
@@ -4607,7 +4607,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_list_record_selector").offsetWidth,
-                40
+                41
             );
             const widthPage2 = target.querySelector(`th[data-name=foo]`).offsetWidth;
             assert.ok(
