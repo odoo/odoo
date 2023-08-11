@@ -89,7 +89,6 @@ class MicrosoftService(models.AbstractModel):
             'state': json.dumps(state),
             'scope': scope,
             'redirect_uri': base_url + '/microsoft_account/authentication',
-            'prompt': 'consent',
             'access_type': 'offline'
         })
         return "%s?%s" % (self._get_auth_endpoint(), encoded_params)
