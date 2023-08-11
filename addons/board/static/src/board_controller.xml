@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="board.BoardView" owl="1">
+    <t t-name="board.BoardView">
         <div class="o_dashboard d-flex flex-column">
             <t t-if="board.isEmpty">
                 <t t-call="board.NoContent"/>
@@ -12,7 +12,7 @@
         </div>
     </t>
 
-    <t t-name="board.Content" owl="1">
+    <t t-name="board.Content">
         <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end">
             <Dropdown togglerClass="'btn btn-secondary m-2 p-2'">
                 <t t-set-slot="toggler">
@@ -46,7 +46,7 @@
         </div>
     </t>
 
-    <t t-name="board.NoContent" owl="1">
+    <t t-name="board.NoContent">
         <div class="o_view_nocontent">
             <div class="o_nocontent_help">
                 <p class="o_view_nocontent_neutral_face">
@@ -65,7 +65,7 @@
         </div>
     </t>
 
-    <t t-name="board.arch" owl="1">
+    <t t-name="board.arch">
         <form t-att-string="title">
             <board t-att-style="layout">
                 <column t-foreach="columns" t-as="column" t-key="column_index">

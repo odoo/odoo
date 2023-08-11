@@ -3,7 +3,17 @@
 import { blockDom, markup } from "@odoo/owl";
 
 export function renderToElement(template, context = {}) {
-    return render(template, context).firstElementChild;
+    const el = render(template, context).firstElementChild;
+    el?.remove();
+    return el;
+}
+
+export function renderToFragment(template, context = {}) {
+    const frag = document.createDocumentFragment();
+    for (const el of [...render(template, context).children]) {
+        frag.appendChild(el);
+    }
+    return frag;
 }
 
 /**

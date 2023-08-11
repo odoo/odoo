@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="web_editor.AutoResizeImage" owl="1">
+<t t-name="web_editor.AutoResizeImage">
     <div t-ref="auto-resize-image-container" class="o_existing_attachment_cell o_we_image align-items-center justify-content-center me-1 mb-1 opacity-trigger-hover opacity-0 cursor-pointer" t-att-class="{ o_we_attachment_optimized: props.isOptimized, 'o_loaded position-relative opacity-100': state.loaded, o_we_attachment_selected: props.selected, 'position-fixed': !state.loaded }" t-on-click="props.onImageClick">
         <RemoveButton t-if="props.isRemovable" model="props.model" remove="() => this.remove()"/>
         <div class="o_we_media_dialog_img_wrapper">
@@ -11,7 +11,7 @@
     </div>
 </t>
 
-<t t-name="web_editor.ExternalImage" owl="1">
+<t t-name="web_editor.ExternalImage">
     <t t-if="record.mediaType == 'libraryMedia'">
         <AutoResizeImage author="record.author"
             src="record.thumbnail_url"
@@ -25,7 +25,7 @@
     </t>
 </t>
 
-<t t-name="web_editor.ImagesListTemplate" owl="1">
+<t t-name="web_editor.ImagesListTemplate">
     <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0">
         <t t-if="!hasContent and !isFetching">
             <div t-if="state.needle" class="o_nocontent_help">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="discuss.GifPicker" owl="1">
+    <t t-name="discuss.GifPicker">
         <div class="o-discuss-GifPicker bg-view d-flex flex-column" t-attf-class="{{ props.className }}" t-on-click="onClick">
             <div class="o-discuss-GifPicker-search d-flex align-items-center m-2 rounded">
                 <i t-if="!state.showCategories" aria-label="back" t-on-click="openCategories" class="oi oi-arrow-left cursor-pointer p-2 fs-5"/>
@@ -74,7 +74,7 @@
         </div>
     </t>
 
-    <t t-name="discuss.Gif" owl="1">
+    <t t-name="discuss.Gif">
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer">
             <i
                 t-if="!store.guest"

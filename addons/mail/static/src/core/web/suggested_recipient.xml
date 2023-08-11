@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.SuggestedRecipients" owl="1">
+    <t t-name="mail.SuggestedRecipients">
         <div class="o-mail-SuggestedRecipient" t-att-data-partner-id="props.recipient.persona?.id ? props.recipient.persona.id : false" t-att-title="titleText">
             <div class="form-check">
                 <input t-attf-id="{{ props.recipient.id }}_checkbox" class="form-check-input" type="checkbox" t-att-checked="props.recipient.checked" t-on-change="onChangeCheckbox"/>

@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
-var QWeb = core.qweb;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',
@@ -61,10 +60,10 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _fillBooths() {
         const boothsElem = this.el.querySelector('.o_wbooth_booths');
-        boothsElem.innerHTML = QWeb.render('event_booth_checkbox_list', {
+        boothsElem.replaceChildren(renderToFragment('event_booth_checkbox_list', {
             'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
             'selected_booth_ids': this.boothsFirstRendering ? this.selectedBoothIds : [],
-        });
+        }));
 
         this.boothsFirstRendering = false;
     },
@@ -219,7 +218,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             if (jsonResponse.success) {
                 this.el.querySelector('.o_wevent_booth_order_progress').remove();
                 const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
-                $form.replaceWith(QWeb.render('event_booth_registration_complete', {
+                $form.replaceWith(renderToElement('event_booth_registration_complete', {
                     'booth_category_id': boothCategoryId,
                     'event_id': this.eventId,
                     'event_name': jsonResponse.event_name,

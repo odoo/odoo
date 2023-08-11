@@ -56,7 +56,6 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <t t-if="field.custom and !field.string" t-set="field.string" t-value="field.name"/>
         <span class="s_website_form_label_content" t-esc="field.string"/>
         <t t-if="field.required or field.modelRequired">
             <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>
@@ -69,15 +68,6 @@
     <t t-name="website.form_field_description">
         <!-- The actual value for this case is handled in JS as it can be -->
         <!-- edited with formatting by the user -->
-        <t t-set="default_description">
-            <t t-if="field.description">
-                Describe your field here.
-            </t>
-            <t t-elif="['email_cc', 'email_to'].includes(field.name)">
-                Separate email addresses with a comma.
-            </t>
-        </t>
-        <t t-set="default_description" t-value="default_description and default_description.trim()"/>
         <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
             <t t-esc="default_description"/>
         </div>
@@ -85,8 +75,6 @@
 
     <!-- Hidden Field -->
     <t t-name="website.form_field_hidden">
-        <t t-set="field.dnone" t-value="true"/>
-        <t t-set="field.formatInfo" t-value="{}"/>
         <t t-call="website.form_field">
             <input
                 type="hidden"
@@ -116,19 +104,16 @@
 
     <!-- Email Field -->
     <t t-name="website.form_field_email">
-        <t t-set="field.inputType" t-value="'email'"/>
         <t t-call="website.form_field_char"/>
     </t>
 
     <!-- Telephone Field -->
     <t t-name="website.form_field_tel">
-        <t t-set="field.inputType" t-value="'tel'"/>
         <t t-call="website.form_field_char"/>
     </t>
 
     <!-- Url Field -->
     <t t-name="website.form_field_url">
-        <t t-set="field.inputType" t-value="'url'"/>
         <t t-call="website.form_field_char"/>
     </t>
 
@@ -230,7 +215,6 @@
 
     <!-- Boolean Field -->
     <t t-name="website.form_field_boolean">
-        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website.form_field">
             <div class="form-check">
                 <input
@@ -248,7 +232,6 @@
 
     <!-- Selection Field -->
     <t t-name="website.form_field_selection">
-        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website.form_field">
             <t t-if="!field.records">
                 <input
@@ -261,7 +244,7 @@
                 />
             </t>
             <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                <t t-foreach="field.records" t-as="record">
+                <t t-foreach="field.records" t-as="record" t-key="record_index">
                     <t t-call="website.form_radio"/>
                 </t>
             </div>
@@ -299,12 +282,12 @@
         <t t-if="field.relation != 'ir.attachment'">
             <t t-call="website.form_field">
                 <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
-                    <t t-foreach="field.records" t-as="record">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <option t-esc="record.display_name" t-att-value="record.id" t-att-selected="record.selected and 'selected' or None"/>
                     </t>
                 </select>
                 <div id="editable_select" class="form-control s_website_form_input">
-                    <t t-foreach="field.records" t-as="record">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <t t-set="noValueLabel">no value</t>
                         <div t-esc="record.display_name" t-attf-data-empty-value="&lt;#{noValueLabel}&gt;" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
                     </t>
@@ -323,7 +306,6 @@
         </t>
         <!-- Generic one2many -->
         <t t-if="field.relation != 'ir.attachment'">
-            <t t-set="field.isCheck" t-value="true"/>
             <t t-call="website.form_field">
                 <t t-if="!field.records || field.records.length == 0">
                     <input
@@ -336,7 +318,7 @@
                     />
                 </t>
                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                    <t t-foreach="field.records" t-as="record">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <t t-call="website.form_checkbox"/>
                     </t>
                 </div>
@@ -372,7 +354,6 @@
 
     <!-- Binary Field -->
     <t t-name="website.form_field_binary">
-        <t t-set="field.isCheck" t-value="true"/>
         <t t-call="website.form_field">
             <input
                 type="file"

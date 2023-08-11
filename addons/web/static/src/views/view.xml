@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="web.View" owl="1">
+  <t t-name="web.View">
       <WithSearch t-props="withSearchProps" t-slot-scope="search">
         <t t-component="Controller"
           t-on-click="handleActionLinks"
@@ -15,7 +15,7 @@
       </WithSearch>
   </t>
 
-  <t t-name="web.ReportViewMeasures" owl="1">
+  <t t-name="web.ReportViewMeasures">
     <Dropdown togglerClass="'btn btn-primary'">
             <t t-set-slot="toggler">
                 Measures <i class="fa fa-caret-down ms-1"/>

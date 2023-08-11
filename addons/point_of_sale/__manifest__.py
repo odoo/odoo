@@ -167,7 +167,6 @@
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery/jquery.browser.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
-            'web/static/lib/qweb/qweb2.js',
             'web/static/src/legacy/js/**/*',
             ('remove', 'web/static/src/legacy/js/libs/**/*'),
             ('remove', 'web/static/src/legacy/js/public/**/*'),

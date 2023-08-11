@@ -2,7 +2,7 @@
 <template id="template" xml:space="preserve">
 
     <!-- LAYOUT TEMPLATES -->
-    <t t-name="iap.InsufficientCreditDialog" owl="1">
+    <t t-name="iap.InsufficientCreditDialog">
         <Dialog>
             <div t-att-style="style">
                 <t t-if="props.errorData.body">
@@ -23,11 +23,4 @@
             </div>
         </Dialog>
     </t>
-
-    <t t-extend="DashboardMain">
-        <t t-jquery=".o_web_settings_apps" t-operation="after">
-            <div class="o_web_settings_iap"></div>
-        </t>
-    </t>
-
 </template>

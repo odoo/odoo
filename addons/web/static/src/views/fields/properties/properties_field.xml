@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.PropertiesField" owl="1">
+    <t t-name="web.PropertiesField">
         <div t-ref="properties" class="row align-items-start"
             t-att-class="{'d-none': propertiesList.length === 0 and state.hideAddButton}">
             <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">

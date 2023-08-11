@@ -226,11 +226,6 @@ function getWysiwygIframeContent(params) {
                 widget.appendTo(document.body);
                 return widget;
             });
-
-            odoo.define('web.core.top', ['@web/legacy/js/services/core'], function (require) {
-                var core = require('@web/legacy/js/services/core')[Symbol.for("default")];
-                core.qweb.templates = window.top.odoo.__DEBUG__.services['@web/legacy/js/services/core'].qweb.templates;
-            });
         </script>
     </head>
     <body class="o_in_iframe">

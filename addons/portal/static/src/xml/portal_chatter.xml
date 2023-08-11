@@ -58,7 +58,7 @@
 
     <t t-name="portal.Chatter.Attachments">
         <div t-if="attachments.length" class="row">
-            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
+            <div t-foreach="attachments" t-as="attachment" t-key="attachment_index" class="col-lg-2 col-md-3 col-sm-6">
                 <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
                     <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
                         <i class="fa fa-times"/>
@@ -78,7 +78,7 @@
 
     <t t-name="portal.chatter_messages">
         <div class="o_portal_chatter_messages">
-            <t t-foreach="widget.get('messages') || []" t-as="message">
+            <t t-foreach="widget.get('messages') || []" t-as="message" t-key="message_index">
                 <div class="d-flex o_portal_chatter_message" t-att-id="'message-' + message.id">
                     <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
                     <div class="flex-grow-1">
@@ -123,7 +123,7 @@
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
                         <a href="#" class="page-link"><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
                     </li>
-                    <t t-foreach="widget.get('pager')['pages']" t-as="page">
+                    <t t-foreach="widget.get('pager')['pages']" t-as="page" t-key="page_index">
                         <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
                             <a href="#" class="page-link"><t t-esc="page"/></a>
                         </li>

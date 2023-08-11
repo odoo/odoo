@@ -6,7 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "@mass_mailing/js/mass_mailing_design_constants"
 import { toInline, getCSSRules } from "@web_editor/js/backend/convert_inline";
 import { getBundle, loadBundle } from "@web/core/assets";
-import { qweb } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "@web/legacy/js/core/rpc";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
@@ -331,7 +331,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         // Create theme selection screen and check if it must be forced opened.
         // Reforce it opened if the last snippet is removed.
-        const $themeSelectorNew = $(qweb.render("mass_mailing.theme_selector_new", {
+        const $themeSelectorNew = $(renderToElement("mass_mailing.theme_selector_new", {
             themes: themesParams,
             templates: templatesParams,
             modelName: this.props.record.data.mailing_model_id[1] || '',

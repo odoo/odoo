@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-inherit="web_editor.LinkDialog" t-inherit-mode="extension" owl="1">
+    <t t-inherit="web_editor.LinkDialog" t-inherit-mode="extension">
         <xpath expr="//*[@id='o_link_dialog_url_input']" position="after">
             <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
         </xpath>
     </t>
 
-    <t t-inherit="web_editor.LinkTools" t-inherit-mode="extension" owl="1">
+    <t t-inherit="web_editor.LinkTools" t-inherit-mode="extension">
         <xpath expr="//we-row[@id='url_row']" position="after">
             <div style="text-align: center" t-attf-class="#{state.isButton ? ' d-none' : ''}">
                 <small>
@@ -36,7 +36,7 @@
         </xpath>
     </t>
 
-    <t t-inherit="web_editor.toolbar" t-inherit-mode="extension" owl="1">
+    <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='this.isMobile()']//div[@id='list']" position="inside">
             <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
         </xpath>

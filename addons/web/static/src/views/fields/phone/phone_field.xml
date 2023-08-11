@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PhoneField" owl="1">
+    <t t-name="web.PhoneField">
         <div class="o_phone_content d-inline-flex w-100">
             <t t-if="props.readonly">
                 <a t-if="props.record.data[props.name]" class="o_form_uri" t-att-href="phoneHref" t-esc="props.record.data[props.name]"/>

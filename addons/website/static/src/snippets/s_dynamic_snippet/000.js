@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import config from "@web/legacy/js/services/config";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from "@web/legacy/js/core/utils";
 import { uniqueId } from "@web/core/utils/functions";
+import { renderToElement } from "@web/core/utils/render";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
@@ -136,7 +136,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _prepareContent: function () {
-        this.renderedContent = core.qweb.render(
+        this.renderedContent = renderToElement(
             this.template_key,
             this._getQWebRenderOptions()
         );

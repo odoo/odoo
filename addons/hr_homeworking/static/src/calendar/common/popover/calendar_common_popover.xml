@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="homework.AttendeeCalendarCommonPopover" owl="1">
+    <t t-name="homework.AttendeeCalendarCommonPopover">
         <t t-if="isWorkLocationEvent()">
         <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
             <div class="card-header d-flex justify-content-between py-2 pe-2">
@@ -34,7 +34,7 @@
             <t t-call="web.CalendarCommonPopover" />
         </t>
     </t>
-    <t t-name="homework.AttendeeCalendarCommonPopover.body" owl="1">
+    <t t-name="homework.AttendeeCalendarCommonPopover.body">
         <t t-if="isWorkLocationEvent()">
             <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
                 <ul class="list-group list-group-flush">
@@ -60,7 +60,7 @@
         </t>
     </t>
 
-    <t t-name="homework.AttendeeCalendarCommonPopover.footer" owl="1">
+    <t t-name="homework.AttendeeCalendarCommonPopover.footer">
         <t t-if="isWorkLocationEvent()">
             <Record resModel="'hr.employee.location'" resId="props.record.rawRecord.idInDB" fieldNames="fieldNames" mode="'readonly'" t-slot-scope="slot">
                 <t t-if="isCurrentUserIsOwnerWorklocation()">

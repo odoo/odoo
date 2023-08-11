@@ -2,7 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="purchase.PurchaseProductField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+    <t t-name="purchase.PurchaseProductField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='hasExternalButton']" position="before">
             <t t-if="isConfigurableTemplate">
                 <button

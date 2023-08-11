@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.ProductScreen" owl="1">
+    <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100 bg-100" t-att-class="{ 'd-none': !props.isShown }">
             <div class="leftpane d-flex flex-column border-end bg-200" 
                 t-if="!ui.isSmall || pos.mobile_pane === 'left'"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PivotRenderer" owl="1">
+    <t t-name="web.PivotRenderer">
         <t t-call="web.PivotView.Buttons"/>
         <div t-if="model.hasData() and model.metaData.activeMeasures.length" class="o_pivot table-responsive mx-3">
             <table
@@ -53,7 +53,7 @@
         </div>
     </t>
 
-    <t t-name="web.PivotHeader" owl="1">
+    <t t-name="web.PivotHeader">
         <th
             class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
             t-att-colspan="isXAxis ? cell.width : undefined"
@@ -90,7 +90,7 @@
         </th>
     </t>
 
-    <t t-name="web.PivotMeasure" owl="1">
+    <t t-name="web.PivotMeasure">
         <th class="bg-view text-muted text-center text-nowrap fw-normal" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
                 'o_pivot_origin_row cursor-pointer user-select-none': cell.originIndexes,
                 'o_pivot_measure_row cursor-pointer user-select-none': !cell.originIndexes,
