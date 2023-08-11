@@ -42,3 +42,7 @@ class StockMove(models.Model):
         if self.unbuild_id:
             return True
         return super()._is_returned(valued_type)
+
+    def _should_force_price_unit(self):
+        self.ensure_one()
+        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
