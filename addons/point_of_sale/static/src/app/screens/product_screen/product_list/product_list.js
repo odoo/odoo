@@ -9,9 +9,14 @@ import { ProductCard } from "@point_of_sale/app/generic_components/product_card/
 import { Component, useState, useEffect, useRef } from "@odoo/owl";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+<<<<<<< HEAD
 import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
+||||||| parent of a86b099e1452 (temp)
+=======
+import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+>>>>>>> a86b099e1452 (temp)
 
 export class ProductsWidget extends Component {
     static components = { ProductCard, CategorySelector, Input };
@@ -29,6 +34,7 @@ export class ProductsWidget extends Component {
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
+<<<<<<< HEAD
         useEffect(() => {
             const productsWidget = this.productsWidgetRef.el;
             if (!productsWidget) {
@@ -44,6 +50,10 @@ export class ProductsWidget extends Component {
             observer.observe(productsWidget);
             return () => observer.disconnect();
         });
+||||||| parent of a86b099e1452 (temp)
+=======
+        this.loadDemoDataProducts = useAsyncLockedMethod(this.loadDemoDataProducts);
+>>>>>>> a86b099e1452 (temp)
     }
 
     getShowCategoryImages() {
