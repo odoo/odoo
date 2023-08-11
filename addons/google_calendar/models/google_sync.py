@@ -192,7 +192,7 @@ class GoogleSync(models.AbstractModel):
             if not self.exists():
                 reason = "Google gave the following explanation: %s" % response['error'].get('message')
                 error_log = "Error while syncing record. It does not exists anymore in the database. %s" % reason
-                _logger.error(error_log)
+                _logger.warning(error_log)
                 return
 
             if self._name == 'calendar.event':
