@@ -2604,6 +2604,7 @@ class MailThread(models.AbstractModel):
                      body='', subject=False,
                      author_id=None, email_from=None,
                      message_type='notification',
+                     partner_ids=False,
                      attachment_ids=False, tracking_value_ids=False):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
@@ -2613,12 +2614,14 @@ class MailThread(models.AbstractModel):
             {self.id: body}, subject=subject,
             author_id=author_id, email_from=email_from,
             message_type=message_type,
+            partner_ids=partner_ids,
             attachment_ids=attachment_ids, tracking_value_ids=tracking_value_ids
         )
 
     def _message_log_batch(self, bodies, subject=False,
                            author_id=None, email_from=None,
                            message_type='notification',
+                           partner_ids=False,
                            attachment_ids=False, tracking_value_ids=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
@@ -2628,7 +2631,9 @@ class MailThread(models.AbstractModel):
         access rights are already granted to avoid privilege escalation.
 
         :param bodies: dict {record_id: body}
-
+        :param list partner_ids: optional partners, not used in any notification
+          mechanism. This is mainly used to link a log to a specific customer
+          like SMS or WhatsApp log;
         :return: created messages (as sudo)
         """
         # protect against side-effect prone usage
@@ -2654,6 +2659,7 @@ class MailThread(models.AbstractModel):
             # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'partner_ids': partner_ids,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
 
@@ -2747,7 +2753,7 @@ class MailThread(models.AbstractModel):
             # Avoid warnings about non-existing fields
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
-            create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
+            create_values['partner_ids'] = [Command.link(pid) for pid in (create_values.get('partner_ids') or [])]
             create_values_list.append(create_values)
 
         # remove context, notably for default keys, as this thread method is not
