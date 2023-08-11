@@ -7,7 +7,7 @@ import {setCookie} from "@web/legacy/js/core/cookie_utils";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from '@web/legacy/js/core/utils';
-import session from "web.session";
+import { session } from "@web/session";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";

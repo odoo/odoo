@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { strftimeToLuxonFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import time from "@web/legacy/js/core/time";
 
@@ -149,8 +150,8 @@ QUnit.module('core', {}, function () {
         assert.expect(4);
         const originalParameters = Object.assign({}, localization);
         Object.assign(localization, {
-            dateFormat: '%m/%d/%Y',
-            timeFormat: '%H:%M:%S',
+            dateFormat: strftimeToLuxonFormat('%m/%d/%Y'),
+            timeFormat: strftimeToLuxonFormat('%H:%M:%S'),
         });
         assert.strictEqual(time.getLangDateFormat(), "MM/DD/YYYY");
         assert.strictEqual(time.getLangDateFormatWoZero(), "M/D/YYYY");

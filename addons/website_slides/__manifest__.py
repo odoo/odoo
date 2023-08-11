@@ -206,9 +206,7 @@ Featuring
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/rpc.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/session.js',
             'web/static/src/legacy/js/core/time.js',
-            'web/static/src/legacy/js/core/translation.js',
             'web/static/src/legacy/js/core/utils.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
@@ -218,7 +216,6 @@ Featuring
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/libs/pdfjs.js',
-            'web/static/src/legacy/js/services/session.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             ('include', 'web._assets_helpers'),

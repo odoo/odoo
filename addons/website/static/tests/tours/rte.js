@@ -1,18 +1,13 @@
 /** @odoo-module **/
 
-import session from "web.session";
 import wTourUtils from "@website/js/tours/tour_utils";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
-
-var domReady = new Promise(function (resolve) {
-    $(resolve);
-});
-var ready = Promise.all([domReady, session.is_bound]);
+import { whenReady } from "@odoo/owl";
 
 wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
-    wait_for: ready,
+    wait_for: whenReady(),
 }, () => [{
     content: "click language dropdown",
     trigger: 'iframe .js_language_selector .dropdown-toggle',

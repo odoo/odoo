@@ -1,16 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "../core/browser/browser";
-import {
-    ConnectionAbortedError,
-    RPCError,
-    makeErrorFromResponse,
-    ConnectionLostError,
-} from "../core/network/rpc_service";
+import { makeErrorFromResponse } from "../core/network/rpc_service";
 import { ErrorDialog } from "../core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
-
 import { Component, useComponent, xml } from "@odoo/owl";
+import { loadJS } from "@web/core/assets";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
@@ -111,63 +106,9 @@ export function makeLegacyDropdownService(legacyEnv) {
     };
 }
 
-export function makeLegacySessionService(legacyEnv, session) {
-    return {
-        dependencies: ["user"],
-        start(env) {
-            // userContext, Object.create is incompatible with legacy new Context
-            function mapContext() {
-                return Object.assign({}, env.services.user.context);
-            }
-            Object.defineProperty(legacyEnv.session, "userContext", {
-                get: () => mapContext(),
-            });
-            Object.defineProperty(session, "user_context", {
-                get: () => mapContext(),
-            });
-        },
-    };
-}
-
 export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
     // store wowl services on the legacy env (used by the 'useWowlService' hook)
     legacyEnv[wowlServicesSymbol] = wowlEnv.services;
-
-    // rpc
-    legacyEnv.session.rpc = (...args) => {
-        let rejection;
-        const prom = new Promise((resolve, reject) => {
-            const [route, params, settings = {}] = args;
-            // Add user context in kwargs if there are kwargs
-            if (params && params.kwargs) {
-                params.kwargs.context = Object.assign(
-                    {},
-                    legacyEnv.session.user_context,
-                    params.kwargs.context
-                );
-            }
-            const jsonrpc = wowlEnv.services.rpc(route, params, {
-                silent: settings.shadow,
-                xhr: settings.xhr,
-            });
-            rejection = () => {
-                jsonrpc.abort();
-            };
-            jsonrpc.then(resolve).catch((reason) => {
-                if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
-                    // we do not reject an error here because we want to pass through
-                    // the legacy guardedCatch code
-                    reject({ message: reason, event: $.Event(), legacy: true });
-                } else if (reason instanceof ConnectionAbortedError) {
-                    reject({ message: reason.message, event: $.Event("abort") });
-                } else {
-                    reject(reason);
-                }
-            });
-        });
-        prom.abort = rejection;
-        return prom;
-    };
 
     legacyEnv.services.dialog = wowlEnv.services.dialog;
     legacyEnv.services.ui = wowlEnv.services.ui;
@@ -303,6 +244,51 @@ export function makeLegacyRainbowManService(legacyEnv) {
             legacyEnv.bus.on("show-effect", null, (payload) => {
                 effect.add(payload);
             });
+        },
+    };
+}
+
+export function makeMomentLoaderService() {
+    return {
+        dependencies: ["localization"],
+        async start(_, { localization }) {
+            await loadJS(`/web/webclient/locale/${localization.code}`);
+            const dow = (localization.weekStart || 0) % 7;
+            moment.updateLocale(moment.locale(), {
+                dow,
+                doy: 7 + dow - 4,  // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
+            });
+        },
+    };
+}
+
+export function makeLegacyRPC(wowlRPC) {
+    return function rpc(route, args, options, target) {
+        let rpcPromise = null;
+        const promise = new Promise(function (resolve, reject) {
+            rpcPromise = wowlRPC(route, args, options);
+            rpcPromise.then(function (result) {
+                if (!target.isDestroyed()) {
+                    resolve(result);
+                }
+            }).guardedCatch(function (reason) {
+                if (!target.isDestroyed()) {
+                    reject(reason);
+                }
+            });
+        });
+        promise.abort = rpcPromise.abort.bind(rpcPromise);
+        return promise;
+    };
+}
+
+export function makeLegacyRPCService(legacyEnv) {
+    return {
+        dependencies: ["rpc"],
+        start(_, { rpc: wowlRPC }) {
+            const rpc = makeLegacyRPC(wowlRPC);
+            legacyEnv.services.ajax = { rpc };
+            legacyEnv.services.rpc = rpc;
         },
     };
 }

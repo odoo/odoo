@@ -215,10 +215,6 @@ function getWysiwygIframeContent(params) {
         ${assets.jsContents.join('\n')}
 
         <script type="text/javascript">
-            odoo.define('web.session', [], function () {
-                return window.top.odoo.__DEBUG__.services['web.session'];
-            });
-
             odoo.define('root.widget', ['@web/legacy/js/core/widget'], function (require) {
                 'use strict';
                 var Widget = require('@web/legacy/js/core/widget')[Symbol.for("default")];

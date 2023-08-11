@@ -3,7 +3,7 @@
     import publicWidget from '@web/legacy/js/public/public_widget';
     import Dialog from '@web/legacy/js/core/dialog';
     import { renderToElement } from "@web/core/utils/render";
-    import session from 'web.session';
+    import { session } from "@web/session";
     import { Markup } from "@web/legacy/js/core/utils";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';

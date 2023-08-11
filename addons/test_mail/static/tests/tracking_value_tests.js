@@ -5,11 +5,9 @@ import { click, contains, insertText, start, startServer } from "@mail/../tests/
 import {
     editSelect,
     selectDropdownItem,
-    patchWithCleanup,
     patchTimeZone,
     getFixture,
 } from "@web/../tests/helpers/utils";
-import session from "web.session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 let target;
@@ -46,11 +44,7 @@ QUnit.module("tracking value", {
             return remainder;
         };
 
-        patchWithCleanup(session, {
-            getTZOffset() {
-                return 0;
-            },
-        });
+        patchTimeZone(0);
     },
 });
 

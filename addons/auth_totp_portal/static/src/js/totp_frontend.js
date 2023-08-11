@@ -5,6 +5,7 @@ import { markup } from "@odoo/owl";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { handleCheckIdentity } from "@portal/js/portal_security";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { session } from "@web/session";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
@@ -144,7 +145,7 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
         const w = await handleCheckIdentity(this.proxy('_rpc'), this._rpc({
             model: 'res.users',
             method: 'action_totp_enable_wizard',
-            args: [this.getSession().user_id]
+            args: [session.user_id]
         }), (...args) => this.call("dialog", "add", ...args));
 
         if (!w) {
@@ -219,7 +220,7 @@ publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
         e.preventDefault();
         await handleCheckIdentity(
             this.proxy('_rpc'),
-            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().user_id]}),
+            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [session.user_id]}),
             (...args) => this.call("dialog", "add", ...args)
         )
         window.location = window.location;
@@ -258,7 +259,7 @@ publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend
             this._rpc({
                 model: 'res.users',
                 method: 'revoke_all_devices',
-                args: [this.getSession().user_id]
+                args: [session.user_id]
             }),
             (...args) => this.call("dialog", "add", ...args)
         );
