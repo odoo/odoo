@@ -4,7 +4,6 @@ import ajax from "@web/legacy/js/core/ajax";
 import { escape } from "@web/core/utils/strings";
 import { whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import session from "web.session";
 
 whenReady(() => {
     var email = $("input[name='email']").val();
@@ -13,7 +12,6 @@ whenReady(() => {
     var token = (location.search.split('token' + '=')[1] || '').split('&')[0];
 
     if ($('.o_unsubscribe_form').length) {
-        session.load_translations().then(function () {
             if (email != '' && email != undefined){
                 ajax.jsonRpc('/mailing/blacklist/check', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
                     .then(function (result) {
@@ -55,7 +53,6 @@ whenReady(() => {
             else{
                 $('#subscription_info').html(_t('You have been <strong>successfully unsubscribed</strong>.'));
             }
-        });
 
         $('#unsubscribe_form').on('submit', function (e) {
             e.preventDefault();

@@ -6,8 +6,7 @@
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
     import { Markup } from "@web/legacy/js/core/utils";
-
-    import session from 'web.session';
+    import { session } from "@web/session";
     import { Quiz } from '@website_slides/js/slides_course_quiz';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
     import { unhideConditionalElements } from '@website/js/content/inject_dom';

@@ -92,16 +92,6 @@ var ServicesMixin = {
             });
         });
     },
-    // Session stuff
-    getSession: function () {
-        var session;
-        this.trigger_up('get_session', {
-            callback: function (result) {
-                session = result;
-            }
-        });
-        return session;
-    },
     /**
      * Informs the action manager to do an action. This supposes that the action
      * manager can be found amongst the ancestors of the current widget.

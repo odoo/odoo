@@ -3,10 +3,7 @@
 import core from "@web/legacy/js/services/core";
 import { Markup } from "@web/legacy/js/core/utils";
 import time from "@web/legacy/js/core/time";
-import download from "@web/legacy/js/libs/download";
-import contentdisposition from "@web/legacy/js/libs/content-disposition";
 import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
 
 // Create the final object containing all the functions first to allow monkey
 // patching them correctly if ever needed.
@@ -69,9 +66,6 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             if (type === "server") {
                 if (!shadow) {
                     core.bus.trigger('rpc_response', data.id);
-                }
-                if (error.code === 100) {
-                    core.bus.trigger('invalidate_session');
                 }
                 reject({message: error, event: $.Event()});
             } else {
@@ -136,100 +130,6 @@ export function jsonRpc(url, fct_name, params, settings) {
 // helper function to make a rpc with a function name hardcoded to 'call'
 function rpc(url, params, settings) {
     return jsonRpc(url, 'call', params, settings);
-}
-
-/**
- * Cooperative file download implementation, for ajaxy APIs.
- *
- * @param {Object} options
- * @param {String} [options.url] used to dynamically create a form
- * @param {Object} [options.data] data to add to the form submission. If can be used without a form, in which case a form is created from scratch. Otherwise, added to form data
- * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
- * @param {Function} [options.success] callback in case of download success
- * @param {Function} [options.error] callback in case of request error, provided with the error body
- * @param {Function} [options.complete] called after both ``success`` and ``error`` callbacks have executed
- * @returns {boolean} a false value means that a popup window was blocked. This
- *   mean that we probably need to inform the user that something needs to be
- *   changed to make it work.
- */
-function get_file(options) {
-    var xhr = new XMLHttpRequest();
-
-    var data;
-    if (options.form) {
-        xhr.open(options.form.method, options.form.action);
-        data = new FormData(options.form);
-    } else {
-        xhr.open('POST', options.url);
-        data = new FormData();
-        for (const [k, v] of Object.entries(options.data || {})) {
-            data.append(k, v);
-        }
-    }
-    if (odoo.csrf_token) {
-        data.append('csrf_token', odoo.csrf_token);
-    }
-    // IE11 wants this after xhr.open or it throws
-    xhr.responseType = 'blob';
-
-    // onreadystatechange[readyState = 4]
-    // => onload (success) | onerror (error) | onabort
-    // => onloadend
-    xhr.onload = function () {
-        var mimetype = xhr.response.type;
-        if (xhr.status === 200 && mimetype !== 'text/html') {
-            // replace because apparently we send some C-D headers with a trailing ";"
-            // todo: maybe a lack of CD[attachment] should be interpreted as an error case?
-            var header = (xhr.getResponseHeader('Content-Disposition') || '').replace(/;$/, '');
-            var filename = header ? contentdisposition.parse(header).parameters.filename : null;
-
-            download(xhr.response, filename, mimetype);
-            // not sure download is going to be sync so this may be called
-            // before the file is actually fetched (?)
-            if (options.success) { options.success(); }
-            return true;
-        }
-
-        if (!options.error) {
-            return true;
-        }
-        var decoder = new FileReader();
-        decoder.onload = function () {
-            var contents = decoder.result;
-
-            var err;
-            var doc = new DOMParser().parseFromString(contents, 'text/html');
-            var nodes = doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
-            try { // Case of a serialized Odoo Exception: It is Json Parsable
-                var node = nodes[1] || nodes[0];
-                err = JSON.parse(node.textContent);
-            } catch { // Arbitrary uncaught python side exception
-                err = {
-                    message: nodes.length > 1 ? nodes[1].textContent : '',
-                    data: {
-                        name: String(xhr.status),
-                        title: nodes.length > 0 ? nodes[0].textContent : '',
-                    }
-                };
-            }
-            options.error(err);
-        };
-        decoder.readAsText(xhr.response);
-    };
-    xhr.onerror = function () {
-        if (options.error) {
-            options.error({
-                message: _t("Something happened while trying to contact the server, check that the server is online and that you still have a working network connection."),
-                data: { title: _t("Could not connect to the server") }
-            });
-        }
-    };
-    if (options.complete) {
-        xhr.onloadend = function () { options.complete(); };
-    }
-
-    xhr.send(data);
-    return true;
 }
 
 function post (controller_url, data) {
@@ -318,7 +218,6 @@ Object.assign(ajax, {
     jsonRpc: jsonRpc,
     rpc: rpc,
     loadAsset: loadAsset,
-    get_file: get_file,
     post: post,
 });
 
