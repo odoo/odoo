@@ -36,6 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'fiscalyear_last_month': '3',
                 'account_sale_tax_id': 'igst_sale_18',
                 'account_purchase_tax_id': 'igst_purchase_18',
+                'deferred_expense_account_id': 'p10084',
+                'deferred_revenue_account_id': 'p10085',
             },
         }
 
