@@ -47,15 +47,15 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
         views: [[false, "list"]],
     });
     assert.strictEqual(
-        document.querySelector(".o_data_cell span:not(.o_m2o_avatar) span").innerText,
+        document.querySelector(".o_data_cell div[name='employee_id']").innerText,
         "Mario"
     );
     assert.strictEqual(
-        document.querySelectorAll(".o_data_cell span:not(.o_m2o_avatar) span")[1].innerText,
+        document.querySelectorAll(".o_data_cell div[name='employee_id']")[1].innerText,
         "Luigi"
     );
     assert.strictEqual(
-        document.querySelectorAll(".o_data_cell span:not(.o_m2o_avatar) span")[2].innerText,
+        document.querySelectorAll(".o_data_cell div[name='employee_id']")[2].innerText,
         "Mario"
     );
 
