@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <!-- Template for 'mailing_filter' widget, specific for mailing form view -->
-    <t t-name="mass_mailing.MailingFilter" t-inherit="web.Many2OneField" primary="True" owl="1">
+    <t t-name="mass_mailing.MailingFilter" t-inherit="web.Many2OneField" primary="True">
         <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="inside">
             <div class="o_mass_mailing_filter_container">
                 <div t-attf-class="o_mass_mailing_save_filter_container pt-1 {{ !this.filter.canSaveFilter ? 'd-none': '' }}">

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-<t t-name="website.MetaImage" owl="1">
+<t t-name="website.MetaImage">
     <div t-att-class="props.active ? 'o_active_image o_meta_img m-1' : 'o_meta_img m-1'" t-on-click="() => props.selectImage(props.src)">
         <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
         <img t-att-src="props.src"/>
     </div>
 </t>
 
-<t t-name="website.ImageSelector" owl="1">
+<t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
             <h4><small>Select an image for social share</small></h4>
@@ -36,7 +36,7 @@
     </section>
 </t>
 
-<t t-name="website.Keyword" owl="1">
+<t t-name="website.Keyword">
     <tr>
         <td t-esc="props.keyword"/>
         <td class="text-center"><i t-if="usedInH1" class="fa fa-check" t-att-title="props.keyword + ' is used in page first level heading'"/></td>
@@ -58,7 +58,7 @@
     </tr>
 </t>
 
-<t t-name="website.MetaKeywords" owl="1">
+<t t-name="website.MetaKeywords">
     <section>
         <label for="website_meta_keywords">
             Keywords
@@ -97,7 +97,7 @@
     </section>
 </t>
 
-<t t-name="website.SEOPreview" owl="1">
+<t t-name="website.SEOPreview">
     <div class="oe_seo_preview_g">
         <div class="rc">
             <t t-if="props.isIndexed">
@@ -116,7 +116,7 @@
     </div>
 </t>
 
-<t t-name="website.TitleDescription" owl="1">
+<t t-name="website.TitleDescription">
     <section>
         <div class="row">
             <div class="col-lg-6">
@@ -163,7 +163,7 @@
     </section>
 </t>
 
-<t t-name="website.OptimizeSEODialog" owl="1">
+<t t-name="website.OptimizeSEODialog">
     <WebsiteDialog close="props.close"
         title="title"
         size="size"

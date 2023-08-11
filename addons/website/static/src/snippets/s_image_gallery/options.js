@@ -2,12 +2,10 @@
 
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
-import core from "@web/legacy/js/services/core";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
-
-var qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 /**
  * This class provides layout methods for interacting with the ImageGallery
@@ -176,7 +174,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             attrClass: imageEls.length > 0 ? imageEls[0].className : '',
             attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
-        $slideshow = $(qweb.render('website.gallery.slideshow', params));
+        $slideshow = $(renderToElement('website.gallery.slideshow', params));
         this._replaceContent($slideshow);
         this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});

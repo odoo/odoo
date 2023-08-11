@@ -26,7 +26,7 @@
                             <div class="row m-2">
                                 <label class="col-4 mt-2 text-start">Language</label>
                                 <select class="o_wevent_create_meeting_room_lang form-select col-8" name="lang_code" required="1">
-                                    <option t-foreach="langs" t-as="language" t-att-value="language[0]" t-out="language[1]"
+                                    <option t-foreach="langs" t-as="language" t-key="language_index" t-att-value="language[0]" t-out="language[1]"
                                         t-att-selected="language[0] == defaultLangCode and 'selected' or None"/>
                                 </select>
                             </div>
@@ -41,7 +41,7 @@
                                 </select>
                             </div>
                             <input name="event" t-att-value="event" type="hidden"/>
-                            <input name="csrf_token" t-att-value="csrf_token" type="hidden"/>
+                            <input name="csrf_token" t-att-value="widget.csrf_token" type="hidden"/>
                         </form>
                     </main>
                     <footer class="modal-footer justify-content-start">

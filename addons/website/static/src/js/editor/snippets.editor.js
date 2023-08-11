@@ -1,11 +1,11 @@
 /** @odoo-modules **/
 
-import { qweb } from "@web/legacy/js/services/core";
 import { _t } from "@web/core/l10n/translation";
 import Dialog from "@web/legacy/js/core/dialog";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { renderToElement } from "@web/core/utils/render";
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
@@ -121,7 +121,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             $apiKeyHelp.empty().text(message);
         }
 
-        const $content = $(qweb.render('website.s_google_map_modal', {
+        const $content = $(renderToElement('website.s_google_map_modal', {
             apiKey: apiKey,
         }));
         if (!apiKeyValidation.isValid && apiKeyValidation.message) {

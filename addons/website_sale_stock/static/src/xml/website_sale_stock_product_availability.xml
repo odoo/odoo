@@ -23,9 +23,8 @@
                         <div class="input-group">
                             <input class="form-control"
                                    id="stock_notification_input" name="email"
-                                   type="text" placeholder="youremail@gmail.com" t-value="stock_notification_email if stock_notification_email else None"/>
+                                   type="text" placeholder="youremail@gmail.com" t-att-value="stock_notification_email? stock_notification_email: ''"/>
                             <input name="product_id" type="hidden" t-att-value="product_id"/>
-
                             <div id="product_stock_notification_form_submit_button" class="btn btn-secondary">
                                 <i class="fa fa-paper-plane"/>
                             </div>

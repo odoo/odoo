@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.Configurator.SkipButton" owl="1">
+    <t t-name="website.Configurator.SkipButton">
         <div class="container-fluid py-2 pb-md-3 text-end pe-lg-5">
             <button class="btn btn-link btn-lg" t-on-click="this.props.skip">Skip and start from scratch</button>
         </div>
     </t>
 
-    <t t-name="website.Configurator.WelcomeScreen" owl="1">
+    <t t-name="website.Configurator.WelcomeScreen">
         <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
             <div class="o_configurator_odoo_logo mt-4 ms-4" style="height: 31px; width: 99px;"/>
             <div class="o_configurator_screen_content d-flex h-100">
@@ -24,7 +24,7 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.DescriptionScreen" owl="1">
+<t t-name="website.Configurator.DescriptionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
         <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
@@ -83,7 +83,7 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.PaletteSelectionScreen" owl="1">
+<t t-name="website.Configurator.PaletteSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_palette_selection_screen">
         <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
@@ -143,7 +143,7 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.FeatureSelection" owl="1">
+<t t-name="website.Configurator.FeatureSelection">
     <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
         <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content overflow-hidden container d-flex flex-grow-1 align-items-center">
@@ -185,7 +185,7 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.ThemeSelectionScreen" owl="1">
+<t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
         <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
@@ -231,7 +231,7 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.Configurator" owl="1">
+<t t-name="website.Configurator.Configurator">
     <div class="o_configurator_container">
         <DescriptionScreen t-if="state.currentStep === 2" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
         <PaletteSelectionScreen t-elif="state.currentStep === 3" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>

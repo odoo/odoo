@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="web.X2ManyFieldDialog" owl="1">
+<t t-name="web.X2ManyFieldDialog">
     <Dialog title="title" withBodyPadding="false" modalRef="modalRef" contentClass="contentClass">
         <FormRenderer record="record" archInfo="archInfo"/>
         <t t-set-slot="footer">
@@ -34,7 +34,7 @@
     </Dialog>
 </t>
 
-<t t-name="web.Many2XAutocomplete" owl="1" >
+<t t-name="web.Many2XAutocomplete" >
     <div class="o_input_dropdown" t-ref="autocomplete_container">
         <input t-if="env.isSmall and props.dropdown"
             type="text"
@@ -62,7 +62,7 @@
     </div>
 </t>
 
-<t t-name="web.AvatarMany2XAutocomplete" owl="1">
+<t t-name="web.AvatarMany2XAutocomplete">
     <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
         <img t-if="option.value" class="rounded me-1"
              t-attf-src="/web/image/{{option.resModel}}/{{option.value}}/avatar_128" />

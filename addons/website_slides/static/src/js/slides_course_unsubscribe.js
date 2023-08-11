@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { _t } from "@web/core/l10n/translation";
-var QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 var SlideUnsubscribeDialog = Dialog.extend({
     template: 'slides.course.unsubscribe.modal',
@@ -126,7 +125,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
             tmpl = 'slides.course.unsubscribe.modal.leave';
         }
         this.$('.o_w_slide_unsubscribe_modal_container').empty();
-        this.$('.o_w_slide_unsubscribe_modal_container').append(QWeb.render(tmpl, {widget: this}));
+        this.$('.o_w_slide_unsubscribe_modal_container').append(renderToElement(tmpl, {widget: this}));
 
         this._resetModal();
     },

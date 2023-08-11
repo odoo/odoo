@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-<t t-name="web.EmojiPicker" owl="1">
+<t t-name="web.EmojiPicker">
     <div class="o-EmojiPicker bg-view" t-att-class="{ 'd-flex flex-column align-items-center justify-content-center': emojis.length === 0, 'o-small': ui.isSmall }" t-attf-class="{{ props.className }}" t-on-click="onClick" t-on-keydown="onKeydown">
         <t t-if="emojis.length === 0">
             <span class="o-EmojiPicker-empty">😵‍💫</span>
@@ -59,18 +59,18 @@
     </div>
 </t>
 
-<t t-name="web.EmojiPicker.tab" owl="1">
+<t t-name="web.EmojiPicker.tab">
     <span class="o-Emoji text-center p-1 cursor-pointer" t-att-class="{'bg-300': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
         <t t-esc="category.title"/>
     </span>
 </t>
 
-<t t-name="web.EmojiPicker.section" owl="1">
+<t t-name="web.EmojiPicker.section">
     <span class="w-100 fs-7 p-2 position-sticky top-0 bg-view" t-att-data-category="category.sortId"><span class="o-EmojiPicker-sectionIcon" t-esc="category.title"/><span class="ms-2" t-esc="category.displayName"/></span>
     <span class="o-EmojiPicker-category opacity-100 fs-7 py-2" t-att-data-category="category.sortId"/>
 </t>
 
-<t t-name="web.EmojiPicker.emoji" owl="1">
+<t t-name="web.EmojiPicker.emoji">
     <span class="o-Emoji cursor-pointer d-flex justify-content-center" t-att-class="{ 'bg-200': state.activeEmojiIndex === itemIndex, 'fs-2': !ui.isSmall, 'fs-1': ui.isSmall }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="recentCategory.sortId" t-on-click="selectEmoji">
         <span t-esc="emoji.codepoints"/>
     </span>

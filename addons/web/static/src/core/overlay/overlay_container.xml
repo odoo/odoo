@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.OverlayContainer" owl="1">
+    <t t-name="web.OverlayContainer">
         <div class="o-overlay-container">
             <t t-foreach="sortedOverlays" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler onError="(error) => this.handleError(overlay, error)">

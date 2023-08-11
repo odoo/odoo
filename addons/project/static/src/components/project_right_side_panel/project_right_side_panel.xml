@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="project.ProjectRightSidePanel" owl="1">
+    <t t-name="project.ProjectRightSidePanel">
         <div t-if="projectId" class="o_rightpanel pt-0 bg-view border-start border-bottom overflow-auto">
             <ProjectRightSidePanelSection
                 name="'stat_buttons'"
@@ -40,7 +40,7 @@
                 show="!!this.state.data.profitability_items"
                 dataClassName="'py-3'"
             >
-                <t t-set-slot="title" owl="1">
+                <t t-set-slot="title">
                     Profitability
                 </t>
                 <ProjectProfitability
@@ -60,14 +60,14 @@
                 dataClassName="'my-3'"
                 headerClassName="'border-bottom'"
             >
-                <t t-set-slot="header" owl="1">
+                <t t-set-slot="header">
                     <span class="btn btn-secondary">
                         <div class="o_add_milestone">
                             <a t-on-click="addMilestone">Add Milestone</a>
                         </div>
                     </span>
                 </t>
-                <t t-set-slot="title" owl="1">
+                <t t-set-slot="title">
                     Milestones
                 </t>
                 <div t-foreach="state.data.milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">

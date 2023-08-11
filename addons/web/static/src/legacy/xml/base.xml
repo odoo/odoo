@@ -3,7 +3,7 @@
 
 <!-- Owl Templates -->
 
-<t t-name="web.DialogButton.tooltip" owl="1">
+<t t-name="web.DialogButton.tooltip">
     <div class="oe_tooltip_string" role="tooltip">
         <div class="tooltip-inner">
             <t>Hit ENTER to <t t-esc="title"/></t>
@@ -11,7 +11,7 @@
     </div>
 </t>
 
-<t t-name="Popover" owl="1">
+<t t-name="Popover">
     <div t-att-class="{ 'o_is_open': state.displayed }" t-attf-class="{{ props.class }}" t-att-title="props.titleAttribute" t-on-click="_onClick" t-on-o-popover-compute="_onPopoverCompute" t-on-o-popover-close="_onPopoverClose">
         <t t-slot="default"/>
         <t t-portal="'body'" t-if="state.displayed">
@@ -26,7 +26,7 @@
     </div>
 </t>
 
-<t t-name="web.legacy.Pager" owl="1">
+<t t-name="web.legacy.Pager">
     <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">
             <input t-if="state.editing" type="text"
@@ -70,7 +70,7 @@
     </nav>
 </t>
 
-<t t-name="web.ViewSwitcherButton" owl="1">
+<t t-name="web.ViewSwitcherButton">
     <t t-set="buttonLabel">View %s</t>
     <button type="button"
         t-att-accesskey="view.accessKey"
@@ -279,7 +279,7 @@
     <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style" aria-atomic="true">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
               method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
-            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="csrf_token" t-att-value="window.odoo.csrf_token"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <input type="file" class="o_input_file" name="ufile"
                 t-att="{'multiple': multi_upload ? 'multiple' : null, 'accept': widget.accepted_file_extensions || '*'}"/>

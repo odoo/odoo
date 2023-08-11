@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
 import config from "@web/legacy/js/services/config";
-import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
-const QWeb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     selector: '.o_wjitsi_room_widget',
@@ -89,7 +88,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             await this._joinJitsiRoom($parentNode);
         } else {
             // create a model and append the Jitsi iframe in it
-            let $jitsiModal = $(QWeb.render('chat_room_modal', {}));
+            let $jitsiModal = $(renderToElement('chat_room_modal', {}));
             $("body").append($jitsiModal);
             $jitsiModal.modal('show');
 

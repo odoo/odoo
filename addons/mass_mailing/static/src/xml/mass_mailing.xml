@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="mass_mailing.theme_selector" class="o_mail_theme_selector">
-        <t t-foreach="themes" t-as="theme">
+        <t t-foreach="themes" t-as="theme" t-key="theme_index">
             <a t-att-id="theme.name" href="#" class="dropdown-item">
                 <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
             </a>
@@ -12,7 +12,7 @@
             Click on the ⭐ next to the subject to save this mailing as a <span t-esc="modelName"/> template
         </div>
         <div class="o_mailing_template_preview_wrapper d-inline-block w-100">
-            <div t-foreach="templates" t-as="template"
+            <div t-foreach="templates" t-as="template" t-key="template_index"
                 class="o_mail_template_preview d-inline-block dropdown-item"
                 t-att-id="template.name" t-att-model-id="template.modelId">
                 <div class="d-inline-flex flex-row align-items-center text-white border px-2 py-2 w-100">
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="d-inline-block w-100">
-            <a t-foreach="themes" t-as="theme"
+            <a t-foreach="themes" t-as="theme" t-key="theme_index"
                 t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item px-4">
                 <div class="o_thumb small mb-2"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
                 <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.img}_large.png)"/>

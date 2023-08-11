@@ -8,13 +8,13 @@
              t-att-style="inline_mode ? 'display:inline' : ''"
              t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
              t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
-            <t t-foreach="range(0, val_integer)" t-as="num">
+            <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
                 <i class="fa fa-star" role="img"></i>
             </t>
             <t t-if="val_decimal">
                 <i class="fa fa-star-half-o" role="img"></i>
             </t>
-            <t t-foreach="range(0, empty_star)" t-as="num">
+            <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
                 <i class="fa fa-star text-black-25" role="img"></i>
             </t>
         </div>
@@ -38,7 +38,7 @@
                 <p t-if="!two_columns"><strong>Details</strong></p>
                 <t t-set="selected_rating" t-value="widget.get('rating_value')"/>
                 <table t-attf-class="o_website_rating_table #{selected_rating and 'o_website_rating_table_has_selection' or ''}">
-                    <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent">
+                    <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent" t-key="percent_index">
                         <t t-set="row_selected" t-value="percent['num'] == selected_rating"/>
                         <tr t-attf-class="o_website_rating_table_row #{row_selected ? 'o_website_rating_table_row_selected' : (selected_rating ? 'opacity-50' : '')}"
                             t-att-data-star="percent['num']">
@@ -74,13 +74,13 @@
             <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
 
             <div class="stars enabled">
-                <t t-foreach="range(0, val_integer)" t-as="num">
+                <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
                     <i class="fa fa-star" role="img" aria-label="Full star"></i>
                 </t>
                 <t t-if="val_decimal">
                     <i class="fa fa-star-half-o" role="img" aria-label="Half a star"></i>
                 </t>
-                <t t-foreach="range(0, empty_star)" t-as="num">
+                <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
                     <i class="fa fa-star-o text-black-25" role="img" aria-label="Empty star"></i>
                 </t>
             </div>

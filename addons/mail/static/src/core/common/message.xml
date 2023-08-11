@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.Message" owl="1">
+    <t t-name="mail.Message">
         <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.messageService.setDone(this.message), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative"
                 t-att-class="attClass"
@@ -120,7 +120,7 @@
         </ActionSwiper>
     </t>
 
-<t t-name="mail.Message.actions" owl="1">
+<t t-name="mail.Message.actions">
     <div t-if="props.hasActions and message.hasActions" class="o-mail-Message-actions"
         t-att-class="{
             'start-0 ms-3': isAlignedRight,

@@ -14,7 +14,7 @@
             <span class="text-muted">No results found. Please try another search.</span>
         </span>
     </t>
-    <a t-foreach="results" t-as="result"
+    <a t-foreach="results" t-as="result" t-key="result_index"
         t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
         <div class="d-flex align-items-center o_search_result_item">
             <t t-if="widget.displayImage">

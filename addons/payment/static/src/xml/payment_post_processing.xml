@@ -8,7 +8,7 @@
             <div t-if="tx_error.length > 0">
                 <h1>Failed operations</h1>
                 <ul class="list-group">
-                    <t t-foreach="tx_error" t-as="tx">
+                    <t t-foreach="tx_error" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
@@ -27,7 +27,7 @@
                 <h1>Operations in progress</h1>
                 <div class="list-group">
                     <!-- Done transactions -->
-                    <t t-foreach="tx_done" t-as="tx">
+                    <t t-foreach="tx_done" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
@@ -56,7 +56,7 @@
                         </a>
                     </t>
                     <!-- Pending transactions -->
-                    <t t-foreach="tx_pending" t-as="tx">
+                    <t t-foreach="tx_pending" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
@@ -77,7 +77,7 @@
                         </a>
                     </t>
                     <!-- Authorized transactions -->
-                    <t t-foreach="tx_authorized" t-as="tx">
+                    <t t-foreach="tx_authorized" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
@@ -102,7 +102,7 @@
             <div t-if="tx_draft.length > 0">
                 <h1>Waiting for operations to process</h1>
                 <ul class="list-group">
-                    <t t-foreach="tx_draft" t-as="tx">
+                    <t t-foreach="tx_draft" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>
@@ -126,7 +126,7 @@
             <div t-if="tx_cancel.length > 0">
                 <h1>Canceled operations</h1>
                 <ul class="list-group">
-                    <t t-foreach="tx_cancel" t-as="tx">
+                    <t t-foreach="tx_cancel" t-as="tx" t-key="tx_index">
                         <a t-att-href="tx['landing_route']" class="list-group-item">
                             <h4 class="list-group-item-heading mb5">
                                 <t t-esc="tx['reference']"/>

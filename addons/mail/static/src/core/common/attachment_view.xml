@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.AttachmentView" owl="1">
+    <t t-name="mail.AttachmentView">
         <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
             <t t-if="state.thread.mainAttachment">
                 <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="state.thread.mainAttachment.filename"/></h3>

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { sprintf } from '@web/core/utils/strings';
-import { _t, qweb } from "@web/legacy/js/services/core";
+import { _t } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 var CourseJoinWidget = publicWidget.Widget.extend({
@@ -134,13 +135,13 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 self.afterJoin();
             } else {
                 if (data.error === 'public_user') {
-                    let $popupContent = qweb.render('slide.course.join.popupContent', {
+                    const popupContent = renderToElement('slide.course.join.popupContent', {
                         channelId: channelId,
                         courseUrl: encodeURIComponent(document.URL),
                         errorSignupAllowed: data.error_signup_allowed,
                         widget: self,
                     });
-                    self._popoverAlert(self.$el, $popupContent);
+                    self._popoverAlert(self.$el, popupContent);
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-extend="slides.course.unsubscribe.modal.leave">
-        <t t-jquery="p:last" t-operation="after">
+    <t t-inherit="website_slides.slides.course.unsubscribe.modal.leave" t-inherit-mode="extension">
+        <xpath expr="//p[last()]" position="after">
             <t t-if="widget.enroll === 'payment'">
                 <p class="alert alert-warning">
                     <i class="fa fa-exclamation-triangle fa-3x float-start me-3"></i>
@@ -10,7 +10,7 @@
                     Leaving the course and re-enrolling afterwards means that you'll be charged again.
                 </p>
             </t>
-        </t>
+        </xpath>
     </t>
 
 </templates>

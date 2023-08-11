@@ -16,12 +16,12 @@
                 </div>
                 <div class="list-group">
                     <t t-if="widget.question.answers" >
-                        <t t-foreach="widget.question.answers" t-as="answer" >
+                        <t t-foreach="widget.question.answers" t-as="answer" t-key="answer_index">
                             <t t-call="slide.quiz.answer.line"/>
                         </t>
                     </t>
                     <t t-else="" >
-                        <t t-foreach="['A giraffe', 'A bird', 'A fly']" t-as="placeholder">
+                        <t t-foreach="['A giraffe', 'A bird', 'A fly']" t-as="placeholder" t-key="placeholder_index">
                             <t t-call="slide.quiz.answer.line"/>
                         </t>
                     </t>

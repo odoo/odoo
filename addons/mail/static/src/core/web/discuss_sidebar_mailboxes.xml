@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.DiscussSidebarMailboxes" owl="1">
+    <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.Mailbox">
                 <t t-set="mailbox" t-value="store.discuss.inbox"/>
@@ -15,7 +15,7 @@
         </div>
     </t>
 
-    <t t-name="mail.Mailbox" owl="1">
+    <t t-name="mail.Mailbox">
         <button
             class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
             t-att-class="{

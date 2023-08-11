@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.DiscussSidebarCategories" owl="1">
+    <t t-name="mail.DiscussSidebarCategories">
         <hr class="w-100 opacity-0"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
         <t t-foreach="categories" t-as="categoryData" t-key="categoryData_index">
@@ -10,7 +10,7 @@
         </t>
     </t>
 
-    <t t-name="mail.DiscussSidebarCategory" owl="1">
+    <t t-name="mail.DiscussSidebarCategory">
         <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
             <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
@@ -40,7 +40,7 @@
         </t>
     </t>
 
-    <t t-name="mail.DiscussSidebarChannel" owl="1">
+    <t t-name="mail.DiscussSidebarChannel">
         <t t-set="counter" t-value="threadService.getCounter(thread)"/>
         <button class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
             t-att-class="{

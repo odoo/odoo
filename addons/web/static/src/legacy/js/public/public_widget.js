@@ -9,7 +9,7 @@ import core from "@web/legacy/js/services/core";
 import mixins from "@web/legacy/js/core/mixins";
 import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle } from '@web/core/assets';
-
+import { renderToElement } from "@web/core/utils/render";
 
 /**
  * Base class for all visual components. Provides a lot of functions helpful
@@ -282,7 +282,7 @@ export const PublicWidget = core.Class.extend(mixins.PropertiesMixin, ServicesMi
     renderElement: function () {
         var $el;
         if (this.template) {
-            $el = $(core.qweb.render(this.template, {widget: this}).trim());
+            $el = $(renderToElement(this.template, {widget: this}));
         } else {
             $el = this._makeDescriptive();
         }

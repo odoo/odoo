@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="website_sale.ReorderModal" owl="1">
+    <t t-name="website_sale.ReorderModal">
         <Dialog title="env._t('Re-Order')">
             <table id="o_wsale_reorder_table" class="table table-sm">
                 <thead class="bg-100">
@@ -83,7 +83,7 @@
         </Dialog>
     </t>
 
-    <t t-name="website_sale.ReorderConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary" owl="1">
+    <t t-name="website_sale.ReorderConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
         <xpath expr="//button[1]" position="replace">
             <button class="btn btn-primary" t-on-click="_confirm">
               Yes

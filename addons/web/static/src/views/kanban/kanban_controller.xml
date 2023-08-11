@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanView" owl="1">
+    <t t-name="web.KanbanView">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
                 <t t-set-slot="control-panel-create-button">
@@ -56,7 +56,7 @@
         </div>
     </t>
 
-    <t t-name="web.KanbanView.Buttons" owl="1">
+    <t t-name="web.KanbanView.Buttons">
         <div t-if="props.showButtons" class="o_cp_buttons d-empty-none d-flex align-items-baseline gap-1" role="toolbar" aria-label="Main actions"/>
     </t>
 

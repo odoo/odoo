@@ -6,12 +6,12 @@ import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 import { useWowlService } from "@web/legacy/utils";
-import { qweb } from "@web/legacy/js/services/core";
 import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import Dialog from "@web/legacy/js/core/dialog";
 import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
+import { renderToElement } from "@web/core/utils/render";
 
 const { onRendered } = owl;
 patch(WysiwygAdapterComponent.prototype, {
@@ -500,7 +500,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 .split(' ')
                 .filter(className => !/^o_(ribbon|tag)_(left|right)$/.test(className))
                 .join(' ');
-            $select.append(qweb.render('website_sale.ribbonSelectItem', {
+            $select.append(renderToElement('website_sale.ribbonSelectItem', {
                 ribbon,
                 colorClasses,
                 isTag: /o_tag_(left|right)/.test(ribbon.html_class),

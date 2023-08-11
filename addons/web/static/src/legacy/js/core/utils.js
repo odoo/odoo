@@ -9,7 +9,7 @@
 import translation from "@web/legacy/js/core/translation";
 
 import { Component } from "@odoo/owl";
-import { escape, escapeHTML, escapeMethod, sprintf as str_sprtinf } from "@web/core/utils/strings";
+import { escape, escapeMethod, sprintf as str_sprtinf } from "@web/core/utils/strings";
 
 var _t = translation._t;
 var id = -1;
@@ -286,10 +286,6 @@ const _Markup = owl.markup('').constructor;
 _Markup.prototype[escapeMethod] = function () {
     return this;
 }
-
-// exposed for qweb2.js
-window._Markup = _Markup;
-window._escape = escapeHTML;
 
 /**
  * Returns a markup object, which acts like a String but is considered safe by

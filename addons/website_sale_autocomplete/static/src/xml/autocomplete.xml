@@ -4,7 +4,7 @@
     <t t-name="website_sale_autocomplete.AutocompleteDropDown">
         <div t-attf-class="dropdown-menu position-relative #{results.length ? 'show' : ''}">
             <a class="dropdown-item js_autocomplete_result"
-               t-foreach="results" t-as="result"
+               t-foreach="results" t-as="result" t-key="result_index"
                t-att-data-google-place-id="result['google_place_id']">
                 <t t-out="result['formatted_address']"/>
             </a>

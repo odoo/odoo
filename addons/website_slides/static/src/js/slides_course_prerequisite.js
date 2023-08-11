@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { qweb } from "@web/legacy/js/services/core";
+import { renderToElement } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.extend({
@@ -14,7 +14,7 @@ publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.exte
             placement: 'bottom',
             container: 'body',
             html: true,
-            content: qweb.render('slide.course.prerequisite', {channels: channels}),
+            content: renderToElement('slide.course.prerequisite', {channels: channels}),
         });
     },
 });

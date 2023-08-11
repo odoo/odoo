@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mail.MessageInReply" owl="1">
+    <t t-name="mail.MessageInReply">
         <t t-set="message" t-value="props.message"/>
         <div class="o-mail-MessageInReply" t-att-class="{
                 'me-5': store.discuss.isActive or (env.inChatWindow and !props.alignedRight),

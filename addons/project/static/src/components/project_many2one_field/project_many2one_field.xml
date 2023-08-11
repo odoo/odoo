@@ -1,6 +1,6 @@
 <templates>
 
-    <t t-name="project.ProjectMany2OneField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+    <t t-name="project.ProjectMany2OneField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
         <xpath expr="//t[@t-if='!props.canOpen']/span" position="attributes">
             <attribute name="t-if">props.record.data[props.name]</attribute>
         </xpath>

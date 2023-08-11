@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates>
-    <t t-name="account.DropZone" owl="1">
+    <t t-name="account.DropZone">
         <div t-if="props.visible"
             t-attf-class="o_drop_area"
             t-on-dragover.prevent="()=>{}"
@@ -11,7 +11,7 @@
         </div>
     </t>
 
-    <t t-name="account.AccountFileUploader" owl="1">
+    <t t-name="account.AccountFileUploader">
         <div t-att-class="props.record and props.record.data ? 'oe_kanban_color_' + props.record.data.color : ''">
             <FileUploader
                 acceptedFileExtensions="props.acceptedFileExtensions"
@@ -28,7 +28,7 @@
         </div>
     </t>
 
-    <t t-name="account.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+    <t t-name="account.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='root']" position="before">
             <AccountDropZone
                 visible="state.dropzoneVisible"
@@ -39,7 +39,7 @@
         </xpath>
     </t>
 
-    <t t-name="account.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+    <t t-name="account.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='root']" position="before">
             <AccountDropZone
                 visible="state.dropzoneVisible"
@@ -50,19 +50,19 @@
         </xpath>
     </t>
 
-    <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+    <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
             <t t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>
 
-    <t t-name="account.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
+    <t t-name="account.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
             <t t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>
 
-    <t t-name="account.AccountViewUploadButton" owl="1">
+    <t t-name="account.AccountViewUploadButton">
         <!-- No record is available so rely on the action context to contain the default_move_type -->
         <AccountFileUploader>
             <t t-set-slot="toggler">
@@ -73,7 +73,7 @@
         </AccountFileUploader>
     </t>
 
-    <t t-name="account.DashboardKanbanRecord" owl="1">
+    <t t-name="account.DashboardKanbanRecord">
         <div
             role="article"
             t-att-class="getRecordClasses()"
@@ -94,7 +94,7 @@
         </div>
     </t>
 
-    <t t-name="account.JournalUploadLink" owl="1">
+    <t t-name="account.JournalUploadLink">
         <div t-att-class="props.btnClass" groups="account.group_account_invoice">
             <a href="#" t-out="props.linkText"/>
         </div>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.BinaryField" owl="1">
+    <t t-name="web.BinaryField">
         <t t-if="!props.readonly">
             <t t-if="props.record.data[props.name]">
                 <div class="w-100 d-inline-flex gap-1">
@@ -61,7 +61,7 @@
         </t>
     </t>
 
-    <t t-name="web.ListBinaryField" t-inherit="web.BinaryField" owl="1">
+    <t t-name="web.ListBinaryField" t-inherit="web.BinaryField">
         <xpath expr="//label[hasclass('o_select_file_button')]" position="replace">
             <label class="o_select_file_button btn btn-sm btn-link p-0">
                 <FileUploader

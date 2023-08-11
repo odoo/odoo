@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.FileUploader" owl="1">
+    <t t-name="web.FileUploader">
         <t t-if="state.isUploading and props.showUploadingText">Uploading...</t>
         <span t-else="" t-on-click.prevent="onSelectFileButtonClick" style="display:contents">
             <t t-slot="toggler"/>

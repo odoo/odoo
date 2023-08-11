@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.TagsList" owl="1">
+    <t t-name="web.TagsList">
         <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
             <span
                 class="o_tag position-relative d-inline-flex align-items-center user-select-none"
@@ -57,7 +57,7 @@
         </span>
     </t>
 
-    <t t-name="web.TagsList.Tooltip" owl="1">
+    <t t-name="web.TagsList.Tooltip">
         <t t-foreach="tags" t-as="tag" t-key="tag.id">
             <div t-esc="tag.text"/>
         </t>

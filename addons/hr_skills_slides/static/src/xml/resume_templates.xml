@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-extend="hr_resume_data_row">
-    <t t-jquery="tr.o_data_row" t-operation="append">
+<t t-inherit="hr_skills.hr_resume_data_row" t-inherit-mode="extension">
+    <xpath expr="//tr[hasclass('o_data_row')]" position="inside">
         <t t-if="data.display_type === 'course'">
             <td class="o_data_cell container" colspan="2">
                 <div class="o_resume_line row" t-att-data-id="id">
@@ -21,6 +21,6 @@
                 </div>
             </td>
         </t>
-    </t>
+    </xpath>
 </t>
 </templates>

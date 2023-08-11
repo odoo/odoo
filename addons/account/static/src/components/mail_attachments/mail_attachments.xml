@@ -4,7 +4,7 @@
     <t t-name="account.mail_attachment_file"
        t-inherit="web.Many2ManyBinaryField.attachment_preview"
        t-inherit-mode="primary"
-       owl="1">
+      >
         <xpath expr="//div[hasclass('o_attachment_wrap')]" position="after">
             <!-- lite display for placeholder files -->
             <div class="o_attachment_wrap" t-if="file.placeholder">
@@ -25,7 +25,7 @@
         </xpath>
     </t>
 
-    <t t-name="account.mail_attachments" owl="1">
+    <t t-name="account.mail_attachments">
         <t t-set="data" t-value="getValue()"/>
 
         <div t-attf-class="oe_fileupload" aria-atomic="true">

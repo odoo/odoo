@@ -14,7 +14,7 @@
     -->
     <t t-name="website.slide.upload.modal.select">
         <div class="row p-1 mt-4 mb-2">
-            <div t-foreach="widget.slide_category_data" t-as="slide_category" class="col-6 col-md-4">
+            <div t-foreach="widget.slide_category_data" t-as="slide_category" t-key="slide_category_index" class="col-6 col-md-4">
                 <t t-set="category_data" t-value="widget.slide_category_data[slide_category]"/>
 
                 <a href="#" t-att-data-slide-category="slide_category"
@@ -25,7 +25,7 @@
             </div>
         </div>
         <t t-if="widget.modulesToInstall">
-            <t t-foreach="widget.modulesToInstall" t-as="module_info">
+            <t t-foreach="widget.modulesToInstall" t-as="module_info" t-key="module_info_index">
                 <a class="o_wslides_js_upload_install_button w-100 text-center mb-4 btn rounded border text-600 p-3"
                     href="#" t-att-title="module_info['name']"
                     t-att-data-module-id="module_info['id']">

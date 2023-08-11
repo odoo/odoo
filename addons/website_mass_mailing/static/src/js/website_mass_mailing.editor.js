@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import { _t } from "@web/core/l10n/translation";
-
-const qweb = core.qweb;
+import { renderToElement } from "@web/core/utils/render";
 
 options.registry.mailing_list_subscribe = options.Class.extend({
     /**
@@ -113,7 +111,7 @@ options.registry.recaptchaSubscribe = options.Class.extend({
             recaptchaLegalEl.remove();
         } else {
             const template = document.createElement('template');
-            template.innerHTML = qweb.render("google_recaptcha.recaptcha_legal_terms");
+            template.content.append(renderToElement("google_recaptcha.recaptcha_legal_terms"));
             this.$target[0].appendChild(template.content.firstElementChild);
         }
     },
