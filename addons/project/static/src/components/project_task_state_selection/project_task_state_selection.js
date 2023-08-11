@@ -77,7 +77,8 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             ["1_canceled", _t("Canceled")],
             ["1_done", _t("Done")],
         ];
-        if (this.currentValue != "04_waiting_normal") {
+        const currentState = this.props.record.data[this.props.name];
+        if (currentState != "04_waiting_normal") {
             return [
                 ["01_in_progress", _t("In Progress")],
                 ["02_changes_requested", _t("Changes Requested")],
