@@ -14,6 +14,7 @@ import {
     toggleUnorderedList,
     triggerEvent,
     unformat,
+    switchDirection
 } from '../utils.js';
 
 describe('List', () => {
@@ -8525,6 +8526,96 @@ describe('List', () => {
                             </tbody>
                         </table>
                     `),
+                });
+            });
+        });
+    });
+    describe('switchDirection', () => {
+        describe('switch direction form left to right', () => {
+            it('should properly switch the direction of the single level list (ltr).', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ul><li>a</li><li>b[]</li><li>c</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul dir="rtl"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ol><li>a</li><li>b[]</li><li>c</li></ol>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ol dir="rtl"><li>a</li><li>b[]</li><li>c</li></ol>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul class="o_checklist" dir="rtl"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                });
+            });
+            it('should properly switch the direction of nested list (ltr).', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ul><li>a[]</li><li class="oe-nested"><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ol><li>a[]</li><li class="oe-nested"><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ol dir="rtl"><li>a[]</li><li class="oe-nested"><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist"><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul class="o_checklist" dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li class="oe-nested"><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+                });
+            });
+        });
+        describe('switch direction form right to left', () => {
+            it('should properly switch the direction of the single level list (rtl).', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ul dir="rtl"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul><li>a</li><li>b[]</li><li>c</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ol dir="rtl"><li>a</li><li>b[]</li><li>c</li></ol>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ol><li>a</li><li>b[]</li><li>c</li></ol>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist" dir="rtl"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul class="o_checklist"><li>a</li><li>b[]</li><li>c</li></ul>`,
+                });
+            });
+            it('should properly switch the direction of nested list (rtl).', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: `<ol dir="rtl"><li>a[]</li><li class="oe-nested"><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ol><li>a[]</li><li class="oe-nested"><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul class="o_checklist" dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul class="o_checklist"><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+                });
+                await testEditor(BasicEditor, {
+                    removeCheckIds: true,
+                    contentBefore: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li class="oe-nested"><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+                    stepFunction: switchDirection,
+                    contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
                 });
             });
         });
