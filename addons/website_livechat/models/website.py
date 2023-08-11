@@ -47,6 +47,7 @@ class Website(models.Model):
                 return {
                     "folded": False,
                     "id": chat_request_channel.id,
+                    "requested_by_operator": chat_request_channel.create_uid in chat_request_channel.livechat_operator_id.user_ids,
                     "operator_pid": [
                         chat_request_channel.livechat_operator_id.id,
                         chat_request_channel.livechat_operator_id.user_livechat_username or chat_request_channel.livechat_operator_id.display_name,
