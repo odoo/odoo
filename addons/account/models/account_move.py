@@ -3140,6 +3140,34 @@ class AccountMove(models.Model):
         """
         return self.env['ir.attachment']
 
+    def _prepare_edi_vals_to_export(self):
+        ''' The purpose of this helper is to prepare values in order to export an invoice through the EDI system.
+        This includes the computation of the tax details for each invoice line that could be very difficult to
+        handle regarding the computation of the base amount.
+
+        :return: A python dict containing default pre-processed values.
+        '''
+        self.ensure_one()
+
+        res = {
+            'record': self,
+            'balance_multiplicator': -1 if self.is_inbound() else 1,
+            'invoice_line_vals_list': [],
+        }
+
+        # Invoice lines details.
+        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == 'product'), start=1):
+            line_vals = line._prepare_edi_vals_to_export()
+            line_vals['index'] = index
+            res['invoice_line_vals_list'].append(line_vals)
+
+        # Totals.
+        res.update({
+            'total_price_subtotal_before_discount': sum(x['price_subtotal_before_discount'] for x in res['invoice_line_vals_list']),
+            'total_price_discount': sum(x['price_discount'] for x in res['invoice_line_vals_list']),
+        })
+
+        return res
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
