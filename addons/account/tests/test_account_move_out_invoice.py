@@ -3660,3 +3660,60 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             # we want to test the update of both records in the same write operation
             invoice.write({'invoice_line_ids': [Command.update(invoice.invoice_line_ids.id, {'account_id': account_a.id})]})
+
+    @freeze_time('2023-01-01')
+    def test_post_valid_invoices_when_auto_post(self):
+        valid_invoice = self.init_invoice(move_type='out_invoice', products=self.product_a, invoice_date='2023-01-01')
+
+        # missing partner
+        invalid_invoice_1 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2023-01-01',
+            'date': '2023-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 10,
+                'quantity': 1,
+                'account_id': self.company_data['default_account_revenue'].id,
+            })],
+        })
+
+        # missing invoice lines
+        invalid_invoice_2 = self.init_invoice(move_type='out_invoice', invoice_date='2023-01-01')
+
+        (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
+
+        self.env['account.move']._autopost_draft_entries()
+        self.assertEqual(valid_invoice.state, 'posted')
+        self.assertEqual(invalid_invoice_1.state, 'draft')
+
+        self.assertTrue(any(
+            message.body == "<p>The move could not be posted for the following reason: The field 'Customer' is required, please complete it to validate the Customer Invoice.</p>"
+            for message in invalid_invoice_1.message_ids))
+
+        self.assertEqual(invalid_invoice_2.state, 'draft')
+        self.assertTrue(any(
+            message.body == "<p>The move could not be posted for the following reason: You need to add a line before posting.</p>"
+            for message in invalid_invoice_2.message_ids))
+
+    def test_no_taxes_on_payment_term_line(self):
+        ''' No tax should be set on payment_term lines'''
+
+        receivable_account = self.partner_a.property_account_receivable_id
+        receivable_account.tax_ids = [Command.set(self.company_data['default_tax_sale'].ids)]
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ],
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term'), [
+            {'account_id': receivable_account.id, 'tax_ids': []},
+        ])

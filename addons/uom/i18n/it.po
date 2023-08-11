@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -248,6 +249,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Alcuni campi critici sono stati modificati su %s.\n"
+"Nota che i dati esistenti NON saranno aggiornati da questa modifica.\n"
+"\n"
+"Dato che le unità di misura hanno un impatto sul sistema, questo potrebbe creare seri problemi.\n"
+"Ad es. modificare l'arrotondamento potrebbe disturbare l'equilibrio del magazzino.\n"
+"\n"
+"Pertanto, non è consigliabile cambiare le unità di misura principali in un database in esecuzione."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -306,7 +314,7 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr ""
+msgstr "Il valore del rapporto non può essere zero"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -378,6 +386,8 @@ msgstr ""
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
+"La categoria dell'UDM %s deve avere almeno un'unità di misura di "
+"riferimento."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -517,4 +527,4 @@ msgstr "qt (Stati Uniti)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "iarda"

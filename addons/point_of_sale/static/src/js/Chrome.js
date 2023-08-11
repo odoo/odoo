@@ -465,7 +465,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             );
         }
         showCashMoveButton() {
-            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
+            return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control && this.env.pos.config.has_cash_move_permission;
         }
 
         // UNEXPECTED ERROR HANDLING //

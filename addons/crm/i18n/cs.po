@@ -12,6 +12,8 @@
 # Jiří Podhorecký, 2022
 # dominikkertys <dominik.kertys@26house.com>, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Tomáš Píšek, 2023
+# Jakub Smolka, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1537,7 +1539,7 @@ msgstr "Přiřazení síly"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
 #: model:ir.ui.menu,name:crm.crm_menu_forecast
 msgid "Forecast"
-msgstr "Předpověď"
+msgstr "Prognóza prodeje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_pivot_forecast
@@ -1716,7 +1718,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
 msgid "Import & Synchronize"
-msgstr "Import & synchronizace"
+msgstr "Importovat a synchronizovat"
 
 #. module: crm
 #. odoo-python
@@ -2032,7 +2034,7 @@ msgstr "Potenciálni zákazníci / obchodní příležitost vytvořené"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #, python-format
 msgid "Leads"
-msgstr "Potenciální zákazníci"
+msgstr "Prospekty"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
@@ -2225,7 +2227,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Důvody ztracení"
+msgstr "Důvody ztráty"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__0
@@ -2395,7 +2397,7 @@ msgstr "Vícenásobné týmy"
 #: model:ir.ui.menu,name:crm.crm_lead_menu_my_activities
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_my_activities_filter
 msgid "My Activities"
-msgstr "Moje činnosti"
+msgstr "Mé aktivity"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__my_activity_date_deadline
@@ -2417,7 +2419,7 @@ msgstr "Moji potenciální zákazníci"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr "Moje obchodní nástěnka "
+msgstr "Mé příležitosti"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
@@ -2629,7 +2631,7 @@ msgstr "Počet potenciální zákazníci / příležitosti přiděleno minulý m
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -2910,7 +2912,7 @@ msgstr "Telefon:"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 #, python-format
 msgid "Pipeline"
-msgstr "Obchodní nástěnka"
+msgstr "Příležitosti"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
@@ -3067,7 +3069,7 @@ msgstr "Opakující se plán"
 #: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
 #: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
 msgid "Recurring Plans"
-msgstr "Opakující se plány"
+msgstr "Pravidelné příjmy"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -3158,7 +3160,7 @@ msgstr "Chyba doručení SMS"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
 msgid "Sales"
-msgstr "Prodej"
+msgstr "Prodeje"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3478,7 +3480,7 @@ msgstr "Tag"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__tag_ids
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
-msgstr "Tagy"
+msgstr "Štítky"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3871,6 +3873,11 @@ msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr ""
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr ""
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
@@ -3882,10 +3889,24 @@ msgstr ""
 "vlevo nahoře nebo odešlete e-mail %s."
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
 
 #. module: crm

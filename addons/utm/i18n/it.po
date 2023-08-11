@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s creato il %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
@@ -566,13 +566,16 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
+"Il mezzo UTM \"%s\" non può essere eliminato in quanto viene utilizzato in "
+"alcuni flussi funzionali principali come l'assunzione e l'invio di e-mail di"
+" massa."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "Il nome deve essere unico"
 
 #. module: utm
 #. openerp-web
@@ -652,6 +655,8 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
 msgstr ""
+"I mezzi UTM monitorano il mezzo utilizzato per attrarre il pubblico (ad es. "
+"\"Sito web\", \"Twitter\"...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -666,7 +671,7 @@ msgstr "Sorgente UTM"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "Mixin origine UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
@@ -674,6 +679,8 @@ msgid ""
 "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
 "...)."
 msgstr ""
+"Le fonti UTM tengono traccia della provenienza del pubblico (ad es. "
+"\"Newsletter di maggio\"...) "
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage

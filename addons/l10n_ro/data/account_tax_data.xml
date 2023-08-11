@@ -1145,7 +1145,30 @@
     <record id="tvati_extra" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="sequence">35</field>
-        <field name="name">TVA Export</field>
+        <field name="name">TVA Export Bunuri</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_tva_scutit"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('account_tax_report_ro_baza_rd14_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('account_tax_report_ro_baza_rd14_tag')],
+            }),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="tvati_extras" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="sequence">36</field>
+        <field name="name">TVA Export Servicii</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>

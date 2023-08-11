@@ -404,7 +404,10 @@ export class HtmlField extends Component {
     _isDirty() {
         const strippedPropValue = stripHistoryIds(String(this.props.value));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
-        return !this.props.readonly && (strippedPropValue || '<p><br></p>') !== strippedEditingValue;
+        const domParser = new DOMParser();
+        const parsedPropValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
+        const parsedEditingValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
+        return !this.props.readonly && parsedPropValue.innerHTML !== parsedEditingValue.innerHTML;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;

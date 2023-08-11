@@ -4366,7 +4366,7 @@ msgstr "Kontakt"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__match_note__contains
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__match_transaction_type__contains
 msgid "Contains"
-msgstr "Beinhaltet"
+msgstr "Enthält"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__body
@@ -14494,6 +14494,15 @@ msgstr ""
 "- Um den Text am Anfang der Zeile (im Etikett oder in den Notizen) abzugleichen, geben Sie einfach Ihren Text ein.\n"
 "- Um den Text an einer beliebigen Stelle (im Etikett oder in den Notizen) abzugleichen, setzen Sie Ihren Text zwischen .*\n"
 "z. B.: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+"Der Posten konnte aus folgendem Grund nicht gebucht werden: "
+"%(error_message)s"
 
 #. module: account
 #. odoo-javascript

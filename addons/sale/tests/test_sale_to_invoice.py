@@ -881,3 +881,31 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
+
+    def test_salesperson_in_invoice_followers(self):
+        """
+        Test if the salesperson is in the followers list of invoice created from SO
+        """
+        # create a salesperson
+        salesperson = self.env['res.users'].create({
+            'name': 'Salesperson',
+            'login': 'salesperson',
+            'email': 'test@test.com',
+            'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman').id])]
+        })
+
+        # create a SO and generate invoice from it
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'user_id': salesperson.id,
+            'order_line': [(0, 0, {
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 1,
+            })]
+        })
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices(final=True)
+
+        # check if the salesperson is in the followers list of invoice created from SO
+        self.assertIn(salesperson.partner_id, invoice.message_partner_ids, 'Salesperson not in the followers list of '
+                                                                           'invoice created from SO')

@@ -119,25 +119,21 @@
     <template id="report_invoice_wizard_preview">
         <t t-call="web.html_preview_container">
            <t t-call="web.external_layout">
-                   <div class="address row">
-                       <div name="address" class="col-5" style="margin-left: auto">
-                           <address>
-                               <address class="mb-0" itemscope="itemscope"
-                                        itemtype="http://schema.org/Organization">
-                                   <div>
-                                       <span itemprop="name">Deco Addict</span>
-                                   </div>
-                                   <div itemprop="address" itemscope="itemscope"
-                                        itemtype="http://schema.org/PostalAddress">
-                                       <div class="d-flex align-items-baseline">
-                                           <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
-                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
-                                       </div>
-                                   </div>
-                               </address>
-                           </address>
-                       </div>
-                   </div>
+                   <t t-set="address">
+                       <address class="mb-0" itemscope="itemscope"
+                                itemtype="http://schema.org/Organization">
+                           <div>
+                               <span itemprop="name">Deco Addict</span>
+                           </div>
+                           <div itemprop="address" itemscope="itemscope"
+                                itemtype="http://schema.org/PostalAddress">
+                               <div class="d-flex align-items-baseline">
+                                   <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                               </div>
+                           </div>
+                       </address>
+                   </t>
                    <div class="page mt-5">
                        <h2>
                            <span>Invoice</span>

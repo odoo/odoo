@@ -25,5 +25,25 @@ odoo.define('point_of_sale.tour.ChromeTourMethods', function (require) {
         }
     }
 
-    return createTourMethods('Chrome', Do);
+    class Check {
+        isCashMoveButtonHidden() {
+            return [
+                {
+                    trigger: '.pos-topheader:not(:contains(Cash In/Out))',
+                    run: () => {},
+                }
+            ];
+        }
+
+        isCashMoveButtonShown() {
+            return [
+                {
+                    trigger: '.pos-topheader:contains(Cash In/Out)',
+                    run: () => {},
+                }
+            ];
+        }
+    }
+
+    return createTourMethods('Chrome', Do, Check);
 });
