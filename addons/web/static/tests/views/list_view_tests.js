@@ -1729,6 +1729,16 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
     });
 
+    QUnit.test("text field has no title (data-tooltip)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="text"/></tree>',
+        });
+        assert.strictEqual(target.querySelector(".o_data_cell").getAttribute("data-tooltip"), null);
+    });
+
     QUnit.test("field with nolabel has no title", async function (assert) {
         await makeView({
             type: "list",
