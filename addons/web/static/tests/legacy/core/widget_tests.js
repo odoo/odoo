@@ -2,11 +2,9 @@
 
 import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
-import session from "web.session";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { renderToString } from "@web/core/utils/render";
-import env from "@web/legacy/js/common_env";
+import { makeLegacyRPC } from "@web/legacy/utils";
 
 QUnit.module('core', {}, function () {
 
@@ -403,18 +401,17 @@ QUnit.module('core', {}, function () {
     QUnit.test("calling _rpc on destroyed widgets", async function (assert) {
         assert.expect(3);
 
+        const rpc = makeLegacyRPC(() => {
+            def = testUtils.makeTestPromise();
+            def.abort = def.reject;
+            return def;
+        });
+
         var def;
         var parent = new Widget();
-        patchWithCleanup(session, {
-            rpc: () => {
-                def = testUtils.makeTestPromise();
-                def.abort = def.reject;
-                return def;
-            },
-        });
         testUtils.mock.intercept(parent, 'call_service', function ({ data }) {
             if (data.service === "ajax" && data.method === "rpc") {
-                data.callback(env.services.ajax.rpc(...data.args));
+                data.callback(rpc(...data.args));
             }
         });
         var widget = new Widget(parent);

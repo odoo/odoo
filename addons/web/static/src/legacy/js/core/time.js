@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import translation from "@web/legacy/js/core/translation";
+import { localization } from "@web/core/l10n/localization";
 import utils from "@web/legacy/js/core/utils";
+import { _t } from "@web/core/l10n/translation";
 
 var lpad = utils.lpad;
 var rpad = utils.rpad;
-var _t = translation._t;
 
 /**
  * Replacer function for JSON.stringify, serializes Date objects to UTC
@@ -205,89 +205,37 @@ export function auto_date_to_str (value, type) {
     }
 }
 
-/**
- * Convert Python strftime to escaped moment.js format.
- *
- * @param {String} value original format
- */
-export function strftime_to_moment_format (value) {
-    if (_normalize_format_cache[value] === undefined) {
-        var isletter = /[a-zA-Z]/,
-            output = [],
-            inToken = false;
-
-        for (var index=0; index < value.length; ++index) {
-            var character = value[index];
-            if (character === '%' && !inToken) {
-                inToken = true;
-                continue;
-            }
-            if (isletter.test(character)) {
-                if (inToken && normalize_format_table[character] !== undefined) {
-                    character = normalize_format_table[character];
-                } else {
-                    character = '[' + character + ']'; // moment.js escape
-                }
-            }
-            output.push(character);
-            inToken = false;
-        }
-        _normalize_format_cache[value] = output.join('');
-    }
-    return _normalize_format_cache[value];
-}
-
-var _normalize_format_cache = {};
-var normalize_format_table = {
-    // Python strftime to moment.js conversion table
-    // See openerp/addons/base/views/res_lang_views.xml
-    // for details about supported directives
-    'a': 'ddd',
-    'A': 'dddd',
-    'b': 'MMM',
-    'B': 'MMMM',
-    'd': 'DD',
-    'H': 'HH',
-    'I': 'hh',
-    'j': 'DDDD',
-    'm': 'MM',
-    'M': 'mm',
-    'p': 'A',
-    'S': 'ss',
-    'U': 'ww',
-    'W': 'WW',
-    'w': 'd',
-    'y': 'YY',
-    'Y': 'YYYY',
-    // unsupported directives
-    'c': 'ddd MMM D HH:mm:ss YYYY',
-    'x': 'MM/DD/YY',
-    'X': 'HH:mm:ss'
+const luxonToMomentFormatTable = {
+    c: "d",
+    d: "D",
+    o: "DDDD",
+    a: "A",
+    y: "Y",
 };
-var inverse_normalize_format_table = {};
-Object.entries(normalize_format_table).forEach(([key, val]) => {
-    inverse_normalize_format_table[val] = key;
-});
+
+function luxonToMomentFormat(format) {
+    return format.replace(/[a-zA-Z]/g, (match) => luxonToMomentFormatTable[match] || match);
+}
 
 /**
  * Get date format of the user's language
  */
 export function getLangDateFormat() {
-    return strftime_to_moment_format(_t.database.parameters.date_format);
+    return luxonToMomentFormat(localization.dateFormat);
 }
 
 /**
  * Get time format of the user's language
  */
 export function getLangTimeFormat() {
-    return strftime_to_moment_format(_t.database.parameters.time_format);
+    return luxonToMomentFormat(localization.timeFormat);
 }
 
 /**
  * Get date time format of the user's language
  */
 export function getLangDatetimeFormat() {
-    return strftime_to_moment_format(_t.database.parameters.date_format + " " + _t.database.parameters.time_format);
+    return luxonToMomentFormat(localization.dateTimeFormat);
 }
 
 const dateFormatWoZeroCache = {};
@@ -329,7 +277,6 @@ export default {
     time_to_str: time_to_str,
     auto_str_to_date: auto_str_to_date,
     auto_date_to_str: auto_date_to_str,
-    strftime_to_moment_format: strftime_to_moment_format,
     getLangDateFormat: getLangDateFormat,
     getLangTimeFormat: getLangTimeFormat,
     getLangDateFormatWoZero: getLangDateFormatWoZero,

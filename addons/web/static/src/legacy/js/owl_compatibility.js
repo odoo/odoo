@@ -259,10 +259,6 @@
                          You should probably create a mapper in @web/legacy/utils`
                     );
                 }
-            } else if (evType === 'get_session') {
-                if (payload.callback) {
-                    payload.callback(this.env.session);
-                }
             } else {
                 payload.__targetWidget = ev.target;
                 this.trigger(evType.replace(/_/g, '-'), payload);

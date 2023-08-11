@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/legacy/js/core/translation";
 import LegacyBus from "@web/legacy/js/core/bus";
-import session from "web.session";
 import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { nextTick, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -18,40 +16,6 @@ transitionConfig.disabled = true;
 import { patch } from "@web/core/utils/patch";
 import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
-import "./helpers/session";
-
-function stringifyObjectValues(obj, properties) {
-    let res = "";
-    for (const dotted of properties) {
-        const keys = dotted.split(".");
-        let val = obj;
-        for (const k of keys) {
-            val = val[k];
-        }
-        res += JSON.stringify(val);
-    }
-    return res;
-}
-
-function checkGlobalObjectsIntegrity() {
-    const objects = [
-        [session, ["user_context", "currencies"]],
-        [_t, ["database.multi_lang", "database.parameters"]],
-    ];
-    const initials = objects.map((obj) => stringifyObjectValues(obj[0], obj[1]));
-
-    registerCleanup((infos) => {
-        const finals = objects.map((obj) => stringifyObjectValues(obj[0], obj[1]));
-        for (const index in initials) {
-            if (initials[index] !== finals[index]) {
-                const [, /* global */ keys] = objects[index];
-                throw new Error(
-                    `The keys "${keys}" of some global objects (usually session or _t) may have been polluted by the test "${infos.testName}" in module "${infos.moduleName}". Initial: ${initials[index]}. Final: ${finals[index]}.`
-                );
-            }
-        }
-    });
-}
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -385,7 +349,6 @@ export async function setupTests() {
     // }
 
     QUnit.testStart(() => {
-        checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
@@ -398,7 +361,7 @@ export async function setupTests() {
         patchOwlApp();
     });
 
-    await Promise.all([whenReady(), session.is_bound]);
+    await whenReady();
 
     // alt attribute causes issues with scroll tests. Indeed, alt is
     // displayed between the time we scroll programatically and the time

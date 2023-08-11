@@ -1,10 +1,13 @@
 /** @odoo-module **/
 
-import session from "web.session";
 import time from "@web/legacy/js/core/time";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
+
+function getTimezoneOffset(value) {
+    return luxon.Settings.defaultZone.offset(value.valueOf());
+}
 
 /**
  * Returns a string representing a date.  If the value is false, then we return
@@ -24,7 +27,7 @@ export function formatDate(value, field, options) {
     }
     if (field && field.type === 'datetime') {
         if (!options || !('timezone' in options) || options.timezone) {
-            value = value.clone().add(session.getTZOffset(value), 'minutes');
+            value = value.clone().add(getTimezoneOffset(value), 'minutes');
         }
     }
     var date_format = time.getLangDateFormat();
@@ -49,7 +52,7 @@ export function formatDateTime(value, field, options) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
-        value = value.clone().add(session.getTZOffset(value), 'minutes');
+        value = value.clone().add(getTimezoneOffset(value), 'minutes');
     }
     return value.format(time.getLangDatetimeFormat());
 }
@@ -170,7 +173,7 @@ export function parseDateTime(value, field, options) {
         } else {
             datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
             if (options && options.timezone) {
-                datetime.add(-session.getTZOffset(datetime), 'minutes');
+                datetime.add(-getTimezoneOffset(datetime), 'minutes');
             }
         }
     }

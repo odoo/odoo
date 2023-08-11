@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import session from 'web.session'
+import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 
 /**

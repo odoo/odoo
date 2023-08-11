@@ -2,7 +2,6 @@
 
 import dom from '@web/legacy/js/core/dom';
 import legacyEnv from '@web/legacy/js/public/public_env';
-import session from 'web.session';
 import {getCookie} from '@web/legacy/js/core/cookie_utils';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { registry } from '@web/core/registry';
@@ -11,10 +10,10 @@ import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import {
     makeLegacyNotificationService,
-    makeLegacySessionService,
     makeLegacyDialogMappingService,
     mapLegacyEnvToWowlEnv,
     makeLegacyRainbowManService,
+    makeLegacyRPCService,
 } from "../../utils";
 import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 
@@ -27,6 +26,7 @@ import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
 import { Component, App, whenReady } from "@odoo/owl";
+import { getOrigin } from '@web/core/utils/urls';
 
 
 const serviceRegistry = registry.category("services");
@@ -76,7 +76,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         // TODO would be even greater to wait for localeDef only when necessary
         return Promise.all([
             this._super.apply(this, arguments),
-            session.is_bound,
             localeDef
         ]);
     },
@@ -362,7 +361,7 @@ export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
     // add a bunch of mapping services that will redirect service calls from the legacy env
     // to the wowl env
-    serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
+    serviceRegistry.add("legacy_rpc", makeLegacyRPCService(legacyEnv));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
     serviceRegistry.add("legacy_rainbowman_service", makeLegacyRainbowManService(legacyEnv));
@@ -370,11 +369,11 @@ export async function createPublicRoot(RootWidget) {
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
     }
-    await Promise.all([whenReady(), session.is_bound]);
+    await whenReady();
 
     // Patch browser.fetch and the rpc service to use the correct base url when
     // embeded in an external page
-    const baseUrl = session.prefix;
+    const baseUrl = getOrigin();
     const { fetch } = browser;
     browser.fetch = function(url, ...args) {
         if (!url.match(/^(?:https?:)?\/\//)) {

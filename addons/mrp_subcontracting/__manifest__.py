@@ -113,9 +113,7 @@
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/rpc.js',
             'web/static/src/legacy/js/core/service_mixins.js',
-            'web/static/src/legacy/js/core/session.js',
             'web/static/src/legacy/js/core/time.js',
-            'web/static/src/legacy/js/core/translation.js',
             'web/static/src/legacy/js/core/utils.js',
             'web/static/src/legacy/js/core/widget.js',
             'web/static/src/legacy/js/services/core.js',
@@ -172,7 +170,6 @@
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/core/dates.js',
-            'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 

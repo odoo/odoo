@@ -3,7 +3,7 @@
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import session from "web.session";
+import { session } from "@web/session";
 import { InputConfirmationDialog } from './components/input_confirmation_dialog/input_confirmation_dialog';
 import { _t } from "@web/core/l10n/translation";
 

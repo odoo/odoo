@@ -3028,10 +3028,6 @@ export class Wysiwyg extends Component {
         const payload = ev.data;
         if (evType === 'call_service') {
             this._callService(payload);
-        } else if (evType === 'get_session') {
-            if (payload.callback) {
-                payload.callback(this.env.session);
-            }
         }
     }
     _callService(payload) {

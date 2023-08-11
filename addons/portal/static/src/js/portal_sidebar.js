@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import session from "web.session";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
@@ -34,7 +33,6 @@ var PortalSidebar = publicWidget.Widget.extend({
                 diff = dateTime.diff(today).as("days"),
                 displayStr;
 
-            session.is_bound.then(function (){
                 if (diff === 0) {
                     displayStr = _t('Due today');
                 } else if (diff > 0) {
@@ -45,7 +43,6 @@ var PortalSidebar = publicWidget.Widget.extend({
                     displayStr = _t('%s days overdue', Math.abs(diff).toFixed(1));
                 }
                 $(el).text(displayStr);
-            });
         });
     },
     /**

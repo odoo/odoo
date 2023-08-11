@@ -16,97 +16,13 @@
      * [1] https://github.com/odoo/owl/blob/master/doc/reference/environment.md#content-of-an-environment
      */
 
-    import { jsonRpc } from "@web/legacy/js/core/ajax";
     import { bus } from "@web/legacy/js/services/core";
-    import rpc from "@web/legacy/js/core/rpc";
-    import session from "web.session";
-    import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
-    const browser = {
-        clearInterval: window.clearInterval.bind(window),
-        clearTimeout: window.clearTimeout.bind(window),
-        Date: window.Date,
-        fetch: (window.fetch || (() => { })).bind(window),
-        Notification: window.Notification,
-        requestAnimationFrame: window.requestAnimationFrame.bind(window),
-        setInterval: window.setInterval.bind(window),
-        setTimeout: window.setTimeout.bind(window),
-    };
-    Object.defineProperty(browser, 'innerHeight', {
-        get: () => window.innerHeight,
-    });
-    Object.defineProperty(browser, 'innerWidth', {
-        get: () => window.innerWidth,
-    });
 
     // Build the basic env
     const env = {
-        browser,
         bus,
         debug: odoo.debug,
-        services: {
-            ajax: {
-                rpc(route, args, options, target) {
-                    let rpcPromise = null;
-                    const promise = new Promise(function (resolve, reject) {
-                        rpcPromise = session.rpc(route, args, options);
-                        rpcPromise.then(function (result) {
-                            if (!target.isDestroyed()) {
-                                resolve(result);
-                            }
-                        }).guardedCatch(function (reason) {
-                            if (!target.isDestroyed()) {
-                                reject(reason);
-                            }
-                        });
-                    });
-                    promise.abort = rpcPromise.abort.bind(rpcPromise);
-                    return promise;
-                },
-            },
-            ajaxJsonRPC() {
-                return jsonRpc(...arguments);
-            },
-            getCookie() {
-                return getCookie(...arguments);
-            },
-            httpRequest(route, params = {}, readMethod = 'json') {
-                const info = {
-                    method: params.method || 'POST',
-                };
-                if (params.method !== 'GET') {
-                    const formData = new FormData();
-                    for (const key in params) {
-                        if (key === 'method') {
-                            continue;
-                        }
-                        const value = params[key];
-                        if (Array.isArray(value) && value.length) {
-                            for (const val of value) {
-                                formData.append(key, val);
-                            }
-                        } else {
-                            formData.append(key, value);
-                        }
-                    }
-                    info.body = formData;
-                }
-                return fetch(route, info).then(response => response[readMethod]());
-            },
-            navigate(url, params) {
-                window.location = $.param.querystring(url, params);
-            },
-            reloadPage() {
-                window.location.reload();
-            },
-            rpc(params, options) {
-                const query = rpc.buildQuery(params);
-                return session.rpc(query.route, query.params, options);
-            },
-            setCookie() {
-                setCookie(...arguments);
-            },
-        },
-        session,
+        services: {},
     };
 
     export default env;

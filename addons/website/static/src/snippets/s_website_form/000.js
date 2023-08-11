@@ -2,7 +2,7 @@
 
     import time from "@web/legacy/js/core/time";
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
-    import session from "web.session";
+    import { session } from "@web/session";
     import ajax from "@web/legacy/js/core/ajax";
     import publicWidget from "@web/legacy/js/public/public_widget";
     import dom from "@web/legacy/js/core/dom";
