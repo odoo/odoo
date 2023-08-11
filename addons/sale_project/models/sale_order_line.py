@@ -327,10 +327,18 @@ class SaleOrderLine(models.Model):
                         project = map_so_project[so_line.order_id.id]
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
-            so_line._generate_milestone()
+            so_line._handle_milestones(project)
 
-    def _generate_milestone(self):
-        if self.product_id.service_policy == 'delivered_milestones':
+    def _handle_milestones(self, project):
+        self.ensure_one()
+        if self.product_id.service_policy != 'delivered_milestones':
+            return
+        if (milestones := project.milestone_ids.filtered(lambda milestone: not milestone.sale_line_id)):
+            milestones.write({
+                'sale_line_id': self.id,
+                'product_uom_qty': self.product_uom_qty / len(milestones),
+            })
+        else:
             milestone = self.env['project.milestone'].create({
                 'name': self.name,
                 'project_id': self.project_id.id or self.order_id.project_id.id,
