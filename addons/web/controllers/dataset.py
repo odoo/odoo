@@ -3,8 +3,9 @@
 import logging
 import warnings
 
-from odoo import http
+from odoo import http, _
 from odoo.api import call_kw
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.models import check_method_name
 from .utils import clean_action
@@ -22,6 +23,8 @@ class DataSet(http.Controller):
         return request.env[model].web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
 
     def _call_kw(self, model, method, args, kwargs):
+        if model not in request.env.registry.models:
+            raise AccessError(_("The model '%s' you are trying to access is either not Install or Invalid", model))
         check_method_name(method)
         return call_kw(request.env[model], method, args, kwargs)
 
