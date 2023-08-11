@@ -42,8 +42,11 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: "td[name='name'][data-tooltip*='VIP']",
-    run: function () {} // check
+    trigger: 'label:contains("Untaxed Amount")',
+    // click somewhere else to exit cell focus
+}, {
+    trigger: "td[name='name'] span:contains('VIP')",
+    run: () => {}, // check
 }, {
     trigger: 'ul.nav a:contains("Order Lines")',
     run: 'click'
@@ -69,7 +72,10 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
-    trigger: "td[name='name'][data-tooltip*='Standard']",
-    run: function () {} // check
+    trigger: 'label:contains("Untaxed Amount")',
+    // click somewhere else to exit cell focus
+}, {
+    trigger: "td[name='name'] span:contains('Standard')",
+    run: () => {}, // check
 }, ...stepUtils.saveForm()
 ]});
