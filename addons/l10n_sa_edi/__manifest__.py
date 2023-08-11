@@ -6,6 +6,7 @@
     'icon': '/l10n_sa/static/description/icon.png',
     'version': '0.1',
     'depends': [
+        'account_edi',
         'account_edi_ubl_cii',
         'account_debit_note',
         'l10n_sa',
