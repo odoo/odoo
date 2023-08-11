@@ -1,14 +1,14 @@
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 @patch.object(User, '_get_microsoft_calendar_token', mock_get_token)
 class TestCreateEvents(TestCommon):
-
 
     @patch.object(MicrosoftCalendarService, 'insert')
     def test_create_simple_event_without_sync(self, mock_insert):
@@ -84,9 +84,7 @@ class TestCreateEvents(TestCommon):
         self.assertEqual(new_records.user_id, self.organizer_user)
 
     @patch.object(MicrosoftCalendarService, 'get_events')
-    def test_create_simple_event_from_outlook_attendee_calendar_and_organizer_does_not_exist_in_odoo(
-        self, mock_get_events
-    ):
+    def test_create_simple_event_from_outlook_attendee_calendar_and_organizer_does_not_exist_in_odoo(self, mock_get_events):
         """
         An event has been created in Outlook and synced in the Odoo attendee calendar.
         no Odoo user that matches with the organizer email address.
@@ -116,6 +114,8 @@ class TestCreateEvents(TestCommon):
         """
         A Odoo recurrent event is created when Outlook sync is not enabled.
         """
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
 
         # arrange
         self.organizer_user.microsoft_synchronization_stopped = True
@@ -135,6 +135,8 @@ class TestCreateEvents(TestCommon):
         """
         A Odoo recurrent event is created when Outlook sync is enabled.
         """
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
 
         # >>> first phase: create the recurrence
 
@@ -178,7 +180,8 @@ class TestCreateEvents(TestCommon):
         should happen as it we prevent sync of recurrences from other users
         ( see microsoft_calendar/models/calendar_recurrence_rule.py::_get_microsoft_sync_domain() )
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # >>> first phase: create the recurrence
 
         # act
@@ -257,3 +260,21 @@ class TestCreateEvents(TestCommon):
         self.assert_odoo_recurrence(new_recurrences, self.expected_odoo_recurrency_from_outlook)
         for i, e in enumerate(sorted(new_events, key=lambda e: e.id)):
             self.assert_odoo_event(e, self.expected_odoo_recurrency_events_from_outlook[i])
+
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_forbid_recurrences_creation_synced_outlook_calendar(self, mock_insert):
+        """
+        Forbids new recurrences creation in Odoo due to Outlook spam limitation of updating recurrent events.
+        """
+        # Set custom calendar token validity to simulate real scenario.
+        self.env.user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=5)
+
+        # Assert that synchronization with Outlook is active.
+        self.assertFalse(self.env.user.microsoft_synchronization_stopped)
+
+        with self.assertRaises(UserError):
+            self.env["calendar.event"].create(
+                self.recurrent_event_values
+            )
+        # Assert that no insert call was made.
+        mock_insert.assert_not_called()

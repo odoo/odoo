@@ -57,9 +57,22 @@ class Meeting(models.Model):
             'need_sync_m': True,
         })
 
+    def _check_microsoft_sync_status(self):
+        """
+        Returns True if synchronization with Outlook Calendar is active and False otherwise.
+        The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
+        """
+        outlook_connected = self.env.user._get_microsoft_calendar_token() and self.env.user._is_microsoft_calendar_valid()
+        return outlook_connected and self.env.user.microsoft_synchronization_stopped is False
+
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
+
+        # Forbid recurrence creation in Odoo, suggest its creation in Outlook due to the spam limitation.
+        recurrency_in_batch = any(vals.get('recurrency') for vals in vals_list)
+        if self._check_microsoft_sync_status() and not notify_context and recurrency_in_batch:
+            self._forbid_recurrence_creation()
 
         # for a recurrent event, we do not create events separately but we directly
         # create the recurrency from the corresponding calendar.recurrence.
@@ -103,8 +116,34 @@ class Meeting(models.Model):
 
         return (event_start, event_stop) == (start, stop)
 
+    def _forbid_recurrence_update(self):
+        """
+        Suggest user to update recurrences in Outlook due to the Outlook Calendar spam limitation.
+        """
+        error_msg = _("Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.")
+        if any(not record.microsoft_id for record in self):
+            # If any event is not synced, suggest deleting it in Odoo and recreating it in Outlook.
+            error_msg = _(
+                "Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
+                "If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar.")
+
+        raise UserError(error_msg)
+
+    def _forbid_recurrence_creation(self):
+        """
+        Suggest user to update recurrences in Outlook due to the Outlook Calendar spam limitation.
+        """
+        raise UserError(_("Due to an Outlook Calendar limitation, recurrent events must be created directly in Outlook Calendar."))
+
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')
+        notify_context = self.env.context.get('dont_notify', False)
+
+        # Forbid recurrence updates through Odoo and suggest user to update it in Outlook.
+        if self._check_microsoft_sync_status():
+            recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
+            if not notify_context and (recurrence_update_setting or 'recurrency' in values or recurrency_in_batch):
+                self._forbid_recurrence_update()
 
         # check a Outlook limitation in overlapping the actual recurrence
         if recurrence_update_setting == 'self_only' and 'start' in values:
@@ -117,13 +156,18 @@ class Meeting(models.Model):
                 e._microsoft_delete(e._get_organizer(), e.ms_organizer_event_id, timeout=3)
                 e.microsoft_id = False
 
-        notify_context = self.env.context.get('dont_notify', False)
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
 
         if recurrence_update_setting in ('all_events',) and len(self) == 1 \
            and values.keys() & self._get_microsoft_synced_fields():
             self.recurrence_id.need_sync_m = True
         return res
+
+    def action_mass_archive(self, recurrence_update_setting):
+        # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
+        if self._check_microsoft_sync_status() and any(self.microsoft_id):
+            self._forbid_recurrence_update()
+        super().action_mass_archive(recurrence_update_setting)
 
     def _get_microsoft_sync_domain(self):
         # in case of full sync, limit to a range of 1y in past and 1y in the future by default
@@ -135,7 +179,6 @@ class Meeting(models.Model):
             ('partner_ids.user_ids', 'in', self.env.user.id),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
-            # Do not sync events that follow the recurrence, they are already synced at recurrence creation
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
         return self._extend_microsoft_domain(domain)
