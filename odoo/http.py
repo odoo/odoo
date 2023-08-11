@@ -1538,9 +1538,11 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
-            return Stream.from_path(filepath).get_response(
+            res = Stream.from_path(filepath).get_response(
                 max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
             )
+            root.set_csp(res)
+            return res
         except KeyError:
             raise NotFound(f'Module "{module}" not found.\n')
         except OSError:  # cover both missing file and invalid permissions
