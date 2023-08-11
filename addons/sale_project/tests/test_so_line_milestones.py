@@ -166,3 +166,82 @@ class TestSoLineMilestones(TestSaleCommon):
             self.fail("The sale order should be confirmed, "
                       "and no ValidationError or NotNullViolation should be raised, "
                       "for a missing project on the milestone.")
+
+    def test_so_with_milestone_products(self):
+        """
+        If a SO contains products invoiced based on milestones, a milestone should be created for each of them
+        in their project.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        products = self.product_delivery_milestones1 | self.product_delivery_milestones2 | self.product_delivery_milestones3
+        products.service_tracking = 'task_in_project'
+
+        self.env['sale.order.line'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 20,
+            'order_id': sale_order.id,
+        } for product in products])
+        sale_order.action_confirm()
+        project = sale_order.project_ids
+        self.assertEqual(len(project.milestone_ids), 3, "The project should have a milestone for each product.")
+        self.assertCountEqual({m.name for m in project.milestone_ids}, {f"[{products[0].default_code}] {p.name}" for p in products}, "The milestones should be named after the products.")
+
+    def test_project_template_with_milestones(self):
+        """
+        If a milestone product has a project template with configured milestones, use those instead of creating
+        a new milestone and set a quantity equal to the quantity of the SOL divided by the number of milestones.
+        """
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template',
+        })
+        self.env['project.milestone'].create([{
+            'project_id': project_template.id,
+            'name': str(i),
+        } for i in range(4)])
+        self.product_delivery_milestones1.project_template_id = project_template.id
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_milestones1.id,
+            'product_uom_qty': 20,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+
+        project = sale_order.project_ids
+        self.assertEqual(len(project.milestone_ids), 4, "The generated project should have 4 milestones.")
+        self.assertEqual({m.quantity_percentage for m in project.milestone_ids}, {0.25}, "All milestones of the generated project should have a quantity percentage of 25%.")
+
+    def test_project_template_with_milestones_multiple_products(self):
+        """
+        If multiple products use the same project template, which has configured milestones, use the first product
+        on those milestones, but generate the other default milestones as normal
+        """
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template',
+        })
+        self.env['project.milestone'].create([{
+            'project_id': project_template.id,
+            'name': str(i),
+        } for i in range(4)])
+        products = self.product_delivery_milestones1 | self.product_delivery_milestones2
+        products.write({
+            'project_template_id': project_template.id,
+            'service_tracking': 'task_in_project',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.env['sale.order.line'].create([{
+            'product_id': product.id,
+            'product_uom_qty': 20,
+            'order_id': sale_order.id,
+        } for product in products])
+        sale_order.action_confirm()
+
+        project = sale_order.project_ids
+        self.assertEqual(len(project.milestone_ids), 5, "The project should have 5 milestones")
