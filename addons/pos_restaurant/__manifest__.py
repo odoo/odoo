@@ -17,7 +17,6 @@ This module adds several features to the Point of Sale that are specific to rest
 
 """,
     'depends': ['point_of_sale'],
-    'auto_install': True,
     'website': 'https://www.odoo.com/app/point-of-sale-restaurant',
     'data': [
         'security/ir.model.access.csv',
@@ -30,6 +29,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'data/pos_restaurant_demo.xml',
     ],
     'installable': True,
+    'application': True,
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_restaurant/static/src/**/*',
