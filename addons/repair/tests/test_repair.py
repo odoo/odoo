@@ -493,3 +493,49 @@ class TestRepair(common.TransactionCase):
         repair.action_create_sale_order()
         self.assertEqual(repair.sale_order_id.order_line.product_id, self.product_product_11)
         self.assertEqual(repair.sale_order_id.order_line.purchase_price, 10)
+
+    def test_repair_from_return(self):
+        """
+        create a repair order from a return delivery and ensure that the stock.move
+        resulting from the repair is not associated with the return picking.
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_14, 1)
+        picking_form = Form(self.env['stock.picking'])
+        #create a delivery order
+        picking_form.picking_type_id = self.stock_warehouse.out_type_id
+        picking_form.partner_id = self.res_partner_1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 1.0
+        picking = picking_form.save()
+        picking.action_confirm()
+        picking.action_assign()
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(picking.state, 'done')
+        # Create a return
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_picking.action_set_quantities_to_reservation()
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form.product_id = product
+        repair = repair_form.save()
+        repair.action_repair_start()
+        repair.action_repair_end()
+        self.assertEqual(repair.state, 'done')
+        self.assertEqual(len(return_picking.move_ids), 1)
