@@ -2213,7 +2213,7 @@ const Wysiwyg = Widget.extend({
             this.preSavePromiseResolve();
             resetPreSavePromise();
         } catch (e) {
-            this.preSavePromiseReject(e);
+            this.preSavePromiseReject && this.preSavePromiseReject(e);
             resetPreSavePromise();
         }
     },
