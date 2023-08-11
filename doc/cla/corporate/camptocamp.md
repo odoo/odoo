@@ -1,9 +1,9 @@
 Switzerland, France, 2015-02-10
 
-Camptocamp SA and Camptocamp SaS agrees to the terms of the Odoo Corporate 
+Camptocamp SA and Camptocamp SaS agrees to the terms of the Odoo Corporate
 Contributor License Agreement v1.0.
 
-I declare that I am authorized and able to make this agreement and sign this 
+I declare that I am authorized and able to make this agreement and sign this
 declaration.
 
 Signed,
@@ -46,3 +46,4 @@ Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska
 Matthieu Mequignon matthieu.mequignon@camptocamp.com https://github.com/mmequignon
 Silvio Gregorini silvio.gregorini@camptocamp.com https://github.com/SilvioC2C
 Iryna Vyshnevska iryna.vyshnevska@camptocamp.com https://github.com/i-vyshnevska
+Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/Ricardoalso
