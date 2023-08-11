@@ -8,6 +8,7 @@ import re
 
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
@@ -74,9 +75,8 @@ def locate_node(arch, spec):
         expr = spec.get('expr')
         try:
             xPath = etree.ETXPath(expr)
-        except etree.XPathSyntaxError:
-            _logger.error("XPathSyntaxError while parsing xpath %r", expr)
-            raise
+        except etree.XPathSyntaxError as e:
+            raise ValidationError(_("Invalid Expression while parsing xpath %r", expr)) from e
         nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
