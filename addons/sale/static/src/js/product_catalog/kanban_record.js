@@ -1,9 +1,9 @@
 /** @odoo-module */
-import { useState, useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useDebounced } from "@web/core/utils/timing";
-import { ProductCatalogSOL } from "./sale_order_line/sale_order_line"
+import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { ProductCatalogSOL } from "./sale_order_line/sale_order_line";
 
 export class ProductCatalogKanbanRecord extends KanbanRecord {
     static template = "sale.ProductCatalogKanbanRecord";
@@ -12,10 +12,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
         this.rpc = useService("rpc");
-        this.state = useState({
-            price:  this.props.record.productCatalogData.price,
-            quantity: this.props.record.productCatalogData.quantity || 0,
-        });
         this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500);
 
         useSubEnv({
@@ -28,6 +24,10 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
         });
+    }
+
+    get productCatalogData() {
+        return this.props.record.productCatalogData;
     }
 
     onGlobalClick(ev) {
@@ -46,45 +46,46 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         const price = await this.rpc("/sales/catalog/update_sale_order_line_info", {
             order_id: this.env.orderId,
             product_id: this.env.productId,
-            quantity: this.state.quantity,
-        })
+            quantity: this.productCatalogData.quantity,
+        });
         // Force a reload of the page to remove a product from the view in the case a filter is
         // applied.
-        if (this.state.quantity === 0) {
+        if (this.productCatalogData.quantity === 0) {
             this.props.record.model.load();
         }
-        this.state.price = parseFloat(price);
+        this.productCatalogData.price = parseFloat(price);
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    updateQuantity(quantity) {
+        if (this.productCatalogData.readOnly) {
+            return;
+        }
+        this.productCatalogData.quantity = quantity;
+        this.debouncedUpdateQuantity();
+    }
     /**
      * Add the product to the order
      */
     addProduct() {
-        if (this.props.record.productCatalogData.readOnly) return;
-        this.state.quantity = 1;
-        this.debouncedUpdateQuantity();
+        this.updateQuantity(1);
     }
 
     /**
      * Remove the product to the order
      */
     removeProduct() {
-        if (this.props.record.productCatalogData.readOnly) return;
-        this.state.quantity = 0;
-        this.debouncedUpdateQuantity();
+        this.updateQuantity(0);
     }
 
     /**
      * Increase the quantity of the product on the sale order line.
      */
     increaseQuantity() {
-        if (this.props.record.productCatalogData.readOnly) return;
-        this.state.quantity += 1;
-        this.debouncedUpdateQuantity();
+        this.updateQuantity(this.productCatalogData.quantity + 1);
     }
 
     /**
@@ -93,18 +94,13 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      * @param {Event} event
      */
     setQuantity(event) {
-        if (this.props.record.productCatalogData.readOnly) return;
-        this.state.quantity = parseFloat(event.target.value);
-        this.debouncedUpdateQuantity();
+        this.updateQuantity(parseFloat(event.target.value));
     }
 
     /**
      * Decrease the quantity of the product on the sale order line.
      */
     decreaseQuantity() {
-        if (this.props.record.productCatalogData.readOnly) return;
-        this.state.quantity -= 1;
-        this.debouncedUpdateQuantity();
+        this.updateQuantity(parseFloat(this.productCatalogData.quantity - 1));
     }
-
 }
