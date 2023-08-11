@@ -102,7 +102,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update one Odoo event name from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_name = "my specific event in recurrence"
         modified_event_id = 4
@@ -135,7 +136,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update one Odoo event start date from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 29, 10, 0, 0)
         modified_event_id = 4
@@ -182,6 +184,8 @@ class TestUpdateEvents(TestCommon):
         Update one Odoo event start date from a recurrence from the organizer calendar, in order to
         overlap another existing event.
         """
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 27, 10, 0, 0)
         modified_event_id = 4
@@ -203,7 +207,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update one Odoo event name from a recurrence from the atendee calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_name = "my specific event in recurrence"
         modified_event_id = 4
@@ -238,7 +243,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update a Odoo event name and future events from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_name = "my specific event in recurrence"
         modified_event_id = 4
@@ -277,7 +283,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update a Odoo event start date and future events from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # When a time-related field is changed, the event does not follow the recurrence scheme anymore.
         # With Outlook, another constraint is that the new start of the event cannot overlap/cross the start
         # date of another event of the recurrence (see microsoft_calendar/models/calendar.py
@@ -354,7 +361,8 @@ class TestUpdateEvents(TestCommon):
         Update a Odoo event start date and future events from a recurrence from the organizer calendar,
         overlapping an existing event.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 27, 10, 0, 0)
         modified_event_id = 4
@@ -425,7 +433,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update a Odoo event name and future events from a recurrence from the attendee calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 29, 10, 0, 0)
         modified_event_id = 4
@@ -494,7 +503,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update all events name from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_name = "my specific event in recurrence"
 
@@ -528,7 +538,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update all events start date from a recurrence from the organizer calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 25, 10, 0, 0)
         existing_recurrences = self.env["calendar.recurrence"].search([])
@@ -591,7 +602,8 @@ class TestUpdateEvents(TestCommon):
         """
         Update all events start date from a recurrence from the attendee calendar.
         """
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         new_date = datetime(2021, 9, 25, 10, 0, 0)
         existing_recurrences = self.env["calendar.recurrence"].search([])
@@ -1271,3 +1283,34 @@ class TestUpdateEvents(TestCommon):
                 e.start.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
                 ms_events_to_update[e.ms_organizer_event_id]["dateTime"]
             )
+
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_forbid_simple_event_become_recurrence_sync_on(self, mock_patch):
+        """
+        Forbid in Odoo simple event becoming a recurrence when Outlook Calendar sync is active.
+        """
+        # Set custom calendar token validity to simulate real scenario.
+        self.env.user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=5)
+
+        # Assert that synchronization with Outlook Calendar is active.
+        self.assertFalse(self.env.user.microsoft_synchronization_stopped)
+
+        # Simulate upgrade of a simple event to recurrent event (forbidden).
+        simple_event = self.env['calendar.event'].create(self.simple_event_values)
+        with self.assertRaises(UserError):
+            simple_event.write({
+                'recurrency': True,
+                'rrule_type': 'weekly',
+                'event_tz': 'America/Sao_Paulo',
+                'end_type': 'count',
+                'interval': 1,
+                'count': 1,
+                'fri': True,
+                'month_by': 'date',
+                'day': 1,
+                'weekday': 'FRI',
+                'byday': '2'
+            })
+
+        # Assert that no patch call was made due to the recurrence update forbiddance.
+        mock_patch.assert_not_called()
