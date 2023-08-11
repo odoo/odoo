@@ -79,13 +79,11 @@ class ReturnPicking(models.TransientModel):
             vals['purchase_line_id'], vals['partner_id'] = return_line.move_id._get_purchase_line_and_partner_from_chain()
         return vals
 
-    def _create_returns(self):
-        new_picking_id, picking_type_id = super()._create_returns()
-        picking = self.env['stock.picking'].browse(new_picking_id)
-        if len(picking.move_ids.partner_id) == 1:
-            picking.partner_id = picking.move_ids.partner_id
-        return new_picking_id, picking_type_id
-
+    def _prepare_picking_default_values(self):
+        vals = super()._prepare_picking_default_values()
+        if len(self.picking_id.move_ids.partner_id) == 1:
+            vals['partner_id'] = self.picking_id.move_ids.partner_id.id
+        return vals
 
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"

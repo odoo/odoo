@@ -670,3 +670,21 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po.order_line[0].qty_received, 5)
         self.assertEqual(po.order_line[1].qty_received, 5)
+
+    def test_po_return_location_check(self):
+        """ Ensure the correct source and destination location while returning the product """
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+
+        self.picking = self.po.picking_ids[0]
+        self.picking.action_set_quantities_to_reservation()
+        self.picking.button_validate()
+
+        pick = self.po.picking_ids
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.create_returns()
+        self.assertEqual(self.po.picking_ids[0].location_id, self.po.picking_ids[1].location_dest_id)
+        self.assertEqual(self.po.picking_ids[1].location_id, self.po.picking_ids[0].location_dest_id)
