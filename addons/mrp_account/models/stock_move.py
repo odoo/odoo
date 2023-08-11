@@ -43,5 +43,9 @@ class StockMove(models.Model):
             return True
         return super()._is_returned(valued_type)
 
+    def _should_force_price_unit(self):
+        self.ensure_one()
+        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
+
     def _ignore_automatic_valuation(self):
         return bool(self.raw_material_production_id)
