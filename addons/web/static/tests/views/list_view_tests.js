@@ -11273,10 +11273,10 @@ QUnit.module("Views", (hooks) => {
             .map((node) => {
                 if (node === arrowIcon) {
                     return "->";
-                } else if (node.nodeType === 3) {
+                } else if (node.nodeType === Node.TEXT_NODE) {
                     return node.nodeValue.trim();
                 } else {
-                    return false;
+                    return node.innerText?.trim();
                 }
             })
             .filter(Boolean);
@@ -11304,10 +11304,10 @@ QUnit.module("Views", (hooks) => {
             .map((node) => {
                 if (node === arrowIcon) {
                     return "->";
-                } else if (node.nodeType === 3) {
+                } else if (node.nodeType === Node.TEXT_NODE) {
                     return node.nodeValue.trim();
                 } else {
-                    return false;
+                    return node.innerText?.trim();
                 }
             })
             .filter(Boolean);
