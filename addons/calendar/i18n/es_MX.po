@@ -2277,7 +2277,8 @@ msgstr "Fecha de inicio"
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
 msgstr ""
-"Fecha de inicio del evento, sin horas para eventos que duran un día completo"
+"Fecha de inicio del evento. Los eventos que duran todo el día no incluyen la"
+" hora."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2302,7 +2303,9 @@ msgstr "Detener"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Fecha de fin del evento, sin horas para eventos de día completo"
+msgstr ""
+"Fecha de fin del evento. Los eventos que duran todo el día no incluyen la "
+"hora."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2482,7 +2485,7 @@ msgstr ""
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr "Reunión de hoy"
+msgstr "Reuniones de hoy"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -2575,7 +2578,7 @@ msgstr "Años"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Sí, asistiré"
+msgstr "Sí, asistiré."
 
 #. module: calendar
 #. odoo-python
@@ -2646,9 +2649,9 @@ msgstr "{{ object.event_id.name }} - Recordatorio"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr "{{ object.event_id.name }}: Fecha actualizada"
+msgstr "{{ object.event_id.name }}: fecha actualizada"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr "{{object.name}}: Actualización de evento"
+msgstr "{{object.name}}: actualización del evento"
