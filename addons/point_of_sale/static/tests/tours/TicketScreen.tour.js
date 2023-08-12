@@ -116,7 +116,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         TicketScreen.do.clickBackToMainTicketScreen();
         // When going back, the ticket screen should be in its previous state.
         TicketScreen.check.filterIs("Paid");
-
         // Test refund //
         TicketScreen.do.clickDiscard();
         ProductScreen.check.isShown();
@@ -127,7 +126,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         TicketScreen.do.selectOrder("-0005");
         TicketScreen.check.partnerIs("Colleen Diaz");
         TicketScreen.do.clickOrderline("Desk Pad");
-        TicketScreen.do.pressNumpad("3");
+        ProductScreen.do.pressNumpad("3");
         // Error should show because 2 is more than the number
         // that can be refunded.
         ErrorPopup.do.clickConfirm();
@@ -138,7 +137,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         ProductScreen.do.clickRefund();
         TicketScreen.do.selectOrder("-0005");
         TicketScreen.do.clickOrderline("Desk Pad");
-        TicketScreen.do.pressNumpad("1");
+        ProductScreen.do.pressNumpad("1");
         TicketScreen.check.toRefundTextContains("To Refund: 1.00");
         TicketScreen.do.confirmRefund();
         ProductScreen.do.goBackToMainScreen();
@@ -150,10 +149,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         ErrorPopup.do.clickConfirm();
         // Change the refund line quantity to -3 -- not allowed
         // so error popup.
-        ProductScreen.do.pressNumpad("+/- 3");
+        ProductScreen.do.pressNumpad("+/-", "3");
         ErrorPopup.do.clickConfirm();
         // Change the refund line quantity to -2 -- allowed.
-        ProductScreen.do.pressNumpad("+/- 2");
+        ProductScreen.do.pressNumpad("+/-", "2");
         ProductScreen.check.selectedOrderlineHas("Desk Pad", "-2.00");
         // Check if the amount being refunded changed to 2.
         ProductScreen.do.clickRefund();

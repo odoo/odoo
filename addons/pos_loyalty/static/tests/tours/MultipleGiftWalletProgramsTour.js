@@ -25,7 +25,7 @@ registry
             ProductScreen.check.selectedOrderlineHas("Gift Card");
             ProductScreen.do.pressNumpad("Price");
             ProductScreen.check.modeIsActive("Price");
-            ProductScreen.do.pressNumpad("1 0");
+            ProductScreen.do.pressNumpad("1", "0");
             PosLoyalty.check.orderTotalIs("10.00");
             PosLoyalty.exec.finalizeOrder("Cash", "10");
             // One card for gift_card_1.
@@ -34,7 +34,7 @@ registry
             ProductScreen.check.selectedOrderlineHas("Gift Card");
             ProductScreen.do.pressNumpad("Price");
             ProductScreen.check.modeIsActive("Price");
-            ProductScreen.do.pressNumpad("2 0");
+            ProductScreen.do.pressNumpad("2", "0");
             PosLoyalty.check.orderTotalIs("20.00");
             PosLoyalty.exec.finalizeOrder("Cash", "20");
             // Top up ewallet_1 for AAAAAAA.
@@ -46,7 +46,7 @@ registry
             ProductScreen.do.clickCustomer("AAAAAAA");
             ProductScreen.do.pressNumpad("Price");
             ProductScreen.check.modeIsActive("Price");
-            ProductScreen.do.pressNumpad("3 0");
+            ProductScreen.do.pressNumpad("3", "0");
             PosLoyalty.check.orderTotalIs("30.00");
             PosLoyalty.exec.finalizeOrder("Cash", "30");
             // Top up ewallet_2 for AAAAAAA.
@@ -56,7 +56,7 @@ registry
             ProductScreen.do.clickCustomer("AAAAAAA");
             ProductScreen.do.pressNumpad("Price");
             ProductScreen.check.modeIsActive("Price");
-            ProductScreen.do.pressNumpad("4 0");
+            ProductScreen.do.pressNumpad("4", "0");
             PosLoyalty.check.orderTotalIs("40.00");
             PosLoyalty.exec.finalizeOrder("Cash", "40");
             // Top up ewallet_1 for BBBBBBB.

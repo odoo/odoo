@@ -12,8 +12,6 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
     test: true,
     url: "/pos/ui",
     steps: () => {
-        // signal to start generating steps
-        // when finished, steps can be taken from getSteps
         startSteps();
         ProductScreen.do.confirmOpeningPopup();
 
@@ -31,13 +29,13 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
         PaymentScreen.do.clickValidate();
         ReceiptScreen.do.clickNextOrder();
 
-        // Go to another table and refund one of the product
+        // Go to another table and refund one of the products
         FloorScreen.do.clickTable("4");
         ProductScreen.check.orderIsEmpty();
         ProductScreen.do.clickRefund();
         TicketScreen.do.selectOrder("-0001");
         TicketScreen.do.clickOrderline("Coca-Cola");
-        TicketScreen.do.pressNumpad("2");
+        ProductScreen.do.pressNumpad("2");
         TicketScreen.check.toRefundTextContains("To Refund: 2.00");
         TicketScreen.do.confirmRefund();
         ProductScreen.check.isShown();

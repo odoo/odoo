@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";
+import { Numpad } from "./helpers/NumpadTourMethods";
 
 function assert(condition, message) {
     if (!condition) {
@@ -211,10 +212,7 @@ steps = steps.concat([
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
     },
-    {
-        content: "change qty to 2 kg",
-        trigger: ".numpad button.input-button:visible:contains('2')",
-    },
+    Numpad.click("2"),
     {
         content: "qty of Wall Shelf line should be 2",
         trigger:
@@ -250,19 +248,9 @@ steps = steps.concat([
             ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .info-list .info em:contains('1.0')",
         run: function () {},
     },
-    {
-        content: "change to price mode",
-        trigger: ".numpad button:contains('Price')",
-    },
-    {
-        content: "make sure price mode is activated",
-        trigger: ".numpad button.selected-mode:contains('Price')",
-        run: function () {},
-    },
-    {
-        content: "manually override the unit price of these shelf to $5",
-        trigger: ".numpad button.input-button:visible:contains('5')",
-    },
+    Numpad.click("Price"),
+    Numpad.isActive("Price"),
+    Numpad.click("5"),
     {
         content: "Small Shelf line should be selected with unit price of 5",
         trigger:
@@ -270,15 +258,8 @@ steps = steps.concat([
         extra_trigger:
             ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .price:contains('5.0')",
     },
-    {
-        content: "change back to qty mode",
-        trigger: ".numpad button:contains('Qty')",
-    },
-    {
-        content: "make sure qty mode is activated",
-        trigger: ".numpad button.selected-mode:contains('Qty')",
-        run: function () {},
-    },
+    Numpad.click("Qty"),
+    Numpad.isActive("Qty"),
     {
         content: "click more button",
         trigger: ".mobile-more-button",

@@ -12,12 +12,12 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
-import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
 import { OrderDetails } from "@point_of_sale/app/screens/ticket_screen/order_details/order_details";
 import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
+import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 const { DateTime } = luxon;
 
@@ -27,10 +27,10 @@ export class TicketScreen extends Component {
     static components = {
         ActionpadWidget,
         InvoiceButton,
-        NumpadWidget,
         OrderDetails,
         ReprintReceiptButton,
         SearchBar,
+        Numpad,
     };
     static defaultProps = {
         destinationOrder: null,
@@ -84,6 +84,26 @@ export class TicketScreen extends Component {
         if (this._state.ui.filter == "SYNCED") {
             await this._fetchSyncedOrders();
         }
+    }
+    getNumpadButtons() {
+        return [
+            { value: "1" },
+            { value: "2" },
+            { value: "3" },
+            { value: "quantity", text: "Qty", class: "active border-primary" },
+            { value: "4" },
+            { value: "5" },
+            { value: "6" },
+            { value: "discount", text: "% Disc", disabled: true },
+            { value: "7" },
+            { value: "8" },
+            { value: "9" },
+            { value: "price", text: "Price", disabled: true },
+            { value: "-", text: "+/-", disabled: true },
+            { value: "0" },
+            { value: this.env.services.localization.decimalPoint },
+            { value: "Backspace", text: "⌫" },
+        ];
     }
     async onSearch(search) {
         Object.assign(this._state.ui.searchDetails, search);

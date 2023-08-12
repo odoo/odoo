@@ -193,7 +193,7 @@ class Execute {
     removeRewardLine(name) {
         return [
             ...this.do.selectRewardLine(name),
-            ...ProductScreen.do.pressNumpad("Backspace"),
+            ...ProductScreen.do.pressNumpad("⌫"),
             ...Chrome.do.confirmPopup(),
         ];
     }

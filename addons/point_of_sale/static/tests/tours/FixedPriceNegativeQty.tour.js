@@ -19,7 +19,7 @@ registry
         
         ProductScreen.do.clickDisplayedProduct("Zero Amount Product");
         ProductScreen.check.selectedOrderlineHas("Zero Amount Product", "1.0", "1.0");
-        ProductScreen.do.pressNumpad("+/- 1");
+        ProductScreen.do.pressNumpad("+/-", "1");
         ProductScreen.check.selectedOrderlineHas("Zero Amount Product", "-1.0", "-1.0");
         
         ProductScreen.do.clickPayButton();

@@ -34,11 +34,11 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         // Check effects of clicking numpad buttons
         ProductScreen.do.clickOrderline("Letter Tray", "1");
         ProductScreen.check.selectedOrderlineHas("Letter Tray", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Letter Tray", "0.0", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "3", "15.30");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "0.0", "0.0");
         ProductScreen.do.pressNumpad("1");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "1.0", "5.1");
@@ -46,21 +46,21 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "12.0", "61.2");
         ProductScreen.do.pressNumpad("3");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.0", "627.3");
-        ProductScreen.do.pressNumpad(". 5");
+        ProductScreen.do.pressNumpad(".", "5");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "629.85");
         ProductScreen.do.pressNumpad("Price");
         ProductScreen.check.modeIsActive("Price");
         ProductScreen.do.pressNumpad("1");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "123.5");
-        ProductScreen.do.pressNumpad("1 .");
+        ProductScreen.do.pressNumpad("1", ".");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "1,358.5");
-        ProductScreen.do.pressNumpad("Disc");
-        ProductScreen.check.modeIsActive("Disc");
-        ProductScreen.do.pressNumpad("5 .");
+        ProductScreen.do.pressNumpad("% Disc");
+        ProductScreen.check.modeIsActive("% Disc");
+        ProductScreen.do.pressNumpad("5", ".");
         ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "1,290.58");
         ProductScreen.do.pressNumpad("Qty");
-        ProductScreen.do.pressNumpad("Backspace");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.orderIsEmpty();
 
         // Check different subcategories
@@ -85,13 +85,13 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "1.0");
         ProductScreen.do.pressNumpad("2");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "2.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "2.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.orderIsEmpty();
 
         // Add multiple orderlines then delete each of them until empty
@@ -102,31 +102,31 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ProductScreen.do.clickDisplayedProduct("Monitor Stand");
         ProductScreen.do.clickOrderline("Whiteboard Pen", "1.0");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Wall Shelf Unit", "1.0");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Small Shelf", "1.0");
         ProductScreen.check.selectedOrderlineHas("Small Shelf", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Small Shelf", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Magnetic Board", "1.0");
         ProductScreen.check.selectedOrderlineHas("Magnetic Board", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Magnetic Board", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "0.0");
-        ProductScreen.do.pressNumpad("Backspace");
+        ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.orderIsEmpty();
 
         // Test OrderlineCustomerNoteButton

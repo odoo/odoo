@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
+import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 
 class Do {
     clickPaymentMethod(name) {
@@ -86,24 +87,7 @@ class Do {
      * @param {String} keys space-separated numpad keys
      */
     pressNumpad(keys) {
-        const numberChars = ". +/- 0 1 2 3 4 5 6 7 8 9".split(" ");
-        const modeButtons = "+10 +20 +50".split(" ");
-        function generateStep(key) {
-            let trigger;
-            if (numberChars.includes(key)) {
-                trigger = `.payment-numpad .number-char:contains("${key}")`;
-            } else if (modeButtons.includes(key)) {
-                trigger = `.payment-numpad .mode-button:contains("${key}")`;
-            } else if (key === "Backspace") {
-                trigger = `.payment-numpad .number-char img[alt="Backspace"]`;
-            }
-            return {
-                content: `'${key}' pressed in payment numpad`,
-                trigger,
-                mobile: false,
-            };
-        }
-        return keys.split(" ").map(generateStep);
+        return keys.split(" ").map((key) => Numpad.click(key, { mobile: false }));
     }
 
     clickBack() {

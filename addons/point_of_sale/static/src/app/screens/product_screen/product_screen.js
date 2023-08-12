@@ -16,7 +16,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
-import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
+import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { OrderWidget } from "@point_of_sale/app/screens/product_screen/order/order";
 import { ProductsWidget } from "@point_of_sale/app/screens/product_screen/product_list/product_list";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
@@ -25,7 +25,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "point_of_sale.ProductScreen";
     static components = {
         ActionpadWidget,
-        NumpadWidget,
+        Numpad,
         OrderWidget,
         ProductsWidget,
     };
@@ -63,6 +63,40 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     onMounted() {
         this.pos.openCashControl();
     }
+    getNumpadButtons() {
+        return [
+            { value: "1" },
+            { value: "2" },
+            { value: "3" },
+            { value: "quantity", text: "Qty" },
+            { value: "4" },
+            { value: "5" },
+            { value: "6" },
+            { value: "discount", text: "% Disc", disabled: !this.pos.config.manual_discount },
+            { value: "7" },
+            { value: "8" },
+            { value: "9" },
+            { value: "price", text: "Price", disabled: !this.pos.cashierHasPriceControlRights() },
+            { value: "-", text: "+/-" },
+            { value: "0" },
+            { value: this.env.services.localization.decimalPoint },
+            // Unicode: https://www.compart.com/en/unicode/U+232B
+            { value: "Backspace", text: "⌫" },
+        ].map((button) => ({
+            ...button,
+            class: this.pos.numpadMode === button.value ? "active border-primary" : "",
+        }));
+    }
+    onNumpadClick(buttonValue) {
+        if (["quantity", "discount", "price"].includes(buttonValue)) {
+            this.numberBuffer.capture();
+            this.numberBuffer.reset();
+            this.pos.numpadMode = buttonValue;
+            return;
+        }
+        this.numberBuffer.sendKey(buttonValue);
+    }
+
     /**
      * To be overridden by modules that checks availability of
      * connected scale.

@@ -50,7 +50,7 @@ class DoExt extends Do {
             },
             {
                 content: `click on +10 button`,
-                trigger: `.mode-button.add:contains('+10')`,
+                trigger: `div.numpad.row button.col:contains("+10")`,
             },
             {
                 content: `click on ok button`,

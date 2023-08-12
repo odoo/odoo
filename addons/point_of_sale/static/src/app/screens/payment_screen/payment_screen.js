@@ -13,17 +13,17 @@ import { DatePickerPopup } from "@point_of_sale/app/utils/date_picker_popup/date
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
-import { PaymentScreenNumpad } from "@point_of_sale/app/screens/payment_screen/numpad/numpad";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState, useRef } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
+import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
     static components = {
-        PaymentScreenNumpad,
+        Numpad,
         PaymentScreenPaymentLines,
         PaymentScreenStatus,
     };
@@ -46,6 +46,26 @@ export class PaymentScreen extends Component {
         this.payment_interface = null;
         this.error = false;
         this.validateOrder = useAsyncLockedMethod(this.validateOrder);
+    }
+    getNumpadButtons() {
+        return [
+            { value: "1" },
+            { value: "2" },
+            { value: "3" },
+            { value: "+10" },
+            { value: "4" },
+            { value: "5" },
+            { value: "6" },
+            { value: "+20" },
+            { value: "7" },
+            { value: "8" },
+            { value: "9" },
+            { value: "+50" },
+            { value: "-", text: "+/-" },
+            { value: "0" },
+            { value: this.env.services.localization.decimalPoint },
+            { value: "Backspace", text: "⌫" },
+        ];
     }
 
     showMaxValueError() {

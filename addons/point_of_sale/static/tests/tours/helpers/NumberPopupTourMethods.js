@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
+import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 
 class Do {
     /**
@@ -10,34 +11,11 @@ class Do {
      * @param {String} keys space-separated input keys
      */
     pressNumpad(keys) {
-        const numberChars = "0 1 2 3 4 5 6 7 8 9 C".split(" ");
-        const modeButtons = "+1 +10 +2 +20 +5 +50".split(" ");
-        const decimalSeparators = ", .".split(" ");
-        function generateStep(key) {
-            let trigger;
-            if (numberChars.includes(key)) {
-                trigger = `.popup-numpad .number-char:contains("${key}")`;
-            } else if (modeButtons.includes(key)) {
-                trigger = `.popup-numpad .mode-button:contains("${key}")`;
-            } else if (key === "Backspace") {
-                trigger = `.popup-numpad .numpad-backspace`;
-            } else if (decimalSeparators.includes(key)) {
-                trigger = `.popup-numpad .number-char.dot`;
-            }
-            return {
-                content: `'${key}' pressed in numpad`,
-                trigger,
-                mobile: false,
-            };
-        }
-        return keys.split(" ").map(generateStep);
+        return keys.split(" ").map((key) => Numpad.click(key, { mobile: false }));
     }
     enterValue(keys) {
-        const numpadKeys = keys.split('').join(' ');
-        return [
-            ...this.pressNumpad(numpadKeys),
-            ...this.fillPopupValue(keys)
-        ];
+        const numpadKeys = keys.split("").join(" ");
+        return [...this.pressNumpad(numpadKeys), ...this.fillPopupValue(keys)];
     }
     fillPopupValue(keys) {
         return [
@@ -60,7 +38,7 @@ class Do {
                 content: "click confirm button",
                 trigger: ".popup .footer .confirm",
                 mobile: true,
-            }
+            },
         ];
     }
 }

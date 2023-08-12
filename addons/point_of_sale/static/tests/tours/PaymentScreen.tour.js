@@ -28,7 +28,7 @@ registry
             PaymentScreen.check.changeIs("0.0");
             PaymentScreen.check.validateButtonIsHighlighted(false);
             // remove the selected paymentline with multiple backspace presses
-            PaymentScreen.do.pressNumpad("Backspace Backspace");
+            PaymentScreen.do.pressNumpad("⌫ ⌫");
             PaymentScreen.do.fillPaymentLineAmountMobile("Cash", "0");
             PaymentScreen.check.selectedPaymentlineHas("Cash", "0.00");
             PaymentScreen.do.clickPaymentlineDelButton("Cash", "0", true);
