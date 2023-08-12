@@ -2,7 +2,7 @@
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
-
+import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 class Do {
     clickDisplayedProduct(name) {
         return [
@@ -70,34 +70,16 @@ class Do {
      * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
      * fast inputs. Fast inputs is the case in tours.
      *
-     * @param {String} keys space-separated numpad keys
+     * @param {...String} keys space-separated numpad keys
      */
-    pressNumpad(keys) {
-        const numberChars = ". 0 1 2 3 4 5 6 7 8 9".split(" ");
-        const modeButtons = "Qty Price Disc".split(" ");
-        function generateStep(key) {
-            let trigger;
-            if (numberChars.includes(key)) {
-                trigger = `.numpad .number-char:contains("${key}")`;
-            } else if (modeButtons.includes(key)) {
-                trigger = `.numpad .mode-button:contains("${key}")`;
-            } else if (key === "Backspace") {
-                trigger = `.numpad .numpad-backspace`;
-            } else if (key === "+/-") {
-                trigger = `.numpad .numpad-minus`;
-            }
-            return {
-                content: `'${key}' pressed in product screen numpad`,
-                trigger,
-            };
-        }
+    pressNumpad(...keys) {
         return [
             {
                 content: "click review button",
                 trigger: ".btn-switchpane:contains('Review')",
                 mobile: true,
             },
-            ...keys.split(" ").map(generateStep),
+            ...keys.map(Numpad.click),
             {
                 content: "go back to the products",
                 trigger: ".pos-rightheader .floor-button",
@@ -456,11 +438,7 @@ class Check {
                 trigger: ".btn-switchpane:contains('Review')",
                 mobile: true,
             },
-            {
-                content: `'${mode}' is active`,
-                trigger: `.numpad button.selected-mode:contains('${mode}')`,
-                run: function () {},
-            },
+            Numpad.isActive(mode),
             {
                 content: "go back to the products",
                 trigger: ".pos-rightheader .floor-button",
@@ -576,20 +554,27 @@ class Execute {
      */
     addOrderline(productName, quantity = 1, unitPrice = undefined, expectedTotal = undefined) {
         const res = this._do.clickDisplayedProduct(productName);
+        const mapKey = (key) => {
+            if (key === "-") {
+                return "+/-";
+            }
+            return key;
+        };
+        const numpadWrite = (val) =>
+            val
+                .toString()
+                .split("")
+                .flatMap((key) => this._do.pressNumpad(mapKey(key)));
         res.push(...this._check.selectedOrderlineHas(productName, "1.00"));
         if (unitPrice) {
             res.push(...this._do.pressNumpad("Price"));
             res.push(...this._check.modeIsActive("Price"));
-            res.push(...this._do.pressNumpad(unitPrice.toString().split("").join(" ")));
+            res.push(...numpadWrite(unitPrice));
             res.push(...this._do.pressNumpad("Qty"));
             res.push(...this._check.modeIsActive("Qty"));
         }
-        for (const char of quantity.toString() == "1" ? "" : quantity.toString()) {
-            if (".0123456789".includes(char)) {
-                res.push(...this._do.pressNumpad(char));
-            } else if ("-".includes(char)) {
-                res.push(...this._do.pressNumpad("+/-"));
-            }
+        if (quantity.toString() !== "1") {
+            res.push(...numpadWrite(quantity));
         }
         if (expectedTotal) {
             res.push(...this._check.selectedOrderlineHas(productName, quantity, expectedTotal));

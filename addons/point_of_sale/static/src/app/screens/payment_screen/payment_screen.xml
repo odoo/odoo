@@ -20,9 +20,7 @@
                     </div>
                     <div class="center-content d-flex flex-column w-50 p-1 border-start border-end bg-300" >
                         <PaymentScreenStatus order="currentOrder" />
-                        <div class="payment-numpad flex-grow-1 d-flex flex-wrap">
-                            <PaymentScreenNumpad />
-                        </div>
+                        <Numpad class="'flex-grow-1'"  buttons="getNumpadButtons()" />
                     </div>
                     <div class="right-content w-25 bg-400">
                         <t t-call="point_of_sale.PaymentScreenButtons" />
@@ -55,7 +53,8 @@
             </div>
         </t>
         <t t-else="">
-            <div class="button next validation btn btn-primary btn-lg py-5 rounded-0 d-flex flex-column align-items-center justify-content-center fw-bolder" t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
+            <div class="button next validation btn btn-primary btn-lg py-5 rounded-0 d-flex flex-column align-items-center justify-content-center fw-bolder" 
+                t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
                 t-on-click="() => this.validateOrder()">
                 <div class="pay-circle d-flex align-items-center justify-content-center mb-2">
                     <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
@@ -64,7 +63,6 @@
             </div>
         </t>
     </t>
-
 
     <t t-name="point_of_sale.PaymentScreenButtons">
         <div class="payment-buttons d-flex flex-column flex-wrap">

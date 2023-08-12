@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import { registry } from "@web/core/registry";
 
 function add_product_to_order(product_name) {
@@ -66,13 +67,7 @@ function set_fiscal_position_on_order(fp_name) {
 }
 
 function press_payment_numpad(val) {
-    return [
-        {
-            content: `press ${val} on payment screen numpad`,
-            trigger: `.payment-numpad .input-button:contains("${val}"):visible`,
-            mobile: false,
-        },
-    ];
+    return [{ ...Numpad.click(val), mobile: false }];
 }
 
 function fillPaymentLineAmountMobile(lineName, keys) {
@@ -107,10 +102,7 @@ function press_product_numpad(val) {
             trigger: ".btn-switchpane:contains('Review')",
             mobile: true,
         },
-        {
-            content: `press ${val} on product screen numpad`,
-            trigger: `.numpad .input-button:contains("${val}"):visible`,
-        },
+        Numpad.click(val),
         {
             content: "go back to the products",
             trigger: ".floor-button",

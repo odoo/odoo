@@ -20,9 +20,7 @@
                             actionName="constructor.numpadActionName"
                             actionType="'payment'"
                             onClickMore.bind="displayAllControlPopup" />
-                        <NumpadWidget
-                            updateSelectedOrderline.bind="updateSelectedOrderline"
-                            activeMode="pos.numpadMode" />
+                        <Numpad buttons="getNumpadButtons()" onClick.bind="onNumpadClick" class="'w-100'"/>
                     </div>
                 </div>
             </div>

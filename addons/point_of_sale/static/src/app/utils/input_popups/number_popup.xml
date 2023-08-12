@@ -13,48 +13,7 @@
                     <span t-if="props.inputSuffix"><t t-esc="props.inputSuffix" /></span>
                 </div>
             </div>
-            <div class="popup-numpad px-5 my-3">
-                <!-- FIXME POSREF do we really need to hardcode all of these? -->                                             
-                <div class="row">
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('1')">1</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('2')">2</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('3')">3</button>
-                    <t t-if="!props.isPassword and props.cheap">
-                        <button class="mode-button add btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('+1')">+1</button>
-                    </t>
-                    <t t-if="!props.isPassword and !props.cheap">
-                        <button class="mode-button add btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('+10')">+10</button>
-                    </t>
-                </div>
-                <div class="row">
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('4')">4</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('5')">5</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('6')">6</button>
-                    <t t-if="!props.isPassword and props.cheap">
-                        <button class="mode-button add btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('+2')">+2</button>
-                    </t>
-                    <t t-if="!props.isPassword and !props.cheap">
-                        <button class="mode-button add btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('+20')">+20</button>
-                    </t>
-                </div>
-                <div class="row">
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('7')">7</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('8')">8</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('9')">9</button>
-                    <button t-if="!props.isPassword" class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('-')">-</button>
-                </div>
-                <div class="row">
-                    <button class="col-3 input-button numpad-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('Delete')">C</button>
-                    <button class="col-3 input-button number-char btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('0')">0</button>
-                    <button t-if="!props.isPassword" class="col-3 input-button number-char dot btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput(decimalSeparator)">
-                        <t t-esc="decimalSeparator" /></button>
-                    <button class="col-3 input-button numpad-backspace btn btn-secondary p-0 rounded-circle m-1 fw-bolder" t-on-mousedown.prevent="() => this.sendInput('Backspace')">
-                        <img style="pointer-events: none;"
-                                src="/point_of_sale/static/src/img/backspace.png" width="24"
-                                height="21" alt="Backspace" />
-                    </button>
-                </div>
-            </div>
+            <Numpad buttons="getNumpadButtons()" class="'mx-auto my-3 w-75 max-width-325px'"/>
             <footer class="footer centered modal-footer justify-content-center">
                 <button class="button confirm highlight btn btn-lg btn-primary" t-on-mousedown.prevent="confirm">
                         <span><t t-esc="props.confirmText" /></span>

@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ...ErrorPopup.do.clickConfirm(),
 
         // check that removing a combo product removes all the combo products
-        ...ProductScreen.do.pressNumpad("Backspace"),
+        ...ProductScreen.do.pressNumpad("⌫"),
         ...ProductScreen.check.orderIsEmpty(),
 
         ...ProductScreen.do.clickDisplayedProduct("Office Combo"),

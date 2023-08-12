@@ -150,31 +150,6 @@ class Do {
             },
         ];
     }
-    pressNumpad(key) {
-        let trigger;
-        if (".0123456789".includes(key)) {
-            trigger = `.numpad .number-char:contains("${key}")`;
-        } else if (key === "Backspace") {
-            trigger = `.numpad .numpad-backspace`;
-        } else if (key === "+/-") {
-            trigger = `.numpad .numpad-minus`;
-        }
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger,
-            },
-            {
-                content: "go back",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
-    }
     confirmRefund() {
         return [
             {
