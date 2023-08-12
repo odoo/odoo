@@ -635,37 +635,37 @@ msgstr "サインアップ URL"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "招待されていないユーザのサインアップはできません"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "サインアップトークン '%s'は有効ではありません"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "サインアップトークン '%s'は有効ではありません"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "サインアップ: 無効なテンプレートユーザ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "サインアップ: 新規ユーザにログインが許可されません"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "サインアップ: 新規ユーザに名前またはパートナーが付与されません"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -681,7 +681,7 @@ msgstr "サインアップで作成されるユーザのテンプレートユー
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "フォームが適切に入力されていません。"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -713,13 +713,13 @@ msgstr "ユーザ：未登録ユーザの通知"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr " {{ object.company_id.name }}へようこそ！"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "アーカイブされたユーザにこのアクションを実施できません。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -742,4 +742,4 @@ msgstr "例: 鈴木 一郎"
 msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
-msgstr ""
+msgstr "${object.company_id.name} ${object.create_uid.name} からOdoo接続のご招待"
