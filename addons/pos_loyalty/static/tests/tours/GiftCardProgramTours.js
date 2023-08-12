@@ -91,7 +91,7 @@ registry
             ProductScreen.do.clickRefund();
             TicketScreen.do.selectOrder("-0001");
             TicketScreen.do.clickOrderline("Magnetic Board");
-            TicketScreen.do.pressNumpad("1");
+            ProductScreen.do.pressNumpad("1");
             TicketScreen.do.confirmRefund();
             ProductScreen.check.isShown();
             ProductScreen.check.selectedOrderlineHas("Magnetic Board", "-1.00");

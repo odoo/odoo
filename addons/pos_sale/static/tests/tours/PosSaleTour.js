@@ -22,7 +22,7 @@ registry
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.selectFirstOrder();
             ProductScreen.check.selectedOrderlineHas('Pizza Chicken', 9);
-            ProductScreen.do.pressNumpad('Qty 2'); // Change the quantity of the product to 2
+            ProductScreen.do.pressNumpad('Qty', '2'); // Change the quantity of the product to 2
             ProductScreen.check.selectedOrderlineHas('Pizza Chicken', 2);
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod('Bank');
@@ -76,7 +76,7 @@ registry
             ProductScreen.do.clickOrderline("Product A", "1");
             ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
             ProductScreen.do.clickOrderline("Product B", "1");
-            ProductScreen.do.pressNumpad('Qty 0');
+            ProductScreen.do.pressNumpad("Qty", "0");
             ProductScreen.check.selectedOrderlineHas('Product B', '0.00');
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod('Bank');
@@ -106,7 +106,7 @@ registry
             TicketScreen.check.filterIs('Paid');
             TicketScreen.do.selectOrder('-0001');
             TicketScreen.do.clickOrderline('Down Payment');
-            TicketScreen.do.pressNumpad('1');
+            ProductScreen.do.pressNumpad('1');
             TicketScreen.do.confirmRefund();
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod('Cash');

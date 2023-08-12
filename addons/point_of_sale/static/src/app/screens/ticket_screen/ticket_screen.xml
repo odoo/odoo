@@ -135,11 +135,7 @@
                                     actionType="'refund'"
                                     actionToTrigger.bind="onDoRefund"
                                     isActionButtonHighlighted="getHasItemsToRefund()" />
-                                <NumpadWidget
-                                    disabledModes="['price', 'discount']"
-                                    setNumpadMode="() => {}"
-                                    activeMode="_selectedOrderlineId and 'quantity'"
-                                    disableSign="true" />
+                                <Numpad buttons="getNumpadButtons()" class="'max-width-325px'"/>
                             </div>
                         </div>
                     </t>

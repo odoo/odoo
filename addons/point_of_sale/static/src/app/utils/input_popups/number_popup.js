@@ -4,9 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { useService } from "@web/core/utils/hooks";
 import { useState, useRef, onMounted } from "@odoo/owl";
+import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 export class NumberPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.NumberPopup";
+    static components = { Numpad };
     static defaultProps = {
         confirmText: _t("Confirm"),
         cancelText: _t("Discard"),
@@ -33,7 +35,6 @@ export class NumberPopup extends AbstractAwaitablePopup {
      */
     setup() {
         super.setup();
-        this.localization = useService("localization");
         let startingBuffer = "";
         let startingPayload = null;
         if (typeof this.props.startingValue === "number" && this.props.startingValue > 0) {
@@ -62,8 +63,26 @@ export class NumberPopup extends AbstractAwaitablePopup {
             this.inputRef.el.focus();
         }
     }
-    get decimalSeparator() {
-        return this.localization.decimalPoint;
+    getNumpadButtons() {
+        const { isPassword, cheap } = this.props;
+        return [
+            { value: "1" },
+            { value: "2" },
+            { value: "3" },
+            ...(!isPassword ? [{ value: cheap ? "+1" : "+10" }] : []),
+            { value: "4" },
+            { value: "5" },
+            { value: "6" },
+            ...(!isPassword ? [{ value: cheap ? "+2" : "+20" }] : []),
+            { value: "7" },
+            { value: "8" },
+            { value: "9" },
+            ...(!isPassword ? [{ value: "-" }] : []),
+            { value: "Delete", text: "C" },
+            { value: "0" },
+            ...(!isPassword ? [{ value: this.env.services.localization.decimalPoint }] : []),
+            { value: "Backspace", text: "⌫" },
+        ];
     }
     get inputBuffer() {
         if (this.state.buffer === null) {
@@ -79,9 +98,6 @@ export class NumberPopup extends AbstractAwaitablePopup {
         if (this.numberBuffer.get() || this.state.payload) {
             super.confirm();
         }
-    }
-    sendInput(key) {
-        this.numberBuffer.sendKey(key);
     }
     getPayload() {
         let startingPayload = null;
