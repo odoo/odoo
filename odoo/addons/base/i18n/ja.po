@@ -16465,7 +16465,7 @@ msgstr "ドキュメントタイプ:"
 #: model:ir.module.category,name:base.module_category_productivity_documents
 #: model:ir.module.module,shortdesc:base.module_documents
 msgid "Documents"
-msgstr "書類"
+msgstr "ドキュメント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
@@ -16485,12 +16485,12 @@ msgstr "ドキュメント-契約"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
 msgid "Documents - FSM"
-msgstr ""
+msgstr "ドキュメント - FSM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
 msgid "Documents - Fleet"
-msgstr "ドキュメント-艦隊"
+msgstr "ドキュメント - フリート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr
@@ -16505,12 +16505,12 @@ msgstr "ドキュメント-給与"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_product
 msgid "Documents - Product"
-msgstr "ドキュメント-製品"
+msgstr "ドキュメント-プロダクト"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
 msgid "Documents - Project - Sale"
-msgstr ""
+msgstr "ドキュメント - プロジェクト - 販売"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
@@ -16535,7 +16535,7 @@ msgstr "ドキュメント-休暇"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sign
 msgid "Documents Project Sign"
-msgstr ""
+msgstr "ドキュメントプロジェクト署名"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
@@ -16547,7 +16547,7 @@ msgstr "ドキュメントスプレッドシート"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Documents to Delete"
-msgstr ""
+msgstr "削除するドキュメント"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
@@ -29443,7 +29443,6 @@ msgstr "設定を開始"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -29486,6 +29485,7 @@ msgstr "都道府県/州"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "ステータス"
@@ -33618,6 +33618,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -33647,6 +33654,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr "会計上ですでに使用されている通貨の小数点以下の桁数を減らすことはできません。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python
