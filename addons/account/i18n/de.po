@@ -109,7 +109,7 @@ msgstr "%(amount)s fällig %(date)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr "%(partner_name)s hat sein Kreditlimit erreicht:%(credit_limit)s"
+msgstr "%(partner_name)s hat sein Kreditlimit erreicht: %(credit_limit)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -1048,7 +1048,7 @@ msgstr "<span>Steuer 0 %</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Tax excl.</span>"
-msgstr "</span>exkl. Steuer</span>"
+msgstr "<span>exkl. Steuer</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3919,7 +3919,7 @@ msgstr "Unternehmen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr "Bankkonto der Firma"
+msgstr "Bankkonto des Unternehmens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
@@ -4544,6 +4544,13 @@ msgstr "Habenbuchung"
 #, python-format
 msgid "Credit Note"
 msgstr "Gutschrift"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -5256,7 +5263,7 @@ msgstr "Nicht mehr verwenden"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
-msgstr "Abschreibungen"
+msgstr "Abschreibung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
@@ -9229,6 +9236,13 @@ msgid "No Bank Matching"
 msgstr "Keine Bankabstimmung"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Keine Zahlungserinnerung"
@@ -9494,8 +9508,8 @@ msgstr "Anzahl der Fehler"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13028,7 +13042,7 @@ msgstr "Vorlagen gefunden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
 msgid "Term Key"
-msgstr "Bedinungsschlüssel"
+msgstr "Bedingungsschlüssel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
@@ -13699,6 +13713,15 @@ msgstr ""
 "- Um den Text am Anfang der Zeile (im Etikett oder in den Notizen) abzugleichen, geben Sie einfach Ihren Text ein.\n"
 "- Um den Text an einer beliebigen Stelle (im Etikett oder in den Notizen) abzugleichen, setzen Sie Ihren Text zwischen .*\n"
 "z. B.: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+"Der Posten konnte aus folgendem Grund nicht gebucht werden: "
+"%(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -14478,6 +14501,14 @@ msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Dieser Buchungssatz wird zum Buchungsdatum gebucht: %(date)s"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "Dieser Vorgang verursacht eine Lücke in der Sequenz"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 #, python-format
@@ -14501,7 +14532,7 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Diese Zahlungsbedinung wird anstelle der Standardbedingung für "
+"Diese Zahlungsbedingung wird anstelle der Standardbedingung für "
 "Verkaufsaufträge und Kundenrechnungen verwendet"
 
 #. module: account
@@ -16062,6 +16093,18 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Sie können diesen Eintrag nicht löschen, da er bereits eine Folgenummer "
+"erhalten hat und nicht der letzte Eintrag in der Kette ist. Vermutlich "
+"sollten Sie ihn stattdessen rückgängig machen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16803,7 +16846,7 @@ msgstr "bis"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr "zu Überprüfen"
+msgstr "zu überprüfen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

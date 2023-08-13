@@ -7,13 +7,13 @@
 # Talal Albahra <talal.albahra@outlook.com>, 2023
 # islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
 # Shaima Safar <shaima.safar@open-inside.com>, 2023
-# Niyas Raphy, 2023
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Ziani Ahmed (Zity), 2023
 # Radwan Hallak <rdwan.hlak@gmail.com>, 2023
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
 # Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Niyas Raphy, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 14:39+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Niyas Raphy, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4502,6 +4502,13 @@ msgstr "إشعار دائن "
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You can only send sales documents"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "Credit Note Created"
 msgstr "تم إنشاء إشعار دائن "
 
@@ -5290,7 +5297,7 @@ msgstr "معطل"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr "Disc.%"
+msgstr "خصم %"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -9104,6 +9111,13 @@ msgid "No Bank Matching"
 msgstr "لا يوجد بنك مطابق"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "لا توجد متابعة "
@@ -9367,8 +9381,8 @@ msgstr "عدد الاخطاء"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13465,6 +13479,13 @@ msgstr ""
 "  مثال: .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr "تعذر ترحيل الحركة للسبب التالي: %(error_message)s "
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -14202,6 +14223,14 @@ msgstr "تمت تهيئة هذه الحركة ليتم ترحيلها تلقائ
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "سوف يتم ترحيل هذه الحركة في التاريخ المحاسبي: %(date)s "
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "ستتسبب هذه العملية في إحداث ثغرة في التسلسل. "
 
 #. module: account
 #. odoo-python
@@ -15722,6 +15751,17 @@ msgstr "لا يمكنك حذف بند ضريبي، حيث إنه سيؤثر عل
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "لا يمكنك حذف عنصر مرتبط بقيد مرحّل. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
+"السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
 
 #. module: account
 #. odoo-python

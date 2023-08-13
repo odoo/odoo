@@ -10,8 +10,8 @@
 # Aimée Mendoza Sánchez, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,14 +110,14 @@ msgstr "%s (nuevo) %s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s órdenes de fabricación hijas"
+msgstr "%s órdenes de fabricación secundarias"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
-msgstr "%s no pueden ser eliminados. Intente cancelarlos antes."
+msgstr "%s no se pueden eliminar, intente cancelarlas antes."
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -219,7 +219,7 @@ msgstr "<span class=\"o_stat_text\">Órdenes parciales</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">Orden de fabricación hija</span>"
+msgstr "<span class=\"o_stat_text\">Orden de fabricación secundaria</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -448,7 +448,7 @@ msgstr "<strong>Centro de trabajo: </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? Esto puede dar lugar a inconsistencias en su inventario."
+msgstr "? Esto puede causar inconsistencias en su inventario."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -457,7 +457,7 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into its components when :"
 msgstr ""
 "Una lista de materiales (LdM) de tipo kit no se produce con una orden de fabricación.<br/>\n"
-"                                Por el contrario,se utiliza para desglozar una LdM en sus componentes cuando:"
+"                                Por el contrario, se utiliza para desglosar una LdM en componentes cuando:"
 
 #. module: mrp
 #. odoo-python
@@ -533,7 +533,7 @@ msgstr "Añadir una descripción..."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Add a line"
-msgstr "Agregar línea"
+msgstr "Agregar una línea"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -791,8 +791,8 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"Tiempo medio de entrega en días para fabricar este producto. En el caso de "
-"una lista de materiales de varios niveles, se agregarán los plazos de "
+"Tiempo promedio de entrega en días para fabricar este producto. En el caso "
+"de una lista de materiales de varios niveles, se agregarán los plazos de "
 "fabricación de los componentes. En caso de que el producto sea "
 "subcontratado, esto puede utilizarse para determinar la fecha en la que los "
 "componentes deben enviarse al subcontratista."
@@ -921,8 +921,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components"
 " and work order instructions."
 msgstr ""
-"Las listas de materiales, también conocidas como recetas de producción, son "
-"utilizadas para autocompletar los componentes y las instrucciones de las "
+"Las listas de materiales, también conocidas como recetas de producción, se "
+"utilizan para autocompletar los componentes y las instrucciones de las "
 "órdenes de trabajo."
 
 #. module: mrp
@@ -940,7 +940,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Bloque"
+msgstr "Bloquear"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -977,7 +977,7 @@ msgstr "Horas bloqueadas durante el último mes"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
-msgstr "Razón de bloqueo"
+msgstr "Motivo de bloqueo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
@@ -1164,7 +1164,7 @@ msgstr "Cambiar cantidad de producto"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Production Qty"
-msgstr "Cambiar la cantidad de producción"
+msgstr "Cambiar cantidad de producción"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
@@ -4594,7 +4594,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Settings"
-msgstr "Configuración"
+msgstr "Ajustes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
@@ -6078,7 +6078,7 @@ msgstr "Centros de trabajo"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Overview"
-msgstr "Resumen de los centros de trabajo"
+msgstr "Información general de los centros de trabajo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit

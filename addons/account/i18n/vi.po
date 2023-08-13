@@ -7,9 +7,9 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2023
 # Thin Tran <trvathin@gmail.com>, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Thi Huong Nguyen, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-04 14:39+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4411,6 +4411,13 @@ msgstr "Phát sinh có"
 #, python-format
 msgid "Credit Note"
 msgstr "Giấy báo Có"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9046,6 +9053,13 @@ msgid "No Bank Matching"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Không theo dõi"
@@ -9308,8 +9322,8 @@ msgstr "Số lỗi"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số tin nhắn cần xử lý"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13433,6 +13447,13 @@ msgstr ""
 "  ví dụ: .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -14183,6 +14204,14 @@ msgstr "Bút toán được cấu hình để vào sổ tự động vào ngày 
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Bút toán này sẽ được vào sổ vào ngày kế toán: %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15732,6 +15761,17 @@ msgstr "Bạn không thể xóa dòng thuế vì nó sẽ ảnh hưởng đến 
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Bạn không thể xóa chi tiết bút toán một khi nó đã được đưa vào sổ."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Bạn không thể xóa nút toán này, vì nó đã sử dụng một số thứ tự và không phải"
+" là mục cuối cùng trong chuỗi. Bạn có thể nên hoàn nguyên nó để thay thế."
 
 #. module: account
 #. odoo-python
