@@ -4736,24 +4736,6 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
-"\n"
-"Functional\n"
-"----------\n"
-"\n"
-"In some Latinamerica countries, including Argentina and Chile, some accounting transactions like invoices and vendor bills are classified by a document types defined by the government fiscal authorities (In Argentina case AFIP, Chile case SII).\n"
-"\n"
-"This module is intended to be extended by localizations in order to manage these document types and is an essential information that needs to be displayed in the printed reports and that needs to be easily identified, within the set of invoices as well of account moves.\n"
-"\n"
-"Each document type have their own rules and sequence number, this last one is integrated with the invoice number and journal sequence in order to be easy for the localization user. In order to support or not this document types a Journal has a new option that lets to use document or not.\n"
-"\n"
-"Technical\n"
-"---------\n"
-"\n"
-"If your localization needs this logic will then need to add this module as dependency and in your localization module extend:\n"
-"\n"
-"* extend company's _localization_use_documents() method.\n"
-"* create the data of the document types that exists for the specific country. The document type has a country field\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -26329,7 +26311,7 @@ msgstr "合作夥伴地理定位"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr "合作夥伴: %(category)s"
+msgstr "合作夥伴：%(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -30285,7 +30267,7 @@ msgstr "任務紀錄"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
 msgid "Tax ID"
-msgstr "稅ID"
+msgstr "稅務編號"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -33641,6 +33623,12 @@ msgstr ""
 "連結的活躍使用者: %(names)s"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -33668,6 +33656,12 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr "您不能減少已在會計分錄中使用的貨幣的小數位數."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

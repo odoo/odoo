@@ -2929,6 +2929,16 @@ msgid ""
 "If the automated inventory valuation is active, the necessary accounting entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"Contabilità analitica nell'MRP\n"
+"===========================\n"
+"\n"
+"* Resoconto sulla struttura dei costi\n"
+"\n"
+"Consente, inoltre, di calcolare il costo del prodotto in base alla relativa DiBa, utilizzando il costo dei suoi componenti e delle operazioni del centro di lavoro.\n"
+"Aggiunge un pulsante nel prodotto stesso e anche un'azione nella vista elenco dei prodotti.\n"
+"Se è attiva la valutazione automatica del magazzino verranno create le registrazioni contabili necessarie.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports_annual_vat
@@ -6611,6 +6621,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti e localizzazione per Singapore.\n"
+"=======================================================\n"
+"\n"
+"Questo modulo aggiunge, per la contabilità:\n"
+" - il piano dei conti di Singapore\n"
+" - campo Numero di entità univoco (UEN) su azienda e partner\n"
+" - campo N° permesso (PermitNo) e Data n° permesso (PermitNoDate) sulla fattura\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills
@@ -7032,6 +7052,17 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo Odoo per gestire la contabilità della Finlandia.\n"
+"============================================================\n"
+"\n"
+"Dopo l'installazione del modulo, si avrà accesso a :\n"
+"    * piano dei conti finlandese\n"
+"    * posizioni fiscali\n"
+"    * tipi di riferimento per il pagamento delle fatture (riferimento standard finlandese & riferimento creditore finlandese (RF))\n"
+"\n"
+"Impostare il tipo di riferimento di pagamento dal registro vendite.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -32260,6 +32291,12 @@ msgstr ""
 "Utenti attivi collegati: %(names)s"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "Impossibile eliminare il record %s."
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -32291,6 +32328,12 @@ msgid ""
 msgstr ""
 "Non è possibile ridurre il numero di cifre decimali di una valuta già "
 "utilizzata in una registrazione contabile."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr "Impossibile rinominare i parametri di configurazione con chiavi %s"
 
 #. module: base
 #: code:addons/models.py:0

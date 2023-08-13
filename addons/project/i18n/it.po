@@ -395,7 +395,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Privato"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -642,6 +642,8 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"Una fase personale non può essere legata ad un progetto in quanto è visibile"
+" solo all'utente corrispondente."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -923,6 +925,8 @@ msgstr "In archivio"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"Le attività archiviate non possono essere ricorrenti. Per prima cosa, "
+"annulla l'archiviazione dell'attività"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -949,7 +953,7 @@ msgstr "Freccia"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "Icona freccia"
 
 #. module: project
 #. openerp-web
@@ -1173,7 +1177,7 @@ msgstr "Selezionare se il contatto è un'azienda, diversamente è una persona"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
 msgid "Child Text"
-msgstr ""
+msgstr "Testo secondario"
 
 #. module: project
 #. openerp-web
@@ -1751,7 +1755,7 @@ msgstr "Abbandona"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
 msgid "Display Access Mode"
-msgstr ""
+msgstr "Mostra modalità di accesso"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2393,7 +2397,7 @@ msgstr "La scadenza è superata"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
 msgid "Is Deadline Future"
-msgstr ""
+msgstr "Scadenza futura"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2406,7 +2410,7 @@ msgstr "Sta seguendo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "Milestone superata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2614,7 +2618,7 @@ msgstr "Attività in ritardo"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Milestone in ritardo"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -3329,12 +3333,12 @@ msgstr "Valutazione periodica"
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Fase personale"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "Stato fase personale"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3344,7 +3348,7 @@ msgstr "Fase del compito personale"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
 msgid "Personal User Stage"
-msgstr ""
+msgstr "Fase personale utente"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -4042,7 +4046,7 @@ msgstr "Sab"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Soddisfazione"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4077,7 +4081,7 @@ msgstr "Ricerca progetto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "Cerca aggiornamento"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4089,7 +4093,7 @@ msgstr "Ricerca su tutto"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr ""
+msgstr "Cerca in assegnatari"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4113,7 +4117,7 @@ msgstr "Ricerca nei progetti"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Ref"
-msgstr ""
+msgstr "Cerca in rif."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4125,7 +4129,7 @@ msgstr "Ricerca nelle fasi"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "Cerca in stato"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -4312,7 +4316,7 @@ msgstr "Descrizione fase e suggerimenti"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Proprietario fase"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4383,12 +4387,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Stop Recurrence"
-msgstr ""
+msgstr "Blocca ricorrenza"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task Count"
-msgstr ""
+msgstr "Numero di sub-attività"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -4409,7 +4413,7 @@ msgstr "Ore pianificate per sottolavori"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Inviata il"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4496,7 +4500,7 @@ msgstr "Numero lavori"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count_with_subtasks
 msgid "Task Count With Subtasks"
-msgstr ""
+msgstr "Numero attività con sub-attività"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4558,7 +4562,7 @@ msgstr "Cambio di fase lavoro"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Fasi attività"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4580,7 +4584,7 @@ msgstr "Lavoro bloccato"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
 msgid "Task in Progress"
-msgstr ""
+msgstr "Attività in corso"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4771,7 +4775,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "There are no more occurrences."
-msgstr ""
+msgstr "Non sono presenti ulteriori occorrenze."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -4793,7 +4797,7 @@ msgstr "Nessun lavoro presente."
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "Non c'è nulla da registrare."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -5088,7 +5092,7 @@ msgstr "Aggiorna"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Aggiornamento creato"
 
 #. module: project
 #. openerp-web
