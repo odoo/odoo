@@ -121,7 +121,10 @@ class AccountBankStatement(models.Model):
                 ('state', '=', 'posted'),
                 ('statement_id', '!=', False),
             ], limit=1)
-            balance_start = previous_line_with_statement.statement_id.balance_end_real
+            if not previous_line_with_statement:
+                balance_start = stmt.balance_start or 0.0
+            else:
+                balance_start = previous_line_with_statement.statement_id.balance_end_real
 
             lines_in_between_domain = [
                 ('internal_index', '<', stmt.first_line_index),
