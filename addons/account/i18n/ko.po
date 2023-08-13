@@ -7,16 +7,16 @@
 # Linkup <link-up@naver.com>, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2023-07-11 09:57+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4416,6 +4416,13 @@ msgstr "대변전표"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You can only send sales documents"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "Credit Note Created"
 msgstr "대변전표 작성됨"
 
@@ -7682,6 +7689,13 @@ msgid "Is Valid"
 msgstr "유효함"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr "이메일을 전송하면 청구서 초안 및 청구서가 생성됩니다. "
@@ -8959,6 +8973,13 @@ msgid "No Bank Matching"
 msgstr "일치하는 은행 없음"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "후속 관리 없음"
@@ -9213,7 +9234,7 @@ msgstr "오류 횟수"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: account
@@ -13202,6 +13223,13 @@ msgstr ""
 "예: .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -13831,6 +13859,11 @@ msgid ""
 msgstr "이 필드는 미지급 및 미수금 전표에 사용합니다. 내용에 지불 기한일을 지정할 수도 있습니다."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
 msgstr "이것은 회계 현황판입니다."
@@ -13890,6 +13923,14 @@ msgstr "해당 이동 내용은 다음 회계일자에 자동으로 발행되도
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "이 이동 항목은 회계 일자 기준으로 발행됩니다: %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15353,6 +15394,15 @@ msgstr "세금신고서에 영향을 미칠 수 있으므로 세금 내역은 �
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "게시된 항목에 연결된 항목은 삭제할 수 없습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
 
 #. module: account
 #. odoo-python

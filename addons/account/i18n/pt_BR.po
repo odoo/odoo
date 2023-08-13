@@ -18,17 +18,17 @@
 # ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
 # Martin Trigaux, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
+# adrianojprado <adrianojprado@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2023-07-11 09:57+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Layna Nascimento, 2023\n"
+"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1468,7 +1468,7 @@ msgstr "Movimentação de Estorno da Conta"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Envio de movimentação de conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -4463,6 +4463,13 @@ msgstr "Movimento de Crédito"
 #, python-format
 msgid "Credit Note"
 msgstr "Nota de Crédito"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7785,6 +7792,13 @@ msgid "Is Valid"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr "Ele cria rascunhos de faturas e contas enviando um e-mail."
@@ -9057,6 +9071,13 @@ msgid "No Bank Matching"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Sem Cobrança"
@@ -9317,8 +9338,8 @@ msgstr "Número de Erros"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13377,6 +13398,13 @@ msgstr ""
 "- Para coincidir com o texto em qualquer lugar (no rótulo ou notas), coloque o texto entre . * por exemplo: .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -14038,6 +14066,11 @@ msgstr ""
 "Você pode colocar data limite para o pagamento desta linha."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
 msgstr "Este é o painel de contabilidade"
@@ -14105,6 +14138,14 @@ msgstr ""
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Este movimento será lançado na data contábil: %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15633,6 +15674,15 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Você não pode excluir um item vinculado a uma entrada lançada."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
 
 #. module: account
 #. odoo-python

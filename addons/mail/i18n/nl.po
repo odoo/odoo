@@ -7,6 +7,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,13 +259,6 @@ msgstr "%s, %s, %s hebben gereageerd met %s"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.xml:0
-#, python-format
-msgid "(edited)"
-msgstr "(bewerkt)"
 
 #. module: mail
 #. odoo-javascript
@@ -3696,8 +3690,7 @@ msgstr "Enter"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Enter Full Screen"
 msgstr "Volledig scherm aanzetten"
@@ -3791,8 +3784,7 @@ msgstr "Fout"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Exit Full Screen"
 msgstr "Volledig scherm verlaten"
@@ -5786,10 +5778,10 @@ msgstr "Login Informatie"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Lower hand"
-msgstr "Hand neerlaten"
+msgid "Lower Hand"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_mimetype
@@ -6421,6 +6413,13 @@ msgstr "Maanden"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "More"
+msgstr "Meer"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
 msgid "More actions"
@@ -6987,7 +6986,7 @@ msgstr "Aantal fouten"
 #: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Aantal berichten die actie vereisen"
 
 #. module: mail
@@ -7935,10 +7934,10 @@ msgstr "RTC-sessies"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Raise hand"
-msgstr "Hand opheffen"
+msgid "Raise Hand"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -8882,10 +8881,10 @@ msgstr "Shaka"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Share screen"
-msgstr "Scherm delen"
+msgid "Share Screen"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9151,6 +9150,13 @@ msgstr "Stop met het toevoegen van gebruikers"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "Stop Sharing Screen"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
 msgid "Stop camera"
@@ -9162,13 +9168,6 @@ msgstr "Camera stoppen"
 #, python-format
 msgid "Stop replying"
 msgstr "Stop met reageren"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#, python-format
-msgid "Stop screen sharing"
-msgstr "Scherm delen stoppen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -10542,16 +10541,6 @@ msgstr ""
 " profiteren van een kant-en-klare e-mailserver (@ mijnbedrijf.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
-"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10577,6 +10566,17 @@ msgstr "VS-knop"
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
 msgid "Valid"
 msgstr "Geldig"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
+"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -16961,8 +16961,8 @@ msgid "doctor"
 msgstr "dokter"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0

@@ -10,6 +10,7 @@
 # Odoo - Paolo Gatti (pgi), 2023
 # Martin Trigaux, 2023
 # Marianna Ciofani, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +87,13 @@ msgstr "%d anni fa"
 #, python-format
 msgid "%s Files"
 msgstr "%s file"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
+#, python-format
+msgid "%s days ago"
+msgstr "%s giorni fa"
 
 #. module: web
 #. odoo-javascript
@@ -305,15 +313,15 @@ msgstr "<span class=\"text-nowrap\">Imposta 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>Stati Uniti</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>Stati Uniti</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15,00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr "<span id=\"line_tax_ids\">Tasse 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -327,8 +335,8 @@ msgstr "<span>€ <span class=\"oe_currency_value\">19.250,00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5,000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -344,10 +352,10 @@ msgstr "<span>Descrizione</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
 "<span>Fattura</span>\n"
-"                           <span>FATT/2020/07/0003</span>"
+"                           <span>FATT/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -399,13 +407,13 @@ msgstr "<strong>Data fattura:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Totale parziale</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>Totale</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>Totale</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr "<strong>Importo imponibile</strong>"
 
 #. module: web
 #. odoo-javascript
@@ -514,8 +522,6 @@ msgstr "Editor Ace"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
-#: code:addons/web/static/src/search/action_menus/action_menus.xml:0
-#: code:addons/web/static/src/search/cog_menu/action_menus_items.xml:0
 #: code:addons/web/static/src/views/form/status_bar_buttons/status_bar_buttons.xml:0
 #, python-format
 msgid "Action"
@@ -527,6 +533,13 @@ msgstr "Azione"
 #, python-format
 msgid "Action ID:"
 msgstr "ID azione:"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/action_menus/action_menus.xml:0
+#, python-format
+msgid "Actions"
+msgstr "Azioni"
 
 #. module: web
 #. odoo-javascript
@@ -598,6 +611,14 @@ msgstr "Aggiungi gruppo personalizzato"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Add New Rule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
@@ -666,8 +687,6 @@ msgstr "Aggiungi nuovo valore"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -814,6 +833,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/search/custom_group_by_item/custom_group_by_item.xml:0
 #, python-format
 msgid "Apply"
@@ -921,7 +941,7 @@ msgstr "Freccia"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.xml:0
 #, python-format
 msgid "Arrow icon"
-msgstr ""
+msgstr "Icona freccia"
 
 #. module: web
 #. odoo-javascript
@@ -1811,6 +1831,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
@@ -1861,6 +1882,13 @@ msgstr "Elimina riga"
 #, python-format
 msgid "Descending"
 msgstr "Decrescente"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "Strumenti di sviluppo"
 
 #. module: web
 #. odoo-javascript
@@ -2243,7 +2271,7 @@ msgstr "Esporta"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/list/export_all/export_all.xml:0
 #, python-format
 msgid "Export All"
 msgstr "Esporta tutto"
@@ -2277,8 +2305,8 @@ msgid "Expression"
 msgstr ""
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -2646,10 +2674,10 @@ msgstr "Immagine"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
-msgid "In"
-msgstr "In"
+msgid "In %s days"
+msgstr "Tra %s giorni"
 
 #. module: web
 #. odoo-javascript
@@ -2767,6 +2795,13 @@ msgid "Invalid fields: "
 msgstr "Campi non validi:"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -2786,6 +2821,11 @@ msgstr "Invito per nuovi utenti"
 #, python-format
 msgid "Inviting..."
 msgstr "Invitando..."
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
+msgstr "Non presenta dettagli sull'azienda"
 
 #. module: web
 #. odoo-javascript
@@ -2817,6 +2857,13 @@ msgstr "Esempi Kanban"
 #, python-format
 msgid "Kanban: no action for type: "
 msgstr "Kanban, nessuna azione per la tipologia: "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#, python-format
+msgid "Label"
+msgstr "Etichetta"
 
 #. module: web
 #. odoo-javascript
@@ -3082,7 +3129,6 @@ msgstr "Seleziona i record che corrispondono a"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
@@ -3347,6 +3393,13 @@ msgstr "Nuova proprietà"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "New Rule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "New design"
@@ -3377,6 +3430,8 @@ msgstr "Nuovo: %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Next"
 msgstr "Succ"
@@ -3470,13 +3525,6 @@ msgstr "Nessun comando trovato"
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "No create edit"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/list/list_renderer.js:0
-#, python-format
-msgid "No currency provided"
 msgstr ""
 
 #. module: web
@@ -4014,9 +4062,11 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
-"Please use the following communication for your payment: <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"Please use the following communication for your payment : <b><span>\n"
+"                           INV/2023/00003</span></b>"
 msgstr ""
+"Per il pagamento utilizza l'indicazione seguente: <b><span>\n"
+"                           FATT/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -4104,6 +4154,8 @@ msgstr "Anteprima logo"
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Precedente"
@@ -4176,7 +4228,7 @@ msgstr "Colore primario"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #: code:addons/web/static/src/search/action_menus/action_menus.xml:0
-#: code:addons/web/static/src/search/cog_menu/action_menus_items.xml:0
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 #, python-format
@@ -4450,6 +4502,7 @@ msgstr "Giorni residui"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5147,10 +5200,16 @@ msgstr "SUGGERIMENTO"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#, python-format
+msgid "Tag"
+msgstr "Etichetta"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
-#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Tags"
 msgstr "Etichette"
@@ -5415,7 +5474,7 @@ msgstr "Titolo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "Oggi"
@@ -5451,7 +5510,7 @@ msgstr "Commuta menù"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "Domani"
@@ -5592,8 +5651,8 @@ msgid "Uncaught Promise"
 msgstr "Promise non rilevata"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -6026,7 +6085,7 @@ msgstr "Sì"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "Ieri"
@@ -6294,20 +6353,6 @@ msgstr "contiene"
 #, python-format
 msgid "date"
 msgstr "data"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "giorni"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr "giorni fa"
 
 #. module: web
 #. odoo-javascript
@@ -6648,6 +6693,7 @@ msgstr "non come"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.js:0
+#: code:addons/web/static/src/search/search_model.js:0
 #, python-format
 msgid "not set"
 msgstr ""
@@ -6767,6 +6813,7 @@ msgstr "record selezionati,"
 #: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/search/search_model.js:0
 #, python-format
 msgid "set"
 msgstr "impostato"

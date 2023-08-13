@@ -20,6 +20,7 @@
 # Martin Trigaux, 2023
 # Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,13 +261,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.xml:0
-#, python-format
-msgid "(edited)"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3621,8 +3615,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Enter Full Screen"
 msgstr ""
@@ -3712,8 +3705,7 @@ msgstr "Výnimka"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Exit Full Screen"
 msgstr ""
@@ -5667,9 +5659,9 @@ msgstr "Prihlasovacie údaje"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Lower hand"
+msgid "Lower Hand"
 msgstr ""
 
 #. module: mail
@@ -6291,6 +6283,13 @@ msgstr "Mesiace"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "More"
+msgstr "Viac"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
 msgid "More actions"
@@ -6851,8 +6850,8 @@ msgstr "Počet chýb"
 #: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ, ktoré vyžadujú akciu"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error_counter
@@ -7776,9 +7775,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Raise hand"
+msgid "Raise Hand"
 msgstr ""
 
 #. module: mail
@@ -8715,9 +8714,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Share screen"
+msgid "Share Screen"
 msgstr ""
 
 #. module: mail
@@ -8978,6 +8977,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "Stop Sharing Screen"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
 msgid "Stop camera"
@@ -8988,13 +8994,6 @@ msgstr ""
 #: code:addons/mail/static/src/composer/composer.xml:0
 #, python-format
 msgid "Stop replying"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#, python-format
-msgid "Stop screen sharing"
 msgstr ""
 
 #. module: mail
@@ -10312,14 +10311,6 @@ msgstr ""
 "pripraveného servera (@moja_spolocnost.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10345,6 +10336,15 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
 msgid "Valid"
 msgstr "Platný"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16713,8 +16713,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0

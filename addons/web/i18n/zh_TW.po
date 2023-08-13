@@ -5,8 +5,9 @@
 # Translators:
 # Benson <Benson.Dr@Gmail.com>, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Martin Trigaux, 2023
 # Tony Ng, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +84,13 @@ msgstr "%d 年前"
 #, python-format
 msgid "%s Files"
 msgstr "%s 檔案"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
+#, python-format
+msgid "%s days ago"
+msgstr "%s 天前"
 
 #. module: web
 #. odoo-javascript
@@ -297,15 +305,13 @@ msgstr "<span class=\"text-nowrap\">Tax 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 聖巴巴拉路\n"
-"                                                   <br/>普萊森特山 CA 94523<br/>美國</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr "<span id=\"line_tax_ids\">15.00%</span>"
+msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -319,8 +325,8 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span>5.000</span>"
-msgstr "<span>5.000</span>"
+msgid "<span>5.00</span>"
+msgstr "<span>5.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -336,10 +342,8 @@ msgstr "<span>描述</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span>Invoice</span>\n"
-"                           <span>INV/2020/07/0003</span>"
+"                           <span>INV/2023/00003</span>"
 msgstr ""
-"<span>應收憑單</span>\n"
-"                        <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -391,13 +395,13 @@ msgstr "<strong>憑單日期:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Subtotal</strong>"
-msgstr "<strong>小計</strong>"
+msgid "<strong>Total</strong>"
+msgstr "<strong>總計</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<strong>Total</strong>"
-msgstr "<strong>總計</strong>"
+msgid "<strong>Untaxed Amount</strong>"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -500,8 +504,6 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
-#: code:addons/web/static/src/search/action_menus/action_menus.xml:0
-#: code:addons/web/static/src/search/cog_menu/action_menus_items.xml:0
 #: code:addons/web/static/src/views/form/status_bar_buttons/status_bar_buttons.xml:0
 #, python-format
 msgid "Action"
@@ -513,6 +515,13 @@ msgstr "動作"
 #, python-format
 msgid "Action ID:"
 msgstr "動作ID:"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/action_menus/action_menus.xml:0
+#, python-format
+msgid "Actions"
+msgstr "動作"
 
 #. module: web
 #. odoo-javascript
@@ -584,6 +593,14 @@ msgstr "加入自訂分組"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Add New Rule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
@@ -652,8 +669,6 @@ msgstr "添加新的值"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -798,6 +813,7 @@ msgstr "將出現在列印的報表的右上角(報表頁首)."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/search/custom_group_by_item/custom_group_by_item.xml:0
 #, python-format
 msgid "Apply"
@@ -1783,6 +1799,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
@@ -1833,6 +1850,13 @@ msgstr ""
 #, python-format
 msgid "Descending"
 msgstr "降序"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
+#, python-format
+msgid "Developer Tools"
+msgstr "開發人員工具"
 
 #. module: web
 #. odoo-javascript
@@ -2215,7 +2239,7 @@ msgstr "匯出"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/list/export_all/export_all.xml:0
 #, python-format
 msgid "Export All"
 msgstr "匯出全部"
@@ -2249,8 +2273,8 @@ msgid "Expression"
 msgstr "表達式"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -2616,10 +2640,10 @@ msgstr "圖片"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
-msgid "In"
-msgstr "在"
+msgid "In %s days"
+msgstr "於%s 天後"
 
 #. module: web
 #. odoo-javascript
@@ -2733,6 +2757,13 @@ msgid "Invalid fields: "
 msgstr "無效欄位："
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
@@ -2751,6 +2782,11 @@ msgstr "邀請新使用者"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Inviting..."
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
+msgid "Is Company Details Empty"
 msgstr ""
 
 #. module: web
@@ -2778,6 +2814,13 @@ msgstr "看板示例"
 #, python-format
 msgid "Kanban: no action for type: "
 msgstr "看板：對類型無動作"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#, python-format
+msgid "Label"
+msgstr "標籤"
 
 #. module: web
 #. odoo-javascript
@@ -3043,7 +3086,6 @@ msgstr "尋找符合"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
@@ -3308,6 +3350,13 @@ msgstr "新屬性"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "New Rule"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "New design"
@@ -3338,6 +3387,8 @@ msgstr "新增： %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Next"
 msgstr "下一頁"
@@ -3431,13 +3482,6 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "No create edit"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/list/list_renderer.js:0
-#, python-format
-msgid "No currency provided"
 msgstr ""
 
 #. module: web
@@ -3965,8 +4009,8 @@ msgstr "請使用複製按鈕將錯誤報告給您的支援服務。"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
-"Please use the following communication for your payment: <b><span>\n"
-"                           INV/2020/07/0003</span></b>"
+"Please use the following communication for your payment : <b><span>\n"
+"                           INV/2023/00003</span></b>"
 msgstr ""
 
 #. module: web
@@ -4055,6 +4099,8 @@ msgstr "預覽logo"
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Previous"
 msgstr "前一個"
@@ -4127,7 +4173,7 @@ msgstr "主要色彩"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #: code:addons/web/static/src/search/action_menus/action_menus.xml:0
-#: code:addons/web/static/src/search/cog_menu/action_menus_items.xml:0
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 #, python-format
@@ -4401,6 +4447,7 @@ msgstr "剩餘天數"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
+#: code:addons/web/static/src/views/fields/relational_utils.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -5095,10 +5142,16 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
+#, python-format
+msgid "Tag"
+msgstr "標籤"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
-#: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Tags"
 msgstr "標籤"
@@ -5122,7 +5175,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
 msgid "Tax ID"
-msgstr "稅ID"
+msgstr "稅務編號"
 
 #. module: web
 #. odoo-javascript
@@ -5356,7 +5409,7 @@ msgstr "稱謂"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Today"
 msgstr "今天"
@@ -5392,7 +5445,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Tomorrow"
 msgstr "明天"
@@ -5531,8 +5584,8 @@ msgid "Uncaught Promise"
 msgstr "未獲取的承諾"
 
 #. module: web
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5760,7 +5813,7 @@ msgstr "選項"
 #: code:addons/web/static/src/views/form/setting/setting.xml:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr "此處設置的值是特定於公司的。"
+msgstr "此處設定的值是特定於每間公司的。"
 
 #. module: web
 #. odoo-javascript
@@ -5965,7 +6018,7 @@ msgstr "是"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
+#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.js:0
 #, python-format
 msgid "Yesterday"
 msgstr "昨天"
@@ -6217,20 +6270,6 @@ msgstr "包含"
 #, python-format
 msgid "date"
 msgstr "日期"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days"
-msgstr "天"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/remaining_days/remaining_days_field.xml:0
-#, python-format
-msgid "days ago"
-msgstr "天前"
 
 #. module: web
 #. odoo-javascript
@@ -6571,6 +6610,7 @@ msgstr "not like（不含大小寫相符的字串）"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.js:0
+#: code:addons/web/static/src/search/search_model.js:0
 #, python-format
 msgid "not set"
 msgstr "未設定"
@@ -6689,6 +6729,7 @@ msgstr "選擇的記錄"
 #: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/search/search_model.js:0
 #, python-format
 msgid "set"
 msgstr "已設定"

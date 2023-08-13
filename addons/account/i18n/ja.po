@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2023-07-11 09:57+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
 "Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -116,7 +116,7 @@ msgstr "%(amount)sの期限は%(date)sです"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr ""
+msgstr "%(partner_name)sは以下の与信限度額に達しました: %(credit_limit)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -214,6 +214,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s が関連する明細行が無効な状態に達しました。\n"
+"一貫性を保つために、仕訳項目には常に必ず1つの仮項目がある必要があります。"
 
 #. module: account
 #. odoo-python
@@ -4399,6 +4401,13 @@ msgstr "クレジットノート"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You can only send sales documents"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "Credit Note Created"
 msgstr "クレジットノートが作成されました"
 
@@ -6316,28 +6325,28 @@ msgstr "海外VATヘッダーモード"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account (%s)"
-msgstr ""
+msgstr "外国法人税勘定科目(%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "外国法人税勘定科目前払 (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "外国法人税勘定科目未払(%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "外国法人税勘定科目未収 (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -7650,6 +7659,13 @@ msgid "Is Valid"
 msgstr "有効です"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr "メールを送信することで、請求書の下書きが作成されます。"
@@ -8267,7 +8283,7 @@ msgstr "ライン"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "項目 \"%s\"はその親同様にそれ自体を定義します。"
 
 #. module: account
 #. odoo-python
@@ -8276,7 +8292,7 @@ msgstr ""
 msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
-msgstr ""
+msgstr "項目 \"%s\" は項目\"%s\"をその親として定義していますが、レポートでは親より前に表示されています。必ず親が初めに来る必要があります。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -8310,7 +8326,7 @@ msgstr "さらにリミットを読み込む"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "ロック日メッセージ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -8920,6 +8936,13 @@ msgid "No Bank Matching"
 msgstr "銀行照合なし"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "要フォロー"
@@ -9172,8 +9195,8 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "アクションが必要なメッセージの数"
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -9645,7 +9668,7 @@ msgstr "PDFファイル"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr ""
+msgstr "見積送状"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12908,6 +12931,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"日付が%(lock_type)sロック日%(lock_date)s以前に設定されています。 "
+"記帳すると仕訳は%(invoice_date)sに勘定されます。"
 
 #. module: account
 #. odoo-python
@@ -13141,6 +13166,13 @@ msgstr ""
 "- 行の先頭にテキストと一致させるため、単にテキストを入力してください。\n"
 "- (ラベルまたはノートの)テキストのどこかと一致させるため、文字間にテキストを配置します.*\n"
 "例:.*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -13761,6 +13793,11 @@ msgid ""
 msgstr "この項目は買掛金と売掛金仕訳のために使用されます。この行の支払のための期限の日付を設定することができます。"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
 msgstr "こちらは会計ダッシュボードです"
@@ -13820,6 +13857,14 @@ msgstr "この仕訳は、記帳日に自動的に記帳されるように設定
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "この仕訳は、記帳日で記帳されます:%(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "この処理により付番にギャップが生じます。"
 
 #. module: account
 #. odoo-python
@@ -14051,28 +14096,28 @@ msgstr "合計(±)"
 msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
-msgstr ""
+msgstr "合計未消込金額（販売オーダおよびこのドキュメント込）%(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
-msgstr ""
+msgstr "合計未消込金額（販売オーダ込）%(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due (including this document): %(total_credit)s"
-msgstr ""
+msgstr "合計未消込金額（このドキュメント込）%(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "合計未消込金額: %(total_credit)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -14443,7 +14488,7 @@ msgstr "アップロード"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "アップロード済の請求書"
 
 #. module: account
 #. odoo-python
@@ -14781,7 +14826,7 @@ msgstr "%s の警告です。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "現金丸め方法の警告: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15273,6 +15318,16 @@ msgstr "記帳済仕訳に紐づいた項目を削除することはできませ
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"この仕訳はすでにシーケンス番号を消費しており、連携の最後のものではないため、削除することはできません。その代わりに元に戻す方が良いでしょう。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -15597,7 +15652,7 @@ msgstr "為替レートの差異に関連する会計仕訳を自動的に計上
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "利益勘定(会社により異なる)を指定する必要があります。"
 
 #. module: account
 #. odoo-python

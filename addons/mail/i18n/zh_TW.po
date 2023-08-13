@@ -3,10 +3,11 @@
 # 	* mail
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Tony Ng, 2023
 # Martin Trigaux, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
+# Tony Ng, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,13 +248,6 @@ msgstr "%s、%s、%s 已回應 %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.xml:0
-#, python-format
-msgid "(edited)"
 msgstr ""
 
 #. module: mail
@@ -1785,7 +1779,7 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "BACK"
-msgstr ""
+msgstr "返回"
 
 #. module: mail
 #. odoo-javascript
@@ -3584,8 +3578,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Enter Full Screen"
 msgstr ""
@@ -3675,8 +3668,7 @@ msgstr "例外"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Exit Full Screen"
 msgstr ""
@@ -5615,9 +5607,9 @@ msgstr "登錄信息"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Lower hand"
+msgid "Lower Hand"
 msgstr ""
 
 #. module: mail
@@ -5938,7 +5930,7 @@ msgstr "合併合作夥伴引導"
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "合併以下業務夥伴:"
+msgstr "已與以下合作夥伴合併："
 
 #. module: mail
 #. odoo-javascript
@@ -6218,6 +6210,13 @@ msgstr "模組卸載"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__months
 msgid "Months"
 msgstr "月"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "More"
+msgstr "更多"
 
 #. module: mail
 #. odoo-javascript
@@ -6779,8 +6778,8 @@ msgstr "錯誤數量"
 #: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的消息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error_counter
@@ -7696,9 +7695,9 @@ msgstr "RTC會話"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Raise hand"
+msgid "Raise Hand"
 msgstr ""
 
 #. module: mail
@@ -8629,10 +8628,10 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Share screen"
-msgstr "共享屏幕"
+msgid "Share Screen"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8890,6 +8889,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "Stop Sharing Screen"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
 msgid "Stop camera"
@@ -8901,13 +8907,6 @@ msgstr "停止相機"
 #, python-format
 msgid "Stop replying"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#, python-format
-msgid "Stop screen sharing"
-msgstr "停止屏幕共享"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -9114,7 +9113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__vat
 #: model:ir.model.fields,field_description:mail.field_res_users__vat
 msgid "Tax ID"
-msgstr "稅ID"
+msgstr "稅務編號"
 
 #. module: mail
 #. odoo-javascript
@@ -10209,14 +10208,6 @@ msgstr ""
 "(@mycompany.odoo.com)。"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10242,6 +10233,15 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
 msgid "Valid"
 msgstr "有效"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16599,8 +16599,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0

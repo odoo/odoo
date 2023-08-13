@@ -6,6 +6,7 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' は有効な正規表現バーコードパターンではありません。意図されているのは、以下ですか:'.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -88,7 +89,7 @@ msgstr "バーコード"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "バーコードイベントMixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -125,7 +126,7 @@ msgstr "スキャンされたバーコード"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
-msgstr ""
+msgstr "バーコード: "
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -213,13 +214,18 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"パターンは重量や価格などの数値がバーコードにどのようにエンコードされるかも\n"
+"                                定義することができます。それらパターンは <code>{NNN}</code>のように表現され、\n"
+"　　　　　　　　N's は数字の桁をエンコードする場所を定義します。小数点が D's で示される\n"
+"                               例えば <code>{NNNDD}</code>など、D'sで示される浮動小数点もサポートされています。これらの場合、\n"
+"                                関連するレコードのバーコードフィールドはこれらの数値をゼロとして示す<i>必要があります</i>。"
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "もう一度スキャンして下さい。"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -270,7 +276,7 @@ msgstr "一致したパターンはこのバーコードにエイリアスしま
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
-msgstr ""
+msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つのルールには中括弧を 1 組しか含めることができません。"
 
 #. module: barcodes
 #. odoo-python
@@ -279,7 +285,7 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
-msgstr ""
+msgstr "バーコードパターン %(pattern)sにシンタックスエラーがあります: 中括弧には後にD'sが続くN'sのみ含むことができます。"
 
 #. module: barcodes
 #. odoo-python
@@ -287,7 +293,7 @@ msgstr ""
 #, python-format
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr ""
+msgstr "バーコードパターン%(pattern)sにシンタックスエラーがあります: 中括弧が空です。"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -336,7 +342,7 @@ msgstr "個数管理品"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "不明なバーコードコマンド"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

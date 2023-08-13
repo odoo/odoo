@@ -11,6 +11,7 @@
 # Thomas, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -265,13 +266,6 @@ msgstr "%s, %s, %s haben reagiert mit %s"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message.xml:0
-#, python-format
-msgid "(edited)"
-msgstr "(bearbeitet)"
 
 #. module: mail
 #. odoo-javascript
@@ -3716,8 +3710,7 @@ msgstr "Enter"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Enter Full Screen"
 msgstr "Vollbildmodus aktivieren"
@@ -3813,8 +3806,7 @@ msgstr "Ausnahme"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
 msgid "Exit Full Screen"
 msgstr "Vollbildmodus beenden"
@@ -5815,9 +5807,9 @@ msgstr "Login-Information"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Lower hand"
+msgid "Lower Hand"
 msgstr "Hand herunternehmen"
 
 #. module: mail
@@ -6449,6 +6441,13 @@ msgstr "Monate"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "More"
+msgstr "Mehr"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
 msgid "More actions"
@@ -7018,8 +7017,8 @@ msgstr "Anzahl der Fehler"
 #: model:ir.model.fields,help:mail.field_mail_thread_main_attachment__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error_counter
@@ -7974,9 +7973,9 @@ msgstr "RTC-Sitzungen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Raise hand"
+msgid "Raise Hand"
 msgstr "Hand heben"
 
 #. module: mail
@@ -8923,9 +8922,9 @@ msgstr "Shaka"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
 #, python-format
-msgid "Share screen"
+msgid "Share Screen"
 msgstr "Bildschirm teilen"
 
 #. module: mail
@@ -8958,7 +8957,7 @@ msgstr "Kurzbefehle"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
 msgid "Shortcut"
-msgstr "Tastenkürzel"
+msgstr "Abkürzung"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -9192,6 +9191,13 @@ msgstr "Hinzufügen von Benutzerns stoppen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/rtc/call_action_list.js:0
+#, python-format
+msgid "Stop Sharing Screen"
+msgstr "Teilen des Bilschirms beenden"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call_action_list.xml:0
 #, python-format
 msgid "Stop camera"
@@ -9203,13 +9209,6 @@ msgstr "Kamera anhalten"
 #, python-format
 msgid "Stop replying"
 msgstr "Nicht mehr antworten"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/rtc/call_action_list.xml:0
-#, python-format
-msgid "Stop screen sharing"
-msgstr "Bildschirm nicht mehr teilen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -10245,7 +10244,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr "Aus schwarzen Liste entfernen"
+msgstr "Von schwarzer Liste entfernen"
 
 #. module: mail
 #. odoo-python
@@ -10588,16 +10587,6 @@ msgstr ""
 "(@mycompany.odoo.com) profitieren."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-"Wert für `mail.catchall.domain.allowed` kann nicht validiert werden.\n"
-"Es sollte eine durch Kommata getrennte Liste von Domains sein, z. B. example.com,example.org."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
@@ -10623,6 +10612,17 @@ msgstr "VS-Taste"
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
 msgid "Valid"
 msgstr "Gültig"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Wert für `mail.catchall.domain.allowed` kann nicht validiert werden.\n"
+"Es sollte eine durch Kommata getrennte Liste von Domains sein, z. B. example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -10924,7 +10924,7 @@ msgstr "Sie befinden sich im Kanal <b>#%s</b>."
 #: code:addons/mail/static/src/core/message_service.js:0
 #, python-format
 msgid "You are no longer following \"%(thread_name)s\"."
-msgstr "Si folgen „%(thread_name)s“ nicht mehr."
+msgstr "Sie folgen „%(thread_name)s“ nicht mehr."
 
 #. module: mail
 #. odoo-python
@@ -11015,7 +11015,7 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
-"Sie haben keine Zugriffsrechte, um E-Mails aus der schwarzen Liste zu "
+"Sie haben keine Zugriffsrechte, um E-Mails von der schwarzen Liste zu "
 "entfernen. Bitte wenden Sie sich an Ihren Administrator."
 
 #. module: mail
@@ -17009,8 +17009,8 @@ msgid "doctor"
 msgstr "Doktor"
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0

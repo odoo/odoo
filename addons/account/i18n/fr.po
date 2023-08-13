@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2023-07-11 09:57+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -4557,6 +4557,13 @@ msgstr "Avoir"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You can only send sales documents"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "Credit Note Created"
 msgstr "Avoir créé"
 
@@ -7930,6 +7937,13 @@ msgid "Is Valid"
 msgstr "Est valide"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
@@ -9238,6 +9252,13 @@ msgid "No Bank Matching"
 msgstr "Aucun rapprochement bancaire"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Aucun suivi"
@@ -9504,8 +9525,8 @@ msgstr "Nombre d'erreurs"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13657,6 +13678,13 @@ msgstr ""
 "ex : .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -14353,6 +14381,11 @@ msgstr ""
 "d'échéance pour le règlement."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
 msgstr "Voici le tableau de bord de comptabilité"
@@ -14423,6 +14456,14 @@ msgstr ""
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
 msgstr "Cette écriture sera comptabilisée à la date comptable : %(date)s"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
+#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#, python-format
+msgid "This operation will create a gap in the sequence."
+msgstr "Cette opération créera un trou dans la séquence."
 
 #. module: account
 #. odoo-python
@@ -15989,6 +16030,18 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr "Vous ne pouvez pas supprimer un élément lié à une écriture publiée."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot delete this entry, as it has already consumed a sequence number "
+"and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Vous ne pouvez pas supprimer cette écriture, parce qu'elle a déjà consommé "
+"un numéro de séquence et elle n'est pas la dernière de la chaîne. Vous "
+"devriez plutôt l'inverser."
 
 #. module: account
 #. odoo-python

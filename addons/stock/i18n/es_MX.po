@@ -9,8 +9,8 @@
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
 # Lucia Pacheco, 2023
-# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,7 +277,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
-msgstr "+ %d día(s)"
+msgstr "+ %d días"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -696,7 +696,7 @@ msgstr "<strong>Cantidad</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>Cita programada:</strong>"
+msgstr "<strong>Fecha programada:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -736,7 +736,7 @@ msgstr "<strong>¿A dónde desea enviar estos productos?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? Esto puede dar lugar a inconsistencias en su inventario."
+msgstr "? Esto puede causar inconsistencias en su inventario."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -774,7 +774,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Se puede establecer una advertencia en un partner (existencias)"
+msgstr "Se puede establecer una advertencia en un contacto (existencias)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -1351,7 +1351,7 @@ msgstr ""
 "disponibilidad. La otra posibilidad le permite crear un aprovisionamiento en"
 " la ubicación de origen (y por lo tanto, ignorar las existencias actuales) "
 "para obtener productos. Si desea encadenar movimientos y hacer que éste "
-"espere al anterior, debe escoger la segunda opción."
+"espere al anterior, debe elegir la segunda opción."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1678,7 +1678,7 @@ msgstr "Calcular costos de envío y enviar con DHL"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Calcular los gastos de envío y enviar con Easypost"
+msgstr "Calcular costos de envío y enviar con Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2094,12 +2094,12 @@ msgstr "Fecha de creación, usualmente la de la orden"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
-msgstr "Cross-Dock"
+msgstr "Sin almacenaje intermedio (cross dock)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Ruta crossdock"
+msgstr "Ruta sin almacenes intermedios (cross docking)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -2240,8 +2240,8 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
-"Día del mes en el que se debe realizar el inventario anual. Si es cero o negativo, se seleccionará el primer día del mes en su lugar.\n"
-"        Si es mayor que el último día de un mes, se seleccionará en su lugar el último día del mes."
+"Día del mes en el que se debe realizar el inventario anual. Si es cero o negativo, se seleccionará el primer día del mes.\n"
+"        Si es mayor que el último día de un mes, se seleccionará el último día del mes."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -2429,7 +2429,8 @@ msgstr "Entregas"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
 msgstr ""
-"Las entregas le permiten enviar productos desde tu existencias a un partner."
+"Las entregas le permiten enviar productos desde sus existencias a un "
+"contacto."
 
 #. module: stock
 #. odoo-javascript
@@ -2448,7 +2449,7 @@ msgstr "Dirección de entrega"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr "Método de envío"
+msgstr "Métodos de envío"
 
 #. module: stock
 #. odoo-python
@@ -2510,9 +2511,9 @@ msgid ""
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
 msgstr ""
-"Según los módulos instalados, esto le permitirá definir la ruta del producto"
-" en este empaquetado: si se comprará, se fabricará, se reabastecerá bajo "
-"pedido, etc."
+"Si cuenta con los módulos correspondientes instalados, esto le permitirá "
+"definir la ruta del producto en este empaquetado: si se comprará, se "
+"fabricará, se reabastecerá bajo pedido, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2522,8 +2523,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Dependiendo de los módulos instalados, esto le permitirá definir la ruta del"
-" producto: si se comprará, fabricará, obtendrá bajo pedido, etc."
+"Si cuenta con los módulos correspondientes instalados, esto le permitirá "
+"definir la ruta del producto: si se comprará, se fabricará, se reabastecerá "
+"bajo pedido, etc."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__note
@@ -5281,7 +5283,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Número de mensajes que requieren una acción"
 
 #. module: stock

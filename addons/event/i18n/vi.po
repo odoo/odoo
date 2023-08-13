@@ -243,7 +243,7 @@ msgid ""
 msgstr ""
 "<em>Nếu bạn muốn trình bày, vui lòng gửi đề xuất chủ đề trong thời gian sớm "
 "nhất tới Mr. Famke Jenssen tại địa chỉ ngh (a) yourcompany (dot) com để được"
-" duyệt. Bài phát biểu có thể là bài thuyết trình về module cộng đồng, một "
+" duyệt. Bài phát biểu có thể là bài thuyết trình về phân hệ cộng đồng, một "
 "trường hợp thành công, phản hồi về phương pháp, kỹ thuật, v.v. Các bài "
 "thuyết trình bài được thực hiện bằng tiếng Anh.</em>"
 
@@ -2527,8 +2527,8 @@ msgstr "Số lượng lỗi"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số tin nhắn cần xử lý"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -3220,6 +3220,14 @@ msgstr ""
 
 #. module: event
 #. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+
+#. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
@@ -3425,7 +3433,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr "Hiểu về các module khác nhau;"
+msgstr "Hiểu về các phân hệ khác nhau;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit

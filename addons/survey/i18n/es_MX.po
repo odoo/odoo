@@ -8,9 +8,9 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
-# Iran Villalobos López, 2023
 # Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -261,9 +261,9 @@ msgstr ""
 "                <p>\n"
 "                    A continuación encontrará adjunta su certificación de\n"
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Creación de mobiliario</strong>\n"
-"                    certification\n"
+"                    .\n"
 "                </p>\n"
-"                <p>Felicidades por aprobar el cuestionario con un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"                <p>¡Felicidades por aprobar el cuestionario con un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -312,7 +312,7 @@ msgstr ""
 "            Le invitamos a realizar un nueva certificación.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Estamos realizando una encuesta y le agradeceríamos su participación.\n"
+"            Estamos realizando una encuesta y agradeceríamos su participación.\n"
 "        </t>\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -325,10 +325,10 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Por favor responda la encuesta antes del día <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"            Responda la encuesta antes del día <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
-"            ¡Le deseamos buena suerte!\n"
+"            ¡Buena suerte!\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Le agradecemos de antemano su participación.\n"
@@ -678,7 +678,7 @@ msgid ""
 "<span>Name one animal</span><br/>\n"
 "                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 msgstr ""
-"<span>Nombre a un animal</span><br/>\n"
+"<span>Nombre un animal</span><br/>\n"
 "                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Una sola línea\" title=\"Una sola línea\"/>"
 
 #. module: survey
@@ -870,7 +870,7 @@ msgstr "Icono del tipo de actividad"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Add a question"
-msgstr "Añadir pregunta"
+msgstr "Agregar una pregunta"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -880,7 +880,7 @@ msgstr "Agregar una sección"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Add existing contacts..."
-msgstr "Añadir contactos existentes..."
+msgstr "Agregar contactos existentes..."
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -1114,8 +1114,8 @@ msgid ""
 "Attendee nickname, mainly used to identify them in the survey session "
 "leaderboard."
 msgstr ""
-"Apodo del asistente, principalmente utilizado para su identificación en la "
-"tabla de clasificación de la sesión de la encuesta."
+"Apodo del asistente, se utiliza para identificarle en la tabla de "
+"clasificación de la sesión de la encuesta."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1217,8 +1217,8 @@ msgstr "Pluma azul"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body_has_template_value
-msgid "Body content is the same as tmeplate"
-msgstr "El contenido del cuerpo es el mismo que el de la plantilla"
+msgid "Body content is the same as the template"
+msgstr "El contenido del cuerpo es igual al de la plantilla"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug4
@@ -1433,7 +1433,7 @@ msgstr "Índice de colores"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "Come back once you have added questions to your Surveys."
-msgstr "Regrese una vez que añada preguntas a su encuesta."
+msgstr "Regrese una vez que agregue preguntas a su encuesta."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_comments
@@ -1506,8 +1506,8 @@ msgstr "Silla de conferencias"
 #, python-format
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
 msgstr ""
-"¡Felicidades! Ya está listo para recopilar la retroalimentación como todo un"
-" profesional :)"
+"¡Felicidades! Ya está listo para recibir retroalimentación como todo un "
+"profesional. :)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -2377,8 +2377,8 @@ msgid ""
 "If checked, this question will be displayed only\n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
-"Si se encuentra seleccionado, esta pregunta se mostrará solo\n"
-"        si la respuesta condicional especificada se ha seleccionado en una pregunta anterior"
+"Si se encuentra seleccionada, esta pregunta se mostrará solo\n"
+"        si seleccionó la respuesta condicional especificada en una pregunta anterior."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -3214,7 +3214,7 @@ msgstr "Número de errores"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Número de mensajes que requieren una acción"
 
 #. module: survey
