@@ -50,7 +50,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
-"<b>Arrastre esta tarjeta</b> para calificarlo para una primera entrevista."
+"<b>Arrastre esta tarjeta</b> para calificarle a una primera entrevista."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -525,7 +525,7 @@ msgstr ""
 "        <td valign=\"top\">\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Apreciable,<br><br>\n"
-"                Le agradecemos por su interés y su tiempo.<br>\n"
+"                Le agradecemos su interés y su tiempo.<br>\n"
 "                Le deseamos lo mejor en sus futuros proyectos.\n"
 "                <br><br>\n"
 "                Saludos<br>\n"
@@ -533,7 +533,7 @@ msgstr ""
 "                    <t t-if=\"object.user_id\">\n"
 "                        -- <br>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br>\n"
-"                        Correo electrónico: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br>\n"
+"                        Correo electrónico: <t t-out=\"object.user_id.email or ''\">mark.brown23@ejemplo.com</t><br>\n"
 "                        Teléfono: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
@@ -608,7 +608,7 @@ msgstr ""
 "                <br><br>\n"
 "                Tome en cuenta que reclutar es difícil y podemos cometer\n"
 "                errores. No dude en contestar este correo electrónico si\n"
-"                piensa que hemos cometido un error, o si quiere más información\n"
+"                piensa que hemos cometido un error o si quiere más información\n"
 "                sobre nuestra decisión.\n"
 "                <br><br>\n"
 "                Sin embargo, mantendremos su currículum en el registro y le\n"
@@ -814,7 +814,7 @@ msgstr "Nombre del candidato"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr "Los candidatos no tienen correo electrónico"
+msgstr "Candidatos sin correo electrónico"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -838,7 +838,7 @@ msgid ""
 msgstr ""
 "Los candidatos y su CV adjunto se crean de forma automática cuando se envía un correo electrónico.\n"
 "                Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente\n"
-"                de modo que puede buscar fácilmente a través de su contenido."
+"                de modo que puede buscar con facilidad a través de su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -982,8 +982,8 @@ msgid ""
 msgstr ""
 "Al establecer un seudónimo en un puesto de trabajo, los correos electrónicos"
 " enviados a esta dirección crearán postulaciones de forma automática. "
-"Incluso puede utilizar múltiples rastreadores para obtener estadísticas de "
-"acuerdo al origen de la postulación: LinkedIn, Monster, Indeed, etc."
+"Incluso puede utilizar varios rastreadores para obtener estadísticas según "
+"el origen de la postulación: LinkedIn, Monster, Indeed, etc."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1134,7 +1134,8 @@ msgstr "Crear un puesto de trabajo"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Create new applications by sending an email to"
-msgstr "Cree nuevas postulaciones mediante el envío de un correo electrónico"
+msgstr ""
+"Cree nuevas postulaciones mediante el envío de un correo electrónico a"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1200,9 +1201,9 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Defina una dirección de contacto específica para este puesto. Si lo deja en "
-"blanco, la dirección predeterminada que se usará es la que se haya definido "
-"en la configuración de recursos humanos"
+"Defina una dirección de contacto específica para este puesto. Si la deja en "
+"blanco, la dirección predeterminada a utilizar es la que se definió en los "
+"ajustes de recursos humanos."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1643,8 +1644,7 @@ msgstr "Icono que indica una actividad de excepción."
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
@@ -1818,7 +1818,7 @@ msgstr "Empleos"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Jobs - Recruitment Form"
-msgstr "Trabajos - Formulario de reclutamiento"
+msgstr "Empleos - Formulario de reclutamiento"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -2823,7 +2823,7 @@ msgstr "Asunto"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr "Sujeto/solicitud"
+msgstr "Asunto/solicitud"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -2857,7 +2857,7 @@ msgid ""
 msgstr ""
 "Los entrevistadores establecidos en el puesto de trabajo pueden ver a todos "
 "los postulantes, tienen acceso a la información, los archivos adjuntos, la "
-"gestión de la reunión y pueden rechazarlo. No necesita tener permisos de "
+"gestión de la reunión y pueden rechazarle. No necesita tener permisos de "
 "reclutamiento para ser entrevistador."
 
 #. module: hr_recruitment
@@ -2930,8 +2930,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Use el seudónimo del correo electrónico, por ejemplo, \"jobs\" si desea "
-"recibir correos electrónicos en <jobs@example.odoo.com>"
+"Use el seudónimo del correo electrónico, por ejemplo, \"trabajos\" si desea "
+"recibir correos electrónicos en <trabajos@ejemplo.odoo.com>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2942,8 +2942,8 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "El propietario de los registros creados al recibir correos electrónicos en "
-"este seudónimo. Si el campo no está establecido, el sistema tratará de "
-"encontrar al propietario adecuado basado en la dirección del emisor (De), o "
+"este seudónimo. Si no se establece en el campo, el sistema tratará de "
+"encontrar al propietario adecuado según la dirección del emisor (De), o "
 "usará la cuenta de administrador si no se encuentra un usuario para esa "
 "dirección."
 

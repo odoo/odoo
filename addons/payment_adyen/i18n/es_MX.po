@@ -6,6 +6,7 @@
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Advertencia:</strong> para capturar la cantidad de manera manual, también tiene que configurar\n"
+"                   Capturar Retraso a manual en la configuración de su cuenta Adyen."
 
 #. module: payment_adyen
 #. odoo-python
@@ -34,6 +37,7 @@ msgstr ""
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
 msgstr ""
+"Se envió una solicitud para anular la transacción con referencia %s (%s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -91,7 +95,7 @@ msgstr "Clave HMAC"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Tiene Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -150,6 +154,8 @@ msgstr "Verifique sus datos de pago."
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
 msgstr ""
+"Información recibida para transacción hija con valores de transacción "
+"faltante."
 
 #. module: payment_adyen
 #. odoo-python
@@ -217,6 +223,8 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"La cantidad que procesa Adyen para la transacción %s es diferente que la "
+"cantidad que se pide. Se creó otra transacción con la cantidad correcta."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
@@ -234,6 +242,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Es posible que Adyen se tarde unos minutos en procesar la captura\n"
+"                    o anulación de la transacción para que se refleje en Odoo."
 
 #. module: payment_adyen
 #. odoo-python
@@ -243,6 +253,8 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
+"La solicitud de captura por %(amount)s para la transacción con referencia "
+"%(ref)s se envió (%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -252,14 +264,14 @@ msgstr "La clave de cliente del usuario del servicio web"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "El código de la cuenta comercial que se debe usar con este proveedor"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "Falló la comunicación con la API. Más información: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code

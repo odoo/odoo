@@ -5539,6 +5539,34 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"This module adds accounting features for Ecuadorian localization, which\n"
+"represent the minimum requirements to operate a business in Ecuador in compliance\n"
+"with local regulation bodies such as the ecuadorian tax authority -SRI- and the\n"
+"Superintendency of Companies -Super Intendencia de Compañías-\n"
+"\n"
+"Follow the next configuration steps:\n"
+"1. Go to your company and configure your country as Ecuador\n"
+"2. Install the invoicing or accounting module, everything will be handled automatically\n"
+"\n"
+"Highlights:\n"
+"* Ecuadorian chart of accounts will be automatically installed, based on example provided by Super Intendencia de Compañías\n"
+"* List of taxes (including withholds) will also be installed, you can switch off the ones your company doesn't use\n"
+"* Fiscal position, document types, list of local banks, list of local states, etc, will also be installed\n"
+"\n"
+"Technical\n"
+"---------\n"
+"Master Data:\n"
+"* Chart of Accounts, based on recomendation by Super Cías\n"
+"* Ecuadorian Taxes, Tax Tags, and Tax Groups\n"
+"* Ecuadorian Fiscal Positions\n"
+"* Document types (there are about 41 purchase documents types in Ecuador)\n"
+"* Identification types\n"
+"* Ecuador banks\n"
+"* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -8922,6 +8950,14 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 "    "
 msgstr ""
+"\n"
+"This module adds generic features to register an Odoo DB on the proxy responsible for receiving data (via requests from web-services).\n"
+"- An edi_proxy_user has a unique identification on a specific proxy type (e.g. l10n_it_edi, peppol) which\n"
+"allows to identify him when receiving a document addressed to him. It is linked to a specific company on a specific\n"
+"Odoo database.\n"
+"- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
+"- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -27376,7 +27412,7 @@ msgstr "合作夥伴地理定位"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr "合作夥伴: %(category)s"
+msgstr "合作夥伴：%(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -31818,7 +31854,7 @@ msgstr "任務紀錄"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "稅ID"
+msgstr "稅務編號"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_taxcloud
@@ -35514,6 +35550,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -35536,6 +35579,13 @@ msgstr "不能刪除使用者的預設語言."
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "您不能把聯繫人和其上級項合併."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

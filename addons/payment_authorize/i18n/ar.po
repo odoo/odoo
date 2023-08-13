@@ -27,6 +27,9 @@ msgid ""
 "                    <option value=\"savings\">Personal Savings</option>\n"
 "                    <option value=\"businessChecking\">Business Checking</option>"
 msgstr ""
+"<option value=\"checking\">حساب جاري شخصي</option>\n"
+"                    <option value=\"savings\">حساب توفير شخصي</option>\n"
+"                    <option value=\"businessChecking\">حساب جاري للأعمال</option>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -141,7 +144,7 @@ msgstr ""
 msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
-msgstr ""
+msgstr "تعذر جلب تفاصيل المعاملة. (كود الخطأ: %s؛ rror_details: %s) "
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__authorize_payment_method_type__credit_card
@@ -209,7 +212,7 @@ msgstr "لم يتم العثور على معاملة تطابق المرجع %s.
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "يمكن تحديد عملة واحدة فقط في حساب Authorize.Net. "
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -279,7 +282,7 @@ msgstr "الكود التقني لمزود الدفع هذا. "
 #, python-format
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr ""
+msgstr "المعاملة ليست في حالة تسمح برد الأموال. (الحالة: %s، التفاصيل: %s) "
 
 #. module: payment_authorize
 #. odoo-python
@@ -310,13 +313,15 @@ msgid ""
 "method type, please disable the provider and duplicate it. Then, change the "
 "payment method type on the duplicated provider."
 msgstr ""
+"توجد رموز نشطة مرتبطة بمزود الدفع هذا. لتغيير نوع طريقة الدفع، يرجى تعطيل "
+"مزود الدفع واستنساخه، ثم تغيير نوع طريقة الدفع في مزود الدفع المستنسخ. "
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "لا يمكن تنفيذ هذا الإجراء بينما مزود الدفع معطل. "
 
 #. module: payment_authorize
 #. odoo-javascript

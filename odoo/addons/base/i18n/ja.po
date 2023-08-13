@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Junko Augias, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:35+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16401,7 +16402,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
 msgid "Documents - FSM"
-msgstr ""
+msgstr "ドキュメント - FSM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fleet
@@ -16426,7 +16427,7 @@ msgstr "ドキュメント-プロダクト"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sale
 msgid "Documents - Project - Sale"
-msgstr ""
+msgstr "ドキュメント - プロジェクト - 販売"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project
@@ -16451,7 +16452,7 @@ msgstr "ドキュメント-休暇"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_project_sign
 msgid "Documents Project Sign"
-msgstr ""
+msgstr "ドキュメントプロジェクトサイン"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
@@ -16463,7 +16464,7 @@ msgstr "ドキュメントスプレッドシート"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Documents to Delete"
-msgstr ""
+msgstr "削除するドキュメント"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__domain
@@ -17957,7 +17958,7 @@ msgstr "フィルタ名"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_name_model_uid_unique
 msgid "Filter names must be unique"
-msgstr "フィルタ名は一意でなければなりません。"
+msgstr "フィルタ名は一意にして下さい。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -20673,7 +20674,7 @@ msgstr "キー"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_config_parameter_key_uniq
 msgid "Key must be unique."
-msgstr "キーは一意にしてください。"
+msgstr "キーは一意にして下さい。"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -29143,7 +29144,6 @@ msgstr "設定を開始"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -29181,6 +29181,7 @@ msgstr "都道府県"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "状態"
@@ -30281,7 +30282,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_module_module_name_uniq
 msgid "The name of the module must be unique!"
-msgstr "モジュール名はユニークでなければなりません。"
+msgstr "モジュール名は一意にして下さい。"
 
 #. module: base
 #. odoo-python
@@ -33283,6 +33284,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -33305,6 +33313,13 @@ msgstr "ユーザーの優先言語である言語を削除することはでき
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "連絡先を親の1つにマージすることはできません。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

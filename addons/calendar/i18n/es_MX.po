@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1257,7 +1258,7 @@ msgid ""
 "is not allowed when dates or time is modified"
 msgstr ""
 "Elija qué hacer con otros eventos recurrentes. No se permite actualizar "
-"todos los eventos cuando se modifican las fechas o la hora"
+"todos los eventos cuando se modifican las fechas o la hora."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1562,7 +1563,7 @@ msgstr "Tipo de finalización"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
 msgid "End date"
-msgstr "Fecha final "
+msgstr "Fecha de finalización"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
@@ -1663,7 +1664,7 @@ msgstr "Viernes"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "From"
-msgstr "Desde"
+msgstr "Del"
 
 #. module: calendar
 #. odoo-javascript
@@ -2109,7 +2110,7 @@ msgstr "Número de repeticiones"
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "De acuerdo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2228,7 +2229,7 @@ msgstr "Finalizar recurrencia"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr "Actualización de la secuencia"
+msgstr "Actualización de la recurrencia"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -2385,7 +2386,8 @@ msgstr "Fecha de inicio"
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
 msgstr ""
-"Fecha de inicio del evento, sin horas para eventos que duran un día completo"
+"Fecha de inicio del evento. Los eventos que duran todo el día no incluyen la"
+" hora."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -2405,7 +2407,9 @@ msgstr "Detener"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Fecha de fin del evento, sin horas para eventos de día completo"
+msgstr ""
+"Fecha de fin del evento. Los eventos que duran todo el día no incluyen la "
+"hora."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2582,14 +2586,14 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "To"
-msgstr "Para"
+msgstr "Al"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr "Reunión de hoy"
+msgstr "Reuniones de hoy"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
@@ -2700,7 +2704,7 @@ msgstr "Años"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Sí, asistiré"
+msgstr "Sí, asistiré."
 
 #. module: calendar
 #. odoo-python
@@ -2714,7 +2718,7 @@ msgstr "No puede actualizar una recurrencia sin un evento base."
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "No puede duplicar un asistente de calendario"
+msgstr "No puede duplicar un asistente de calendario."
 
 #. module: calendar
 #. odoo-python
@@ -2771,7 +2775,7 @@ msgstr "para %s eventos"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "from"
-msgstr "desde"
+msgstr "del"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2800,7 +2804,7 @@ msgstr "en el %(position)s%(weekday)s"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "to"
-msgstr "para"
+msgstr "al"
 
 #. module: calendar
 #. odoo-javascript
@@ -2829,9 +2833,9 @@ msgstr "{{ object.event_id.name }} - Recordatorio"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr "{{ object.event_id.name }}: Fecha actualizada"
+msgstr "{{ object.event_id.name }}: fecha actualizada"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr "{{object.name}}: Actualización de evento"
+msgstr "{{object.name}}: actualización del evento"

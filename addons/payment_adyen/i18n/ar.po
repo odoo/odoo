@@ -3,8 +3,8 @@
 # 	* payment_adyen
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +26,15 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>تحذير:</strong> لتحصيل المبلغ يدوياً، تحتاج أيضاً تعيين إعدادات تأخير\n"
+"                    التحصيل لتصبح يدوية، في إعدادات حساب Adyen الخاص بك. "
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "A request was sent to void the transaction with reference %s (%s)."
-msgstr ""
+msgstr "تم إرسال طلب لإبطال المعاملة مع المرجع %s (%s). "
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -89,7 +91,7 @@ msgstr "مفتاح HMAC "
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Has Adyen Tx"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -147,28 +149,28 @@ msgstr "يرجى تأكيد تفاصيل الدفع الخاصة بك. "
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
-msgstr ""
+msgstr "تم استلام بيانات المعاملة الفرعية مع قيم ناقصة "
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment state: %s"
-msgstr "البيانات المستلمة مع حالة دفع غير صالحة: %s "
+msgstr "تم استلام البيانات مع حالة دفع غير صالحة: %s "
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr "البيانات المستلمة دون مرجع التاجر "
+msgstr "تم استلام البيانات دون مرجع التاجر "
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment state."
-msgstr "البيانات المستلمة دون حالة الدفع. "
+msgstr "تم استلام البيانات دون حالة الدفع. "
 
 #. module: payment_adyen
 #. odoo-python
@@ -215,6 +217,8 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"المبلغ الذي قام Adyen بمعالجته للمعاملة %s مختلف عن الذي طلبته. تم إنشاء "
+"معاملة أخرى بالمبلغ الصحيح. "
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_checkout_api_url
@@ -232,6 +236,8 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"قد يستغرق تحصيل أو إبطال المعاملة بضع دقائق لتتم معالجته\n"
+"                    بواسطة Adyen وحتى يظهر في أودو. "
 
 #. module: payment_adyen
 #. odoo-python
@@ -241,6 +247,8 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
+"طلب التحصيل بمبلغ %(amount)s للمعاملة ذات المرجع %(ref)s قد تم طلبه "
+"(%(provider_name)s). "
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -250,14 +258,14 @@ msgstr "مفتاح الالعميل لمستخدم خدمة الويب "
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "كود حساب التاجر لاستخدامه مع مزود الدفع هذا "
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "فشل التواصل مع الواجهة البرمجية. التفاصيل: %s "
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code

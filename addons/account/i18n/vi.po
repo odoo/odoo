@@ -378,7 +378,7 @@ msgstr "27.00"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -4504,6 +4504,13 @@ msgstr "Giấy báo Có"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You can only send sales documents"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "Credit Note Created"
 msgstr "Giấy báo Có đã được Tạo"
 
@@ -7068,7 +7075,7 @@ msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
 msgstr ""
 "Nếu bạn chọn ô này, bạn sẽ có thể đăng ký thanh toán bằng SEPA.\n"
-"-Nó sẽ cài đặt module account_sepa."
+"-Nó sẽ cài đặt phân hệ account_sepa."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -7882,6 +7889,13 @@ msgid "Is Valid"
 msgstr "Hợp lệ"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,help:account.field_account_move__is_being_sent
+#: model:ir.model.fields,help:account.field_account_payment__is_being_sent
+msgid "Is the move being sent asynchronously"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
 msgstr "Hóa đơn và hóa đơn thanh toán nháp được tạo ra bằng cách gửi email."
@@ -8690,8 +8704,8 @@ msgid ""
 msgstr ""
 "Thủ công: Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp thanh toán: Mỗi nhà cung cấp thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên/đến thẻ nhờ mã thông báo thanh toán được lưu bởi đối tác khi mua hoặc đăng ký trực tuyến.\n"
-"Gửi tiền hàng loạt: Thu thập một số séc của khách hàng cùng một lúc tạo và gửi tiền gửi hàng loạt cho ngân hàng của bạn. Module account_batch_payment là cần thiết.\n"
-"SEPA Direct Debit: Được trả tiền trong khu vực SEPA nhờ nhiệm vụ mà đối tác của bạn sẽ cấp cho bạn. Module account_sepa là cần thiết.\n"
+"Gửi tiền hàng loạt: Thu thập một số séc của khách hàng cùng một lúc tạo và gửi tiền gửi hàng loạt cho ngân hàng của bạn. Phân hệ account_batch_payment là cần thiết.\n"
+"SEPA Direct Debit: Được trả tiền trong khu vực SEPA nhờ nhiệm vụ mà đối tác của bạn sẽ cấp cho bạn. Phân hệ account_sepa là cần thiết.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -8718,9 +8732,9 @@ msgstr ""
 "Thủ công: Thanh toán hoặc Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp Dịch vụ Thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
 "Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
-"Gửi Hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có module account_batch_payment.\n"
-"Chuyển Tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển Tín dụng SEPA cho ngân hàng của bạn. Cần có module account_sepa.\n"
-"Ghi nợ Trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác sẽ cấp cho bạn. Cần có module account_sepa.\n"
+"Gửi Hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Chuyển Tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển Tín dụng SEPA cho ngân hàng của bạn. Cần có phân hệ account_sepa.\n"
+"Ghi nợ Trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -8956,7 +8970,7 @@ msgstr "Chỉnh tiền thuế"
 #. module: account
 #: model:ir.model,name:account.model_ir_module_module
 msgid "Module"
-msgstr "Module"
+msgstr "Phân hệ"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__monetary
@@ -9187,6 +9201,13 @@ msgstr "Không"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/download_edi_docs.py:0
+#, python-format
+msgid "No EDI documents found for export."
 msgstr ""
 
 #. module: account
@@ -9438,8 +9459,8 @@ msgstr "Số lượng lỗi"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Số tin nhắn cần xử lý"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -13608,6 +13629,13 @@ msgstr ""
 "  ví dụ: .*N°48748 abc123.*"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
@@ -14313,6 +14341,11 @@ msgid ""
 msgstr ""
 "Trường này được sử dụng cho các bút toán phải thủ và phải trả. Bạn có thể "
 "điền ngày đến hạn thanh toán."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "This invoice is being sent in the background."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban

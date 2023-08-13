@@ -805,7 +805,7 @@ msgstr "응답 추가"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr ""
+msgstr "GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -813,6 +813,8 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
+"GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요. "
+"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -2786,7 +2788,7 @@ msgstr "이메일 환경 설정"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
-msgstr ""
+msgstr "이메일 머리글 색상"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -3074,7 +3076,7 @@ msgstr "실패함"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
-msgstr ""
+msgstr "gif를 불러오지 못했습니다."
 
 #. module: mail
 #. odoo-python
@@ -3146,7 +3148,7 @@ msgstr "지금 가져오기"
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Fetch up to the specified number of GIF."
-msgstr ""
+msgstr "지정된 개수의 GIF를 불러옵니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -3161,6 +3163,8 @@ msgid ""
 "Field \"%(field)s\" on model \"%(model)s\" must be of type Many2one and have"
 " tracking=True for the computation of duration."
 msgstr ""
+"\"%(field)s\" 필드에 포함되어 있는 \"%(model)s\" 모델은 반드시 Many2one 유형이여야 하며, 기간을 계산하기 "
+"위해 tracking=True으로 설정되어 있어야 합니다."
 
 #. module: mail
 #. odoo-python
@@ -3411,7 +3415,7 @@ msgstr "GIF 즐겨찾기"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_gif_favorite__tenor_gif_id
 msgid "GIF id from Tenor"
-msgstr ""
+msgstr "Tenor의 GIF id"
 
 #. module: mail
 #. odoo-javascript
@@ -3435,7 +3439,7 @@ msgstr "레코드 상의 일반 사용자"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr ""
+msgstr "대화로 이동"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
@@ -3619,7 +3623,7 @@ msgstr "구성원 목록 숨기기"
 #: code:addons/mail/static/src/discuss/message_pin/common/thread_actions.js:0
 #, python-format
 msgid "Hide Pinned Messages"
-msgstr ""
+msgstr "고정 메시지 숨기기"
 
 #. module: mail
 #. odoo-javascript
@@ -4279,7 +4283,7 @@ msgstr "화면 공유 중입니다"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "many2one 필드의 ID를 초 단위의 소요 시간으로 매핑하는 JSON"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -4467,7 +4471,7 @@ msgstr "최근 확인일"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
 msgid "Last time this shortcode was used"
-msgstr ""
+msgstr "이 단축 코드가 마지막으로 사용된 시간"
 
 #. module: mail
 #. odoo-javascript
@@ -4639,7 +4643,7 @@ msgstr "낮음"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Lower Hand"
-msgstr ""
+msgstr "손내리기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_mimetype
@@ -4930,7 +4934,7 @@ msgstr "구성원 수"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 #, python-format
 msgid "Member List"
-msgstr ""
+msgstr "구성원 목록"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
@@ -5175,7 +5179,7 @@ msgstr "누락된 이메일 주소"
 msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
-msgstr ""
+msgstr "혼합을 사용하여 각 many2one 필드 값의 레코드에 소요된 시간을 계산합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
@@ -5710,7 +5714,7 @@ msgstr "Odoo에서 이 장치로 알림을 보냅니다!"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__off
 msgid "Off"
-msgstr ""
+msgstr "끄기"
 
 #. module: mail
 #. odoo-javascript
@@ -5852,7 +5856,7 @@ msgstr "열기"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr ""
+msgstr "작업 메뉴 열기"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -6123,7 +6127,7 @@ msgstr "암호"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Paste your API key"
-msgstr ""
+msgstr "API 키 붙여넣기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -6444,7 +6448,7 @@ msgstr "RTC 세션"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Raise Hand"
-msgstr ""
+msgstr "손들기"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -6906,7 +6910,7 @@ msgstr "새로운 서식으로 저장"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
-msgstr ""
+msgstr "Tenor API에 즐겨찾는 GIF 저장"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
@@ -7013,7 +7017,7 @@ msgstr "채널 검색"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Search for a gif"
-msgstr ""
+msgstr "GIF 검색"
 
 #. module: mail
 #. odoo-javascript
@@ -7087,7 +7091,7 @@ msgstr "사용자 선택"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Select the content filter used for filtering GIFs"
-msgstr ""
+msgstr "GIF를 필터링하는 데 사용되는 콘텐츠 필터를 선택합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -7422,7 +7426,7 @@ msgstr "관련 문서 모델의 레코드에서 이 서식을 사용할 수 있�
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "So uhh... maybe go favorite some GIFs?"
-msgstr ""
+msgstr "그럼... GIF를 즐겨찾기에 추가해 볼까요?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -7468,7 +7472,7 @@ msgstr "통화 시작"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Start a Conversation"
-msgstr ""
+msgstr "대화 시작하기"
 
 #. module: mail
 #. odoo-javascript
@@ -7520,14 +7524,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "상태 시간"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 #, python-format
 msgid "Status with time"
-msgstr ""
+msgstr "시간별 상태"
 
 #. module: mail
 #. odoo-javascript
@@ -7541,7 +7545,7 @@ msgstr "사용자 추가 중지"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Stop Sharing Screen"
-msgstr ""
+msgstr "화면 공유 중지"
 
 #. module: mail
 #. odoo-javascript
@@ -7766,32 +7770,32 @@ msgstr "템플릿(서식)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Tenor API key"
-msgstr ""
+msgstr "Tenor API 키"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF API key"
-msgstr ""
+msgstr "Tenor GIF API 키"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF content filter"
-msgstr ""
+msgstr "Tenor GIF 콘텐츠 필터"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF limits"
-msgstr ""
+msgstr "Tenor GIF 제한"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
 msgid "Tenor Gif Limit"
-msgstr ""
+msgstr "Tenor GIF 제한"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
 msgid "Tenor content filter"
-msgstr ""
+msgstr "Tenor 콘텐츠 필터"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8719,7 +8723,7 @@ msgstr "사용자 온라인"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
 msgid "User should not have duplicated favorite GIF"
-msgstr ""
+msgstr "사용자가 즐겨찾는 GIF는 중복될 수 없습니다."
 
 #. module: mail
 #. odoo-python
@@ -9517,7 +9521,7 @@ msgstr "목록"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "list-item"
-msgstr ""
+msgstr "리스트-항목"
 
 #. module: mail
 #. odoo-javascript

@@ -3,8 +3,8 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr "التوصيل "
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
-msgstr ""
+msgstr "تمكين Apple Pay "
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
@@ -87,7 +87,7 @@ msgstr "لم يتم العثور على معاملة تطابق المرجع %s.
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "مزودو الدفع الأخرون "
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -114,7 +114,7 @@ msgstr "معاملة السداد"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
-msgstr ""
+msgstr "يرجى استخدام بيانات الاعتماد الحية لتمكين Apple Pay. "
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -133,21 +133,21 @@ msgstr "المفتاح القابل للنشر "
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr "البيانات المستلمة مع حالة هدف غير صالحة: %s  "
+msgstr "تم استلام البيانات مع حالة هدف غير صالحة: %s  "
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr "البيانات المستلمة مع حالة هدف غير موجودة. "
+msgstr "تم استلام البيانات دون حالة الهدف. "
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr "البيانات المستلمة دون مرجع التاجر "
+msgstr "تم استلام البيانات دون مرجع التاجر "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
@@ -179,7 +179,7 @@ msgstr "Stripe Connect غير متاح في دولتك. يرجى استخدام 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
 msgid "Stripe Mandate"
-msgstr ""
+msgstr "توكيل Stripe "
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -226,7 +226,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "لقد غادر العميل صفحة الدفع. "
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -241,13 +241,16 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"لم تتم عملية استرداد الأموال. يرجى تسجيل الدخول إلى لوحة بيانات Stripe "
+"الخاصة بك للحصول على المزيد من المعلومات حول الأمر، والتعامل مع أي تعارض "
+"محاسبي. "
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/js/stripe_mixin.js:0
 #, python-format
 msgid "The selected payment method cannot be saved."
-msgstr ""
+msgstr "لا يمكن حفظ طريقة الدفع المحددة. "
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -306,6 +309,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
+"لا يمكنك تعيين حالة مزود الدفع إلى \"تم تمكينه\" إلى أن تكمل عملية تهيئة "
+"Stripe للعمل. "
 
 #. module: payment_stripe
 #. odoo-python
@@ -315,6 +320,8 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"لا يمكنك وضع مزود الدفع في وضع الاختبار عندما يكون مرتبطاً بحساب Stripe "
+"الخاص بك. "
 
 #. module: payment_stripe
 #. odoo-python
@@ -335,4 +342,4 @@ msgstr "طلبك "
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "لقد تم التحقق من نطاق الويب الخاص بك بنجاح. "

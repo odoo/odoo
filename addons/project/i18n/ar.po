@@ -486,12 +486,12 @@ msgstr "<span class=\"o_stat_text\">آخر تقييم</span> "
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">المهمة الأصلية</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted o_row ps-1 pb-3\">إرسال طلب تقييم:</span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -512,6 +512,11 @@ msgid ""
 "                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','periodic')]}\">سيتم إرسال طلب تقييم بمجرد أن تصل المهمة إلى المرحلة التي يكون فيها قالب البريد الإلكتروني للتقييم محدداً.</span>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">سيتم إرسال طلبات التقييم طالما أن المهمة باقية في مرحلة يكون فيها قالب البريد الإلكتروني للتقييم محدداً.</span>\n"
+"                                                </span> "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -604,7 +609,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "لا يمكن أن يكون للمهمة الخاصة مهمة ترأسها. "
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
@@ -1030,6 +1035,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"قم بربط كافة المستندات أو الروابط إلى المهام مباشرة، حتى تكون كافة معلومات "
+"البحث في مكان واحد. "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1313,6 +1320,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"تواصل مع العملاء حول المهمة باستخدام بوابة العملاء. قم بإرفاق تصاميم الشعار بالمهمة حتى تنتقل المعلومات من\n"
+"      المصممين إلى العمال طابعي القمصان. "
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1594,6 +1603,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"يقدم العملاء ملاحظاتهم عبر البريد الإلكتروني؛ ويقوم أودو بإنشاء المهام تلقائياً، ويمكنك\n"
+"      التواصل بشأن المهمة مباشرةً."
 
 #. module: project
 #. odoo-python
@@ -1869,7 +1880,7 @@ msgstr "عرض وضع الوصول "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_in_project
 msgid "Display In Project"
-msgstr ""
+msgstr "العرض في المشروع "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2135,7 +2146,7 @@ msgstr "احصل على لقطة لحالة مشروعك وقم بمشاركة �
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "احصل على ملاحظات العملاء وقيّم أداء موظفيك "
 
 #. module: project
 #. odoo-python
@@ -2176,6 +2187,7 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"تمكن من تجميع أفكارك ضمن مهام مشروعك الجديد وقم بمناقشتها في دردشة المهام. "
 
 #. module: project
 #. odoo-javascript
@@ -2432,7 +2444,7 @@ msgstr "القيمة غير صالحة: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Invite Collaborators"
-msgstr ""
+msgstr "دعوة المتعاونين "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2675,7 +2687,7 @@ msgstr "تصميم الشعار"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Look for the"
-msgstr ""
+msgstr "ابحث عن "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3209,7 +3221,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "قم بتنظيم الأولويات من بين الطلبات باستخدام "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3405,7 +3417,7 @@ msgstr "السابق"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "قم بتحديد أولويات مهامك عن طريق تحديد المهم منها باستخدام "
 
 #. module: project
 #. odoo-python
@@ -3442,7 +3454,7 @@ msgstr "خاص"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "المهام الخاصة "
 
 #. module: project
 #. odoo-javascript
@@ -3725,6 +3737,8 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"قم بالتحقق من حالة مهامك التي تنتظر الموافقة أو تغيير الطلبات وتعريف المهام "
+"المعلقة إلى أن يتم إكمال تبعياتها من المهام من أيقونة الساعة الرملية. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4292,7 +4306,7 @@ msgstr "تم تغيير المرحلة"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Stage: %s"
-msgstr ""
+msgstr "المرحلة: %s "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stages_active
@@ -4726,7 +4740,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "يجب أن يكون المشروع والشريك ذو الصلة مرتبطان بنفس الشركة. "
 
 #. module: project
 #. odoo-python
@@ -4749,6 +4763,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
+"لا يمكن تغيير شركة المشروع إذا كانت هناك بنود في حسابها التحليلي أو إذا كان "
+"هناك أكثر من مشروع مرتبط بها. "
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4768,7 +4784,7 @@ msgstr "لا يدعم البحث مشغل %s أو قيمة %s. "
 #, python-format
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "يجب أن تكون المهمة والشريك ذو الصلة مرتبطان بنفس الشركة. "
 
 #. module: project
 #. odoo-python
@@ -4888,7 +4904,7 @@ msgstr "نصيحة: أنشئ المهام من رسائل البريد الوا�
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "نصيحة: استخدم حالات المهام لتتبع مدى تقدم مهامك "
 
 #. module: project
 #. odoo-python
@@ -4982,6 +4998,8 @@ msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
 msgstr ""
+"تتبع مدى ربحية مشروعك باستخدام المحاسبة التحليلية. اختر الخطة التحليلية "
+"للمشاريع الجديدة: "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5466,7 +5484,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "يقرر مدراؤك أي الملاحظات تكون مقبولة "
 
 #. module: project
 #. odoo-javascript
@@ -5573,6 +5591,8 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or canceled, all of its dependencies will be unblocked."
 msgstr ""
+"أيقونة لرؤية المهام التي تنتظر مهاماً أخرى. بمجرد أن يتم تحديد مهمة كمنتهية "
+"أو ملغية، سيتم إلغاء حجب كافة تبعياتها. "
 
 #. module: project
 #. odoo-javascript
@@ -5596,7 +5616,7 @@ msgstr "عرض مهامي من القائمة "
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "على نحو دوري "
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5615,7 +5635,7 @@ msgstr "جاهزة ليتم تحديدها كتم الوصول إليها "
 #, python-format
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "للإشارة إلى طلب تغيير أو الحاجة إلى المناقشة حول مهمة ما. "
 
 #. module: project
 #. odoo-javascript
@@ -5624,21 +5644,21 @@ msgstr ""
 #, python-format
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
-msgstr ""
+msgstr "لإخطار زملائك في العمل بأن المهمة جاهزة للمرحلة التالية. "
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as canceled."
-msgstr ""
+msgstr "لتعيين المهمة كملغية. "
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "لتعيين المهمة كمنتهية. "
 
 #. module: project
 #. odoo-javascript
@@ -5692,7 +5712,7 @@ msgstr "للإشارة إلى الحالة الحالية لفكرتك. "
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "عند الوصول إلى مرحلة محددة "
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

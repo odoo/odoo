@@ -48,7 +48,7 @@ msgstr "<strong>خطأ:</strong> العملة غير موجودة أو غير ص
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid ""
 "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>خطأ:</strong> كانت هناك مشكلة أثناء عملية الدفع. "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -56,6 +56,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/> If you "
 "believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>لم يتم العثور على خيار دفع مناسب.</strong><br/> إذا كنت تظن أنه هناك"
+" خطأ ما، رجاءً تواصل مع مدير الموقع الإلكتروني. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -63,13 +65,14 @@ msgstr ""
 #, python-format
 msgid "A POS config cannot have more than one online payment method."
 msgstr ""
+"لا يمكن أن يكون لتهيئة نقطة البيع أكثر من طريقة دفع واحدة عبر الإنترنت. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "يجب أن يتم تحديد خيار دفع. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -82,7 +85,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "كافة مزودي الدفع المتاحين "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -93,11 +96,14 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"يجب أن يستخدم كافة مزودي الدفع الذين تمت تهيئتهم لاستخدام طريقة دفع عبر "
+"الإنترنت نفس العملة الموجودة في دفتر يومية المبيعات، أو عملة الشركة إذا لم "
+"يتم إعداد ذلك، في تهيئة نقطة البيع. "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "مزودو الدفع المسموح لهم "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -118,45 +124,45 @@ msgstr "إلغاء"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "إلغاء الدفع "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
-msgstr ""
+msgstr "يحتوي على مزود دفع عبر الإنترنت "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invalid online payment"
-msgstr ""
+msgstr "عملية الدفع عبر الإنترنت غير صالحة "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invalid online payments"
-msgstr ""
+msgstr "عمليات الدفع عبر الإنترنت غير صالحة "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Invite your customer to scan the QR code to pay:"
-msgstr ""
+msgstr "قم بدعوة عميلك إلى مسح رمز QR للدفع: "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Invoice could not be generated"
-msgstr ""
+msgstr "تعذر إنشاء الفاتورة "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
 msgid "Next online payment amount to pay"
-msgstr ""
+msgstr "مبلغ الدفع التالي عبر الإنترنت لدفعه "
 
 #. module: pos_online_payment
 #: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
@@ -171,12 +177,12 @@ msgstr "الدفع عبر الإنترنت "
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "طريقة الدفع عبر الإنترنت "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr ""
+msgstr "مدفوعات المحاسبة عبر الإنترنت "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -186,19 +192,19 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "الدفع عبر الإنترنت غير متاح "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Online payments cannot have a negative amount (%s: %s)."
-msgstr ""
+msgstr "لا يمكن أن يكون للمدفوعات عبر الإنترنت مبلغ سالب (%s: %s). "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order Reference:"
-msgstr ""
+msgstr "مرجع الطلب: "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -207,7 +213,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 #, python-format
 msgid "Order id:"
-msgstr ""
+msgstr "معرّف الطلب "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -215,14 +221,14 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Order reference:"
-msgstr ""
+msgstr "مرجع الطلب: "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Order saving issue"
-msgstr ""
+msgstr "مشكلة في حفظ الطلب "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -256,7 +262,7 @@ msgstr "الدفعات"
 #: code:addons/pos_online_payment/static/src/app/customer_display/customer_display_template.xml:0
 #, python-format
 msgid "Please scan the QR code to open the payment page"
-msgstr ""
+msgstr "يرجى مسح رمز QR لفتح صفحة الدفع "
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
@@ -294,14 +300,14 @@ msgstr "تمت المعالجة بواسطة "
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "QR Code to pay"
-msgstr ""
+msgstr "رمز QR للدفع "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/online_payment_popup/online_payment_popup.xml:0
 #, python-format
 msgid "Scan to Pay"
-msgstr ""
+msgstr "امسح للدفع "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -316,6 +322,7 @@ msgstr "خطأ في الخادم "
 #, python-format
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr ""
+"لم نتمكن من حفظ الدفع عبر الإنترنت في نقطة البيع (tx.id=%d) بشكل صحيح "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -325,51 +332,53 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
+"لم نتمكن من حفظ الدفع عبر الإنترنت في نقطة البيع (tx.id=%d) بشكل صحيح لعدم "
+"العثور على طريقة الدفع عبر الإنترنت "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The POS session is not opened."
-msgstr ""
+msgstr "جلسة نقطة البيع غير مفتوحة. "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr ""
+msgstr "طلب نقطة البيع المرتبط بمعاملة الدفع "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr ""
+msgstr "طلب نقطة البيع المرتبط بعملية الدفع هذه "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The QR Code for paying could not be generated."
-msgstr ""
+msgstr "تعذر إنشاء رمز QR للدفع "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The amount to pay has changed. Please refresh the page."
-msgstr ""
+msgstr "لقد تغير المبلغ الذي يجب دفعه. يرجى إعادة تحميل الصفحة. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The currency is invalid."
-msgstr ""
+msgstr "العملة غير صالحة. "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The invoice could not be generated."
-msgstr ""
+msgstr "تعذر إنشاء الفاتورة. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -383,21 +392,21 @@ msgstr "لقد تم إلغاء الطلب. "
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The order has not been saved correctly on the server."
-msgstr ""
+msgstr "لم يتم حفظ الطلب بشكل صحيح في الخادم. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 #, python-format
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "لم نتمكن من العثور على شريك الدفع الإلكتروني في نقطة البيع (id=%d) "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "مزود الدفع غير صالح. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -413,35 +422,35 @@ msgstr ""
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "رمز الدفع غير صالح. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 #, python-format
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "معاملة الدفع (%d) بها مبلغ سالب. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The provided order or access token is invalid."
-msgstr ""
+msgstr "الطلب أو رمز الوصول غير صحيح. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The provided partner_id is different than expected."
-msgstr ""
+msgstr "partner_id الذي قمت بكتابته مختلف عن المتوقع. "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "The saved order could not be retrieved."
-msgstr ""
+msgstr "تعذر إحضار الطلب المحفوظ. "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -451,13 +460,15 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
+"إجمالي المبلغ المتبقي لدفعه عبر الإنترنت (%s) لا يتوافق مع المبلغ المتبقي "
+"دفعه في الطلب (%s). "
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "توجد مدفوعات عبر الإنترنت غير موجودة في نافذة عرضك. "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -467,6 +478,7 @@ msgid ""
 "There is a problem with the server. The order cannot be saved and therefore "
 "the online payment is not possible."
 msgstr ""
+"توجد مشكلة في الخادم. تعذر حفظ المنتج، وبالتالي لا يمكن الدفع عبر الإنترنت. "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -475,7 +487,7 @@ msgstr ""
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
-msgstr ""
+msgstr "توجد مشكلة في الخادم. تعذر إحضار حالة الدفع عبر الإنترنت. "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -485,6 +497,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
+"توجد مشكلة في الخادم. تعذر إحضار حالة الدفع عبر الإنترنت. هل أنت متأكد من "
+"أنه لا يوجد دفع عبر الإنترنت لهذا الطلب؟ "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -492,14 +506,14 @@ msgstr ""
 #, python-format
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
-msgstr ""
+msgstr "لا توجد طريقة دفع عبر الإنترنت مهيئة لطلب نقطة البيع هذا. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "There is nothing to pay for this order."
-msgstr ""
+msgstr "لا يوجد ما يجب دفعه في هذا الطلب. "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -514,18 +528,20 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
+"حتى تستخدم طريقة الدفع عبر الإنترنت في تهيئة نقطة البيع، يجب أن يكون هناك "
+"مزود دفع واحد منشور على الأقل يدعم العملة الموجودة في تهيئة نقطة البيع. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "Tokenization is not available for logged off customers."
-msgstr ""
+msgstr "خاصية الترميز الآلي غير متاحة للعملاء المسجلين خروجهم. "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference:"
-msgstr ""
+msgstr "مرجع المعاملة: "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -542,7 +558,7 @@ msgstr "النوع"
 #: code:addons/pos_online_payment/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Updated online payments"
-msgstr ""
+msgstr "تحديث المدفوعات عبر الإنترنت "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -550,6 +566,8 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
+"استخدم طريقة الدفع هذه للمدفوعات عبر الإنترنت (المدفوعات التي تتم على صفحة "
+"الويب باستخدام مزودي الدفع عبر الإنترنت) "
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -561,14 +579,14 @@ msgstr "نعم"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "You have not activated any"
-msgstr ""
+msgstr "لم تقم بتفعيل أي "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "payment provider"
-msgstr ""
+msgstr "مزود دفع "
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr ""
+msgstr "للسماح بالمدفوعات عبر الإنترنت. "
