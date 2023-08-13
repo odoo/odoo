@@ -576,7 +576,7 @@ msgstr "<strong>Cantidad</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>Cita programada:</strong>"
+msgstr "<strong>Fecha programada:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -611,7 +611,7 @@ msgstr "<strong>¿A dónde quiere enviar estos productos?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? Esto puede dar lugar a inconsistencias en su inventario."
+msgstr "? Esto puede causar inconsistencias en su inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -629,14 +629,14 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. La aplicación Inventario debe estar instalada.\n"
-"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación Inventario.\n"
+"Un producto consumible es un producto para el que no gestiona las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Se puede establecer una advertencia en un partner (Existencias)"
+msgstr "Se puede establecer una advertencia en un contacto (existencias)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -1081,9 +1081,9 @@ msgstr ""
 "De forma predeterminada, el sistema tomará las unidades desde las "
 "existencias en la ubicación fuente y esperará pasivamente a su "
 "disponibilidad. La otra posibilidad le permite crear un aprovisionamiento en"
-" la ubicación fuente (y por tanto, ignorar las existencias actuales) para "
-"obtener productos. Si quiere encadenar movimientos y hacer que éste espere "
-"al anterior, esta segunda opción es la que debe escogerse."
+" la ubicación de origen (y por lo tanto, ignorar las existencias actuales) "
+"para obtener productos. Si desea encadenar movimientos y hacer que éste "
+"espere al anterior, debe elegir la segunda opción."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1659,12 +1659,12 @@ msgstr "Fecha de creación, usualmente la de la orden"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
-msgstr "Cross-Dock"
+msgstr "Sin almacenaje intermedio (cross dock)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Ruta crossdock"
+msgstr "Ruta sin almacenes intermedios (cross docking)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -1979,8 +1979,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Dependiendo de los módulos instalados, esto le permitirá definir la ruta del"
-" producto: si se comprará, fabricará, reabastecerá bajo pedido, etc."
+"Si cuenta con los módulos correspondientes instalados, esto le permitirá "
+"definir la ruta del producto: si se comprará, se fabricará, se reabastecerá "
+"bajo pedido, etc."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
