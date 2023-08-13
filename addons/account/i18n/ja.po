@@ -10240,7 +10240,7 @@ msgstr "セクション"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
-msgstr "セキュアなシーケンス"
+msgstr "付番を確保する"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -11850,7 +11850,7 @@ msgid ""
 "The accounting date is set prior to the tax lock date which is set on %s. "
 "Hence, the accounting date will be changed to the next available date when "
 "posting."
-msgstr "会計日付は設定されている税のロック日%sより前に設定されています。投したがって、会計日は転記時に次に利用可能な日付に変更されます。"
+msgstr "会計日付は設定されている税のロック日%sより前に設定されています。したがって、会計日は転記時に次に利用可能な日付に変更されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -12287,6 +12287,13 @@ msgstr ""
 "- 行の先頭にテキストと一致させるため、単にテキストを入力してください。\n"
 "- (ラベルまたはノートの)テキストのどこかと一致させるため、文字間にテキストを配置します.*\n"
 "例:.*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -14303,7 +14310,7 @@ msgstr "%s(id%s)はすでに投稿済です。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "投稿前に行を追加する必要があります。"
+msgstr "転記前に項目を追加する必要があります。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

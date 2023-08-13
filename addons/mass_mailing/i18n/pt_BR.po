@@ -7,17 +7,16 @@
 # Kevin Harrings <kha@odoo.com>, 2020
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
+# danimaribeiro <danimaribeiro@gmail.com>, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # guisantos23 <guisantos23@yahoo.com.br>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
-# Fernando Colus <fcolus1@gmail.com>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
 # PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
-# danimaribeiro <danimaribeiro@gmail.com>, 2020
 # Rui Andrada <shingonoide@gmail.com>, 2020
 # Clemilton Clementino <clemylton@hotmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
@@ -213,7 +212,8 @@ msgid ""
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
 "<span attrs=\"{'invisible': "
-"[('mailing_model_name','!=','mailing.list')]}\">Contato para Mailing</span>"
+"[('mailing_model_name','!=','mailing.list')]}\">Contato de comunicação em "
+"massa</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -269,8 +269,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
-msgstr ""
-"<span name=\"next_departure_text\">Este mailing está agendado para </span>"
+msgstr "<span name=\"next_departure_text\">Este envio está agendado para </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -333,7 +332,8 @@ msgstr "Gerenciamento <strong>Total</strong> "
 msgid ""
 "A mailing contact cannot subscribe to the same mailing list multiple times."
 msgstr ""
-"Um contato de mailing não pode ser inscrito a mesma lista múltiplas vezes."
+"Um contato de comunicação em massa não pode ser inscrito à mesma lista "
+"múltiplas vezes."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
@@ -348,7 +348,7 @@ msgstr "Um valor único"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__contact_ab_pc
 msgid "A/B Testing percentage"
-msgstr "Porcentagem de teste AB"
+msgstr "Porcentagem de teste A/B"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
@@ -391,17 +391,17 @@ msgstr "Ícone do Tipo de Atividade"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid "All Rights Reserved"
-msgstr "Todos os Direitos Reservados"
+msgstr "Todos os direitos reservados"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__unique_ab_testing
 msgid "Allow A/B Testing"
-msgstr "Permitir Testagem A/B"
+msgstr "Permitir teste A/B"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr "Permitir que os destinatários façam uma lista negra"
+msgstr "Permitir que os destinatários se adicionem à lista de bloqueio"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -409,8 +409,8 @@ msgid ""
 "Allow the recipient to manage himself his state in the blacklist via the "
 "unsubscription page."
 msgstr ""
-"Permite o destinatário gerenciar ele mesmo sua situação na lista negra pela "
-"página de cancelamento da inscrição."
+"Permite que o destinatário gerencie sua situação na lista de bloqueio "
+"através da página de cancelamento da inscrição."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -448,7 +448,9 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:0
 #, python-format
 msgid "An error occurred. Your changes have not been saved, try again later."
-msgstr "Um erro ocorreu. Suas alteração não foram salvas. Tente novamente."
+msgstr ""
+"Houve um erro e suas alterações não foram salvas. Tente novamente mais "
+"tarde."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_tag_line
@@ -524,7 +526,7 @@ msgstr "Gerenciamento básico"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
 msgid "Blacklist"
-msgstr "Lista negra"
+msgstr "Lista de bloqueio"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -625,7 +627,7 @@ msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
 "As campanhas são a ferramenta perfeita para rastrear resultados em várias "
-"correspondências."
+"distribuições."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -775,7 +777,7 @@ msgstr "Parabéns, eu amo o seu primeiro mailing. :)"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__smtp
 msgid "Connection failed (outgoing mail server problem)"
-msgstr "Falha na Conexão (problema no servidor de e-mail de saída)"
+msgstr "Falha na conexão (problema no servidor de envio de e-mail)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__contact_id
@@ -1037,7 +1039,7 @@ msgstr "Domínio"
 #, python-format
 msgid "Don't worry, the mailing contact we created is an internal user."
 msgstr ""
-"Não se preocupe, o contato de mailing que criamos é um usuário interno."
+"Não se preocupe, o contato de distribuição que criamos é um usuário interno."
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__draft
@@ -1174,7 +1176,7 @@ msgstr "Falhou"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr "Tipo da Falha"
+msgstr "Tipo de falha"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:0
@@ -1236,8 +1238,8 @@ msgid ""
 "in-store sales (Point of Sale) and marketplaces like eBay and Amazon."
 msgstr ""
 "Tenha suas vendas internas (CRM) totalmente integradas com as vendas online "
-"(Comércio Eletrônico), as vendas na loja (Ponto de Vendas) e nos "
-"marketplaces, como Amazon e eBay."
+"(e-Commerce), as vendas na loja (Ponto de Venda) e nos marketplaces, como "
+"Amazon e eBay."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -1316,10 +1318,10 @@ msgid ""
 " lets you send different mailings to randomly selected recipients and test "
 "the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
-"Se marcado, os destinatários receberão apenas uma vez durante toda a "
-"campanha. Isso permite enviar diferentes correspondências para destinatários"
-" selecionados aleatoriamente e testar a eficácia dos mailings, sem causar "
-"mensagens duplicadas."
+"Se marcado, os destinatários receberão e-mail apenas uma vez durante toda a "
+"campanha. Isso permite enviar diferentes distribuições para destinatários "
+"selecionados aleatoriamente e testar a eficácia das distribuições, sem "
+"causar mensagens duplicadas."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_has_error
@@ -1336,8 +1338,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Se o endereço e-mail for na lista negra, o contato não receberá mais nenhum "
-"e-mail em massa de nenhuma lista"
+"Se o e-mail estiver na lista de bloqueio, o contato não receberá mais envios"
+" em massa de nenhuma lista"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ignored
@@ -1578,7 +1580,7 @@ msgstr "Inscrição na Lista de Mailing"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr "Inscrições na LIsta de Mailing"
+msgstr "Inscrições na lista de distribuição"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -1655,12 +1657,12 @@ msgstr "Anexo Principal"
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
 msgid "Manage Mass Mailing Campaigns"
-msgstr "Gerenciar Campanhas de e-mail em massa"
+msgstr "Gerenciar campanhas de envio em massa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr "Gerencie campanhas de e-mail em massa"
+msgstr "Gerenciar campanhas de envio em massa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -1671,7 +1673,7 @@ msgstr "Marketing"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Marketing Content"
-msgstr "Conteúdo de Mailing"
+msgstr "Conteúdo de marketing"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__name
@@ -1692,12 +1694,12 @@ msgstr "E-mail em Massa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Mass Mailing"
-msgstr "E-mail em massa"
+msgstr "Envio em massa"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_report_action_mail
 msgid "Mass Mailing Analysis"
-msgstr "Análise de e-mail em massa"
+msgstr "Análise de envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__campaign_id
@@ -1705,14 +1707,14 @@ msgstr "Análise de e-mail em massa"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__campaign_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Mass Mailing Campaign"
-msgstr "Campanha de e-mail em massa"
+msgstr "Campanha de envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_account_tour_upload_bill__mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
-msgstr "Nome da Mala Direta"
+msgstr "Nome do envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_schedule_date
@@ -1725,7 +1727,7 @@ msgstr "Agendamento de Mailing em Massa"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Mass Mailing Statistics"
-msgstr "Estatísticas de e-mail em massa"
+msgstr "Estatísticas de envio em massa"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_trace_report_action_mail
@@ -1735,20 +1737,20 @@ msgid ""
 "can sort out your analysis by different groups to get accurate grained "
 "analysis."
 msgstr ""
-"Estatísticas de E-mail em Massa permite que você verifique diferentes "
-"informações relacionadas como número de e-mails devolvidos, e-mails abertos,"
-" e-mails respondidos. Você pode organizar a sua análise por grupos "
-"diferentes para obter uma análise granular precisa."
+"As estatísticas de envio em massa permitem que você verifique diferentes "
+"informações relacionadas ao envio, tais como o número de e-mails devolvidos,"
+" abertos ou respondidos. Você pode classificar sua análise por diferentes "
+"grupos para obter uma análise detalhada e precisa."
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_subscription
 msgid "Mass Mailing Subscription Information"
-msgstr "Informação de Inscrição de Mailing em Massa"
+msgstr "Informações de inscrição em envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
-msgstr "E-mail em massa"
+msgstr "Envios em massa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__medium_id
@@ -1765,7 +1767,7 @@ msgstr "Mesclar"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Mesclar Lista de Mailing em Massa"
+msgstr "Mesclar lista de envio em massa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
@@ -1923,7 +1925,7 @@ msgstr "Número de Contatos"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_count
 msgid "Number of Mass Mailing"
-msgstr "Número de E-mails"
+msgstr "Número de envios em massa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -2073,8 +2075,8 @@ msgid ""
 "Percentage of the contacts that will be mailed. Recipients will be taken "
 "randomly."
 msgstr ""
-"Percentagem dos contatos que serão enviadas. Os destinatários serão tomados "
-"de forma aleatória."
+"Porcentagem dos contatos que receberão a distribuição. Os destinatários "
+"serão escolhidos de forma aleatória."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2645,8 +2647,8 @@ msgstr "Não há destinatários selecionados."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Este e-mail está na lista negra para envios em massa. Clique para "
-"desbloquear a lista."
+"Este e-mail está na lista de bloqueio para envios em massa. Clique para "
+"remover da lista."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -2787,7 +2789,7 @@ msgstr "Data de cancelamento"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Unsupported mass mailing model %s"
-msgstr "Modelo de mailing em massa não suportado %s"
+msgstr "Modelo de envio em massa não suportado %s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
