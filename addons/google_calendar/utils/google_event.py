@@ -230,3 +230,9 @@ class GoogleEvent(abc.Set):
 
     def is_available(self):
         return self.transparency == 'transparent'
+
+    def get_odoo_event(self, env):
+        if self._get_model(env)._name == 'calendar.event':
+            return env['calendar.event'].browse(self.odoo_id(self.env))
+        else:
+            return env['calendar.recurrence'].browse(self.odoo_id(self.env)).base_event_id
