@@ -1228,9 +1228,9 @@ export class RelationalModel extends Model {
                             const fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
                             const defaultFieldInfo = legRec.data[name].fieldsInfo.default;
                             Object.values(fieldViews).forEach((fieldView) => {
-                                Object.assign(defaultFieldInfo, fieldView.fields);
+                                Object.assign(fieldView.fields, defaultFieldInfo);
                                 Object.values(fieldView.fieldsInfo).forEach((x2mFieldInfo) => {
-                                    Object.assign(defaultFieldInfo, x2mFieldInfo);
+                                    Object.assign(x2mFieldInfo, defaultFieldInfo);
                                 });
                             });
                         }

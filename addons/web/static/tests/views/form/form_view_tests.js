@@ -13440,4 +13440,68 @@ QUnit.module("Views", (hooks) => {
         table.style.tableLayout = 'auto';
         assert.ok(group.clientWidth < group.scrollWidth);
     });
+
+    QUnit.test("multiple views for m2m field after list item edit in form", async function (assert) {
+
+        serverData.models.partner.records[0].timmy = [1, 2];
+
+        serverData.models.partner_type = {
+            fields: {
+                m2m: { string: "M2M field", type: "many2many", relation: "extra" },
+            },
+            records: [
+                { id: 1, display_name: "ma", m2m: [1] },
+                { id: 2, display_name: "cr", m2m: [2] },
+            ],
+        };
+
+        serverData.models.extra = {
+            fields: {
+                name: { string: "Char", type: "char" },
+            },
+            records: [
+                { id: 1, display_name: "ma", name: "ma" },
+                { id: 2, display_name: "cr", name: "cr" },
+            ],
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="m2m" widget="many2many_tags"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                            <field name="m2m">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="display_name"/>
+                                </tree>
+                             </field>
+                        </form>
+                    </field>
+                </form>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        assert.hasClass(
+            document.querySelector("body"),
+            "modal-open",
+            "body should have modal-open class"
+        );
+
+        target.querySelector(".modal-body [name='display_name'] input").value = "updated";
+        await click(target.querySelector(".modal-footer .o_form_button_save"));
+
+        assert.containsOnce(target, ".o_form_button_save");
+        await click(target.querySelector(".o_form_button_save"));
+
+        assert.equal(target.querySelectorAll(".o_data_cell")[0].innerText, "updated");
+    });
 });
