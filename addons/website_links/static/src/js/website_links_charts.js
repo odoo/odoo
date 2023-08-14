@@ -6,6 +6,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 var BarChart = publicWidget.Widget.extend({
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
+        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
     ],
     /**
      * @constructor
@@ -68,6 +69,7 @@ var BarChart = publicWidget.Widget.extend({
 var PieChart = publicWidget.Widget.extend({
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
+        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
     ],
     /**
      * @override
@@ -103,6 +105,9 @@ var PieChart = publicWidget.Widget.extend({
                     data: data,
                     label: this.data.length > 0 ? this.data[0].key : _t('No data'),
                 }]
+            },
+            options: {
+                aspectRatio: 2,
             },
         };
 

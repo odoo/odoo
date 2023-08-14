@@ -220,15 +220,15 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         const bar = model.getters.getChartDefinition(barChartId);
         const line = model.getters.getChartDefinition(lineChartId);
         assert.strictEqual(
-            model.getters.getChartRuntime(pieChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(pieChartId).chartJsConfig.options.plugins.legend.display,
             true
         );
         assert.strictEqual(
-            model.getters.getChartRuntime(barChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(barChartId).chartJsConfig.options.plugins.legend.display,
             true
         );
         assert.strictEqual(
-            model.getters.getChartRuntime(lineChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(lineChartId).chartJsConfig.options.plugins.legend.display,
             true
         );
         model.dispatch("UPDATE_CHART", {
@@ -256,15 +256,15 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             sheetId,
         });
         assert.strictEqual(
-            model.getters.getChartRuntime(pieChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(pieChartId).chartJsConfig.options.plugins.legend.display,
             false
         );
         assert.strictEqual(
-            model.getters.getChartRuntime(barChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(barChartId).chartJsConfig.options.plugins.legend.display,
             false
         );
         assert.strictEqual(
-            model.getters.getChartRuntime(lineChartId).chartJsConfig.options.legend.display,
+            model.getters.getChartRuntime(lineChartId).chartJsConfig.options.plugins.legend.display,
             false
         );
     });
@@ -282,12 +282,8 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
-        assert.ok(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
-        );
-        assert.ok(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
-        );
+        assert.ok(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked);
+        assert.ok(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked);
         model.dispatch("UPDATE_CHART", {
             definition: {
                 ...definition,
@@ -296,12 +292,8 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
-        assert.notOk(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
-        );
-        assert.notOk(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
-        );
+        assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked);
+        assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked);
     });
 
     QUnit.test("Can copy/paste Odoo chart", async (assert) => {
@@ -378,12 +370,8 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
-        assert.notOk(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
-        );
-        assert.ok(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
-        );
+        assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked);
+        assert.ok(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked);
         model.dispatch("UPDATE_CHART", {
             definition: {
                 ...definition,
@@ -392,12 +380,8 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
-        assert.notOk(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.xAxes[0].stacked
-        );
-        assert.notOk(
-            model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
-        );
+        assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked);
+        assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked);
     });
 
     QUnit.test(

@@ -102,6 +102,5 @@ export function isEmpty(item) {
  */
 export async function loadSpreadsheetDependencies() {
     await loadJS("/web/static/lib/Chart/Chart.js");
-    // chartjs-gauge should only be loaded when Chart.js is fully loaded !
-    await loadJS("/spreadsheet/static/lib/chartjs-gauge/chartjs-gauge.js");
+    await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
 }
