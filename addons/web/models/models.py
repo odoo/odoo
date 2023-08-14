@@ -566,11 +566,14 @@ class Base(models.AbstractModel):
             else:
                 condition = [('id', 'in', image_element_ids)]
             comodel_domain = AND([comodel_domain, condition])
-        comodel_records = []
-        try:
-            comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
-        except Exception as e:
-            _logger.error('Error: %s', tools.ustr(e))
+
+        comodel_records = Comodel.search_read(
+            comodel_domain,
+            field_names,
+            limit=limit,
+        )
+        if limit and len(comodel_records) == limit:
+            return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
         if hierarchize:
             ids = [rec['id'] for rec in comodel_records] if expand else image_element_ids
