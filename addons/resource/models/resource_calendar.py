@@ -110,7 +110,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
+        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
