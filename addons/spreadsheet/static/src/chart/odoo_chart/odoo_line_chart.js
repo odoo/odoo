@@ -79,10 +79,10 @@ function getLineConfiguration(chart, labels, locale) {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
         labels: {
-            fontColor,
+            color: fontColor,
             generateLabels(chart) {
                 const { data } = chart;
-                const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
+                const labels = window.Chart.defaults.plugins.legend.labels.generateLabels(chart);
                 for (const [index, label] of labels.entries()) {
                     label.fillStyle = data.datasets[index].borderColor;
                 }
@@ -91,36 +91,33 @@ function getLineConfiguration(chart, labels, locale) {
         },
     };
     legend.position = chart.legendPosition;
-    config.options.legend = legend;
+    config.options.plugins = config.options.plugins || {};
+    config.options.plugins.legend = legend;
     config.options.layout = {
         padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
     };
     config.options.scales = {
-        xAxes: [
-            {
-                ticks: {
-                    // x axis configuration
-                    maxRotation: 60,
-                    minRotation: 15,
-                    padding: 5,
-                    labelOffset: 2,
-                    fontColor,
-                },
+        x: {
+            ticks: {
+                // x axis configuration
+                maxRotation: 60,
+                minRotation: 15,
+                padding: 5,
+                labelOffset: 2,
+                color: fontColor,
             },
-        ],
-        yAxes: [
-            {
-                position: chart.verticalAxisPosition,
-                ticks: {
-                    fontColor,
-                    // y axis configuration
-                    beginAtZero: true, // the origin of the y axis is always zero
-                },
+        },
+        y: {
+            position: chart.verticalAxisPosition,
+            ticks: {
+                color: fontColor,
+                // y axis configuration
             },
-        ],
+            beginAtZero: true, // the origin of the y axis is always zero
+        },
     };
     if (chart.stacked) {
-        config.options.scales.yAxes[0].stacked = true;
+        config.options.scales.y.stacked = true;
     }
     return config;
 }

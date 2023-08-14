@@ -56,32 +56,33 @@ export class GaugeField extends Component {
                 ],
             },
             options: {
-                circumference: Math.PI,
-                rotation: -Math.PI,
+                circumference: 180,
+                rotation: 270,
                 responsive: true,
-                tooltips: {
-                    displayColors: false,
-                    callbacks: {
-                        label: function (tooltipItems) {
-                            if (tooltipItems.index === 0) {
-                                return _t("Value: ") + gaugeValue;
-                            }
-                            return _t("Max: ") + maxLabel;
+                maintainAspectRatio: false,
+                cutout: "70%",
+                layout: {
+                    padding: 5,
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: this.title,
+                        padding: 4,
+                    },
+                    tooltip: {
+                        displayColors: false,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                if (tooltipItem.dataIndex === 0) {
+                                    return _t("Value: ") + gaugeValue;
+                                }
+                                return _t("Max: ") + maxLabel;
+                            },
                         },
                     },
                 },
-                title: {
-                    display: true,
-                    text: this.title,
-                    padding: 4,
-                },
-                layout: {
-                    padding: {
-                        bottom: 5,
-                    },
-                },
-                maintainAspectRatio: false,
-                cutoutPercentage: 70,
+                aspectRatio: 2,
             },
         };
         this.chart = new Chart(this.canvasRef.el, config);

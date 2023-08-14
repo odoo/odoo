@@ -16,6 +16,7 @@ import { App } from "@odoo/owl";
  */
 export async function mountSpreadsheet(model) {
     await loadJS("/web/static/lib/Chart/Chart.js");
+    await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
     const app = new App(Spreadsheet, {
         props: { model },
         templates: templates,

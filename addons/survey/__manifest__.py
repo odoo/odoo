@@ -61,6 +61,7 @@ sent mails with personal token for the invitation of the survey.
     'assets': {
         'survey.survey_assets': [
             'web/static/lib/Chart/Chart.js',
+            'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
             'survey/static/src/js/survey_image_zoomer.js',
             '/survey/static/src/xml/survey_image_zoomer_templates.xml',
             'survey/static/src/js/survey_quick_access.js',
@@ -79,7 +80,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/xml/survey_breadcrumb_templates.xml',
         ],
         'survey.survey_user_input_session_assets': [
-            'survey/static/src/js/libs/chartjs-plugin-datalabels.min.js',
+            'survey/static/src/js/libs/chartjs-plugin-datalabels.js',
             'survey/static/src/js/survey_session_colors.js',
             'survey/static/src/js/survey_session_chart.js',
             'survey/static/src/js/survey_session_text_answers.js',

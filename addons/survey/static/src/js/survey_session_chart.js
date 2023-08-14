@@ -126,35 +126,37 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                         },
                         anchor: 'end',
                         align: 'top',
-                    }
-                },
-                legend: {
-                    display: false,
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
                 },
                 scales: {
-                    yAxes: [{
+                    y: {
                         ticks: {
                             display: false,
                         },
-                        gridLines: {
+                        grid: {
                             display: false
                         }
-                    }],
-                    xAxes: [{
+                    },
+                    x: {
                         ticks: {
                             maxRotation: 0,
-                            fontSize: '35',
-                            fontStyle: 'bold',
-                            fontColor: '#212529'
+                            font: {
+                                size :"35",
+                                weight:"bold"
+                            },
+                            color : '#212529'
                         },
-                        gridLines: {
+                        grid: {
                             drawOnChartArea: false,
                             color: 'rgba(0, 0, 0, 0.2)'
                         }
-                    }]
-                },
-                tooltips: {
-                    enabled: false,
+                    }
                 },
                 layout: {
                     padding: {
@@ -219,7 +221,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                         const allWords = chart.data.labels.reduce((accumulator, words) => accumulator.concat(' '.concat(words)));
                         const maxWordLength = Math.max(...allWords.split(' ').map((word) => word.length));
                         fontRatio = maxWordLength > charPerLine ? minRatio : fontRatio;
-                        chart.options.scales.xAxes[0].ticks.fontSize = Math.min(parseInt(chart.options.scales.xAxes[0].ticks.fontSize), chart.width * fontRatio / (nbrCol));
+                        chart.options.scales.x.ticks.font.size = Math.min(parseInt(chart.options.scales.x.ticks.font.size), chart.width * fontRatio / (nbrCol));
                     }
 
                     chart.data.labels.forEach(function (label, index, labelsList) {
