@@ -2,67 +2,48 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
-class HrPlanActivityType(models.Model):
-    _name = 'hr.plan.activity.type'
-    _description = 'Plan activity type'
-    _rec_name = 'summary'
-    _check_company_auto = True
+class MailActivityPLanTemplate(models.Model):
+    _inherit = 'mail.activity.plan.template'
 
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company)
-    activity_type_id = fields.Many2one(
-        'mail.activity.type', 'Activity Type',
-        default=lambda self: self.env.ref('mail.mail_activity_data_todo'),
-        domain=lambda self: ['|', ('res_model', '=', False), ('res_model', '=', 'hr.employee')],
-        ondelete='restrict'
-    )
-    summary = fields.Char('Summary', compute="_compute_default_summary", store=True, readonly=False)
-    responsible = fields.Selection([
+    responsible_type = fields.Selection(selection_add=[
         ('coach', 'Coach'),
         ('manager', 'Manager'),
         ('employee', 'Employee'),
-        ('other', 'Other')], default='employee', string='Responsible', required=True)
-    responsible_id = fields.Many2one(
-        'res.users',
-        'Other Responsible',
-        check_company=True,
-        help='Specific responsible of activity if not linked to the employee.')
-    plan_id = fields.Many2one('hr.plan')
-    note = fields.Html('Note')
+    ], ondelete={'coach': 'cascade', 'manager': 'cascade', 'employee': 'cascade'})
 
-    @api.depends('activity_type_id')
-    def _compute_default_summary(self):
-        for plan_type in self:
-            if plan_type.activity_type_id and plan_type.activity_type_id.summary:
-                plan_type.summary = plan_type.activity_type_id.summary
-            else:
-                plan_type.summary = False
+    @api.constrains('plan_id', 'responsible_type')
+    def _check_responsible_hr(self):
+        """ Ensure that hr types are used only on employee model """
+        for template in self.filtered(lambda tpl: tpl.plan_id.res_model != 'hr.employee'):
+            if template.responsible_type in {'coach', 'manager', 'employee'}:
+                raise ValidationError(_('Those responsible types are limited to Employee plans.'))
 
-    def get_responsible_id(self, employee):
-        warning = False
-        if self.responsible == 'coach':
+    def _determine_responsible(self, on_demand_responsible, employee):
+        if self.plan_id.res_model != 'hr.employee' or self.responsible_type not in {'coach', 'manager', 'employee'}:
+            return super()._determine_responsible(on_demand_responsible, employee)
+        error = False
+        responsible = False
+        if self.responsible_type == 'coach':
             if not employee.coach_id:
-                warning = _('Coach of employee %s is not set.', employee.name)
+                error = _('Coach of employee %s is not set.', employee.name)
             responsible = employee.coach_id.user_id
             if employee.coach_id and not responsible:
-                warning = _("The user of %s's coach is not set.", employee.name)
-        elif self.responsible == 'manager':
+                error = _("The user of %s's coach is not set.", employee.name)
+        elif self.responsible_type == 'manager':
             if not employee.parent_id:
-                warning = _('Manager of employee %s is not set.', employee.name)
+                error = _('Manager of employee %s is not set.', employee.name)
             responsible = employee.parent_id.user_id
             if employee.parent_id and not responsible:
-                warning = _("The manager of %s should be linked to a user.", employee.name)
-        elif self.responsible == 'employee':
+                error = _("The manager of %s should be linked to a user.", employee.name)
+        elif self.responsible_type == 'employee':
             responsible = employee.user_id
             if not responsible:
-                warning = _('The employee %s should be linked to a user.', employee.name)
-        elif self.responsible == 'other':
-            responsible = self.responsible_id
-            if not responsible:
-                warning = _('No specific user given on activity %s.', self.activity_type_id.name)
-        return {
-            'responsible': responsible,
-            'warning': warning,
-        }
+                error = _('The employee %s should be linked to a user.', employee.name)
+        if error or responsible:
+            return {
+                'responsible': responsible,
+                'error': error,
+            }

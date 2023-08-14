@@ -49,30 +49,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record id="hr_plan_company_rule" model="ir.rule">
-        <field name="name">Plan multi-company rule</field>
-        <field name="model_id" ref="model_hr_plan"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="hr_plan_activity_type_company_rule" model="ir.rule">
-        <field name="name">Plan Activity Type multi-company rule</field>
-        <field name="model_id" ref="model_hr_plan_activity_type"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="hr_plan_employee_activity_company_rule" model="ir.rule">
-        <field name="name">Plan Employee Activity: multi-company rule</field>
-        <field name="model_id" ref="model_hr_plan_employee_activity"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="hr_plan_employee_activity_own_user" model="ir.rule">
-        <field name="name">Plan Employee Activity: own employee or subordinates</field>
-        <field name="model_id" ref="model_hr_plan_employee_activity"/>
-        <field name="domain_force">['|', ('user_id', '=', user.id), ('activity_ids.user_id', '=', user.id)]</field>
-    </record>
-
     <record id="ir_rule_res_partner_bank_internal_users" model="ir.rule">
         <field name="name">HR: Prevent non HR officers from accessing employee bank accounts</field>
         <field name="model_id" ref="base.model_res_partner_bank"/>
@@ -92,5 +68,22 @@
         <field name="model_id" ref="model_hr_contract_type"/>
         <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids)]</field>
     </record>
+
+    <record id="mail_plan_rule_group_hr_manager" model="ir.rule">
+        <field name="name">Manager can edit employee plan</field>
+        <field name="groups" eval="[(4, ref('group_hr_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan"/>
+        <field name="domain_force">[('res_model', '=', 'hr.employee')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
+    <record id="mail_plan_templates_rule_group_hr_manager" model="ir.rule">
+        <field name="name">Manager can edit employee plan template</field>
+        <field name="groups" eval="[(4, ref('group_hr_manager'))]"/>
+        <field name="model_id" ref="mail.model_mail_activity_plan_template"/>
+        <field name="domain_force">[('plan_id.res_model', '=', 'hr.employee')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
 </data>
 </odoo>

@@ -1,27 +1,38 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
-class HrPlan(models.Model):
-    _name = 'hr.plan'
-    _description = 'plan'
+class MailActivityPlan(models.Model):
+    _inherit = 'mail.activity.plan'
 
-    name = fields.Char('Name', required=True)
-    company_id = fields.Many2one(
-        'res.company', default=lambda self: self.env.company)
-    department_id = fields.Many2one('hr.department', check_company=True)
-    plan_activity_type_ids = fields.One2many(
-        'hr.plan.activity.type', 'plan_id',
-        string='Activities',
-        check_company=True)
-    active = fields.Boolean(default=True)
-    steps_count = fields.Integer(compute='_compute_steps_count')
+    department_id = fields.Many2one(
+        'hr.department', check_company=True,
+        compute='_compute_department_id', ondelete='cascade', readonly=False, store=True)
 
-    @api.depends('plan_activity_type_ids')
-    def _compute_steps_count(self):
-        activity_type_data = self.env['hr.plan.activity.type']._read_group([('plan_id', 'in', self.ids)], ['plan_id'], ['__count'])
-        steps_count = {plan.id: count for plan, count in activity_type_data}
-        for plan in self:
-            plan.steps_count = steps_count.get(plan.id, 0)
+    @api.constrains('res_model')
+    def _check_compatibility_with_model(self):
+        """ Check that when the model is updated to a model different from employee,
+        there are no remaining specific values to employee. """
+        plan_tocheck = self.filtered(lambda plan: plan.res_model != 'hr.employee')
+        failing_plans = plan_tocheck.filtered('department_id')
+        if failing_plans:
+            raise UserError(
+                _('Plan %(plan_names)s cannot use a department as it is used only for employee plans.',
+                  plan_names=', '.join(failing_plans.mapped('name')))
+            )
+        failing_templates = plan_tocheck.template_ids.filtered(
+            lambda tpl: tpl.responsible_type in {'coach', 'manager', 'employee'}
+        )
+        if failing_templates:
+            raise UserError(
+                _('Plan activities %(template_names)s cannot use coach, manager or employee responsible as it is used only for employee plans.',
+                  template_names=', '.join(failing_templates.mapped('activity_type_id.name')))
+            )
+
+    @api.onchange('res_model')
+    def _compute_department_id(self):
+        for plan in self.filtered(lambda plan: plan.res_model != 'hr.employee'):
+            plan.department_id = False
