@@ -41,10 +41,17 @@ class AccountPaymentRegister(models.TransientModel):
             rec.l10n_latam_check_issuer_vat = rec.partner_id.vat
         (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
-    @api.onchange('l10n_latam_check_id')
-    def _onchange_amount(self):
-        for rec in self.filtered('l10n_latam_check_id'):
-            rec.amount = rec.l10n_latam_check_id.amount
+    @api.depends('l10n_latam_check_id')
+    def _compute_amount(self):
+        super()._compute_amount()
+        for wizard in self.filtered('l10n_latam_check_id'):
+            wizard.amount = wizard.l10n_latam_check_id.amount
+
+    @api.depends('l10n_latam_check_id')
+    def _compute_currency_id(self):
+        super()._compute_currency_id()
+        for wizard in self.filtered('l10n_latam_check_id'):
+            wizard.currency_id = wizard.l10n_latam_check_id.currency_id
 
     @api.onchange('l10n_latam_check_number')
     def _onchange_l10n_latam_check_number(self):

@@ -117,7 +117,7 @@ class AccountPayment(models.Model):
                 raise ValidationError(error_message)
 
     @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
-                 'check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount')
+                 'check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
     def _compute_l10n_latam_check_warning_msg(self):
         """ Compute warning message for latam checks checks """
         self.l10n_latam_check_warning_msg = False
@@ -145,6 +145,10 @@ class AccountPayment(models.Model):
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []
         for rec in self.filtered('l10n_latam_check_id'):
+            if rec.currency_id != rec.l10n_latam_check_id.currency_id:
+                msgs.append(_(
+                    'The currency of the payment (%s) and the currency of the check (%s) must be the same.') % (
+                        rec.currency_id.name, rec.l10n_latam_check_id.currency_id.name))
             if not rec.currency_id.is_zero(rec.l10n_latam_check_id.amount - rec.amount):
                 msgs.append(_(
                     'The amount of the payment (%s) does not match the amount of the selected check (%s). '
@@ -351,3 +355,15 @@ class AccountPayment(models.Model):
                 raise ValidationError(_(
                     "The check(s) '%s' is already used on another payment. Please select another check or "
                     "deselect the check on this payment.", self.l10n_latam_check_id.mapped('display_name')))
+
+    def check_operations(self):
+        if self.l10n_latam_check_operation_ids and ((self.l10n_latam_check_payment_date or self.date) < max(self.l10n_latam_check_operation_ids.mapped('date'))):
+            raise UserError(_('Can´t edit if there are operations with checks after the date of this payment.'))
+
+    def action_cancel(self):
+        self.check_operations()
+        super().action_cancel()
+
+    def action_draft(self):
+        self.check_operations()
+        super().action_draft()
