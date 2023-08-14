@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import binascii
 import contextlib
 import hashlib
 import io
@@ -311,7 +312,10 @@ class IrAttachment(models.Model):
             if values.get('raw'):
                 raw = values['raw']
             elif values.get('datas'):
-                raw = base64.b64decode(values['datas'])
+                try:
+                    raw = base64.b64decode(values['datas'])
+                except binascii.Error as e:
+                    raw = base64.b64decode(values['datas']+b'==')
             if raw:
                 mimetype = guess_mimetype(raw)
         return mimetype or 'application/octet-stream'
@@ -332,9 +336,16 @@ class IrAttachment(models.Model):
                 try:
                     img = False
                     if is_raw:
-                        img = ImageProcess(values['raw'], verify_resolution=False)
+                        try:
+                            img = ImageProcess(values['raw'], verify_resolution=False)
+                        except binascii.Error:
+                            img = ImageProcess(values['raw']+b'==', verify_resolution=False)
+
                     else:  # datas
-                        img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+                        try:
+                            img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+                        except binascii.Error:
+                            img = ImageProcess(base64.b64decode(values['datas']+b'=='), verify_resolution=False)
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
@@ -635,11 +646,14 @@ class IrAttachment(models.Model):
             values = self._check_contents(values)
             raw, datas = values.pop('raw', None), values.pop('datas', None)
             if raw or datas:
-                if isinstance(raw, str):
+                to_update_values = None
+                if raw and isinstance(raw, str):
                     # b64decode handles str input but raw needs explicit encoding
-                    raw = raw.encode()
+                    to_update_values = raw.encode() or base64.b64decode(datas or b'')
+                if datas:
+                    to_update_values = base64.b64decode(datas + b'==')
                 values.update(self._get_datas_related_values(
-                    raw or base64.b64decode(datas or b''),
+                    to_update_values,
                     values['mimetype']
                 ))
 
