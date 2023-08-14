@@ -234,14 +234,18 @@ class StockPicking(models.Model):
                 res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
-            previous_pickings = self.env['stock.picking']
+            related_pickings = self
             previous_moves = self.move_ids.move_orig_ids
             while previous_moves:
-                previous_pickings |= previous_moves.picking_id
+                related_pickings |= previous_moves.picking_id
                 previous_moves = previous_moves.move_orig_ids
-            without_tracking = previous_pickings.filtered(lambda p: not p.carrier_tracking_ref)
-            (self + without_tracking).carrier_tracking_ref = res['tracking_number']
-            for p in previous_pickings - without_tracking:
+            next_moves = self.move_ids.move_dest_ids
+            while next_moves:
+                related_pickings |= next_moves.picking_id
+                next_moves = next_moves.move_dest_ids
+            without_tracking = related_pickings.filtered(lambda p: not p.carrier_tracking_ref)
+            without_tracking.carrier_tracking_ref = res['tracking_number']
+            for p in related_pickings - without_tracking:
                 p.carrier_tracking_ref += "," + res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _(
