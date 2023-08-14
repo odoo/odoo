@@ -42,10 +42,11 @@ class MicrosoftCalendarController(http.Controller):
             # If App authorized, and user access accepted, We launch the synchronization
             need_refresh = request.env.user.sudo()._sync_microsoft_calendar()
 
-            # If synchronization has been stopped
-            if not need_refresh and request.env.user.microsoft_synchronization_stopped:
+            # If synchronization has been stopped or paused
+            sync_status = request.env.user._get_microsoft_sync_status()
+            if not need_refresh and sync_status != "sync_active":
                 return {
-                    "status": "sync_stopped",
+                    "status": sync_status,
                     "url": ''
                 }
             return {

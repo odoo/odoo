@@ -150,11 +150,12 @@ class Meeting(models.Model):
             self._check_recurrence_overlapping(values['start'])
 
         # if a single event becomes the base event of a recurrency, it should be first
-        # removed from the Outlook calendar.
-        if 'recurrency' in values and values['recurrency']:
-            for e in self.filtered(lambda e: not e.recurrency and not e.recurrence_id):
-                e._microsoft_delete(e._get_organizer(), e.ms_organizer_event_id, timeout=3)
-                e.microsoft_id = False
+        # removed from the Outlook calendar. Additionaly, checks if synchronization is not paused.
+        if self.env.user._get_microsoft_sync_status() != "sync_paused" and values.get('recurrency'):
+            for event in self:
+                if not event.recurrency and not event.recurrence_id:
+                    event._microsoft_delete(event._get_organizer(), event.ms_organizer_event_id, timeout=3)
+                    event.microsoft_id = False
 
         res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
 

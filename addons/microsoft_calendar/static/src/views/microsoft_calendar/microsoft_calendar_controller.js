@@ -59,5 +59,16 @@ patch(AttendeeCalendarController.prototype, {
                 await this.model.load();
             },
         });
+    },
+
+    onMicrosoftSyncUnpause() {
+        if (this.isSystemUser) {
+            this.env.services.action.doAction("base_setup.action_general_configuration");
+        } else {
+            this.dialog.add(AlertDialog, {
+                title: this.env._t("Configuration"),
+                body: this.env._t("Your administrator paused the synchronization with Outlook Calendar."),
+            });
+        }
     }
 });

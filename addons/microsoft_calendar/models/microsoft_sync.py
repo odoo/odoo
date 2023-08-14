@@ -76,20 +76,22 @@ class MicrosoftSync(models.AbstractModel):
 
     def write(self, vals):
         fields_to_sync = [x for x in vals if x in self._get_microsoft_synced_fields()]
-        if fields_to_sync and 'need_sync_m' not in vals and not self.env.user.microsoft_synchronization_stopped:
+        if fields_to_sync and 'need_sync_m' not in vals and self.env.user._get_microsoft_sync_status() == "sync_active":
             vals['need_sync_m'] = True
 
         result = super().write(vals)
 
-        for record in self.filtered(lambda e: e.need_sync_m and e.ms_organizer_event_id):
-            if not vals.get('active', True):
-                # We need to delete the event. Cancel is not sufficant. Errors may occurs
-                record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
-            elif fields_to_sync:
-                values = record._microsoft_values(fields_to_sync)
-                if not values:
-                    continue
-                record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
+        if self.env.user._get_microsoft_sync_status() != "sync_paused":
+            for record in self:
+                if record.need_sync_m and record.ms_organizer_event_id:
+                    if not vals.get('active', True):
+                        # We need to delete the event. Cancel is not sufficient. Errors may occur.
+                        record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
+                    elif fields_to_sync:
+                        values = record._microsoft_values(fields_to_sync)
+                        if not values:
+                            continue
+                        record._microsoft_patch(record._get_organizer(), record.ms_organizer_event_id, values, timeout=3)
 
         return result
 
@@ -100,9 +102,10 @@ class MicrosoftSync(models.AbstractModel):
                 vals.update({'need_sync_m': False})
         records = super().create(vals_list)
 
-        records_to_sync = records.filtered(lambda r: r.need_sync_m and r.active)
-        for record in records_to_sync:
-            record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
+        if self.env.user._get_microsoft_sync_status() != "sync_paused":
+            for record in records:
+                if record.need_sync_m and record.active:
+                    record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=3)
         return records
 
     @api.depends('microsoft_id')
@@ -159,8 +162,9 @@ class MicrosoftSync(models.AbstractModel):
 
     def unlink(self):
         synced = self._get_synced_events()
-        for ev in synced:
-            ev._microsoft_delete(ev._get_organizer(), ev.ms_organizer_event_id)
+        if self.env.user._get_microsoft_sync_status() != "sync_paused":
+            for ev in synced:
+                ev._microsoft_delete(ev._get_organizer(), ev.ms_organizer_event_id)
         return super().unlink()
 
     def _write_from_microsoft(self, microsoft_event, vals):

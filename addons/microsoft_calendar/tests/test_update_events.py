@@ -1314,3 +1314,24 @@ class TestUpdateEvents(TestCommon):
 
         # Assert that no patch call was made due to the recurrence update forbiddance.
         mock_patch.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_update_synced_event_with_sync_config_paused(self, mock_patch):
+        """
+        Updates an event with the synchronization paused, the event must have its field 'need_sync_m' as True
+        for later synchronizing it with Outlook Calendar.
+        """
+        # Set user synchronization configuration as active and pause it.
+        self.organizer_user.microsoft_synchronization_stopped = False
+        self.organizer_user.pause_microsoft_synchronization()
+
+        # Try to update a simple event in Odoo Calendar.
+        self.simple_event.with_user(self.organizer_user).write({"name": "updated simple event"})
+        self.call_post_commit_hooks()
+        self.simple_event.invalidate_recordset()
+
+        # Ensure that synchronization is paused, delete wasn't called and record is waiting to be synced again.
+        self.assertFalse(self.organizer_user.microsoft_synchronization_stopped)
+        self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
+        self.assertTrue(self.simple_event.need_sync_m, "Sync variable must be true for updating event when sync re-activates")
+        mock_patch.assert_not_called()
