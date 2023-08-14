@@ -4,14 +4,16 @@ import pytz
 from lxml import etree
 import base64
 import json
+import logging
 
-from odoo import _, _lt, api, fields, models
+from odoo import _, _lt, api, fields, models, tools
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
+_logger = logging.getLogger(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
 def is_true_domain(domain):
@@ -564,7 +566,14 @@ class Base(models.AbstractModel):
             else:
                 condition = [('id', 'in', image_element_ids)]
             comodel_domain = AND([comodel_domain, condition])
-        comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
+
+        comodel_records = Comodel.search_read(
+            comodel_domain,
+            field_names,
+            limit=limit,
+        )
+        if limit and len(comodel_records) == limit:
+            return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
         if hierarchize:
             ids = [rec['id'] for rec in comodel_records] if expand else image_element_ids
