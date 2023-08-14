@@ -243,6 +243,10 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
+            elif not move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots\
+                and not move.user_has_groups('stock.group_stock_tracking_lot')\
+                and not move.user_has_groups('stock.group_stock_multi_locations'):
+                move.show_details_visible = False
             elif len(move.move_line_ids) > 1:
                 move.show_details_visible = True
             else:
@@ -547,7 +551,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
-                and not move.picking_type_id.use_existing_lots \
                 and move.state != 'done' \
                 and not move.origin_returned_move_id.id
 
@@ -1489,7 +1492,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
                 to_update.with_context(reserved_quant=reserved_quant).quantity += uom_quantity
             else:
-                if self.product_id.tracking == 'serial':
+                if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
                     if vals_list:
                         self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
