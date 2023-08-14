@@ -1,124 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <record id="hr_plan_view_search" model="ir.ui.view">
-            <field name="name">hr.plan.view.search</field>
-            <field name="model">hr.plan</field>
+        <record id="mail_activity_plan_template_view_form_inherit_hr" model="ir.ui.view">
+            <field name="name">mail.activity.plan.template.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan.template</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_template_view_form"/>
             <field name="arch" type="xml">
-                <search string="Plan">
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                </search>
+                <xpath expr="//field[@name='responsible_type']" position="replace">
+                    <field name="responsible_type"
+                           invisible="dedicated_to_res_model != 'hr.employee'"/>
+                    <field name="responsible_type" widget="filterable_selection"
+                           options="{'whitelisted_values': ['on_demand', 'other']}"
+                           invisible="dedicated_to_res_model == 'hr.employee'"/>
+                </xpath>
             </field>
         </record>
 
-        <record id="hr_plan_view_tree" model="ir.ui.view">
-            <field name="name">hr.plan.view.tree</field>
-            <field name="model">hr.plan</field>
+        <record id="mail_activity_plan_view_form_inherit_hr" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.form.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
             <field name="arch" type="xml">
-                <tree string="Planning">
-                    <field name="name"/>
-                    <field name="steps_count"/>
+                <xpath expr="//group[@name='group_plan_fields']" position="inside">
+                    <field name="department_id"
+                           invisible="dedicated_to_res_model != 'hr.employee'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_view_tree_inherit_hr" model="ir.ui.view">
+            <field name="name">mail.activity.plan.view.tree.inherit.hr</field>
+            <field name="model">mail.activity.plan</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="mail.mail_activity_plan_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='steps_count']" position="after">
                     <field name="department_id" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="company_id" column_invisible="True"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="hr_plan_view_form" model="ir.ui.view">
-            <field name="name">hr.plan.view.form</field>
-            <field name="model">hr.plan</field>
-            <field name="arch" type="xml">
-                <form string="Planning">
-                    <field name="company_id" invisible="1"/>
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <div class="oe_title">
-                            <label for="name" string="Plan Name"/>
-                            <h1>
-                                <field name="name" placeholder="e.g. Onboarding"/>
-                            </h1>
-                        </div>
-                        <group>
-                            <field name="department_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="active" invisible="1"/>
-                        </group>
-                        <notebook>
-                            <page string="Activities To Generate">
-                                <field name="plan_activity_type_ids" nolabel="1">
-                                    <tree>
-                                        <field name="company_id" column_invisible="True"/>
-                                        <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
-                                        <field name="summary"/>
-                                        <field name="responsible"/>
-                                        <field name="responsible_id" readonly="responsible != 'other'" optional="hide"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="hr_plan_activity_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.plan.activity.type.view.tree</field>
-            <field name="model">hr.plan.activity.type</field>
-            <field name="arch" type="xml">
-                <tree string="Activities">
-                    <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
-                    <field name="summary"/>
-                    <field name="responsible"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="hr_plan_activity_type_view_form" model="ir.ui.view">
-            <field name="name">hr.plan.activity.type.view.form</field>
-            <field name="model">hr.plan.activity.type</field>
-            <field name="arch" type="xml">
-                <form string="Activity">
-                    <field name="company_id" invisible="1"/>
-                    <sheet>
-                        <group>
-                            <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
-                            <field name="summary"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="responsible"/>
-                            <field name="responsible_id" invisible="responsible != 'other'"/>
-                            <field name="note"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="hr_plan_action" model="ir.actions.act_window">
-            <field name="name">Plans</field>
-            <field name="res_model">hr.plan</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="hr_plan_view_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Add a new plan
-                </p>
-            </field>
-        </record>
-
-        <record id="hr_plan_activity_type_action" model="ir.actions.act_window">
-            <field name="name">Plan Activities</field>
-            <field name="res_model">hr.plan.activity.type</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Add a new plan activity
-                </p>
+                </xpath>
             </field>
         </record>
 
@@ -145,7 +63,7 @@
                                     </span>
                                 </div>
                             </div>
-                        </t> 
+                        </t>
                     </templates>
                 </kanban>
             </field>
@@ -181,26 +99,33 @@
             </field>
         </record>
 
-        <record id="mail_activity_type_form_inherit" model="ir.ui.view">
-            <field name="name">mail.activity.type.form.inherit</field>
-            <field name="model">mail.activity.type</field>
-            <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
-            <field name="mode">primary</field>
-            <field name="priority">50</field>
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='delay_count']" position="attributes">
-                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>                </xpath>
-
-                <field name="delay_count" position="attributes">
-                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-                </field>
-                <field name="delay_from" position="attributes">
-                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-                </field>
-                <field name="delay_unit" position="attributes">
-                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
-                </field>
+        <record id="mail_activity_plan_action" model="ir.actions.act_window">
+            <field name="name">On/Offboarding Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+            <field name="context">{'default_res_model': 'hr.employee'}</field>
+            <field name="domain">[('dedicated_to_res_model', '=', 'hr.employee')]</field>
+            <!-- Force the tree view where the department can be shown -->
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('hr.mail_activity_plan_view_tree_inherit_hr')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('mail.mail_activity_plan_view_form_fixed_model')}),
+                         ]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
             </field>
+        </record>
+
+        <!-- This id is referenced in chatter message as a link to launch the plan -->
+        <record id="plan_wizard_action" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">mail.activity.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'plan_mode': True}</field>
+            <field name="target">new</field>
         </record>
     </data>
 </odoo>

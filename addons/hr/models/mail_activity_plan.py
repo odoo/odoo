@@ -1,27 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 
-class HrPlan(models.Model):
-    _name = 'hr.plan'
-    _description = 'plan'
+class MailActivityPlan(models.Model):
+    _inherit = 'mail.activity.plan'
 
-    name = fields.Char('Name', required=True)
-    company_id = fields.Many2one(
-        'res.company', default=lambda self: self.env.company)
     department_id = fields.Many2one('hr.department', check_company=True)
-    plan_activity_type_ids = fields.One2many(
-        'hr.plan.activity.type', 'plan_id',
-        string='Activities',
-        check_company=True)
-    active = fields.Boolean(default=True)
-    steps_count = fields.Integer(compute='_compute_steps_count')
 
-    @api.depends('plan_activity_type_ids')
-    def _compute_steps_count(self):
-        activity_type_data = self.env['hr.plan.activity.type']._read_group([('plan_id', 'in', self.ids)], ['plan_id'], ['__count'])
-        steps_count = {plan.id: count for plan, count in activity_type_data}
-        for plan in self:
-            plan.steps_count = steps_count.get(plan.id, 0)
+    def _validate_transition_from_dedicated(self, dedicated_res_model):
+        super()._validate_transition_from_dedicated(dedicated_res_model)
+        if dedicated_res_model == 'hr.employee':
+            error = False
+            template_ids = []
+            for plan in self:
+                if plan.department_id:
+                    plan.department_id = False
+                for template in plan.template_ids:
+                    template_ids.append(template.id)
+
+            if not error:
+                for data in self.env['mail.activity.plan.template'].search_read(
+                        [('id', 'in', template_ids)], ['responsible_type']):
+                    if data['responsible_type'] in ('coach', 'manager', 'employee'):
+                        error = f"responsible: {data['responsible_type']}"
+                        break
+            if error:
+                raise UserError(_('Cannot generalize the plans because they are employee specific (field: %s).', error))

@@ -9,10 +9,10 @@ from . import hr_employee_public
 from . import hr_department
 from . import hr_departure_reason
 from . import hr_job
-from . import hr_plan
-from . import hr_plan_activity_type
-from . import hr_plan_employee_activity
 from . import hr_work_location
+from . import mail_activity_plan
+from . import mail_activity_plan_template
+from . import hr_plan_employee_activity
 from . import mail_alias
 from . import discuss_channel
 from . import models
