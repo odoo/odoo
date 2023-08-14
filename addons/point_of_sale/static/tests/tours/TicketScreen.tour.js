@@ -98,8 +98,8 @@ registry
             Chrome.do.clickMenuButton();
             Chrome.do.clickTicketButton();
             TicketScreen.do.selectFilter("Paid");
-            TicketScreen.check.nthRowContains(3, "Brandon Freeman");
-            TicketScreen.check.nthRowContains(2, "-0005");
+            TicketScreen.check.nthRowContains(2, "Brandon Freeman");
+            TicketScreen.check.nthRowContains(3, "-0005");
             // Invoice order
             TicketScreen.do.selectOrder("-0005");
             TicketScreen.check.orderWidgetIsNotEmpty();
