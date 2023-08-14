@@ -23,7 +23,7 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee')
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
-    plan_ids = fields.One2many('hr.plan', 'department_id')
+    plan_ids = fields.One2many('mail.activity.plan', 'department_id')
     plans_count = fields.Integer(compute='_compute_plan_count')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
@@ -63,7 +63,7 @@ class Department(models.Model):
             department.total_employee = result.get(department.id, 0)
 
     def _compute_plan_count(self):
-        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        plans_data = self.env['mail.activity.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
         plans_count = {department.id: count for department, count in plans_data}
         for department in self:
             department.plans_count = plans_count.get(department.id, 0)
@@ -128,7 +128,7 @@ class Department(models.Model):
         return res
 
     def action_plan_from_department(self):
-        action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
+        action = self.env['ir.actions.actions']._for_xml_id('hr.mail_activity_plan_action')
         action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
         return action
 

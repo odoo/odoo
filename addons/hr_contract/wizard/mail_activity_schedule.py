@@ -1,28 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from dateutil.relativedelta import relativedelta
 
 
-class HrPlanWizard(models.TransientModel):
-    _inherit = 'hr.plan.wizard'
+class MailActivitySchedule(models.TransientModel):
+    _inherit = 'mail.activity.schedule'
 
-    @api.model
-    def default_get(self, field_list=None):
-        result = super(HrPlanWizard, self).default_get(field_list)
-        selected_employees = self.env['hr.employee'].browse(self.env.context['active_ids'])
-        start_dates = selected_employees.filtered('first_contract_date').mapped('first_contract_date')
-        if start_dates:
-            today = fields.Date.today()
-            planned_due_date = start_dates[0] if len(set(start_dates)) == len(selected_employees) else min(start_dates)
-
-            if planned_due_date < today:
-                result['due_date'] = today + relativedelta(days=+30)
-            else:
-                if (planned_due_date-today).days < 30:
-                    result['due_date'] = today + relativedelta(days=+30)
+    def _compute_plan_date_deadline(self):
+        todo = self.filtered(lambda s: s.res_model == 'hr.employee')
+        for scheduler in todo:
+            selected_employees = scheduler._get_applied_on_records()
+            start_dates = selected_employees.filtered('first_contract_date').mapped('first_contract_date')
+            if start_dates:
+                today = fields.Date.today()
+                planned_due_date = min(start_dates)
+                if planned_due_date < today or (planned_due_date - today).days < 30:
+                    scheduler.plan_date_deadline = today + relativedelta(days=+30)
                 else:
-                    result['due_date'] = planned_due_date
-
-        return result
+                    scheduler.plan_date_deadline = planned_due_date
+        super(MailActivitySchedule, self - todo)._compute_plan_date_deadline()
