@@ -254,6 +254,7 @@ class Product(models.Model):
         Possible parameters are shop, warehouse, location, compute_child
         '''
         Warehouse = self.env['stock.warehouse']
+        Location = self.env['stock.location']
 
         def _search_ids(model, values):
             ids = set()
@@ -281,7 +282,13 @@ class Product(models.Model):
             w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
-                location_ids = w_ids & l_ids
+                # Keep all locations which are child of w_ids
+                parents = Location.browse(w_ids).mapped("parent_path")
+                location_ids = {
+                    loc.id
+                    for loc in Location.browse(l_ids)
+                    if any(loc.parent_path.startswith(parent) for parent in parents)
+                }
             else:
                 location_ids = w_ids
         else:
