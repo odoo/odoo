@@ -2,6 +2,7 @@
 
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
+import { currencies } from "@web/core/currency";
 import { currencyService } from "@web/webclient/currency_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRPCService } from "../helpers/mock_services";
@@ -15,6 +16,14 @@ QUnit.test("reload currencies when updating a res.currency", async (assert) => {
     serviceRegistry.add("orm", ormService);
     const fakeRpc = makeFakeRPCService((route) => {
         assert.step(route);
+        if (route === "/web/session/get_session_info") {
+            return {
+                uid: 1,
+                currencies: {
+                    7: { symbol: "$", position: "before", digits: 2 },
+                },
+            };
+        }
     });
     serviceRegistry.add("rpc", fakeRpc);
     const env = await makeTestEnv();
@@ -28,6 +37,7 @@ QUnit.test("reload currencies when updating a res.currency", async (assert) => {
     ]);
     await env.services.orm.unlink("notcurrency", [32]);
     assert.verifySteps(["/web/dataset/call_kw/notcurrency/unlink"]);
+    assert.deepEqual(Object.keys(currencies), ["7"]);
 });
 
 QUnit.test(
