@@ -17,7 +17,6 @@
 # Arnau Ros, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Harcogourmet, 2022
 # Josep Anton Belchi, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
@@ -26,24 +25,42 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Ivan Espinola, 2023
 # marcescu, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Quim - eccit <quim@eccit.com>, 2023
 # martioodo hola, 2023
 # Jonatan Gk, 2023
+# Albert Parera, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Harcogourmet, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 08:47+0000\n"
+"POT-Creation-Date: 2023-08-11 09:17+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jonatan Gk, 2023\n"
+"Last-Translator: Harcogourmet, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1049,6 +1066,13 @@ msgstr "No es pot tancar la sessió quan està desconnectat."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1815,6 +1839,13 @@ msgstr "Avís de pantalla del client"
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "El client és necessari per al mètode de pagament %s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -3489,6 +3520,11 @@ msgid "Newspaper Rack"
 msgstr "Magatzem de periodico"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Proper esdeveniment del calendari d'activitats"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Data límit de la següent activitat"
@@ -3656,7 +3692,7 @@ msgstr "Nombre d'elements reemborsats en aquesta línia de comanda."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Nombre de missatges que requereixen una acció"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
@@ -3762,6 +3798,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Aplica només l'arrodoniment en efectiu"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6398,9 +6442,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\r\n"
+"\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
+"La diferència màxima permesa és %s.\n"
+"\n"
+"                        Contacteu amb el vostre gestor per acceptar la diferència de tancament."
 
 #. module: point_of_sale
 #. odoo-python

@@ -78,6 +78,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        招待保留中\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                         <t t-out=\"object.name or ''\">Mitchell Admin</t>様、<br> <br>\n"
+"                        以下のユーザがデータベースに追加されましたが、まだ登録されていません: \n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        データベースにアクセスし、業務を行えるよう確認して下さい。\n"
+"                        <br><br>\n"
+"                        宜しくお願い致します。<br>\n"
+"                        --<br>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -614,42 +653,42 @@ msgstr "サインアップ URL"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "招待されていないユーザのサインアップはできません"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "サインアップトークン '%s'は有効ではありません"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "サインアップトークン '%s'は有効ではありません"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "サインアップ: 無効なテンプレートユーザ"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "サインアップ: 新規ユーザにログインが許可されません"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "サインアップ: 新規ユーザに名前またはパートナーが付与されません"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -666,7 +705,7 @@ msgstr "サインアップで作成されるユーザのテンプレートユー
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "フォームが適切に入力されていません。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -691,14 +730,14 @@ msgstr "ユーザ：未登録ユーザの通知"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr " {{ object.company_id.name }}へようこそ！"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "アーカイブされたユーザにこのアクションを実施できません。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -721,4 +760,4 @@ msgstr "例: 鈴木 一郎"
 msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
-msgstr ""
+msgstr "${object.company_id.name} ${object.create_uid.name} からOdoo接続のご招待"

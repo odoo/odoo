@@ -94,7 +94,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Hallo <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Unten finden Sie die Richtlinien der {{ object.mail_group_id.name }} Mailingliste.</p>\n"
+"                <p>Unten finden Sie die Richtlinien der Mailingliste von {{ object.mail_group_id.name }}.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
@@ -432,7 +432,7 @@ msgstr "Inhalte"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr "Eine Mailinggruppe erstellen"
+msgstr "Eine Mailing-Gruppe erstellen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -726,22 +726,22 @@ msgstr "Mailing-Gruppe"
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr "Mailinggruppen-Administrator"
+msgstr "Mailing-Gruppen-Administrator"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr "Mailinggruppe: Anmeldung für Mailingliste"
+msgstr "Mailing-Gruppe: Anmeldung für Mailingliste"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "Mailinggruppe: Abmeldung von Mailingliste"
+msgstr "Mailing-Gruppe: Abmeldung von Mailingliste"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr "Mailinggruppe: Richtlinien senden"
+msgstr "Mailing-Gruppe: Richtlinien senden"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
@@ -787,7 +787,7 @@ msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
 msgstr ""
-"Mailinggruppen sind Gemeinschaften, die ein bestimmtes Thema gemeinsam "
+"Mailing-Gruppen sind Gemeinschaften, die ein bestimmtes Thema gemeinsam "
 "diskutieren wollen."
 
 #. module: mail_group
@@ -1113,7 +1113,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1206,7 +1207,7 @@ msgstr "Mailgruppenmitglied suchen"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Search Mail group"
-msgstr "Mailinggruppe suchen"
+msgstr "Mailing-Gruppe suchen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -1258,15 +1259,14 @@ msgstr "Richtlinien an neue Abonnenten senden"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Versand an Personen, die sich bei einer Mailinggruppe mit Gruppenleitlinien "
-"angemeldet haben"
+"Versand an Personen, die sich bei einer Mailing-Gruppe mit "
+"Gruppenrichtlinien angemeldet haben"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
 msgstr ""
-"Versand an Personen, die sich von einer Mailinggruppe mit Gruppenleitlinien "
-"abgemeldet haben"
+"Versand an Personen, die sich von einer Mailing-Gruppe abgemeldet haben"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1298,7 +1298,7 @@ msgstr "Anmelden"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr "Anmeldebestätigung für eine Mailinggruppe"
+msgstr "Anmeldebestätigung für eine Mailing-Gruppe"
 
 #. module: mail_group
 #. odoo-python

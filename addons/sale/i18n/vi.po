@@ -35,7 +35,7 @@ msgstr "# Đơn bán hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "Số lượng mục"
+msgstr "Số lượng dòng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
@@ -761,9 +761,9 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế :\n"
-"  - Thủ công: số lượng được đặt thủ công trên mục\n"
+"  - Thủ công: số lượng được đặt thủ công trên dòng\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
-"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với mục bán hàng\n"
+"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
 "  - Dịch chuyển tồn kho: số lượng đến từ các phiếu giao hàng đã xác nhận\n"
 
 #. module: sale
@@ -890,7 +890,7 @@ msgstr "Phân tích từ chi phí"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Mục phân tích"
+msgstr "Dòng phân tích"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
@@ -905,7 +905,7 @@ msgstr "Độ chính xác phân tích"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Mục phân tích"
+msgstr "Dòng phân tích"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1747,7 +1747,7 @@ msgstr "Giá trị bổ sung"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr "Mục bổ sung với %s"
+msgstr "Dòng bổ sung với %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1788,7 +1788,7 @@ msgstr "Font biểu tượng ví dụ: fa-tasks"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Giá trị bị cấm trên mục đơn bán hàng không được ghi sổ"
+msgstr "Giá trị bị cấm trên dòng đơn bán hàng không được ghi sổ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__email_from
@@ -1937,8 +1937,8 @@ msgstr "Nếu đúng, đóng gói có thể được sử dụng cho các đơn 
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
-"Nếu bạn thay đổi bảng giá, chỉ những mục mới được thêm vào mới bị ảnh hưởng."
-" "
+"Nếu bạn thay đổi bảng giá, chỉ những dòng mới được thêm vào mới bị ảnh "
+"hưởng. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2175,7 +2175,7 @@ msgstr "Là chi phí"
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
-msgstr "Đúng nếu mục đơn hàng đến từ chi phí hoặc hóa đơn nhà cung cấp"
+msgstr "Đúng nếu dòng đơn hàng đến từ chi phí hoặc hóa đơn nhà cung cấp"
 
 #. module: sale
 #. odoo-python
@@ -2396,7 +2396,7 @@ msgstr "Tin nhắn cho đơn bán hàng"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr "Tin nhắn cho mục đơn bán hàng"
+msgstr "Tin nhắn cho dòng đơn bán hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
@@ -2416,7 +2416,7 @@ msgstr "Phương thức cập nhật số lượng đã giao"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr "Thiếu trường bắt buộc trên mục đơn bán hàng có thể ghi sổ. "
+msgstr "Thiếu trường bắt buộc trên dòng đơn bán hàng có thể ghi sổ. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2629,8 +2629,8 @@ msgstr "Chỉ đơn hàng nháp có thể được trực tiếp đánh dấu l�
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
-"Chỉ cho phép một Giá trị tùy chỉnh cho mỗi Giá trị thuộc tính trong mỗi Mục "
-"đơn bán hàng. "
+"Chỉ cho phép một Giá trị tùy chỉnh cho mỗi Giá trị thuộc tính trong mỗi Dòng"
+" đơn bán hàng. "
 
 #. module: sale
 #. odoo-javascript
@@ -3425,7 +3425,7 @@ msgstr "Hạng mục đơn bán hàng"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
@@ -3552,7 +3552,7 @@ msgstr "Nhân viên kinh doanh"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
-msgstr "Mục đơn hàng mẫu"
+msgstr "Dòng đơn hàng mẫu"
 
 #. module: sale
 #. odoo-python
@@ -4611,7 +4611,7 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
-"Bạn không thể xóa một mục đơn hàng sau khi đơn bán hàng được xác nhận.\n"
+"Bạn không thể xóa một dòng đơn hàng sau khi đơn bán hàng được xác nhận.\n"
 "Bạn nên đặt số lượng thành 0."
 
 #. module: sale
@@ -4653,8 +4653,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Bạn không thể thay đổi loại của một mục đơn bán hàng. Thay vào đó, bạn nên "
-"xóa mục hiện tại và tạo một mục mới cho loại thích hợp. "
+"Bạn không thể thay đổi loại của một dòng đơn bán hàng. Thay vào đó, bạn nên "
+"xóa dòng hiện tại và tạo một dòng mới cho loại thích hợp. "
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action

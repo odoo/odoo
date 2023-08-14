@@ -13,6 +13,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Martin Trigaux, 2022
 # Jiří Podhorecký, 2022
+# Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
@@ -788,7 +789,7 @@ msgstr "Přiřazení online objednávek"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Attributes"
-msgstr "Vlastnosti"
+msgstr "Atributy"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1441,7 +1442,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express konektor"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1975,6 +1976,15 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -2570,7 +2580,7 @@ msgstr "Platit s"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_icons
 msgid "Payment Icons"
-msgstr "Ikony platebních služeb"
+msgstr "Ikony platebních poskytovatelů"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_provider
@@ -2580,7 +2590,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Platební poskytovatelé"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -2862,7 +2872,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
 msgid "Product Tags"
-msgstr ""
+msgstr "Produktové štítky"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -4329,13 +4339,13 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #, python-format
 msgid "eCommerce"
-msgstr "e-shop"
+msgstr "E-shop"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "eCommerce Categories"
-msgstr "kategorie"
+msgstr "E-shop produktové kategorie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view

@@ -124,7 +124,7 @@
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                        attrs="{'invisible': [('state', '=', 'draft')]}">
+                        attrs="{'invisible': [('state', '=', 'draft')]}" context="{'default_currency_id': currency_id}">
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>

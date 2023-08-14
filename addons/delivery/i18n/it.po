@@ -37,7 +37,7 @@ msgstr "(calcolato:"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"fa fa-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Calcola tariffa"
 
 #. module: delivery
 #. odoo-python
@@ -159,6 +159,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Descrizione del metodo di consegna che vuoi fornire ai clienti nell'ordine "
+"di vendita e nell'e-mail di conferma delle vendite. Ad es. Istruzioni da "
+"seguire per il cliente."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -238,7 +241,7 @@ msgstr "Annulla"
 msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
-msgstr ""
+msgstr "È possibile annullare una consegna. Sei sicuro di voler continuare?"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -410,7 +413,7 @@ msgstr "Gruppo di consegne"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Codice postale consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -424,6 +427,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "                which zips it is available to."
 msgstr ""
+"I codici postali per la consegna vengono assegnati ai corrieri per ridurre il numero di\n"
+"                codici per i quali sono disponibili."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -660,7 +665,7 @@ msgstr "Ultimo aggiornamento il"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "Consegna locale"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -777,7 +782,7 @@ msgstr "Prefisso"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Prefisso già esistente!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -1061,6 +1066,8 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Il pacco non può essere creato perché il peso totale dei prodotti nel "
+"prelievo è 0.0 %s"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1292,7 +1299,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Codici postali"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids

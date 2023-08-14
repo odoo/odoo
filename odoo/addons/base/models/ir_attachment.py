@@ -316,7 +316,7 @@ class IrAttachment(models.Model):
         supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        _type, _subtype = mimetype.split('/')
+        _type, _, _subtype = mimetype.partition('/')
         is_image_resizable = _type == 'image' and _subtype in supported_subtype
         if is_image_resizable and (values.get('datas') or values.get('raw')):
             is_raw = values.get('raw')

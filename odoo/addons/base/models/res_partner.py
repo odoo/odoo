@@ -766,7 +766,7 @@ class Partner(models.Model):
                     if v:
                         to_write[f] = v.id if isinstance(v, models.BaseModel) else v
             if to_write:
-                self.browse(children).write(to_write)
+                self.sudo().browse(children).write(to_write)
 
         # do the second half of _fields_sync the "normal" way
         for partner, vals in zip(partners, vals_list):

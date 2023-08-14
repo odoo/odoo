@@ -24,12 +24,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
 msgid "# Contracts"
-msgstr "# Contratti"
+msgstr "N. contratti"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
 msgid "# Contracts using it"
-msgstr "# Contratti che lo usano"
+msgstr "N. contratti che lo usano"
 
 #. module: hr_contract
 #: code:addons/hr_contract/report/hr_contract_history.py:0
@@ -52,6 +52,12 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible' : [('contracts_count', '!=', 1)]}\" class=\"o_stat_text text-danger\">\n"
+"                                    Contratto\n"
+"                                </span>\n"
+"                                <span attrs=\"{'invisible' : [('contracts_count', '=', 1)]}\" class=\"o_stat_text text-danger\">\n"
+"                                    Contratti\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -434,12 +440,12 @@ msgstr "Informazioni dipendenti"
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
 msgid "Employee Manager"
-msgstr ""
+msgstr "Manager dipendente"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "Conto bancario del dipendente per il pagamento dello stipendio"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
@@ -657,7 +663,7 @@ msgstr "Nuovo"
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
-msgstr ""
+msgstr "Nuovo dipendente"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
@@ -687,7 +693,7 @@ msgstr "Nessun contratto"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Not Running"
-msgstr ""
+msgstr "Non è in esecuzione"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
@@ -723,7 +729,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
-msgstr ""
+msgstr "Apri contratto"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
@@ -887,7 +893,7 @@ msgstr "Attività odierne"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Type in notes about this contract..."
-msgstr ""
+msgstr "Inserisci note riguardanti il contratto..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration

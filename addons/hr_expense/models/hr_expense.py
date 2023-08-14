@@ -289,12 +289,13 @@ class HrExpense(models.Model):
         for expense in self:
             expense.product_uom_id = expense.product_id.uom_id
 
-    @api.depends('product_id', 'attachment_number')
+    @api.depends('product_id', 'attachment_number', 'currency_rate')
     def _compute_unit_amount(self):
         for expense in self:
-            # Only change unit_amount if the product has cost defined on it
             if expense.product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
                 expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+            else:  # Even if we don't add a product, the unit_amount is still used for the move.line balance computation
+                expense.unit_amount = expense.company_currency_id.round(expense.total_amount_company / (expense.quantity or 1))
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -1125,6 +1126,9 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Specify expense journal to generate accounting entries."))
 
+        if not self.employee_id.address_home_id:
+            raise UserError(_("The private address of the employee is required to post the expense report. Please add it on the employee form."))
+
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
         res = expense_line_ids.with_context(clean_context(self.env.context)).action_move_create()
@@ -1176,8 +1180,11 @@ class HrExpenseSheet(models.Model):
             amount = sum(self.expense_line_ids.mapped('total_amount'))
         move_lines = []
         for expense in self.expense_line_ids:
-            tax_data = self.env['account.tax']._compute_taxes([expense._convert_to_tax_base_line_dict(price_unit=expense.total_amount, currency=expense.currency_id)])
-            rate = abs(expense.total_amount / expense.total_amount_company)
+            expense_amount = expense.total_amount_company if self.is_multiple_currency else expense.total_amount
+            tax_data = self.env['account.tax']._compute_taxes([
+                expense._convert_to_tax_base_line_dict(price_unit=expense_amount, currency=currency)
+            ])
+            rate = abs(expense_amount / expense.total_amount_company)
             base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base lines
             amount_currency = to_update['price_subtotal']
             expense_name = expense.name.split("\n")[0][:64]

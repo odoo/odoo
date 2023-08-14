@@ -8,6 +8,7 @@
 # Linkup <link-up@naver.com>, 2022
 # Martin Trigaux, 2022
 # Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2642,7 +2643,7 @@ msgstr "지난달 배정된 영업제안과 영업기회의 숫자"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "조치가 필요한 메시지 수"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -3838,6 +3839,11 @@ msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr "왼쪽 상단의 <i>만들기</i> 버튼을 누르거나, 다음 주소로 이메일을 보내십시오."
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid "Use the <i>New</i> button, or send an email to"
+msgstr "<i>신규</i> 버튼을 누르거나, 다음 주소로 이메일을 보내주세요."
+
+#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
@@ -3847,11 +3853,25 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
+msgstr "<i>신규</i> 버튼을 사용하거나 %s로 이메일을 보내 이메일 게이트웨이를 테스트할 수 있습니다. "
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
 msgstr "왼쪽 상단의 만들기 버튼을 누르거나 이메일 별칭을 설정하여 이메일 게이트웨이를 테스트할 수 있습니다."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
+msgid ""
+"Use the New button, or configure an email alias to test the email gateway."
+msgstr "신규 버튼을 누르거나 이메일 별칭을 설정하여 이메일 게이트웨이를 테스트할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action

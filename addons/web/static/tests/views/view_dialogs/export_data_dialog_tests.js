@@ -1212,4 +1212,45 @@ QUnit.module("ViewDialogs", (hooks) => {
             "subfield has been found with its technical name and is displayed"
         );
     });
+
+    QUnit.test(
+        "Direct export list take optional fields into account",
+        async function (assert) {
+            assert.expect(3);
+
+            mockDownload(({ url, data }) => {
+                assert.strictEqual(
+                    url,
+                    "/web/export/xlsx",
+                    "should call get_file with the correct url"
+                );
+                assert.deepEqual(JSON.parse(data.data).fields, [
+                    { label: "Bar", name: "bar", type: "boolean" },
+                ]);
+                return Promise.resolve();
+            });
+
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `
+                 <tree>
+                     <field name="foo" optional="show"/>
+                     <field name="bar" optional="show"/>
+                 </tree>`,
+            });
+
+            await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+            await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
+            assert.containsN(
+                target,
+                "th",
+                3,
+                "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
+            );
+
+            await click(target.querySelector(".o_list_export_xlsx"));
+        }
+    );
 });

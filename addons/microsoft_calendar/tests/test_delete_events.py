@@ -86,17 +86,19 @@ class TestDeleteEvents(TestCommon):
         """
         Archive several events at once should not produce any exception.
         """
+        # arrange
+        several_simple_events = self.several_events.filtered(lambda ev: not ev.recurrency and ev.microsoft_id)
         # act
-        self.several_events.action_archive()
+        several_simple_events.action_archive()
         self.call_post_commit_hooks()
-        self.several_events.invalidate_recordset()
+        several_simple_events.invalidate_recordset()
 
         # assert
-        self.assertFalse(all(e.active for e in self.several_events))
+        self.assertFalse(all(e.active for e in several_simple_events))
 
         mock_delete.assert_has_calls([
             call(e.ms_organizer_event_id, token=ANY, timeout=ANY)
-            for e in self.several_events
+            for e in several_simple_events
         ])
 
     @patch.object(MicrosoftCalendarService, 'get_events')
@@ -132,7 +134,6 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_delete_one_event_from_recurrence_from_odoo_calendar(self, mock_delete):
-
         # arrange
         idx = 2
         event_id = self.recurrent_events[idx].ms_organizer_event_id
@@ -199,7 +200,6 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_delete_first_event_from_recurrence_from_outlook_calendar(self, mock_get_events):
-
         # arrange
         rec_values = [
             dict(
@@ -223,6 +223,8 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_delete_one_event_and_future_from_recurrence_from_outlook_calendar(self, mock_get_events):
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         idx = range(4, self.recurrent_events_count)
         rec_values = [
@@ -259,7 +261,7 @@ class TestDeleteEvents(TestCommon):
         )
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.organizer_user.with_context(dont_notify=True).with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertFalse(self.recurrence.exists())
@@ -276,6 +278,8 @@ class TestDeleteEvents(TestCommon):
         """
         Deletes the base_event of a recurrence and checks if the event was archived and the recurrence was updated.
         """
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         idx = 0
         event_id = self.recurrent_events[idx].ms_organizer_event_id

@@ -8,9 +8,9 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Aimée Mendoza Sánchez, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -645,7 +645,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Plan de cuentas y localización parta Hungría\n"
+"        Plan de cuentas y localización para Hungría\n"
 "    "
 
 #. module: base
@@ -669,7 +669,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Árabe/inglés para el CCG + números de lote/serie\n"
+"        Árabe/inglés para el CCEAG + números de lote/serie\n"
 "    "
 
 #. module: base
@@ -16538,15 +16538,15 @@ msgid ""
 "                    mainly by governmental and international agencies as well\n"
 "                    as industries."
 msgstr ""
-"Realiza y promueve la investigación en el campo de la dinámica de fluidos\n"
-"                 Cuenta con cerca de cincuenta túneles de viento, turbomaquinaria\n"
-"                 y otras instalaciones de experimentación especializadas, algunas\n"
-"                 de las cuales son únicas o las más grandes del mundo. Se realiza\n"
-"                 una amplia investigación sobre los aspectos experimentales,\n"
-"                 computacionales y teóricos de los flujos de gases y líquidos bajo\n"
-"                 la dirección del profesorado y los ingenieros de investigación,\n"
-"                 patrocinada principalmente por organismos gubernamentales e\n"
-"                 internacionales, así como por los sectores industriales."
+"Realiza y promueve la investigación en el campo de la dinámica\n"
+"                    de fluidos. Cuenta con cerca de cincuenta túneles de viento,\n"
+"                    turbomaquinaria y otras instalaciones de experimentación especializadas, algunas\n"
+"                    de las cuales son únicas o las más grandes en el mundo. Se realiza\n"
+"                    una amplia investigación sobre los aspectos experimentales, computacionales y teóricos\n"
+"                    del flujo de gases y líquidos bajo la dirección\n"
+"                    de la facultad y los ingenieros de investigación, con el patrocinio\n"
+"                    principal del gobierno y de organismos internacionales, así como\n"
+"                    de los sectores industriales."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -21406,7 +21406,7 @@ msgstr "Operación:"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Oportunidad a presupuesto"
+msgstr "Oportunidad de cotización"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -25273,7 +25273,6 @@ msgstr "Iniciar configuración"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -25316,6 +25315,7 @@ msgstr "Estados"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "Estado"
@@ -29141,6 +29141,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "No puede eliminar el registro %s."
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -29172,6 +29179,14 @@ msgid ""
 msgstr ""
 "No puede reducir el número de decimales de una divisa que ya se ha utilizado"
 " para realizar asientos contables."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
+"No puede cambiar el nombre de los parámetros de configuración con claves %s"
 
 #. module: base
 #. odoo-python

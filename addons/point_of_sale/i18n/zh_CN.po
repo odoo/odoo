@@ -8,20 +8,38 @@
 # digitalliuzg8888, 2023
 # Martin Trigaux, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# Chloe Wang, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 08:47+0000\n"
+"POT-Creation-Date: 2023-08-11 09:17+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -987,6 +1005,13 @@ msgstr "当离线时无法关闭会话。"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1742,6 +1767,13 @@ msgstr "客户屏幕警告"
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "客户被要求 %s 支付方式。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -3373,6 +3405,11 @@ msgid "Newspaper Rack"
 msgstr "报纸架"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一活动日历事件"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活动截止日期"
@@ -3538,7 +3575,7 @@ msgstr "此订单行中的退款项目数量。"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "需要采取行动的消息数量"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
@@ -3642,6 +3679,14 @@ msgstr "对于退款行项目仅允许负数量。点击 +/- 修改要退款的�
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "仅对现金应用四舍五入"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6210,9 +6255,12 @@ msgstr "门店 %s 的结算单凭证必须属于同一家公司。"
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\r\n"
+"\n"
 "                        Please contact your manager to accept the closing difference."
 msgstr ""
+"允许的最大差异为 %s。\n"
+"\n"
+"请联系您的经理以接受结算差价。"
 
 #. module: point_of_sale
 #. odoo-python

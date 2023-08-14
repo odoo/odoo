@@ -78,7 +78,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("ImageField");
 
     QUnit.test("ImageField is correctly rendered", async function (assert) {
-        assert.expect(10);
+        assert.expect(12);
 
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
@@ -135,6 +135,19 @@ QUnit.module("Fields", (hooks) => {
             "the image should correctly set its attributes"
         );
 
+        const computedStyle = window.getComputedStyle(
+            target.querySelector(".o_field_widget[name='document'] img")
+        );
+        assert.strictEqual(
+            computedStyle.width,
+            "90px",
+            "the image should correctly set its attributes"
+        );
+        assert.strictEqual(
+            computedStyle.height,
+            "90px",
+            "the image should correctly set its attributes"
+        );
         assert.containsOnce(
             target,
             ".o_field_image .o_select_file_button",

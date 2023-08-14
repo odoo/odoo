@@ -65,6 +65,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
 "remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Annullato</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -83,6 +85,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Autorizzato</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -90,6 +94,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Pagato</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -97,6 +103,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Stornato</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -104,6 +112,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
 "d-md-inline\"> Pending</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\"><span class=\"d-none "
+"d-md-inline\"> In sospeso</span></span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -121,6 +131,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Attenzione!</strong> È presente un rimborso in sospeso per questo pagamento.\n"
+"                        Aspetta un momento per l'elaborazione. Se il rimborso è ancora in sospeso dopo\n"
+"                        alcuni minuti, controlla le impostazioni del fornitore di pagamento."
 
 #. module: account_payment
 #. odoo-python
@@ -146,7 +159,7 @@ msgstr "Importo disponibile per rimborso"
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "Importo pagato"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -235,6 +248,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"In modalità di prova, un pagamento finto viene processato attraverso un'interfaccia di pagamento di prova.\n"
+"Questa modalità è consigliata quando si configura il fornitore."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -290,6 +305,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Nota che sono disponibili solo i token di fornitori che permettono di "
+"acquisire l'importo."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -297,6 +314,9 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Nota che i token dei fornitori configurati esclusivamente per "
+"l'autorizzazione delle transazioni (invece di acquisire l'importo) non sono "
+"disponibili."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -354,7 +374,7 @@ msgstr "Fornitori di pagamenti"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Procedura guidata rimborso pagamento"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -439,7 +459,7 @@ msgstr "Token di pagamento salvato"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Pagamento di origine"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -472,7 +492,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "Giornale in cui sono registrate le transazioni avvenute con successo."
 
 #. module: account_payment
 #. odoo-python
@@ -482,6 +502,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
+"Il pagamento relativo alla transazione con riferimento %(ref)s è stato "
+"pubblicato: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -553,6 +575,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"Non puoi eliminare un metodo di pagamento collegato ad un fornitore nello stato abilitato o di prova.\n"
+"Fornitore/i collegato/i: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -562,3 +586,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"È necessario disattivare un fornitore di pagamento prima di eliminare il giornale corrispondente.\n"
+"Fornitori collegati: %s"

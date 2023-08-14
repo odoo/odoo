@@ -10013,7 +10013,7 @@ msgstr "Jumlah kesalahan"
 #: model:ir.model.fields,help:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Jumlah pesan yang membutuhkan tindakan"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error_counter
@@ -14391,6 +14391,13 @@ msgstr ""
 "- Untuk Mencocokkan teks di awal baris (di label atau catatan), akan mengisi teks Anda.\n"
 "- Untuk Mencocokkan teks di mana saja (di label atau catatan), isi teks di antara .*\n"
 "  misal: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #. odoo-javascript

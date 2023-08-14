@@ -558,10 +558,7 @@ class StockQuant(models.Model):
             return 'location_id ASC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-
+    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -576,6 +573,12 @@ class StockQuant(models.Model):
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        return domain
+
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+        removal_strategy = self._get_removal_strategy(product_id, location_id)
+        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
 
         return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
 
