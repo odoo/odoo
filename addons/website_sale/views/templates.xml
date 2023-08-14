@@ -1266,7 +1266,6 @@
             <t t-set="extra_step" t-value="false"/>
             <t t-set="o_wizard_titles" t-value="['Review Order', 'Shipping', 'Extra Info', 'Payment'] if extra_step else ['Review Order', 'Shipping', 'Payment']"/>
             <t t-set="o_wizard_urls" t-value="['/shop/cart', '/shop/checkout', '/shop/extra_info', '/shop/payment'] if extra_step else ['/shop/cart', '/shop/checkout', '/shop/payment']"/>
-            <t t-set="o_wizard_step_first_back_url" t-value="'/shop'"/>
         </xpath>
     </template>
 

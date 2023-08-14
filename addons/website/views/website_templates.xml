@@ -2599,10 +2599,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <t t-set="_step_first_back_url" t-value="o_wizard_step_first_back_url if o_wizard_step_first_back_url else '#'"/>
     <t t-set="_step_active" t-value="o_wizard_titles.index(o_wizard_step_active) if o_wizard_step_active else 0"/>
 
-    <div class="o_wizard d-flex flex-wrap justify-content-end justify-content-sm-start my-3 my-sm-4">
+    <div t-attf-class="o_wizard d-flex flex-wrap {{'justify-content-end' if _back else 'justify-content-between'}} justify-content-sm-start my-3 my-sm-4">
         <t t-set="_steps_in_deg" t-value="(_step_active + 1) / len(_titles) * 360"/>
 
-        <a class="align-self-center me-auto" t-attf-href="{{o_wizard_back_custom if o_wizard_back_custom else _urls[_step_active - 1] if _step_active &gt; 0 else _step_first_back_url if _step_first_back_url else '#'}}">
+        <a t-if="_back" class="align-self-center me-auto" t-attf-href="{{o_wizard_back_custom if o_wizard_back_custom else _urls[_step_active - 1] if _step_active &gt; 0 else _step_first_back_url if _step_first_back_url else '#'}}">
             <i class="fa fa-long-arrow-left me-2"/>Back</a>
         <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
             <a t-foreach="_titles"
