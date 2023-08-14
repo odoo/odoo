@@ -188,22 +188,24 @@
         </main>
     </div>
 
+    <div class="oe_structure"></div>
     <div class="row footer o_event_full_page_ticket_footer d-block">
         <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
-            <t t-if="event.organizer_id">
-                <span class="fw-bold" t-field="event.organizer_id.name"></span>
+            <span t-if="event.organizer_id">
+                <span class="fw-bold" t-field="event.organizer_id.name">Marc Demo</span>
                 <span t-if="event.organizer_id.phone" class="ps-3 fa fa-phone"/>
-                <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone"/>
+                <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone">+123456789</span>
                 <span t-if="event.organizer_id.email_normalized" class="ps-3 fa fa-envelope"/>
-                <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized"/>
+                <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized">organizer@email.com</span>
                 <span t-if="event.organizer_id.website" class="ps-3 fa fa-globe"/>
-                <span t-if="event.organizer_id.website" t-field="event.organizer_id.website"/>
-            </t>
+                <span t-if="event.organizer_id.website" t-field="event.organizer_id.website">https://www.example.com</span>
+            </span>
             <t t-else="">
-                <span t-out="event.name"/> <!-- Force some content to avoid messing the layout -->
+                <span t-out="event.name">Odoo Community Days</span> <!-- Force some content to avoid messing the layout -->
             </t>
         </div>
     </div>
+    <div class="oe_structure"></div>
 </template>
 
 <template id="event_registration_report_template_full_page_ticket">
@@ -293,21 +295,18 @@
     <span t-if="use_map_marker" class="fa fa-map-marker"/>
     <t t-if="event.address_id.contact_address.strip()">
         <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
-        <t t-if="address_bits">
-            <t t-set="partner_name" t-value="address_bits[0]"/>
-            <span t-out="partner_name"/>
-        </t>
+        <span t-if="address_bits" t-out="address_bits[0]">Rue de la Paix 123</span>
         <t t-if="len(address_bits) > 1">
             <br/>
         </t>
         <t t-set="remaining_bits" t-value="address_bits[1:]"/>
         <t t-foreach="remaining_bits" t-as="address_bit">
             <t t-if="address_bit and address_bit.strip()">
-                <span class="text-muted" t-out="address_bit"/>
+                <span class="text-muted" t-out="address_bit">Rue de la Paix 123</span>
             </t>
         </t>
     </t>
-    <t t-else="" t-out="event.address_id.name"/>
+    <span t-else="" t-out="event.address_id.name">1000 Brussels</span>
 </template>
 
 </odoo>
