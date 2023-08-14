@@ -1,7 +1,7 @@
 # # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime, date, time
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
@@ -170,3 +170,105 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         second_leave = leaves.filtered(lambda l: l.date_from.day == 16 and l.date_to.day == 30)
         self.assertEqual(second_leave.state, 'validate')
         self.assertEqual(second_leave.number_of_days, 11)
+
+    def test_contract_traceability_calculate_nbr_leave(self):
+        """
+            The goal is to test the traceability of contracts in the past,
+            i.e. to check that expired contracts are taken into account
+            to ensure the consistency of leaves (number of days/hours) in the past.
+        """
+        calendar_full, calendar_partial = self.env['resource.calendar'].create([
+            {
+                'name': 'Full time (5/5)',
+            },
+            {
+                'name': 'Partial time (4/5)',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    # Does not work on Wednesdays
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                ]
+            },
+        ])
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'resource_calendar_id': calendar_partial.id,
+        })
+        self.env['hr.contract'].create([
+            {
+                'name': 'Full time (5/5)',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
+                'date_end': datetime.strptime('2023-06-30', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_full.id,
+                'wage': 1000.0,
+                'state': 'close', # Old contract
+                'date_generated_from': datetime.strptime('2023-01-01', '%Y-%m-%d'),
+                'date_generated_to': datetime.strptime('2023-01-01', '%Y-%m-%d'),
+            },
+            {
+                'name': 'Partial time (4/5)',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2023-07-01', '%Y-%m-%d').date(),
+                'date_end': datetime.strptime('2023-12-31', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_partial.id,
+                'wage': 1000.0,
+                'state': 'open', # Current contract
+                'date_generated_from': datetime.strptime('2023-07-01', '%Y-%m-%d'),
+                'date_generated_to': datetime.strptime('2023-07-01', '%Y-%m-%d'),
+            },
+        ])
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'request_unit': 'day',
+        })
+        self.env['hr.leave.allocation'].create({
+            'name': 'Allocation',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 10,
+            'state': 'confirm',
+            'date_from': datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
+            'date_to': datetime.strptime('2023-12-31', '%Y-%m-%d').date(),
+        }).action_validate()
+        leave_during_full_time, leave_during_partial_time = self.env['hr.leave'].create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 3,
+                'date_from': datetime.combine(date(2023, 1, 3), time.min), # Tuesday
+                'date_to': datetime.combine(date(2023, 1, 5), time.max), # Thursday
+            },
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 2,
+                'date_from': datetime.combine(date(2023, 12, 5), time.min), # Tuesday
+                'date_to': datetime.combine(date(2023, 12, 7), time.max), # Thursday
+            },
+        ])
+        self.assertEqual(leave_during_full_time.number_of_days_display, 3)
+        self.assertEqual(leave_during_partial_time.number_of_days_display, 2)
+        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
+        # Simulate the unit change days/hours of the time off type
+        (leave_during_full_time + leave_during_partial_time)._compute_number_of_days()
+        self.assertEqual(leave_during_full_time.number_of_days_display, 3)
+        self.assertEqual(leave_during_partial_time.number_of_days_display, 2)
+        (leave_during_full_time + leave_during_partial_time)._compute_number_of_hours_display()
+        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
+        # Check after leave approval
+        (leave_during_full_time + leave_during_partial_time).action_approve()
+        (leave_during_full_time + leave_during_partial_time)._compute_number_of_hours_display()
+        self.assertEqual(leave_during_full_time.number_of_hours_display, 24)
+        self.assertEqual(leave_during_partial_time.number_of_hours_display, 16)
