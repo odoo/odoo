@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="stock.res_company_1" model="res.company">
+            <field eval="1.0" name="po_lead"/>
+        </record>
+
+        <record id="product.product_delivery_01" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_delivery_02" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_9" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_12" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_13" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_16" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_20" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="purchase_order_8" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_planned" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_25'),
+                    'name': obj().env.ref('product.product_product_25').partner_ref,
+                    'price_unit': 2864.80,
+                    'product_qty': 20.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+            ]"/>
+        </record>
+
+        <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_8')]]"/>
+
+    </data>
+
+    <data noupdate="0">
+
+        <record id="stock.stock_warehouse_shop0" model="stock.warehouse">
+            <field name="buy_to_resupply" eval="True"/>
+        </record>
+
+        <function model="stock.warehouse" name="write">
+          <value model="stock.warehouse" search="[('partner_id', '=', ref('stock.res_partner_company_1'))]"/>
+          <value eval="{'buy_to_resupply': True}"/>
+        </function>
+
+    </data>
+
+</odoo>

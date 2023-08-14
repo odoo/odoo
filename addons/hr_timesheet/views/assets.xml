@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="assets_backend" name="timesheet assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link type="text/scss" href="/hr_timesheet/static/src/scss/timesheets_task_form.scss" rel="stylesheet"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/task_with_hours.js"></script>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_uom.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_factor.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_config_form_view.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/src/js/qr_code_action.js"/>
+        </xpath>
+    </template>
+</odoo>

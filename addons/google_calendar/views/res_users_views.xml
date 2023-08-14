@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook colspan="4" position="inside">
+                    <page string="Google Calendar" name="calendar" groups="base.group_system">
+                        <group class="text-break">
+                            <field name="google_calendar_rtoken" readonly="1"/>
+                            <field name="google_calendar_token" readonly="1"/>
+                            <field name="google_calendar_token_validity" readonly="1"/>
+                            <field name="google_calendar_sync_token" readonly="1"/>
+                            <field name="google_calendar_cal_id" readonly="1"/>
+                        </group>
+                        <button
+                            string="Reset Account" class="btn btn-secondary"
+                            type="action" name="%(google_calendar_reset_account_action)d"
+                            context="{'default_user_id': id}"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+</odoo>
+

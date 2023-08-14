@@ -1,0 +1,36 @@
+.o_searchview {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: $border-radius;
+    padding: 1px 25px 3px 5px;
+
+    .o_searchview_facet {
+        border: 1px solid gray('600');
+        background: $o-brand-lightsecondary;
+
+        .o_searchview_facet_label {
+            background-color: $o-brand-odoo;
+        }
+
+        .o_facet_remove {
+            color: gray('600');
+            &:hover {
+                color: gray('700');
+            }
+        }
+    }
+
+    .o_searchview_input {
+        border: none;
+        padding: 4px 0 0 0;
+    }
+    .o_searchview_icon {
+        @include o-position-absolute($top: 6px, $right: 5px);
+    }
+    .o_searchview_autocomplete li.o_selection_focus {
+        background-color: $o-brand-odoo;
+        > a {
+            color: white;
+        }
+    }
+}

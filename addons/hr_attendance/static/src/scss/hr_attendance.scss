@@ -1,0 +1,228 @@
+
+.o_kanban_view #oe_hr_attendance_status {
+    margin-right: .3em;
+}
+
+#oe_hr_attendance_status {
+    color: $o-brand-secondary;
+    &.oe_hr_attendance_status_green {
+        color: theme-color('success');
+    }
+    &.oe_hr_attendance_status_orange {
+        color: theme-color('warning');
+    }
+}
+
+.o_hr_attendance_kiosk_backdrop {
+    @include o-position-absolute(0,0,0,0);
+    background-color: fade-out(black, 0.7);
+}
+
+.o_hr_attendance_clock {
+    display: none;
+    position: relative;
+    width: 100%;
+    padding: 0.5em;
+    background-color: fade-out(black, 0.7);
+    font: normal 1.2em $font-family-monospace;
+    color: white;
+
+    @include media-breakpoint-up(md) {
+        @include o-position-absolute(20px, 20px);
+        width: auto;
+        padding: 3px 10px 3px 10px;
+        border-radius: 3px;
+        font-size: 1.5em;
+    }
+}
+
+.o_hr_attendance_kiosk_mode_container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    @include o-position-absolute(0, 0, 0, 0);
+
+    @include media-breakpoint-up(md) {
+        justify-content: center;
+    }
+}
+
+.o_hr_attendance_kiosk_mode {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    background-color: fade-out(white, 0.1);
+    &.o_barcode_main {
+        font-family: 'Lato', sans-serif;
+        width: 100%;
+        text-align: center;
+        background-color: #fff;
+        padding: 3em;
+        img {
+            width: 115px;
+            height: 60px;
+        }
+        .o_hr_attendance_kiosk_welcome_row img {
+            max-width: inherit;
+        }
+        @include media-breakpoint-down(sm) {
+            h2 {
+                margin-left: -10px;
+                margin-right: -10px;
+            }
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        overflow: hidden;
+        padding: 0 2em 2em;
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @include media-breakpoint-up(md) {
+        padding: 2em 4em;
+        width: auto;
+        max-width: 550px;
+        width: 100%;
+        border-radius: 0.2em;
+        font-size: 1.2em;
+        animation: fadeInDownSmall .3s;
+    }
+
+    .o_hr_attendance_kiosk_welcome_row {
+        @include media-breakpoint-up(md) {
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            max-width: 80px;
+        }
+    }
+
+    .o_hr_attendance_sign_in_out_icon {
+        cursor: pointer;
+        margin: 0.1em 0 0.1em;
+        padding: 0.15em 0.3em;
+        border-radius: .1em;
+        box-shadow: inset 0 -3px 0 fade-out(black, 0.7);
+
+        &.btn-secondary:hover {
+            color: $o-brand-primary;
+        }
+    }
+
+    .o_hr_attendance_back_button {
+        .visible-xs{
+            background: gray('200');
+            margin: 0 -2em;
+            .fa {
+                @include o-position-absolute(0.75em);
+                margin-left: -1.5em
+            }
+        }
+
+        .d-none.d-md-inline-block.btn-secondary {
+            transform: translate(-50%, -50%);
+            @include o-position-absolute(0, $left:0);
+            width: 2em;
+            height: 2em;
+            border-radius: 50%;
+            padding-left: 14px;
+            line-height: 1.5em;
+            text-align: left;
+            color: $body-color;
+            font-size: 1.6em;
+            z-index: 1;
+            box-shadow: inset 0 0 0 1px fade-out(black, 0.8);
+        }
+    }
+
+    .btn-secondary{
+        box-shadow: inset 0 0 0 1px fade-out(black, 0.9);
+        color: $headings-color;
+    }
+
+    .o_hr_attendance_user_badge {
+        background: linear-gradient(to right bottom, #77717e, #c9a8a9);
+
+        img {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 1px solid #d7d7d7;
+        }
+
+        @include media-breakpoint-down(sm) {
+            margin: 1em -2em 0;
+            background: transparent;
+        }
+
+        @include media-breakpoint-up(md) {
+            margin: 0;
+            height: 90px;
+            border-radius: .2em .2em 0 0;
+            border-top: 1px solid fade-out(white, 0.8);
+            @include o-position-absolute(auto, 0, 100%, 0);
+            transform: translateY(3px);
+
+            img {
+                width: 80px;
+                height: 80px;
+                transform: translateX(-50%)translateY(35%);
+                @include o-position-absolute($bottom: 0);
+            }
+        }
+
+        + h1 {
+            margin-top: .4em;
+        }
+    }
+
+    .o_hr_attendance_pin_pad [class*="col-"] {
+        padding: 4px;
+
+        .o_hr_attendance_PINbox {
+            font-size: 2em;
+            border: none;
+            padding: 0 $input-btn-padding-x-lg;
+            background: fade-out(white, 0.6);
+        }
+    }
+
+    .o_hr_attendance_random_message {
+        font-style: italic;
+    }
+
+    .message_demo_barcodes {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    img.o_hr_attendance_kiosk_company_image {
+        overflow:hidden; // prevent margins colapsing with h1
+        margin: 1rem 0 2rem;
+        width: 200px;
+    }
+
+    p {
+        text-align: left;
+        margin: 3rem 0;
+    }
+
+    > button {
+        font-size: 1.2em;
+        margin-bottom: 2rem;
+        width: 100%;
+        font-weight: 400;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

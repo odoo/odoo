@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" name="Title">
+    <section class="s_title pt32 pb32" data-vcss="001">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;"><font style="font-size: 62px;">Your Site Title</font></h1>
+        </div>
+    </section>
+</template>
+
+<template id="assets_snippet_s_title_css_000" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_title/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

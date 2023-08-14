@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DropZone" owl="1">
+        <div class="o_DropZone" t-att-class="{ 'o-dragging-inside': state.isDraggingInside }" t-on-dragenter="_onDragenter" t-on-dragleave="_onDragleave" t-on-dragover="_onDragover" t-on-drop="_onDrop">
+            <h4>
+                Drag Files Here <i class="fa fa-download"/>
+            </h4>
+        </div>
+    </t>
+
+</templates>

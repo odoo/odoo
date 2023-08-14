@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons" name="Comparisons">
+    <section class="s_comparisons pt32 pb32">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt32 pb16" data-name="Box">
+                    <div class="card bg-200">
+                        <h4 class="card-header">Beginner</h4>
+                        <div class="card-body text-center">
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>35</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Basic sales &amp; marketing for up to 2 users</li>
+                            <li class="list-group-item">Account &amp; Sales management</li>
+                            <li class="list-group-item">No customization</li>
+                            <li class="list-group-item">No support</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-primary mb-2">Order now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt32 pb16" data-name="Box">
+                    <div class="card bg-o-color-5">
+                        <h4 class="card-header">Professional</h4>
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>65</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Complete CRM for any size team</li>
+                            <li class="list-group-item">Get access to all modules</li>
+                            <li class="list-group-item">Limited customization</li>
+                            <li class="list-group-item">Email support</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-primary mb-2">Start now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt32 pb16" data-name="Box">
+                    <div class="card bg-secondary">
+                        <h4 class="card-header">Expert</h4>
+                        <div class="card-body text-center">
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>125</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Unlimited CRM power and support</li>
+                            <li class="list-group-item">Get access to all modules and features</li>
+                            <li class="list-group-item">Unlimited customization</li>
+                            <li class="list-group-item">24x7 toll-free support</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-primary mb-2">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="assets_snippet_s_comparisons_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_comparisons/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

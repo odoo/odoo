@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task" name="Portal: My Task with Timesheets">
+        <xpath expr="//t[@t-set='card_body']" position="inside">
+            <div class="container" t-if="timesheets">
+                <hr class="mt-4 mb-1"/>
+                <h5 class="mt-2 mb-2">Timesheets</h5>
+                <t t-call="hr_timesheet.portal_timesheet_table"/>
+            </div>
+            <t t-if="timesheets_by_subtask">
+                <t t-call="hr_timesheet.portal_subtask_timesheet_tables"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_timesheet_table" name="Portal Timesheet Table">
+        <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Employee</th>
+                <th>Description</th>
+                <th t-if="is_uom_day" class="text-right">Duration (Days)</th>
+                <th t-else="" class="text-right">Duration (Hours)</th>
+              </tr>
+            </thead>
+            <tr t-foreach="timesheets" t-as="timesheet">
+                <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
+                <td><t t-esc="timesheet.employee_id.name"/></td>
+                <td><t t-esc="timesheet.name"/></td>
+                <td class="text-right">
+                    <span t-if="is_uom_day" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                    <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                </td>
+            </tr>
+            <tfoot>
+                <tr>
+                    <th colspan="3"></th>
+                    <th class="text-right">Total Hours: <span t-esc="round(sum(timesheets.mapped('unit_amount')), 2)" t-options='{"widget": "float_time"}'/></th>
+                </tr>             
+            </tfoot>
+        </table>
+    </template>
+
+    <template id="portal_subtask_timesheet_tables" name="Portal Subtask Timesheet Tables">
+        <t t-foreach="timesheets_by_subtask.values()" t-as="timesheets">
+            <t t-set="total_hours" t-value="round(sum(timesheets.mapped('unit_amount')), 2)"/>
+            <t t-if="total_hours &gt; 0">
+                <div class="container">
+                    <hr class="mt-4 mb-1"/>
+                    <h5 class="mt-2 mb-2">Timesheets for sub-task: <t t-esc="timesheets[0].task_id.name" /></h5>
+                    <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Employee</th>
+                            <th>Description</th>
+                            <th class="text-right">Duration</th>
+                          </tr>
+                        </thead>
+                        <tr t-foreach="timesheets" t-as="timesheet">
+                            <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
+                            <td><t t-esc="timesheet.employee_id.name"/></td>
+                            <td><t t-esc="timesheet.name"/></td>
+                            <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/></td>
+                        </tr>
+                        <tfoot>
+                            <tr>
+                                <th class="text-right" colspan="3"></th>
+                                <th class="text-right">Total Hours: <span t-esc="total_hours" t-options='{"widget": "float_time"}'/></th>
+                            </tr>             
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

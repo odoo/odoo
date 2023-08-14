@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+# 
+# Translators:
+# Denis Baranov <baranov@itlibertas.com>, 2020
+# Martin Trigaux, 2020
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Конфигурационные настройки"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Минимальная длина пароля"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"Минимальное количество символов, которые пароль должен содержать, установите"
+" на 0, чтобы выключить."
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "Пароль должен иметь по крайней мере %d символов, полученные %d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid ""
+"Required: %s.\n"
+"\n"
+"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+msgstr ""
+"Необходимо:%s . Подсказка: увеличение длины, использование нескольких слов и"
+" использование символов без символов для увеличения силы пароля."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "Users"
+msgstr "Пользователи"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d character classes"
+msgstr "по крайней мере %d классов символов"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d characters"
+msgstr "по крайней мере %d символов"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d words"
+msgstr "по крайней мере %d слов"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "no requirements"
+msgstr "нет требований"

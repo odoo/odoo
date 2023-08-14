@@ -1,0 +1,107 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_buckaroo
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
+# 192015edb78c7397bdecc2172c7447b3, 2020
+# Jan Prokop, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; nájdená viacnásobná objednávka"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; nenájdená žiadna objednávka"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
+#, python-format
+msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
+msgstr "Buckaroo: nesprávný shasign, obdržané %s, vyrátané %s pre dáta %s"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
+#, python-format
+msgid "Buckaroo: received data for reference %s"
+msgstr "Buckaroo: obdržané dáta pre referenciu %s"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
+#, python-format
+msgid ""
+"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
+"shasign (%s)"
+msgstr ""
+"Buckaroo: obdržané dáta s chýbajucou referenciou (%s) alebo pay_id (%s) "
+"alebo shasign (%s)"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Posledná úprava"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Príjemca platby "
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platobná transakcia"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Poskytovateľ"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
+msgid "SecretKey"
+msgstr "SecretKey"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
+msgid "WebsiteKey"
+msgstr "WebsiteKey"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="event_sponsor_rule_share" model="ir.rule">
+        <field name="name">Event Sponsor: public/portal published only</field>
+        <field name="model_id" ref="website_event_track.model_event_sponsor"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

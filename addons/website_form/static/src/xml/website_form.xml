@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Success status -->
+    <t t-name="website_form.status_success">
+        <span id="s_website_form_result" class="text-success ml8">
+            <i class="fa fa-check mr4" role="img" aria-label="Success" title="Success"/>The form has been sent successfully.
+        </span>
+    </t>
+
+    <!-- Error status -->
+    <t t-name="website_form.status_error">
+        <span id="s_website_form_result" class="text-danger ml8">
+            <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+            <t t-esc="message"/>
+        </span>
+    </t>
+</templates>

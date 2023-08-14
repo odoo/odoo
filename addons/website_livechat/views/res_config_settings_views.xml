@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.livechat</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="google_maps_setting" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="live_chat_install_setting">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Live Chat</span>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Live chat channel of your website
+                        </div>
+                        <div class="content-group mt16">
+                            <div class="row">
+                                <label class="col-lg-3 o_light_label" string="Channel" for="channel_id"/>
+                                <field name="channel_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,17 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_FormRenderer_chatterContainer {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 0 auto;
+    max-width: $o-form-view-sheet-max-width;
+    padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 5);
+    width: 100%;
+}
+
+// FIX to hide chatter in dialogs when they are opened from an action returned by python code
+.modal .modal-dialog .o_form_view .o_FormRenderer_chatterContainer {
+    display: none;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SMS Template Preview -->
+        <record model="ir.ui.view" id="sms_template_preview_form">
+            <field name="name">sms.template.preview.form</field>
+            <field name="model">sms.template.preview</field>
+            <field name="arch" type="xml">
+                <form string="SMS Preview">
+                    <h3>Preview of <field name="sms_template_id" readonly="1" nolabel="1" class="oe_inline"/></h3>
+                    <field name="no_record" invisible="1"/>
+                    <div class="o_row">
+                        <span>Choose an example <field name="model_id" readonly="1"/> record:</span>
+                        <div>
+                            <field name="resource_ref" class="oe_inline" options="{'hide_model': True, 'no_create': True, 'no_edit': True, 'no_open': True}" attrs="{'invisible': [('no_record', '=', True)]}"/>
+                            <span class="text-warning" attrs="{'invisible': [('no_record', '=', False)]}">No records</span>
+                        </div>
+                    </div>
+                    <p>Choose a language: <field name="lang" class="oe_inline ml8"/></p>
+                    <label for="body" string="SMS content"/>
+                    <hr/>
+                        <field name="body" readonly="1" nolabel="1" options='{"safe": True}'/>
+                    <hr/>
+                    <footer>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="sms_template_preview_action" model="ir.actions.act_window">
+            <field name="name">Template Preview</field>
+            <field name="res_model">sms.template.preview</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sms_template_preview_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_sms_template_id':active_id}</field>
+        </record>
+
+    </data>
+</odoo>

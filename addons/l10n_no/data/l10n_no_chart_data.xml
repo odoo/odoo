@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_no_statements_menu" name="Norway" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
+    <data>
+
+	<menuitem id="account_reports_no_statements_menu" name="Norwegian Statements" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
+    <!-- COA Templates -->
+    <record id="no_chart_template" model="account.chart.template">
+        <field name="name">Norway's Chart of Accounts</field>
+        <field name="cash_account_code_prefix">1900</field>
+        <field name="bank_account_code_prefix">1920</field>
+        <field name="transfer_account_code_prefix">1940</field>
+        <field name="code_digits">4</field>
+        <field name="currency_id" ref="base.NOK"/>
+    </record>
+
+    </data>
+</odoo>

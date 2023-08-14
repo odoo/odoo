@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_company_partner_bank_form" model="ir.ui.view">
+            <field name="name">company.res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_new_bank_setting" model="ir.actions.server">
+            <field name="name">Add a Bank Account</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.setting_init_bank_account_action()
+            </field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

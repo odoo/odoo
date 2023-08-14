@@ -1,0 +1,198 @@
+.o_searchview {
+    align-items: flex-end;
+    padding: 0 20px 1px 0;
+    position: relative;
+
+    .o_searchview_input_container {
+        display: flex;
+        flex-flow: row wrap;
+        position: relative;
+
+        .o_searchview_facet {
+            display: flex;
+            flex: 0 0 auto;
+            margin: 1px 3px 0 0;
+            max-width: 100%;
+            position: relative;
+            $o-searchview-facet-remove-width: 18px;
+
+            .o_searchview_facet_label {
+                align-items: center;
+                color: white;
+                flex: 0 0 auto;
+                padding: 0 3px;
+                @include o-text-overflow($display: flex);
+            }
+
+            .o_facet_values {
+                direction: ltr#{"/*rtl:ignore*/"};
+                padding: 0 $o-searchview-facet-remove-width 0 5px;
+
+                .o_facet_values_sep {
+                    font-style: italic;
+                    margin: 0 0.3rem;
+                }
+            }
+
+            .o_facet_remove {
+                align-items: center;
+                cursor: pointer;
+                display: flex;
+                flex: 0 0 auto;
+                justify-content: center;
+                width: $o-searchview-facet-remove-width;
+                @include o-position-absolute(0, 0, 0);
+            }
+        }
+
+        .o_searchview_input {
+            flex: 1 0 auto;
+            width: 75px;
+        }
+
+        .o_searchview_autocomplete {
+            width: 100%;
+            @include o-position-absolute(100%, $left: auto);
+
+            .o_menu_item {
+                align-items: center;
+                display: flex;
+                padding-left: 25px;
+
+                &.o_indent {
+                    padding-left: 50px;
+                }
+
+                a {
+                    &:hover {
+                        background-color: inherit;
+                    }
+
+                    &.o_expand {
+                        display: flex;
+                        justify-content: center;
+                        width: 25px;
+                        @include o-position-absolute($left: 0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_search_options .o_dropdown_toggler_btn:first-child {
+    // apply the padding to the first element so that when the `favorites` menu goes under
+    // the `filters` menu, they're still aligned
+    margin-right: 15px;
+}
+
+// Dropdowns
+.o_dropdown {
+    color: $o-main-text-color;
+    cursor: pointer;
+    display: inline-block;
+    user-select: none;  // Prevent text selection when toggling the dropdowns
+    white-space: nowrap;  // prevent the arrow from going under the dropdown when too little space
+
+    .o_dropdown_title {
+        padding: 0 0.3rem;
+    }
+
+    .o_dropdown_caret {
+        font-size: 12px;
+        width: 1rem;
+    }
+
+    &:hover,
+    &.show {
+
+        .o_dropdown_toggler_btn {
+            color: darken($o-main-text-color, 10%);
+        }
+    }
+
+    .o_dropdown_menu {
+
+        ul.o_embed_menu {
+            padding: 0;
+        }
+
+        a.dropdown-item {
+            align-items: center;
+            display: flex;
+            position: relative;
+
+            .o_item_description {
+                flex: 1;
+            }
+
+            .o_icon_right {
+                @include o-position-absolute($right: $dropdown-item-padding-x * 0.5);
+            }
+
+            .o_icon_right + .o_icon_right {
+                @include o-position-absolute($right: $dropdown-item-padding-x * 1.25);
+            }
+        }
+
+        .o_menu_item_options {
+            list-style: none;
+            margin-bottom: 1rem;
+            padding: 0;
+        }
+    }
+}
+
+// Open and closed carets in dropdowns
+.o_closed_menu {
+    position: relative;
+
+    &:before {
+        margin-top: (-$caret-width);
+        @include o-caret-right;
+        @include o-position-absolute($top: 50%, $left: 10px);
+    }
+}
+.o_open_menu {
+    position: relative;
+
+    &:before {
+        margin-top: (-$caret-width);
+        @include o-caret-down;
+        @include o-position-absolute($top: 50%, $left: 10px);
+    }
+}
+
+// Filter menu
+.o_filter_menu {
+
+    .o_filter_condition {
+        margin-bottom: 8px;
+        position: relative;
+
+        .o_or_filter { // or between conditions
+            @include o-position-absolute($top: 3px, $left: 4px);
+        }
+
+        .o_generator_menu_operator {
+            margin: 3px 0px; // vertical gap between selects
+        }
+
+        .o_generator_menu_value { // date fields: datepicker position
+            .datepickerbutton {
+                cursor: pointer;
+                @include o-position-absolute(3px, -20px);
+            }
+        }
+
+        .o_generator_menu_delete { // delete condition button position
+            cursor: pointer;
+            @include o-position-absolute($top: 6px, $right: 4px);
+        }
+    }
+
+    .o_add_filter_menu { // apply and add buttons
+        display: flex;
+        justify-content: space-between;
+    }
+}

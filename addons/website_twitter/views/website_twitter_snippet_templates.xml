@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_twitter" name="Twitter Scroller">
+        <section class="twitter" data-screen-name="OpenERP" data-limit="15">
+            <div class="twitter_timeline o_not_editable"/>
+        </section>
+    </template>
+
+    <template id="remove_external_snippets" inherit_id="website.external_snippets">
+        <xpath expr="//t[@t-install='website_twitter']" position="replace"/>
+    </template>
+     <template id="website_twitter_snippet" inherit_id="website.snippets">
+        <xpath expr="//t[@id='twitter_favorite_tweets_hook']" position="replace">
+            <t t-snippet="website_twitter.s_twitter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
+        </xpath>
+    </template>
+
+    <template id="website_twitter_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="twitter" data-selector=".twitter"/>
+        </xpath>
+    </template>
+
+    <template id="twitter" inherit_id="website.assets_frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_twitter/static/src/scss/website_twitter.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_twitter/static/src/js/website.twitter.animation.js"/>
+        </xpath>
+    </template>
+    <template id="twitter_editor" inherit_id="website.assets_editor">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_twitter/static/src/js/website.twitter.editor.js"/>
+        </xpath>
+    </template>
+</odoo>

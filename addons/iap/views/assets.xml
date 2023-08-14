@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="iap assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/iap/static/src/js/iap_credit.js"></script>
+            <script type="text/javascript" src="/iap/static/src/js/crash_manager.js"></script>
+            <script type="text/javascript" src="/iap/static/src/js/iap_buy_more_credits.js"></script>
+        </xpath>
+    </template>
+
+    <template id="tests_assets" name="iap tests assets" inherit_id="web.tests_assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/iap/static/tests/helpers/mock_server.js"/>
+        </xpath>
+    </template>
+</odoo>

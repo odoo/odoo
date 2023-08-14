@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="_assets_primary_variables" inherit_id="portal._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+
+        <!-- Those files will be automatically edited by users -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/user_values.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
+    </xpath>
+</template>
+<template id="_assets_secondary_variables" inherit_id="web_editor._assets_secondary_variables">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_tests" name="Website Assets Tests" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website/static/tests/tours/carousel_content_removal.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/automatic_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/reset_password.js"></script>
+        <script type="text/javascript" src="/website/static/tests/tours/rte.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/focus_blur_snippets.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/dashboard_tour.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/specific_website_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/parallax.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/public_user_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/website_navbar_menu.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_version.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/website_style_edition.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_empty_parent_autoremove.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_countdown.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_image_gallery.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/unsplash_beacon.js"/>
+    </xpath>
+</template>
+
+<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website_visitor_views.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/res_config_settings.js"/>
+        <script type="text/javascript" src="/website/static/src/js/widget_iframe.js"/>
+        <script type="text/javascript" src="/website/static/src/js/theme_preview_kanban.js"/>
+        <script type="text/javascript" src="/website/static/src/js/theme_preview_form.js"/>
+    </xpath>
+</template>
+
+<template id="qunit_suite" inherit_id="web.qunit_suite_tests">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/dashboard_tests.js"/>
+        <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="portal._assets_frontend_helpers">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers_user_custom" inherit_id="web._assets_frontend_helpers" priority="99">
+    <xpath expr="//link" position="before">
+        <!-- Custom empty file for user custom bootstrap override -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="portal.assets_frontend" name="Website Assets">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
+    </xpath>
+    <xpath expr="//script[@src='/web/static/src/js/public/public_root_instance.js']" position="replace">
+        <script type="text/javascript" src="/website/static/src/js/content/website_root_instance.js"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/utils.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/show_password.js"/>
+        <script type="text/javascript" src="/website/static/src/js/post_link.js"/>
+        <!-- Custom empty file for user javascript -->
+        <script type="text/javascript" src="/website/static/src/js/user_custom_javascript.js"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend_user_custom" inherit_id="web.assets_frontend" name="Website Assets user custom" priority="99">
+    <xpath expr="//link[last()]" position="after">
+        <!-- Custom empty file for user custom rules -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/user_custom_rules.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend_compatibility_for_12_0" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/compatibility/bs3_for_12_0.scss"/>
+    </xpath>
+</template>
+
+<template id="website.compiled_assets_wysiwyg" name="Website Editor Assets (used in website editor)" groups="website.group_website_publisher">
+    <t t-call-assets="website.assets_wysiwyg"/>
+</template>
+
+<template id="website.assets_wysiwyg" name="Website Editor Assets (used in website editor)">
+    <t t-call="web._assets_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </t>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.wysiwyg.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
+
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/mega_menu.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_facebook_page/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_image_gallery/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_countdown/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_popup/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_product_catalog/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_chart/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_rating/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_tabs/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_progress_bar/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_blockquote/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_showcase/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_table_of_content/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_timeline/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_media_list/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_google_map/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet_carousel/options.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone_translate.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/widget_link.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/widgets/media.js"/>
+</template>
+
+<template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
+    <t t-call="web._assets_helpers"/>
+
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
+
+    <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/debug_manager.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/homepage.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/tour_utils.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
+</template>
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form_l10n_sg" model="ir.ui.view">
+            <field name="name">l10n_sg.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                  <field name="l10n_sg_unique_entity_number" attrs="{'invisible': [('country_code', '!=', 'SG')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                  <attribute name="string" >GST No.</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

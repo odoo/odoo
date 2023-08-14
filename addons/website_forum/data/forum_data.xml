@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="forum_help" model="forum.forum">
+            <field name="name">Help</field>
+            <field name="description">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</field>
+        </record>
+
+        <record id="menu_website_forums" model="website.menu">
+            <field name="name">Forum</field>
+            <field name="url">/forum</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">35</field>
+        </record>
+    </data>
+    <data>
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
+
+        <!-- JUMP TO FORUM AT INSTALL -->
+        <record id="action_open_forum" model="ir.actions.act_url">
+            <field name="name">Forum</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/forum/'+str(ref('website_forum.forum_help'))"/>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <!-- Answers subtypes -->
+        <record id="mt_answer_new" model="mail.message.subtype">
+            <field name="name">New Answer</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="description">New Answer</field>
+        </record>
+        <record id="mt_answer_edit" model="mail.message.subtype">
+            <field name="name">Answer Edited</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Answer Edited</field>
+        </record>
+        <!-- Questions subtypes -->
+        <record id="mt_question_new" model="mail.message.subtype">
+            <field name="name">New Question</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="True"/>
+            <field name="description">New Question</field>
+        </record>
+        <record id="mt_question_edit" model="mail.message.subtype">
+            <field name="name">Question Edited</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Question Edited</field>
+        </record>
+        <!-- Forum subtypes, to follow all answers or questions -->
+        <record id="mt_forum_answer_new" model="mail.message.subtype">
+            <field name="name">New Answer</field>
+            <field name="res_model">forum.forum</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="parent_id" ref="mt_answer_new"/>
+            <field name="relation_field">forum_id</field>
+        </record>
+        <record id="mt_forum_question_new" model="mail.message.subtype">
+            <field name="name">New Question</field>
+            <field name="res_model">forum.forum</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="parent_id" ref="mt_question_new"/>
+            <field name="relation_field">forum_id</field>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_forum"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Reasons for closing Post -->
+        <record id="reason_1" model="forum.post.reason">
+            <field name="name">Duplicate post</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_2" model="forum.post.reason">
+            <field name="name">Off-topic or not relevant</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_3" model="forum.post.reason">
+            <field name="name">Too subjective and argumentative</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_4" model="forum.post.reason">
+            <field name="name">Not a real post</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_6" model="forum.post.reason">
+            <field name="name">Not relevant or out dated</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_7" model="forum.post.reason">
+            <field name="name">Contains offensive or malicious remarks</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_8" model="forum.post.reason">
+            <field name="name">Spam or advertising</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_9" model="forum.post.reason">
+            <field name="name">Too localized</field>
+            <field name="reason_type">basic</field>
+        </record>
+        <record id="reason_11" model="forum.post.reason">
+            <field name="name">Insulting and offensive language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_12" model="forum.post.reason">
+            <field name="name">Violent language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_13" model="forum.post.reason">
+            <field name="name">Inappropriate and unacceptable statements</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_14" model="forum.post.reason">
+            <field name="name">Threatening language</field>
+            <field name="reason_type">offensive</field>
+        </record>
+        <record id="reason_15" model="forum.post.reason">
+            <field name="name">Racist and hate speech</field>
+            <field name="reason_type">offensive</field>
+        </record>
+
+    </data>
+</odoo>

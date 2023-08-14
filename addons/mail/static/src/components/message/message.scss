@@ -1,0 +1,387 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Message {
+    display: flex;
+    flex: 0 0 auto;
+    padding: map-get($spacers, 2);
+}
+
+.o_Message_authorAvatar {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.o_Message_authorAvatarContainer {
+    position: relative;
+    height: 36px;
+    width: 36px;
+}
+
+.o_Message_authorName {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Message_checkbox {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Message_commandStar {
+    font-size: 1.3em;
+}
+
+.o_Message_Composer {
+    flex: 1 1 auto;
+}
+
+.o_Message_commands {
+    display: flex;
+    align-items: center;
+}
+
+.o_Message_content {
+    word-wrap: break-word;
+    word-break: break-word;
+
+    *:not(li):not(li div) {
+        // Message content can contain arbitrary HTML that might overflow and break
+        // the style without this rule.
+        // Lists are ignored because otherwise bullet style become hidden from overflow.
+        // It's acceptable not to manage overflow of these tags for the moment.
+        // It also excludes all div in li because 1st leaf and div child of list overflow
+        // may impact the bullet point (at least it does on Safari).
+        max-width: 100%;
+        overflow-x: auto;
+
+        // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+        // warning table. If detected, we prevent the issue by removing flotation.
+        &table[align="left"][width="100%"] {
+            float: none;
+        }
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.o_Message_core {
+    min-width: 0; // allows this flex child to shrink more than its content
+    margin-inline-end: map-get($spacers, 3);
+}
+
+.o_Message_footer {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_Message_header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+}
+
+.o_Message_headerCommands {
+    margin-inline-end: map-get($spacers, 2);
+    align-self: center;
+
+    .o_Message_headerCommand {
+        padding-left: map-get($spacers, 2);
+        padding-right: map-get($spacers, 2);
+
+        &.o-mobile {
+            padding-left: map-get($spacers, 3);
+            padding-right: map-get($spacers, 3);
+
+            &:first-child {
+                padding-left: map-get($spacers, 2);
+            }
+
+            &:last-child {
+                padding-right: map-get($spacers, 2);
+            }
+        }
+    }
+}
+
+.o_Message_headerDate {
+    margin-inline-end: map-get($spacers, 2);
+    font-size: 0.8em;
+}
+
+.o_Message_moderationAction {
+    margin-inline-end: map-get($spacers, 3);
+}
+
+.o_Message_moderationPending {
+    margin-inline-end: map-get($spacers, 3);
+}
+
+.o_Message_moderationSubHeader {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+.o_Message_originThread {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Message_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_Message_prettyBody {
+
+    > p:last-of-type {
+        margin-bottom: 0;
+    }
+
+}
+
+.o_Message_readMoreLess {
+    display: block;
+}
+
+.o_Message_seenIndicator {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_Message_sidebar {
+    flex: 0 0 $o-mail-message-sidebar-width;
+    max-width: $o-mail-message-sidebar-width;
+    display: flex;
+    margin-inline-end: map-get($spacers, 2);
+    justify-content: center;
+
+    &.o-message-squashed {
+        align-items: flex-start;
+    }
+}
+
+.o_Message_sidebarItem {
+    margin-left: map-get($spacers, 1);
+    margin-right: map-get($spacers, 1);
+
+    &.o-message-squashed {
+        display: flex;
+    }
+}
+
+.o_Message_trackingValues {
+    margin-top: map-get($spacers, 2);
+}
+
+.o_Message_trackingValue {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.o_Message_trackingValueItem {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Message {
+    background-color: white;
+
+    &:hover, &.o-clicked {
+
+        .o_Message_commands {
+            opacity: 1;
+        }
+
+        .o_Message_sidebarItem.o-message-squashed {
+            display: flex;
+        }
+
+        .o_Message_seenIndicator.o-message-squashed {
+            display: none;
+        }
+    }
+
+    .o_Message_partnerImStatusIcon {
+        color: white;
+    }
+
+    &.o-not-discussion {
+        background-color: lighten(gray('300'), 5%);
+        border-bottom: 1px solid darken(gray('300'), 5%);
+
+        .o_Message_partnerImStatusIcon {
+            color: lighten(gray('300'), 5%);
+        }
+
+        &.o-selected {
+            border-bottom: 1px solid darken(gray('400'), 5%);
+        }
+    }
+
+    &.o-selected {
+        background-color: gray('400');
+
+        .o_Message_partnerImStatusIcon {
+            color: gray('400');
+        }
+    }
+
+    &.o-starred {
+
+        .o_Message_commandStar {
+            display: flex;
+        }
+
+        .o_Message_commands {
+            display: flex;
+        }
+    }
+}
+
+.o_Message_authorName {
+    font-weight: bold;
+}
+
+.o_Message_authorRedirect {
+    cursor: pointer;
+}
+
+.o_Message_command {
+    cursor: pointer;
+    color: gray('400');
+
+    &:not(.o-mobile) {
+        &:hover {
+            filter: brightness(0.8);
+        }
+    }
+
+    &.o-mobile {
+        filter: brightness(0.8);
+
+        &:hover {
+            filter: brightness(0.75);
+        }
+    }
+
+    &.o-message-selected {
+        color: gray('500');
+    }
+}
+
+.o_Message_commandStar {
+
+    &.o-message-starred {
+        color: gold;
+
+        &:hover {
+            filter: brightness(0.9);
+        }
+    }
+}
+
+.o_Message_content .o_mention {
+    color: $o-brand-primary;
+    cursor: pointer;
+
+    &:hover {
+        color: darken($o-brand-primary, 15%);
+    }
+}
+
+.o_Message_date {
+    color: gray('500');
+
+    &.o-message-selected {
+        color: gray('600');
+    }
+}
+
+.o_Message_headerCommands:not(.o-mobile) {
+    opacity: 0;
+}
+
+.o_Message_originThread {
+    font-size: 0.8em;
+    color: gray('500');
+
+    &.o-message-selected {
+        color: gray('600');
+    }
+}
+
+.o_Message_originThreadLink {
+    font-size: 1.25em; // original size
+}
+
+.o_Message_partnerImStatusIcon:not(.o_Message_partnerImStatusIcon-mobile) {
+    font-size: x-small;
+}
+
+.o_Message_moderationAction {
+    font-weight: bold;
+    font-style: italic;
+
+    &.o-accept,
+    &.o-allow {
+        color: $o-mail-moderation-accept-color;
+        @include hover-focus {
+            color: darken($o-mail-moderation-accept-color, $emphasized-link-hover-darken-percentage);
+        }
+    }
+
+    &.o-ban,
+    &.o-discard,
+    &.o-reject {
+        color: $o-mail-moderation-reject-color;
+        @include hover-focus {
+            color: darken($o-mail-moderation-reject-color, $emphasized-link-hover-darken-percentage);
+        }
+    }
+}
+
+.o_Message_moderationPending {
+    font-style: italic;
+
+    &.o-author {
+        color: theme-color('danger');
+        font-weight: bold;
+    }
+}
+
+.o_Message_notificationIconClickable {
+    color: gray('600');
+    cursor: pointer;
+
+    &.o-error {
+        color: $red;
+    }
+}
+
+.o_Message_sidebarCommands {
+    display: none;
+}
+
+.o_Message_sidebarItem.o-message-squashed {
+    display: none;
+}
+
+.o_Message_subject {
+    font-style: italic;
+}
+
+// Used to hide buttons on rating emails in chatter
+// FIXME: should use a better approach for not having such buttons
+// in chatter of such messages, but keep having them in emails.
+.o_Message_content [summary~="o_mail_notification"] {
+    display: none;
+}

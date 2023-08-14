@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Quote frontend assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_management/static/src/js/sale_management.js"></script>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
+
+        <xpath expr="//section[@id='details']//t[@t-set='display_discount']" position="after">
+            <t t-set="display_remove" t-value="sale_order.state in ('draft', 'sent') and any(line.sale_order_option_ids for line in sale_order.order_line)"/>
+        </xpath>
+
+        <xpath expr="//section[@id='details']//table[@id='sales_order_table']/thead/tr" position="inside">
+            <!-- add blank Tr in thead for layout conciseness -->
+            <th t-if="display_remove">
+            </th>
+        </xpath>
+
+        <xpath expr="//section[@id='details']//t[@t-if='not line.display_type']" position="inside">
+            <td class="text-center" t-if="display_remove">
+                <a t-att-data-line-id="line.id" t-att-data-unlink="True" href="#" class="mb8 js_update_line_json d-print-none" t-if="sale_order.state in ('draft', 'sent') and line.sale_order_option_ids" aria-label="Remove" title="Remove">
+                    <span class="fa fa-trash-o"></span>
+                </a>
+            </td>
+        </xpath>
+
+        <xpath expr="//section[@id='signature']" position="after">
+            <t t-if="any((not option.is_present) for option in sale_order.sale_order_option_ids)">
+                <section>
+                    <h3>Options</h3>
+                    <t t-set="display_discount" t-value="True in [option.discount > 0 for option in sale_order.sale_order_option_ids]"/>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Product</th>
+                                <th t-if="display_discount" class="text-right">Disc.%
+                                </th>
+                                <th class="text-right">Unit Price</th>
+                                <th t-if="sale_order.state in ['draft', 'sent'] and report_type == 'html'"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="sale_order.sale_order_option_ids" t-as="option">
+                                <t t-if="not option.is_present">
+                                    <td>
+                                        <div t-field="option.name"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right">
+                                        <strong t-if="option.discount" class="text-info">
+                                            <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>%
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong class="text-right">
+                                            <div t-field="option.price_unit"
+                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
+                                                t-att-style="option.discount and 'text-decoration: line-through' or None"
+                                                t-att-class="option.discount and 'text-danger' or None"/>
+                                            <div t-if="option.discount">
+                                                <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                            </div>
+                                        </strong>
+                                    </td>
+                                    <td class="text-center" t-if="sale_order.state in ['draft', 'sent'] and report_type == 'html'">
+                                        <a t-att-data-option-id="option.id" href="#" class="mb8 js_add_optional_products d-print-none" aria-label="Add to cart" title="Add to cart">
+                                            <span class="fa fa-shopping-cart"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </t>
+        </xpath>
+
+        <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
+            <t t-if="sale_order.state in ['draft', 'sent'] and line.sale_order_option_ids">
+                <div class="input-group js_quantity_container pull-right">
+
+                    <div class="input-group-prepend d-print-none">
+                        <span class="input-group-text d-none d-md-inline-block">
+                            <a t-att-data-line-id="line.id" t-att-data-remove="True" href="#" class="js_update_line_json" aria-label="Remove one" title="Remove one">
+                                <span class="fa fa-minus"/>
+                            </a>
+                        </span>
+                    </div>
+                    <!-- TODO add uom in this case too -->
+                    <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-value="line.product_uom_qty"/>
+                    <div class="input-group-append d-print-none">
+                        <span class="input-group-text d-none d-md-inline-block">
+                            <a t-att-data-line-id="line.id" href="#" class="js_update_line_json" aria-label="Add one" title="Add one">
+                                <span class="fa fa-plus"/>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <span t-field="line.product_uom_qty"/>
+                <span t-field="line.product_uom"/>
+            </t>
+        </xpath>
+
+    </template>
+
+</odoo>

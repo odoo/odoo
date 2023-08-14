@@ -1,0 +1,69 @@
+/* Modifications for the Light and Boxed document layouts */
+.article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
+    > .pt-5 {
+        padding-top: 0 !important;
+        > .address.row {
+            width: 117% !important;
+            height: 68mm !important;
+            margin-top: -4mm !important;
+            line-height: 1.1em;
+        }
+    }
+}
+
+/* Modifications for Clean document layouts */
+.article.o_report_layout_clean.o_company_1_layout {
+    > .address.row {
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
+        line-height: 1.1em;
+    }
+}
+/* Modification for background document layouts */
+.o_company_1_layout.article.o_report_layout_background {
+    > .address.row {
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
+        line-height: 1.1em;
+    }
+}
+
+div .address.row > div[name="address"] {
+    position: relative !important;
+    margin-left: 48.5% !important;
+    background-color: #ffffff;
+    > address, div {
+        > address {
+            width: 100% !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            padding-left: 3mm;
+            padding-top: 3mm;
+            height: 33mm;
+            max-height: 33mm;
+        }
+    }
+}
+
+/* Follow-up Letters */
+div .row.fallback_header {
+    margin-top: -4mm !important;
+    height: 68mm !important;
+    width: 117% !important;
+    > div.col-5.offset-7 {
+        background-color: #ffffff;
+        margin-left: 48.5% !important;
+        position: relative !important;
+        > div:first-child {
+            width: 100%;
+            padding-left: 2mm !important;
+            height: 33mm;
+            max-height: 33mm !important;
+            line-height: 1.1em;
+            position: absolute;
+            bottom: 0;
+        }
+    }
+}

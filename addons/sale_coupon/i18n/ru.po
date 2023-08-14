@@ -1,0 +1,415 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2020
+# Vasiliy Korobatov <korobatov@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Константин Коровин <korovin74@gmail.com>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
+msgid "<strong>Sales</strong>"
+msgstr "Продажи"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "A Coupon is already applied for the same reward"
+msgstr "Купон уже применяется за такую же вознаграждение"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr ""
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
+msgid "Applied Coupons"
+msgstr "Использованные купоны"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
+msgid "Applied Immediate Promo Programs"
+msgstr "Применены неотложные промо-программы"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
+msgid "Applied Promo Program"
+msgstr "Применены программы промо"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
+msgid "Applied program code"
+msgstr "Применен код программы"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply"
+msgstr "Применить"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply coupon"
+msgstr "Применить купон"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "At least one of the required conditions is not met to get the reward!"
+msgstr ""
+"По крайней мере одно из необходимых условий не встречается, чтобы получить "
+"награду!"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
+msgid "Code"
+msgstr "Код"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Coupon"
+msgstr "Купон"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_program
+msgid "Coupon Program"
+msgstr "Купонная программа"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Coupon Programs"
+msgstr "Купонные программы"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_date
+msgid "Created on"
+msgstr "Создан"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr ""
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
+msgid "Enter Promotion or Coupon Code"
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Free Product"
+msgstr "Бесплатный товар"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Global discounts are not cumulable."
+msgstr "Общие скидки не накапливаются."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Global discounts are not cumulative."
+msgstr "Общие скидки не является совокупным."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "Недействителен партнер."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr "Есть строка программы вознаграждения"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
+msgid "Offered Coupons"
+msgstr "предложенные купоны"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
+msgid "Order Count"
+msgstr "подсчет заказов"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
+msgid "Order Reference"
+msgstr "Ссылка на заказ"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code %s has been expired."
+msgstr "Срок действия промо-кода %s закончился."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is expired"
+msgstr "Срок действия промо-кода истек."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is invalid"
+msgstr "Промо-код недействителен"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
+msgid "Promotion Code"
+msgstr "Промокод"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Promotion Programs"
+msgstr "Акционные программы"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promotionals codes are not cumulative."
+msgstr "Промо-коды не являются совокупными."
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Promotions"
+msgstr ""
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr "сумма вознаграждения"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
+msgid "Sales"
+msgstr "Продажи"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
+msgid "Sales Coupon Apply Code"
+msgstr "Код применения продаж купонов"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_order_action
+#: model:ir.model,name:sale_coupon.model_sale_order
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Строка заказа на продажу"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Sales Orders"
+msgstr "Заказы продаж"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "Купонная программа%s Sу состоянии черновика или в закрытом состоянии"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The customer doesn't have access to this reward."
+msgstr "Клиент не имеет доступа к этой награды."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promo code is already applied on this order"
+msgstr "Промо-код уже применяется к этому заказу"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promotional offer is already applied on this order"
+msgstr "Акционное предложение уже применяется к этому заказу"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"The reward products should be in the sales order lines to apply the "
+"discount."
+msgstr ""
+"Товары вознаграждения должны быть в строках заказа на продажу, чтобы "
+"применять скидку."
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
+msgid "The sales order from which coupon is generated"
+msgstr "Заказ на продажу, из которого формируется купон"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "The sales order on which the coupon is applied"
+msgstr "Заказ на продажу, по которому применяется купон"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr ""
+"Этот купон %s существует, но оригинальное заказ на продажу еще не "
+"подтверждено."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
+#, python-format
+msgid "This coupon is invalid (%s)."
+msgstr ""
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "Used in"
+msgstr ""
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid ""
+"When clicked, the content of the order will be checked to detect (and apply)"
+" possible promotion programs."
+msgstr ""
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. All the "
+"products should be recorded on the sales order. (Example: You need to have 3"
+" T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr ""
+"Вы не имеете нужного количества товаров в заказе на продажу. Все товары "
+"должны быть записаны в заказе на продажу. (Пример: в вашем заказе должно "
+"быть 3 футболки, если рекламная акция - &quot;Покупай 2, получи 1 "
+"бесплатно&quot;)."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. If the "
+"reward is same product quantity, please make sure that all the products are "
+"recorded on the sales order (Example: You need to have 3 T-shirts on your "
+"sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr ""
+"Вы не имеете нужных товаров в заказе на продажу. Если награда такая же, как "
+"и количество товаров, то пожалуйста, убедитесь, что все товары записаны в "
+"заказе на продажу (например: в вашем заказе на продажу нужно иметь 3 "
+"футболки, если рекламная акция - &quot;Покупай 2, получи 1 бесплатно&quot;."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "limited to "
+msgstr "ограничено до"

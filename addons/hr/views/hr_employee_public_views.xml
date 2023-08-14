@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_employee_public_view_search" model="ir.ui.view">
+            <field name="name">hr.employee.search</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
+                    <field name="job_title" string="Job Title"/>
+                    <field name="department_id" string="Department"/>
+                    <field name="company_id" string="Company"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                    </group>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+             </field>
+        </record>
+
+        <record id="hr_employee_public_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.public.form</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <form string="Employee" create="0" write="0" js_class="hr_employee_form">
+                    <header/>
+                    <sheet>
+                        <field name="user_id" invisible="1"/>
+                        <field name="user_partner_id" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- Used by other modules-->
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                            <div class="oe_title">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" placeholder="Employee's Name" required="True"/>
+                                    <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                </h1>
+                                <h2>
+                                    <field name="job_title" placeholder="Job Title" />
+                                </h2>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="mobile_phone" widget="phone" options="{'enable_sms': false}"/>
+                                    <field name="work_phone" widget="phone" options="{'enable_sms': false}"/>
+                                    <field name="work_email" widget="email"/>
+                                    <field name="work_location"/>
+                                </group>
+                                <group>
+                                    <field name="department_id"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="parent_id"/>
+                                    <field name="coach_id"/>
+                                </group>
+                            </group>
+                        <notebook>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main">
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        </group>
+                                        <group name="managers" string="Approvers" invisible="1">
+                                            <!-- overridden in other modules -->
+                                        </group>
+                                        <group string="Schedule" groups="base.group_no_one">
+                                            <field name="resource_calendar_id"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_view_tree" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <tree string="Employees" sample="1">
+                    <field name="name"/>
+                    <field name="work_phone" class="o_force_ltr"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_title"/>
+                    <field name="parent_id"/>
+                    <field name="coach_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_view_kanban" model="ir.ui.view">
+            <field name="name">hr.employee.kanban</field>
+            <field name="model">hr.employee.public</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
+                    <field name="id"/>
+                    <field name="hr_presence_state"/>
+                    <field name="user_id"/>
+                    <field name="user_partner_id"/>
+                    <field name="last_activity"/>
+                    <field name="hr_icon_display"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <field name="image_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <div class="float-right"
+                                                 t-if="record.hr_icon_display.raw_value == 'presence_present'">
+                                                <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                                <span class="fa fa-circle text-success" role="img" aria-label="Present"
+                                                      title="Present" name="presence_present">
+                                                </span>
+                                            </div>
+                                            <div class="float-right"
+                                                 t-if="record.hr_icon_display.raw_value == 'presence_absent'">
+                                                <!-- Employee is absent and it is normal according to his work schedule  -->
+                                                <span class="fa fa-circle-o text-muted" role="img" aria-label="Absent"
+                                                      title="Absent" name="presence_absent">
+                                                </span>
+                                            </div>
+                                            <div class="float-right"
+                                                 t-if="record.hr_icon_display.raw_value == 'presence_absent_active'">
+                                                <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                                                <span class="fa fa-circle-o text-success" role="img"
+                                                      aria-label="Present but not active"
+                                                      title="Present but not active" name="presence_absent_active">
+                                                </span>
+                                            </div>
+                                            <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                            <div class="float-right"
+                                                 t-if="record.hr_icon_display.raw_value == 'presence_to_define'">
+                                                <span class="fa fa-circle text-warning" role="img"
+                                                      aria-label="To define" title="To define"
+                                                      name="presence_to_define">
+                                                </span>
+                                            </div>
+                                            <field name="name"/>
+                                        </strong>
+                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li id="last_login"/>
+                                    <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
+                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
+                                </ul>
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left"/>
+                                        <div class="oe_kanban_bottom_right">
+                                            <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_action" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee.public</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr_employee_public_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

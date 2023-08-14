@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="model">account.journal</field>
+        <field name="name">account.journal.form</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_latam_company_use_documents" invisible="1"/>
+            </form>
+            <field name="type" position="after">
+                <field name="l10n_latam_use_documents" attrs="{'invisible': ['|', ('l10n_latam_company_use_documents', '=', False), ('type', 'not in', ['purchase','sale'])]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

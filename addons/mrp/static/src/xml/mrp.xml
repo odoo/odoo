@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mrp.button">
+        <div class="o_list_buttons o_mrp_bom_report_buttons">
+            <button type="button" class="btn btn-primary o_mrp_bom_print">Print</button>
+            <t t-if="is_variant_applied">
+                <button type="button" class="btn btn-primary o_mrp_bom_print_all_variants">Print All Variants</button>
+            </t>
+            <button type="button" class="btn btn-primary o_mrp_bom_print_unfolded">Print Unfolded</button>
+        </div>
+    </t>
+
+    <form class="form-inline" t-name="mrp.report_bom_search">
+        <div class="form-group col-lg-4">
+            <label>Quantity:</label>
+            <div class="row">
+                <div class="col-lg-6">
+                    <input type="number" step="any" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty"/>
+                </div>
+                <div class="col-lg-6">
+                    <t t-if="is_uom_applied" t-esc="bom_uom_name"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="is_variant_applied" class="form-group col-lg-4">
+            <label>Variant:</label>
+            <select class="o_input o_mrp_bom_report_variants">
+                <option t-foreach="variants" t-as="variant" t-att-value="variant">
+                    <t t-esc="variants[variant]"/>
+                </option>
+            </select>
+        </div>
+        <div t-attf-class="form-group #{is_variant_applied ? 'col-lg-4' : 'col-lg-8'}">
+            <label>Report:</label>
+            <select class="o_input o_mrp_bom_report_type">
+                <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
+                <option t-att-data-type="'bom_structure'">BoM Structure</option>
+            </select>
+        </div>
+    </form>
+
+    <div t-name="mrp.workorderPopover">
+        <t t-foreach="infos" t-as="info">
+            <i t-attf-class="fa fa-arrow-right mr-2 #{ info.color }"></i><t t-esc="info.msg"/><br/>
+        </t>
+        <button t-if="replan" class="btn btn-primary action_replan_button">Replan</button>
+    </div>
+
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="mail_test_multi_company_rule" model="ir.rule">
+            <field name="name">Mail Test Multi Company</field>
+            <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="mail_test_multi_company_with_activity_rule" model="ir.rule">
+            <field name="name">Mail Test Multi Company With Activity</field>
+            <field name="model_id" ref="test_mail.model_mail_test_multi_company_with_activity"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+</odoo>

@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_vat
+# 
+# Translators:
+# Paolo Valier, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
+"specifici per azienda.\" aria-label=\"I valori impostati qui sono specifici "
+"per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "<span class=\"o_vat_label\">VAT</span>"
+msgstr "<span class=\"o_vat_label\">Partita IVA</span>"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Contact"
+msgstr "Contatto"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+"Se la casella viene selezionata, non sarà possibile salvare un contatto se "
+"la partita IVA non supera la verifica del servizio europeo VIES."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
+"Note: the expected format is %(format)s"
+msgstr ""
+"La partita IVA [%(vat)s] del partner [%(name)s] non sembra essere valida. \n"
+"Nota: il formato atteso è %(format)s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
+"validation check or did not respect the expected format %(format)s."
+msgstr ""
+"La partita IVA [%(vat)s] del partner [%(name)s] non ha superato la verifica "
+"di validità VIES oppure non rispetta il formato %(format)s atteso."
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "VAT"
+msgstr "Partita IVA"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "Verificare le partite IVA"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "Verifica delle partite IVA con il servizio europeo VIES"

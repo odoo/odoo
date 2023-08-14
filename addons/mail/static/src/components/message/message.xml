@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Message" owl="1">
+        <div class="o_Message"
+            t-att-class="{
+                'o-clicked': state.isClicked,
+                'o-discussion': message and (message.is_discussion or message.is_notification),
+                'o-mobile': env.messaging.device.isMobile,
+                'o-not-discussion': message and !(message.is_discussion or message.is_notification),
+                'o-notification': message and message.message_type === 'notification',
+                'o-selected': props.isSelected,
+                'o-squashed': props.isSquashed,
+                'o-starred': message and message.isStarred,
+            }" role="group" t-att-aria-label="message and message.messageTypeText" t-on-click="_onClick" t-att-data-message-local-id="message and message.localId"
+        >
+            <t t-if="message" name="rootCondition">
+                <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed': props.isSquashed }">
+                    <t t-if="!props.isSquashed">
+                        <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
+                            <img class="o_Message_authorAvatar rounded-circle" t-att-class="{ o_Message_authorRedirect: hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="avatar" role="button" tabindex="0" t-on-click="_onClickAuthorAvatar" t-att-title="hasAuthorOpenChat ? OPEN_CHAT : ''" t-att-alt="hasAuthorOpenChat ? OPEN_CHAT : ''"/>
+                            <t t-if="message.author and message.author.im_status">
+                                <PartnerImStatusIcon
+                                    class="o_Message_partnerImStatusIcon"
+                                    t-att-class="{
+                                        'o-message-not-discussion': !(message.is_discussion or message.is_notification),
+                                        'o-message-selected': props.isSelected,
+                                        'o_Message_partnerImStatusIcon-mobile': env.messaging.device.isMobile,
+                                    }"
+                                    hasOpenChat="hasAuthorOpenChat"
+                                    partnerLocalId="message.author.localId"
+                                />
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-if="message.date">
+                            <div class="o_Message_date o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected }">
+                                <t t-esc="shortTime"/>
+                            </div>
+                        </t>
+                        <div class="o_Message_commands o_Message_sidebarCommands o_Message_sidebarItem o-message-squashed" t-att-class="{ 'o-message-selected': props.isSelected, 'o-mobile': env.messaging.device.isMobile }">
+                            <t t-if="message.message_type !== 'notification'">
+                                <div class="o_Message_command o_Message_commandStar fa"
+                                    t-att-class="{
+                                        'fa-star': message.isStarred,
+                                        'fa-star-o': !message.isStarred,
+                                        'o-message-selected': props.isSelected,
+                                        'o-message-starred': message.isStarred,
+                                        'o-mobile': env.messaging.device.isMobile,
+                                    }" t-on-click="_onClickStar"
+                                />
+                            </t>
+                        </div>
+                        <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
+                            <MessageSeenIndicator class="o_Message_seenIndicator o-message-squashed" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
+                        </t>
+                    </t>
+                </div>
+                <div class="o_Message_core">
+                    <t t-if="!props.isSquashed">
+                        <div class="o_Message_header">
+                            <t t-if="message.author">
+                                <div class="o_Message_authorName o_Message_authorRedirect o_redirect" role="link" tabindex="0" t-on-click="_onClickAuthorName" title="Open profile">
+                                    <t t-if="threadView and threadView.thread">
+                                        <t t-esc="threadView.thread.getMemberName(message.author)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="message.author.nameOrDisplayName"/>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-elif="message.email_from">
+                                <a class="o_Message_authorName" t-attf-href="mailto:{{ message.email_from }}?subject=Re: {{ message.subject ? message.subject : '' }}">
+                                    <t t-esc="message.email_from"/>
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <div class="o_Message_authorName">
+                                    Anonymous
+                                </div>
+                            </t>
+                            <t t-if="message.date">
+                                <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': props.isSelected }" t-att-title="datetime">
+                                    - <t t-esc="message.dateFromNow"/>
+                                </div>
+                            </t>
+                            <t t-if="message.isCurrentPartnerAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
+                                <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
+                            </t>
+                            <t t-if="threadView and message.originThread and message.originThread !== threadView.thread">
+                                <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
+                                    <t t-if="message.originThread.model === 'mail.channel'">
+                                        (from <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="message.originThread.name">#<t t-esc="message.originThread.name"/></t><t t-else="">channel</t></a>)
+                                    </t>
+                                    <t t-else="">
+                                        on <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="message.originThread.name"><t t-esc="message.originThread.name"/></t><t t-else="">document</t></a>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-if="message.moderation_status === 'pending_moderation' and !message.isModeratedByCurrentPartner">
+                                <span class="o_Message_moderationPending o-author" title="Your message is pending moderation.">Pending moderation</span>
+                            </t>
+                            <t t-if="threadView and message.originThread and message.originThread === threadView.thread and message.notifications.length > 0">
+                                <t t-if="message.failureNotifications.length > 0">
+                                    <span class="o_Message_notificationIconClickable o-error" role="button" tabindex="0" t-on-click="_onClickFailure">
+                                        <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
+                                    </span>
+                                </t>
+                                <t t-else="">
+                                    <Popover>
+                                        <span class="o_Message_notificationIconClickable">
+                                            <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
+                                        </span>
+                                        <t t-set="opened">
+                                            <NotificationPopover
+                                                notificationLocalIds="message.notifications.map(notification => notification.localId)"
+                                            />
+                                        </t>
+                                    </Popover>
+                                </t>
+                            </t>
+                            <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                                <t t-if="!message.isTemporary and ((message.message_type !== 'notification' and message.originThread and message.originThread.model === 'mail.channel') or !message.isTransient) and message.moderation_status !== 'pending_moderation'">
+                                    <span class="o_Message_command o_Message_commandStar o_Message_headerCommand fa"
+                                        t-att-class="{
+                                            'fa-star': message.isStarred,
+                                            'fa-star-o': !message.isStarred,
+                                            'o-message-selected': props.isSelected,
+                                            'o-message-starred': message.isStarred,
+                                            'o-mobile': env.messaging.device.isMobile,
+                                        }" role="button" tabindex="0" aria-label="Mark as Todo" t-att-aria-pressed="message.isStarred ? 'true' : 'false'" t-on-click="_onClickStar" title="Mark as Todo"
+                                    />
+                                </t>
+                                <t t-if="props.hasReplyIcon">
+                                    <span class="o_Message_command o_Message_commandReply o_Message_headerCommand fa fa-reply"
+                                        t-att-class="{
+                                            'o-message-selected': props.isSelected,
+                                            'o-mobile': env.messaging.device.isMobile,
+                                        }" role="button" tabindex="0" aria-label="Reply" t-on-click="_onClickReply" title="Reply"
+                                    />
+                                </t>
+                                <t t-if="props.hasMarkAsReadIcon">
+                                    <span class="o_Message_command o_Message_commandMarkAsRead o_Message_headerCommand fa fa-check"
+                                        t-att-class="{
+                                            'o-message-selected': props.isSelected,
+                                            'o-mobile': env.messaging.device.isMobile,
+                                        }" role="button" tabindex="0" aria-label="Mark as Read" t-on-click="_onClickMarkAsRead" title="Mark as Read"
+                                    />
+                                </t>
+                            </div>
+                        </div>
+                        <t t-if="message.isModeratedByCurrentPartner">
+                            <div class="o_Message_moderationSubHeader">
+                                <t t-if="threadView and props.hasCheckbox and message.hasCheckbox">
+                                    <input class="o_Message_checkbox" type="checkbox" t-att-checked="message.isChecked(threadView.thread, threadView.stringifiedDomain) ? 'checked': ''" t-on-change="_onChangeCheckbox" t-ref="checkbox"/>
+                                </t>
+                                <span class="o_Message_moderationPending">Pending moderation:</span>
+                                <a class="o_Message_moderationAction o-accept" href="#" title="Accept" t-on-click="_onClickModerationAccept">Accept</a>
+                                <a class="o_Message_moderationAction o-reject" href="#" title="Remove message with explanation" t-on-click="_onClickModerationReject">Reject</a>
+                                <a class="o_Message_moderationAction o-discard" href="#" title="Remove message without explanation" t-on-click="_onClickModerationDiscard">Discard</a>
+                                <a class="o_Message_moderationAction o-allow" href="#" title="Add this email address to white list of people" t-on-click="_onClickModerationAllow">Always Allow</a>
+                                <a class="o_Message_moderationAction o-ban" href="#" title="Ban this email address" t-on-click="_onClickModerationBan">Ban</a>
+                            </div>
+                        </t>
+                    </t>
+                    <div class="o_Message_content" t-ref="content">
+                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                        <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
+                            <p t-esc="message.subtype_description"/>
+                        </t>
+                        <t t-if="trackingValues.length > 0">
+                            <ul class="o_Message_trackingValues">
+                                <t t-foreach="trackingValues" t-as="value" t-key="value.id">
+                                    <li>
+                                        <div class="o_Message_trackingValue" role="group">
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
+                                            <t t-if="value.old_value">
+                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
+                                            </t>
+                                            <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                            <t t-if="value.new_value">
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
+                                            </t>
+                                        </div>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                    <t t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and threadView and threadView.thread and (threadView.thread.mass_mailing or [env.messaging.inbox, env.messaging.history].includes(threadView.thread))">
+                        <p class="o_Message_subject">Subject: <t t-esc="message.subject"/></p>
+                    </t>
+                    <t t-if="message.attachments and message.attachments.length > 0">
+                        <div class="o_Message_footer">
+                            <AttachmentList
+                                class="o_Message_attachmentList"
+                                areAttachmentsDownloadable="true"
+                                areAttachmentsEditable="message.author === env.messaging.currentPartner"
+                                attachmentLocalIds="message.attachments.map(attachment => attachment.localId)"
+                                attachmentsDetailsMode="props.attachmentsDetailsMode"
+                            />
+                        </div>
+                    </t>
+                </div>
+                <t t-if="state.hasModerationBanDialog">
+                    <ModerationBanDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationBan"/>
+                </t>
+                <t t-if="state.hasModerationDiscardDialog">
+                    <ModerationDiscardDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
+                </t>
+                <t t-if="state.hasModerationRejectDialog">
+                    <ModerationRejectDialog messageLocalIds="[message.localId]" t-on-dialog-closed="_onDialogClosedModerationReject"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

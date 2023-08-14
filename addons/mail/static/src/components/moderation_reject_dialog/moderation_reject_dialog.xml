@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ModerationRejectDialog" owl="1">
+        <Dialog contentClass="'o_ModerationRejectDialog'" title="SEND_EXPLANATION_TO_AUTHOR" size="'medium'" t-ref="dialog">
+            <input class="o_ModerationRejectDialog_title form-control" type="text" placeholder="Subject" autofocus="autofocus" t-model="state.title"/>
+            <textarea class="o_ModerationRejectDialog_comment form-control mt16" placeholder="Mail Body" t-model="state.comment"/>
+            <t t-set-slot="buttons">
+                <button class="o-reject btn btn-primary" t-on-click="_onClickReject">Reject</button>
+                <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,227 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_stripe
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Camille Dantinne <cmd@odoo.com>, 2022
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
+msgid ""
+"A relative or absolute URL pointing to a square image of your brand or "
+"product. As defined in your Stripe profile. See: "
+"https://stripe.com/docs/checkout"
+msgstr ""
+"Une URL absolue ou relative pointant vers une image carrée de votre marque "
+"ou produit. Comme définie dans votre profil Stripe. Consultez "
+"https://stripe.com/docs/checkout"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
+msgid "Checkout Image URL"
+msgstr "URL de l'image de paiement"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid ""
+"If you enable webhooks, this secret is used to verify the electronic "
+"signature of events sent by Stripe to Odoo. Failing to set this field in "
+"Odoo will disable the webhook system for this acquirer entirely."
+msgstr ""
+"Si vous activez les webhooks, le secret est de vérifier la signature "
+"électronique des événements envoyée par Stripe à Odoo. Si vous ne définissez"
+" pas ce champ dans Odoo, le système des webhooks pour ce fournisseur sera "
+"entièrement désactivé."
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#, python-format
+msgid "Just one more second, We are redirecting you to Stripe..."
+msgstr "Encore une seconde, nous vous redirigeons vers Stripe ..."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Intermédiaire de paiement"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Payment Method ID"
+msgstr "ID du mode de paiement"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr "Jeton de paiement"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#, python-format
+msgid "Payment error"
+msgstr "Échec du paiement"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
+msgstr ""
+"Vérifiez les informations de votre carte bancaire ou contactez votre banque."
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: payment_stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
+msgstr "ID d'intention de paiement Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
+msgid "Stripe Payment Intent Secret"
+msgstr "Stripe Payment Intent Secret"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "Stripe Publishable Key"
+msgstr "Clé publique Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+msgid "Stripe Secret Key"
+msgstr "Clé secrète Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "Stripe Webhook Secret"
+msgstr "Secret webhook Stripe"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr ""
+"Stripe nous a transmis les informations suivantes concernant le problème : "
+"%s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe: %(count)s orders found for reference %(reference)s"
+msgstr "Stripe : %(count)s commandes trouvées pour la référence %(reference)s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe: no order found for reference %s"
+msgstr "Stripe : aucune commande trouvée pour la référence %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid ""
+"Unable to convert Stripe customer for SCA compatibility. Is there at least "
+"one card for this customer in the Stripe backend?"
+msgstr ""
+"Impossible de convertir le client Stripe pour la compatibilité SCA. Existe-"
+"t-il au moins une carte pour ce client dans le backend Stripe ?"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Unable to save card"
+msgstr "Impossible d'enregistrer la carte"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment. "
+msgstr ""
+"Nous ne sommes pas en mesure d'ajouter votre méthode de paiement pour le "
+"moment."
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr "Nous sommes désolés de vous informer que la transaction a échoué."

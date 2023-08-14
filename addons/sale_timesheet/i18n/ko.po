@@ -1,0 +1,1726 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_timesheet
+# 
+# Translators:
+# Link Up링크업 <linkup.way@gmail.com>, 2020
+# Seongseok Shin <shinss61@hotmail.com>, 2020
+# Martin Trigaux, 2020
+# JH CHOI <hwangtog@gmail.com>, 2020
+# Linkup <link-up@naver.com>, 2021
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account_move.py:0
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Record timesheets\n"
+"                </p><p>\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    customers if required.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    작업 기록\n"
+"                </p><p>\n"
+"                    매일 프로젝트별 작업시간을 입력하거나 추적할 수 있습니다.\n"
+"                    프로젝트에서 모든 시간 사용은 비용으로 변경되며\n"
+"                    필요시 청구서 재발행이 가능합니다.\n"
+"                </p>\n"
+"            "
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
+msgid " Candidate Orders"
+msgstr "잠재 주문"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "%(amount)s %(label)s will be added to the new Sales Order."
+msgstr "%(amount)s %(label)s가 새로운 판매 주문서에 추가됩니다. "
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "%(amount)s %(label)s will be added to the selected Sales Order."
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "<b>Total</b>"
+msgstr "<b>합계</b>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
+msgid ""
+"<i class=\"ml-2 fa fa-exclamation-triangle text-danger small\" role=\"img\" "
+"title=\"Some of the employees who are recording time on this project are not"
+" linked to any Sales Order Item. This means that their time will be "
+"considered as non-billable.\" aria-label=\"Some of the employees who are "
+"recording time on this project are not linked to any Sales Order Item. This "
+"means that their time will be considered as non-billable.\"/>"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                Non Billable Tasks\n"
+"                                                            </span>"
+msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                청구 불가능한 작업\n"
+"                                                            </span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
+"                                                                Non Billable Timesheets\n"
+"                                                            </span>"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Time Billing</span>"
+msgstr "<span class=\"o_form_label\">시간 청구</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
+msgid "<span class=\"o_label\">Overview</span>"
+msgstr "<span class=\"o_label\">개요</span>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "<span class=\"o_stat_text\">Recorded</span>"
+msgstr "<span class=\"o_stat_text\">기록됨</span>"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"A billable project should be linked to a Sales Order Item having a Service "
+"product."
+msgstr "청구 가능한 프로젝트는 서비스 제품이 있는 판매 주문 항목에 연결되어야 합니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"A billable project should be linked to a Sales Order Item that does not come"
+" from an expense or a vendor bill."
+msgstr "청구 가능한 프로젝트는 비용 또는 공급업체 청구서가 아닌 판매 주문 항목에 연결되어야 합니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"상품 환경 설정에 따라 수령 수량은 메커니즘에 의해 자동으로 계산 될 수 있습니다. :\n"
+"- 수동 : 수량은 내역에서 수동으로 설정됩니다. \n"
+"- 비용 분석 : 수량은 게시된 비용의 수량 합계입니다.\n"
+"- 작업 기록 : 수량은 이 판매 내역에 연결된 작업에 기록된 시간의 합계입니다.\n"
+"재고 이동 : 수량은 확정된 불출에서 나옵니다.\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"All revenues that are not from timesheets and that are linked to the "
+"analytic account of the project."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"All timesheet hours that are not yet invoiced will be assigned to the "
+"selected Project on save. Discard to avoid the change."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"All timesheet hours that are not yet invoiced will be assigned to the "
+"selected Sales Order Item on save. Discard to avoid the change."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"All timesheet hours that are not yet invoiced will be removed from Sales "
+"Order on save. Discard to avoid the change."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"All timesheet hours that are not yet invoiced will be removed from the "
+"selected Sales Order Item on save. Discard to avoid the change."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"All timesheet hours will be assigned to the selected Sales Order Item on "
+"save. Discard to avoid the change."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid "Amount to invoice"
+msgstr "청구할 금액"
+
+#. module: sale_timesheet
+#: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
+#: model:ir.model.constraint,message:sale_timesheet.constraint_project_sale_line_employee_map_uniqueness_employee
+msgid ""
+"An employee cannot be selected more than once in the mapping. Please remove "
+"duplicate(s) and try again."
+msgstr "매핑에서 직원을 두 번 이상 선택할 수 없습니다. 중복을 제거하고 다시 시도하십시오."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__analytic_account_id
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "분석 라인"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
+msgid "Analytic lines"
+msgstr "분석 라인"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Any cost linked to the Analytic Account of the Project."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid "At least one line should be filled."
+msgstr "최소한 한 줄을 채워야 합니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Before"
+msgstr "이전"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billable"
+msgstr "청구 가능"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billable Type"
+msgstr "청구 가능 유형"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed at a Fixed Price"
+msgstr "고정 가격으로 청구"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Billed at a Fixed price"
+msgstr "고정 가격으로 청구"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billed on Timesheets"
+msgstr "작업 기록에서 청구됨"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Billing"
+msgstr "청구"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_1
+#: model:project.task,legend_blocked:sale_timesheet.project_task_2
+#: model:project.task,legend_blocked:sale_timesheet.project_task_3
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Blocked"
+msgstr "거부됨"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_4
+msgid "Buzz or set as done"
+msgstr "알림 또는 완료로 설정"
+
+#. module: sale_timesheet
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
+msgid "By Billing Type"
+msgstr "청구 유형별"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Cancelled"
+msgstr "취소 됨"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
+msgid "Choose the Sales Order to invoice"
+msgstr "청구할 판매 주문 선택하기"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__commercial_partner_id
+msgid "Commercial Entity"
+msgstr "상업 항목"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__company_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Company"
+msgstr "회사"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Configure your services"
+msgstr "서비스 구성"
+
+#. module: sale_timesheet
+#: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
+msgid "Costs and Revenues"
+msgstr "비용과 수익"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"Costs from expenses that were reinvoiced to your customer (provided that the"
+" Analytic Account of the Project was set on the Expense)."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#, python-format
+msgid "Create Invoice"
+msgstr "청구서 생성"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create Invoice from project"
+msgstr "프로젝트에서 청구서 만들기"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
+msgid "Create SO Line from project"
+msgstr "프로젝트에서 판매 주문 명세 만들기"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create SO from project"
+msgstr "프로젝트에서 판매 주문 만들기"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task_create_sale_order
+msgid "Create SO from task"
+msgstr "작업에서 판매 주문 생성"
+
+#. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/models/project.py:0
+#: code:addons/sale_timesheet/models/project.py:0
+#: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+#, python-format
+msgid "Create Sales Order"
+msgstr "판매 주문 만들기"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+msgid "Create Sales Order from Project"
+msgstr "프로젝트에서 판매 주문 만들기"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
+#: model:ir.actions.act_window,name:sale_timesheet.project_task_action_multi_create_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
+#, python-format
+msgid "Create a Sales Order"
+msgstr "판매 주문 만들기"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__link_selection__create
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task_create_sale_order__link_selection__create
+msgid "Create a new sales order"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__currency_id
+msgid "Currency"
+msgstr "환율"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Customer"
+msgstr "고객"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr "고객 관리 (선불 시간)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
+msgid "Invoice Tasks to"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__partner_id
+msgid "Customer of the sales order"
+msgstr "판매 주문의 고객"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__line_date
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Days"
+msgstr "일"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Days Spent"
+msgstr "소요 일자"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Days recorded"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid "Default Sales Order Item"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid "Default Service"
+msgstr "기본 서비스"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+msgid "Description"
+msgstr "내용"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_create_order
+msgid "Display Create Order"
+msgstr "주문 생성 표시"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Documentation"
+msgstr "문서화"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+msgid "Duration (days)"
+msgstr "기간 (일)"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+msgid "Duration (hours)"
+msgstr "기간 (시간)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Employee"
+msgstr "임직원"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
+msgid "Employee rate"
+msgstr "직원 비율"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
+msgid "Employee that has timesheets on the project."
+msgstr "프로젝트에 작업 기록이 있는 직원"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Employee/Sale Order Item Mapping:\n"
+" Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
+msgstr ""
+"직원 / 판매 주문 항목 매핑 : \n"
+" 직원의 작업 기록 항목을 연결할 판매 주문 항목을 정의합니다. 확장을 통해 프로젝트에서 직원의 시간이 청구되는 비율을 정의합니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
+msgid "End Date"
+msgstr "종료일"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Fixed price services"
+msgstr "고정 가격 서비스"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
+msgid "Project rate"
+msgstr "프로젝트 비율"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
+msgid "Has Multi Sol"
+msgstr "다중 Sol 있음"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
+#, python-format
+msgid "Hours"
+msgstr "시간"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Hours Spent"
+msgstr "소요 시간"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Hours recorded"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.project_task_1
+#: model:project.task,legend_normal:sale_timesheet.project_task_2
+#: model:project.task,legend_normal:sale_timesheet.project_task_3
+#: model:project.task,legend_normal:sale_timesheet.project_task_4
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+msgid "In Progress"
+msgstr "진행 중"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"Includes the time logged from the Timesheet module that is linked to a "
+"project, but not to a task."
+msgstr "작업 시간이 아닌 프로젝트에 연결된 작업 기록 모듈에서 기록된 시간을 포함합니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"Includes the time logged into a task which is linked to a cancelled Sales "
+"Order."
+msgstr "취소된 판매 주문에 연결된 작업에 로그인한 시간을 포함합니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"Includes the time logged into tasks for which you invoice based on ordered "
+"quantities or on milestones."
+msgstr "주문 수량 또는 마일스톤을 기준으로 송장을 작성하는 작업에 로그인한 시간을 포함합니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"Includes the time logged into tasks for which you invoice based on "
+"timesheets on tasks."
+msgstr "작업에 대한 작업 기록을 기반으로 청구서를 작성하는 작업에 로그인한 시간을 포함합니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__info_invoice
+msgid "Info Invoice"
+msgstr "청구서 정보"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
+msgid "Invoice"
+msgstr "청구서"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
+msgid "A unique customer"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
+msgid "Invoice created from the timesheet"
+msgstr "작업 기록에서 생성된 청구서"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
+msgid "Different customers"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__allow_billable
+msgid "Invoice your time and material from tasks."
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid "Invoice your time and material to customers"
+msgstr "시간 및 재료를 고객에게 청구하십시오"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Invoiced"
+msgstr "청구서 발행됨"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Invoices"
+msgstr "청구서"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+msgid "Invoicing"
+msgstr "청구서 발행"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
+msgid "Invoicing Timesheet Enabled"
+msgstr "작업기록 청구서 활성화"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
+msgid "Is Project map empty"
+msgstr "프로젝트 맵이 비었는지 여부"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move
+msgid "Journal Entry"
+msgstr "분개"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_move_line
+msgid "Journal Item"
+msgstr "분개 항목"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr "초급 건축가 (작업 기록 청구)"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Kitchen Assembly (Milestones)"
+msgstr "주방 조립 (마일스톤)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_recurrence____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Late"
+msgstr "지연"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_task_form2_inherit_sale_timesheet
+msgid "Leave empty if non-billable"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
+msgid "Lines"
+msgstr "명세"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__link_selection
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__link_selection
+msgid "Link Selection"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
+msgid "Link to Sales Order"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__link_selection__link
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_task_create_sale_order__link_selection__link
+msgid "Link to an existing sales order"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+msgstr ""
+"주문에서 수량을 수동으로 설정합니다. : 송장에 자동으로 생성되지 않고, 수동으로 수량을 입력하여 반영합니다. \n"
+"작업 기록의 연락처 : 송장에 관련된 작업 기록에 추적된 시간을 반영합니다. \n"
+"작업 생성 및 시간 추적 : 판매 주문 승인에서 작업을 생성하고 작업 시간을 추적합니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__margin
+msgid "Margin"
+msgstr "이윤"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr "배송 수량을 갱신하는 방법"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Milestone services"
+msgstr "이정표 서비스"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
+msgid "Milestones (manually set quantities on order)"
+msgstr "이정표 (수동으로 주문 수량 설정)"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "My Projects"
+msgstr "내 프로젝트"
+
+#. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_4
+msgid "Need functional or technical help"
+msgstr "기능적 또는 기술적 도움이 필요함"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "No Sales Order"
+msgstr "판매 주문 없음"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "No Sales Order Line"
+msgstr "판매 주문 내역 없음"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable_project
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "No task found"
+msgstr "작업을 찾을 수 없음"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Non Billable"
+msgstr "청구 불가"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Non Billable Tasks"
+msgstr "청구 불가 작업"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable_timesheet
+msgid "Non Billable Timesheet"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non billable tasks"
+msgstr "청구 불가 작업"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non billable timesheets"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__non_allow_billable
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__non_allow_billable
+msgid "Non-Billable"
+msgstr "청구 불가"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_count
+msgid "Number of timesheets"
+msgstr "작업 기록 수"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
+msgid ""
+"Only timesheets not yet invoiced (and validated, if applicable) from this "
+"period will be invoiced. If the period is not indicated, all timesheets not "
+"yet invoiced (and validated, if applicable) will be invoiced without "
+"distinction."
+msgstr ""
+"이 기간부터 아직 청구되지 않은(해당되는 경우 승인 완료된) 작업기록이 청구됩니다. 기간이 따로 명시되지 않은 경우 아직 청구되지 "
+"않은(해당되는 경우 승인 완료된) 모든 작업기록이 청구됩니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
+msgid "Prepaid"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
+msgid "Other Costs"
+msgstr "기타 비용"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Other Revenues"
+msgstr "기타 수익"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Other costs"
+msgstr "기타 비용"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
+msgid "Overview"
+msgstr "입출고 현황"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__pricing_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__pricing_type
+msgid "Pricing"
+msgstr "가격 책정"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_product
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
+msgid "Product"
+msgstr "상품"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_template
+msgid "Product Template"
+msgstr "상품 양식"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
+msgid ""
+"Product of the sales order item. Must be a service invoiced based on "
+"timesheets on tasks."
+msgstr "판매 주문 항목의 상품. 작업에 대한 작업 기록을 기준으로 청구 처리된 서비스여야 합니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__product_id
+msgid ""
+"Product of the sales order item. Must be a service invoiced based on "
+"timesheets on tasks. The existing timesheet will be linked to this product."
+msgstr ""
+"판매 주문 항목의 상품입니다. 작업의 작업 기록을 기준으로 청구 처리된 서비스여야 합니다. 기존 작업 기록이 이 상품에 연결됩니다."
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
+msgid "Products"
+msgstr "상품"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Profitability"
+msgstr "수익성"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_graph
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Profitability Analysis"
+msgstr "수익성 분석"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:ir.model,name:sale_timesheet.model_project_project
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__project_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+#, python-format
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
+msgid "Project Company"
+msgstr "프로젝트 회사"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
+#: model:ir.ui.menu,name:sale_timesheet.menu_project_profitability_analysis
+msgid "Project Costs and Revenues"
+msgstr "프로젝트 비용과 수익"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
+msgid "Project Currency"
+msgstr "프로젝트 통화"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Project Manager"
+msgstr "프로젝트 관리자"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Project Overview"
+msgstr "프로젝트 개요"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_profitability_report
+msgid "Project Profitability Report"
+msgstr "프로젝트 수익성 보고서"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
+msgstr "프로젝트 판매 내역, 직원 매핑"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
+msgid "Project Template"
+msgstr "프로젝트 서식"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
+msgid "Project for which we are creating a sales order"
+msgstr "판매 주문을 생성하는 프로젝트"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
+msgid "Project to make billable"
+msgstr "청구 가능 프로젝트"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Projects"
+msgstr "프로젝트"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Re-invoiced costs"
+msgstr "재청구된 비용"
+
+#. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_1
+#: model:project.task,legend_done:sale_timesheet.project_task_2
+#: model:project.task,legend_done:sale_timesheet.project_task_3
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready"
+msgstr "준비"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Recorded"
+msgstr "기록됨"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Recorded Days and Profitability"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Recorded Hours and Profitability"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Remaining"
+msgstr "잔여"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Revenues linked to Timesheets already invoiced."
+msgstr "청구서가 발행된 타임시트에 연결된 수익"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Revenues linked to Timesheets not yet invoiced."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
+msgid "Sale Order"
+msgstr "판매 주문"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
+msgid "Sale Order Item"
+msgstr "판매 주문 항목"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
+msgid "Sale Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid "Sale line/Employee map"
+msgstr "판매 내역/직원 맵"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "선결제 주문 청구서"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:ir.model,name:sale_timesheet.model_sale_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__sale_order_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+#, python-format
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
+msgid "Sales Order Confirmation Date"
+msgstr "판매 주문 확인 날짜"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_line_id
+msgid "Sales Order Item"
+msgstr "판매 주문 항목"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 명세"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Sales Orders"
+msgstr "판매 주문"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
+msgid "Sales order to which the task is linked."
+msgstr "작업이 연결된 판매 주문."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
+msgid ""
+"Select a Service product with which you would like to bill your time spent "
+"on tasks."
+msgstr "작업에 소비한 시간을 청구할 서비스 제품을 선택하십시오."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__timesheet_product_id
+msgid ""
+"Select a Service product with which you would like to bill your time spent "
+"on this task."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
+msgid ""
+"Select a billable project on which tasks can be created. This setting must "
+"be set for each company."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
+msgid ""
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
+msgid "Select a non billable project on which tasks can be created."
+msgstr "작업을 만들 수 있는 청구 불가능한 프로젝트를 선택하십시오."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr "시간사용에 대한 서비스 판매와 청구서 발행"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr "고급 건축가 (작업 기록 청구)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__timesheet_product_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__product_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form_simplified_inherit
+msgid "Service"
+msgstr "서비스"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
+msgid "Service Invoicing Policy"
+msgstr "서비스 청구 정책"
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.time_product
+#: model:product.template,name:sale_timesheet.time_product_product_template
+msgid "Service on Timesheet"
+msgstr "작업 기록에 서비스"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Sold"
+msgstr "팔림"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Statistics"
+msgstr "통계"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__task_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+msgid "Task"
+msgstr "작업"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "반복되는 작업"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__task_id
+msgid "Task for which we are creating a sales order"
+msgstr "판매 주문을 생성하는 작업"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:project.project,label_tasks:sale_timesheet.project_support
+#, python-format
+msgid "Tasks"
+msgstr "작업"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheet app and cannot be "
+"archived/deleted."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid ""
+"The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
+"Missing employee(s): %s"
+msgstr ""
+"이 프로젝트에서 작업 기록을 입력한 일부 직원을 입력하지 않았으므로 판매 주문을 작성할 수 없습니다. 판매 주문을 작성하기 전에 관련 직원을 모두 기재해 주십시오.\n"
+"누락된 직원 : %s"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__analytic_account_id
+msgid "The analytic account related to a sales order."
+msgstr "판매 주문과 관련된 분석 계정."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__pricing_type
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__pricing_type
+msgid ""
+"The fixed rate is perfect if you bill a service at a fixed rate per hour or "
+"day worked regardless of the employee who performed it. The employee rate is"
+" preferable if your employees deliver the same service at a different rate. "
+"For instance, junior and senior consultants would deliver the same service "
+"(= consultancy), but at a different rate because of their level of "
+"seniority."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid "The project has already a sale order."
+msgstr "이미 프로젝트에 판매 주문이 있습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid "The project is already linked to a sales order item."
+msgstr "프로젝트가 이미 판매 주문 항목에 연결되어 있습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid ""
+"The sales order cannot be created because some timesheets of this project "
+"are already linked to another sales order."
+msgstr "이 프로젝트의 일부 작업 기록이 이미 다른 판매 주문에 연결되어 있으므로 판매 주문을 작성할 수 없습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
+#, python-format
+msgid "The selected Sales Order should contain something to invoice."
+msgstr "선택한 판매 주문에는 청구서에 무언가가 포함되어 있어야 합니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "The task has already a sale order."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "The task is already linked to a sales order item."
+msgstr "이 작업은 이미 판매 주문 항목에 연결되어 있습니다."
+
+#. module: sale_timesheet
+#: model:ir.model.constraint,message:sale_timesheet.constraint_project_project_timesheet_product_required_if_billable_and_timesheets
+msgid ""
+"The timesheet product is required when the task can be billed and timesheets"
+" are allowed."
+msgstr "작업 대금이 청구되고 작업 기록이 허용되는 경우에만 작업 기록 상품이 필요합니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "There are no timesheets for now."
+msgstr "현재 작업 기록이 없습니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid ""
+"This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
+"employees."
+msgstr "이 비용은 직원의 HR 설정에 설정된 \"작업 기록 비용\"을 기준으로 합니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
+msgid ""
+"This report allows you to analyse the profitability of your projects: "
+"compare the amount to invoice, the ones already invoiced and the project "
+"cost (via timesheet cost of your employees)."
+msgstr ""
+"이 보고서를 통해 프로젝트의 수익성을 분석 할 수 있습니다. 청구할 금액, 이미 청구된 금액 및 프로젝트 비용(직원의 작업 기록 비용을 "
+"통해)을 비교합니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid ""
+"This timesheet line cannot be billed: there is no Sale Order Item defined on"
+" the task, nor on the project. Please define one to save your timesheet "
+"line."
+msgstr ""
+"이 작업 기록 내역은 대금을 청구할 수 없습니다. 작업이나 프로젝트에 판매 주문 항목이 정의되어 있지 않습니다. 작업 기록 내역을 "
+"저장하기 위해 하나를 정의하십시오."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
+msgid ""
+"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
+"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
+msgstr ""
+"이것은 작업 기록을 표시하는 데 사용되는 측정 단위를 설정합니다.\n"
+"그러면 표시하는데 도움이 되는 간단한 도구와 위젯을 제공합니다. 그러더라도 모든 보고는 여전히 시간(기본값) 단위로 표시됩니다."
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Time by people"
+msgstr "사람별 시간"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
+msgid "Time-based services"
+msgstr "시간 기반 서비스"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
+msgid "Timesheet"
+msgstr "작업 기록"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
+msgid "Timesheet Cost"
+msgstr "작업 기록 비용"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
+msgid "Timesheet Costs"
+msgstr "작업 기록 비용"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
+msgid "Timesheet Duration"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
+msgid "Timesheet Encoding Unit"
+msgstr "작업 기록 표시 단위"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
+msgid "Timesheet Product"
+msgstr "작업 기록 상품"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
+msgid "Timesheet Total Duration"
+msgstr "작업 기록 전체 기간"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
+msgid "Timesheet activities"
+msgstr "작업 기록 활동"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
+msgid "Timesheet activities associated to this sale"
+msgstr "이 판매와 관련된 작업 기록 활동"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Timesheet costs"
+msgstr "작업 기록 비용"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account_move.py:0
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_sales_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_ids
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__sale_order_line__qty_delivered_method__timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#, python-format
+msgid "Timesheets"
+msgstr "작업 기록"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
+msgid "Timesheets By Billing Type"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
+msgid "Timesheets Period"
+msgstr "작업기록 기간"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid "Timesheets of %s"
+msgstr "%s의 작업 기록"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
+msgid "Timesheets on project (one fare per SO/Project)"
+msgstr "프로젝트상의 작업 기록(판매주문/프로젝트 당 1운임)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
+msgid "Timesheets on tasks"
+msgstr "작업에 대한 작업 기록"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "To invoice"
+msgstr "청구서 발행 대기"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "Total"
+msgstr "합계"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid ""
+"Total amount to invoice on the sales order, including all items (services, "
+"storables, expenses, ...)"
+msgstr "모든 품목 (서비스, 저장 가능 항목, 비용 등)을 포함하여 판매 주문에 대한 청구 총액"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
+msgid ""
+"Total recorded duration, expressed in the encoding UoM, and rounded to the "
+"unit"
+msgstr "인코딩한 단위로 표시하고 단위에 맞춰 올림 하여 기록한 총소요 시간"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
+msgid "Track Service"
+msgstr "서비스 추적"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__price_unit
+msgid "Unit Price"
+msgstr "단가"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__price_unit
+msgid "Unit price of the sales order item."
+msgstr "판매 주문 항목의 단가."
+
+#. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.product,uom_name:sale_timesheet.time_product
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+#: model:product.template,uom_name:sale_timesheet.time_product_product_template
+msgid "Units"
+msgstr "단위"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
+msgid "Untaxed Amount Invoiced"
+msgstr "공급가액 청구됨"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
+msgid "Untaxed Amount Re-invoiced"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
+msgid "Untaxed Amount to Invoice"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
+msgid "Untaxed Amount to Re-invoice"
+msgstr "재청구될 공급가액"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:0
+#: code:addons/sale_timesheet/models/project.py:0
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid "Warning"
+msgstr "경고"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
+msgid "Warning Employee Rate"
+msgstr "직원 비율 경고"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid ""
+"What is still to deliver based on sold hours and hours already done. Equals "
+"to sold hours - done hours."
+msgstr "이미 판매 된 시간과 시간을 기준으로 제공할 내용입니다. 판매 시간 - 완료 시간과 같습니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__bill_type
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__bill_type
+msgid ""
+"When billing tasks individually, a Sales Order will be created from each task. It is perfect if you would like to bill different services to different customers at different rates. \n"
+" When billing the whole project, a Sales Order will be created from the project instead. This option is better if you would like to bill all the tasks of a given project to a specific customer either at a fixed rate, or at an employee rate."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
+msgid "Wizard"
+msgstr "마법사"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid ""
+"You can not modify already invoiced timesheets (linked to a Sales order "
+"items invoiced on Time and material)."
+msgstr "이미 청구 된 작업 기록(시간 및 자재에 대해 청구된 판매 주문 항목에 연결)을 수정할 수 없습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr "다른 직원의 작업 기록을 수정할 수 없습니다"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
+msgid "You can only apply this action from a project."
+msgstr "이 작업은 프로젝트에서만 적용할 수 있습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "You can only apply this action from a task."
+msgstr "이 행동은 작업에서만 적용할 수 있습니다."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You cannot remove a timesheet that has already been invoiced."
+msgstr "이미 청구된 작업기록은 삭제할 수 없습니다."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__non_allow_billable
+msgid "Your timesheet will not be billed."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__non_allow_billable
+msgid "Your timesheets linked to this task will not be billed."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "days"
+msgstr "일"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
+#, python-format
+msgid "hours"
+msgstr "시간"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project_overview.py:0
+#, python-format
+msgid "in Overtime"
+msgstr ""

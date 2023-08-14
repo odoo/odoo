@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_sale_quotation_builder" name="Order Design" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="after">
+            <div t-field="sale_order.website_description" class="oe_no_empty"/>
+            <t t-set="product_tmpl_ids" t-value="[]"/>
+            <t t-foreach="sale_order.order_line" t-as="line">
+                <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+                    <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
+                    <a t-att-id="line.id"/>
+                    <div class="alert alert-info alert-dismissable mt16 css_non_editable_mode_hidden o_not_editable" t-ignore="True" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        Product: <strong t-esc="line.product_id.name"/>:
+                        this content will appear on the quotation only if this
+                        product is not removed.
+                    </div>
+                    <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty d-print-none'" t-field="line.website_description"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Template to edit the quotation template with the website editor -->
+    <template id="so_template" name="SO Template">
+        <t t-call="website.layout">
+            <body>
+                <t t-set="o_portal_fullwidth_alert">
+                    <t t-call="portal.portal_back_in_edit_mode">
+                        <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('sale_management.sale_order_template_action').id)"/>
+                        <t t-set="custom_html">This is a preview of the sale order template.</t>
+                    </t>
+                </t>
+                <div class="container o_sale_order">
+                    <div class="row mt16">
+                        <div class="col-lg-9 ml-auto">
+                            <div class="alert alert-info" t-ignore="True" role="status">
+                                <p>
+                                    <strong>Template Header:</strong> this content
+                                    will appear on all quotations using this
+                                    template.
+                                </p>
+                                <p class="text-muted">
+                                    Titles with style <i>Heading 2</i> and
+                                    <i>Heading 3</i> will be used to generate the
+                                    table of content automatically.
+                                </p>
+                            </div>
+                            <div id="template_introduction" t-field="template.website_description" class="oe_no_empty"/>
+                            <t t-set="product_tmpl_ids" t-value="[]"/>
+                            <t t-foreach="template.sale_order_template_line_ids" t-as="line">
+                                <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+                                    <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
+                                    <div class="alert alert-info mt16" t-ignore="True" role="status">
+                                        Product: <strong t-esc="line.product_id.name"/>:
+                                        this content will appear on the quotation only if this
+                                        product is put on the quote.
+                                    </div>
+                                    <div t-field="line.website_description" class="oe_no_empty"/>
+                                </t>
+                            </t>
+                            <t t-set="product_tmpl_ids" t-value="[]"/>
+                            <t t-foreach="template.sale_order_template_option_ids" t-as="option_line">
+                                <t t-if="option_line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+                                    <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [option_line.product_id.product_tmpl_id.id]"/>
+                                    <div class="alert alert-info mt16" t-ignore="True" role="status">
+                                        Optional Product: <strong t-esc="option_line.product_id.name"/>:
+                                        this content will appear on the quotation only if this
+                                        product is used in the quote.
+                                    </div>
+                                    <div t-field="option_line.website_description" class="oe_no_empty"/>
+                                </t>
+                            </t>
+                            <section id="terms" class="container" t-if="template.note">
+                                <h1 t-ignore="True">Terms &amp; Conditions</h1>
+                                <p t-field="template.note"/>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        </t>
+    </template>
+
+    <template id="brand_promotion" inherit_id="website.brand_promotion">
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message">
+                    An awesome <a target="_blank" href="https://www.odoo.com/page/crm?utm_source=db&amp;utm_medium=portal">Open Source CRM</a>
+                </t>
+                <t t-set="_utm_medium" t-valuef="portal"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

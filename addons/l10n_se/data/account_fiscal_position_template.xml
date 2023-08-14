@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="fp_sweden" model="account.fiscal.position.template">
+            <field name="name">Sverige</field>
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.se"/>
+            <field name="vat_required" eval="True"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="fp_euro_b2c" model="account.fiscal.position.template">
+            <field name="name">Europaunionen (B2C)</field>
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">11</field>
+        </record>
+        <record id="fp_euro_b2b" model="account.fiscal.position.template">
+            <field name="name">Europaunionen (B2B)</field>
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">12</field>
+        </record>
+        <record id="fp_outside_euro" model="account.fiscal.position.template">
+            <field name="name">Utanför Europaunionen</field>
+            <field name="chart_template_id" ref="l10nse_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="sequence">13</field>
+        </record>
+    </data>
+</odoo>

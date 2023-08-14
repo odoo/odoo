@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="website.slide.channel.create">
+        <div>
+            <form action="/slides/channel/add" method="POST" id="slide_channel_add_form">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Title</label>
+                    <input type="text" class="form-control" name="name" id="title" placeholder="Computer Science for kids" required="1"/>
+                    <p id="title-required" class="text-danger mt-1 mb-0 d-none">Please fill in this field</p>
+                </div>
+                <div class="form-group">
+                    <label for="tag_ids" class="col-form-label">Tags</label>
+                    <input type="text" class="form-control" name="tag_ids" id="tag_ids" placeholder="Tags"/>
+                </div>
+                <label for="channel_type">Choose a layout</label>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <div class="form-check px-0">
+                            <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type1" value="training" checked="checked"/>
+                            <label for="channel_type1">
+                                <img class="w-100" src="/website_slides/static/src/img/channel-training-layout.png" alt="Training Layout"/>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-6">
+                        <div class="form-check px-0">
+                            <input class="form-check-input d-none" type="radio" name="channel_type" id="channel_type2" value="documentation"/>
+                            <label for="channel_type2">
+                                <img class="w-100" src="/website_slides/static/src/img/channel-documentation-layout.png" alt="Documentation Layout"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title">Description</label>
+                    <textarea rows="2" class="form-control" name="description" id="description"
+                              placeholder="Common tasks for a computer scientist is asking the right questions and answering
+                              questions. In this course, you'll study those topics with activities about mathematics, science and logic." />
+                </div>
+                <div class="form-group">
+                    <label id="communication-label">Review</label>
+                    <div class="o_wslide_channel_communication_type">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="allow_comment" name="allow_comment" checked="checked"/>
+                            <span class="form-check-label" for="allow_comment">Allow students to review your course</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </t>
+
+</templates>

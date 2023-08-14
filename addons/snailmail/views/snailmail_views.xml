@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="snailmail_letter_list">
+        <field name="name">snailmail.letter.tree</field>
+        <field name="model">snailmail.letter</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state=='error'" decoration-muted="state=='sent'" string="Letters">
+                <field name="attachment_id" string="Document"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="state" invisible="1"/>
+                <field name="info_msg" widget="html"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="snailmail_letter_form">
+        <field name="name">snailmail.letter.form</field>
+        <field name="model">snailmail.letter</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="snailmail_print" string="Send Now" type="object" states="pending,error" class="oe_highlight"/>
+                    <button name="cancel" string="Cancel" type="object" states="pending,error"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,sent,canceled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <field name="reference" widget="reference"/>
+                        <field name="attachment_datas" filename="attachment_fname"/>
+                        <field name="attachment_fname" invisible="1"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="info_msg" widget="html"/>
+                    </group>
+                    <group groups="base.group_no_one">
+                        <field name="model"/>
+                        <field name="res_id"/>
+                        <field name="color"/>
+                        <field name="duplex"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mail_letters">
+        <field name="name">Snailmail Letters</field>
+        <field name="res_model">snailmail.letter</field>
+        <field name="view_mode">form,tree</field>
+        <field name="domain">[('state', '!=', 'draft')]</field>
+        <field name="view_id" ref="snailmail_letter_list" />
+    </record>
+
+    <menuitem id="menu_snailmail_letters" parent="base.menu_email" action="action_mail_letters"
+              sequence="50"/>
+</odoo>

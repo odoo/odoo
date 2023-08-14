@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="Product assets backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/product/static/src/js/product_pricelist_report.js"></script>
+        </xpath>
+   </template>
+    <template id="qunit_suite" name="Product pricelist report tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/product/static/tests/product_pricelist_report_test.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.exhibitor</field>
+        <field name="inherit_id" ref="website_event_track.event_event_view_form"/>
+        <field name="model">event.event</field>
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_track_proposal']" position="after">
+                <label for="exhibitor_menu"/>
+                <field name="exhibitor_menu"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

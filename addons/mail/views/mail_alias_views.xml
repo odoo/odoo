@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Alias Form View -->
+        <record  model="ir.ui.view" id="view_mail_alias_form">
+            <field name="name">mail.alias.form</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <form string="Alias">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="open_document" string="Open Document"
+                                    type="object" class="oe_link"
+                                    attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', 0)]}"/>
+                            <button name="open_parent_document" string="Open Parent Document"
+                                    type="object" class="oe_link" icon="fa-sitemap"
+                                    attrs="{'invisible': ['|', ('alias_parent_model_id', '=', False), ('alias_parent_thread_id', '=', 0)]}"/>
+                        </div>
+                        <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
+                        <group>
+                            <field name="alias_model_id"/>
+                            <field name="alias_force_thread_id"/>
+                            <field name="alias_defaults"/>
+                            <field name="alias_contact"/>
+                            <field name="alias_user_id"/>
+                            <field name="alias_parent_model_id"/>
+                            <field name="alias_parent_thread_id"/>
+                            <field name="alias_bounced_content" attrs="{'invisible':[('alias_contact', '=', 'everyone')]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Alias List View -->
+        <record  model="ir.ui.view" id="view_mail_alias_tree">
+            <field name="name">mail.alias.tree</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <tree string="Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                    <field name="alias_user_id"/>
+                    <field name="alias_defaults"/>
+                    <field name="alias_contact"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Alias Search View -->
+        <record  model="ir.ui.view" id="view_mail_alias_search">
+            <field name="name">mail.alias.search</field>
+            <field name="model">mail.alias</field>
+            <field name="arch" type="xml">
+                <search string="Search Alias">
+                    <field name="alias_name"/>
+                    <field name="alias_model_id"/>
+                    <field name="alias_force_thread_id"/>
+                    <field name="alias_parent_model_id"/>
+                    <field name="alias_parent_thread_id"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="User" name="User" context="{'group_by':'alias_user_id'}"/>
+                        <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_alias" model="ir.actions.act_window">
+            <field name="name">Aliases</field>
+            <field name="res_model">mail.alias</field>
+            <field name="context">{
+                    'search_default_active': True,
+                }
+            </field>
+        </record>
+
+        <menuitem id="mail_alias_menu"
+                  parent="base.menu_email"
+                  action="action_view_mail_alias"
+                  sequence="11"
+                  groups="base.group_no_one"/>
+
+    </data>
+</odoo>

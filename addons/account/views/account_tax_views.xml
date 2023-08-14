@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_tax_tree" model="ir.ui.view">
+            <field name="name">account.tax.tree</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <tree string="Account Tax" decoration-muted="not active">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type_tax_use"/>
+                    <field name="tax_scope"/>
+                    <field name="description"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tax_repartition_line_tree" model="ir.ui.view">
+            <field name="name">account.tax.repartition.line.tree</field>
+            <field name="model">account.tax.repartition.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" create="1" delete="1">
+                    <field name="sequence" widget="handle"/>
+                    <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
+                    <field name="repartition_type"/>
+                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', tax_fiscal_country_id)]"/>
+                    <field name="use_in_tax_closing"
+                           optional="hidden"
+                           attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
+                    <field name="tax_fiscal_country_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_tax_view_tree" model="ir.ui.view">
+            <field name="name">account.invoice.line.tax.search</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <tree string="Account Tax">
+                    <field name="display_name" string="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tax_kanban" model="ir.ui.view">
+            <field name="name">account.tax.kanban</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="type_tax_use"/>
+                    <field name="tax_scope"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-6">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <span class="badge badge-pill"><t t-esc="record.type_tax_use.value"/></span>
+                                        <span class="badge badge-pill"><t t-esc="record.tax_scope.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_tax_search" model="ir.ui.view">
+            <field name="name">account.tax.search</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <search string="Search Taxes">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
+                    <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
+                    <separator/>
+                    <filter string="Services" name="service" domain="[('tax_scope','=','service')]" />
+                    <filter string="Goods" name="goods" domain="[('tax_scope','=','consu')]" />
+                    <separator/>
+                    <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
+                    <group string="Group By">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Tax Type" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Tax Scope" name="taxapp" domain="[]" context="{'group_by':'tax_scope'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_tax_view_search" model="ir.ui.view">
+            <field name="name">account.tax.search.filters</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <search string="Search Taxes">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_tax_form" model="ir.ui.view">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax">
+                    <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="amount_type"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="type_tax_use"/>
+                            <field name="tax_scope"/>
+                            <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                <field name="amount" class="oe_inline"/>
+                                <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Definition" name="definition">
+                            <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
+                                <field name="tax_fiscal_country_id" invisible="1"/>
+                                <field name="country_code" invisible="1"/>
+                                <group string="Distribution for Invoices">
+                                    <field name="invoice_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
+                                </group>
+                                <group string="Distribution for Credit Notes">
+                                    <field name="refund_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
+                                </group>
+                            </div>
+                            <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                                <tree string="Children Taxes">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="amount_type"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Advanced Options" name="advanced_options">
+                            <group>
+                                <group>
+                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="tax_group_id"/>
+                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                </group>
+                                <group name="advanced_booleans">
+                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                    <field name="hide_tax_exigibility" invisible="1"/>
+                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_readonly"/>
+                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_readonly"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+              </field>
+        </record>
+
+        <record id="action_tax_form" model="ir.actions.act_window">
+            <field name="name">Taxes</field>
+            <field name="res_model">account.tax</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain" eval="False"/> <!-- Force empty -->
+            <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
+            <field name="view_id" ref="view_tax_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tax
+              </p>
+            </field>
+        </record>
+
+        <record id="view_tax_group_tree" model="ir.ui.view">
+            <field name="name">account.tax.group.tree</field>
+            <field name="model">account.tax.group</field>
+            <field name="arch" type="xml">
+                <tree string="Account Tax Group" editable="bottom" create="false">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="property_tax_payable_account_id"/>
+                    <field name="property_tax_receivable_account_id"/>
+                    <field name="property_advance_tax_payment_account_id"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

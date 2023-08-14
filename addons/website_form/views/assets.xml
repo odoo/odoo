@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_editor" name="Website Form Editor Assets Editor" inherit_id="website.assets_editor">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/website_form/static/src/scss/wysiwyg_snippets.scss"/>
+                <script type="text/javascript" src="/website_form/static/src/snippets/s_website_form/options.js"/>
+                <script type="text/javascript" src="/website_form/static/src/js/website_form_editor_registry.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_tests" name="Website Form Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_form/static/tests/tours/website_form_editor.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

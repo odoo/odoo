@@ -1,0 +1,44 @@
+.o_timeoff_calendar .o_content {
+    .o_timeoff_container {
+        height: 6rem;
+    }
+
+    .o_calendar_container {
+      height: calc(100% - 6rem);
+    }
+
+    @include media-breakpoint-down(sm) {
+        .o_timeoff_container {
+             height: 15%;
+        }
+
+        .o_calendar_container {
+          height: 85%;
+        }
+    }
+
+    .o_timeoff_card {
+        border-right: #adb5bd solid 2px;
+        text-align: center;
+        margin-top: 4px;
+        div {
+            line-height: 1;
+        }
+    }
+
+    .o_timeoff_card_last {
+        border-right: 0px;
+    }
+
+    .o_timeoff_big {
+        font-size: 20px;
+    }
+
+    .o_timeoff_purple {
+        color: $o-enterprise-color;
+    }
+
+    .o_timeoff_green {
+        color: $o-enterprise-primary-color;
+    }
+}

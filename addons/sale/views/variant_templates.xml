@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="variants">
+        <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination, parent_name)"/>
+        <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
+                <li t-att-data-attribute_id="ptal.attribute_id.id"
+                    t-att-data-attribute_name="ptal.attribute_id.name"
+                    t-attf-class="variant_attribute #{'d-none' if len(ptal.product_template_value_ids._only_active()) == 1 and not ptal.product_template_value_ids._only_active()[0].is_custom else ''}">
+
+                    <!-- Used to customize layout if the only available attribute value is custom -->
+                    <t t-set="single" t-value="len(ptal.product_template_value_ids._only_active()) == 1"/>
+                    <t t-set="single_and_custom" t-value="single and ptal.product_template_value_ids._only_active()[0].is_custom" />
+                    <strong t-field="ptal.attribute_id.name" class="attribute_name"/>
+
+                    <t t-if="ptal.attribute_id.display_type == 'select'">
+                        <select
+                            t-att-data-attribute_id="ptal.attribute_id.id"
+                            t-attf-class="form-control js_variant_change #{ptal.attribute_id.create_variant} #{'d-none' if single_and_custom else ''}"
+                            t-att-name="'ptal-%s' % ptal.id">
+                            <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
+                                <t t-set="combination_info_variant" t-value="product._get_combination_info(ptav, pricelist=pricelist)"/>
+                                <option t-att-value="ptav.id"
+                                    t-att-data-value_id="ptav.id"
+                                    t-att-data-value_name="ptav.name"
+                                    t-att-data-attribute_name="ptav.attribute_id.name"
+                                    t-att-data-is_custom="ptav.is_custom"
+                                    t-att-selected="ptav in combination"
+                                    t-att-data-is_single="single"
+                                    t-att-data-is_single_and_custom="single_and_custom">
+                                    <span t-field="ptav.name"/>
+                                    <span t-if="combination_info_variant['price_extra']" class="badge badge-pill badge-secondary">
+                                        <!--
+                                            price_extra is displayed as catalog price instead of
+                                            price after pricelist because it is impossible to
+                                            compute. Indeed, the pricelist rule might depend on the
+                                            selected variant, so the price_extra will be different
+                                            depending on the selected combination. The price of an
+                                            attribute is therefore variable and it's not very
+                                            accurate to display it.
+                                            -->
+                                        <t t-esc="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
+                                        <span t-esc="abs(combination_info_variant['price_extra'])" class="variant_price_extra" style="white-space: nowrap;"
+                                            t-options='{
+                                                "widget": "monetary",
+                                                "display_currency": (pricelist or product).currency_id
+                                            }'/>
+                                    </span>
+                                </option>
+                            </t>
+                        </select>
+                    </t>
+
+                    <t t-if="ptal.attribute_id.display_type == 'radio'">
+                        <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-unstyled #{'d-none' if single_and_custom else ''}">
+                            <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
+                                <t t-set="combination_info_variant" t-value="product._get_combination_info(ptav, pricelist=pricelist)"/>
+                                <li class="form-group js_attribute_value" style="margin: 0;">
+                                    <label class="col-form-label">
+                                        <div>
+                                            <input type="radio"
+                                                t-attf-class="js_variant_change radio_input #{ptal.attribute_id.create_variant}"
+                                                t-att-checked="ptav in combination"
+                                                t-att-name="'ptal-%s' % ptal.id"
+                                                t-att-value="ptav.id"
+                                                t-att-data-value_id="ptav.id"
+                                                t-att-data-value_name="ptav.name"
+                                                t-att-data-attribute_name="ptav.attribute_id.name"
+                                                t-att-data-is_custom="ptav.is_custom"
+                                                t-att-data-is_single="single"
+                                                t-att-data-is_single_and_custom="single_and_custom" />
+                                            <div class="radio_input_value">
+                                                <span t-field="ptav.name"/>
+                                                <span class="badge badge-pill badge-secondary" t-if="combination_info_variant['price_extra']">
+                                                    <!-- see note above about price_extra -->
+                                                    <t t-esc="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
+                                                    <span t-esc="abs(combination_info_variant['price_extra'])" class="variant_price_extra" style="white-space: nowrap;"
+                                                        t-options='{
+                                                            "widget": "monetary",
+                                                            "display_currency": (pricelist or product).currency_id
+                                                        }'/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+
+                    <t t-if="ptal.attribute_id.display_type == 'color'">
+                        <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline  #{'d-none' if single_and_custom else ''}">
+                            <li t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav" class="list-inline-item">
+                                <label t-attf-style="background-color:#{ptav.html_color or ptav.product_attribute_value_id.name if not ptav.is_custom else ''}"
+                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''}">
+                                    <input type="radio"
+                                        t-attf-class="js_variant_change  #{ptal.attribute_id.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-value_id="ptav.id"
+                                        t-att-data-value_name="ptav.name"
+                                        t-att-data-attribute_name="ptav.attribute_id.name"
+                                        t-att-data-is_custom="ptav.is_custom"
+                                        t-att-data-is_single="single"
+                                        t-att-data-is_single_and_custom="single_and_custom"/>
+                                </label>
+                            </li>
+                        </ul>
+                    </t>
+                </li>
+            </t>
+        </ul>
+    </template>
+</odoo>

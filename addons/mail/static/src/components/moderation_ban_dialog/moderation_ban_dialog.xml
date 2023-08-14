@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ModerationBanDialog" owl="1">
+        <Dialog contentClass="'o_ModerationBanDialog'" title="CONFIRMATION" size="'medium'" t-ref="dialog">
+            <t t-if="messages.length === 1">
+                <p>You are going to ban the following user:</p>
+            </t>
+            <t t-else="">
+                <p>You are going to ban the following users:</p>
+            </t>
+            <ul class="my-5">
+                <t t-foreach="messages" t-as="message" t-key="message.localId">
+                    <li t-esc="message.email_from"/>
+                </t>
+            </ul>
+            <p>Do you confirm the action?</p>
+            <t t-set-slot="buttons">
+                <button class="o-ban btn btn-primary" t-on-click="_onClickBan">Ban</button>
+                <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

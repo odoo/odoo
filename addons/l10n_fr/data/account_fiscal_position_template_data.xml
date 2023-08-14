@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- To solve bug 1240265, we have to delete all fiscal position templates before each update.
+         The valid ones will be re-created later during the update.
+         /!\ This must be executed *before* loading the fiscal position templates!! -->
+    <delete model="account.fiscal.position.template" search="[('chart_template_id','=',ref('l10n_fr_pcg_chart_template'))]"/>
+
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Templates     -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+<!-- Position Géographique du partenaire -->
+        <record id="fiscal_position_template_domestic" model="account.fiscal.position.template">
+            <field name="sequence">1</field>
+            <field name="name">Domestique - France</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="auto_apply" eval="True" />
+            <field name="vat_required" eval="True" />
+            <field name="country_id" ref="base.fr"></field>
+        </record>
+        <record id="fiscal_position_template_intraeub2c" model="account.fiscal.position.template">
+            <field name="sequence">2</field>
+            <field name="name">EU privé</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="auto_apply" eval="True" />
+            <field name="country_group_id" ref="base.europe"></field>
+        </record>
+        <record id="fiscal_position_template_intraeub2b" model="account.fiscal.position.template">
+            <field name="sequence">3</field>
+            <field name="name">Intra-EU B2B</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="note">French VAT exemption according to articles 262 ter I (for products) and/or 283-2 (for services) of "CGI"</field>
+            <field name="auto_apply" eval="True" />
+            <field name="country_group_id" ref="base.europe"></field>
+            <field name="vat_required" eval="True" />
+        </record>
+        <record id="fiscal_position_template_import_export" model="account.fiscal.position.template">
+            <field name="sequence">50</field>
+            <field name="name">Import/Export Hors Europe + DOM-TOM</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+            <field name="note">French VAT exemption according to articles 291, 294 and 262 I of "CGI"</field>
+            <field name="auto_apply" eval="True" />
+        </record>
+
+    <!-- = = = = = = = = = = = = = = = -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- = = = = = = = = = = = = = = = -->
+
+<!-- Par défaut, les produits doivent être paramétrés pour utiliser les taxes, paramétrées pour des numéro de comptes (nationaux) -->
+
+<!-- Zone Intracommunautaire B2B -->
+<!-- ventes -->
+<!-- Taux Normal -->
+        <record id="fp_tax_template_intraeub2b_vt_normale" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_normale" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_normale_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_normale_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_intermediaire_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_normale_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_normale_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_normale_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_normale_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_intermediaire_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+<!-- Taux DOM-TOM -->
+        <record id="fp_tax_template_intraeub2b_vt_specifique" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_specifique" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_specifique_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_specifique_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+<!-- Taux Intermédiaire -->
+        <record id="fp_tax_template_intraeub2b_vt_intermediaire" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_intermediaire" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_intermediaire_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_intermediaire_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+<!-- Taux réduit -->
+        <record id="fp_tax_template_intraeub2b_vt_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_reduite" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_reduite_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_reduite_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_reduite_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_reduite_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_reduite_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_reduite_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+<!-- Taux super réduit -->
+        <record id="fp_tax_template_intraeub2b_vt_super_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_super_reduite" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_super_reduite_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_super_reduite_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_super_reduite_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_super_reduite_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_vt_super_reduite_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_super_reduite_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_intra_0" />
+        </record>
+<!-- achats -->
+<!-- Taux Normal -->
+        <record id="fp_tax_template_intraeub2b_ha_normale_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_normale" />
+            <field name="tax_dest_id" ref="tva_intra_normale_biens" />
+        </record>
+<!-- Taux DOM-TOM -->
+        <record id="fp_tax_template_intraeub2b_ha_specifique_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_specifique" />
+            <field name="tax_dest_id" ref="tva_intra_specifique_biens" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_ha_encaissement_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_encaissement" />
+            <field name="tax_dest_id" ref="tva_intra_normale_services" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_ha_encaissement_deduc_intermediaire" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_intermediaire_encaissement" />
+            <field name="tax_dest_id" ref="tva_intra_intermediaire_services" />
+        </record>
+<!-- Taux Intermédiaire -->
+        <record id="fp_tax_template_intraeub2b_ha_intermediaire_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_intermediaire" />
+            <field name="tax_dest_id" ref="tva_intra_intermediaire_biens" />
+        </record>
+<!-- Taux réduit -->
+        <record id="fp_tax_template_intraeub2b_ha_reduite_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_reduite_biens" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_ha_encaissement_reduite_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_encaissement_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_reduite_services" />
+        </record>
+<!-- Taux super réduit -->
+        <record id="fp_tax_template_intraeub2b_ha_super_reduite_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_super_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_super_reduite_biens" />
+        </record>
+        <record id="fp_tax_template_intraeub2b_ha_encaissement_super_reduite_deduc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
+            <field name="tax_src_id" ref="tva_acq_encaissement_super_reduite" />
+            <field name="tax_dest_id" ref="tva_intra_super_reduite_services" />
+        </record>
+
+<!-- Import/Export + DOM/TOM -->
+<!-- ventes -->
+<!-- Taux Normal -->
+        <record id="fp_tax_template_impexp_vt_normale" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_normale" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_normale_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_normale_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_normale_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_normale_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_intermediaire_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_normale_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_normale_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_intermediaire_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_intermediaire_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+<!-- Taux DOM-TOM -->
+        <record id="fp_tax_template_impexp_vt_specifique" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_specifique" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_specifique_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_specifique_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+<!-- Taux Intermédiare -->
+        <record id="fp_tax_template_impexp_vt_intermediaire" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_intermediaire" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_intermediaire_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_intermediaire_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+<!-- Taux Réduit -->
+        <record id="fp_tax_template_impexp_vt_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_reduite" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_reduite_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_reduite_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_reduite_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_reduite_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_reduite_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_reduite_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+<!-- Taux super réduit -->
+        <record id="fp_tax_template_impexp_vt_super_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_super_reduite" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_super_reduite_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_super_reduite_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_good_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_super_reduite_encaissement_ttc" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_super_reduite_encaissement_ttc" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+        <record id="fp_tax_template_impexp_vt_super_reduite_encaissement" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_super_reduite_encaissement" />
+            <field name="tax_dest_id" ref="tva_sale_service_export_0" />
+        </record>
+<!-- achats -->
+<!-- Taux Normal -->
+        <record id="fp_tax_template_impexp_ha_normale" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_acq_normale" />
+            <field name="tax_dest_id" ref="tva_import_outside_eu_20" />
+        </record>
+<!-- Taux DOM-TOM -->
+        <record id="fp_tax_template_impexp_ha_specifique" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_acq_specifique" />
+            <field name="tax_dest_id" ref="tva_import_outside_eu_8_5" />
+        </record>
+<!-- Taux Intermédiare -->
+        <record id="fp_tax_template_impexp_ha_intermediaire" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_acq_intermediaire" />
+            <field name="tax_dest_id" ref="tva_import_outside_eu_10" />
+        </record>
+<!-- Taux Réduit -->
+        <record id="fp_tax_template_impexp_ha_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_acq_reduite" />
+            <field name="tax_dest_id" ref="tva_import_outside_eu_5_5" />
+        </record>
+<!-- Taux super réduit -->
+        <record id="fp_tax_template_impexp_ha_super_reduite" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import_export" />
+            <field name="tax_src_id" ref="tva_acq_super_reduite" />
+            <field name="tax_dest_id" ref="tva_import_outside_eu_2_1" />
+        </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="mailbot assets" inherit_id="web.assets_backend">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/mail_bot/static/src/bugfix/bugfix.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/models/messaging_initializer/messaging_initializer.js"></script>
+            </xpath>
+            <xpath expr="link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/mail_bot/static/src/scss/odoobot_style.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail_bot/static/src/bugfix/bugfix.scss"/>
+            </xpath>
+        </template>
+
+        <template id="tests_assets" name="mail_bot tests assets" inherit_id="web.tests_assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail_bot/static/tests/helpers/mock_server.js"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="mailbot_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail_bot/static/src/bugfix/bugfix_tests.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

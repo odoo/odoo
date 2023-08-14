@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<button t-name="replenish_report_buttons"
+    class="btn btn-primary o_report_replenish_buy"
+    type="button" title="Replenish">
+    Replenish
+</button>
+
+<t t-name="warehouseFilter">
+    <div id="warehouse_filter" class="btn-group o_dropdown o_stock_report_warehouse_filter"
+        t-if="displayWarehouseFilter">
+        <button type="button" class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle"
+            data-toggle="dropdown">
+            <span class="fa fa-home"/> Warehouse: <t t-esc="active_warehouse['name']"/>
+        </button>
+        <div class="dropdown-menu o_dropdown_menu o_filter_menu" role="menu">
+            <t t-foreach="warehouses" t-as="wh">
+                <a role="menuitem" class="dropdown-item warehouse_filter"
+                    data-filter="warehouses" t-att-data-warehouse-id="wh['id']"
+                    t-esc="wh['name']"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

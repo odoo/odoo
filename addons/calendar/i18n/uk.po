@@ -1,0 +1,1942 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* calendar
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2021\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_reminder
+msgid "${object.event_id.name} - Reminder"
+msgstr "${object.event_id.name} - Нагадування"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_changedate
+msgid "${object.event_id.name}: Date updated"
+msgstr "${object.event_id.name}: Дату оновлено"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid ""
+"%(date_start)s at %(time_start)s To\n"
+" %(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(date_start)s о %(time_start)s до\n"
+" %(date_end)s о %(time_end)s (%(timezone)s)"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
+msgstr "%(day)s о (%(start)s до %(end)s) (%(timezone)s)"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_attendee.py:0
+#, python-format
+msgid "%s has accepted invitation"
+msgstr "%s прийняв запрошення"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_attendee.py:0
+#, python-format
+msgid "%s has declined invitation"
+msgstr "%s відхилив запрошення"
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
+msgid ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        Hello ${object.common_name},<br/><br/>\n"
+"        ${object.event_id.user_id.partner_id.name} invited you to the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Accept</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Decline</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Details of the event</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Location: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Description: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>When: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Attendees\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Thank you,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        Вітаємо ${object.common_name},<br/><br/>\n"
+"        ${object.event_id.user_id.partner_id.name} invited you to the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Підтвердити</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Відхилити</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Переглянути</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Деталі події</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Location: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Переглянути карту</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Опис: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>Коли: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Тривалість: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Учасники\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">Ви</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Дякуємо,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
+msgid ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        Hello ${object.common_name},<br/><br/>\n"
+"        The date of the meeting has been updated. The meeting ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Accept</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Decline</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Details of the event</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Location: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Description: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>When: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Attendees\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Thank you,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        Вітаємо ${object.common_name},<br/><br/>\n"
+"        Дату події оновлено. Подія ${object.event_id.name} створена ${object.event_id.user_id.partner_id.name} запланована для ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Підтвердити</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Відхилити</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Переглянути</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Деталі події</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Місцезнаходження: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Переглянути карту</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Опис: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>Коли: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Тривалість: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Учасники\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">Ви</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Дякуємо,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+
+#. module: calendar
+#: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
+msgid ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <!--\n"
+"        In a recurring event case, the object.event_id is always the first event\n"
+"        This makes the event date (and a lot of other information) incorrect\n"
+"    -->\n"
+"    % set event_id = ctx.get('force_event_id') or object.event_id\n"
+"    <p>\n"
+"        Hello ${object.common_name},<br/><br/>\n"
+"        This is a reminder for the below event :\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Accept</a>\n"
+"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Decline</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('day', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${event_id.get_interval('month', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not event_id.allday and event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Details of the event</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Location: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Description: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Attendees\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Thank you,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <!--\n"
+"        У випадку повторюваної події, object.event_id завжди є першою подією\n"
+"        Це робить дату події (та іншу інформацію) невірною\n"
+"    -->\n"
+"    % set event_id = ctx.get('force_event_id') or object.event_id\n"
+"    <p>\n"
+"        Вітаємо ${object.common_name},<br/><br/>\n"
+"        Це нагадування про наступну подію :\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Підтвердити</a>\n"
+"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Відхилити</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Переглянути</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('day', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${event_id.get_interval('month', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
+"                ${not event_id.allday and event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Деталі події</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>Місцезнаходження: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">Переглянути карту</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Опис: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>Тривалість: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>Учасники\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">Ви</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Дякуємо,\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "<span> hours</span>"
+msgstr "<span> години </span>"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
+msgid "A user cannot have the same contact twice."
+msgstr "Користувач не може мати той же контакт двічі."
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
+msgid "Accept"
+msgstr "Прийняти"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__accepted
+msgid "Accepted"
+msgstr "Прийнято"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr "Дія для виконання"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Дії повинні запустити конкретну дію, таку як відкриття календаря або "
+"автоматичне позначення як зроблено після завантаження документа."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
+msgid "Activities"
+msgstr "Дії"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity
+msgid "Activity"
+msgstr "Дія"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Тип дії"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#, python-format
+msgid "All Day"
+msgstr "Весь день"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "All Day, %(day)s"
+msgstr "Увесь день, %(day)s"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
+msgid "All events"
+msgstr "Усі події"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
+msgid "Attachment Count"
+msgstr "Кількість прикріплень"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
+msgid "Attendee Status"
+msgstr "Статус учасників"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Attendees"
+msgstr "Учасники"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Availability"
+msgstr "Наявність"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
+msgid "Base Event"
+msgstr "Базова подія"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__busy
+#, python-format
+msgid "Busy"
+msgstr "Зайнятий"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__byday
+msgid "By day"
+msgstr "За днем"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
+msgid "Byday"
+msgstr "Протягом дня"
+
+#. module: calendar
+#: model:ir.ui.menu,name:calendar.mail_menu_calendar
+#: model:ir.ui.menu,name:calendar.menu_calendar_configuration
+msgid "Calendar"
+msgstr "Календар"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_alarm
+#: model:ir.ui.menu,name:calendar.menu_calendar_alarm
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
+msgid "Calendar Alarm"
+msgstr "Сповіщення календаря"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Інформація календаря учасника"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_contacts
+msgid "Calendar Contacts"
+msgstr "Контакти календаря"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
+msgid "Calendar Event"
+msgstr "Календар подій"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Calendar Invitation"
+msgstr "Запрошення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
+msgid "Calendar Meeting"
+msgstr "Зустріч"
+
+#. module: calendar
+#: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
+#: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
+#: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
+msgid "Calendar: Event Reminder"
+msgstr "Календар: Нагадування подій"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
+msgid ""
+"Choose what to do with other events in the recurrence. Updating All Events "
+"is not allowed when dates or time is modified"
+msgstr ""
+"Виберіть, що робити з іншими подіями, що повторюються. Оновлення всіх подій "
+"не дозволяється, коли дати або час змінюються"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
+msgid "Common name"
+msgstr "Загальна назва"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/js/calendar_controller.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
+msgid "Count"
+msgstr "Підрахунок"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
+msgid "Created by"
+msgstr "Створено"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Date"
+msgstr "Дата"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__date
+msgid "Date of month"
+msgstr "Дата місяця"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__day
+msgid "Day"
+msgstr "День"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Day of Month"
+msgstr "День місяця"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__day
+msgid "Day of month"
+msgstr "День місяця"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__daily
+msgid "Days"
+msgstr "Дні"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
+msgid "Decline"
+msgstr "Відхилити"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__declined
+msgid "Declined"
+msgstr "Відхилено"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Description"
+msgstr "Опис"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
+#, python-format
+msgid "Details"
+msgstr "Деталі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__display_name
+#: model:ir.model.fields,field_description:calendar.field_ir_http__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__display_name
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
+#: model:ir.model.fields,field_description:calendar.field_res_users__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Document"
+msgstr "Документ"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
+msgid "Document ID"
+msgstr "ID документу"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
+msgid "Document Model"
+msgstr "Модель документу"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
+msgid "Document Model Name"
+msgstr "Назва моделі документу"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
+msgid "Dtstart"
+msgstr "Dtstart"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Duration"
+msgstr "Тривалість"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__duration_minutes
+msgid "Duration in minutes"
+msgstr "Тривалість у хвилинах"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/js/calendar_controller.js:0
+#, python-format
+msgid "Edit Recurrent event"
+msgstr "Редагувати повторювану подію"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Edit recurring event"
+msgstr "Редагувати повторювану подію"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__email
+msgid "Email"
+msgstr "Ел. пошта"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "Email - 3 Hours"
+msgstr "Email - 3 години"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "Email - 6 Hours"
+msgstr "Email - 6 годин"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__email
+msgid "Email of Invited Person"
+msgstr "Ел. пошта запрошеної людини"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
+msgid "Employee"
+msgstr "Співробітник"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "End Date"
+msgstr "Кінцева дата"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
+msgid "End Type"
+msgstr "Тип закінчення"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
+msgid "End date"
+msgstr "Кінцева дата"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Ending at"
+msgstr "Закінчується"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Сповіщення про подію"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Менеджер сповіщення про подію"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_event_type
+msgid "Event Meeting Type"
+msgstr "Тип події"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_calendar_recurrence
+msgid "Event Recurrence Rule"
+msgstr "Правило повторюваної події"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
+msgid "Event Time"
+msgstr "Час події"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(count)s %(period)s"
+msgstr "Кожні %(count)s %(period)s"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
+msgid "Everyone"
+msgstr "Кожен"
+
+#. module: calendar
+#: code:addons/calendar/models/mail_activity.py:0
+#, python-format
+msgid "Feedback: "
+msgstr "Відгук:  "
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
+msgid "First"
+msgstr "Перший"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "First you have to specify the date of the invitation."
+msgstr "Спочатку потрібно вказати дату запрошення."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
+msgid "Follow Recurrence"
+msgstr "Слідувати за повторенням"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
+msgid "Forever"
+msgstr "Назавжди"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__4
+msgid "Fourth"
+msgstr "Четвертий"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
+msgid "Fr"
+msgstr "Пт"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
+msgid "Free"
+msgstr "Безкоштовно"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
+msgid "Free/Busy"
+msgstr "Вільно/зайнято"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
+msgid "Fri"
+msgstr "Пт"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__fr
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__fr
+msgid "Friday"
+msgstr "П’ятниця"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "Grouping by %s is not allowed."
+msgstr "Групування за %s заборонене."
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_ir_http
+msgid "HTTP Routing"
+msgstr "Маршрутизація HTTP"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
+msgid "Hours"
+msgstr "Години"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
+#: model:ir.model.fields,field_description:calendar.field_ir_http__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:calendar.field_res_partner__id
+#: model:ir.model.fields,field_description:calendar.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Якщо активне поле налаштовано невірно, ви зможете приховати інформацію про "
+"сповіщення події, не видаляючи її."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
+msgid "Interval"
+msgstr "Інтервал"
+
+#. module: calendar
+#: model:mail.message.subtype,name:calendar.subtype_invitation
+msgid "Invitation"
+msgstr "Запрошення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
+msgid "Invitation Token"
+msgstr "Токен запрошення"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Invitation details"
+msgstr "Деталі запрошення"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Invitation for"
+msgstr "Запрошення для"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_invitation
+msgid "Invitation to ${object.event_id.name}"
+msgstr "Запрошення на ${object.event_id.name}"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Invitations"
+msgstr "Запрошення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
+msgid "Is the Event Highlighted"
+msgstr "Чи подія освітлена"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__-1
+msgid "Last"
+msgstr "Останній"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence____last_update
+#: model:ir.model.fields,field_description:calendar.field_ir_http____last_update
+#: model:ir.model.fields,field_description:calendar.field_mail_activity____last_update
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type____last_update
+#: model:ir.model.fields,field_description:calendar.field_res_partner____last_update
+#: model:ir.model.fields,field_description:calendar.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr "Останнє повідомлення позначено як прочитане з базового календаря."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
+msgid "Let the event automatically repeat at that interval"
+msgstr "Дозволити події автоматично повторюватись через певний інтервал"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__location
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Location"
+msgstr "Місцезнаходження"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__location
+msgid "Location of Event"
+msgstr "Розміщення події"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Logo"
+msgstr "Логотип"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Основне прикріплення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
+msgid "Me"
+msgstr "Я"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Meeting"
+msgstr "Зустріч"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid ""
+"Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
+msgstr ""
+"Подія '%(name)s' починається '%(start_datetime)s' та закінчується "
+"'%(end_datetime)s'"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Meeting Details"
+msgstr "Деталі зустрічі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__name
+msgid "Meeting Subject"
+msgstr "Тема зустрічі"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_type
+#: model:ir.ui.menu,name:calendar.menu_calendar_event_type
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+msgid "Meeting Types"
+msgstr "Типи зустрічей"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
+msgid "Meeting linked"
+msgstr "Зустріч закріплено"
+
+#. module: calendar
+#: model:ir.actions.act_window,name:calendar.action_calendar_event
+#: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "Meetings"
+msgstr "Зустрічі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+msgid "Message Delivery error"
+msgstr "Помилка доставлення повідомлення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
+msgid "Minutes"
+msgstr "Хвилини"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Misc"
+msgstr "Різне"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__mo
+msgid "Mo"
+msgstr "Пн"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
+msgid "Mon"
+msgstr "Пн"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__mo
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__mo
+msgid "Monday"
+msgstr "Понеділок"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
+msgid "Month By"
+msgstr "Місяць за"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__monthly
+msgid "Months"
+msgstr "Місяці"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "My Meetings"
+msgstr "Мої зустрічі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__name
+msgid "Name"
+msgstr "Назва"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
+msgid "Needs Action"
+msgstr "Очікується"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "No I'm not going."
+msgstr "Ні, не піду."
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "No feedback yet"
+msgstr "Немає фідбеку"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
+msgid "Notification"
+msgstr "Сповіщення"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "Notification - 1 Days"
+msgstr "Сповіщення - 1 день"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "Notification - 1 Hours"
+msgstr "Сповіщення - 1 година"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "Notification - 15 Minutes"
+msgstr "Сповіщення - 15 хвилин"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "Notification - 2 Hours"
+msgstr "Сповіщення - 2 години"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "Notification - 30 Minutes"
+msgstr "Сповіщення - 30 хвилин"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of errors"
+msgstr "Кількість помилок"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Кількість повідомлень з помилковою доставкою"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__count
+msgid "Number of repetitions"
+msgstr "Число повторень"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
+#, python-format
+msgid "OK"
+msgstr "Ок"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
+msgid "Only internal users"
+msgstr "Тільки внутрішні користувачі"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
+msgid "Only me"
+msgstr "Тільки я"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Open Calendar"
+msgstr "Відкрити календар"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
+msgid "Option"
+msgstr "Опція"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Options"
+msgstr "Опції"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
+msgid "Participant"
+msgstr "Учасник"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
+msgid "Partner-related data of the user"
+msgstr "Дані про користувача, пов'язані з партнером"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
+msgid "Privacy"
+msgstr "Приватний"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
+msgid "Recurrence"
+msgstr "Повторення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
+msgid "Recurrence Rule"
+msgstr "Правило повторення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
+msgid "Recurrence Termination"
+msgstr "Термін дії "
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
+msgid "Recurrence Update"
+msgstr "Оновлення повторення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
+msgid "Recurrent"
+msgstr "Повторюваний"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
+msgid "Recurrent Event"
+msgstr "Повторювана подія"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
+msgid "Recurrent Rule"
+msgstr "Правило повторення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
+msgid "Remind Before"
+msgstr "Нагадати перед"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
+msgid "Reminders"
+msgstr "Нагадування"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__count
+msgid "Repeat"
+msgstr "Повторити"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
+msgid "Repeat Every"
+msgstr "Повторювати кожні"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
+msgid "Repeat Until"
+msgstr "Повторювати до"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__interval
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr "Повторювати кожного (Дня/Тижня/Місяця/Року)"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__count
+msgid "Repeat x times"
+msgstr "Повторити x разів"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Responsible"
+msgstr "Відповідальний"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
+msgid "Responsible Contact"
+msgstr "Відповідальний контакт"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
+msgid "Rrule"
+msgstr "Правило"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
+msgid "Rrule Type"
+msgstr "Тип правила"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sa
+msgid "Sa"
+msgstr "Сб"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
+msgid "Sat"
+msgstr "Сб"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sa
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sa
+msgid "Saturday"
+msgstr "Субота"
+
+#. module: calendar
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+msgid "Schedule a new meeting"
+msgstr "Запланувати нову зустріч"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+msgid "Search Meetings"
+msgstr "Шукати зустрічі"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__2
+msgid "Second"
+msgstr "Другий"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Select attendees..."
+msgstr "Вибрати учасників..."
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Send mail"
+msgstr "Надіслати лист"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
+msgid "Show Time as"
+msgstr "Показати час як"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/notification_calendar.xml:0
+#, python-format
+msgid "Snooze"
+msgstr "Відкласти"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start
+msgid "Start"
+msgstr "Початок"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "Start Date"
+msgstr "Початкова дата"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__start
+msgid "Start date of an event, without time for full days events"
+msgstr "Дата початку події, не містить часу, якщо подія триває весь день"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Starting at"
+msgstr "Починаючи з"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
+msgid "Status"
+msgstr "Статус"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__state
+msgid "Status of the attendee's participation"
+msgstr "Статус учасника"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Status:"
+msgstr "Статус:"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
+msgid "Stop"
+msgstr "Зупинити"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__stop
+msgid "Stop date of an event, without time for full days events"
+msgstr "Дата завершення події, не містить часу, якщо подія триває весь день"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__su
+msgid "Su"
+msgstr "Нд"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+msgid "Subject"
+msgstr "Тема"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__su
+msgid "Sun"
+msgstr "Нд"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__su
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__su
+msgid "Sunday"
+msgstr "Неділя"
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
+msgid "Tag name already exists !"
+msgstr "Така мітка вже існує!"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
+msgid "Tags"
+msgstr "Теги"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Tentative"
+msgstr "Орієнтовний"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
+msgid "Th"
+msgstr "Чт"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "The"
+msgstr "Цей"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/js/mail_activity.js:0
+#, python-format
+msgid ""
+"The activity is linked to a meeting. Deleting it will remove the meeting as "
+"well. Do you want to proceed ?"
+msgstr ""
+"Дія пов'язана із зустріччю. Видалення її також призведе до видалення "
+"зустрічі. Ви хочете продовжити?"
+
+#. module: calendar
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
+msgid ""
+"The calendar is shared between employees and fully integrated with\n"
+"            other applications such as the employee leaves or the business\n"
+"            opportunities."
+msgstr ""
+"Календар ділиться між працівниками та повністю інтегрований з\n"
+"             іншими програмами, такі як відпустки працівника, або бізнес\n"
+"             можливості."
+
+#. module: calendar
+#: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+msgid "The day must be between 1 and 31"
+msgstr "День повинен бути між 1 та 31"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
+msgstr "Кінцева дата та час не можуть бути раніше, ніж початкова дата та час."
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "The ending date cannot be earlier than the starting date."
+msgstr "Кінцева дата не може бути раніше, ніж початкова дата."
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "The interval cannot be negative."
+msgstr "Інтервал не може бути негативним."
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "The number of repetitions cannot be negative."
+msgstr "Кількість повторень не може бути негативною."
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__3
+msgid "Third"
+msgstr "Третій"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#, python-format
+msgid "This and following events"
+msgstr "Ця та наступні події"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#, python-format
+msgid "This event"
+msgstr "Ця подія"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__th
+msgid "Thu"
+msgstr "Чт"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__th
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__th
+msgid "Thursday"
+msgstr "Четвер"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
+msgid "Timezone"
+msgstr "Часовий пояс"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:0
+#, python-format
+msgid "Today's Meetings"
+msgstr "Сьогоднішні зустрічі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__tu
+msgid "Tu"
+msgstr "Вт"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
+msgid "Tue"
+msgstr "Вт"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__tu
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__tu
+msgid "Tuesday"
+msgstr "Вівторок"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, python-format
+msgid "Uncertain"
+msgstr "Неточно"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
+msgid "Unit"
+msgstr "Одиниця"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__until
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Until"
+msgstr "До"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid ""
+"Updating All Events is not allowed when dates or time is modified. You can "
+"only update one particular event and following events."
+msgstr ""
+"Оновлення всіх подій не дозволяється, коли дати або час змінюються. Ви "
+"можете оновити лише одну конкретну подію та наступні події."
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_users
+msgid "Users"
+msgstr "Користувачі"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__we
+msgid "We"
+msgstr "Ми"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__we
+msgid "Wed"
+msgstr "Ср"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__we
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__we
+msgid "Wednesday"
+msgstr "Середа"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__weekday
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__weekday
+msgid "Weekday"
+msgstr "День тижня"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__weekly
+msgid "Weeks"
+msgstr "Тижні"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__yearly
+msgid "Years"
+msgstr "Роки"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Yes I'm going."
+msgstr "Так, я піду."
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_attendee.py:0
+#, python-format
+msgid "You cannot duplicate a calendar attendee."
+msgstr "Ви не можете створити однакових учасників."
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "You have to choose at least one day in the week"
+msgstr "Ви повинні обрати принаймні один день тижня"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "day %s"
+msgstr "день %s"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "e.g. Business Lunch"
+msgstr "напр. Бізнес ланч"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "for %s events"
+msgstr "для подій %s "
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on %s"
+msgstr "на %s"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on the %(position)s %(weekday)s"
+msgstr "на %(position)s %(weekday)s"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "until %s"
+msgstr "до %s"

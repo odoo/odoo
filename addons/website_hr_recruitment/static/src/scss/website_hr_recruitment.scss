@@ -1,0 +1,23 @@
+.o_website_hr_recruitment_jobs_list {
+    #jobs_grid_left {
+        ul.flex-column > li.nav-item > a {
+            padding: .5rem 1rem;
+            border-radius: 0.125rem;
+        }
+    }
+    .card {
+        padding: 15px;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.17);
+
+        &:hover {
+            transition: box-shadow 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .o_job_infos {
+            .fa {
+                color: theme-color('primary');
+                margin-right: 8px;
+            }
+        }
+    }
+}

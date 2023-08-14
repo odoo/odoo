@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+payment_acquirer_all,payment.acquirer.all,model_payment_acquirer,,1,0,0,0
+payment_acquirer_system,payment.acquirer.system,model_payment_acquirer,base.group_system,1,1,1,1
+payment_transaction_all,payment.transaction.all,model_payment_transaction,,1,0,0,0
+payment_transaction_user,payment.transaction.user,model_payment_transaction,base.group_user,1,1,1,0
+payment_transaction_system,payment.transaction.system,model_payment_transaction,base.group_system,1,1,1,1
+payment_method_all,payment.token.all,model_payment_token,,1,0,0,0
+payment_method_user,payment.token.user,model_payment_token,base.group_user,1,1,1,1
+payment_method_portal,payment.token.portal,model_payment_token,base.group_portal,1,1,1,1
+payment_method_system,payment.token.system,model_payment_token,base.group_system,1,1,1,1
+payment_icon_all,payment.icon.all,model_payment_icon,,1,0,0,0
+payment_icon_user,payment.icon.user,model_payment_icon,base.group_user,1,1,1,0
+payment_icon_system,payment.icon.system,model_payment_icon,base.group_system,1,1,1,1
+access_payment_acquirer_onboarding_wizard,access.payment.acquirer.onboarding.wizard,model_payment_acquirer_onboarding_wizard,base.group_system,1,1,1,0
+access_payment_link_wizard,access.payment.link.wizard,model_payment_link_wizard,account.group_account_user,1,1,1,0

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_restaurant/static/lib/js/jquery.ui.touch-punch.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/multiprint.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/floors.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/notes.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/payment.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Resizeable.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SplitBillButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TransferOrderButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ProductScreen/Orderline.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/BillScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/SplitBillScreen/SplitBillScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/SplitBillScreen/SplitOrderline.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/FloorScreen/EditBar.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/FloorScreen/TableWidget.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/FloorScreen/EditableTable.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/OrderManagementScreen/OrderManagementScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/OrderManagementScreen/OrderRow.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/TicketScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/ChromeWidgets/BackToFloorButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Chrome.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/PaymentScreen.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/Screens/TipScreen.js"></script>
+        </xpath>
+        <xpath expr="//link[@id='pos-stylesheet']" position="after">
+            <link rel="stylesheet" href="/pos_restaurant/static/src/css/restaurant.css"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/point_of_sale/static/src/scss/pos_dashboard.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="POS Restaurant Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/ProductScreenTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/ChromeTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/FloorScreenTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/SplitBillScreenTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/TextAreaPopupTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/TextInputPopupTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/BillScreenTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/helpers/TipScreenTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/pos_restaurant.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/SplitBillScreen.tour.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/ControlButtons.tour.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/FloorScreen.tour.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/OrderManagementScreen.tour.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/TicketScreen.tour.js"></script>
+            <script type="text/javascript" src="/pos_restaurant/static/tests/tours/TipScreen.tour.js"></script>
+        </xpath>
+    </template>
+
+    <template id="pos_restaurant.qunit_suite_tests" inherit_id="point_of_sale.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_restaurant/static/tests/unit/test_FloorScreen.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

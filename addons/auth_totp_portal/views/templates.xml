@@ -1,0 +1,74 @@
+<odoo>
+    <template id="auth_totp_frontend" name="TOTP frontend (portal)" inherit_id="portal.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="application/javascript"
+                    src="/auth_totp_portal/static/src/js/totp_frontend.js"/>
+        </xpath>
+    </template>
+    <template id="assets_tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/auth_totp_portal/static/tests/totp_portal.js"></script>
+        </xpath>
+    </template>
+
+    <template id="totp_portal_hook" name="TOTP Portal hook" inherit_id="portal.portal_my_security">
+        <xpath expr="//div[hasclass('o_portal_security_body')]">
+            <!--
+                portal users don't have access to non-qweb views anymore, so
+                embed the target view as a *data island* of sorts, a JSON embed
+                of the fields_view_get could have been nice but at 14k it'd be a
+                bit ridiculous
+            -->
+            <div class="d-none" id="totp_wizard_view">
+                <t t-esc="env.ref('auth_totp.view_totp_wizard').sudo().read_combined(['arch'])['arch']"/>
+            </div>
+            <section>
+                <h3>Two-factor authentication</h3>
+                <t t-if="not user_id.totp_enabled">
+                    <div class="alert alert-secondary" role="status">
+                        <i class="fa fa-warning"/>
+                        Two-factor authentication not enabled
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="auth_totp_portal_enable">
+                        Enable two-factor authentication
+                    </button>
+                </t>
+                <t t-else="">
+                    <span class="text-success">
+                        <i class="fa fa-check-circle"/>
+                        Two-factor authentication enabled
+                    </span>
+                    <button type="button" class="btn btn-link" id="auth_totp_portal_disable">
+                        (Disable two-factor authentication)
+                    </button>
+                    <t t-if="len(user_id.totp_trusted_device_ids)">
+                        <table class="table o_main_table">
+                            <thead>
+                                <tr>
+                                    <th><strong>Trusted Device</strong></th>
+                                    <th><strong>Added On</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="user_id.totp_trusted_device_ids" t-as="td">
+                                    <td>
+                                        <span t-field="td.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="td.create_date"/>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-trash text-danger" type="button" t-att-id="td.id"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary" type="button" id="auth_totp_portal_revoke_all_devices">
+                            Revoke All
+                        </button>
+                    </t>
+                </t>
+            </section>
+        </xpath>
+    </template>
+</odoo>

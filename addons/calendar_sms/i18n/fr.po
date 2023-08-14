@@ -1,0 +1,92 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* calendar_sms
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Nicolas Roussey <nro@odoo.com>, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Alexandra Jubert, 2021
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "Calendrier de l'événement"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "Evénement calendrier : Rappel"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Rappel d'événement"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Gestionnaire de rappel d'événements"
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid "Event reminder: ${object.name}, ${object.display_time}"
+msgstr "Rappel d'événement: ${object.name}, ${object.display_time}"
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Rappel d'événement: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
+msgid "Send SMS to attendees"
+msgstr "Envoyer un SMS aux participants"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Type"

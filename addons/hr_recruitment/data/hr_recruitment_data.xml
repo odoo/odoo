@@ -1,0 +1,383 @@
+<?xml version="1.0"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Meeting Types (for interview meetings) -->
+    <record model="calendar.event.type" id="categ_meet_interview">
+        <field name="name">Interview</field>
+    </record>
+
+    <!-- Templates for interest / refusing applicants -->
+    <record id="email_template_data_applicant_refuse" model="mail.template">
+        <field name="name">Applicant: Refuse</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+    <tr>
+        <td valign="top">
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                Thank you for your interest in joining the
+                <b>${object.company_id.name}</b> team.  We wanted to
+                let you know that, although your resume is competitive,
+                our hiring team reviewed your application and <b>did not
+                select it for further consideration</b>.
+                <br/><br/>
+                Please note that recruiting is hard, and we can make
+                mistakes. Do not hesitate to reply to this email if you
+                think we made a mistake, or if you want more information
+                about our decision.
+                <br/><br/>
+                We will, however, keep your resume on record and get in
+                touch with you about future opportunities that may be a
+                better fit for your skills and experience.
+                <br/><br/>
+                We wish you all the best in your job search and hope we
+                will have the chance to consider you for another role
+                in the future.
+                <br/><br/>
+                Thank you,
+                <div style="font-size: 11px; color: grey;">
+                    % if object.user_id:
+                        -- <br/>
+                        <strong>${object.user_id.name}</strong><br/>
+                        Email: ${object.user_id.email or ''}<br/>
+                        Phone: ${object.user_id.phone or ''}
+                    % else:
+                        -- <br/>
+                        ${object.company_id.name}<br/>
+                        The HR Team
+                    % endif
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+    </record>
+
+    <record id="email_template_data_applicant_interest" model="mail.template">
+        <field name="name">Applicant: Interest</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+    <tr>
+        <td valign="top" style="padding: 0px 10px;">
+            <div style="text-align: center">
+                <h2>Congratulations!</h2>
+                <div style="color:grey;">Your resume has been positively reviewed.</div>
+                <img src="/hr_recruitment/static/src/img/congratulations.png" alt="Congratulations!" style="width:175px;margin:20px 0;"/>
+            </div>
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                We just reviewed your resume, and it caught our
+                attention. As we think you might be great for the
+                position, your application has been short listed for a
+                call or an interview.
+                <br/><br/>
+                % if 'website_url' in object.job_id and object.job_id.website_url:
+                    <div style="margin: 16px 8px 16px 8px;">
+                        <a href="${object.job_id.website_url}"
+                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                    </div>
+                % endif
+
+                % if object.user_id:
+                    You will soon be contacted by:
+                    <table>
+                        <tr>
+                            <td width="75">
+                                <img src="/web/image/res.users/${object.user_id.id}/image_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <strong>${object.user_id.name}</strong><br/>
+                                <span>Email: ${object.user_id.email or ''}</span><br/>
+                                <span>Phone: ${object.user_id.phone or ''}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
+                % endif
+                See you soon,
+                <div style="font-size: 11px; color: grey;">
+                    -- <br/>
+                    The HR Team
+                    % if 'website_url' in object.job_id and object.job_id.website_url
+                        Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.<br/>
+                    % endif
+                </div>
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
+                We usually <strong>answer applications within a few days</strong>.
+                <br/><br/>
+                The next step is either a call or a meeting in our offices.
+                <br/>
+                Feel free to <strong>contact us if you want a faster
+                feedback</strong> or if you don't get news from us
+                quickly enough (just reply to this email).
+                <br/>
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
+                % set location = ''
+                % if object.job_id.address_id.name:
+                    <strong>${object.job_id.address_id.name}</strong><br/>
+                % endif
+                % if object.job_id.address_id.street:
+                    ${object.job_id.address_id.street}<br/>
+                    % set location = object.job_id.address_id.street
+                % endif
+                % if object.job_id.address_id.street2:
+                    ${object.job_id.address_id.street2}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
+                % endif
+                % if object.job_id.address_id.city:
+                    ${object.job_id.address_id.city},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
+                % endif
+                % if object.job_id.address_id.state_id.name:
+                    ${object.job_id.address_id.state_id.name},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
+                % endif
+                % if object.job_id.address_id.zip:
+                    ${object.job_id.address_id.zip}
+                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
+                % endif
+                <br/>
+                % if object.job_id.address_id.country_id.name:
+                    ${object.job_id.address_id.country_id.name}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
+                % endif
+                <br/>
+            </div>
+        </td>
+    </tr>
+</table></field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+    </record>
+
+    <record id="email_template_data_applicant_congratulations" model="mail.template">
+        <field name="name">Applicant: Acknowledgement</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+    <tr>
+        <td valign="top" style="padding: 0px 10px;">
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                Hello,
+                <br/><br/>
+                We confirm we successfully received your application for the job
+                "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>" at <strong>${object.company_id.name}</strong>.
+                <br/><br/>
+                We will come back to you shortly.
+
+                % if 'website_url' in object.job_id and object.job_id.website_url:
+                    <div style="margin: 16px 8px 16px 8px;">
+                        <a href="${object.job_id.website_url}"
+                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                    </div>
+                % endif
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                % if object.user_id:
+                    <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
+                    <table>
+                        <tr>
+                            <td width="75">
+                                <img src="/web/image/res.users/${object.user_id.id}/image_128" alt="Avatar" style="vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <strong>${object.user_id.name}</strong><br/>
+                                <span>Email: ${object.user_id.email or ''}</span><br/>
+                                <span>Phone: ${object.user_id.phone or ''}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                % endif
+
+                <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
+                We usually <strong>answer applications within a few days.</strong><br/><br/>
+                Feel free to <strong>contact us if you want a faster
+                feedback</strong> or if you don't get news from us
+                quickly enough (just reply to this email).
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
+                % set location = ''
+                % if object.job_id.address_id.name:
+                    <strong>${object.job_id.address_id.name}</strong><br/>
+                % endif
+                % if object.job_id.address_id.street:
+                    ${object.job_id.address_id.street}<br/>
+                    % set location = object.job_id.address_id.street
+                % endif
+                % if object.job_id.address_id.street2:
+                    ${object.job_id.address_id.street2}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
+                % endif
+                % if object.job_id.address_id.city:
+                    ${object.job_id.address_id.city},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
+                % endif
+                % if object.job_id.address_id.state_id.name:
+                    ${object.job_id.address_id.state_id.name},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
+                % endif
+                % if object.job_id.address_id.zip:
+                    ${object.job_id.address_id.zip}
+                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
+                % endif
+                <br/>
+                % if object.job_id.address_id.country_id.name:
+                    ${object.job_id.address_id.country_id.name}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
+                % endif
+                <br/>
+            </div>
+        </td>
+    </tr>
+</table></field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+    </record>
+
+    <record model="hr.recruitment.degree" id="degree_graduate">
+        <field name="name">Graduate</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_bachelor">
+        <field name="name">Bachelor Degree</field>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_licenced">
+        <field name="name">Master Degree</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_bac5">
+        <field name="name">Doctoral Degree</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="mail_alias_jobs" model="mail.alias">
+        <field name="alias_name">jobs</field>
+        <field name="alias_model_id" ref="model_hr_applicant"/>
+        <field name="alias_user_id" ref="base.user_admin"/>
+        <field name="alias_parent_model_id" ref="model_hr_job"/>
+    </record>
+
+    <!-- Applicant-related subtypes for messaging / Chatter -->
+    <record id="mt_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+        <field name="description">Applicant created</field>
+    </record>
+    <record id="mt_applicant_stage_changed" model="mail.message.subtype">
+        <field name="name">Stage Changed</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
+        <field name="description">Stage changed</field>
+    </record>
+    <record id="mt_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="True"/>
+        <field name="description">Applicant hired</field>
+    </record>
+
+    <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_new" model="mail.message.subtype">
+        <field name="name">Job Position created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
+        <field name="name">Applicant Stage Changed</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_applicant_stage_changed"/>
+        <field name="relation_field">job_id</field>
+    </record>
+    <record id="mt_job_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_applicant_hired"/>
+        <field name="relation_field">job_id</field>
+    </record>
+
+    <!-- Department-related (parent) subtypes for messaging / Chatter -->
+    <record id="mt_department_new" model="mail.message.subtype">
+        <field name="name">Job Position Created</field>
+        <field name="res_model">hr.department</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="mt_job_new"/>
+        <field name="relation_field">department_id</field>
+    </record>
+
+    <!-- Applicant Categories(Tag) -->
+    <record id="tag_applicant_reserve" model="hr.applicant.category">
+        <field name="name">Reserve</field>
+    </record>
+    <record id="tag_applicant_manager" model="hr.applicant.category">
+        <field name="name">Manager</field>
+    </record>
+    <record id="tag_applicant_it" model="hr.applicant.category">
+        <field name="name">IT</field>
+    </record>
+    <record id="tag_applicant_sales" model="hr.applicant.category">
+        <field name="name">Sales</field>
+    </record>
+    <record model="utm.campaign" id="utm_campaign_job">
+            <field name="name">Job Campaign</field>
+    </record>
+
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Initial Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="sequence">2</field>
+        <field name="template_id" ref="email_template_data_applicant_congratulations"/> 
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <!-- applicant refuse reason -->
+        <record id="refuse_reason_1" model="hr.applicant.refuse.reason">
+            <field name="name">Doesn't fit the job requirements</field>
+        </record>
+        <record id="refuse_reason_2" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant is not interested anymore</field>
+        </record>
+        <record id="refuse_reason_3" model="hr.applicant.refuse.reason">
+            <field name="name">The applicant gets a better offer</field>
+        </record>
+
+</data>
+</odoo>

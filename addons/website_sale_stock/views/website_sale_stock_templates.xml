@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Sale Stock">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_stock/static/src/js/variant_mixin.js" />
+        </xpath>
+    </template>
+
+    <!-- Shopping Cart Lines -->
+    <template id="website_sale_stock_cart_lines" inherit_id="website_sale.cart_lines" name="Shopping Cart Lines">
+        <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
+          <attribute name='t-att-data-max'>(line.product_uom_qty + (line.product_id.virtual_available - line.product_id.cart_qty)) if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold'] else None</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('css_quantity')]//i[hasclass('fa-plus')]/.." position="replace">
+          <t t-if="line._get_stock_warning(clear=False)">
+            <div class="input-group-append">
+                <a t-attf-href="#" class="btn btn-link">
+                  <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
+                </a>
+            </div>
+          </t>
+          <t t-else="1">
+            <t>$0</t>
+          </t>
+        </xpath>
+        <xpath expr="//div[hasclass('css_quantity')]" position="after">
+            <div class='availability_messages'/>
+        </xpath>
+        <xpath expr="//div[hasclass('js_cart_lines')]" position="after">
+          <t t-if='website_sale_order'>
+            <div t-if='website_sale_order._get_stock_warning(clear=False)' class="alert alert-warning" role="alert">
+              <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
+            </div>
+          </t>
+        </xpath>
+    </template>
+
+  <template id="website_sale_stock_product" inherit_id="website_sale.product" priority="4">
+    <xpath expr="//a[@id='add_to_cart']" position="after">
+      <div class="availability_messages o_not_editable"/>
+    </xpath>
+  </template>
+
+  <template id="website_sale_stock_payment" inherit_id="website_sale.cart_summary">
+     <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
+      <t t-if='line._get_stock_warning(clear=False)'>
+        <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
+      </t>
+    </xpath>
+    <xpath expr="//table[@id='cart_products']" position="after">
+        <t t-if='website_sale_order'>
+          <t t-set='warning' t-value='website_sale_order._get_stock_warning(clear=False)' />
+          <div t-if='warning' class="alert alert-warning" role="alert">
+            <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
+          </div>
+        </t>
+    </xpath>
+  </template>
+
+</odoo>

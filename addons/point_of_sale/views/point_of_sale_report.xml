@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_user_label" model="ir.actions.report">
+        <field name="name">User Labels</field>
+        <field name="model">res.users</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_userlabel</field>
+        <field name="report_file">point_of_sale.report_userlabel</field>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- used from POS UI, no need to be in print menu -->
+    <record id="pos_invoice_report" model="ir.actions.report">
+        <field name="name">Invoice</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_invoice</field>
+        <field name="print_report_name">'Invoice - %s' % (object.name)</field>
+    </record>
+
+    <record id="sale_details_report" model="ir.actions.report">
+        <field name="name">Sales Details</field>
+        <field name="model">report.point_of_sale.report_saledetails</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">point_of_sale.report_saledetails</field>
+    </record>
+
+    <template id="report_invoice" inherit_id="account.report_invoice" primary="True"/>
+
+</odoo>

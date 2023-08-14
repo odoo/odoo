@@ -1,0 +1,410 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_adyen
+# 
+# Translators:
+# Paolo Valier, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 15:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"Values set here are "
+"company-specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"I valori impostati qui "
+"sono specifici per azienda.\" aria-label=\"I valori impostati qui sono "
+"specifici per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Account"
+msgstr "Conto"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
+msgid "Add tip through payment terminal (Adyen)"
+msgstr "Aggiungere mancia tramite terminale di pagamento (Adyen)"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Address"
+msgstr "Indirizzo"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid "Adyen API key"
+msgstr "Chiave API Adyen"
+
+#. module: pos_adyen
+#: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_account_id
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__adyen_account_id
+#: model:ir.ui.menu,name:pos_adyen.menu_pos_adyen_account
+msgid "Adyen Account"
+msgstr "Conto Adyen"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Adyen Error"
+msgstr "Errore Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
+msgid "Adyen Latest Diagnosis"
+msgstr "Ultima diagnosi Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
+msgid "Adyen Latest Response"
+msgstr "Ultima risposta Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
+msgid "Adyen Payout"
+msgstr "Pagamento Adyen"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Adyen Store"
+msgstr "Negozio Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_id
+msgid "Adyen Terminal"
+msgstr "Terminale Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "Adyen Terminal Identifier"
+msgstr "Identificativo terminale Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Adyen Test Mode"
+msgstr "Modalità test Adyen"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_account
+msgid "Adyen for Platforms Account"
+msgstr "Conto Adyen per piattaforme"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_store
+msgid "Adyen for Platforms Store"
+msgstr "Negozio Adyen per piattaforme"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_adyen_terminal
+msgid "Adyen for Platforms Terminal"
+msgstr "Terminale Adyen per piattaforme"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "An unexpected error occured. Message from Adyen: %s"
+msgstr "Si è verificato un errore non atteso. Messaggio da Adyen: %s"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
+msgid "Ask Customers For Tip"
+msgstr "Richiesta mancia ai clienti"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Authentication failed. Please check your Adyen credentials."
+msgstr "Autenticazione non riuscita. Controllare le credenziali Adyen."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "City"
+msgstr "Città"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_id
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Country"
+msgstr "Nazione"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_code
+msgid "Country Code"
+msgstr "Codice nazione"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Create an account in 1 minute"
+msgstr "Crea un conto in 1 minuto"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_date
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_date
+msgid "Created on"
+msgstr "Data creazione"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__house_number_or_name
+msgid "House Number Or Name"
+msgstr "Numero civico o nome"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "House number or name"
+msgstr "Numero civico o nome"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__id
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__id
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method____last_update
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_uid
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_date
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid "Message from Adyen: %s"
+msgstr "Messaggio da Adyen: %s"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
+msgid "Order a Terminal"
+msgstr "Ordina terminale"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__terminal_ids
+msgid "Payment Terminals"
+msgstr "Terminali di pagamento"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__phone_number
+msgid "Phone Number"
+msgstr "Numero di telefono"
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_config.py:0
+#, python-format
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
+msgstr ""
+"Per gestire le mance in Adyen configurare un prodotto mancia per il POS %s."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/adyen_account.py:0
+#, python-format
+msgid "Please create a store first."
+msgstr "Creare prima un negozio."
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurazione punto vendita"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metodi di pagamento punto vendita"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
+msgid "Prompt the customer to tip."
+msgstr "Invita il cliente a lasciare la mancia."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
+msgid "Reference"
+msgstr "Riferimento"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Run transactions in the test environment."
+msgstr "Esegue le transazioni nell'ambiente di prova."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "State"
+msgstr "Stato/Provincia"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_code
+msgid "State Code"
+msgstr "Codice stato/provincia"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__store_id
+msgid "Store"
+msgstr "Negozio"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
+msgid "Stores"
+msgstr "Negozi"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__street
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "Street"
+msgstr "Indirizzo"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_response
+msgid ""
+"Technical field used to buffer the latest asynchronous notification from "
+"Adyen."
+msgstr ""
+"Campo tecnico utilizzato per caricare l'ultima notifica asincrona da Adyen."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
+msgid "Technical field used to determine if the terminal is still connected."
+msgstr ""
+"Campo tecnico utilizzato per stabilire se il terminale è ancora connesso."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
+msgid "Terminal"
+msgstr "Terminale"
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Il terminale %sè già in uso nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Il terminale %s è già in uso nell'azienda %s nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
+msgid "Terminal ID"
+msgstr "ID terminale"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_adyen_store__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Codice ISO a due caratteri della nazione. \n"
+"È possibile usare questo campo per una ricerca rapida."
+
+#. module: pos_adyen
+#. openerp-web
+#: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
+#, python-format
+msgid ""
+"The connection to your payment terminal failed. Please check if it is still "
+"connected to the internet."
+msgstr ""
+"Connessione al terminale di pagamento non riuscita. Controllare se è ancora "
+"presente il collegamento internet."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
+msgid "The state code."
+msgstr "Il codice stato/provincia."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_uuid
+msgid "UUID"
+msgstr "UUID"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"Utilizzata per connettersi ad Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
+#: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
+msgid "ZIP"
+msgstr "CAP"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
+msgstr "[Modello terminale]-[Numero di serie], ad esempio: P400Plus-123456789"

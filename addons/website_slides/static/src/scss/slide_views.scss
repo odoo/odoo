@@ -1,0 +1,17 @@
+$o-kanban-large-record-width: 400px;
+
+.o_kanban_view.o_slide_kanban {
+    .o_kanban_group:not(.o_column_folded) {
+        width: $o-kanban-large-record-width + 2*$o-kanban-group-padding;
+    }
+    .o_kanban_record {
+        width: $o-kanban-large-record-width;
+    }
+}
+
+table.o_section_list_view tr.o_data_row.o_is_section {
+    font-weight: bold;
+    background-color: #DDD;
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+}

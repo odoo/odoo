@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAILING LIST -->
+    <record model="ir.ui.view" id="mailing_list_view_search">
+        <field name="name">mailing.list.view.search</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <search string="Mailing Lists">
+                <field name="name"/>
+                <field name="create_date"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Creation Period" name="group_create_date"
+                        context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_tree">
+        <field name="name">mailing.list.view.tree</field>
+        <field name="model">mailing.list</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing Lists" sample="1">
+                <field name="name"/>
+                <field name="create_date"/>
+                <field name="is_public"/>
+                <field name="contact_nbr"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_form">
+        <field name="name">mailing.list.form</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contacts"
+                                type="object" icon="fa-user" class="oe_stat_button">
+                            <field name="contact_nbr" string="Recipients" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="is_public"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form_simplified" model="ir.ui.view">
+        <field name="name">mailing.list.form.simplified</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <group>
+                    <group>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                            </h1>
+                        </div>
+                    </group>
+                </group>
+                <group>
+                    <field name="is_public"/>
+                </group>
+                <footer>
+                    <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_create_mass_mailing_list" model="ir.actions.act_window">
+        <field name="name">Create a Mailing List</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mailing_list_view_form_simplified"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="mailing_list_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.list.view.kanban</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <kanban js_class="mass_mailing_list_kanban" class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list" sample="1">
+                <field name="name"/>
+                <field name="contact_nbr"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_mass_mailing_kanban_main">
+                                <div class="o_kanban_card_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane">
+                                    <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" data-display="static" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <span class="fa fa-ellipsis-v"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                                                <t t-if="record.active.raw_value">Archive</t>
+                                                <t t-if="!record.active.raw_value">Restore</t>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_mailing_list_kanban_boxes">
+                                <a name="action_view_contacts" type="object">
+                                    <div>
+                                        <span class="badge badge-pill">
+                                            <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
+                                            <t t-esc="record.contact_nbr.value"/>
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
+        <field name="name">Mailing Lists</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new mailing list
+          </p><p>
+            You don't need to import your mailing lists, you can easily
+            send emails<br/> to any contact saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
+        parent="mass_mailing_mailing_list_menu" sequence="3"
+        action="action_view_mass_mailing_lists"/>
+</odoo>

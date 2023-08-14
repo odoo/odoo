@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--Email template -->
+        <record id="mail_template_data_payment_receipt" model="mail.template">
+            <field name="name">Payment Receipt: Send by email</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="subject">${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="xml">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}<br/><br/>
+        Thank you for your payment.
+        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting
+        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <br/><br/>
+        Best regards,
+        % if user.signature:
+            <br/>
+            ${user.signature | safe}
+        % endif
+    </p>
+</div>
+</field>
+            <field name="report_template" ref="account.action_report_payment_receipt"/>
+            <field name="report_name">${(object.name or '').replace('/','-')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="account_send_payment_receipt_by_email_action" model="ir.actions.act_window">
+            <field name="name">Send receipt by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'comment',
+                'default_use_template': True,
+                'default_template_id': ref('account.mail_template_data_payment_receipt'),
+                'custom_layout': 'mail.mail_notification_light',
+            }"/>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
+
+        <record id="account_send_payment_receipt_by_email_action_multi" model="ir.actions.act_window">
+            <field name="name">Send receipts by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'mass_mail',
+                'default_use_template': True,
+                'default_template_id': ref('account.mail_template_data_payment_receipt'),
+                'custom_layout': 'mail.mail_notification_light',
+            }"/>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

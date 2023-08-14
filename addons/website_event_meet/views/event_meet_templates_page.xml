@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_meet_main" name="Event Meet">
+    <t t-set="no_header" t-value="option_widescreen"/>
+    <t t-set="no_footer" t-value="option_widescreen"/>
+    <t t-call="website_event.layout">
+        <div class="o_wevent_online o_wevent_online_bg o_wemeet_index">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+                <div class="row mb-5 mx-0">
+                    <t t-call="website_event_meet.meeting_room_aside"/>
+                    <t t-call="website_event_meet.meeting_room_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_2" class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="meeting_room_main" name="Meeting Room: Main Content">
+    <div t-att-class="'col-12 o_wevent_online_page_main o_wemeet_room_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+        <!-- EVENT NOT STARTED ALERTS -->
+        <t t-if="not meeting_room.event_id.is_ongoing">
+            <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
+                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/> is over.
+                <br/>
+                <span>Join us next time to chat about <b t-esc="meeting_room.name"/>!</span>
+            </div>
+            <div t-else="" class="alert alert-warning text-center">
+                The event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
+                <span t-if="meeting_room.event_id.start_today">
+                    starts in
+                    <span t-esc="meeting_room.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                </span>
+                <span class="my-0" t-else="meeting_room.event_id.start_today">
+                    starts on
+                    <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/> (<t t-esc="meeting_room.event_id.date_tz"/>).
+                </span>
+                <br/>
+                <span>Join us there to chat about <b t-esc="meeting_room.name"/> !</span>
+            </div>
+        </t>
+        <!-- ROOM CONTENT -->
+        <div class="d-flex flex-column">
+            <div t-if="meeting_room.room_is_full and not is_event_manager" class="alert alert-warning text-center">
+                <span>Oops! This room is full !</span><br />Come back later to have a chat with us!
+            </div>
+            <div t-else="" class="d-flex flex-column">
+                <div id="o_wemeet_jitsi_iframe">
+                    <div class="o_wjitsi_chat_room_loading position-absolute w-100 text-center text-muted">
+                        <i class="fa fa-spin fa-spinner mr-3"/>
+                        <span>Loading your room...</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <t t-call="website_jitsi.chat_room_join_button">
+                        <t t-set="_classes" t-value="'d-none'"/>
+                        <t t-set="room_name" t-value="meeting_room.room_name"/>
+                        <t t-set="chat_room_id" t-value="meeting_room.chat_room_id.id"/>
+                        <t t-set="auto_open" t-value="1"/>
+                        <t t-set="attach_to" t-value="'#o_wemeet_jitsi_iframe'"/>
+                        <t t-set="max_capacity" t-value="meeting_room.room_max_capacity"/>
+                        <t t-set="check_full" t-value="int(not is_event_manager)"/>
+                        <t t-set="default_username" t-value="default_username"/>
+                        <t t-set="jitsi_server_domain" t-value="meeting_room.chat_room_id.jitsi_server_domain"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <!-- ROOM DESCRIPTION -->
+        <div class="mx-3">
+            <span class="h5 d-inline-block mt-3 mb-1" t-esc="meeting_room.name"/>
+            <br/>
+            <span class="text-muted">A chat among <span class="font-weight-bold" t-esc="meeting_room.target_audience"/></span>
+        </div>
+        <hr class="mt-2 mb-0"/>
+        <div t-field="meeting_room.summary" class="my-2 mx-3 oe_no_empty"/>
+     </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- ASIDE: CONTROL PANEL -->
+<!-- ============================================================ -->
+
+<template id="meeting_room_aside" name="Meeting Room: Aside">
+    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="bg-white o_wevent_online_page_aside_content">
+            <div class="d-flex align-items-center justify-content-between mx-2 py-1">
+                <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other Rooms</span>
+                <a href="#collapse_meet_room_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
+                    <i class="fa fa-chevron-down d-lg-none"/>
+                </a>
+            </div>
+            <ul id="collapse_meet_room_aside" class="list-unstyled collapse d-lg-block mb-0">
+                <li t-foreach="meeting_rooms_other" t-as="meeting_room_other">
+                    <a class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
+                        t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
+                        <div class="flex-grow-1 mw-100">
+                            <div class="text-truncate" t-esc="meeting_room_other.name"/>
+                            <span class="text-muted" t-esc="meeting_room_other.summary"></span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted">
+                                    <b>&amp;#9900;&amp;nbsp;</b>
+                                    <small><t t-esc="meeting_room_other.room_participant_count"/> <t t-esc="meeting_room_other.target_audience"/></small>
+                                </div>
+                                <small t-if="meeting_room_other.room_lang_id" class="text-muted"><i class="fa fa-globe"/> <t t-esc="meeting_room_other.room_lang_id.name"/></small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>

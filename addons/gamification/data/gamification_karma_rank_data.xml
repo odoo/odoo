@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!--Karma-->
+    <record id="base.user_root" model="res.users">
+        <field name="karma">2500</field>
+    </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="karma">2500</field>
+    </record>
+
+    <!--Ranks-->
+    <record id="rank_newbie" model="gamification.karma.rank">
+        <field name="name">Newbie</field>
+        <field name="description" type="html"><p>You just began the adventure! Welcome!</p></field>
+        <field name="description_motivational" type="html">
+            <div class="media align-items-center">
+                <div class="media-body">Earn your first points and join the adventure !</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_newbie_badge.svg"/>
+            </div>
+        </field>
+        <field name="karma_min">1</field>
+        <field name="image_1920" type="base64" file="gamification/static/img/rank_newbie_badge.svg"/>
+    </record>
+
+    <record id="rank_student" model="gamification.karma.rank">
+        <field name="name">Student</field>
+        <field name="description" type="html"><p>You're a young padawan now. May the force be with you!</p></field>
+        <field name="description_motivational" type="html">
+            <div class="media align-items-center">
+                <div class="media-body">Reach the next rank to show the rest of the world you exist.</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_student_badge.svg"/>
+            </div>
+        </field>
+        <field name="karma_min">100</field>
+        <field name="image_1920" type="base64" file="gamification/static/img/rank_student_badge.svg"/>
+    </record>
+
+    <record id="rank_bachelor" model="gamification.karma.rank">
+        <field name="name">Bachelor</field>
+        <field name="description" type="html"><p>You love learning things. Curiosity is a good way to progress.</p></field>
+        <field name="description_motivational" type="html">
+            <div class="media align-items-center">
+                <div class="media-body">Reach the next rank to improve your status!</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_bachelor_badge.svg"/>
+            </div>
+        </field>
+        <field name="karma_min">500</field>
+        <field name="image_1920" type="base64" file="gamification/static/img/rank_bachelor_badge.svg"/>
+    </record>
+
+    <record id="rank_master" model="gamification.karma.rank">
+        <field name="name">Master</field>
+        <field name="description" type="html"><p>You know what you are talking about. People learn from you.</p></field>
+        <field name="description_motivational" type="html">
+            <div class="media align-items-center">
+                <div class="media-body">Reach the next rank and become a Master!</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_master_badge.svg"/>
+            </div>
+        </field>
+        <field name="karma_min">2000</field>
+        <field name="image_1920" type="base64" file="gamification/static/img/rank_master_badge.svg"/>
+    </record>
+
+    <record id="rank_doctor" model="gamification.karma.rank">
+        <field name="name">Doctor</field>
+        <field name="description" type="html"><p>You have reached the last rank. Congratulations!</p></field>
+        <field name="description_motivational" type="html">
+            <div class="media align-items-center">
+                <div class="media-body">Reach the next rank and become a powerful user!</div>
+                <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_doctor_badge.svg"/>
+            </div>
+        </field>
+        <field name="karma_min">10000</field>
+        <field name="image_1920" type="base64" file="gamification/static/img/rank_doctor_badge.svg"/>
+    </record>
+</data></odoo>

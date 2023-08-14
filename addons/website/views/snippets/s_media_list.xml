@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Media List" id="s_media_list">
+    <section class="s_media_list bg-200 pt32 pb32" data-vcss="001">
+        <div class="container">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor">
+                <div class="col-lg-12 s_media_list_item pt16 pb16" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor no-gutters align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 align-self-stretch s_media_list_img_wrapper">
+                            <img src="/web/image/website.s_media_list_default_image_1" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Media heading</h3>
+                            <p>Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs.</p>
+                            <a href="#" class="btn btn-primary mb-2">Discover</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 s_media_list_item pt16 pb16" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor no-gutters align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 align-self-stretch s_media_list_img_wrapper">
+                            <img src="/web/image/website.s_media_list_default_image_2" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Event heading</h3>
+                            <p>Speakers from all over the world will join our experts to give inspiring talks on various topics. Stay on top of the latest business management trends &amp; technologies</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 s_media_list_item pt16 pb16" data-name="Media item">
+                    <div class="row s_col_no_resize s_col_no_bgcolor no-gutters align-items-center o_cc o_cc1">
+                        <div class="col-lg-4 align-self-stretch s_media_list_img_wrapper">
+                            <img src="/web/image/website.s_media_list_default_image_3" class="s_media_list_img h-100 w-100" alt=""/>
+                        </div>
+                        <div class="col-lg-8 s_media_list_body">
+                            <h3>Post heading</h3>
+                            <p>Use this component for creating a list of featured elements to which you want to bring attention.</p>
+                            <a href="#">Continue reading <i class="fa fa-long-arrow-right align-middle ml-1"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_media_list_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <t t-call="web_editor.snippet_options_background_options">
+            <t t-set="selector" t-value="'.s_media_list_item'"/>
+            <t t-set="target" t-value="'> .row'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="False"/>
+            <t t-set="with_color_combinations" t-value="True"/>
+        </t>
+        <div data-js="Box" data-selector=".s_media_list_item" data-target="> .row">
+            <t t-call="website.snippet_options_border_widgets"/>
+            <t t-call="website.snippet_options_shadow_widgets"/>
+        </div>
+        <div data-selector=".s_media_list_item" data-target="> .row">
+            <we-button-group string="Layout">
+                <we-button title="Left"
+                           data-name="media_left_opt"
+                           data-select-class=""
+                           data-img="/website/static/src/img/snippets_options/image_left.svg"/>
+                <we-button title="Right"
+                           data-select-class="flex-row-reverse"
+                           data-img="/website/static/src/img/snippets_options/image_right.svg"/>
+            </we-button-group>
+        </div>
+        <div data-js="MediaItemLayout" data-selector=".s_media_list_item">
+            <we-button-group string="Image Size" data-dependencies="media_left_opt">
+                <we-button data-layout="3"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_4.svg"
+                           title="1/4 - 3/4"/>
+                <we-button data-layout="4"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_3.svg"
+                           title="1/3 - 2/3"/>
+                <we-button data-layout="6"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_2.svg"
+                           title="1/2 - 1/2"/>
+            </we-button-group>
+            <we-button-group string="Image Size" data-dependencies="!media_left_opt">
+                <we-button data-layout="3"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_4_right.svg"
+                           title="1/4 - 3/4"/>
+                <we-button data-layout="4"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_3_right.svg"
+                           title="1/3 - 2/3"/>
+                <we-button data-layout="6"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_2_right.svg"
+                           title="1/2 - 1/2"/>
+            </we-button-group>
+        </div>
+
+        <div data-selector=".s_media_list_item" data-target="> .row">
+            <!-- Don't use the standard Vert. Alignement option to not suggest
+                 Equal Height, which is useless for this snippet. -->
+            <we-button-group string="Text Position" title="Text Position" data-dependencies="media_left_opt">
+                <we-button title="Align Top"
+                           data-select-class="align-items-start"
+                           data-img="/website/static/src/img/snippets_options/align_top_right.svg"/>
+                <we-button title="Align Middle"
+                           data-select-class="align-items-center"
+                           data-img="/website/static/src/img/snippets_options/align_middle_right.svg"/>
+                <we-button title="Align Bottom"
+                           data-select-class="align-items-end"
+                           data-img="/website/static/src/img/snippets_options/align_bottom_right.svg"/>
+            </we-button-group>
+            <we-button-group string="Text Position" title="Text Position" data-dependencies="!media_left_opt">
+                <we-button title="Align Top"
+                           data-select-class="align-items-start"
+                           data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+                <we-button title="Align Middle"
+                           data-select-class="align-items-center"
+                           data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+                <we-button title="Align Bottom"
+                           data-select-class="align-items-end"
+                           data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_media_list_css_000" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_media_list/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_media_list_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_media_list/001.scss"/>
+    </xpath>
+</template>
+
+</odoo>

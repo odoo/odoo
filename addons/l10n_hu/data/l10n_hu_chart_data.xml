@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_hu_statements_menu" name="Hungary" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
+    <record id="hungarian_chart_template" model="account.chart.template">
+        <field name="name">Magyar főkönyvi kivonat</field>
+        <field name="code_digits">4</field>
+        <field name="cash_account_code_prefix">381</field>
+        <field name="bank_account_code_prefix">384</field>
+        <field name="transfer_account_code_prefix">389</field>
+        <field name="currency_id" ref="base.HUF"/>
+    </record>
+</odoo>

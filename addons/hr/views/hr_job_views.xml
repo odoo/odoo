@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_job_form" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="set_recruit" string="Start Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
+                        </div>
+                        <notebook> 
+                            <page string="Job Description">
+                                <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
+                                    <label for="description"/>
+                                    <field name="description"/>
+                                </div>
+                            </page>
+                            <page string="Recruitment">
+                                <group>
+                                    <group name="recruitment">
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="department_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="no_of_recruitment"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_job_tree" model="ir.ui.view">
+            <field name="name">hr.job.tree</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <tree string="Job" sample="1">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
+                    <field name="no_of_hired_employee"/>
+                    <field name="state"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_job_view_kanban" model="ir.ui.view">
+            <field name="name">hr.job.kanban</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div>
+                                    <span><field name="department_id"/>&amp;nbsp;</span>
+                                </div>
+                                <div t-if="!selection_mode">
+                                    <span>Vacancies : <field name="expected_employees"/></span>
+                                    <span t-att-class="record.state.raw_value == 'recruit'  and 'float-right badge badge-success' or 'float-right badge badge-danger'">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_job_filter" model="ir.ui.view">
+            <field name="name">hr.job.search</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <search string="Jobs">
+                    <field name="name" string="Job Position"/>
+                    <field name="department_id" operator="child_of"/>
+                    <filter name="in_position" string="In Position" domain="[('state', '=', 'open')]"/>
+                    <filter name="in_recruitment" string="In Recruitment" domain="[('state', '=', 'recruit')]"/>
+                    <separator/>
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_job" model="ir.actions.act_window">
+            <field name="name">Job Positions</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_job_filter"/>
+            <field name="context">{"search_default_Current":1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
+              </p><p>
+                Let's create a job position.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_website_public,website.public,website.model_website,,1,0,0,0
+access_website_designer,website.website.designer,website.model_website,group_website_designer,1,1,1,1
+access_website_menu,access_website_menu,model_website_menu,,1,0,0,0
+access_website_menu_designer,Web Menu Manager,model_website_menu,group_website_designer,1,1,1,1
+access_website_rewrite,access_website_rewrite,model_website_rewrite,,0,0,0,0
+access_website_rewrite_designer,Web Rewrite Manager,model_website_rewrite,group_website_designer,1,1,1,1
+access_website_page,access_website_page,model_website_page,,0,0,0,0
+access_website_page_designer,Web Page Manager,model_website_page,group_website_designer,1,1,1,1
+access_website_ir_ui_view_publisher,access_website_ir_ui_view_publisher,model_ir_ui_view,group_website_publisher,1,0,0,0
+access_website_ir_ui_view_designer,access_website_ir_ui_view_designer,model_ir_ui_view,group_website_designer,1,1,1,1
+access_seo_public,access_seo_public,model_website_seo_metadata,,1,0,0,0
+access_seo_designer,access_seo_designer,model_website_seo_metadata,group_website_designer,1,1,1,1
+access_website_visitor_designer,access_website_visitor_designer,model_website_visitor,website.group_website_designer,1,1,0,1
+access_website_visitor_system,access_website_visitor_system,model_website_visitor,base.group_system,1,1,0,1
+access_website_track_designer,access_website_track_designer,model_website_track,website.group_website_designer,1,1,1,1
+access_website_track_system,access_website_track_system,model_website_track,base.group_system,1,1,1,1
+access_website_route_designer,access_website_designer_route,model_website_route,group_website_designer,1,1,1,1
+access_theme_ir_ui_view,access_theme_ir_ui_view,model_theme_ir_ui_view,base.group_system,1,1,1,1
+access_theme_ir_attachment,access_theme_ir_attachment,model_theme_ir_attachment,base.group_system,1,1,1,1
+access_theme_website_menu,access_theme_website_menu,model_theme_website_menu,base.group_system,1,1,1,1
+access_theme_website_page,access_theme_website_page,model_theme_website_page,base.group_system,1,1,1,1
+access_website_robots,access.website.robots,model_website_robots,website.group_website_designer,1,1,1,0
+access_website_dynamic_filter_public,access_website_dynamic_filter,model_website_snippet_filter,,0,0,0,0
+access_website_dynamic_filter_system,access_website_dynamic_filter,model_website_snippet_filter,base.group_system,1,1,1,1

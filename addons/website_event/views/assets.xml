@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_common" inherit_id="web.assets_common" name="Event Assets Common">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_event/static/src/js/tours/event_tour.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Event Assets Frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_event/static/src/scss/website_event.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/website_event/static/src/scss/website_event_templates.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_event/static/src/js/display_timer_widget.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/register_toaster_widget.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/website_event_ticket_details.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/website_event_set_customize_options.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_editor" inherit_id="website.assets_editor" name="Event Assets Editor">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
+            <script type="text/javascript" src="/website_event/static/src/js/tours/website_event.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

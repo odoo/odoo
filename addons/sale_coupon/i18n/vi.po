@@ -1,0 +1,411 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon
+# 
+# Translators:
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
+msgid "<strong>Sales</strong>"
+msgstr "<strong>Bán</strong>"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "A Coupon is already applied for the same reward"
+msgstr "Một phiếu giảm giá đã được áp dụng cho cùng một phần thưởng"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr "Giá trị tối thiểu %(amount)s %(currency)s nên mua để nhận phần thưởng"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
+msgid "Applied Coupons"
+msgstr "Phiếu giảm giá đã áp dụng"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
+msgid "Applied Immediate Promo Programs"
+msgstr "Chương trình khuyến mãi ngay lập tức được áp dụng"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
+msgid "Applied Promo Program"
+msgstr "Chương trình khuyến mãi áp dụng"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
+msgid "Applied program code"
+msgstr "Mã chương trình áp dụng"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply"
+msgstr "Áp dụng"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply coupon"
+msgstr "Áp dụng phiếu giảm giá"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "At least one of the required conditions is not met to get the reward!"
+msgstr ""
+"Ít nhất một trong những điều kiện bắt buộc không đáp ứng được để nhận phần "
+"thưởng!"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
+msgid "Code"
+msgstr "Mã"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Coupon"
+msgstr "Phiếu giảm giá"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_program
+msgid "Coupon Program"
+msgstr "Chương trình phiếu khuyến mãi"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Coupon Programs"
+msgstr "Chương trình phiếu giảm giá"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_uid
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_date
+msgid "Created on"
+msgstr "Thời điểm tạo"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
+msgstr "Giảm giá: %(program)s - Trên sản phẩm có các loại thuế sau: %(taxes)s"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr "Giảm giá: %s"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
+msgid "Enter Promotion or Coupon Code"
+msgstr "Nhập mã phiếu giảm giá hoặc mã khuyến mãi"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Free Product"
+msgstr "Sản phẩm miễn phí"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Global discounts are not cumulable."
+msgstr "Giảm giá toàn đơn hàng không được phép gộp."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Global discounts are not cumulative."
+msgstr "Giảm giá toàn đơn hàng không được phép gộp."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "Đối tác không hợp lệ."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr "Là một phần thưởng chương trình"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối vào"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
+msgid "Offered Coupons"
+msgstr "Phiếu giảm giá được đề nghị"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
+msgid "Order Count"
+msgstr "Số đơn hàng"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
+msgid "Order Reference"
+msgstr "Mã đơn hàng"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code %s has been expired."
+msgstr "Mã giảm giá %s này đã hết hạn."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is expired"
+msgstr "Mã khuyến mãi đã hết hạn"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is invalid"
+msgstr "Mã khuyến mãi không hợp lệ"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
+msgid "Promotion Code"
+msgstr "Mã khuyến mãi"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Promotion Programs"
+msgstr "Chương trình khuyến mãi"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promotionals codes are not cumulative."
+msgstr "Mã khuyến mại không được lặp lại."
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Promotions"
+msgstr "Chương trình khuyến mãi"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr "Số tiền thưởng"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
+msgid "Sales"
+msgstr "Bán hàng"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
+msgid "Sales Coupon Apply Code"
+msgstr "Mã giảm giá bán hàng áp dụng"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_order_action
+#: model:ir.model,name:sale_coupon.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Chi tiết đơn hàng"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Sales Orders"
+msgstr "Đơn bán hàng"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "Chương trình phiếu giảm giá cho %s ở trạng thái nháp hoặc đóng"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The customer doesn't have access to this reward."
+msgstr "Khách hàng không có quyền truy cập vào phần thưởng này."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promo code is already applied on this order"
+msgstr "Mã khuyến mãi đã được áp dụng cho đơn hàng này"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promotional offer is already applied on this order"
+msgstr "Ưu đãi khuyến mại đã được áp dụng cho đơn hàng này"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"The reward products should be in the sales order lines to apply the "
+"discount."
+msgstr ""
+"Các sản phẩm thưởng nên có trong các dòng đặt hàng để áp dụng giảm giá."
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
+msgid "The sales order from which coupon is generated"
+msgstr "Đơn bán hàng được tạo ra từ phiếu giảm giá"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "The sales order on which the coupon is applied"
+msgstr "Đơn bán hàng được áp dụng phiếu giảm giá"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr "Mã giảm giá %s tồn tại nhưng đơn hàng gốc chưa được xác nhận."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr "Phiếu giảm giá này đã được sử dụng (%s)."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr "Phiếu giảm giá này đã bị hủy (%s)."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "Phiếu giảm giá này đã hết hạn (%s)."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
+#, python-format
+msgid "This coupon is invalid (%s)."
+msgstr "Phiếu giảm giá này không hợp lệ (%s)."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "Used in"
+msgstr "Dùng trong"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid ""
+"When clicked, the content of the order will be checked to detect (and apply)"
+" possible promotion programs."
+msgstr ""
+"Khi bấm, thông tin đơn hàng sẽ được kiệm tra để phát hiện (và áp dụng) các "
+"chương trình khuyến mãi đủ điều kiện."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. All the "
+"products should be recorded on the sales order. (Example: You need to have 3"
+" T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr ""
+"Bạn không có số lượng sản phẩm cần thiết trên đơn đặt hàng của bạn. Tất cả "
+"các sản phẩm nên được ghi lại trên đơn đặt hàng. (Ví dụ: Bạn cần có 3 áo "
+"phông trong đơn đặt hàng nếu chương trình khuyến mãi là 'Mua 2, tặng 1')."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. If the "
+"reward is same product quantity, please make sure that all the products are "
+"recorded on the sales order (Example: You need to have 3 T-shirts on your "
+"sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr ""
+"Bạn không có số lượng sản phẩm cần thiết trên đơn đặt hàng của bạn. Nếu phần"
+" thưởng có cùng số lượng sản phẩm, vui lòng đảm bảo rằng tất cả các sản phẩm"
+" được ghi trên đơn đặt hàng (Ví dụ: Bạn cần có 3 áo phông trong đơn đặt hàng"
+" nếu chương trình khuyến mãi là 'Mua 2, tặng 1'."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "limited to "
+msgstr "giới hạn tới "

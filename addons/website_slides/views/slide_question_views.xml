@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="slide_question_view_form" model="ir.ui.view">
+        <field name="name">slide.question.view.form</field>
+        <field name="model">slide.question</field>
+        <field name="arch" type="xml">
+            <form string="Quiz">
+                <sheet>
+                    <div class="oe_edit_only">
+                        <label for="question" string="Question Name"/>
+                    </div>
+                    <h1>
+                        <field name="question" default_focus="1" placeholder="Name"/>
+                    </h1>
+                    <field name="answer_ids">
+                        <tree editable="bottom" create="true" delete="true">
+                            <field name="text_value"/>
+                            <field name="is_correct"/>
+                            <field name="comment"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_question_view_tree" model="ir.ui.view">
+        <field name="name">slide.question.view.tree</field>
+        <field name="model">slide.question</field>
+        <field name="arch" type="xml">
+            <tree string="Quizzes">
+                <field name="sequence" widget="handle"/>
+                <field name="question"/>
+                <field name="slide_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_question_view_tree_report" model="ir.ui.view">
+        <field name="name">slide.question.view.tree.report</field>
+        <field name="model">slide.question</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Quizzes" create="0">
+                <field name="sequence" widget="handle"/>
+                <field name="question"/>
+                <field name="slide_id"/>
+                <field name="attempts_count"/>
+                <field name="attempts_avg"/>
+                <field name="done_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_question_view_search" model="ir.ui.view">
+        <field name="name">slide.question.view.search</field>
+        <field name="model">slide.question</field>
+        <field name="arch" type="xml">
+            <search string="Quizzes">
+                <field name="question"/>
+                <field name="slide_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_question_action_report" model="ir.actions.act_window">
+        <field name="name">Quizzes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">slide.question</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="slide_question_view_tree_report"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There are no quizzes
+            </p>
+            <p>
+                Add quizzes at the end of your lessons to evaluate what your students understood.
+            </p>
+        </field>
+    </record>
+</odoo>

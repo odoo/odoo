@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_dynamic_snippet_products" name="Dynamic Products">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+        </t>
+    </template>
+    <template id="s_dynamic_snippet_products_options"  inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.dynamic_snippet_carousel_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet_products'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_products'"/>
+                <we-select string="Product Category" data-name="product_category_opt" data-attribute-name="productCategoryId" data-no-preview="true">
+                    <we-button data-select-data-attribute="-1">All Products</we-button>
+                </we-select>
+            </t>
+        </xpath>
+    </template>
+    <template id="assets_snippet_s_dynamic_snippet_products_js_000" inherit_id="website.assets_snippet_s_dynamic_snippet_carousel_js_000">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_sale/static/src/snippets/s_dynamic_snippet_products/000.js"/>
+        </xpath>
+    </template>
+</odoo>

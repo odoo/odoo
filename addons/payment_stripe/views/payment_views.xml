@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acquirer_form_stripe" model="ir.ui.view">
+        <field name="name">payment.acquirer.form.inherit</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'stripe')]}">
+                    <field name="stripe_secret_key" attrs="{'required':[ ('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="stripe_publishable_key" attrs="{'required':[ ('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="stripe_webhook_secret" password="True"/>
+                </group>
+            </xpath>
+            <xpath expr='//group[@name="acquirer_config"]' position='after'>
+                <group attrs="{'invisible': [('provider', '!=', 'stripe')]}">
+                    <field name="stripe_image_url"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

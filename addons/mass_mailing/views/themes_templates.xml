@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Theme "Basic" template -->
+    <template id="theme_basic_template">
+        <div class="o_mail_no_options">
+            <p><br/></p>
+            <p><br/></p>
+            <p>
+                <br/>
+                <a href="/unsubscribe_from_list">Unsubscribe</a>
+            </p>
+        </div>
+    </template>
+
+    <!-- Default Theme -->
+    <template id="theme_default_template">
+        <div class="o_mail_block_header_logo mb16" data-snippet="s_mail_block_header_logo">
+            <div class="o_mail_snippet_general">
+                <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles o_mail_h_padding">
+                    <tr>
+                        <td width="20%"/>
+                        <td valign="center" width="60%" class="o_mail_logo_container text-center o_mail_v_padding">
+                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
+                                <img border="0" src="/mass_mailing/static/src/img/theme_default/s_default_image_logo.png" style="height:auto;max-width:400px;"/>
+                            </a>
+                        </td>
+                        <td width="20%" style="text-align:right"/>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <t t-snippet-call="mass_mailing.s_mail_block_title_text" />
+        <t t-snippet-call="mass_mailing.s_mail_block_footer_social_left"/>
+    </template>
+</odoo>

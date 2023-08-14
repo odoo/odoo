@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <!-- LAYOUT TEMPLATES -->
+    <div t-name="iap.redirect_to_odoo_credit">
+        <t t-if="data.body">
+            <div t-raw="data.body"/>
+        </t>
+        <t t-if="!data.body">
+            <t t-if="data.message">
+                <span t-esc="data.message"/>
+            </t>
+            <t t-if="!data.message">
+                <span>Insufficient credit to perform this service.</span>
+            </t>
+        </t>
+    </div>
+
+    <t t-extend="DashboardMain">
+        <t t-jquery=".o_web_settings_apps" t-operation="after">
+            <div class="o_web_settings_iap"></div>
+        </t>
+    </t>
+    
+    <div t-name="iap.buy_more_credits" class="mt-2 row">
+        <div class="col-sm">
+            <button class="btn btn-link buy_credits o-hidden-ios"><i class="fa fa-arrow-right"/> Buy credits</button>
+        </div>
+    </div>
+</template>

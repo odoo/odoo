@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.nz"/>
+    </record>
+
+    <record id="tax_report_sale_and_income" model="account.tax.report.line">
+        <field name="name">Sales and Income</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box5" model="account.tax.report.line">
+        <field name="name">[BOX 5] Total sales and income for the period(including GST and zero-rated Supplies)</field>
+        <field name="tag_name">BOX 5</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="1"/>
+        <field name="code">NZBOX5</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box6" model="account.tax.report.line">
+        <field name="name">[BOX 6] Zero-rated supplies in Box 5</field>
+        <field name="tag_name">BOX 6</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="2"/>
+        <field name="code">NZBOX6</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box7" model="account.tax.report.line">
+        <field name="name">[BOX 7] The amount in Box 6 is subracted from Box 5</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="3"/>
+        <field name="code">NZBOX7</field>
+        <field name="formula">NZBOX5 - NZBOX6</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box8" model="account.tax.report.line">
+        <field name="name">[BOX 8] Multiply the amount in Box 7 by 3 and then divide by 23</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="4"/>
+        <field name="code">NZBOX8</field>
+        <field name="formula">(NZBOX7 * 3)/23</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box9" model="account.tax.report.line">
+        <field name="name">[BOX 9] Enter any adjustments from your calculation sheet</field>
+        <field name="tag_name">BOX 9</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="5"/>
+        <field name="code">NZBOX9</field>
+        <field name="formula"></field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box10" model="account.tax.report.line">
+        <field name="name">[BOX 10] Total GST collected on sales and income</field>
+        <field name="parent_id" ref="tax_report_sale_and_income"/>
+        <field name="sequence" eval="6"/>
+        <field name="code">NZBOX10</field>
+        <field name="formula">NZBOX8 + NZBOX9</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_purchases_and_expenses" model="account.tax.report.line">
+        <field name="name">Purchases and Expenses</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box11" model="account.tax.report.line">
+        <field name="name">[BOX 11] Total purchases and expenses(including GST) for which tax invoicing requirements have been met</field>
+        <field name="tag_name">BOX 11</field>
+        <field name="parent_id" ref="tax_report_purchases_and_expenses"/>
+        <field name="sequence" eval="1"/>
+        <field name="code">NZBOX11</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box12" model="account.tax.report.line">
+        <field name="name">[BOX 12] Multiply BOX11 by 3 and then divide by 23</field>
+        <field name="parent_id" ref="tax_report_purchases_and_expenses"/>
+        <field name="sequence" eval="2"/>
+        <field name="code">NZBOX12</field>
+        <field name="formula">(NZBOX11 * 3)/23</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box13" model="account.tax.report.line">
+        <field name="name">[BOX 13] Credit adjustments from your calculation sheet</field>
+        <field name="parent_id" ref="tax_report_purchases_and_expenses"/>
+        <field name="sequence" eval="3"/>
+        <field name="code">NZBOX13</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box14" model="account.tax.report.line">
+        <field name="name">[BOX 14] Total GST credit for purchases and expenses</field>
+        <field name="parent_id" ref="tax_report_purchases_and_expenses"/>
+        <field name="sequence" eval="4"/>
+        <field name="code">NZBOX14</field>
+        <field name="formula">NZBOX12 + NZBOX13</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+    <record id="tax_report_box15" model="account.tax.report.line">
+        <field name="name">[BOX 15]  Difference between BOX10 and BOX14</field>
+        <field name="sequence" eval="3"/>
+        <field name="formula">NZBOX10 - NZBOX14</field>
+        <field name="report_id" ref="tax_report"/>
+    </record>
+
+</odoo>

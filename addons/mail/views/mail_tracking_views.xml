@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_mail_tracking_value_tree">
+            <field name="name">mail.tracking.value.tree</field>
+            <field name="model">mail.tracking.value</field>
+            <field name="priority">12</field>
+            <field name="arch" type="xml">
+                <tree string="Tracking Value">
+                    <field name="field"/>
+                    <field name="old_value_integer"/>
+                    <field name="old_value_float"/>
+                    <field name="old_value_char"/>
+                    <field name="old_value_text"/>
+                    <field name="old_value_datetime"/>
+                    <field name="new_value_integer"/>
+                    <field name="new_value_float"/>
+                    <field name="new_value_char"/>
+                    <field name="new_value_text"/>
+                    <field name="new_value_datetime"/>
+                    <field name="mail_message_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_tracking_value_form">
+            <field name="name">mail.tracking.value.form</field>
+            <field name="model">mail.tracking.value</field>
+            <field name="arch" type="xml">
+                <form string="Tracking Value">
+                    <sheet>
+                        <group name="field_details" string="Field details">
+                            <field name="field"/>
+                            <field name="field_desc"/>
+                            <field name="field_type"/>
+                            <field name="tracking_sequence"/>
+                        </group>
+                        <group name="values">
+                            <group name="old_values" string="Old values">
+                                <field name="old_value_integer"/>
+                                <field name="old_value_float"/>
+                                <field name="old_value_char"/>
+                                <field name="old_value_text"/>
+                                <field name="old_value_datetime"/>
+                            </group>
+                            <group name="new_values" string="New values">
+                                <field name="new_value_integer"/>
+                                <field name="new_value_float"/>
+                                <field name="new_value_char"/>
+                                <field name="new_value_text"/>
+                                <field name="new_value_datetime"/>
+                            </group>
+                        </group>
+                        <group string='Related Message'>
+                            <field name="mail_message_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_mail_tracking_value">
+            <field name="name">Tracking Values</field>
+            <field name="res_model">mail.tracking.value</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Tracking Values"
+            id="menu_mail_tracking_value"
+            parent="mail.mail_menu_technical"
+            action="action_view_mail_tracking_value"
+            sequence="5"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="rating_rating_view_tree" model="ir.ui.view">
+            <field name="name">rating.rating.tree</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <tree string="Rating" create="false" edit="false" sample="1">
+                    <field name="res_name"/>
+                    <field name="parent_res_name"/>
+                    <field name="rated_partner_id"/>
+                    <field name="partner_id"/>
+                    <field name="rating_text" decoration-danger="rating_text == 'highly_dissatisfied'" decoration-warning="rating_text == 'not_satisfied'" decoration-success="rating_text == 'satisfied'"/>
+                    <field name="feedback"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_form" model="ir.ui.view">
+            <field name="name">rating.rating.form</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <form string="Rating" create="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="resource_ref" string="Document"/>
+                                <field name="res_name" string="Document" invisible="1"/>
+                                <field name="parent_ref" string="Parent Holder"/>
+                                <field name="parent_res_name" string="Parent Holder" invisible="1"/>
+                                <field name="rated_partner_id"/>
+                                <field name="rating" invisible="1"/>
+                                <field name="is_internal"/>
+                            </group>
+                            <group>
+                                <field name="partner_id"/>
+                                <div colspan="2" class="text-center" name="rating_image_container">
+                                    <field name="rating_image" widget='image'/>
+                                    <div class="mt4">
+                                        <strong><field name="rating_text"/></strong>
+                                    </div>
+                                </div>
+                                <field name="create_date"/>
+                                <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_kanban" model="ir.ui.view">
+            <field name="name">rating.rating.kanban</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <kanban create="false" sample="1">
+                    <field name="rating"/>
+                    <field name="res_name"/>
+                    <field name="feedback"/>
+                    <field name="partner_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <field name="rating_image" widget="image"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="rated_partner_id" />
+                                    </strong>
+                                    <ul>
+                                        <li t-if="record.partner_id.value">
+                                            <span class="o_text_overflow">
+                                                by
+                                                <span t-att-title="record.partner_id.value">
+                                                    <field name="partner_id" />
+                                                </span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="o_text_overflow">
+                                                for
+                                                <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                                    <field name="res_name" />
+                                                </a>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            on <field name="create_date" />
+                                        </li>
+                                    </ul>
+                                    <i t-if="record.feedback.raw_value" class="fa fa-comment float-right mt4" t-att-title="record.feedback.raw_value"  t-att-aria-label="record.feedback.raw_value" role="img"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_pivot" model="ir.ui.view">
+            <field name="name">rating.rating.pivot</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <pivot string="Rating Average" display_quantity="true" sample="1">
+                    <field name="rated_partner_id" type="row"/>
+                    <field name="create_date" type="col"/>
+                    <field name="rating" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_graph" model="ir.ui.view">
+           <field name="name">rating.rating.graph</field>
+           <field name="model">rating.rating</field>
+           <field name="arch" type="xml">
+                <graph string="Rating Average" type="bar" sample="1">
+                    <field name="create_date" type="row"/>
+                    <field name="rating" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_search" model="ir.ui.view">
+            <field name="name">rating.rating.search</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <search string="Ratings">
+                    <field name="rated_partner_id"/>
+                    <field name="rating"/>
+                    <field name="partner_id"/>
+                    <field name="res_name" filter_domain="[('res_name','ilike',self)]"/>
+                    <field name="res_id"/>
+                    <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
+                    <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'satisfied')]"/>
+                    <filter string="Not satisfied" name="rating_okay" domain="[('rating_text', '=', 'not_satisfied')]"/>
+                    <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'highly_dissatisfied')]"/>
+                    <separator/>
+                    <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
+                    <separator/>
+                    <filter name="filter_create_date" date="create_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Rated Operator" name="responsible" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Rating" name="rating_text" context="{'group_by':'rating_text'}"/>
+                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
+                        <filter string="Date" name="month" context="{'group_by':'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="rating_rating_view" model="ir.actions.act_window">
+            <field name="name">Ratings</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No rating yet
+                </p><p>
+                    There is no rating for this object at the moment.
+                </p>
+            </field>
+        </record>
+
+        <!-- Add menu entry in Technical/Discuss -->
+        <menuitem name="Ratings"
+            id="rating_rating_menu_technical"
+            parent="mail.mail_menu_technical"
+            action="rating_rating_view"
+            sequence="30"/>
+
+</odoo>

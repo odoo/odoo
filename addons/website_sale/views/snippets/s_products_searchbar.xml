@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_products_searchbar_input" name="Products Search">
+    <t t-call="website_sale.website_sale_products_search_box">
+        <t t-set="_classes" t-value="'s_wsale_products_searchbar_input'"/>
+        <t t-set="_snippet" t-value="'s_products_searchbar_input'"/>
+    </t>
+</template>
+<template id="s_products_searchbar" name="Products Search">
+    <section class="s_wsale_products_searchbar bg-200 pt48 pb48" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2>Search for a product</h2>
+                    <p>We have amazing products in our shop, check them now !</p>
+                    <t t-snippet-call="website_sale.s_products_searchbar_input"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="searchbar_input_snippet_options" inherit_id="website_sale.snippet_options" name="search bar snippet options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_wsale_products_searchbar_input">
+            <we-select string="Order by" id="order_by" data-attribute-name="value" data-apply-to=".o_wsale_search_order_by">
+                <we-button data-select-attribute="">default</we-button>
+                <we-button data-select-attribute="name asc">name (A-Z)</we-button>
+                <we-button data-select-attribute="name desc">name (Z-A)</we-button>
+                <we-button data-select-attribute="list_price asc">price (low to high)</we-button>
+                <we-button data-select-attribute="list_price desc">price (high to low)</we-button>
+            </we-select>
+            <t t-set="unit">products</t>
+            <we-input string="Suggestions" data-name="product_limit_opt" data-attribute-name="limit"
+                      data-apply-to=".search-query" data-select-data-attribute="" t-att-data-unit="unit"/>
+            <we-checkbox string="Description" data-dependencies="product_limit_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+                         data-apply-to=".search-query"/>
+            <we-checkbox string="Price" data-dependencies="product_limit_opt" data-select-data-attribute="true" data-attribute-name="displayPrice"
+                         data-apply-to=".search-query"/>
+            <we-checkbox string="Image" data-dependencies="product_limit_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
+                         data-apply-to=".search-query"/>
+        </div>
+    </xpath>
+    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .s_wsale_products_searchbar_input</xpath>
+</template>
+
+<template id="assets_snippet_s_products_searchbar_js_000" inherit_id="website_sale.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_sale/static/src/snippets/s_products_searchbar/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

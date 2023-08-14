@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
+    </record>
+</odoo>

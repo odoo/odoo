@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="slide_channel_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.view.form.inherit.sale</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='enroll']" position="after">
+                <field name="product_id"
+                    attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}"
+                    context="{'default_type': 'service', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_redirect_to_members']" position="after">
+                <button name="action_view_sales"
+                    type="object"
+                    icon="fa-signal"
+                    class="oe_stat_button"
+                    attrs="{'invisible': [('enroll', '!=', 'payment')]}"
+                    groups="sales_team.group_sale_salesman">
+                    <field name="product_sale_revenues" string="Sales" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_channel_view_kanban" model="ir.ui.view">
+        <field name="name">slide.channel.view.kanban.inherit.sale</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_published']" position="before">
+                <field name="enroll"/>
+            </xpath>
+            <xpath expr="//div[@name='info_total_time']" position="after">
+                <div class="d-flex" attrs="{'invisible': [('enroll', '!=', 'payment')]}">
+                    <span class="mr-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
+                    <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="currency_id" attrs="{'invisible': True}"/>
+                </div>
+            </xpath>
+            <xpath expr="//a[@name='action_channel_invite']" position="attributes">
+                <attribute name="attrs">{'invisible': [('enroll', '=', 'payment')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

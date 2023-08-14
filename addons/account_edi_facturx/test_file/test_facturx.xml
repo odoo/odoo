@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rsm:CrossIndustryInvoice xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" 
+    xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" 
+    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+    <rsm:ExchangedDocumentContext>
+        <ram:GuidelineSpecifiedDocumentContextParameter>
+            <ram:ID>urn:cen.eu:en16931:2017</ram:ID>
+        </ram:GuidelineSpecifiedDocumentContextParameter>
+    </rsm:ExchangedDocumentContext>
+
+    <rsm:ExchangedDocument>
+        <ram:TypeCode>380</ram:TypeCode>
+        <ram:IssueDateTime>
+            <udt:DateTimeString format="102">20200501</udt:DateTimeString>
+        </ram:IssueDateTime>
+    </rsm:ExchangedDocument>
+
+    <rsm:SupplyChainTradeTransaction>
+        <ram:IncludedSupplyChainTradeLineItem>
+            <ram:AssociatedDocumentLineDocument>
+                <ram:LineID>1</ram:LineID>
+            </ram:AssociatedDocumentLineDocument>
+
+            <ram:SpecifiedTradeProduct>
+                <ram:SellerAssignedID>FURN_6741</ram:SellerAssignedID>
+                <ram:Name>[FURN_6741] Large Meeting Table
+Conference room table</ram:Name>
+            </ram:SpecifiedTradeProduct>
+
+            <ram:SpecifiedLineTradeAgreement>
+                <ram:GrossPriceProductTradePrice>
+                    <ram:ChargeAmount currencyID="USD">642.00</ram:ChargeAmount>
+                </ram:GrossPriceProductTradePrice>
+            </ram:SpecifiedLineTradeAgreement>
+
+            <ram:SpecifiedLineTradeDelivery>
+                <ram:BilledQuantity>5.0</ram:BilledQuantity>
+            </ram:SpecifiedLineTradeDelivery>
+
+            <ram:SpecifiedLineTradeSettlement>
+
+                <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                    <ram:LineTotalAmount currencyID="USD">3210.00</ram:LineTotalAmount>
+                </ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:ApplicableTradeTax>
+                    <ram:RateApplicablePercent>0.0</ram:RateApplicablePercent>
+                </ram:ApplicableTradeTax>
+            </ram:SpecifiedLineTradeSettlement>
+
+        </ram:IncludedSupplyChainTradeLineItem>
+
+        <ram:IncludedSupplyChainTradeLineItem>
+            <ram:AssociatedDocumentLineDocument>
+                <ram:LineID>2</ram:LineID>
+            </ram:AssociatedDocumentLineDocument>
+
+            <ram:SpecifiedTradeProduct>
+                <ram:SellerAssignedID>FURN_8220</ram:SellerAssignedID>
+                <ram:Name>[FURN_8220] Four Person Desk
+Four person modern office workstation</ram:Name>
+            </ram:SpecifiedTradeProduct>
+
+            <ram:SpecifiedLineTradeAgreement>
+                <ram:GrossPriceProductTradePrice>
+                    <ram:ChargeAmount currencyID="USD">280.00</ram:ChargeAmount>
+                </ram:GrossPriceProductTradePrice>
+            </ram:SpecifiedLineTradeAgreement>
+
+            <ram:SpecifiedLineTradeDelivery>
+                <ram:BilledQuantity>5.0</ram:BilledQuantity>
+            </ram:SpecifiedLineTradeDelivery>
+
+            <ram:SpecifiedLineTradeSettlement>
+                <ram:SpecifiedTradeSettlementLineMonetarySummation>
+                    <ram:LineTotalAmount currencyID="USD">1400.00</ram:LineTotalAmount>
+                </ram:SpecifiedTradeSettlementLineMonetarySummation>
+            </ram:SpecifiedLineTradeSettlement>
+
+        </ram:IncludedSupplyChainTradeLineItem>
+
+        <ram:ApplicableHeaderTradeAgreement>
+            <ram:SellerTradeParty>
+                <ram:Name>YourCompany</ram:Name>
+                <ram:DefinedTradeContact>
+                    <ram:PersonName>YourCompany</ram:PersonName>
+                    <ram:TelephoneUniversalCommunication>
+                        <ram:CompleteNumber>+1 (650) 691-3277 </ram:CompleteNumber>
+                    </ram:TelephoneUniversalCommunication>
+                    <ram:EmailURIUniversalCommunication>
+                        <ram:URIID schemeID="SMTP">info@yourcompany.example.com</ram:URIID>
+                    </ram:EmailURIUniversalCommunication>
+                </ram:DefinedTradeContact>
+
+                <ram:PostalTradeAddress>
+                    <ram:PostcodeCode>94134</ram:PostcodeCode>
+                    <ram:LineOne>250 Executive Park Blvd, Suite 3400</ram:LineOne>
+
+                    <ram:CityName>San Francisco</ram:CityName>
+                    <ram:CountryID>US</ram:CountryID>
+                </ram:PostalTradeAddress>
+            </ram:SellerTradeParty>
+
+            <ram:BuyerTradeParty>
+                <ram:Name>Azure Interior</ram:Name>
+                <ram:DefinedTradeContact>
+                    <ram:PersonName>Azure Interior</ram:PersonName>
+                    <ram:TelephoneUniversalCommunication>
+                        <ram:CompleteNumber>(870)-931-0505</ram:CompleteNumber>
+                    </ram:TelephoneUniversalCommunication>
+                    <ram:EmailURIUniversalCommunication>
+                        <ram:URIID schemeID="SMTP">azure.Interior24@example.com</ram:URIID>
+                    </ram:EmailURIUniversalCommunication>
+                </ram:DefinedTradeContact>
+
+                <ram:PostalTradeAddress>
+                    <ram:PostcodeCode>94538</ram:PostcodeCode>
+                    <ram:LineOne>4557 De Silva St</ram:LineOne>
+
+                    <ram:CityName>Fremont</ram:CityName>
+                    <ram:CountryID>US</ram:CountryID>
+                </ram:PostalTradeAddress>
+            </ram:BuyerTradeParty>
+
+            <ram:BuyerOrderReferencedDocument>
+                <ram:IssuerAssignedID>INV/2020/05/0001: INV/2020/05/0001</ram:IssuerAssignedID>
+            </ram:BuyerOrderReferencedDocument>
+        </ram:ApplicableHeaderTradeAgreement>
+
+        <ram:ApplicableHeaderTradeDelivery>
+        </ram:ApplicableHeaderTradeDelivery>
+
+        <ram:ApplicableHeaderTradeSettlement>
+            <ram:SpecifiedTradePaymentTerms>
+                <ram:Description>End of Following Month</ram:Description>
+                <ram:DueDateDateTime>
+                    <udt:DateTimeString>20200630</udt:DateTimeString>
+                </ram:DueDateDateTime>
+            </ram:SpecifiedTradePaymentTerms>
+
+            <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+                <ram:LineTotalAmount currencyID="USD">4610.00</ram:LineTotalAmount>
+                <ram:TaxBasisTotalAmount currencyID="USD">0.00</ram:TaxBasisTotalAmount>
+                <ram:TaxTotalAmount currencyID="USD">0.00</ram:TaxTotalAmount>
+                <ram:GrandTotalAmount currencyID="USD">4610.00</ram:GrandTotalAmount>
+                <ram:TotalPrepaidAmount currencyID="USD">0.00</ram:TotalPrepaidAmount>
+                <ram:DuePayableAmount currencyID="USD">4610.00</ram:DuePayableAmount>
+            </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+        </ram:ApplicableHeaderTradeSettlement>
+
+    </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>

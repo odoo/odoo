@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="certification_report_view_modern">
+            <!-- Style classes to be applyed to '#o_survey_certification': [no class](purple), gold, blue  -->
+            <div id="o_survey_certification" t-att-data-oe-model="user_input._name" t-att-data-oe-id="user_input.id" t-att-class="'article certification-wrapper modern %s' % layout_color">
+                <div class="certification">
+                    <div t-if="user_input.test_entry" class="test-entry"/>
+                    <div class="certification-top">
+                        <div class="certification-bg-dark">
+                            <div class="certification-company-wrapper" t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
+                        </div>
+                        <div class="certification-name" t-field="user_input.survey_id.display_name"/>
+                    </div>
+
+                    <div class="certification-bottom">
+                        <div t-if="user_input.scoring_success">
+                            <h5 class="user-name-label">This Certificate is Presented to</h5>
+                            <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+
+                            <div class="certification-description">
+                                <span t-field="user_input.env.company.display_name"/> is proud to award this certificate to
+                                <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating <span t-field="user_input.survey_id.display_name"/>.
+                            </div>
+                        </div>
+                        <div t-else="">
+                            <h5>Certification Failed</h5>
+                        </div>
+
+                        <div class="certification-bottom-group">
+                            <div class="certification-bg-dark"/>
+                            <div class="certification-date">
+                                <h5>Date</h5>
+                                <h5 t-field="user_input.create_date" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div class="certification-seal">
+                                <img src="/survey/static/src/img/certification_seal.svg" alt="Certification Seal" role="image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="certification_report_view_classic">
+            <!-- Style classes to be applyed to '#o_survey_certification': [no class](purple), gold, blue  -->
+            <div id="o_survey_certification" t-att-data-oe-model="user_input._name" t-att-data-oe-id="user_input.id" t-att-class="'article certification-wrapper classic %s' % layout_color">
+                <div class="certification">
+                    <div t-if="user_input.test_entry" class="test-entry"/>
+                    <h5 class="certification-name-label">CERTIFICATE</h5>
+                    <div class="certification-name" t-field="user_input.survey_id.display_name"/>
+                    <hr/>
+
+                    <div t-if="user_input.scoring_success">
+                        <h5>This Certificate is Presented to</h5>
+                        <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
+                        <hr class="small"/>
+
+                        <div class="certification-description">
+                            <span t-field="user_input.env.company.display_name"/> is proud to award this certificate to
+                            <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating <span t-field="user_input.survey_id.display_name"/>.
+                        </div>
+                    </div>
+                    <div t-else="">
+                        <h5>Certification Failed</h5>
+                    </div>
+
+                    <div class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'/>
+                    <img src="/survey/static/src/img/certification_seal.svg" alt="Certification Seal" role="img"/>
+
+                    <div class="certificate-signature">
+                        <span t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="certification_report_view">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="user_input">
+                    <t t-set="layout_values" t-value="user_input.survey_id.certification_report_layout.split('_') if user_input.survey_id.certification_report_layout else ['modern', 'purple']"/>
+                    <t t-set="layout_template" t-value="'survey.certification_report_view_%s' % (layout_values[0])"/>
+                    <t t-set="layout_color" t-value="layout_values[1]"/>
+                    <t t-call="{{layout_template}}"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

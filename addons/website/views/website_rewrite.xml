@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Attachment -->
+        <record id="view_website_rewrite_form" model="ir.ui.view">
+            <field name="model">website.rewrite</field>
+            <field name="arch" type="xml">
+                <form string="Website rewrite Settings">
+                    <header>
+                        <button name="refresh_routes" string="Refresh route's list" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('redirect_type', '!=', '308')]}"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="redirect_type"/>
+                                <field name="url_from" attrs="{'invisible': [('redirect_type', '=', '308')]}"/>
+                                <field name="route_id" string="URL from" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('redirect_type', '!=', '308')]}"/>
+                                <field name="url_to" attrs="{'invisible': [('redirect_type', '=', '404')]}"/>
+                            </group>
+                            <group>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                                <field name="active" widget="boolean_toggle"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_website_rewrite_tree" model="ir.ui.view">
+            <field name="name">website.rewrite.list</field>
+            <field name="model">website.rewrite</field>
+            <field name="arch" type="xml">
+                <tree string="Website rewrites">
+                    <field name="sequence" widget="handle" />
+                    <field name="redirect_type"/>
+                    <field name="name"/>
+                    <field name="url_from"/>
+                    <field name="url_to"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_website_rewrite_list" model="ir.actions.act_window">
+            <field name="name">Rewrite</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">website.rewrite</field>
+            <field name="view_id" eval="False"/>
+        </record>
+
+        <menuitem name="Redirects"
+            id="menu_website_rewrite"
+            action="action_website_rewrite_list"
+            parent="menu_website_global_configuration"
+            sequence="30"
+            groups="base.group_no_one"/>
+
+        <record id="view_rewrite_search" model="ir.ui.view">
+            <field name="name">website.rewrite.search</field>
+            <field name="model">website.rewrite</field>
+            <field name="arch" type="xml">
+                <search string="Search Redirect">
+                    <field name="url_from"/>
+                    <field name="url_to"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group string="Group By">
+                        <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'redirect_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+</odoo>

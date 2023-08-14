@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="LunchPreviousOrdersWidgetNoOrder" class="col-lg-12">
+        <h3>This is the first time you order a meal</h3>
+        <p class="text-muted">Select a product and put your order comments on the note.</p>
+        <p class="text-muted">Your favorite meals will be created based on your last orders.</p>
+        <p class="text-muted">Don't forget the alerts displayed in the reddish area</p>
+    </div>
+    <div t-name="LunchPreviousOrdersWidgetList" class="row">
+        <div t-foreach="categories" t-as="supplier" class="col-lg-4">
+            <h3><t t-esc="supplier"/></h3>
+            <div t-foreach='categories[supplier]' t-as='order' class="o_lunch_vignette">
+                <button type="button" class="float-right o_add_button oe_edit_only oe_link" t-att-data-id="order.line_id">
+                    <span class="fa fa-plus-square"></span>
+                    <span>Add</span>
+                </button>
+                <div>
+                    <t t-esc="order.product_name"/>
+                    <span class="badge badge-pill float-right">
+                        <span class="o_lunch_price" t-raw="formatValue(order)"/>
+                    </span>
+                </div>
+                <div class="text-muted">
+                    <t t-if="order.note != false" t-esc="order.note"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

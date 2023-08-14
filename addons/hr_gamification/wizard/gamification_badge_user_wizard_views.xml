@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <record id="view_badge_wizard_grant_employee" model="ir.ui.view">
+            <field name="name">gamification.badge.user.wizard.form.inherit</field>
+            <field name="model">gamification.badge.user.wizard</field>
+            <field name="inherit_id" ref="gamification.view_badge_wizard_grant" />
+            <field name="arch" type="xml">
+                <data>
+                    <field name="user_id" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                    </field>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_badge_wizard_reward" model="ir.ui.view">
+            <field name="name">gamification.badge.user.wizard.form</field>
+            <field name="model">gamification.badge.user.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reward Employee with">
+                    What are you thankful for?
+                    <group>
+                        <field name="employee_id" invisible="1" />
+                        <field name="user_id" invisible="1" />
+                        <field name="badge_id" nolabel="1" colspan="4" />
+                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
+                    </group>
+                    <footer>
+                        <button string="Reward Employee" type="object" name="action_grant_badge" class="btn-primary" />
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_reward_wizard" model="ir.actions.act_window">
+            <field name="name">Reward Employee</field>
+            <field name="res_model">gamification.badge.user.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_badge_wizard_reward"/>
+            <field name="target">new</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_employee_id': active_id, 'employee_id': active_id}</field>
+        </record>
+
+</odoo>

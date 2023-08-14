@@ -1,0 +1,25 @@
+
+.o_notification_manager {
+    @include o-position-absolute(3.5rem, 0);
+    position: fixed;
+    z-index: ($zindex-modal + $zindex-popover) / 2;
+    width: $toast-max-width;
+    margin-right: 8px;
+    max-width: 100%;
+
+    .toast:not(:last-child) {
+        margin-bottom: 5px;
+    }
+    .o_notification {
+        width: 100%;
+
+        .toast-body {
+            padding: 8px 10px;
+
+            .o_notification_close {
+                height: 20px;
+                margin-left: 1rem;
+            }
+        }
+    }
+}

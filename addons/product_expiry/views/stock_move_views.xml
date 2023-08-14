@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_move_operations_expiry" model="ir.ui.view">
+        <field name="name">stock.move.operations.inherit.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after" >
+                <field name="picking_code" invisible="1"/>
+                <field name="use_expiration_date" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_operation_tree_expiry" model="ir.ui.view">
+        <field name="name">stock.move.line.inherit.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_name']" position="after" >
+                <field name="picking_type_use_existing_lots" invisible="1"/>
+                <field name="expiration_date" force_save="1" attrs="{
+                    'column_invisible': ['|', ('parent.use_expiration_date', '!=', True), ('parent.picking_code', '!=', 'incoming')],
+                    'readonly': [('picking_type_use_existing_lots', '=', True)],
+                }"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_detailed_operation_tree_expiry" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.inherit.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_name']" position="after">
+                <field name="picking_type_use_existing_lots" invisible="1"/>
+                <field name="expiration_date" force_save="1" attrs="{
+                    'column_invisible': [('parent.picking_type_code', '!=', 'incoming')],
+                    'readonly': [('picking_type_use_existing_lots', '=', True)],
+                }"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

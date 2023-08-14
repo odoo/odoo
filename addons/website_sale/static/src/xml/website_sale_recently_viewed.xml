@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Recently Viewed Products Carousel -->
+    <t t-name="website_sale.productsRecentlyViewed">
+        <div t-att-id="uniqueId" class="carousel slide o_not_editable" data-interval="false">
+            <div class="carousel-inner">
+                <t t-foreach="productsGroups" t-as="products">
+                    <div t-attf-class="carousel-item #{!products_index and 'active' or ''}">
+                        <div class="row">
+                            <t t-foreach="products" t-as="product">
+                                <div t-attf-class="o_carousel_product_card_wrap col-md-#{12 / productFrame}">
+                                    <div class="o_carousel_product_card card h-100">
+                                        <input type="hidden" name="product-id" t-att-data-product-id="product.id"/>
+                                        <a class="o_carousel_product_img_link" t-att-href="product.website_url">
+                                            <img class="o_carousel_product_card_img_top card-img-top" t-attf-src="/web/image/product.product/#{product.id}#{productFrame == 1 ? '/image_256' : '/image_512'}" t-att-alt="product.display_name"/>
+                                        </a>
+                                        <i class="fa fa-trash o_carousel_product_remove js_remove"></i>
+                                        <div class="o_carousel_product_card_body card-body border-top">
+                                            <a t-att-href="product.website_url" class="text-decoration-none">
+                                                <h6 class="card-title mb-0 text-truncate" t-raw="product.display_name"/>
+                                            </a>
+                                            <t t-if="product.rating" t-raw="product.rating"/>
+                                        </div>
+                                        <div class="o_carousel_product_card_footer card-footer d-flex align-items-center">
+                                            <div class="d-block font-weight-bold" t-raw="product.price"/>
+                                            <button type="button" role="button" class="btn btn-primary js_add_cart ml-auto" title="Add to Cart">
+                                                <i class="fa fa-fw fa-shopping-cart"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-if='productsGroups.length > 1'>
+                <a class="o_carousel_product_control carousel-control-prev" t-att-href="'#' + uniqueId" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="o_carousel_product_control carousel-control-next" t-att-href="'#' + uniqueId" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>

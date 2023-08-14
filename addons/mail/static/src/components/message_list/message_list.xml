@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageList" owl="1">
+        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0, 'o-has-message-selection': props.selectedMessageLocalId }" t-on-scroll="onScroll">
+            <t t-if="threadView">
+                <!-- No result messages -->
+                <t t-if="threadView.nonEmptyMessages.length === 0">
+                    <div class="o_MessageList_empty o_MessageList_item">
+                        <t t-if="threadView.thread === env.messaging.inbox">
+                            <div class="o_MessageList_emptyTitle">
+                                Congratulations, your inbox is empty
+                            </div>
+                            New messages appear here.
+                        </t>
+                        <t t-elif="threadView.thread === env.messaging.starred">
+                            <div class="o_MessageList_emptyTitle">
+                                No starred messages
+                            </div>
+                            You can mark any message as 'starred', and it shows up in this mailbox.
+                        </t>
+                        <t t-elif="threadView.thread === env.messaging.history">
+                            <div class="o_MessageList_emptyTitle o-neutral-face-icon">
+                                No history messages
+                            </div>
+                            Messages marked as read will appear in the history.
+                        </t>
+                        <t t-elif="threadView.thread === env.messaging.moderation">
+                            <div class="o_MessageList_emptyTitle">
+                                You have no messages to moderate.
+                            </div>
+                            Messages pending moderation appear here.
+                        </t>
+                        <t t-else="">
+                            There are no messages in this conversation.
+                        </t>
+                    </div>
+                </t>
+                <!-- LOADING (if order asc)-->
+                <t t-if="props.order === 'asc' and orderedMessages.length > 0">
+                    <t t-call="mail.MessageList.loadMore"/>
+                </t>
+                <!-- MESSAGES -->
+                <t t-set="current_day" t-value="0"/>
+                <t t-set="prev_message" t-value="0"/>
+                <t t-foreach="orderedMessages" t-as="message" t-key="message.localId">
+                    <t t-if="message === threadView.thread.messageAfterNewMessageSeparator">
+                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': env.disableAnimation }" t-transition="fade">
+                            <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
+                        </div>
+                    </t>
+                    <t t-if="!message.isEmpty">
+                        <t t-set="message_day" t-value="getDateDay(message)"/>
+                        <t t-if="current_day !== message_day">
+                            <div class="o_MessageList_separator o_MessageList_separatorDate o_MessageList_item">
+                                <hr class="o_MessageList_separatorLine"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelDate"><t t-esc="message_day"/></span><hr class="o_MessageList_separatorLine"/>
+                                <t t-set="current_day" t-value="message_day"/>
+                                <t t-set="isMessageSquashed" t-value="false"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <t t-set="isMessageSquashed" t-value="shouldMessageBeSquashed(prev_message, message)"/>
+                        </t>
+                        <Message
+                            class="o_MessageList_item o_MessageList_message"
+                            t-att-class="{
+                                'o-has-message-selection': props.selectedMessageLocalId,
+                            }"
+                            hasMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                            hasCheckbox="props.hasMessageCheckbox"
+                            hasReplyIcon="props.haveMessagesReplyIcon"
+                            isSelected="props.selectedMessageLocalId === message.localId"
+                            isSquashed="isMessageSquashed"
+                            messageLocalId="message.localId"
+                            threadViewLocalId="threadView.localId"
+                            t-ref="{{ message.localId }}"
+                        />
+                        <t t-set="prev_message" t-value="message"/>
+                    </t>
+                </t>
+                <!-- LOADING (if order desc)-->
+                <t t-if="props.order === 'desc' and orderedMessages.length > 0">
+                    <t t-call="mail.MessageList.loadMore"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.MessageList.loadMore" owl="1">
+        <t t-if="threadView.threadCache.isLoadingMore">
+            <div class="o_MessageList_item o_MessageList_isLoadingMore">
+                <i class="o_MessageList_isLoadingMoreIcon fa fa-spin fa-spinner"/>
+                Loading...
+            </div>
+        </t>
+        <t t-elif="!threadView.threadCache.isAllHistoryLoaded and !threadView.thread.isTemporary">
+            <a class="o_MessageList_item o_MessageList_loadMore" href="#" t-on-click="_onClickLoadMore" t-ref="loadMore">
+                Load more
+            </a>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="point_of_sale.assets" name="point_of_sale assets">
+    <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+    <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
+    <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css"/>
+    <link rel="stylesheet" href="/point_of_sale/static/src/css/pos_receipts.css"/>
+    <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
+
+    <script type="text/javascript" src="/point_of_sale/static/lib/html2canvas.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/lib/backbone/backbone.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/lib/waitfont.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/lib/sha1.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/utils.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ClassRegistry.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/PosComponent.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/PosContext.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ComponentRegistry.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Registries.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/db.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/models.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/keyboard.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/barcode_reader.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/printers.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Gui.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/PopupControllerMixin.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ControlButtonsMixin.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Chrome.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/devices.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/payment.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/custom_hooks.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ClientListScreen/ClientLine.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ClientListScreen/ClientDetailsEdit.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/ReprintReceiptButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderFetcher.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderManagementScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/MobileOrderManagementScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderManagementControlPanel.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderList.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderRow.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderDetails.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/OrderlineDetails.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/OrderManagementScreen/ReprintReceiptScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PSNumpadInputButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenNumpad.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenElectronicPayment.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenPaymentLines.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreenStatus.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentMethodButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/Orderline.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/OrderSummary.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/NumpadWidget.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ActionpadWidget.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/CategoryBreadcrumb.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/CashBoxOpening.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/CategoryButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/CategorySimpleButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/HomeCategoryBreadcrumb.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ProductList.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ReceiptScreen/WrappedProductNameLines.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ReceiptScreen/OrderReceipt.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ScaleScreen/ScaleScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/CashierName.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/SyncNotification.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/OrderManagementButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/SaleDetailsButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/TicketButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/Draggable.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/NotificationSound.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/IndependentToOrderScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/SearchBar.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/AbstractAwaitablePopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/ErrorPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/ErrorBarcodePopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/ConfirmPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/TextInputPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/TextAreaPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/SelectionPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/EditListInput.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/EditListPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/NumberPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/OfflineErrorPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/OrderImportPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Popups/ProductConfiguratorPopup.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/NumberBuffer.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/src/js/Misc/MobileOrderWidget.js"></script>
+</template>
+
+<template id="point_of_sale.assets_backend" name="hr assets" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" type="text/scss" href="/point_of_sale/static/src/scss/pos_dashboard.scss"/>
+        <script type="text/javascript" src="/point_of_sale/static/src/js/tours/point_of_sale.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/src/js/debug_manager.js"></script>
+    </xpath>
+</template>
+
+<template id="point_of_sale.pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+</template>
+
+<template id="point_of_sale.assets_common" name="POS Assets Common">
+    <t t-call-assets="point_of_sale.assets" t-js="false" />
+    <t t-call-assets="web.assets_common" t-css="false" />
+    <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false" />
+    <t t-call-assets="point_of_sale.assets" t-css="false" />
+</template>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_category_events" model="product.category">
+            <field name="parent_id" ref="product.product_category_1"/>
+            <field name="name">Events</field>
+        </record>
+
+        <record id="product_product_event" model="product.product">
+            <field name="list_price">10.0</field>
+            <field name="event_ok" eval="True"/>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="name">Event Registration</field>
+            <field name="description_sale" eval="False"/>
+            <field name="categ_id" ref="event_sale.product_category_events"/>
+            <field name="type">service</field>
+        </record>
+    </data>
+</odoo>
+
+
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_rating" name="Rating">
+    <div class="s_rating pt16 pb16" data-vcss="001" data-icon="fa-star">
+        <h4 class="s_rating_title">Quality</h4>
+        <div class="s_rating_icons o_not_editable">
+            <span class="s_rating_active_icons">
+                <i class="fa fa-star"/>
+                <i class="fa fa-star"/>
+                <i class="fa fa-star"/>
+            </span>
+            <span class="s_rating_inactive_icons">
+                <i class="fa fa-star-o"/>
+                <i class="fa fa-star-o"/>
+            </span>
+        </div>
+    </div>
+</template>
+
+<template id="s_rating_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="Rating" data-selector=".s_rating">
+            <we-select string="Icon">
+                <we-button data-set-icons="fa-star"><i class="fa fa-fw fa-star"/> Stars</we-button>
+                <we-button data-set-icons="fa-thumbs-up"><i class="fa fa-fw fa-thumbs-up"/> Thumbs</we-button>
+                <we-button data-set-icons="fa-circle"><i class="fa fa-fw fa-circle"/> Circles</we-button>
+                <we-button data-set-icons="fa-square"><i class="fa fa-fw fa-square"/> Squares</we-button>
+                <we-button data-set-icons="fa-heart"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
+                <we-button data-set-icons="custom" class="d-none">Custom</we-button>
+            </we-select>
+            <we-row string="⌙ Active">
+                <we-colorpicker
+                    data-select-style=""
+                    data-apply-to=".s_rating_active_icons"
+                    data-css-property="color"
+                    data-color-prefix="text-"/>
+                <we-button data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
+                </we-button>
+            </we-row>
+            <we-row string="⌙ Inactive">
+                <we-colorpicker
+                    data-select-style=""
+                    data-apply-to=".s_rating_inactive_icons"
+                    data-css-property="color"
+                    data-color-prefix="text-"/>
+                <we-button data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
+                </we-button>
+            </we-row>
+            <we-row string="Score">
+                <we-input data-active-icons-number="true" data-step="1"/>
+                <span class="mx-2">/</span>
+                <we-input data-total-icons-number="true" data-step="1"/>
+            </we-row>
+            <we-button-group string="Size" data-apply-to=".s_rating_icons">
+                <we-button data-select-class=""
+                           title="Small"
+                           data-img="/website/static/src/img/snippets_options/size_small.svg"/>
+                <we-button data-select-class="fa-2x"
+                           title="Medium"
+                           data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
+                <we-button data-select-class="fa-3x"
+                           title="Large"
+                           data-img="/website/static/src/img/snippets_options/size_large.svg"/>
+            </we-button-group>
+            <we-checkbox string="Display Inline" data-select-class="s_rating_inline" data-no-preview="true"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_rating_css_000" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_rating/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_rating_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_rating/001.scss"/>
+    </xpath>
+</template>
+
+</odoo>

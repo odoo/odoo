@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="im assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/web_client_bus.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" name="im assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="bus tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/bus/static/tests/bus_tests.js"/>
+        </xpath>
+    </template>
+    <template id="assets_tests" name="Bus Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/bus/static/tests/bus_tests_tour.js"></script>
+        </xpath>
+    </template>
+</odoo>

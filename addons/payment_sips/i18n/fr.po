@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_sips
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
+# Eloïse Stilmant <est@odoo.com>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Camille Dantinne <cmd@odoo.com>, 2022
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:0
+#, python-format
+msgid "Currency not supported by Wordline: %s"
+msgstr "Devise non prise en charge par Worldline : %s"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:0
+#, python-format
+msgid "Incorrect payment acquirer provider"
+msgstr "Paiement incorrect vendeur fournisseur"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
+msgid "Interface Version"
+msgstr "Version de l'interface"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "Merchant ID"
+msgstr "Identifiant du marchand"
+
+#. module: payment_sips
+#: model:ir.model,name:payment_sips.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Intermédiaire de paiement"
+
+#. module: payment_sips
+#: model:ir.model,name:payment_sips.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
+msgstr "URL de Production"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
+msgid "Secret Key"
+msgstr "Clé secrète"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
+msgstr "Version de clé secrète"
+
+#. module: payment_sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:0
+#, python-format
+msgid "Sips: received data for reference %s; no order found"
+msgstr "Sips : données reçues pour la référence %s; aucune commande trouvée"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
+msgstr "URL de test"

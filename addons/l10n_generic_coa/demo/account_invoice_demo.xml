@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ==== Invoice Demo 1 with attachment ==== -->
+        <record id="demo_invoice_1" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_02'), 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 2 ==== -->
+        <record id="demo_invoice_2" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" eval="False"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_01'), 'quantity': 20}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 3 ==== -->
+        <record id="demo_invoice_3" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" eval="False"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_01'), 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 4 - Create an invoice that will generate a followup ==== -->
+        <record id="demo_invoice_followup" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_immediate"/>
+
+            <field name="invoice_date" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.consu_delivery_02'), 'quantity': 5}),
+                (0, 0, {'product_id': ref('product.consu_delivery_03'), 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 5 - Draft Vendor Bill ==== -->
+        <record id="demo_invoice_5" model="account.move">
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'product_id': ref('product.product_delivery_01'), 'price_unit': 10.0, 'quantity': 1}),
+                (0, 0, {'product_id': ref('product.product_order_01'), 'price_unit': 4.0, 'quantity': 5}),
+            ]"/>
+        </record>
+
+        <!-- ==== Invoice Demo 6 - Draft Vendor Bill for OCR ==== -->
+
+        <record id="demo_invoice_extract" model="account.move" context="{'default_move_type': 'in_invoice'}">
+            <field name="move_type">in_invoice</field>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+        </record>
+
+        <!-- ==== Invoice Demo 7 - Posted vendor bill ==== -->
+        <record id="demo_invoice_equipment_purchase" model="account.move">
+            <field name="move_type">in_invoice</field>
+            <field name="ref">INV/2018/0057</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" eval="False"/>
+            <field name="invoice_date">2018-09-17</field>
+            <field name="invoice_line_ids" eval="[
+                (0, 0, {'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10})
+            ]"/>
+        </record>
+
+        <!-- ==== Post invoices ==== -->
+        <!-- Ensure every detail related to the partner is set (fiscal position, payment terms, bank,...)-->
+        <function model="account.move" name="_onchange_partner_id">
+            <value eval="[ref('demo_invoice_1')]"/>
+        </function>
+        <function model="account.move" name="_onchange_partner_id">
+            <value eval="[ref('demo_invoice_2')]"/>
+        </function>
+        <function model="account.move" name="_onchange_partner_id">
+            <value eval="[ref('demo_invoice_3')]"/>
+        </function>
+        <function model="account.move" name="_onchange_partner_id">
+            <value eval="[ref('demo_invoice_equipment_purchase')]"/>
+        </function>
+
+        <!-- Ensure the lines are consistent with the products (taxes, price, name) -->
+        <!-- check_move_validity=False because the dynamic lines are computed after, it is checked later at the post function -->
+        <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
+            <value model="account.move.line" eval="obj().search([('move_id', 'in', [
+                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
+                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
+            ])]).ids"/>
+        </function>
+
+        <!-- Recompute the taxes and receivable lines after the onchange executed above -->
+        <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
+            <value eval="[
+                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
+                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
+            ]"/>
+            <value name="recompute_all_taxes" eval="True"/>
+            <value name="recompute_tax_base_amount" eval="True"/>
+        </function>
+
+        <function model="account.move" name="action_post">
+            <value eval="[
+                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
+                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
+            ]"/>
+        </function>
+
+        <!-- ==== Create attachments for posted invoices ==== -->
+        <record id="ir_attachment_in_invoice_1" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo_1.pdf"/>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_extract"/>
+        </record>
+
+        <record id="demo_invoice_extract" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_1"/>
+        </record>
+
+        <record id="mail_message_in_invoice_1" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_1')])]"/>
+        </record>
+
+        <record id="ir_attachment_in_invoice_2" model="ir.attachment">
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo_2.pdf"/>
+            <field name="name">in_invoice_yourcompany_demo.pdf</field>
+            <field name="res_model">account.move</field>
+            <field name="res_id" ref="demo_invoice_equipment_purchase"/>
+        </record>
+
+        <record id="demo_invoice_equipment_purchase" model="account.move">
+            <field name="message_main_attachment_id" ref="ir_attachment_in_invoice_2"/>
+        </record>
+
+        <record id="mail_message_in_invoice_2" model="mail.message">
+            <field name="model">account.move</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_equipment_purchase"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_2')])]"/>
+        </record>
+
+        <record id="invoice_activity_1" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_3"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Follow-up on payment</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_2" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_2"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_3" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_1"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Include upsell</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="invoice_activity_4" model="mail.activity">
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Update address</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="acquirer_form_sips" model="ir.ui.view">
+            <field name="name">acquirer.form.sips</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='inside'>
+                    <group attrs="{'invisible': [('provider', '!=', 'sips')]}">
+                        <field name="sips_merchant_id" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
+                        <field name="sips_secret" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
+                        <field name="sips_test_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
+                        <field name="sips_prod_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
+                        <field name="sips_version" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" />
+                        <field name="sips_key_version" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_simple_label">
+            <div style="width: 32%; display: inline-table; height:14rem;">
+                <table class="table table-bordered mb-0" style="border: 2px solid black;">
+                    <tr>
+                        <th class="table-active text-left" style="height: 4rem;">
+                            <strong t-field="product.display_name"/>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td style="height: 2rem">
+                            <strong>Price:</strong>
+                            <strong t-field="product.lst_price" t-options="{'widget': 'monetary', 'display_currency': product.company_id.currency_id}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center align-middle" style="height: 6rem">
+                            <t t-if="product.barcode">
+                                <img alt="Barcode" t-if="len(product.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height::4rem;"/>
+                                <img alt="Barcode" t-elif="len(product.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height::4rem;"/>
+                                <img alt="Barcode" t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height::4rem;"/>
+                                <span t-field="product.barcode"/>
+                            </t>
+                            <t t-else=""><span class="text-muted">No barcode available</span></t>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+
+        <template id="report_productlabel">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="product">
+                        <t t-call="product.report_simple_label">
+                            <t t-set="product" t-value="product"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_simple_barcode">
+            <div style="width: 32%; display: inline-table; height: 10rem;">
+                <table class="table table-bordered mb-0" style="border: 2px solid black;">
+                    <tr>
+                        <th class="table-active text-left" style="height: 4rem;">
+                            <strong t-field="product.display_name"/>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="text-center align-middle" style="height: 6rem;">
+                            <t t-if="product.barcode">
+                                <img alt="Barcode" t-if="len(product.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height:4rem;"/>
+                                <img alt="Barcode" t-elif="len(product.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height:4rem;"/>
+                                <img alt="Barcode" t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', quote_plus(product.barcode or ''), 600, 150)" style="width:100%;height:4rem"/>
+                                <span t-field="product.barcode"/>
+                            </t>
+                            <t t-else=""><span class="text-muted">No barcode available</span></t>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+
+        <template id="report_productbarcode">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="product">
+                        <t t-call="product.report_simple_barcode">
+                            <t t-set="product" t-value="product"/>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

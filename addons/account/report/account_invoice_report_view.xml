@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="view_account_invoice_report_pivot" model="ir.ui.view">
+         <field name="name">account.invoice.report.pivot</field>
+         <field name="model">account.invoice.report</field>
+         <field name="arch" type="xml">
+             <pivot string="Invoices Analysis" disable_linking="True" sample="1">
+                 <field name="product_categ_id" type="col"/>
+                 <field name="invoice_date" type="row"/>
+                 <field name="price_subtotal" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_account_invoice_report_graph" model="ir.ui.view">
+         <field name="name">account.invoice.report.graph</field>
+         <field name="model">account.invoice.report</field>
+         <field name="arch" type="xml">
+             <graph string="Invoices Analysis" type="line" sample="1" disable_linking="1">
+                 <field name="product_categ_id"/>
+                 <field name="price_subtotal" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <!-- Custom reports (aka filters) -->
+    <record id="filter_invoice_report_salespersons" model="ir.filters">
+        <field name="name">By Salespersons</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['invoice_date:month', 'invoice_user_id']}</field>
+    </record>
+    <record id="filter_invoice_product" model="ir.filters">
+        <field name="name">By Product</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['invoice_date:month', 'product_id'], 'set_visible':True, 'residual_invisible':True}</field>
+    </record>
+    <record id="filter_invoice_product_category" model="ir.filters">
+        <field name="name">By Product Category</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['invoice_date:month', 'product_categ_id'], 'residual_invisible':True}</field>
+    </record>
+    <record id="filter_invoice_refund" model="ir.filters">
+        <field name="name">By Credit Note</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[('move_type', '=', 'out_refund')]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['invoice_date:month', 'invoice_user_id']}</field>
+    </record>
+    <record id="filter_invoice_country" model="ir.filters">
+        <field name="name">By Country</field>
+        <field name="model_id">account.invoice.report</field>
+        <field name="domain">[]</field>
+        <field name="user_id" eval="False"/>
+        <field name="context">{'group_by': ['invoice_date:month', 'country_id']}</field>
+    </record>
+
+    <record id="view_account_invoice_report_search" model="ir.ui.view">
+        <field name="name">account.invoice.report.search</field>
+        <field name="model">account.invoice.report</field>
+        <field name="arch" type="xml">
+            <search string="Invoices Analysis">
+                <filter string="My Invoices" name="my_invoice" domain="[('invoice_user_id', '=', uid)]"/>
+                <separator/>
+                <field name="invoice_date"/>
+                <separator/>
+                <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
+                <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
+                <separator/>
+                <filter string="Customers" name="customer" domain="['|', ('move_type','=','out_invoice'),('move_type','=','out_refund')]"/>
+                <filter string="Vendors" name="supplier" domain="['|', ('move_type','=','in_invoice'),('move_type','=','in_refund')]"/>
+                <separator/>
+                <filter string="Invoices" name="invoice" domain="['|', ('move_type','=','out_invoice'),('move_type','=','in_invoice')]"/>
+                <filter string="Credit Notes" name="creditnote" domain="['|', ('move_type','=','out_refund'),('move_type','=','in_refund')]"/>
+                <separator/>
+                <filter name="filter_invoice_date" date="invoice_date"/>
+                <filter name="invoice_date_due" date="invoice_date_due"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="invoice_user_id" />
+                <field name="product_id" />
+                <field name="product_categ_id" filter_domain="[('product_categ_id', 'child_of', self)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Salesperson" name='user' context="{'group_by':'invoice_user_id'}"/>
+                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Product Category" name="category_product" context="{'group_by':'product_categ_id','residual_invisible':True}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical" />
+                    <filter string="Date" name="invoice_date" context="{'group_by':'invoice_date'}"/>
+                    <filter string="Due Date" name="duemonth" context="{'group_by':'invoice_date_due:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_report_search_analytic_accounting" model="ir.ui.view">
+        <field name="name">account.invoice.report.search_analytic_accounting</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+        <field name="arch" type="xml">
+            <filter name="status" position="after">
+                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_account_invoice_report_all_supp" model="ir.actions.act_window">
+        <field name="name">Invoices Analysis</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{'search_default_current':1, 'search_default_supplier': 1, 'group_by':['invoice_date'], 'group_by_no_leaf':1}</field>
+        <field name="search_view_id" ref="view_account_invoice_report_search"/>
+        <field name="help">From this report, you can have an overview of the amount invoiced from your vendors. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+    </record>
+    <record id="action_account_invoice_report_all" model="ir.actions.act_window">
+        <field name="name">Invoices Analysis</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{'search_default_current':1, 'search_default_customer': 1, 'group_by':['invoice_date'], 'group_by_no_leaf':1}</field>
+        <field name="search_view_id" ref="view_account_invoice_report_search"/>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customers. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+    </record>
+
+</data>
+</odoo>

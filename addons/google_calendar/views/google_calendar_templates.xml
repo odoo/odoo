@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="google_calendar assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/google_calendar/static/src/scss/google_calendar.scss"/>
+            <script type="text/javascript" src="/google_calendar/static/src/js/google_calendar_popover.js"></script>
+            <script type="text/javascript" src="/google_calendar/static/src/js/google_calendar.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="google_calendar_tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/google_calendar/static/tests/mock_server.js" />
+            <script type="text/javascript" src="/google_calendar/static/tests/google_calendar_tests.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/google_calendar/static/tests/mock_server.js" />
+        </xpath>
+    </template>
+</odoo>

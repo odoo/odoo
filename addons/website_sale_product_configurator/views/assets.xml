@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_sale_product_configurator assets frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/product_configurator.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/website_sale_product_configurator/static/src/scss/website_sale_options.scss"/>
+        </xpath>
+        <xpath expr="script[contains(@src, '/website_sale/static/src/js/website_sale.js')]" position="before">
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_modal.js"></script>
+            <script type="text/javascript" src="/website_sale_product_configurator/static/src/js/product_configurator_modal.js"></script>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/website_sale_product_configurator/static/src/js/website_sale_options.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_tests" name="Website Sale Product Configurator Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_product_configurator/static/tests/tours/website_sale_buy.js"></script>
+            <script type="text/javascript" src="/website_sale_product_configurator/static/tests/tours/website_sale_shop_custom_attributes_value.js"></script>
+        </xpath>
+    </template>
+</odoo>

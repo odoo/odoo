@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <template id="assets_backend" name="website livechat assets" inherit_id="web.assets_backend">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/website_livechat/static/src/bugfix/bugfix.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/components/discuss/discuss.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/components/visitor_banner/visitor_banner.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/models/thread/thread.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/models/visitor/visitor.js"/>
+        </xpath>
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/bugfix/bugfix.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/components/visitor_banner/visitor_banner.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Website Livechat Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_livechat/static/tests/tours/website_livechat_common.js"></script>
+            <script type="text/javascript" src="/website_livechat/static/tests/tours/website_livechat_rating.js"></script>
+            <script type="text/javascript" src="/website_livechat/static/tests/tours/website_livechat_request.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="website_livechat_tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_livechat/static/src/bugfix/bugfix_tests.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/components/discuss/discuss_tests.js"/>
+            <script type="text/javascript" src="/website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler_tests.js"/>
+            <script type="text/javascript" src="/website_livechat/static/tests/helpers/mock_models.js"/>
+            <script type="text/javascript" src="/website_livechat/static/tests/helpers/mock_server.js"/>
+        </xpath>
+    </template>
+</data>
+</odoo>

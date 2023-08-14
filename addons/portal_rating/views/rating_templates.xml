@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Rating widget static: show 5 stars (full or empty) regarding the given rating_avg and rating_count
+    -->
+    <template id="rating_widget_stars_static" name="Rating: static star widget">
+        <t t-set="rating_avg" t-value="round(rating_avg * 100) / 100"/>
+        <t t-set="val_decimal" t-value="round(rating_avg % 1, 1)"/>
+        <t t-set="val_integer" t-value="int(rating_avg)"/>
+        <t t-set="empty_star" t-value="5 - (val_integer+1) if val_decimal else 5 - val_integer"/>
+        <div class="o_website_rating_static" t-att-style="inline_mode and 'display:inline'" t-att-title="rating_avg">
+            <t t-foreach="range(0, val_integer)" t-as="num">
+                <i class="fa fa-star" role="img"></i>
+            </t>
+            <t t-if="val_decimal">
+                <i class="fa fa-star-half-o" role="img"></i>
+            </t>
+            <t t-foreach="range(0, empty_star)" t-as="num">
+                <i class="fa fa-star text-black-25" role="img"></i>
+            </t>
+            (<t t-esc="rating_count"/>)
+        </div>
+    </template>
+
+    <!--
+        Display static star widget, and open rating composer on click
+        This template provide the container of the Popup Rating Composer. The rest is done in js.
+        To use this template, you need to call it after setting the following variable in your template or in your controller:
+            :float rating_avg : average rating to be displayed with star widget
+            :object browserecord : the mail_thread object
+            :token string (optional): if you want your chatter to be available for non-logged user,
+                     you can use a token to verify the identity of the user;
+                     the message will be posted with the identity of the partner_id of the object
+    -->
+    <template id="rating_stars_static_popup_composer" name="Rating: rating composer in popup">
+        <div class="d-print-none o_rating_popup_composer o_not_editable p-0"
+            t-att-data-rating-avg="rating_avg or 0.0"
+            t-att-data-rating-total="rating_total or 0.0"
+            t-att-data-token="token"
+            t-att-data-hash="hash"
+            t-att-data-pid="pid"
+            t-att-data-res_model="object._name"
+            t-att-data-res_id="object.id"
+            t-att-data-partner_id="request.env.user.partner_id.id"
+            t-att-data-default_message="default_message"
+            t-att-data-default_message_id="default_message_id"
+            t-att-data-default_rating_value="default_rating_value"
+            t-att-data-default_attachment_ids="default_attachment_ids"
+            t-att-data-force_submit_url="force_submit_url"
+            t-att-data-disable_composer="disable_composer"
+            t-att-data-link_btn_classes="_link_btn_classes">
+        </div>
+    </template>
+</odoo>

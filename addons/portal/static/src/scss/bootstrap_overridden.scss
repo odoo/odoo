@@ -1,0 +1,34 @@
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes: () !default;
+$sizes: map-merge((
+    0: 0,
+), $sizes);
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: $o-portal-default-body-bg !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-size-sm: (12 / 16) * 1rem !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-padding-y-sm: (1 / 16) * 1rem !default;
+$btn-padding-x-sm: (5 / 16) * 1rem !default;
+
+// Navbar
+
+$navbar-dark-toggler-border-color: transparent;
+$navbar-light-toggler-border-color: transparent;
+
+// Modals
+
+$modal-lg: $o-modal-lg;
+$modal-md: $o-modal-md;

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_table_of_content" name="Table of Content">
+    <section class="s_table_of_content pt24 pb24 o_cc o_cc1">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-3 s_table_of_content_navbar_wrap s_table_of_content_navbar_sticky
+                        s_table_of_content_vertical_navbar d-print-none d-none d-lg-block o_not_editable o_cc o_cc1"
+                        data-name="Navbar">
+                    <div class="s_table_of_content_navbar list-group"/>
+                </div>
+                <div class="col-lg-9 s_table_of_content_main oe_structure oe_empty" data-name="Content">
+                    <section class="pb16">
+                        <h1 data-anchor="true">Intuitive system</h1>
+                        <h4>What you see is what you get</h4>
+                        <p>
+                            Insert text styles like headers, bold, italic, lists, and fonts with
+                            a simple WYSIWYG editor. Flexible and easy to use.
+                        </p>
+                        <h4>Customization tool</h4>
+                        <p>
+                            Click and change content directly from the front-end: no complex back
+                            end to deal with.
+                        </p>
+                        <h4>Building blocks system</h4>
+                        <p>
+                            Create your page from scratch by dragging and dropping pre-made,
+                            fully customizable building blocks.
+                        </p>
+                    </section>
+                    <section class="pb16">
+                        <h1 data-anchor="true">Design features</h1>
+                        <h4>Bootstrap-based templates</h4>
+                        <p>
+                            Easily design your own Odoo templates thanks to clean HTML
+                            structure and bootstrap CSS.
+                        </p>
+                        <h4>Professional themes</h4>
+                        <p>
+                            Change theme in a few clicks, and browse through Odoo's catalog of
+                            ready-to-use themes available in our app store.
+                        </p>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_table_of_content_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="TableOfContent" data-selector=".s_table_of_content"/>
+        <div data-js="TableOfContentNavbar" data-selector=".s_table_of_content_navbar_wrap">
+            <we-button-group string="Position">
+                <we-button title="Left" data-navbar-position="left"><i class="fa fa-fw fa-long-arrow-left"/></we-button>
+                <we-button title="Top" data-navbar-position="top"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
+                <we-button title="Right" data-navbar-position="right"><i class="fa fa-fw fa-long-arrow-right"/></we-button>
+            </we-button-group>
+            <we-checkbox string="Sticky" data-select-class="s_table_of_content_navbar_sticky" data-no-preview="true"/>
+        </div>
+        <div data-js="TableOfContentMainColumns" data-selector=".s_table_of_content_navbar_wrap, .s_table_of_content_main"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_table_of_content_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_table_of_content/000.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_table_of_content_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/snippets/s_table_of_content/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

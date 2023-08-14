@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- LINK.TRACKER VIEWS -->
+    <record id="link_tracker_view_search" model="ir.ui.view">
+        <field name="name">link.tracker.view.search.inherit.mass.mail</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='title']" position="after">
+                <field name="mass_mailing_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_view_form" model="ir.ui.view">
+        <field name="name">link.tracker.view.form.inherit.mass.mail</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='campaign_id']" position="before">
+                <field name="mass_mailing_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- LINK.TRACKER.CLICK VIEWS -->
+    <record id="link_tracker_click_view_search" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.search.inherit.mass_mailing</field>
+            <field name="model">link.tracker.click</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_click_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="mass_mailing_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_country_id']" position="after">
+                <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_click_view_form" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.form.inherit.mass_mailing</field>
+        <field name="model">link.tracker.click</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_click_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="mass_mailing_id"/>
+                <field name="mailing_trace_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_click_view_tree" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.tree.inherit.mass_mailing</field>
+        <field name="model">link.tracker.click</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_click_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='link_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="mass_mailing_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_click_view_graph" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.graph.inherit.mass_mailing</field>
+        <field name="model">link.tracker.click</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_click_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="mass_mailing_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- MENU TO HANLDE LINK DATA IN MM -->
+    <menuitem id="link_tracker_menu_mass_mailing"
+        name="Link Tracker"
+        parent="mass_mailing_configuration"
+        sequence="5"
+        action="link_tracker.link_tracker_action"/>
+
+</odoo>

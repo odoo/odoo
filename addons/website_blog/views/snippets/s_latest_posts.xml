@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Snippet -->
+<template id="s_latest_posts" name="Blog Posts">
+    <section class="s_latest_posts pt16 pb16" data-vcss="001">
+        <div class="container">
+            <div class="row s_col_no_bgcolor s_nb_column_fixed js_get_posts s_latest_posts_big_picture s_latest_posts_effect_marley"
+                data-loading="true"
+                data-template="website_blog.s_latest_posts_big_picture_template"
+                data-filter-by-blog-id="0"
+                data-order="published_date desc"/>
+        </div>
+    </section>
+</template>
+
+<!-- Load-time templates (rendered in JS on page load) -->
+<!-- List layout -->
+<template id="s_latest_posts_list_template">
+    <div t-foreach="posts" t-as="p" class="d-flex col-12 mt-3 s_latest_posts_post">
+        <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}" t-att-title="'Read' + p.name">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="p"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+
+                <div class="s_latest_posts_loader d-flex align-items-center justify-content-center bg-200">
+                    <div class="d-none rounded-circle bg-black-25 w-25 h-25"/>
+                </div>
+            </t>
+        </a>
+        <div class="pl-2">
+            <a class="" t-att-title="'Read' + p.name" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
+                <div class="s_latest_posts_post_title mb-1" t-field="p.name"/>
+            </a>
+            <div class="s_latest_posts_post_subtitle mb-1 d-none d-sm-block" t-field="p.subtitle"/>
+        </div>
+    </div>
+</template>
+<!-- Big picture layout -->
+<template id="s_latest_posts_big_picture_template">
+    <figure t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 my-3 s_latest_posts_post">
+        <a class="s_latest_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="p"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
+            </t>
+
+            <figcaption class="text-center w-100 h-100 px-3 d-flex flex-column flex-grow-1">
+                <div class="s_latest_posts_post_title text-white" t-field="p.name"/>
+                <div class="s_latest_posts_post_subtitle text-white" t-field="p.subtitle"/>
+            </figcaption>
+
+            <div class="s_latest_posts_loader d-flex align-items-center justify-content-center bg-200">
+                <div class="d-none rounded-circle bg-black-25 w-25 h-25"/>
+            </div>
+        </a>
+    </figure>
+</template>
+<!-- Horizontal layout -->
+<template id="s_latest_posts_horizontal_template">
+    <figure t-foreach="posts" t-as="p" class="post s_latest_posts_post col-md-6 col-lg-4">
+        <figcaption>
+            <h4 class="mb0"><a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
+            <h5 class="mt0 mb4" t-field="p.post_date" t-options='{"format": "dd/MM"}' />
+        </figcaption>
+        <a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="p"/>
+                <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
+            </t>
+        </a>
+    </figure>
+</template>
+<!-- Card layout -->
+<template id="s_latest_posts_card_template">
+    <div t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 s_latest_posts_post pb32">
+        <div class="card">
+            <a class="s_latest_posts_post_cover" t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="p"/>
+                    <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
+                </t>
+            </a>
+            <div class="card-body">
+                <a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)"><h4 class="mb-0"><t t-esc="p.name"/></h4></a>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <span class="text-muted mb-0" t-field="p.post_date" t-options='{"format": "MMM d, yyyy"}' />
+                <span class="text-muted mb-0">In <a class="font-weight-bold" t-esc="p.blog_id.name" t-att-href="'/blog/%s' % (p.blog_id.id)" /></span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Options -->
+<template id="s_latest_posts_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts" data-target=".js_get_posts" data-no-check="true">
+            <we-select string="Choose a blog" data-no-preview="true" name="blog_selection" data-attribute-name="filterByBlogId">
+                <we-button data-select-data-attribute="0">All blogs</we-button>
+                <!-- the blog list will be generated in js -->
+            </we-select>
+            <we-select string="Posts" data-no-preview="true" data-attribute-name="order" class="o_we_inline">
+                <we-button data-select-data-attribute="published_date desc">Latest</we-button>
+                <we-button data-select-data-attribute="visits desc">Most viewed</we-button>
+            </we-select>
+            <we-select string="Layout" data-attribute-name="template">
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_list_template" data-select-class="s_latest_posts_list">List</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_big_picture_template"
+                    data-select-class="s_latest_posts_big_picture"
+                    data-name="big_picture_opt">Big Pictures</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_horizontal_template"
+                    data-select-class="s_latest_posts_horizontal">Horizontal</we-button>
+                <we-button data-select-data-attribute="website_blog.s_latest_posts_card_template"
+                    data-select-class="s_latest_posts_card">Cards</we-button>
+            </we-select>
+            <we-select string="Hover effect" data-no-widget-refresh="true" data-dependencies="big_picture_opt" class="o_we_inline">
+                <we-button data-select-class="">None</we-button>
+                <we-button data-select-class="s_latest_posts_effect_marley">Marley</we-button>
+                <we-button data-select-class="s_latest_posts_effect_dexter">Dexter</we-button>
+                <we-button data-select-class="s_latest_posts_effect_chico">Silly-Chico</we-button>
+            </we-select>
+        </div>
+    </xpath>
+    <xpath expr="//div[@data-js='layout_column']" position="attributes">
+        <attribute name="data-exclude" add=".s_latest_posts, .s_latest_posts_big_picture" separator=","/>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<template id="assets_snippet_s_latest_posts_css_000" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/snippets/s_latest_posts/000.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_latest_posts_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/snippets/s_latest_posts/001.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_latest_posts_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_blog/static/src/snippets/s_latest_posts/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

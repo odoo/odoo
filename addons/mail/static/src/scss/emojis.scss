@@ -1,0 +1,67 @@
+// General variable
+$o-mail-emoji-height: 2rem;
+
+.o_mail_add_emoji {
+    float: right;
+    margin-bottom: 1rem;
+    .dropdown-menu {
+        .o_mail_emoji {
+            cursor: pointer;
+            padding: 2px;
+            width: $o-mail-emoji-height;
+            height: $o-mail-emoji-height;
+            @include hover-focus() {
+                background-color: grey('100');
+            }
+        }
+    }
+}
+
+.o_form_view {
+    // Emojis widgets should hide the emoji dropdown button when the field is invisible.
+    // This is necessary because the button is added *after* the main element (and not inside)
+    // (see '_attachEmojisDropdown' for more details)
+    .o_invisible_modifier + .o_mail_add_emoji{
+        display: none !important;
+    }
+}
+
+.o_mail_emojis_dropdown {
+    height: $o-mail-emoji-height;
+    width: 40px;
+    float: right;
+    bottom: 33px;
+    margin-bottom: -$o-mail-emoji-height;
+
+    * {
+        outline: none!important;
+        box-shadow: none!important;
+    }
+
+    .dropdown-toggle:after {
+        display: none;
+    }
+}
+
+.o_mail_emojis_dropdown_translation {
+    // if the button is added to a text field with a button "language"
+    // add margin-right, so the emojis button is placed on the left of the
+    // language button
+    margin-right: 20px;
+}
+
+.o_mail_emojis_dropdown_textarea{
+    bottom: 40px;
+}
+
+
+.o_xxs_form_view {
+    .o_mail_emojis_dropdown {
+        bottom: 50px;
+    }
+    .o_mail_add_emoji {
+        .dropdown-menu {
+            max-width: 320px;
+        }
+    }
+}

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<header t-name="Menu">
+    <nav class="o_main_navbar">
+        <ul class="o_menu_apps"/>
+        <a class="o_menu_brand" role="button"/>
+        <ul class="o_menu_sections" role="menu"/>
+        <ul class="o_menu_systray" role="menu"/>
+    </nav>
+</header>
+
+<!--
+    @param {web.AppsMenu} widget
+-->
+<t t-name="AppsMenu">
+    <li class="dropdown">
+        <a class="full" data-toggle="dropdown" data-display="static" href="#" accesskey="h">
+            <i class="fa fa-th-large"/>
+        </a>
+        <div class="dropdown-menu" role="menu">
+            <t t-foreach="widget.getApps()" t-as="app">
+            <a role="menuitem" t-attf-href="#menu_id=#{app.menuID}"
+                class="dropdown-item o_app"
+                t-att-data-menu-id="app.menuID"
+                t-att-data-menu-xmlid="app.xmlID"
+                t-att-data-action-id="app.actionID">
+                    <t t-esc="app.name"/>
+                </a>
+            </t>
+        </div>
+    </li>
+</t>
+
+<t t-name="Menu.link">
+    <t t-set="depth" t-value="(depth || 0) + 1"/>
+
+    <t t-if="!menu.children.length">
+        <t t-set="_link">
+            <a role="menuitem" t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
+                t-att-data-menu="menu.id"
+                t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
+                t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''"
+                t-att-data-menu-xmlid="menu.xmlid"
+                t-attf-class="#{inNavbar ? '' : 'dropdown-item '}o_menu_entry_lvl_#{depth}"
+                data-toggle="collapse" data-target="#o_navbar_collapse.in">
+                <span><t t-esc="menu.name"/></span>
+            </a>
+        </t>
+        <li t-if="inNavbar">
+            <t t-raw="_link"/>
+        </li>
+        <t t-else="">
+            <t t-raw="_link"/>
+        </t>
+    </t>
+    <t t-else="">
+        <div t-attf-class="dropdown-header o_menu_header_lvl_#{depth}">
+            <span><t t-esc="menu.name"/></span>
+        </div>
+        <t t-foreach="menu.children" t-as="menu">
+            <t t-call="Menu.link"/>
+        </t>
+    </t>
+</t>
+
+<!-- separate first level dropdown from the others to avoid nested dropdown -->
+<t t-name="Menu.sections">
+    <t t-foreach="menu_data.children" t-as="first_level_menu">
+        <section t-att-class="first_level_menu.id">
+            <t t-foreach="first_level_menu.children" t-as="second_level_menu">
+                <t t-if="!second_level_menu.children.length">
+                    <t t-call="Menu.link">
+                        <t t-set="inNavbar" t-value="true"/>
+                        <t t-set="menu" t-value="second_level_menu"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <li>
+                        <a href="#" class="dropdown-toggle o-no-caret o_menu_header_lvl_1" t-att-data-menu-xmlid="second_level_menu.xmlid" data-toggle="dropdown" data-display="static" role="button" aria-expanded="false">
+                            <t t-esc="second_level_menu.name"/>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach="second_level_menu.children" t-as="third_level_menu">
+                                <t t-call="Menu.link">
+                                    <t t-set="depth" t-value="1"/>
+                                    <t t-set="menu" t-value="third_level_menu"/>
+                                </t>
+                            </t>
+                        </div>
+                    </li>
+                </t>
+            </t>
+        </section>
+    </t>
+</t>
+
+<t t-extend="UserMenu.Actions">
+    <t t-jquery=".dropdown-divider" t-operation="before">
+        <a role="menuitem" href="#" data-menu="shortcuts" class="dropdown-item d-none d-md-inline-block">Shortcuts</a>
+    </t>
+</t>
+
+<div t-name="UserMenu.shortcuts">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-md-2 col-md-8">
+                <table class="o_shortcut_table text-center">
+                    <thead>
+                        <tr>
+                            <th style="width:50%;">Description</th>
+                            <th style="width:25%;" class="text-center">Windows/Linux</th>
+                            <th style="width:25%;" class="text-center">Mac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td align="left">Save a record</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">s</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">s</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Edit a record</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">a</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">a</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Discard a record modification</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">j</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">j</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Create a new record</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">c</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">c</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Open to list view</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">l</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">l</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Open to kanban view</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">k</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">k</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Open the previous record</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">p</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">p</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Open the next record</td>
+                            <td>
+                                <span class="o_key">Alt</span> + <span class="o_key">n</span>
+                            </td>
+                            <td>
+                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">n</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<t t-extend="FormSelection">
+    <t t-jquery=".dropdown-menu.state">$(this).addClass("dropdown-menu-right");</t>
+</t>
+
+</templates>

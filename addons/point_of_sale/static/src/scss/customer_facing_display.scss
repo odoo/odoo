@@ -1,0 +1,475 @@
+// out: ../css/customer_facing_display.css, sourcemap: false, compress: false
+
+// =========== Variables ===========
+$color-gray-lighter: #f6f6f6;
+$color-gray-dark: #3E3E3E;
+
+// =========== Animations ===========
+@keyframes item_in {
+    0%   { opacity: 0; margin-top: -30px; }
+    50%  { margin-top: 0; }
+    100% { opacity: 1; }
+}
+@-webkit-keyframes item_in {
+    0%   { opacity: 0; margin-top: -30px; }
+    50%  { margin-top: 0; }
+    100% { opacity: 1; }
+}
+
+// =========== MIXINS ===========
+@mixin pos-bg {
+    background-position: center top;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &[style*="url(http://placehold.it"] {
+        // Add a bg-color in case we are using a pleceholder.
+        // This will help the user to identify the right image dimension
+        // before apply customizations.
+        background-color: #ccc;
+    }
+}
+
+// =========== VENDOR PREFIX ===========
+@mixin flex-display {
+    -webkit-display: flex;
+    -moz-display: flex;
+    -ms-display: flex;
+    -o-display: flex;
+    display: flex;
+}
+@mixin flex-direction($direction) {
+    -webkit-flex-direction: $direction;
+    -moz-flex-direction: $direction;
+    -ms-flex-direction: $direction;
+    -o-flex-direction: $direction;
+    flex-direction: $direction;
+};
+@mixin flex-grow($grow) {
+    -webkit-box-flex: $grow;
+    -webkit-flex-grow: $grow;
+    -moz-box-flex: $grow;
+    -ms-flex-positive: $grow;
+    flex-grow: $grow;
+}
+@mixin flex($flex) {
+    -webkit-box-flex: $flex;
+    -webkit-flex: $flex;
+    -moz-box-flex: $flex;
+    -ms-flex: $flex;
+    flex: $flex;
+}
+@mixin align-items($align) {
+    -webkit-box-align: $align;
+    -webkit-align-items: $align;
+    -moz-box-align: $align;
+    -ms-flex-align: $align;
+    -ms-grid-row-align: $align;
+    align-items: $align;
+};
+@mixin justify-content($justify) {
+    -webkit-box-pack: $justify;
+    -webkit-justify-content: $justify;
+    -moz-box-pack: $justify;
+    -ms-flex-pack: $justify;
+    justify-content: $justify;
+}
+@mixin flex-wrap($wrap) {
+    -webkit-flex-wrap: $wrap;
+    -ms-flex-wrap: $wrap;
+    flex-wrap: $wrap;
+}
+
+
+// =========== MAIN LAYOUT ===========
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+    font-smooth: always;
+
+    .pos-customer_facing_display {
+        background-color: $color-gray-lighter;
+        font-size: 2vw;
+        font-family: Futura, HelveticaNeue, Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: 300;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        @include flex-display;
+        @include flex-direction(row);
+
+        .pos-customer_products,
+        .pos-payment_info {
+            height: 100%;
+            padding: 2%;
+            @include flex-display;
+            @include flex-direction(column);
+            @include flex-grow(1);
+        }
+
+        .pos_orderlines {
+            width: 100%;
+            height: 100%;
+            @include flex-display;
+            @include flex-direction(column);
+
+            .pos_orderlines_list {
+                overflow-y: scroll;
+                padding-right: 1.5vw;
+                position: relative;
+                height: 100%;
+            }
+
+            .pos_orderlines_item {
+                margin-bottom: 1vw;
+                padding: 1%;
+                border-radius: 0.3vw;
+                height: auto;
+                @include flex(0 1 auto);
+                @include flex-display;
+                @include flex-direction(row);
+                @include align-items(center);
+
+                &:last-of-type {
+                    animation: item_in 1s ease;
+                }
+
+                &.pos_orderlines_header {
+                    background-color: transparent;
+                    box-shadow: none;
+                    animation: none;
+
+                    > div {
+                        &,
+                        &:last-child {
+                            border-left-width: 0;
+                            text-align: center;
+                            font-size: 70%;
+                            font-weight: normal;
+                        }
+                    }
+
+                    > div:last-child {
+                        text-align: left;
+                    }
+                }
+
+                > div {
+                    width: 5%;
+                    text-align: left;
+                    margin-right: 4%;
+                    font-size: 80%;
+                    @include flex-grow(1);
+
+                    &:first-child {
+                        margin-right: 2%;
+                        @include flex(1 1 1%);
+                    }
+
+                    &:nth-child(2) {
+                        width: 40%;
+                        border-left: 1px solid;
+                        padding-left: 2%;
+                    }
+
+                    &:nth-child(3) {
+                        text-align: center;
+                    }
+
+                    &:last-child {
+                        margin-right: 0;
+                        font-weight: bold;
+                    }
+
+                    div {
+                        background-position: center;
+                        background-size: cover;
+                        padding-top: 75%;
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        .pos-payment_info {
+            max-width: 30%;
+            padding: 2% 2% 1% 2%;
+            @include flex-direction(column);
+            @include justify-content(space-between);
+
+            .pos-adv,
+            .pos-company_logo {
+                @include pos-bg;
+            }
+
+            .pos-company_logo {
+                background-image: url(/logo);
+                margin-bottom: 10%;
+                @include flex(0 0 20%);
+            }
+
+            .pos-adv {
+                margin-bottom: 5%;
+                border-bottom: 10px solid transparent;
+                box-shadow: 0 1px rgba($color-gray-lighter, 0.2);
+                @include flex(1 1 60%);
+            }
+
+            .pos-payment_info_details{
+                .pos-total,
+                .pos-paymentlines {
+                    @include flex-direction(row);
+                    @include flex-display;
+                    @include flex-wrap(wrap);
+                    @include justify-content(space-between);
+                    @include align-items(baseline);
+
+                    > div {
+                        @include flex(1 0 48%);
+
+                        &:nth-child(even) {
+                            font-weight: bold;
+                            font-size: 120%;
+                            margin-right: 0
+                        }
+                    }
+                }
+
+                .pos-total {
+                    font-size: 2vw;
+                }
+
+                .pos-paymentlines {
+                    margin-top: 2%;
+                    font-size: 1.5vw;
+                    line-height: 1.3;
+                }
+
+                .pos-odoo_logo_container {
+                    text-align: right;
+                    margin-top: 10%;
+                    @include flex(0 1 auto);
+
+                    img {
+                        max-width: 40px;
+                    }
+                }
+            }
+        }
+    }
+
+    // =========== PORTRAIT LAYOUT ===========
+    @media all and (orientation: portrait) {
+        .pos-customer_facing_display {
+            font-size: 2vh;
+            height: 100%;
+            @include flex-direction(column);
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 17vh;
+            }
+
+            .pos-payment_info .pos-adv {
+                // Move ADV on top.
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 15vh;
+                width: 99vw;
+                margin:0.5vh;
+                border-width: 0;
+                @include flex-display;
+            }
+
+            &.pos-js_no_ADV {
+                &:before {
+                    display: none;
+                }
+                .pos-customer_products {
+                    padding-top: 0;
+                }
+            }
+
+            .pos-customer_products {
+                padding-top: 17vh;
+                height: 72vw;
+                overflow: hidden;
+
+                .pos_orderlines {
+                    @include flex(1 0 auto);
+
+                    .pos_orderlines_item {
+                        > div:nth-child(2) {
+                            width: 30%;
+                        }
+                        &.pos_orderlines_header div{
+                            font-size: 90%;
+                        }
+                    }
+
+                    .pos_orderlines_list {
+                        padding-right: 1.5vh;
+                        height: auto;
+                        .pos_orderlines_item {
+                            box-shadow: 0 .1vh .1vh darken($color-gray-lighter, 10%);
+                            margin-bottom: 1vh;
+                            > div {
+                                font-size: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .pos-payment_info {
+                max-width: 100%;
+                overflow: hidden;
+                padding-top: 0;
+                min-height: 120px;
+                @include flex(0 1 23vw);
+                @include flex-direction(row);
+                @include align-items(center);
+                @include justify-content(space-between);
+
+                .pos-company_logo {
+                    margin: 0;
+                    background-position: left center;
+                    margin-right: 5%;
+                    height: 100%;
+                    padding: 0;
+                    @include flex(1 1 20%);
+                }
+
+                .pos-payment_info_details {
+                    @include flex(0 1 50%);
+                    @include flex-direction(column);
+                    min-width: 170px;
+
+                    .pos-total {
+                        font-size: 3vw;
+                        .pos_total-amount {
+                            font-size: 3.5vw;
+                        }
+                    }
+
+                    .pos-paymentlines {
+                        margin-top: 2%;
+                        font-size: 80%;
+                        line-height: 1.2;
+                    }
+                    .pos-odoo_logo_container {
+                        position: absolute;
+                        right: 3%;
+                        bottom: 1%;
+                    }
+                }
+            }
+        }
+    }
+
+    @media all and (orientation: portrait) and (max-width: 340px ) {
+        .pos-customer_facing_display {
+            .pos-customer_products .pos_orderlines {
+                .pos_orderlines_list{
+                    padding-right: 0;
+                    .pos_orderlines_item > div{
+                        font-size: 70%;
+                    }
+                }
+                .pos_orderlines_header > div {
+                    font-size: 60%;
+                    &:last-child {
+                        text-align: center;
+                    }
+                }
+            }
+            .pos-payment_info {
+
+                .pos-company_logo {
+                    display: none!important;
+                }
+                .pos-payment_info_details {
+                    @include flex(1 0 100%);
+
+                    .pos-total {
+                        font-size: 6vw;
+                        .pos_total-amount {
+                            font-size: 6.5vw;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// @media all and (max-width: 340px ) {
+// }
+
+body {
+    // =========== UTILITY CLASSES ===========
+    .pos-hidden {
+        opacity: 0;
+    }
+}
+
+
+// =========== PALETTE GENERATOR ===========
+@mixin palette-variant (
+    $bg-info: $color-gray-dark,
+    $text-info: $color-gray-lighter,
+    $bg-products: $color-gray-lighter,
+    $text-products: lighten($color-gray-dark, 10%),
+    $card-bg: white,
+    $card-text: $color-gray-dark,
+    $card-shadow: darken($bg-products, 30%)) {
+
+    .pos-payment_info {
+        background: $bg-info;
+        color: $text-info;
+    }
+
+    .pos-customer_products {
+        background: $bg-products;
+        color: $text-products;
+
+        .pos_orderlines_list .pos_orderlines_item {
+            background-color: $card-bg;
+            color: $card-text;
+            box-shadow: 0 .1vh .1vh $card-shadow;
+            div:nth-child(2) {
+                border-color: rgba($card-text, 0.3);
+            }
+        }
+    }
+
+    @media all and (orientation: portrait) {
+        &:before {
+            background: $bg-info;
+        }
+    }
+}
+
+// =========== PALETTES ===========
+// Those are kept for compatibility for now (previously there was a feature
+// which allowed to change the default pos-palette_01 class.
+.pos-palette_01 { @include palette-variant; }
+.pos-palette_02 { @include palette-variant(#364152, #e6e7e8, #ecf2f6, #364152, white, $color-gray-dark, #364152 ); }
+.pos-palette_03 { @include palette-variant(#1BA39C, $color-gray-lighter, #ececec ); }
+.pos-palette_04 { @include palette-variant(#0b7b6c, $color-gray-lighter, #efeeec); }
+.pos-palette_05 { @include palette-variant(#E26868, $color-gray-lighter, #ececec ); }
+.pos-palette_06 { @include palette-variant(#9E373B, $color-gray-lighter); }
+.pos-palette_07 { @include palette-variant(#ce9934, white, #ececec ); }
+.pos-palette_08 { @include palette-variant(#a48c77, $color-gray-lighter, #ececec ); }
+.pos-palette_09 { @include palette-variant(linear-gradient(30deg, #014d43, #127e71), $color-gray-lighter, #ececec ); }
+.pos-palette_10 { @include palette-variant(linear-gradient(30deg, #e2316c, #ea4c89), white, #ececec ); }
+.pos-palette_11 { @include palette-variant(linear-gradient(30deg, #362b3d, #5b4a63), white, #ececec ); }
+.pos-palette_12 { @include palette-variant(#434343, #e6e6e6, #5b5b5b, #bdb9b9, #f5f5f5); }
+.pos-palette_13 { @include palette-variant(linear-gradient(30deg, #1a1b1f, #3d3f45), white, #a2a2ab, $color-gray-lighter, $color-gray-lighter); }

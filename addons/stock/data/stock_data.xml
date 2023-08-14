@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="removal_fifo" model="product.removal">
+            <field name="name">First In First Out (FIFO)</field>
+            <field name="method">fifo</field>
+        </record>
+        <record id="removal_lifo" model="product.removal">
+            <field name="name">Last In First Out (LIFO)</field>
+            <field name="method">lifo</field>
+        </record>
+        <record  id="stock_quant_stock_move_line_desynchronization" model="ir.actions.server">
+            <field name="name">Correct inconsistencies for reservation</field>
+            <field name="model_id" ref="base.model_ir_actions_server"/>
+            <field name="state">code</field>
+            <field name="code">
+quants = env['stock.quant'].sudo().search([])
+
+move_line_ids = []
+move_line_to_recompute_ids = []
+
+logging = ''
+
+for quant in quants:
+
+    move_lines = env['stock.move.line'].search([
+        ('product_id', '=', quant.product_id.id),
+        ('location_id', '=', quant.location_id.id),
+        ('lot_id', '=', quant.lot_id.id),
+        ('package_id', '=', quant.package_id.id),
+        ('owner_id', '=', quant.owner_id.id),
+        ('product_qty', '!=', 0),
+        ])
+
+    move_line_ids += move_lines.ids
+    reserved_on_move_lines = sum(move_lines.mapped('product_qty'))
+    move_line_str = str.join(', ', [str(move_line_id) for move_line_id in move_lines.ids])
+
+    if quant.location_id.should_bypass_reservation():
+        # If a quant is in a location that should bypass the reservation, its `reserved_quantity` field
+        # should be 0.
+        if quant.reserved_quantity != 0:
+            logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
+            logging += "its `reserved_quantity` field is not 0 while its location should bypass the reservation\n"
+            if move_lines:
+                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
+            else:
+                logging += "no move lines are reserved on it, you can safely reset its `reserved_quantity` to 0\n"
+            logging += '******************\n'
+            quant.write({'reserved_quantity': 0})
+    else:
+        # If a quant is in a reservable location, its `reserved_quantity` should be exactly the sum
+        # of the `product_qty` of all the partially_available / assigned move lines with the same
+        # characteristics.
+
+        if quant.reserved_quantity == 0:
+            if move_lines:
+                logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
+                logging += "its `reserved_quantity` field is 0 while these move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
+                logging += '******************\n'
+                move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
+                move_line_to_recompute_ids += move_lines.ids
+        elif quant.reserved_quantity &lt; 0:
+            logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
+            logging += "its `reserved_quantity` field is negative while it should not happen\n"
+            quant.write({'reserved_quantity': 0})
+            if move_lines:
+                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
+                move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
+                move_line_to_recompute_ids += move_lines.ids
+            logging += '******************\n'
+        else:
+            if reserved_on_move_lines != quant.reserved_quantity:
+                logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
+                logging += "its `reserved_quantity` does not reflect the move lines reservation\n"
+                logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
+                logging += '******************\n'
+                move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
+                move_line_to_recompute_ids += move_lines.ids
+                quant.write({'reserved_quantity': 0})
+            else:
+                if any(move_line.product_qty &lt; 0 for move_line in
+                       move_lines):
+                    logging += "Problematic quant found: %s (quantity: %s, reserved_quantity: %s)\n" % (quant.id, quant.quantity, quant.reserved_quantity)
+                    logging += "its `reserved_quantity` correctly reflects the move lines reservation but some are negatives\n"
+                    logging += "These move lines are reserved on it: %s (sum of the reservation: %s)\n" % (move_line_str, reserved_on_move_lines)
+                    logging += '******************\n'
+                    move_lines.with_context(bypass_reservation_update=True).sudo().write({'product_uom_qty': 0})
+                    move_line_to_recompute_ids += move_lines.ids
+                    quant.write({'reserved_quantity': 0})
+
+move_lines = env['stock.move.line'].search([('product_id.type', '=',
+        'product'), ('product_qty', '!=', 0), ('id', 'not in',
+        move_line_ids)])
+
+move_lines_to_unreserve = []
+
+for move_line in move_lines:
+    if not move_line.location_id.should_bypass_reservation():
+        logging += "Problematic move line found: %s (reserved_quantity: %s)\n" % (move_line.id, move_line.product_qty)
+        logging += "There is no exiting quants despite its `reserved_quantity`\n"
+        logging += '******************\n'
+        move_lines_to_unreserve.append(move_line.id)
+        move_line_to_recompute_ids.append(move_line.id)
+
+if len(move_lines_to_unreserve) > 1:
+    env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id in %s ;""" % (tuple(move_lines_to_unreserve), ))
+elif len(move_lines_to_unreserve) == 1:
+    env.cr.execute(""" UPDATE stock_move_line SET product_uom_qty = 0, product_qty = 0 WHERE id = %s ;""" % (move_lines_to_unreserve[0]))
+
+if logging:
+    env['ir.logging'].sudo().create({
+        'name': 'Unreserve stock.quant and stock.move.line',
+        'type': 'server',
+        'level': 'DEBUG',
+        'dbname': env.cr.dbname,
+        'message': logging,
+        'func': '_update_reserved_quantity',
+        'path': 'addons/stock/models/stock_quant.py',
+        'line': '0',
+    })
+
+if move_line_to_recompute_ids:
+    env['stock.move.line'].browse(move_line_to_recompute_ids).move_id._recompute_state()
+
+            </field>
+        </record>
+                <!--
+    Resource: stock.location
+    -->
+    </data>
+    <data noupdate="1">
+        <record id="stock_location_locations" model="stock.location">
+            <field name="name">Physical Locations</field>
+            <field name="usage">view</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_locations_partner" model="stock.location">
+            <field name="name">Partner Locations</field>
+            <field name="usage">view</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_locations_virtual" model="stock.location">
+            <field name="name">Virtual Locations</field>
+            <field name="usage">view</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
+        </record>
+
+        <record id="stock_location_suppliers" model="stock.location">
+            <field name="name">Vendors</field>
+            <field name="location_id" ref="stock_location_locations_partner"/>
+            <field name="usage">supplier</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_customers" model="stock.location">
+            <field name="name">Customers</field>
+            <field name="location_id" ref="stock_location_locations_partner"/>
+            <field name="usage">customer</field>
+            <field name="company_id"></field>
+        </record>
+        
+        <record id="stock_location_inter_wh" model="stock.location">
+            <field name="name">Inter-company transit</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">transit</field>
+            <field name="company_id"></field>
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <!--
+             Stock rules
+        -->
+        
+        <!-- set a lower sequence on the mto route than on the resupply routes -->
+        <record id="route_warehouse0_mto" model='stock.location.route'>
+            <field name="name">Replenish on Order (MTO)</field>
+            <field name="company_id"></field>
+            <field name="active">False</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <!--
+    Properties
+    -->
+        <record forcecreate="True" id="property_stock_supplier" model="ir.property">
+            <field name="name">property_stock_supplier</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
+            <field eval="'stock.location,'+str(stock_location_suppliers)" name="value"/>
+        </record>
+        <record forcecreate="True" id="property_stock_customer" model="ir.property">
+            <field name="name">property_stock_customer</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
+            <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
+        </record>
+
+
+        <!--
+    Resource: stock.warehouse
+    -->
+
+        <record id="warehouse0" model="stock.warehouse">
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="name">San Francisco</field>
+            <field name="code">WH</field>
+        </record>
+
+        <record id="sequence_mrp_op" model="ir.sequence">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">stock.orderpoint</field>
+            <field name="prefix">OP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id"></field>
+        </record>
+
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'stock.stock_location_stock',
+                'record': obj().env.ref('stock.warehouse0').lot_stock_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_company',
+                'record': obj().env.ref('stock.warehouse0').wh_input_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_output',
+                'record': obj().env.ref('stock.warehouse0').wh_output_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.location_pack_zone',
+                'record': obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_internal',
+                'record': obj().env.ref('stock.warehouse0').int_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_in',
+                'record': obj().env.ref('stock.warehouse0').in_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_out',
+                'record': obj().env.ref('stock.warehouse0').out_type_id,
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <!-- create the transit location for each company existing -->
+        <function model="res.company" name="create_missing_transit_location"/>
+        <function model="res.company" name="create_missing_warehouse"/>
+        <function model="res.company" name="create_missing_inventory_loss_location"/>
+        <function model="res.company" name="create_missing_production_location"/>
+        <function model="res.company" name="create_missing_scrap_location"/>
+        <function model="res.company" name="create_missing_scrap_sequence"/>
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent e0cc13c2b2ec4d6f6bfdb033b189a32e44106f2e
+diff --git a/__init__.py b/__init__.py
+--- a/__init__.py
++++ b/__init__.py
+@@ -0,0 +1,13 @@
++# __init__.py
++from openerp.osv import orm, fields
++
++
++class Times(orm.Model):
++    _name = 'web_example.stopwatch'
++
++    _columns = {
++        'time': fields.integer("Time", required=True,
++                               help="Measured time in milliseconds"),
++        'user_id': fields.many2one('res.users', "User", required=True,
++                                   help="User who registered the measurement")
++    }

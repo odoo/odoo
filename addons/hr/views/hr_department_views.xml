@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <form string="department">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="active" invisible="1"/>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="manager_id"/>
+                            <field name="parent_id"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">hr.department.tree</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <tree string="Companies" sample="1">
+                    <field name="display_name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="manager_id"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_department_filter" model="ir.ui.view">
+            <field name="name">hr.department.search</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <search string="Departments">
+                    <field name="name" string="Department"/>
+                    <field name="manager_id" />
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+             </field>
+        </record>
+
+        <record id="hr_department_view_kanban" model="ir.ui.view" >
+            <field name="name">hr.department.kanban</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban" sample="1">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="manager_id"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary"><field name="name"/></div>
+                                        <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section" t-if="!selection_mode">
+                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                    <div class="row o_kanban_card_upper_content">
+                                        <div class="col-4 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
+                                        </div>
+                                        <div class="col-8 o_kanban_primary_right">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <div class="o_kanban_card_manage_section">
+                                        <div role="menuitem" class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                            <div class="o_kanban_card_manage_title">
+                                                <strong><span>Reporting</span></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="hr_department_kanban_action" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new department
+              </p><p>
+                Odoo's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                time off, recruitments, etc.
+              </p>
+            </field>
+        </record>
+        <record id="hr_department_tree_action" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new department
+                </p><p>
+                    Odoo's department structure is used to manage all documents
+                    related to employees by departments: expenses, timesheets,
+                    leaves, recruitments, etc.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

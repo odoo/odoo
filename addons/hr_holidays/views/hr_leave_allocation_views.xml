@@ -1,0 +1,454 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="view_hr_leave_allocation_filter" model="ir.ui.view">
+        <field name="name">hr.holidays.filter_allocations</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <search string="Search allocations">
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="allocation_type"/>
+                <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Need Second Approval" name="second_approval"/>
+                <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
+                <filter string="Accrual Allocations" domain="[('allocation_type', '=', 'accrual')]" name="accrual_allocation"/>
+                <separator/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an time off type that is 'active' (active field is True)"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <separator/>
+                <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
+                <filter string="My Team Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
+                <separator/>
+                <filter name="year" string="Current Year"
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Allocations"/>
+                <separator/>
+                <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <separator/>
+                <field name="department_id" operator="child_of"/>
+                <field name="holiday_status_id"/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" string="Status"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.form</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="Allocation Request">
+                <field name="can_reset" invisible="1"/>
+                <field name="can_approve" invisible="1"/>
+                <field name="holiday_type" invisible="1"/>
+                <header>
+                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            class="oe_stat_button"
+                            icon="fa-calendar"
+                            type="action"
+                            attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
+                            name="%(hr_leave_action_action_approve_department)d"
+                            context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id], 'default_holiday_status_id': holiday_status_id}"
+                            help="Time off Taken/Total Allocated">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="leaves_taken" digits="[42,1]"/>/<field name="max_leaves" digits="[42,1]"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Time Off
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h2><field name="name" placeholder="e.g. Public Holiday Allocation" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_request_unit" invisible="1"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+
+                            <field name="allocation_type" invisible="1" widget="radio"/>
+
+                            <field name="number_of_days_display" invisible="1"/>
+                            <field name="number_of_days" invisible="1"/>
+                            <div class="o_td_label">
+                                <label for="number_of_days" string="Duration" attrs="{'invisible': [('allocation_type', '=', 'accrual')]}"/>
+                                <label for="number_of_days" string="Extra days" attrs="{'invisible': [('allocation_type', '!=', 'accrual')]}"/>
+                            </div>
+                            <div>
+                                <field name="number_of_days_display" class="oe_inline" nolabel="1"
+                                    attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
+                                <field name="number_of_hours_display" class="oe_inline" nolabel="1"
+                                    attrs="{'readonly': ['|', ('type_request_unit', '!=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
+                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
+                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
+                            </div>
+                        </group>
+                        <group name="alloc_right_col">
+                            <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
+                            <field name="department_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="notes" nolabel="1" placeholder="Add a reason..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_form_manager" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.form.manager</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
+                <button string="Validate" name="action_validate" states="validate1" type="object" class="oe_highlight"/>
+                <button string="Refuse" name="action_refuse" type="object"
+                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Mark as Draft" name="action_draft" type="object"
+                        attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="before">
+                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="replace">
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'employee')], 'invisible': [('holiday_type', '!=', 'employee')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="category_id"
+                    attrs="{'required': [('holiday_type', '=', 'category')], 'invisible': [('holiday_type', '!=', 'category')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="replace">
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', '!=', 'department')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='allocation_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='allocation_type']" position="after">
+                <label for="date_from" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
+                <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
+                    <field name="date_from" class="mr-2" attrs="{'required': [('allocation_type', '=', 'accrual')]}" />
+                    Run until <field name="date_to" help="If no value set, runs indefinitely" class="ml-2"/>
+                </div>
+                <label for="date_from" invisible="1"/>
+                <div attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
+                    <div class="o_row">
+                        <span>Add</span>
+                        <field name="number_per_interval" class="ml8"
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
+                        <field name="unit_per_interval"
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
+                        <span class="ml8">of time off every</span>
+                        <field name="interval_number" class="ml8"
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
+                        <field name="interval_unit"
+                            attrs="{'required': [('allocation_type', '=', 'accrual')]}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.tree</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <tree string="Allocation Requests" sample="1">
+                <field name="employee_id"/>
+                <field name="department_id" optional="hide"/>
+                <field name="holiday_status_id" class="font-weight-bold"/>
+                <field name="name"/>
+                <field name="duration_display" string="Duration"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
+                <button string="Approve" name="action_approve" type="object"
+                    icon="fa-thumbs-up"
+                    states="confirm"
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
+                <button string="Validate" name="action_validate" type="object"
+                    icon="fa-check"
+                    states="validate1"
+                    groups="hr_holidays.group_hr_holidays_manager"/>
+                <button string="Refuse" name="action_refuse" type="object"
+                    icon="fa-times"
+                    states="confirm,validate1"
+                    groups="hr_holidays.group_hr_holidays_manager"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_tree_my" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.tree.my</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_leave_allocation_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_search_my" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.search.my</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="view_hr_leave_allocation_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//searchpanel" position="replace"/>
+            <xpath expr="//filter[@name='message_needaction']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='managed_people']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_team_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_search_manager" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.search.my</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="view_hr_leave_allocation_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='message_needaction']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_kanban" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.kanban</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
+                <field name="employee_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="name"/>
+                <field name="number_of_days"/>
+                <field name="can_approve"/>
+                <field name="state"/>
+                <field name="holiday_status_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click container">
+                            <div class="row no-gutters">
+                                <div class="col-2">
+                                    <img t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)"
+                                        t-att-title="record.employee_id.value"
+                                        t-att-alt="record.employee_id.value"
+                                        class="oe_kanban_avatar o_image_40_cover float-left mr4"/>
+                                </div>
+                                <div class="col-10">
+                                    <span class="badge badge-pill float-right mt4 mr16"><t t-esc="record.number_of_days.value"/> days</span>
+                                    <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
+                                    <div class="text-muted o_kanban_record_subtitle">
+                                        <t t-esc="record.holiday_status_id.value"/>
+                                    </div>
+                                    <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <span class="fa fa-ellipsis-v"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Allocation</a>
+                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
+                                <div class="col-2"/>
+                                <div class="col-10">
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
+                                    <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
+                                    <span class="text-muted"><t t-esc="record.state.value"/></span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom" t-if="record.can_approve.raw_value" >
+                                <div class="oe_kanban_bottom_left" t-if="record.can_approve.raw_value">
+                                    <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-primary btn-sm mt8">Approve</button>
+                                    <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-primary btn-sm mt8">Validate</button>
+                                    <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-secondary btn-sm mt8">Refuse</button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+     </record>
+
+    <record id="hr_leave_allocation_view_activity" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.activity</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <activity string="Allocation Requests">
+                <field name="employee_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('hr.employee', 'image_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
+                        <div>
+                            <field name="employee_id"/>
+                            <span class="ml-3 text-muted">
+                                <field name="number_of_days"/> days
+                            </span>
+                            <field name="holiday_status_id" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_action_my" model="ir.actions.act_window">
+        <field name="name">My Allocations</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_my"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new time off allocation request
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
+            </p>
+        </field>
+        <field name="context">{}</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+    </record>
+    <record id="hr_leave_allocation_action_my_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_leave_allocation_action_my"/>
+        <field name="view_id" ref="hr_leave_allocation_view_tree_my"/>
+    </record>
+    <record id="hr_leave_allocation_action_my_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_leave_allocation_action_my"/>
+        <field name="view_id" ref="hr_leave_allocation_view_form"/>
+    </record>
+
+    <record id="hr_leave_allocation_action_all" model="ir.actions.act_window">
+        <field name="name">All Allocations</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new time off allocation request
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_action_approve_department" model="ir.actions.act_window">
+        <field name="name">Allocations</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="context">{'search_default_managed_people': 1}</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new time off allocation
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
+            </p>
+        </field>
+    </record>
+
+    <record id="ir_actions_server_approve_allocations" model="ir.actions.server">
+        <field name="name">Approve Allocations</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+        <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_approve()</field>
+    </record>
+
+    <record id="hr_leave_allocation_view_form_dashboard" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <div name="button_box" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
+        </field>
+    </record>
+
+</odoo>

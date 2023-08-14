@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="mass_mailing.theme_selector" class="o_mail_theme_selector">
+        <a role="button" href="#" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-paint-brush"/> Change Style
+        </a>
+        <div class="dropdown-menu" role="menu">
+            <t t-foreach="themes" t-as="theme">
+                <a t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item">
+                    <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
+                    <div class="o_thumb large" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
+                    <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
+                </a>
+            </t>
+            <t t-if="themes.length === 1">
+                <a role="menuitem" href="#" class="dropdown-item o_mass_mailing_themes_upgrade">
+                    <div class="o_thumb"><i class="fa fa-plus" role="img" aria-label="Upgrade theme" title="Upgrade theme"/></div>
+                </a>
+            </t>
+        </div>
+    </div>
+</templates>

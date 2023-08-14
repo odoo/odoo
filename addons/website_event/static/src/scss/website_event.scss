@@ -1,0 +1,266 @@
+.o_wevent_index_topbar_filters {
+    .dropdown-toggle {
+        border: $border-width solid gray('400');
+        @include o-bg-color(gray('white'), $with-extras: false);
+        @include border-radius($dropdown-border-radius);
+        @include hover-focus {
+            border-color: theme-color('primary');
+            color: theme-color('primary');
+            text-decoration: none;
+        }
+        &:after {
+            margin-left: 1.2em;
+        }
+        .fa {
+            margin-right: .4em;
+            color: theme-color('primary');
+        }
+    }
+    .dropdown-menu {
+        margin-top: $navbar-padding-y;
+        min-width: 12rem;
+    }
+    .dropdown-item  {
+        &.active .badge { // Invert badge display when the item is active
+            background-color: color-yiq(theme-color('primary'));
+            color: theme-color('primary');
+        }
+    }
+}
+
+.o_wevent_social_link {
+    $o_link_size: 3em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    @include size($o_link_size);
+    margin: 0 ($spacer * .25) ($spacer * .5) ($spacer * .25);
+    line-height: $o_link_size;
+    background-color: gray('100');
+    border: $border-width solid $border-color;
+    border-radius: 50%;
+    text-align: center;
+    @include hover-focus {
+        background-color: gray('300');
+    }
+}
+
+.o_wevent_badge {
+    padding: ($spacer * .5) $spacer;
+    border-radius: 10rem;
+    font-weight: $font-weight-normal;
+}
+
+// Index
+.o_wevent_index {
+    // Events List
+    .o_wevent_events_list {
+        header {
+            a {
+                transition: all .25s ease-in-out;
+                @include hover-focus {
+                    transform: scale(1.05);
+                }
+            }
+        }
+        @include media-breakpoint-up(sm) {
+            #o_wevent_index_main_col article div.col {
+                min-width: 0;
+            }
+        }
+        &.opt_event_list_cards_bg {
+            @if (color('body') == $o-portal-default-body-bg) {
+                @extend .bg-200;
+            }
+        }
+        .opt_events_list_columns {
+            header {
+                height: 200px;
+            }
+        }
+        .opt_events_list_rows {
+            @include media-breakpoint-down(sm) {
+                header {
+                    height: 200px;
+                }
+            }
+        }
+        .o_wevent_badge_event {
+            @include o-position-absolute($top: 0, $left: 0);
+            @include border-left-radius(0);
+            padding: ($spacer * .5) $card-spacer-x;
+            transform: translateY(-50%);
+        }
+        .o_wevent_event_date {
+            top: $card-spacer-x;
+            right: $card-spacer-x;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            @include size(4rem);
+            border-radius: 50%;
+            text-align: center;
+
+            .o_wevent_event_day {
+                font-size: 1.125rem;
+                font-weight: 300;
+                line-height: 1;
+            }
+            .o_wevent_event_month {
+                font-size: 0.75rem;
+                font-weight: $font-weight-bold;
+                text-transform: uppercase;
+            }
+        }
+        .o_wevent_participating,
+        .o_wevent_unpublished {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: $card-spacer-y $card-spacer-x;
+            text-align: right;
+        }
+        .card-title {
+            color: $body-color;
+        }
+    }
+    .o_wevent_sidebar_title {
+        margin: 0 0 ($spacer * 1.5) 0;
+        border-bottom: $border-width solid $border-color;
+        padding: 0 0 ($spacer * .5) 0;
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+    }
+    .o_wevent_sidebar_block {
+        margin: 0 0 ($spacer * 2.5) 0;
+    }
+    .o_wevent_sidebar_figure {
+        position: relative;
+
+        .figure-img {
+            margin-bottom: 0;
+        }
+        .figure-caption {
+            @include o-position-absolute($left: 0, $bottom: 0);
+            width: 100%;
+            padding: $spacer;
+            background-color: rgba($color: #000, $alpha: 0.5);
+            @include border-bottom-radius($border-radius);
+            color: #fff;
+        }
+    }
+    #o_wevent_index_main_col .form-inline {
+        width: 100%;
+    }
+}
+
+.o_wevent_event {
+    // Multi-line event title, even in mobile mode
+    nav > div > a.navbar-brand {
+        text-overflow: revert;
+        white-space: normal;
+        overflow: hidden;
+        max-width: calc(100% - 80px);
+    }
+
+    // Ensure menu labels are not split
+    #o_wevent_event_submenu {
+        li.nav-item {
+            white-space: nowrap;
+        }
+    }
+
+    .o_wevent_event_title {
+        margin: 3rem 0;
+
+        .o_wevent_event_name {
+            font-weight: $display4-weight;
+            line-height: $display-line-height;
+            @include font-size($display4-size);
+        }
+        .o_wevent_event_subtitle {
+            font-weight: $lead-font-weight;
+            @include font-size($lead-font-size);
+        }
+    }
+
+    .o_wevent_registration_single {
+        .o_wevent_nowrap {
+            white-space: nowrap;
+        }
+    }
+
+    .o_wevent_registration_btn {
+        flex: 0 0 100%;
+
+        &.collapsed {
+            flex: 0 0 33%;
+
+            .close {
+                display: none;
+            }
+        }
+        .close {
+            display: block;
+        }
+        &:not(.collapsed) {
+            box-shadow: none;
+            font-weight: $font-weight-bold;
+            text-transform: uppercase;
+            transition: none;
+        }
+    }
+
+    .o_wevent_sidebar_title {
+        margin-bottom: $spacer;
+        opacity: .5;
+        text-transform: uppercase;
+    }
+
+    .o_wevent_sidebar_block {
+        padding: $spacer * 3;
+        border-bottom: $border-width solid $border-color;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+
+.o_wevent_event {
+    .o_record_cover_container {
+        overflow: hidden;
+        z-index: 0;
+
+        .o_record_cover_component {
+            z-index: -1;
+        }
+        &.o_record_has_cover {
+            .o_record_cover_image {
+                background-attachment: fixed;
+
+                &::after {
+                    content: "";
+                    display: block;
+                    @include o-position-absolute(0,0,50%,0);
+                }
+            }
+            .o_wevent_event_title {
+                color: white;
+            }
+        }
+    }
+}
+
+.modal-open {
+    > .modal-backdrop {
+        z-index: $zindex-dropdown - 1;
+    }
+}
+
+// Country snippet
+.country_events_list .o_wevent_sidebar_title > img {
+    max-height: 1em;
+    vertical-align: top;
+    margin: 2px 0.2em 0;
+}

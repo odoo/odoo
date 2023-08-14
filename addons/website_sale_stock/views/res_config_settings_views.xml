@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='product_availability_setting']" position="attributes">
+                <attribute name="title">Manage the inventory of your products and display their availability status on the website.</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='stock_inventory_availability']" position="inside">
+                <div class="content-group">
+                    <div class="row mt16"
+                        id="website_warehouse_setting"
+                        groups="stock.group_stock_multi_warehouses">
+                        <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
+                        <field name="website_warehouse_id"/>
+                    </div>
+                    <div class="row mt16"
+                        id="inventory_availability_setting"
+                        title="Default availability mode set on newly created storable products. This can be changed at the product level.">
+                        <label for="inventory_availability" string="Mode" class="col-lg-3 o_light_label" />
+                        <field name="inventory_availability" string="Inventory"/>
+                    </div><br/>
+                    <div class="row" id="available_treshold_setting" attrs="{'invisible': [('inventory_availability', '!=', 'threshold')]}">
+                        <label for="available_threshold" string="Threshold" class="col-lg-3 o_light_label" />
+                        <field name="available_threshold" class="oe_inline" attrs="{'required': [('inventory_availability', '=', 'threshold')]}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

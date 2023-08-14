@@ -1,0 +1,330 @@
+<odoo>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        
+        <record id="email_template_goal_reminder" model="mail.template">
+            <field name="name">Goal: Reminder for Goal Update</field>
+            <field name="model_id" ref="gamification.model_gamification_goal"/>
+            <field name="partner_to">${object.user_id.partner_id.id}</field>
+            <field name="body_html" type="html">
+<div>
+    <strong>Reminder ${object.name}</strong><br/>
+    You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.
+    <br/><br/>
+    Thank you,
+    % if object.challenge_id.manager_id.signature:
+        <br />
+        ${object.challenge_id.manager_id.signature | safe}
+    % endif
+</div></field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        
+        <record id="simple_report_template" model="mail.template">
+            <field name="name">Challenge: Simple Challenge Report Progress</field>
+            <field name="model_id" ref="gamification.model_gamification_challenge"/>
+            <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
+<tr>
+    <td valign="top" align="center">
+        % set record = ctx.get('record')
+        % set company = record and record.company_id or user.company_id
+        % set challenge_lines = ctx.get('challenge_lines', [])     
+        <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 570px;">
+            <tr><td>
+                <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                        <div>
+                            % if object.visibility_mode == 'ranking':
+                                <td style="padding:15px;">
+                                    <p style="font-size:20px;color:#666666;" align="center">Leaderboard</p>
+                                </td>
+                            % endif
+                        </div>
+                    </tr>
+                </table>
+                <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                    <tr><td style="padding: 15px;">
+                        % if object.visibility_mode == 'personal':
+                            <span style="color:#666666;font-size:13px;">Here is your current progress in the challenge <strong>${object.name}</strong>.</span>
+                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:20px;">
+                                <tr>
+                                    <td align="center">
+                                        <div>Personal Performance</div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:30px;color:#666666;">
+                                <thead>
+                                    <tr style="color:#9A6C8E; font-size:12px;">
+                                        <th align="left" style="padding-bottom: 0px;width:40%;text-align:left;">Goals</th>
+                                        <th style="width:20%;text-align:right;" align="left">Target</th>
+                                        <th style="width:20%;text-align:right;" align="right">Current</th>
+                                        <th style="width:20%;text-align:right;" align="right">Completeness</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="height:1px;background-color:#9A6C8E;"></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                % for line in challenge_lines:
+                                    <tr style="font-weight:bold;">
+                                        <td style="padding: 20px 0;" align="left">
+                                            ${line['name']}
+                                            % if line['suffix'] or line['monetary']:
+                                                (${line['full_suffix']})
+                                            % endif
+                                        </td>
+                                        <td style="padding: 20px 0;" align="right">${"%.2f" % line['target']}
+                                            % if line['suffix']:
+                                                ${line['suffix']}
+                                            % endif
+                                        </td>
+                                        <td style="padding: 20px 0;" align="right">${"%.2f" % line['current']}
+                                            % if line['suffix']:
+                                                ${line['suffix']}
+                                            % endif
+                                        </td>
+                                        <td style="padding: 20px 0;font-size:25px;color:#9A6C8E;" align="right"><strong>${line['completeness']| int}%</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="height:1px;background-color:#e3e3e3;"></td>
+                                    </tr>
+                                % endfor        
+                                </tbody>
+                            </table>                   
+                        % else: 
+                            <span style="color:#A8A8A8;font-size:13px;">
+                                Challenge: <strong>${object.name}</strong>.
+                            </span> 
+                            % for line in challenge_lines:
+                                <!-- Header + Button table -->
+                                <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:35px;">
+                                    <tr>
+                                        <td width="50%">
+                                            <div>Top Achievers for goal <strong>${line['name']}</strong></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- Podium -->
+                                % if len(line['goals']) == 2:
+                                    <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:10px;">
+                                        <tr><td style="padding:0 30px;">
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
+                                                <tr>
+                                                    % set top_goals = line['goals'][:3]
+                                                    % for goal in top_goals:
+                                                        <td align="center" style="width:32%;">
+                                                            % if loop.index == 1:
+                                                                % set extra_div = '<div style="height:40px;"></div>'
+                                                                % set heightA = 95
+                                                                % set heightB = 75
+                                                                % set bgColor = '#b898b0'
+                                                                % set fontSize = 50
+                                                                % set podiumPosition = '2'
+                                                            % elif loop.index == 2:
+                                                                % set extra_div = ''
+                                                                % set heightA = 55
+                                                                % set heightB = 115
+                                                                % set bgColor = '#9A6C8E'
+                                                                % set fontSize = 85
+                                                                % set podiumPosition = '1'
+                                                            % elif loop.index == 3:
+                                                                % set extra_div = '<div style="height:60px;"></div>'
+                                                                % set heightA = 115
+                                                                % set heightB = 55
+                                                                % set bgColor = '#c8afc1'
+                                                                % set fontSize = 35
+                                                                % set podiumPosition = '3'
+                                                            % endif
+                                                            <div style="margin:0 3px 0 3px;height:220px;">
+                                                                <div style="height:${heightA}px;">
+                                                                    ${extra_div | safe}   
+                                                                    <div style="height:55px;">
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)" alt="${goal['name']}"/>
+                                                                    </div>
+                                                                    <div align="center" style ="color:${bgColor};height:20px">
+                                                                        ${goal['name']}
+                                                                    </div>
+                                                                </div>
+                                                                <div style="background-color:${bgColor | safe};height:${heightB}px;">
+                                                                    <strong><span style="color:#fff;font-size:${fontSize}px;">${podiumPosition | safe}</span></strong>
+                                                                </div>
+                                                                <div style="height:30px;">
+                                                                    ${"%.2f" % goal['current']}
+                                                                    % if line['suffix'] or line['monetary']:
+                                                                        ${line['full_suffix']}
+                                                                    % endif
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    % endfor
+                                                </tr>
+                                            </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                % endif
+                                <!-- data table -->
+                                <table cellspacing="0" cellpadding="0" width="100%" style="margin-bottom:5px">
+                                    <tr>
+                                        <td>
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:30px;margin-bottom:5px;color:#666666;">
+                                                <thead>
+                                                    <tr style="color:#9A6C8E; font-size:12px;">
+                                                        <th style="width:15%;text-align:center;">Rank</th>
+                                                        <th style="width:25%;text-align:left;">Name</th>
+                                                        <th style="width:30%;text-align:right;">Performance 
+                                                            % if line['suffix']:
+                                                                (${line['suffix']})
+                                                            % elif line['monetary']:
+                                                                (${company.currency_id.symbol})
+                                                            % endif
+                                                        </th>
+                                                        <th style="width:30%;text-align:right;">Completeness</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="height:1px;background-color:#9A6C8E;"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    % for goal in line['goals']:
+                                                        <tr>
+                                                            % set tdBgColor = '#fff'
+                                                            % set tdColor = 'gray'
+                                                            % set mutedColor = '#AAAAAA'
+                                                            % set tdPercentageColor = '#9A6C8E'
+                                                            <td width="15%" align="center" valign="middle" style="background-color:${tdBgColor};padding :5px 0;font-size:20px;">${goal['rank']+1}
+                                                            </td>
+                                                            <td width="25%" align="left" valign="middle" style="background-color:${tdBgColor};padding :5px 0;font-size:13px;">${goal['name']}</td>
+                                                            <td width="30%" align="right" style="background-color:${tdBgColor};padding:5px 0;line-height:1;">${"%.2f" % goal['current']}<br/><span style="font-size:13px;color:${mutedColor};">on ${"%.2f" % line['target']}</span>
+                                                            </td>
+                                                            <td width="30%" style="color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;" align="right"><strong>${goal['completeness'] | int}%</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="5" style="height:1px;background-color:#DADADA;"></td>
+                                                        </tr>
+                                                    % endfor
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table> 
+                            % endfor
+                        % endif
+                    </td></tr>
+                </table>
+            </td></tr>
+        </table>
+    </td>
+</tr>
+</table>
+            </field>
+        </record>
+
+        <!-- goal definitions -->
+        <record model="gamification.goal.definition" id="definition_base_timezone">
+            <field name="name">Set your Timezone</field>
+            <field name="description">Configure your profile and specify your timezone</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain">[('partner_id.tz', '!=', False)]</field>
+            <field name="action_id" ref="base.action_res_users_my"/>
+            <field name="res_id_field">user.id</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="base.field_res_users__id"/>
+            <field name="batch_user_expression">user.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_data">
+            <field name="name">Set your Company Data</field>
+            <field name="description">Write some information about your company (specify at least a name)</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
+            <field name="condition">lower</field>
+            <field name="action_id" ref="base.action_res_company_form"/>
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_logo">
+            <field name="name">Set your Company Logo</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="domain">[('user_ids', 'in', [user.id]),('logo', '!=', False)]</field>
+            <field name="action_id" ref="base.action_res_company_form"/>
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record id="action_new_simplified_res_users" model="ir.actions.act_window">
+            <field name="name">Create User</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="target">current</field>
+            <field name="view_id" ref="base.view_users_simple_form"/>
+            <field name="context">{}</field>
+            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_invite">
+            <field name="name">Invite new Users</field>
+            <field name="description">Create at least another user</field>
+            <field name="display_mode">boolean</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain">[('id', '!=', user.id)]</field>
+            <field name="action_id" ref="action_new_simplified_res_users"/>
+        </record>
+
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_base_discover">
+            <field name="name">Complete your Profile</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
+            <field name="state">inprogress</field>
+            <field name="challenge_category">other</field>
+        </record>
+
+        <record model="gamification.challenge" id="challenge_base_configure">
+            <field name="name">Setup your Company</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
+            <field name="state">inprogress</field>
+            <field name="challenge_category">other</field>
+        </record>
+
+        <!-- lines -->
+        <record model="gamification.challenge.line" id="line_base_discover1">
+            <field name="definition_id" ref="definition_base_timezone"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_discover"/>
+        </record>
+
+        <record model="gamification.challenge.line" id="line_base_admin2">
+            <field name="definition_id" ref="definition_base_company_logo"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin1">
+            <field name="definition_id" ref="definition_base_company_data"/>
+            <field name="target_goal">0</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin3">
+            <field name="definition_id" ref="definition_base_invite"/>
+            <field name="target_goal">1</field>
+            <field name="challenge_id" ref="challenge_base_configure"/>
+        </record>
+    </data>
+
+</odoo>

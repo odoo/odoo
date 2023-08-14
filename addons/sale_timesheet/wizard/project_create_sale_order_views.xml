@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_create_sale_order_view_form" model="ir.ui.view">
+        <field name="name">project.create.sale.order.wizard.form</field>
+        <field name="model">project.create.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Create a Sales Order">
+                <field name="link_selection" nolabel="1" widget="radio" options="{'horizontal': true}" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="project_id" readonly="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                        <field name="pricing_type" invisible="1"/>
+                    </group>
+                    <group attrs="{'invisible': [('link_selection', '!=', 'link')]}">
+                        <field name="sale_order_id" options="{'no_create': True, 'no_create_edit': True}" attrs="{'required': [('link_selection', '=', 'link')]}"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible': ['&amp;', ('link_selection', '=', 'link'), ('pricing_type', '!=', 'employee_rate')]}">
+                    <field name="line_ids" nolabel="1" attrs="{'required': [('pricing_type', '=', 'employee_rate')]}">
+                        <tree editable="bottom">
+                            <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'column_invisible': [('parent.pricing_type', '=', 'fixed_rate')], 'required': [('parent.pricing_type', '=', 'employee_rate')]}"/>
+                            <field name="sale_line_id" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" domain="[('is_service', '=', True), ('order_id', '=', parent.sale_order_id)]" attrs="{'column_invisible': ['|', ('parent.link_selection', '!=', 'link'), ('parent.pricing_type', '=', 'fixed_rate')], 'required': ['&amp;', ('parent.link_selection', '=', 'link'), ('parent.pricing_type', '=', 'employee_rate')]}"/>
+                            <field name="product_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'column_invisible': [('parent.link_selection', '=', 'link')], 'required': [('parent.link_selection', '!=', 'link')]}"/>
+                            <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('parent.link_selection', '=', 'link')]}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <group attrs="{'invisible': [('info_invoice', '=', False)]}">
+                    <field name="info_invoice" nolabel="1"/>
+                </group>
+                <footer>
+                    <button string="Link to Sales Order" type="object" name="action_link_sale_order" class="oe_highlight" attrs="{'invisible': [('link_selection', '!=', 'link')]}"/>
+                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight" attrs="{'invisible': [('link_selection', '=', 'link')]}"/>
+                    <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_project_action_multi_create_sale_order" model="ir.actions.act_window">
+        <field name="name">Create a Sales Order</field>
+        <field name="res_model">project.create.sale.order</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_create_sale_order_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

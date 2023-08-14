@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.vn"/>
+    </record>
+
+     <record id="account_tax_report_line_01_vn" model="account.tax.report.line">
+        <field name="name">Purchase of Goods and Services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="account_tax_report_line_01_01_vn" model="account.tax.report.line">
+        <field name="name">VAT on purchase of goods and services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_01_01_01_vn" model="account.tax.report.line">
+        <field name="name">VAT on purchase of goods and services 0%</field>
+        <field name="tag_name">VAT on purchase of goods and services 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_01_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_01_01_vn" model="account.tax.report.line">
+        <field name="name">VAT on purchase of goods and services 5%</field>
+        <field name="tag_name">VAT on purchase of goods and services 5%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_01_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_03_01_01_vn" model="account.tax.report.line">
+        <field name="name">VAT on purchase of goods and services 10%</field>
+        <field name="tag_name">VAT on purchase of goods and services 10%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_01_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_01_vn" model="account.tax.report.line">
+        <field name="name">Untaxed Purchase of Goods and Services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_01_02_01_vn" model="account.tax.report.line">
+        <field name="name">Untaxed Purchase of Goods and Services taxed 0%</field>
+        <field name="tag_name">Untaxed Purchase of Goods and Services taxed 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_02_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_02_01_vn" model="account.tax.report.line">
+        <field name="name">Untaxed Purchase of Goods and Services taxed 5%</field>
+        <field name="tag_name">Untaxed Purchase of Goods and Services taxed 5%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_02_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_03_02_01_vn" model="account.tax.report.line">
+        <field name="name">Untaxed Purchase of Goods and Services taxed 10%</field>
+        <field name="tag_name">Untaxed Purchase of Goods and Services taxed 10%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_02_01_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_vn" model="account.tax.report.line">
+        <field name="name">Sales of Goods and Services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="account_tax_report_line_01_02_vn" model="account.tax.report.line">
+        <field name="name">VAT on sales of goods and services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_01_01_02_vn" model="account.tax.report.line">
+        <field name="name">VAT on sales of goods and services 0%</field>
+        <field name="tag_name">VAT on sales of goods and services 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_01_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_01_02_vn" model="account.tax.report.line">
+        <field name="name">VAT on sales of goods and services 5%</field>
+        <field name="tag_name">VAT on sales of goods and services 5%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_01_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_03_01_02_vn" model="account.tax.report.line">
+        <field name="name">VAT on sales of goods and services 10%</field>
+        <field name="tag_name">VAT on sales of goods and services 10%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_01_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_02_vn" model="account.tax.report.line">
+        <field name="name">Untaxed Sales of Goods and Services</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_01_02_02_vn" model="account.tax.report.line">
+        <field name="name">Untaxed sales of goods and services taxed 0%</field>
+        <field name="tag_name">Untaxed sales of goods and services taxed 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_02_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_02_02_02_vn" model="account.tax.report.line">
+        <field name="name">Untaxed sales of goods and services taxed 5%</field>
+        <field name="tag_name">Untaxed sales of goods and services taxed 5%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_02_02_vn"/>
+    </record>
+
+    <record id="account_tax_report_line_03_02_02_vn" model="account.tax.report.line">
+        <field name="name">Untaxed sales of goods and services taxed 10%</field>
+        <field name="tag_name">Untaxed sales of goods and services taxed 10%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_02_02_vn"/>
+    </record>
+</odoo>

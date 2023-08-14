@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_inventory">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <br/>
+                            <h2 t-field="o.name"/>
+
+                            <div class="row mt32 mb32" id="informations">
+                                <div t-if="o.date" class="col-auto mw-100 mb-2">
+                                    <strong>Date:</strong>
+                                    <p class="m-0" t-field="o.date"/>
+                                </div>
+                            </div>
+
+                            <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
+                                        <th><strong>Product</strong></th>
+                                        <th groups="stock.group_production_lot"><strong>Lot/Serial Number</strong></th>
+                                        <th groups="stock.group_tracking_lot"><strong>Package</strong></th>
+                                        <th class="text-right"><strong>On Hand Quantity</strong></th>
+                                        <th class="text-right"><strong>Counted Quantity</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="locations" t-as="location">
+                                        <tr groups="stock.group_stock_multi_locations">
+                                            <td colspan="2"><strong t-esc="location.display_name"/></td>
+                                            <td groups="stock.group_production_lot"></td>
+                                            <td groups="stock.group_tracking_lot"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id)" t-as="line">
+                                            <td groups="stock.group_stock_multi_locations"></td>
+                                            <td><span t-field="line.product_id"/></td>
+                                            <td groups="stock.group_production_lot"><span t-field="line.prod_lot_id"/></td>
+                                            <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
+                                            <td class="text-right"><span t-field="line.theoretical_qty"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                            <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_event_form_inherit_ticket" model="ir.ui.view">
+        <field name="name">event.form.inherit</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="currency_id" invisible="1"/>
+                <button name="action_view_linked_orders"
+                        type="object" class="oe_stat_button" icon="fa-dollar"
+                        groups="sales_team.group_sale_salesman"
+                        help="Total sales for this event"
+                        attrs="{'invisible': ['|', ('sale_price_subtotal', '=', 0), ('sale_price_subtotal', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field string="Sales" name="sale_price_subtotal"
+                                widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                        <span class="o_stat_text">Sales</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

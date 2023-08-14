@@ -1,0 +1,407 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
+msgid "<strong>Sales</strong>"
+msgstr "<strong>การขาย</strong>"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "A Coupon is already applied for the same reward"
+msgstr "คูปองถูกนำไปใช้สำหรับรางวัลเดียวกัน"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr "ขั้นต่ำของ %(amount)s %(currency)s ที่ควรซื้อเพื่อรับรางวัล"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
+msgid "Applied Coupons"
+msgstr "ใช้คูปอง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
+msgid "Applied Immediate Promo Programs"
+msgstr "สมัครโปรแกรมโปรโมชันทันที"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
+msgid "Applied Promo Program"
+msgstr "ใช้โปรแกรมโปรโมชัน"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
+msgid "Applied program code"
+msgstr "ใช้โค้ดโปรแกรม"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply"
+msgstr "ใช้"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Apply coupon"
+msgstr "ใช้คูปอง"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "At least one of the required conditions is not met to get the reward!"
+msgstr "ไม่ตรงตามเงื่อนไขที่กำหนดสำหรับรับรางวัลอย่างน้อยหนึ่งข้อ!"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
+msgid "Code"
+msgstr "รหัส"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Coupon"
+msgstr "คูปอง"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_coupon_program
+msgid "Coupon Program"
+msgstr "โปรแกรมคูปอง"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Coupon Programs"
+msgstr "โปรแกรมคูปอง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
+msgstr "ส่วนลด: %(program)s - บนสินค้าที่มีภาษีดังต่อไปนี้: %(taxes)s"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr "ส่วนลด: %s"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
+msgid "Enter Promotion or Coupon Code"
+msgstr "ใส่โปรโมชันหรือโค้ดคูปอง"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "Free Product"
+msgstr "สินค้าฟรี"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Global discounts are not cumulable."
+msgstr "ส่วนลดทั่วโลกไม่สามารถสะสมได้"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Global discounts are not cumulative."
+msgstr "ส่วนลดทั่วโลกไม่สามารถสะสมได้"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "พาร์ทเนอร์ไม่ถูกต้อง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr "เป็นโปรแกรมไลน์รางวัล"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
+msgid "Offered Coupons"
+msgstr "คูปองที่เสนอ"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
+msgid "Order Count"
+msgstr "จำนวนคำสั่ง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
+msgid "Order Reference"
+msgstr "ข้อมูลอ้างอิงใบสั่งซื้อ"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code %s has been expired."
+msgstr "โค้ดโปรโมชัน %s หมดอายุแล้ว"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is expired"
+msgstr "โค้ดโปรโมชันหมดอายุ"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promo code is invalid"
+msgstr "โค้ดโปรโมชันไม่ถูกต้อง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
+msgid "Promotion Code"
+msgstr "โค้ดโปรโมชัน"
+
+#. module: sale_coupon
+#: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
+#: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
+msgid "Promotion Programs"
+msgstr "โปรแกรมโปรโมชั่น"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Promotionals codes are not cumulative."
+msgstr "โค้ดโปรโมชันไม่สามารถสะสมได้"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid "Promotions"
+msgstr "โปรโมชั่น"
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr "จำนวนรางวัล"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
+msgid "Sales"
+msgstr "ขาย"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
+msgid "Sales Coupon Apply Code"
+msgstr "โค้ดคูปองการขาย"
+
+#. module: sale_coupon
+#: model:ir.actions.act_window,name:sale_coupon.sale_order_action
+#: model:ir.model,name:sale_coupon.model_sale_order
+msgid "Sales Order"
+msgstr "ใบสั่งขาย"
+
+#. module: sale_coupon
+#: model:ir.model,name:sale_coupon.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "Sales Orders"
+msgstr "คำสั่งขาย / Sales Order"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "โปรแกรมคูปองสำหรับ %s อยู่ในร่างหรือสถานะปิด"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The customer doesn't have access to this reward."
+msgstr "ลูกค้าไม่สามารถเข้าถึงรางวัลนี้"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promo code is already applied on this order"
+msgstr "มีการใช้โค้ดโปรโมชั่นกับคำสั่งซื้อนี้แล้ว"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid "The promotional offer is already applied on this order"
+msgstr "ข้อเสนอส่งเสริมการขายนี้ถูกใช้กับคำสั่งซื้อนี้แล้ว"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"The reward products should be in the sales order lines to apply the "
+"discount."
+msgstr "สินค้าที่เป็นรางวัลควรอยู่ในไลน์คำสั่งขายสำหรับใช้ส่วนลด"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
+msgid "The sales order from which coupon is generated"
+msgstr "คำสั่งขายที่สร้างคูปอง"
+
+#. module: sale_coupon
+#: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "The sales order on which the coupon is applied"
+msgstr "คำสั่งขายที่ใช้คูปอง"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr "คูปองนี้ %s มีอยู่แต่คำสั่งขายต้นทางยังไม่ได้ตรวจสอบความถูกต้อง"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr "คูปองนี้ถูกใช้ไปแล้ว (%s)."
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr "คูปองนี้ถูกยกเลิก (%s)"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "คูปองนี้หมดอายุ (%s)"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
+#, python-format
+msgid "This coupon is invalid (%s)."
+msgstr "คูปองนี้ไม่ถูกต้อง (%s)."
+
+#. module: sale_coupon
+#: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
+msgid "Used in"
+msgstr "ใช้ใน"
+
+#. module: sale_coupon
+#: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
+msgid ""
+"When clicked, the content of the order will be checked to detect (and apply)"
+" possible promotion programs."
+msgstr ""
+"เมื่อคลิก เนื้อหาของคำสั่งซื้อจะถูกตรวจสอบเพื่อตรวจหา (และใช้) "
+"โปรแกรมส่งเสริมการขายที่เป็นไปได้"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. All the "
+"products should be recorded on the sales order. (Example: You need to have 3"
+" T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
+msgstr ""
+"คุณไม่มีปริมาณผลิตภัณฑ์ที่จำเป็นในใบสั่งขายของคุณ "
+"ควรบันทึกผลิตภัณฑ์ทั้งหมดไว้ในใบสั่งขาย (ตัวอย่าง: คุณต้องมีเสื้อยืด 3 "
+"ตัวในใบสั่งขายของคุณ หากโปรโมชันคือ 'ซื้อ 2 รับฟรี 1 ตัว')"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/coupon_program.py:0
+#, python-format
+msgid ""
+"You don't have the required product quantities on your sales order. If the "
+"reward is same product quantity, please make sure that all the products are "
+"recorded on the sales order (Example: You need to have 3 T-shirts on your "
+"sales order if the promotion is 'Buy 2, Get 1 Free'."
+msgstr ""
+"คุณไม่มีปริมาณผลิตภัณฑ์ที่จำเป็นในใบสั่งขายของคุณ "
+"หากรางวัลเป็นปริมาณผลิตภัณฑ์เท่ากัน "
+"โปรดตรวจสอบให้แน่ใจว่าผลิตภัณฑ์ทั้งหมดได้รับการบันทึกในใบสั่งขาย (ตัวอย่าง: "
+"คุณต้องมีเสื้อยืด 3 ตัวในใบสั่งขายของคุณ หากโปรโมชันเป็น 'ซื้อ 2 แถม 1 ฟรี'"
+
+#. module: sale_coupon
+#: code:addons/sale_coupon/models/sale_order.py:0
+#, python-format
+msgid "limited to "
+msgstr "จำกัดที่"

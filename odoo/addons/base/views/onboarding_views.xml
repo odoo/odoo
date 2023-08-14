@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="onboarding_container">
+        <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Remove Configuration Tips</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-label="Close">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Do you want to remove this configuration panel?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a type="action" class="btn btn-primary" data-dismiss="modal"
+                        data-toggle="collapse" href=".o_onboarding_container"
+                        t-att-data-model="close_model" t-att-data-method="close_method">
+                            Remove
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="o_onboarding_container collapse show">
+            <div t-att-class="'o_onboarding ' + ('o_onboarding_completed ' if steps_completed else ' ') + classes"
+                 t-att-style="'background-image:url(' + bg_image + ')'">
+                <div class="o_onboarding_wrap">
+                    <a href="#" data-toggle="modal" data-target=".o_onboarding_modal"
+                       class="float-right o_onboarding_btn_close">
+                        <i class="fa fa-times" title="Close the onboarding panel" />
+                    </a>
+                    <div class="o_onboarding_steps">
+                        <t t-raw="0" />
+                    </div>
+                    <div t-att-class="'o_onboarding_completed_message text-center' + (' o_onboarding_steps_done' if state.get('onboarding_state') in ('done', 'just_done') else '') + (' o_onboarding_steps_just_done' if state.get('onboarding_state') == 'just_done' else '')">
+                        <i class="fa fa-check text-success mr8" />
+                        <span class="h3 mr16">
+                            <t t-if="text_completed" t-esc="text_completed" />
+                            <t t-else="">Nice work! Your configuration is done.</t>
+                        </span>
+                            <a type="action" class="btn btn-primary" data-toggle="collapse" href=".o_onboarding_container"
+                            t-att-data-model="close_model" t-att-data-method="close_method">
+                                Close
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="onboarding_step">
+        <div t-att-class="'o_onboarding_step ' + ('o_onboarding_done' if state in ('done', 'just_done') else 'o_onboarding_current') + (' o_onboarding_just_done' if state == 'just_done' else '')">
+            <t t-call="base.onboarding_confetti" />
+            <div class="o_onboarding_progress d-inline-block progress">
+                <div class="progress-bar"></div>
+            </div>
+            <span class="o_onboarding_dot d-inline-block fa fa-check" />
+            <div class="o_onboarding_step_content">
+                <div class="o_onboarding_step_content_info">
+                    <h4 class="o_onboarding_step_title mt16">
+                        <a type="action" data-reload-on-close="true" role="button"
+                            t-att-data-method="method" t-att-data-model="model">
+                            <t t-esc="title" />
+                        </a>
+                    </h4>
+                    <p class="mb16">
+                        <t t-esc="description" />
+                    </p>
+                </div>
+                <a class="o_onboarding_step_action btn" type="action"
+                   data-reload-on-close="true" role="button" t-att-data-method="method"
+                   t-att-data-model="model">
+                    <t t-if="btn_text" t-esc="btn_text" />
+                    <t t-else="">Let's do it</t>
+                </a>
+                <a class="o_onboarding_all_done mt16" type="action"
+                   data-reload-on-close="true" role="button" t-att-data-method="method"
+                   t-att-data-model="model">
+                    <i t-attf-class="text-success mr6 fa #{done_icon if done_icon else 'fa-check'}" />
+                    <span>
+                        <t t-if="done_text" t-esc="done_text" />
+                        <t t-else="">All done!</t>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </template>
+    <template id="onboarding_confetti">
+        <div class="o_onboarding_confetti">
+            <div>
+                <div class="flake color-3" />
+                <div class="ribbon color-1" />
+                <div class="ribbon color-2" />
+                <div class="flake color-1" />
+                <div /> <!-- spacer -->
+            </div>
+            <div>
+                <div class="ribbon color-2" />
+                <div class="flake color-2" />
+                <div class="flake color-3" />
+                <div class="ribbon color-1" />
+                <div class="flake color-4" />
+                <div /> <!-- spacer -->
+            </div>
+            <div>
+                <div class="ribbon color-1" />
+                <div class="ribbon color-4" />
+                <div class="ribbon color-2" />
+                <div class="flake color-3" />
+                <div /> <!-- spacer -->
+            </div>
+            <div>
+                <div class="flake color-3" />
+                <div class="ribbon color-1" />
+                <div class="ribbon color-4" />
+                <div class="flake color-3" />
+                <div class="ribbon color-2" />
+                <div /> <!-- spacer -->
+            </div>
+            <div>
+                <div class="ribbon color-2" />
+                <div class="flake color-3" />
+                <div class="flake color-4" />
+                <div class="ribbon color-1" />
+                <div /> <!-- spacer -->
+            </div>
+        </div>
+    </template>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_company_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Company Data</t>
+            <t t-set="description">
+                Set your company's data for documents header/footer.
+            </t>
+            <t t-set="btn_text">Let's start!</t>
+            <t t-set="method" t-value="'action_open_base_onboarding_company'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('base_onboarding_company_state')" />
+        </t>
+    </template>
+    <!-- COMPANY FORM -->
+    <record id="base_onboarding_company_form" model="ir.ui.view">
+        <field name="name">base.company.onboarding.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='social_media']" position="replace" />
+            <form position="inside">
+                <footer position="replace">
+                    <button name="action_save_onboarding_company_step" class="btn btn-primary" type="object" string="Apply" />
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_base_onboarding_company" model="ir.actions.act_window">
+        <field name="name">Set your company data</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base_onboarding_company_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>

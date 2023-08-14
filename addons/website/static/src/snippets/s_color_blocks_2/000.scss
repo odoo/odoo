@@ -1,0 +1,36 @@
+.s_color_blocks_2 {
+    // Needed to be able to stretch the inner container so that
+    // the snippet works with the 50% and 100% height
+    &.o_half_screen_height, &.o_full_screen_height {
+        > :first-child { // container
+            &, > .row {
+                min-height: inherit;
+            }
+        }
+    }
+    .row {
+        display: flex;
+        flex-flow: row wrap;
+
+        // Fix for safari browser as it 'supports' flex but not with the right
+        // behavior
+        &::before, &::after {
+            width: 0;
+        }
+    }
+    [class*="col-lg-"] {
+        padding: 8% 5%;
+        padding-top: 8vw; // A flex item cannot have % padding top and bottom (even if it works on chrome)
+        padding-bottom: 8vw; // Solution is vw units but we keep 8% as a fallback
+    }
+    @include media-breakpoint-down(md) {
+        [class*="col-lg-"] {
+            flex: 1 1 100%;
+        }
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}

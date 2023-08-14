@@ -1,0 +1,106 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatterTopbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    // We need the +1 to handle the status bar border-bottom.
+    // The var is called `$o-statusbar-height`, but is used on button, therefore
+    // doesn't include the border-bottom.
+    // We use min-height to allow multiples buttons lines on mobile.
+    min-height: $o-statusbar-height + 1;
+}
+
+.o_ChatterTopbar_actions {
+    border-bottom: $border-width solid;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap-reverse; // reverse to ensure send buttons are directly above composer
+}
+
+.o_ChatterTopbar_button {
+    margin-bottom: -$border-width; /* Needed to allow "overriding" of the bottom border */
+}
+
+.o_ChatterTopbar_buttonAttachmentsCountLoader {
+    margin-left: 2px;
+}
+
+.o_ChatterTopbar_buttonCount {
+    padding-left: 0.25rem;
+}
+
+.o_ChatterTopbar_buttonClose {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    width: 34px;
+    height: 34px;
+}
+
+.o_ChatterTopbar_followerListMenu {
+    display: flex;
+}
+
+.o_ChatterTopbar_rightSection {
+    display: flex;
+    flex: 1 0 auto;
+    justify-content: flex-end;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatterTopbar_actions {
+    border-color: transparent;
+
+    &.o-has-active-button {
+        border-color: $border-color;
+    }
+}
+
+.o_ChatterTopbar_button {
+    border-radius: 0;
+
+    &:hover {
+        background-color: gray('300');
+    }
+
+    &.o-active {
+        color: $o-brand-odoo;
+        background-color: lighten(gray('300'), 7%);
+        border-right-color: $border-color;
+
+        &:not(:first-of-type),
+        &:first-of-type.o-bordered {
+            border-left-color: $border-color;
+        }
+
+        &.o-bordered {
+            border-top-color: $border-color;
+        }
+
+        &:hover {
+            background-color: gray('300');
+            color: $link-hover-color;
+        }
+    }
+}
+
+.o_ChatterTopbar_buttonClose {
+    border-radius: 0 0 10px 10px;
+    font-size: $font-size-lg;
+    background-color: gray('700');
+    color: gray('100');
+    cursor: pointer;
+
+    &:hover {
+        background-color: gray('600');
+        color: $white;
+    }
+}

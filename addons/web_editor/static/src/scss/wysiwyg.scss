@@ -1,0 +1,522 @@
+$o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
+$o-we-zindex: $o-we-overlay-zindex + 1 !default;
+
+// Use css variables to control the default style of the editor so that an
+// external assets bundle can influence it without duplicating the css.
+:root {
+    @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
+}
+
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+    .btn {
+        text-align: unset !important;
+    }
+}
+
+// EDITOR TOP BAR AND POPOVER
+.note-popover .popover {
+    max-width: 350px;
+    left: 50% !important;
+    transform: translate(-50%, 0);
+
+    .popover-body {
+        white-space: normal;
+    }
+}
+
+#web_editor-top-edit {
+    @include o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+    z-index: $o-we-zindex + 1;
+    height: var(--o-we-toolbar-height);
+    background-color: $o-we-bg;
+
+    .note-popover .popover {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border: none !important;
+        max-width: none;
+        transform: none;
+    }
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
+    }
+}
+
+.wysiwyg_iframe,
+.note-editor {
+    border: $o-we-border-width solid $o-we-border-color;
+    margin: 0;
+    padding: 0;
+}
+// avoid popover bar over its opened modal
+.note-popover .popover {
+    z-index: $o-we-overlay-zindex;
+}
+.note-popover .popover .popover-body,
+.panel-heading.note-toolbar {
+    padding-bottom: 0;
+    border-bottom: $o-we-border-width solid $o-we-border-color;
+    background-color: $o-we-bg;
+    color: $o-we-color;
+    font-family: $o-we-font-family;
+
+    // Main layout of buttons
+    .btn-group, .btn {
+        width: auto !important;
+        height: 100% !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+    }
+    .btn-secondary {
+        color: inherit;
+    }
+
+    // Active buttons and opened dropdowns
+    .btn {
+        padding: 0.5em 0.75em !important;
+        border-left: $o-we-item-border-width solid $o-we-item-border-color;
+        border-right: $o-we-item-border-width solid $o-we-item-border-color;
+        background: $o-we-sidebar-content-field-clickable-bg;
+        color: inherit;
+        font-size: $o-we-font-size !important;
+
+        &.active,
+        &:focus, &:active, &:focus:active {
+            @extend %we-active-button;
+        }
+
+        // This element should have been removed but still exists in 13.0 by
+        // mistake. This takes advantage of it to restore the color preview
+        // feature which disappeared and cannot be fixed as in 12.0.
+        // TODO fix the right way in 14.0.
+        > .caret {
+            display: block;
+            @include o-position-absolute(auto, 0, 0, 0);
+            border-bottom: 2px solid transparent;
+        }
+    }
+    .btn-group.show {
+        > .btn {
+            @extend %we-active-button;
+        }
+        &::after {
+            content: '';
+            @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
+            height: $o-we-border-width;
+        }
+    }
+    %we-active-button {
+        background: $o-we-sidebar-content-field-pressed-bg;
+        color: $o-we-sidebar-content-field-pressed-color;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .dropdown-menu {
+        transform: none !important;
+        margin-top: $o-we-dropdown-spacing;
+        padding: 0;
+        margin-top: $o-we-toolbar-height;
+        border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
+        background-color: $o-we-dropdown-bg;
+        box-shadow: $o-we-dropdown-shadow;
+    }
+    .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
+        min-width: 0;
+    }
+    .dropdown-item { // To overcome summernote rules breaking this in iframes
+        display: block;
+        max-width: none;
+        overflow: visible;
+        margin-top: 0;
+        padding: 0 1em;
+        border: none;
+        background: none;
+        background-clip: padding-box;
+        background-color: $o-we-dropdown-item-bg;
+        color: $o-we-dropdown-item-color;
+        line-height: $o-we-dropdown-item-height;
+
+        &:not(.d-none) ~ .dropdown-item {
+            // Use a border-top instead of a margin-top as when the
+            // mouse goes from one select button to another, the
+            // option preview should switch from the first button's
+            // option to the second one without reset to selected
+            // state in between.
+            border-top: $o-we-dropdown-item-spacing solid transparent;
+        }
+
+        &.active {
+            color: $o-we-dropdown-item-active-color;
+        }
+    }
+    li > .dropdown-item {
+        border-top: $o-we-dropdown-item-spacing solid transparent;
+    }
+
+    .note-style {
+        .dropdown-item {
+            > * {
+                display: inline;;
+            }
+            &, > * {
+                line-height: 2;
+            }
+            &[data-value="blockquote"] {
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+
+                > * {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    // Specific elements
+    .o_image_alt {
+        @include o-text-overflow();
+        max-width: 150px;
+    }
+    .note-color-palette div .note-color-btn {
+        border-color: $o-we-dropdown-bg;
+    }
+    .note-custom-color-palette .note-color-row {
+        height: auto!important;
+        .note-color-btn {
+            float: left;
+            height: 20px;
+            width: 20px;
+            padding: 0;
+            margin: 0;
+            border: 1px solid $o-we-dropdown-bg;
+        }
+    }
+}
+.note-color ul.show {
+    min-width: 216px !important;
+}
+
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: $o-brand-primary;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+.o_we_horizontal_collapse {
+    width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.o_we_transition_ease {
+    transition: all ease 0.35s;
+}
+
+// MODALS
+body .modal {
+
+    // SELECT MEDIA
+    .o_select_media_dialog {
+        max-width: 80%;
+
+        .modal-body {
+            .tab-pane {
+                min-height: 300px;
+            }
+
+            .o_we_images > .o_existing_attachment_cell .o_we_media_dialog_img_wrapper {
+                @extend %o-preview-alpha-background;
+
+                &, > img {
+                    width: 100%;
+                }
+            }
+
+            .o_existing_attachment_cell {
+                cursor: pointer;
+                margin: 1px;
+
+                .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                    background-color: rgba(white, 0.4);
+                    opacity: 0;
+                    cursor: pointer;
+                    transition: color 0.2s ease;
+                }
+
+                .o_existing_attachment_optimize {
+                    @include o-position-absolute($top: 0, $left: 0);
+                    border-radius: 0 0 2px 0;
+                }
+
+                .o_existing_attachment_remove {
+                    @include o-position-absolute($top: 0, $right: 0);
+                    z-index: 1;
+                    border-radius: 0 0 0 2px;
+                    &:hover {
+                        color: $o-we-color-danger;
+                    }
+                }
+
+                .o_file_name {
+                    @include o-text-overflow;
+                }
+
+                &:hover {
+                    .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                        opacity: 1;
+                    }
+                    &.o_we_attachment_highlight, .o_we_attachment_highlight {
+                        border-color: $card-border-color;
+                        box-shadow: 0px 0px 2px 2px $card-border-color;
+                    }
+                }
+            }
+
+            .o_we_attachment_selected {
+                border-color: $o-brand-primary;
+                box-shadow: 0px 0px 2px 2px $o-brand-primary;
+            }
+
+            .o_we_attachment_optimized .badge {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                margin: 2px;
+            }
+
+            .font-icons-icons {
+                > span {
+                    text-align: center;
+                    font-size: 22px;
+                    margin: 5px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 15px;
+                    cursor: pointer;
+                }
+            }
+
+            #editor-media-image,
+            #editor-media-document {
+                .o_we_url_input {
+                    width: 300px;
+                }
+            }
+
+            // VIDEO TAB
+            #editor-media-video {
+                .o_video_dialog_form {
+                    #o_video_form_group {
+                        position: relative;
+                        width: 100%;
+
+                        > textarea {
+                            width: 100%;
+                            min-height: 95px;
+                            padding-bottom: 25px;
+                            overflow-y: scroll;
+                        }
+                    }
+                }
+
+                #video-preview {
+                    position: relative;
+                    @include o-we-preview-box();
+                    border: none;
+
+                    .media_iframe_video {
+                        width: 100%;
+                    }
+
+                    .o_video_dialog_iframe {
+                        @include o-we-preview-content;
+                        max-width: 100%;
+                        max-height: 100%;
+
+                        &.alert {
+                            animation: fadeInDownSmall 700ms forwards;
+                            margin: 0 auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // LINK EDITOR DIALOG COLOR SELECTOR
+    .o_link_dialog {
+        input.link-style:checked + span::after {
+            content: "\f00c";
+            display: inline-block;
+            font-family: FontAwesome;
+            margin-left: 2px;
+        }
+
+        .o_link_dialog_preview {
+            border-left: 1px solid gray('200');
+        }
+    }
+
+    .o_we_image_optimize_dialog {
+        .o_we_title_label {
+            font-size: $o-we-font-size;
+        }
+        .o_we_preview_area {
+            max-height: 400px;
+            overflow: auto;
+        }
+    }
+}
+
+// Highlight selected image/icon
+%o-we-selected-image {
+    outline: 3px solid rgba(150, 150, 220, 0.3);
+}
+
+img.o_we_selected_image {
+    @extend %o-we-selected-image;
+}
+
+.fa.o_we_selected_image::before {
+    @extend %o-we-selected-image;
+}
+// Override default image selection color from portal. It prevents your from
+// seeing the images' quality clearly in the wysiwyg.
+img::selection {
+    background: transparent;
+}
+.o_we_media_author {
+    font-size: 11px;
+    @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .7);
+}
+
+@include media-breakpoint-down(md) {
+    #web_editor-top-edit {
+        position: initial !important;
+        height: initial !important;
+        top: initial !important;
+        left: initial !important;
+
+        #web_editor-toolbars .popover-body {
+            display: flex;
+            width: 100%;
+            overflow-x: auto;
+
+            .btn-group {
+                position: static;
+            }
+        }
+    }
+}
+
+// User modal in edit mode
+.editor_enable, .note-editable {
+    .modal:not(.o_technical_modal) {
+        top: 40px;
+        right: 0;
+        bottom: 0;
+        right: $o-we-sidebar-width;
+        width: auto;
+        height: auto;
+
+        .modal-dialog {
+            padding: 0.5rem 0; // To use more editor space if necessary
+        }
+    }
+}
+
+.o_we_no_pointer_events {
+    pointer-events: none;
+}
+
+.o_we_crop_widget {
+    background-color: rgba(128, 128, 128, 0.5);
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: 1024;
+
+    .o_we_cropper_wrapper {
+        position: absolute;
+    }
+
+    .o_we_crop_buttons {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+
+        input[type=radio] {
+            display: none;
+        }
+
+        .btn-group {
+            border-radius: 0.25rem;
+            margin: 0.1rem;
+        }
+
+        button, label {
+            cursor: pointer !important;
+            padding: 0.2rem 0.3rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+
+            &.active {
+                background-color: $o-we-bg-darkest;
+            }
+        }
+
+        button:not(.btn), label {
+            margin: 0;
+            border: none;
+            border-right: 1px solid $o-we-bg;
+            background-color: $o-we-bg;
+            color: $o-we-color;
+
+            &:first-child {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+
+            &:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-right: none;
+            }
+        }
+    }
+}

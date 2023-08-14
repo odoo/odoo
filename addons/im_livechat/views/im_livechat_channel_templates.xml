@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Integrate Livechat Conversation in the Discuss
+        -->
+        <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_view.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_controller.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/notification_list/notification_list.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_needaction_preview/thread_needaction_preview.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_preview/thread_preview.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/partner/partner.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/thread/thread.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/widgets/discuss/discuss.js"></script>
+
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/bugfix/bugfix.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_form.scss"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/chat_window_manager/chat_window_manager_tests.js"/>
+                <script type="text/javascript" src="/im_livechat/static/src/components/composer/composer_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/messaging_menu/messaging_menu_tests.js"/>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_icon/thread_icon_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_textual_typing_status/thread_textual_typing_status_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_models.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_server.js"></script>
+            </xpath>
+        </template>
+
+        <!--
+            Template rendering the external HTML support page
+        -->
+        <template id="support_page" name="Livechat : Support Page">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title><t t-esc="channel_name"/> Livechat Support Page</title>
+
+                    <!-- Call the external Bundle to render the css, js, and js loader tags -->
+                    <t t-raw="channel.script_external"/>
+
+                    <style type="text/css">
+                        body {
+                            height: 100%;
+                            font-size: 16px;
+                            font-weight: 400;
+                            font-family: "Lato", "Lucida Grande", "Helvetica neue", "Helvetica", "Verdana", "Arial", sans-serif;
+                            overflow: hidden;
+                            overflow-y: auto;
+                            display: block;
+                            margin: 0;
+                            padding: 0;
+                            border: none;
+                            width: 100%;
+                            height: 100%;
+                            background: #C9C8E0;
+                            background-image: -webkit-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -moz-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -ms-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -o-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: linear-gradient(to bottom, #7c7bad, #ddddee);
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c7bad', endColorstr='#ddddee',GradientType=0 );
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-attachment: fixed;
+                        }
+                        .main {
+                            position: absolute;
+                            opacity: 0;
+                            top: 50%;
+                            width: 100%;
+                            margin-top: -150px;
+                            color: white;
+                            text-shadow: 0 1px 0 rgba(34, 52, 72, 0.2);
+                            text-align: center;
+                        }
+                        .main h1 {
+                            font-size: 54px;
+                        }
+                        .main div {
+                            font-style: italic;
+                        }
+                    </style>
+                </head>
+
+                <body>
+                     <div class="main" style="opacity: 1;">
+                        <h1 class="channel_name"><t t-esc="channel.name"/></h1>
+                        <div>Website Live Chat Powered by <strong>Odoo</strong>.</div>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <!--
+            Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo)
+        -->
+        <template id="external_loader" name="Livechat : external_script field of livechat channel">
+            <!-- css style -->
+            <link t-att-href="'%s/im_livechat/external_lib.css' % (url)" rel="stylesheet"/>
+            <!-- js of all the required lib (internal and external) -->
+            <script t-att-src="'%s/im_livechat/external_lib.js' % (url)" type="text/javascript" />
+            <!-- the loader -->
+            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel_id)" type="text/javascript"/>
+        </template>
+
+
+        <!--
+            Bundle of External Librairies of the Livechat (Odoo + required modules)
+        -->
+        <template id="external_lib" name="Livechat : External Librairies of the Livechat, required to make it work">
+            <!-- Momentjs -->
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+            <!-- Odoo minimal lib -->
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <!-- jQuery -->
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+            <!-- Qweb2 lib -->
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <!-- Odoo JS Framework -->
+            <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
+            <script type="text/javascript" src="/web/static/src/js/core/translation.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/js/ajax_external.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/service_mixins.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/rpc.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/registry.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/session.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/utils.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/qweb.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/common_env.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/public/lazyloader.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_env.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
+            <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
+            <!-- Bus, Mail, Livechat -->
+            <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
+            <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
+            <t t-call="web._assets_helpers"/>
+            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/legacy/public_livechat.scss"/>
+        </template>
+
+        <!-- the js code to initialize the LiveSupport object -->
+        <template id="loader" name="Livechat : Javascript appending the livechat button">
+            <t t-translation="off">
+                window.addEventListener('load', function () {
+                    <t t-if="web_session_required">
+                    odoo.define('web.session', function (require) {
+                        var Session = require('web.Session');
+                        var modules = odoo._modules;
+                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: true});
+                    });
+                    </t>
+
+                    odoo.define('im_livechat.livesupport', function (require) {
+            <t t-if="info['available']" t-translation="off">
+                        var rootWidget = require('root.widget');
+                        var im_livechat = require('im_livechat.legacy.im_livechat.im_livechat');
+                        var button = new im_livechat.LivechatButton(
+                            rootWidget,
+                            "<t t-esc="info['server_url']"/>",
+                            <t t-raw="json.dumps(info.get('options', {}))"/>
+                        );
+                        button.appendTo(document.body);
+                        window.livechat_button = button;
+            </t>
+                    });
+                });
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

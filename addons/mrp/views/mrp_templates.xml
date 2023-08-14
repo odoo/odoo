@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="mrp assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/mrp/static/src/scss/mrp_workorder_kanban.scss" />
+            <script type="text/javascript" src="/mrp/static/src/js/mrp.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_bom_report.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_workorder_popover.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_documents_controller_mixin.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_documents_document_viewer.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_documents_kanban_controller.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_documents_kanban_record.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_documents_kanban_renderer.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_document_kanban_view.js"></script>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_should_consume.js"></script>
+        </xpath>
+   </template>
+
+    <template id="assets_common" name="mrp bom common assets" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/mrp/static/src/scss/mrp_bom_report.scss" />
+            <link rel="stylesheet" type="text/scss" href="/mrp/static/src/scss/mrp_fields.scss" />
+            <link rel="stylesheet" type="text/scss" href="/mrp/static/src/scss/mrp_gantt.scss" />
+            <link rel="stylesheet" type="text/scss" href="/mrp/static/src/scss/mrp_document_kanban_view.scss" />
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/mrp/static/tests/mrp_tests.js"/>
+            <script type="text/javascript" src="/mrp/static/tests/mrp_document_kanban_tests.js"/>
+        </xpath>
+    </template>
+
+    <template id="exception_on_mo">
+        <div class="alert alert-warning" role="alert">
+            Exception(s) occurred on the manufacturing order(s):
+            <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>.
+            Manual actions may be needed.
+            <div class="mt16">
+                <p>Exception(s):</p>
+                <ul t-foreach="order_exceptions.items()" t-as="order_exception">
+                    <li>
+                        <t t-set="move_raw_id" t-value="order_exception[0]"/>
+                        <t t-set="exception" t-value="order_exception[1]"/>
+                        <t t-set="order" t-value="exception[0]"/>
+                        <t t-set="new_qty" t-value="exception[1][0]"/>
+                        <t t-set="old_qty" t-value="exception[1][1]"/>
+                            <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>:
+                            <t t-esc="new_qty"/> <t t-esc="move_raw_id.product_uom.name"/> of <t t-esc="move_raw_id.product_id.name"/>
+                            <t t-if="cancel">
+                                cancelled
+                            </t>
+                            <t t-if="not cancel">
+                                ordered instead of <t t-esc="old_qty"/> <t t-esc="move_raw_id.product_uom.name"/>
+                            </t>
+                      </li>
+                </ul>
+            </div>
+            <div class="mt16" t-if="not cancel and impacted_pickings">
+                <p>Impacted Transfer(s):</p>
+                <ul t-foreach="impacted_pickings" t-as="picking">
+                    <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+                </ul>
+            </div>
+        </div>
+    </template>
+
+</odoo>

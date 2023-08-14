@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1400 1400">
+    <defs>
+        <filter id="drop-shadow" y="-50%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+            <feOffset dx="0" dy="-4" result="offsetblur" />
+            <feFlood flood-color="rgba(0,0,0,0.4)" />
+            <feComposite in2="offsetblur" operator="in" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <mask maskUnits="userSpaceOnUse" x="0" y="0" width="1400" height="500" id="SVGID_1_">
+            <rect style="fill:white" width="1400" height="550"/>
+            <path d="M-1,286c283.4-184.2,559.7,140.5,1066,174.3c175.6,11.7,333.1-48.9,336-49.3v1400H-1V287z" style="fill:black"/>
+        </mask>
+        <linearGradient id="linear-gradient" x1="700.51" y1="8915.67" x2="699.42" y2="9429.18"
+        gradientTransform="matrix(1, 0, 0, -1, 0, 9440.95)" gradientUnits="userSpaceOnUse">
+            <stop offset="0.11" stop-color="#3aadaa" />
+            <stop offset="1" stop-color="#383e45" />
+        </linearGradient>
+        <linearGradient id="linear-gradient-2" x1="904.49" y1="9586.58" x2="351.14" y2="8214.94"
+        gradientTransform="matrix(1, 0, 0, -1, 0, 9440.95)" gradientUnits="userSpaceOnUse">
+            <stop offset="0.8" stop-color="#3aadaa" />
+            <stop offset="0.97" stop-color="#383e45" />
+        </linearGradient>
+        <linearGradient id="linear-gradient-4" x1="622.62" y1="8824.69" x2="1098.85" y2="10216.47"
+        gradientTransform="matrix(1, 0, 0, -1, 0, 9440.95)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#3aadaa" />
+            <stop offset="0.99" stop-color="#383e45" />
+        </linearGradient>
+    </defs>
+    <g style="mask:url(#SVGID_1_)">
+        <polygon points="1400,471.7 0,470 0,0 1400,0" style="fill: url(#linear-gradient)" />
+        <path d="M0,156.2C89.9,77.9,390.4-46,695,195.9c232,184.2,528.2,252.1,705,157.9v53.2H0V568V156.2z"
+        style="fill: url(#linear-gradient-2); filter: url(#drop-shadow)" />
+        <path d="M1037.6,418.4c137.4,29.3,241.9,7.7,325.9-24c-237.3-114-374.4-94.2-529.3-47.5
+      C899.6,377.3,966.9,403.3,1037.6,418.4z"
+        style="fill: #F6F6F6; filter: url(#drop-shadow)" />
+        <path d="M0,212.2c401.1-238,673.5,128.4,1037.6,206.2c158.1,33.8,272.6,0,362.4-38.7v92H0V212.2z"
+        style="fill: url(#linear-gradient-4); filter: url(#drop-shadow)" />
+        <path d="M0,287c283.4-184.2,559.7,140.5,1066,174.3c175.6,11.7,333.1-48.9,334-49.3v140H0V287z"
+        style="filter: url(#drop-shadow)" />
+    </g>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="phone_blacklist_remove_view_form" model="ir.ui.view">
+        <field name="name">phone.blacklist.remove.form</field>
+        <field name="model">phone.blacklist.remove</field>
+        <field name="arch" type="xml">
+            <form string="phone_blacklist_removal">
+                <group class="oe_title">
+                    <field name="phone" string="Phone Number"/>
+                    <field name="reason" string="Reason"/>
+                </group>
+                <footer>
+                    <button name="action_unblacklist_apply" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FloorScreen" owl="1">
+        <div class="floor-screen screen">
+            <div class="screen-content-flexbox">
+                <t t-if="env.pos.floors.length > 1">
+                    <div class="floor-selector">
+                        <t t-foreach="env.pos.floors" t-as="floor" t-key="floor.id">
+                            <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="selectFloor(floor)">
+                                <t t-esc="floor.name" />
+                            </span>
+                        </t>
+                    </div>
+                </t>
+                <div class="floor-map" t-on-click="trigger('deselect-table')" t-ref="floor-map-ref">
+                    <div t-if="isFloorEmpty" class="empty-floor">
+                        <span>This floor has no tables yet, use the </span>
+                        <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
+                        <span> button in the editing toolbar to create new tables.</span>
+                    </div>
+                    <div t-else="" class="tables">
+                        <t t-foreach="activeTables" t-as="table" t-key="table.id">
+                            <TableWidget t-if="table.id !== state.selectedTableId" table="table" />
+                            <EditableTable t-else="" table="table" />
+                        </t>
+                    </div>
+                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
+                          t-attf-style="top:{{state.floorMapScrollTop}}px;">
+                        <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
+                    </span>
+                    <EditBar t-if="state.isEditMode" selectedTable="selectedTable" floorMapScrollTop="state.floorMapScrollTop"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

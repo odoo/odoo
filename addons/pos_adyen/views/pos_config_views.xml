@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.pos_adyen</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='tip_product']" position="after">
+                <div attrs="{'invisible': [('iface_tipproduct', '=', False)]}">
+                    <field name="adyen_ask_customer_for_tip" class="oe_inline"/>
+                    <label class="font-weight-normal" for="adyen_ask_customer_for_tip" string="Add tip through payment terminal (Adyen)"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

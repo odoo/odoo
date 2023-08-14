@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_report_product_product_replenishment" inherit_id="stock.report_product_product_replenishment">
+        <xpath expr="//tr[@name='draft_picking_in']" position="after">
+            <tr t-if="docs['draft_production_qty']['in']" name="draft_mo_in">
+                <td colspan="2">Production of Draft MO</td>
+                <td t-esc="docs['draft_production_qty']['in']" class="text-right"/>
+                <td t-esc="docs['uom']" groups="uom.group_uom"/>
+            </tr>
+        </xpath>
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="docs['draft_production_qty']['out']" name="draft_mo_out">
+                <td colspan="2">Component of Draft MO</td>
+                <td t-esc="-docs['draft_production_qty']['out']" class="text-right"/>
+                <td t-esc="docs['uom']" groups="uom.group_uom"/>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

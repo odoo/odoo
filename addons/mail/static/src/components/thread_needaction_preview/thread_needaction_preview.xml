@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadNeedactionPreview" owl="1">
+        <!--
+            The preview template is used by the discuss in mobile, and by the systray
+            menu in order to show preview of threads.
+        -->
+        <div class="o_ThreadNeedactionPreview" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined">
+            <t t-if="thread">
+                <div class="o_ThreadNeedactionPreview_sidebar">
+                    <div class="o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem">
+                        <img class="o_ThreadNeedactionPreview_image" t-att-src="image()" alt="Thread Image"/>
+                        <t t-if="thread.correspondent and thread.correspondent.im_status">
+                            <PartnerImStatusIcon
+                                class="o_ThreadNeedactionPreview_partnerImStatusIcon"
+                                t-att-class="{
+                                    'o-mobile': env.messaging.device.isMobile,
+                                }"
+                                partnerLocalId="thread.correspondent.localId"
+                            />
+                        </t>
+                    </div>
+                </div>
+                <div class="o_ThreadNeedactionPreview_content">
+                    <div class="o_ThreadNeedactionPreview_header">
+                        <span class="o_ThreadNeedactionPreview_name" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                            <t t-esc="thread.displayName"/>
+                        </span>
+                        <span class="o_ThreadNeedactionPreview_counter">
+                            (<t t-esc="thread.needactionMessagesAsOriginThread.length"/>)
+                        </span>
+                        <span class="o-autogrow"/>
+                        <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.date">
+                            <span class="o_ThreadNeedactionPreview_date">
+                                <t t-esc="thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
+                            </span>
+                        </t>
+                    </div>
+                    <div class="o_ThreadNeedactionPreview_core">
+                        <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
+                            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.author">
+                                <MessageAuthorPrefix
+                                    messageLocalId="thread.lastNeedactionMessageAsOriginThread.localId"
+                                    threadLocalId="thread.localId"
+                                />
+                            </t>
+                            <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
+                        </span>
+                        <span class="o-autogrow"/>
+                        <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

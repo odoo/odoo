@@ -1,0 +1,177 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_paypal
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
+"<br/><br/>\n"
+"Mulțumiri,<br/>\n"
+"<b>Echipa Odoo</b>"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
+msgstr "Adăugați contul dvs. Paypal la Odoo"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "Email"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Taxe locale fixe"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Taxe internaționale fixe"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Vă rugăm să urmați instrucțiunile date de PayPal pentru a vă crea contul.<br/>\n"
+"                Apoi, ajutați-ne să vă completăm acreditările Paypal în Odoo.<br/><br/>"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr "Cum vă configurați contul de paypal?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr "ID Cont Comerciant"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "Token de identitate PDT"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Procesator Plată"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+"Transferul de date de plată vă permite să primiți notificări cu privire la "
+"plățile reușite pe măsură ce sunt efectuate."
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Tranzacție plată"
+
+#. module: payment_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
+msgid "Paypal"
+msgstr "PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "Notificare de plată instant Paypal"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr "Paypal: date primite cu referință lipsă (%s) sau txn_id (%s)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Furnizor"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
+msgstr "Setați acreditările Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Paypal are "
+"valid and secured."
+msgstr ""
+"ID-ul comerciantului este utilizat pentru a se asigura că comunicările "
+"provenite de la Paypal sunt valide și securizate."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
+msgid "Transaction type"
+msgstr "Tip tranzacție"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Use IPN"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Taxe interne variabile (în procente)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Taxe internaționale variabile (în procente)"

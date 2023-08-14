@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentBox" owl="1">
+        <div class="o_AttachmentBox">
+            <div class="o_AttachmentBox_title">
+                <hr class="o_AttachmentBox_dashedLine"/>
+                <span class="o_AttachmentBox_titleText">
+                    Attachments
+                </span>
+                <hr class="o_AttachmentBox_dashedLine"/>
+            </div>
+            <div class="o_AttachmentBox_content">
+                <t t-if="isDropZoneVisible.value">
+                    <DropZone
+                        class="o_AttachmentBox_dropZone"
+                        t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
+                        t-ref="dropzone"
+                    />
+                </t>
+                <t t-if="thread and thread.allAttachments.length > 0">
+                    <AttachmentList
+                        class="o_attachmentBox_attachmentList"
+                        areAttachmentsDownloadable="true"
+                        attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
+                        attachmentsDetailsMode="'hover'"
+                        attachmentsImageSize="'small'"
+                        showAttachmentsFilenames="true"
+                        t-on-o-attachment-removed="_onAttachmentRemoved"
+                    />
+                </t>
+                <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                    <i class="fa fa-plus-square"/>
+                    Add attachments
+                </button>
+            </div>
+            <t t-if="thread">
+                <FileUploader
+                    attachmentLocalIds="thread.allAttachments.map(attachment => attachment.localId)"
+                    newAttachmentExtraData="newAttachmentExtraData"
+                    uploadModel="thread.model"
+                    uploadId="thread.id"
+                    t-on-o-attachment-created="_onAttachmentCreated"
+                    t-ref="fileUploader"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>
