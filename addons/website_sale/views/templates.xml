@@ -1382,7 +1382,7 @@
 
             <div t-foreach="website_sale_order.website_order_line"
                  t-as="line"
-                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 {{'optional_product info' if line.linked_line_id else None}}{{'border-bottom pb-4' if not line_last else ''}} {{'pt-4' if line_index &gt; 0 else ''}}"
+                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 {{'optional_product info' if line.linked_line_id else None}} {{'border-bottom pb-4' if not line_last else ''}} {{'pt-4' if line_index &gt; 0 else ''}}"
                  t-attf-data-product-id="{{line.product_id.id if line.product_id else ''}}"
             >
                 <t t-if="line.product_id">
@@ -1412,8 +1412,8 @@
                                     title="remove"><i class="fa fa-trash-o"/></button>
                         </div>
                     </div>
-                    <div class="d-flex flex-column justify-content-between align-items-end">
-                        <div t-attf-class="css_quantity {{'d-none' if hide_qty else ''}} input-group" data-container-type="div-quantity">
+                    <div class="d-flex flex-column align-items-end">
+                        <div t-attf-class="css_quantity {{'d-none' if hide_qty else ''}} input-group mb-2" data-container-type="div-quantity">
                             <t t-if="not line._is_not_sellable_line()">
                                 <t t-if="show_qty">
                                     <a href="#"
