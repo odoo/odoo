@@ -3,6 +3,7 @@
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import { registry } from "@web/core/registry";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 function add_product_to_order(product_name) {
     return [
@@ -15,11 +16,7 @@ function add_product_to_order(product_name) {
             trigger: ".btn-switchpane:contains('Review')",
             mobile: true,
         },
-        {
-            content: "the " + product_name + " have been added to the order",
-            trigger: '.order .product-name:contains("' + product_name + '")',
-            run: function () {},
-        },
+        ...Order.hasLine({ productName: product_name }),
         {
             content: "go back to the products",
             trigger: ".floor-button",
@@ -130,20 +127,7 @@ function selected_orderline_has({ product, price = null, quantity = null }) {
             mobile: true,
         },
     ];
-    if (price !== null) {
-        result.push({
-            content: `Selected line has product '${product}' and price '${price}'`,
-            trigger: `.order-container .orderlines .orderline.selected .product-name:contains("${product}") ~ span.price:contains("${price}")`,
-            run: function () {},
-        });
-    }
-    if (quantity !== null) {
-        result.push({
-            content: `Selected line has product '${product}' and quantity '${quantity}'`,
-            trigger: `.order-container .orderlines .orderline.selected .product-name:contains('${product}') ~ .info-list .info em:contains('${quantity}')`,
-            run: function () {},
-        });
-    }
+    result.push(...Order.hasLine({ productName: product, quantity, price, withClass: ".selected" }));
     result.push({
         content: "go back to the products",
         trigger: ".floor-button",
@@ -159,11 +143,7 @@ function verify_order_total(total_str) {
             trigger: ".btn-switchpane:contains('Review')",
             mobile: true,
         },
-        {
-            content: "order total contains " + total_str,
-            trigger: '.order .total .value:contains("' + total_str + '")',
-            run: function () {}, // it's a check
-        },
+        Order.hasTotal(total_str),
         {
             content: "go back to the products",
             trigger: ".floor-button",

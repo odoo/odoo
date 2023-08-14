@@ -5,6 +5,7 @@ import { Do as ProductScreenDo } from "@point_of_sale/../tests/tours/helpers/Pro
 import { Do as PaymentScreenDo } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { Do as ReceiptScreenDo } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { Do as ChromeDo } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 const ProductScreen = { do: new ProductScreenDo() };
 const PaymentScreen = { do: new PaymentScreenDo() };
@@ -14,15 +15,16 @@ const Chrome = { do: new ChromeDo() };
 class Do {
     selectRewardLine(rewardName) {
         return [
-            {
-                content: "select reward line",
-                trigger: `.orderline.program-reward .product-name:contains("${rewardName}")`,
-            },
-            {
-                content: "check reward line if selected",
-                trigger: `.orderline.selected.program-reward .product-name:contains("${rewardName}")`,
-                run: function () {}, // it's a check
-            },
+            ...Order.hasLine({
+                withClass: ".fst-italic",
+                withoutClass: ".selected",
+                run: "click",
+                productName: rewardName,
+            }),
+            ...Order.hasLine({
+                withClass: ".selected.fst-italic",
+                productName: rewardName,
+            }),
         ];
     }
     enterCode(code) {
@@ -99,35 +101,15 @@ class Do {
 
 class Check {
     hasRewardLine(rewardName, amount, qty) {
-        const steps = [
-            {
-                content: "check if reward line is there",
-                trigger: `.orderline.program-reward span.product-name:contains("${rewardName}")`,
-                run: function () {},
-            },
-            {
-                content: "check if the reward price is correct",
-                trigger: `.orderline.program-reward span.price:contains("${amount}")`,
-                run: function () {},
-            },
-        ];
-        if (qty) {
-            steps.push({
-                content: "check if the reward qty is correct",
-                trigger: `.order .orderline.program-reward .product-name:contains("${rewardName}") ~ .info-list em:contains("${qty}")`,
-                run: function () {},
-            });
-        }
-        return steps;
+        return Order.hasLine({
+            withClass: ".fst-italic",
+            productName: rewardName,
+            price: amount,
+            quantity: qty,
+        });
     }
     orderTotalIs(total_str) {
-        return [
-            {
-                content: "order total contains " + total_str,
-                trigger: '.order .total .value:contains("' + total_str + '")',
-                run: function () {}, // it's a check
-            },
-        ];
+        return [Order.hasTotal(total_str)];
     }
     checkNoClaimableRewards() {
         return [

@@ -2,6 +2,7 @@
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
 import { Do, Check, Execute } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 class DoExt extends Do {
     clickSplitBillButton() {
@@ -13,13 +14,7 @@ class DoExt extends Do {
         ];
     }
     doubleClickOrderline(name) {
-        return [
-            {
-                content: "first click orderline",
-                trigger: `.order .orderline .product-name:contains("${name}")`,
-                run: "dblclick"
-            },
-        ];
+        return Order.hasLine({ productName: name, run: "dblclick" });
     }
     clickTransferButton() {
         return [
@@ -77,13 +72,7 @@ class DoExt extends Do {
 
 class CheckExt extends Check {
     orderlinesHaveNoChange() {
-        return [
-            {
-                content: "Orderlines have no change",
-                trigger: ".orderlines .orderline:not(.has-change)",
-                run: function () {},
-            },
-        ];
+        return Order.doesNotHaveLine({ withClass: ".has-change" });
     }
     isPrintingError() {
         // because we don't have printer in the test.
@@ -95,36 +84,16 @@ class CheckExt extends Check {
         ];
     }
     orderlineIsToOrder(name) {
-        return [
-            {
-                content: `Line is to order`,
-                trigger: `.order .orderline.has-change .product-name:contains("${name}")`,
-                run: function () {}, // it's a check
-            },
-        ];
+        return Order.hasLine({
+            productName: name,
+            withClass: ".has-change.text-success.border-start.border-success.border-4",
+        });
     }
     orderlineIsToSkip(name) {
-        return [
-            {
-                content: `Line is to order`,
-                trigger: `.order .orderline.skip-change .product-name:contains("${name}")`,
-                run: function () {}, // it's a check
-            },
-        ];
-    }
-    orderlineHasNote(name, quantity, note) {
-        return [
-            {
-                content: `line has ${quantity} quantity`,
-                trigger: `.order .orderline .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
-                run: function () {}, // it's a check
-            },
-            {
-                content: `line has '${note}' note`,
-                trigger: `.order .orderline .info-list .orderline-note:contains("${note}")`,
-                run: function () {}, // it's a check
-            },
-        ];
+        return Order.hasLine({
+            withClass: ".skip-change.text-primary.border-start.border-primary.border-4",
+            productName: name,
+        });
     }
     guestNumberIs(numberInString) {
         return [

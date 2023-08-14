@@ -1,19 +1,11 @@
 /** @odoo-module */
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 class Do {
-    clickOrderline(name, totalQuantity) {
-        let trigger = `.splitbill-screen li.orderline .product-name:contains("${name}")`;
-        if (totalQuantity) {
-            trigger += ` ~ .info-list .info:contains("${totalQuantity}")`;
-        }
-        return [
-            {
-                content: `click '${name}' orderline with total quantity of '${totalQuantity}'`,
-                trigger,
-            },
-        ];
+    clickOrderline(productName) {
+        return Order.hasLine({ productName, run: "click" });
     }
     clickBack() {
         return [
@@ -35,18 +27,10 @@ class Do {
 
 class Check {
     orderlineHas(name, totalQuantity, splitQuantity) {
-        return [
-            {
-                content: `'${name}' orderline has total quantity of '${totalQuantity}'`,
-                trigger: `.splitbill-screen li.orderline .product-name:contains("${name}") ~ .info-list .info:contains("${totalQuantity}")`,
-                run: () => {},
-            },
-            {
-                content: `'${name}' orderline has '${splitQuantity}' quantity to split`,
-                trigger: `.splitbill-screen li.orderline .product-name:contains("${name}") ~ .info-list .info em:contains("${splitQuantity}")`,
-                run: () => {},
-            },
-        ];
+        return Order.hasLine({
+            productName: name,
+            quantity: splitQuantity != 0 ? `${splitQuantity} / ${totalQuantity}` : totalQuantity,
+        });
     }
     subtotalIs(amount) {
         return [

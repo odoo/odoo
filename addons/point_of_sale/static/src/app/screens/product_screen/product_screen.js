@@ -17,17 +17,18 @@ import { Component, onMounted, useState } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
 import { Numpad } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { OrderWidget } from "@point_of_sale/app/screens/product_screen/order/order";
 import { ProductsWidget } from "@point_of_sale/app/screens/product_screen/product_list/product_list";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-
+import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
+import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "point_of_sale.ProductScreen";
     static components = {
         ActionpadWidget,
         Numpad,
-        OrderWidget,
         ProductsWidget,
+        Orderline,
+        OrderWidget,
     };
     static numpadActionName = _t("Payment");
 
@@ -51,7 +52,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             gs1: this._barcodeGS1Action,
         });
 
-        // Call `resset` when the `onMounted` callback in `numberBuffer.use` is done.
+        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
         // We don't do this in the `mounted` lifecycle method because it is called before
         // the callbacks in `onMounted` hook.
         onMounted(() => this.numberBuffer.reset());
@@ -97,6 +98,11 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.sendKey(buttonValue);
     }
 
+
+    selectLine(orderline) {
+        this.numberBuffer.reset();
+        this.currentOrder.select_orderline(orderline);
+    }
     /**
      * To be overridden by modules that checks availability of
      * connected scale.

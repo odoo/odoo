@@ -12,7 +12,9 @@ import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_pop
 
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
-import { OrderDetails } from "@point_of_sale/app/screens/ticket_screen/order_details/order_details";
+import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
+import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
 import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
@@ -27,7 +29,9 @@ export class TicketScreen extends Component {
     static components = {
         ActionpadWidget,
         InvoiceButton,
-        OrderDetails,
+        Orderline,
+        OrderWidget,
+        CenteredIcon,
         ReprintReceiptButton,
         SearchBar,
         Numpad,

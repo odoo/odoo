@@ -143,3 +143,7 @@ export function createTourMethods(name, Do, Check = class {}, Execute = class {}
         },
     };
 }
+
+export function negate(selector) {
+    return `body:not(:has(${selector}))`;
+}

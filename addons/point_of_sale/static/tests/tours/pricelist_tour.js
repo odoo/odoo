@@ -6,6 +6,7 @@ import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScre
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";
 import { Numpad } from "./helpers/NumpadTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 function assert(condition, message) {
     if (!condition) {
@@ -192,13 +193,7 @@ steps = steps.concat([
         trigger: ".btn-switchpane:contains('Review')",
         mobile: true,
     },
-    {
-        trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf')",
-        extra_trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('1.0')",
-        run: function () {},
-    },
+    ...Order.hasLine({ productName: "Wall Shelf", quantity: "1.0", withClass: ".selected" }),
     {
         content: "click more button",
         trigger: ".mobile-more-button",
@@ -213,19 +208,9 @@ steps = steps.concat([
         trigger: ".selection-item:contains('min_quantity ordering')",
     },
     Numpad.click("2"),
-    {
-        content: "qty of Wall Shelf line should be 2",
-        trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf')",
-        extra_trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('2.0')",
-        run: function () {},
-    },
-    {
-        content: "verify that unit price of shelf changed to $1",
-        trigger: `.total > .value:contains('$${nbsp}2.00')`,
-        run: function () {},
-    },
+    ...Order.hasLine({ productName: "Wall Shelf", quantity: "2.0", withClass: ".selected" }),
+    // verify that unit price of shelf changed to $1
+    Order.hasTotal(`$${nbsp}2.00`),
     {
         content: "go back to the products",
         trigger: ".floor-button",
@@ -240,24 +225,11 @@ steps = steps.concat([
         trigger: ".btn-switchpane:contains('Review')",
         mobile: true,
     },
-    {
-        content: "Small Shelf line should be selected with quantity 1",
-        trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
-        extra_trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .info-list .info em:contains('1.0')",
-        run: function () {},
-    },
+    ...Order.hasLine({ productName: "Small Shelf", quantity: "1.0", withClass: ".selected" }),
     Numpad.click("Price"),
     Numpad.isActive("Price"),
     Numpad.click("5"),
-    {
-        content: "Small Shelf line should be selected with unit price of 5",
-        trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
-        extra_trigger:
-            ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .price:contains('5.0')",
-    },
+    ...Order.hasLine({ productName: "Small Shelf", price: "5.0", withClass: ".selected" }),
     Numpad.click("Qty"),
     Numpad.isActive("Qty"),
     {
@@ -273,11 +245,8 @@ steps = steps.concat([
         content: "select public pricelist",
         trigger: ".selection-item:contains('Public Pricelist')",
     },
-    {
-        content:
-            "verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)",
-        trigger: `.total > .value:contains('$${nbsp}8.96')`,
-    },
+    // verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)
+    Order.hasTotal(`$${nbsp}8.96`),
     {
         content: "click more button",
         trigger: ".mobile-more-button",

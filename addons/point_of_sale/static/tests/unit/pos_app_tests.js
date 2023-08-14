@@ -10,6 +10,22 @@ import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
 import { popupService } from "@point_of_sale/app/popup/popup_service";
 
+const mockContextualUtilsService = {
+    dependencies: ["pos", "localization"],
+    start(env, { pos, localization }) {
+        const formatCurrency = (value, hasSymbol = true) => {
+            return "dummy";
+        };
+        const floatIsZero = (value) => {
+            return value === 0;
+        };
+        env.utils = {
+            formatCurrency,
+            floatIsZero,
+        };
+    },
+};
+
 QUnit.module("Chrome", {
     beforeEach() {
         registry
@@ -19,6 +35,7 @@ QUnit.module("Chrome", {
             .add("barcode_reader", barcodeReaderService)
             .add("ui", uiService)
             .add("popup", popupService)
+            .add("contextual_utils_service", mockContextualUtilsService)
             .add("barcode", {
                 start() {
                     return { bus: new EventBus() };

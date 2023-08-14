@@ -92,6 +92,18 @@ patch(Orderline.prototype, {
             return "" + this.id;
         }
     },
+    toggleSkipChange() {
+        if (this.hasChange || this.skipChange) {
+            this.skipChange = !this.skipChange;
+        }
+    },
+    getDisplayClasses() {
+        return {
+            ...super.getDisplayClasses(),
+            "has-change text-success border-start border-success border-4": this.hasChange,
+            "skip-change text-primary border-start border-primary border-4": this.skipChange,
+        };
+    },
 });
 
 patch(Payment.prototype, {

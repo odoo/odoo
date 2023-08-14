@@ -19,7 +19,6 @@ import {
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
-import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
@@ -113,6 +112,12 @@ export class Product extends PosModel {
             ""
         );
     }
+    isTracked() {
+        return (
+            ["serial", "lot"].includes(this.tracking) &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        );
+    }
     get_unit() {
         var unit_id = this.uom_id;
         if (!unit_id) {
@@ -179,24 +184,15 @@ export class Product extends PosModel {
             comboLines = payload;
         }
         // Gather lot information if required.
-        if (
-            ["serial", "lot"].includes(this.tracking) &&
-            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-        ) {
-            const isAllowOnlyOneLot = this.isAllowOnlyOneLot();
-            if (isAllowOnlyOneLot) {
-                packLotLinesToEdit = [];
-            } else {
-                const orderline = this.pos.selectedOrder
-                    .get_orderlines()
-                    .filter((line) => !line.get_discount())
-                    .find((line) => line.product.id === this.id);
-                if (orderline) {
-                    packLotLinesToEdit = orderline.getPackLotLinesToEdit();
-                } else {
-                    packLotLinesToEdit = [];
-                }
-            }
+        if (this.isTracked()) {
+            packLotLinesToEdit =
+                (!this.isAllowOnlyOneLot() &&
+                    this.pos.selectedOrder
+                        .get_orderlines()
+                        .filter((line) => !line.get_discount())
+                        .find((line) => line.product.id === this.id)
+                        ?.getPackLotLinesToEdit()) ||
+                [];
             // if the lot information exists in the barcode, we don't need to ask it from the user.
             if (code && code.type === "lot") {
                 // consider the old and new packlot lines
@@ -206,31 +202,14 @@ export class Product extends PosModel {
                 const newPackLotLines = [{ lot_name: code.code }];
                 draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
             } else {
-                const { confirmed, payload } = await this.pos.env.services.popup.add(
-                    EditListPopup,
-                    {
-                        title: _t("Lot/Serial Number(s) Required"),
-                        name: this.display_name,
-                        isSingleItem: isAllowOnlyOneLot,
-                        array: packLotLinesToEdit,
-                    }
+                draftPackLotLines = await this.pos.getEditedPackLotLines(
+                    this.isAllowOnlyOneLot(),
+                    packLotLinesToEdit,
+                    this.display_name
                 );
-                if (confirmed) {
-                    // Segregate the old and new packlot lines
-                    const modifiedPackLotLines = Object.fromEntries(
-                        payload.newArray
-                            .filter((item) => item.id)
-                            .map((item) => [item.id, item.text])
-                    );
-                    const newPackLotLines = payload.newArray
-                        .filter((item) => !item.id)
-                        .map((item) => ({ lot_name: item.text }));
-
-                    draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
-                } else {
-                    // We don't proceed on adding product.
-                    return;
-                }
+            }
+            if (!draftPackLotLines) {
+                return;
             }
         }
 
@@ -470,6 +449,9 @@ export class Orderline extends PosModel {
         orderline.customerNote = this.customerNote;
         return orderline;
     }
+    getDisplayClasses() {
+        return {};
+    }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines;
         let nExtraLines = Math.abs(this.quantity) - currentPackLotLines.length;
@@ -486,6 +468,23 @@ export class Orderline extends PosModel {
                 }))
             );
         return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+    }
+    // What if a number different from 1 (or -1) is specified
+    // to an orderline that has product tracked by lot? Lot tracking (based
+    // on the current implementation) requires that 1 item per orderline is
+    // allowed.
+    async editPackLotLines() {
+        const isAllowOnlyOneLot = this.product.isAllowOnlyOneLot();
+        const editedPackLotLines = await this.pos.getEditedPackLotLines(
+            isAllowOnlyOneLot,
+            this.getPackLotLinesToEdit(isAllowOnlyOneLot),
+            this.product.display_name
+        );
+        if (!editedPackLotLines) {
+            return;
+        }
+        this.setPackLotLines(editedPackLotLines);
+        this.order.select_orderline(this);
     }
     /**
      * @param { modifiedPackLotLines, newPackLotLines }
@@ -533,11 +532,6 @@ export class Orderline extends PosModel {
     }
     setNote(note) {
         this.note = note;
-    }
-    toggleSkipChange() {
-        if (this.hasChange || this.skipChange) {
-            this.skipChange = !this.skipChange;
-        }
     }
     setHasChange(isChange) {
         this.hasChange = isChange;
@@ -879,6 +873,18 @@ export class Orderline extends PosModel {
             return this.get_all_prices(1).priceWithoutTax;
         }
     }
+    /**
+     * This is the price that will appear as striked through.
+     * @returns {number | false}
+     */
+    get_old_unit_display_price() {
+        return (
+            this.display_discount_policy() === "without_discount" &&
+            this.env.utils.roundCurrency(this.get_unit_display_price()) <
+                this.env.utils.roundCurrency(this.get_taxed_lst_unit_price()) &&
+            this.get_taxed_lst_unit_price()
+        );
+    }
     getUnitDisplayPriceBeforeDiscount() {
         if (this.pos.config.iface_tax_included === "total") {
             return this.get_all_prices(1).priceWithTaxBeforeDiscount;
@@ -1119,6 +1125,20 @@ export class Orderline extends PosModel {
     }
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
+    }
+    getDisplayData() {
+        return {
+            productName: this.get_full_product_name(),
+            price: this.env.utils.formatCurrency(this.get_display_price()),
+            qty: this.get_quantity_str(),
+            unit: this.get_unit().name,
+            unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
+            oldUnitPrice: this.env.utils.formatCurrency(this.get_old_unit_display_price()),
+            discount: this.get_discount_str(),
+            customerNote: this.get_customer_note(),
+            internalNote: this.getNote(),
+            comboParent: this.comboParent?.get_full_product_name(),
+        };
     }
 }
 

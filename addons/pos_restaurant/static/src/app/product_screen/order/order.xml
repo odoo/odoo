@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="pos_restaurant.OrderWidget" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('order-empty')]" position="after">
-            <button t-if="showReleaseBtn" class="btn btn-primary py-2 rounded-0" style="border:none; font-size: 20px;" t-on-click="releaseTable">Release table</button>
-        </xpath>
-    </t>
-</templates>

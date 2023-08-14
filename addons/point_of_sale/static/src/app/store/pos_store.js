@@ -21,6 +21,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { EditListPopup } from "./select_lot_popup/select_lot_popup";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -1823,6 +1824,28 @@ export class PosStore extends Reactive {
         await this.addProductFromUi(product, options);
         this.numberBuffer.reset();
     }
+
+    async getEditedPackLotLines(isAllowOnlyOneLot, packLotLinesToEdit, productName) {
+        const { confirmed, payload } = await this.env.services.popup.add(EditListPopup, {
+            title: _t("Lot/Serial Number(s) Required"),
+            name: productName,
+            isSingleItem: isAllowOnlyOneLot,
+            array: packLotLinesToEdit,
+        });
+        if (!confirmed) {
+            return;
+        }
+        // Segregate the old and new packlot lines
+        const modifiedPackLotLines = Object.fromEntries(
+            payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+        );
+        const newPackLotLines = payload.newArray
+            .filter((item) => !item.id)
+            .map((item) => ({ lot_name: item.text }));
+
+        return { modifiedPackLotLines, newPackLotLines };
+    }
+
     // FIXME POSREF get rid of temp screens entirely?
     showTempScreen(name, props = {}) {
         return new Promise((resolve) => {
