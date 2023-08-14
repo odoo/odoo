@@ -690,7 +690,7 @@ class AccountMoveLine(models.Model):
             record.cumulated_balance = result[record.id]
 
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
-                 'matched_debit_ids', 'matched_credit_ids')
+                 'matched_debit_ids', 'matched_credit_ids', 'account_id.internal_group')
     def _compute_amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
