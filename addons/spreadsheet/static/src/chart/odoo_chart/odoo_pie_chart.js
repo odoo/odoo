@@ -48,14 +48,15 @@ function getPieConfiguration(chart, labels, locale) {
         labels: { fontColor },
     };
     legend.position = chart.legendPosition;
-    config.options.legend = legend;
+    config.options.plugins = config.options.plugins || {};
+    config.options.plugins.legend = legend;
     config.options.layout = {
         padding: { left: 20, right: 20, top: chart.title ? 10 : 25, bottom: 10 },
     };
-    config.options.tooltips = {
+    config.options.plugins.tooltip = {
         callbacks: {
-            title: function (tooltipItems, data) {
-                return data.datasets[tooltipItems[0].datasetIndex].label;
+            title: function (tooltipItem) {
+                return tooltipItem.label;
             },
         },
     };

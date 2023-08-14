@@ -74,7 +74,7 @@ function checkLegend(assert, graph, expectedLegendLabels) {
     expectedLegendLabels =
         expectedLegendLabels instanceof Array ? expectedLegendLabels : [expectedLegendLabels];
     const chart = getChart(graph);
-    const actualLegendLabels = chart.config.options.legend.labels
+    const actualLegendLabels = chart.config.options.plugins.legend.labels
         .generateLabels(chart)
         .map((o) => o.text);
     assert.deepEqual(actualLegendLabels, expectedLegendLabels);
@@ -91,13 +91,13 @@ function checkTooltip(assert, graph, expectedTooltipContent, index, datasetIndex
         if (yLabel !== undefined && (datasetIndex === undefined || datasetIndex === i)) {
             dataPoints.push({
                 datasetIndex: i,
-                index,
+                dataIndex: index,
                 yLabel,
             });
         }
     }
     const tooltipModel = { opacity: 1, x: 1, y: 1, dataPoints };
-    getChart(graph).config.options.tooltips.custom(tooltipModel);
+    getChart(graph).config.options.plugins.tooltip.external({ tooltip: tooltipModel });
     const { title, lines } = expectedTooltipContent;
     const lineLabels = [];
     const lineValues = [];
@@ -135,15 +135,15 @@ function checkModeIs(assert, graph, mode) {
 }
 
 function getScaleY(graph) {
-    return getChart(graph).config.options.scales.yAxes;
+    return getChart(graph).config.options.scales.y;
 }
 
 function getXAxeLabel(graph) {
-    return getChart(graph).config.options.scales.xAxes[0].scaleLabel.labelString;
+    return getChart(graph).config.options.scales.x.title.text;
 }
 
 function getYAxeLabel(graph) {
-    return getChart(graph).config.options.scales.yAxes[0].scaleLabel.labelString;
+    return getChart(graph).config.options.scales.y.title.text;
 }
 
 export async function clickOnDataset(graph) {
@@ -1050,7 +1050,7 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "line");
         assert.strictEqual(graph.model.metaData.stacked, true, "graph should be stacked.");
         assert.strictEqual(
-            getScaleY(graph).every((y) => y.stacked),
+            getScaleY(graph).stacked,
             true,
             "The y axes should have stacked property set to true"
         );
@@ -1063,7 +1063,7 @@ QUnit.module("Views", (hooks) => {
             "graph should be a classic line chart."
         );
         assert.strictEqual(
-            getScaleY(graph).every((y) => y.stacked == undefined),
+            getScaleY(graph).stacked == undefined,
             true,
             "The y axes should have stacked property set to undefined"
         );
@@ -1090,7 +1090,7 @@ QUnit.module("Views", (hooks) => {
             "graph should be a classic line chart."
         );
         assert.strictEqual(
-            getScaleY(graph).every((y) => y.stacked),
+            !!getScaleY(graph).stacked,
             false,
             "the y axes should have a stacked property set to false since the stacked property in line chart is false."
         );
@@ -1140,7 +1140,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(graph.model.metaData.stacked, true, "should be stacked by default.");
 
         assert.strictEqual(
-            getScaleY(graph).every((y) => y.stacked),
+            getScaleY(graph).stacked,
             true,
             "the stacked property in y axes should be true when the stacked is enabled in line chart"
         );
@@ -2360,8 +2360,8 @@ QUnit.module("Views", (hooks) => {
         assert.expect(6);
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
         function checkMeasure(measure) {
-            const yAxe = getChart(graph).config.options.scales.yAxes[0];
-            assert.strictEqual(yAxe.scaleLabel.labelString, measure);
+            const yAxe = getChart(graph).config.options.scales.y;
+            assert.strictEqual(yAxe.title.text, measure);
             const item = [...target.querySelectorAll(".o_menu_item")].find(
                 (el) => el.innerText === measure
             );
