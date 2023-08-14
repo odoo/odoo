@@ -44,7 +44,6 @@
     'external_dependencies': {
         'python': ['pyOpenSSL'],
     },
-    'auto_install': ['l10n_es'],
     'post_init_hook': '_l10n_es_edi_post_init',
     'license': 'LGPL-3',
 }
