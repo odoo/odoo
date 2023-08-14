@@ -1891,9 +1891,11 @@
 
                                     <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between mb32 mt16">
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'"
-                                        class="btn btn-outline-secondary order-3 order-lg-1">
-                                            <i t-if="mode == ('new', 'billing')" class="fw-light fa fa-long-arrow-left me-2"/>
-                                            Discard
+                                        class="btn btn-outline-secondary d-none d-lg-inline-block">
+                                            <i t-if="mode == ('new', 'billing')" class="fw-light fa fa-long-arrow-left me-2"/>Discard
+                                        </a>
+                                        <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="d-lg-none order-3">
+                                            <i t-if="mode == ('new', 'billing')" class="fw-light fa fa-angle-left me-2"/>Discard
                                         </a>
                                         <div class="position-relative w-100 d-flex d-lg-none justify-content-center align-items-center order-2 my-2 opacity-75">
                                             <hr class="w-100"/>
