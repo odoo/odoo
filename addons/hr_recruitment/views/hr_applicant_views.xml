@@ -136,6 +136,7 @@
                         <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="medium_id"/>
+                        <field name="availability"/>
                         <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <group string="Job">
@@ -156,7 +157,6 @@
                             <span attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" placeholder="Extra advantages..."/>
                         </div>
-                        <field name="availability"/>
                     </group>
                 </group>
                 <notebook>
