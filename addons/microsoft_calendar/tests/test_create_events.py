@@ -278,3 +278,24 @@ class TestCreateEvents(TestCommon):
             )
         # Assert that no insert call was made.
         mock_insert.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_create_event_with_sync_config_paused(self, mock_insert):
+        """
+        Creates an event with the synchronization paused, the event must have its field 'need_sync_m' as True
+        for later synchronizing it with Outlook Calendar.
+        """
+        # Set user sync configuration as active and then pause the synchronization.
+        self.organizer_user.microsoft_synchronization_stopped = False
+        self.organizer_user.pause_microsoft_synchronization()
+
+        # Try to create a simple event in Odoo Calendar.
+        record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
+        self.call_post_commit_hooks()
+        record.invalidate_recordset()
+
+        # Ensure that synchronization is paused, insert wasn't called and record is waiting to be synced.
+        self.assertFalse(self.organizer_user.microsoft_synchronization_stopped)
+        self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
+        self.assertTrue(record.need_sync_m, "Sync variable must be true for updating event when sync re-activates")
+        mock_insert.assert_not_called()

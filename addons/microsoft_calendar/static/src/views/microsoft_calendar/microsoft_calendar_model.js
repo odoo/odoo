@@ -13,6 +13,7 @@ patch(AttendeeCalendarModel.prototype, {
         this.rpc = rpc;
         this.microsoftIsSync = true;
         this.microsoftPendingSync = false;
+        this.microsoftIsPaused = false;
     },
 
     /**
@@ -49,11 +50,12 @@ patch(AttendeeCalendarModel.prototype, {
                 silent,
             },
         );
-        if (["need_config_from_admin", "need_auth", "sync_stopped"].includes(result.status)) {
+        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
             this.microsoftIsSync = false;
         } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
             this.microsoftIsSync = true;
         }
+        this.microsoftIsPaused = result.status == "sync_paused";
         this.microsoftPendingSync = false;
         return result;
     },
