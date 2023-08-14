@@ -1223,7 +1223,7 @@ class PosOrder(models.Model):
             if orders_info[key_order] < orderline.write_date:
                 orders_info[key_order] = orderline.write_date
         totalCount = self.search_count(real_domain)
-        return {'ordersInfo': list(orders_info.items()), 'totalCount': totalCount}
+        return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
     def _export_for_ui(self, order):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
