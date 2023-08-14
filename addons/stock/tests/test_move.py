@@ -348,6 +348,13 @@ class StockMove(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lot2)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 4.0)
         # creation
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+        })
+
         move1 = self.env['stock.move'].create({
             'name': 'test_in_1',
             'location_id': self.stock_location.id,
@@ -355,6 +362,7 @@ class StockMove(TransactionCase):
             'product_id': self.product_serial.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 4.0,
+            'picking_id': picking.id,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1909,6 +1917,13 @@ class StockMove(TransactionCase):
         lines instead of adding quantity in existing one.
         """
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 2.0)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+        })
+
         # move from shelf1
         move = self.env['stock.move'].create({
             'name': 'test_edit_moveline_1',
@@ -1917,6 +1932,7 @@ class StockMove(TransactionCase):
             'product_id': self.product_serial.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 4.0,
+            'picking_id': picking.id,
         })
         move._action_confirm()
         move._action_assign()
