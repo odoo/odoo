@@ -53,7 +53,7 @@ from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import find_in_path, mute_logger
 
 from . import case
 
@@ -726,6 +726,7 @@ class TransactionCase(BaseCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
+    muted_registry_logger = mute_logger(odoo.modules.registry._logger.name)
 
 
     @classmethod
@@ -751,7 +752,8 @@ class TransactionCase(BaseCase):
                     cls.registry.setup_models(cr)
             cls.registry.registry_invalidated = False
             cls.registry.registry_sequence = cls.registry_start_sequence
-            cls.registry.clear_all_caches()
+            with cls.muted_registry_logger:
+                cls.registry.clear_all_caches()
             cls.registry.cache_invalidated.clear()
         cls.addClassCleanup(reset_changes)
 
@@ -772,7 +774,7 @@ class TransactionCase(BaseCase):
         self.addCleanup(envs.update, list(envs))
         self.addCleanup(envs.clear)
 
-        self.addCleanup(self.registry.clear_all_caches)
+        self.addCleanup(self.muted_registry_logger(self.registry.clear_all_caches))
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
