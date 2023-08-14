@@ -1135,8 +1135,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         }])
         self.sync(gevent)
         # User attendee removed but gevent owner might be added after synch.
-        mails = sorted(set(event.attendee_ids.mapped('email')))
-        self.assertEqual(mails, ['odoobot@example.com'])
+        mails = event.attendee_ids.mapped('email')
+        self.assertFalse(mails)
 
         self.assertGoogleAPINotCalled()
 
@@ -1644,4 +1644,44 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         # The stream is not blocking, but there is a duplicate
 
         # Not call API
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_attendee_status_is_not_updated_when_syncing_and_time_data_is_not_changed(self):
+        recurrence_id = "aaaaaaaa"
+        organizer = new_test_user(self.env, login="organizer")
+        other_user = new_test_user(self.env, login='calendar_user')
+        base_event = self.env['calendar.event'].with_user(organizer).create({
+            'name': 'coucou',
+            'start': datetime(2020, 1, 6, 9, 0),
+            'stop': datetime(2020, 1, 6, 10, 0),
+            'need_sync': False,
+            'partner_ids': [Command.set([organizer.partner_id.id, other_user.partner_id.id])]
+        })
+        recurrence = self.env['calendar.recurrence'].with_user(organizer).create({
+            'google_id': recurrence_id,
+            'rrule': 'FREQ=DAILY;INTERVAL=1;COUNT=3',
+            'need_sync': False,
+            'base_event_id': base_event.id,
+        })
+        recurrence._apply_recurrence()
+
+        self.assertTrue(all(len(event.attendee_ids) == 2 for event in recurrence.calendar_event_ids), 'should have 2 attendees in all recurring events')
+        organizer_state = recurrence.calendar_event_ids.sorted('start')[0].attendee_ids.filtered(lambda attendee: attendee.partner_id.email == organizer.partner_id.email).state
+        self.assertEqual(organizer_state, 'accepted', 'organizer should have accepted')
+        values = [{
+            'summary': 'coucou',
+            'id': recurrence_id,
+            'recurrence': ['RRULE:FREQ=DAILY;INTERVAL=1;COUNT=3'],
+            'start': {'dateTime': '2020-01-06T10:00:00+01:00'},
+            'end': {'dateTime': '2020-01-06T11:00:00+01:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': organizer.partner_id.email},
+            'attendees': [{'email': organizer.partner_id.email, 'responseStatus': 'accepted'}, {'email': other_user.partner_id.email, 'responseStatus': 'accepted'}],
+            'updated': self.now,
+        }]
+        self.env['calendar.recurrence'].with_user(other_user)._sync_google2odoo(GoogleEvent(values))
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
+        self.assertEqual(events[0].attendee_ids[0].state, 'accepted', 'after google sync, organizer should have accepted status still')
         self.assertGoogleAPINotCalled()
