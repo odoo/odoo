@@ -27,7 +27,8 @@ class PaymentTransaction(models.Model):
             order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
 
         invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
-        order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
+        if invoice_journal:
+            order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
 
         return order_reference
 
