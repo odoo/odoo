@@ -42,9 +42,10 @@ class ProductConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = request.env['product.template'].browse(product_template_id)
 
+        combination = request.env['product.template.attribute.value']
         if ptav_ids:
-            combination = request.env['product.template.attribute.value'].browse(ptav_ids)
-        else:
+            combination = request.env['product.template.attribute.value'].browse(ptav_ids).filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
+        if not combination:
             combination = product_template._get_first_possible_combination()
 
         return dict(
