@@ -120,8 +120,10 @@ class Meeting(models.Model):
             if stop < start:
                 stop = parse(google_event.end.get('date'))
             values['allday'] = True
-        values['start'] = start
-        values['stop'] = stop
+        if related_event['start'] != start:
+            values['start'] = start
+        if related_event['stop'] != stop:
+            values['stop'] = stop
         return values
 
     @api.model
