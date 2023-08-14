@@ -3,6 +3,35 @@
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
 import { Numpad } from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+
+export function adaptForMobile(steps) {
+    return [
+        {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+        ...[steps].flat(),
+        {
+            content: "go back to the products",
+            trigger: ".pos-rightheader .floor-button",
+            mobile: true,
+        },
+    ];
+}
+
+export function clickLine(productName, quantity = "1.0") {
+    return adaptForMobile([
+        ...Order.hasLine({
+            withoutClass: ".selected",
+            run: "click",
+            productName,
+            quantity,
+        }),
+        ...Order.hasLine({ withClass: ".selected", productName, quantity }),
+    ]);
+}
 class Do {
     clickDisplayedProduct(name) {
         return [
@@ -13,27 +42,9 @@ class Do {
         ];
     }
 
-    clickOrderline(name, quantity = "1.0") {
+    clickOrderline(productName, quantity = "1.0") {
         return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                content: `selecting orderline with product '${name}' and quantity '${quantity}'`,
-                trigger: `.order .orderline:not(:has(.selected)) .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
-            },
-            {
-                content: `orderline with product '${name}' and quantity '${quantity}' has been selected`,
-                trigger: `.order .orderline.selected .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
-                run: () => {},
-            },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
+            ...clickLine(productName, quantity),
             {
                 content: "Check the product page",
                 trigger: ".product-list-container .product-list",
@@ -73,19 +84,7 @@ class Do {
      * @param {...String} keys space-separated numpad keys
      */
     pressNumpad(...keys) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            ...keys.map(Numpad.click),
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile(keys.map(Numpad.click));
     }
 
     clickPayButton(shouldCheck = true) {
@@ -183,12 +182,7 @@ class Do {
         return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
     }
     selectPriceList(name) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
+        return adaptForMobile([
             {
                 content: "click more button",
                 trigger: ".mobile-more-button",
@@ -199,12 +193,7 @@ class Do {
                 content: `select price list '${name}'`,
                 trigger: `.selection-item:contains("${name}")`,
             },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        ]);
     }
     enterOpeningAmount(amount) {
         return [
@@ -309,74 +298,25 @@ class Check {
         ];
     }
     selectedOrderlineHas(name, quantity, price, comboParent) {
-        const res = [
+        return [
+            ...adaptForMobile(
+                Order.hasLine({
+                    withClass: ".selected",
+                    productName: name,
+                    quantity,
+                    price,
+                    comboParent,
+                })
+            ),
             {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                // check first if the order widget is there and has orderlines
-                content: "order widget has orderlines",
-                trigger: ".order .orderlines",
-                run: () => {},
-            },
-            {
-                content: `'${name}' is selected`,
-                trigger: `.order .orderline.selected .product-name:contains("${name}")`,
-                run: function () {}, // it's a check
+                content: "Check the product page",
+                trigger: ".product-list-container .product-list",
+                isCheck: true,
             },
         ];
-        if (quantity) {
-            res.push({
-                content: `selected line has ${quantity} quantity`,
-                trigger: `.order .orderline.selected .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
-                run: function () {}, // it's a check
-            });
-        }
-        if (price) {
-            res.push({
-                content: `selected line has total price of ${price}`,
-                trigger: `.order .orderline.selected .product-name:contains("${name}") ~ .price:contains("${price}")`,
-                run: function () {}, // it's a check
-            });
-        }
-        if (comboParent) {
-            res.push({
-                content: `selected line has ${comboParent} as combo parent`,
-                trigger: `.order .orderline.selected .info-list .combo-parent-name:contains("${comboParent}")`,
-                isCheck: true,
-            });
-        }
-        res.push({
-            content: "go back to the products",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        }, {
-            content: "Check the product page",
-            trigger: ".product-list-container .product-list",
-            isCheck: true,
-        });
-        return res;
     }
     orderIsEmpty() {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                content: `order is empty`,
-                trigger: `.order .order-empty`,
-                run: () => {},
-            },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile(Order.doesNotHaveLine());
     }
 
     productIsDisplayed(name) {
@@ -390,75 +330,19 @@ class Check {
     }
     totalAmountIs(amount) {
         return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                content: `order total amount is '${amount}'`,
-                trigger: `.order-container .order .summary .value:contains("${amount}")`,
-                run: () => {},
-            },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
+            ...adaptForMobile(Order.hasTotal(amount)),
             {
                 content: "Check the product page",
                 trigger: ".product-list-container .product-list",
                 isCheck: true,
-            }
+            },
         ];
     }
     totalTaxIs(amount) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                content: `order total tax is '${amount}'`,
-                trigger: `.summary .subentry .value:contains("${amount}")`,
-                isCheck: true,
-            },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile(Order.hasTax(amount));
     }
     modeIsActive(mode) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            Numpad.isActive(mode),
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
-    }
-    orderlineHasCustomerNote(name, quantity, note) {
-        return [
-            {
-                content: `line has ${quantity} quantity`,
-                trigger: `.order .orderline .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
-                run: function () {}, // it's a check
-            },
-            {
-                content: `line has '${note}' as customer note`,
-                trigger: `.order .orderline .info-list .orderline-note:contains("${note}")`,
-                run: function () {}, // it's a check
-            },
-        ];
+        return adaptForMobile(Numpad.isActive(mode));
     }
     checkSecondCashClosingDetailsLineAmount(amount, sign) {
         return [
@@ -483,22 +367,10 @@ class Check {
         ];
     }
     noDiscountApplied(originalPrice) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                content: "no discount is applied",
-                trigger: `.info:not(:contains(${originalPrice}))`,
-            },
-            {
-                content: "go back to the products",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile({
+            content: "no discount is applied",
+            trigger: `.orderline .info-list:not(:contains(${originalPrice}))`,
+        });
     }
     discountOriginalPriceIs(original_price) {
         return [
@@ -576,11 +448,7 @@ class Execute {
         if (quantity.toString() !== "1") {
             res.push(...numpadWrite(quantity));
         }
-        if (expectedTotal) {
-            res.push(...this._check.selectedOrderlineHas(productName, quantity, expectedTotal));
-        } else {
-            res.push(...this._check.selectedOrderlineHas(productName, quantity));
-        }
+        res.push(...this._check.selectedOrderlineHas(productName, quantity, expectedTotal));
         return res;
     }
     addMultiOrderlines(...list) {

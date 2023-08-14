@@ -4,6 +4,7 @@ import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScre
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
 import { FloorScreen } from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 import { SplitBillScreen } from "@pos_restaurant/../tests/tours/helpers/SplitBillScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
@@ -92,7 +93,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
         Chrome.do.clickTicketButton();
         TicketScreen.do.selectOrder("-0001");
         TicketScreen.do.loadSelectedOrder();
-        ProductScreen.do.clickOrderline("Minute Maid", "1.0");
+        Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" });
         ProductScreen.check.totalAmountIs("2.00");
         return getSteps();
     },
@@ -125,7 +126,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
         // Check if there is still water in the order
         ProductScreen.check.isShown();
-        ProductScreen.do.clickOrderline("Water", "1.0");
+        ProductScreen.check.selectedOrderlineHas("Water", "1.0");
         ProductScreen.do.clickPayButton(true);
         PaymentScreen.do.clickPaymentMethod("Bank");
         PaymentScreen.do.clickValidate();
@@ -184,7 +185,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
         // Check if there is still water in the order
         ...ProductScreen.check.isShown(),
         // now we check that all the lines that remained in the order are correct
-        ...ProductScreen.do.clickOrderline("Minute Maid", "1.0"),
+        ...ProductScreen.check.selectedOrderlineHas("Minute Maid", "1.0"),
         ...ProductScreen.do.clickOrderline("Office Combo"),
         ...ProductScreen.do.clickOrderline("Combo Product 2"),
         ...ProductScreen.check.selectedOrderlineHas(

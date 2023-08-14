@@ -2,15 +2,16 @@
 
 import { Order } from "@point_of_sale/app/store/models";
 
-import { SplitOrderline } from "@pos_restaurant/app/split_bill_screen/split_orderline/split_orderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState } from "@odoo/owl";
+import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
+import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { groupBy } from "@web/core/utils/arrays";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
-    static components = { SplitOrderline };
+    static components = { Orderline, OrderWidget };
 
     setup() {
         this.pos = usePos();
@@ -37,6 +38,13 @@ export class SplitBillScreen extends Component {
             this._splitQuantity(l);
             this._updateNewOrder(l);
         }
+    }
+    getLineData(line) {
+        const splitQty = this.splitlines[line.id].quantity;
+        if (!splitQty) {
+            return line.getDisplayData();
+        }
+        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.get_quantity_str()}` };
     }
     back() {
         this.pos.showScreen("ProductScreen");

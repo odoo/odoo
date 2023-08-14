@@ -5,19 +5,19 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
 /**
-    This component is meant to provide a "batteries included" api for working
-    with inputs. It is well suited to work as a search bar or as a monetary input.
-    Optional props allow handling debouncing, toggling between mobile and desktop views,
-    autofocus, validation, and more.
-    The only required prop is tModel, which is an array that represents the
-    state variable that this component should read and write to. The first
-    element of the array is the object returned by `useState` and second is
-    either a `string` or an `int` representing the key to access the value.
-    ex: normally you would write
-    ```<input t-model="state.userValues[nThValue].searchString"/>```
-    with this component you can write
-    ```<Input tModel="[state.userValues[nThValue], "searchString"]"/>```
-*/
+ *   This component is meant to provide a "batteries included" api for working
+ *   with inputs. It is well suited to work as a search bar or as a monetary input.
+ *   Optional props allow handling debouncing, toggling between mobile and desktop views,
+ *   autofocus, validation, and more.
+ *   The only required prop is tModel, which is an array that represents the
+ *   state variable that this component should read and write to. The first
+ *   element of the array is the object returned by `useState` and second is
+ *   either a `string` or an `int` representing the key to access the value.
+ *   ex: normally you would write
+ *   ```<input t-model="state.userValues[nThValue].searchString"/>```
+ *   with this component you can write
+ *   ```<Input tModel="[state.userValues[nThValue], "searchString"]"/>```
+ */
 export class Input extends Component {
     static template = "point_of_sale.input";
     static props = {

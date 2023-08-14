@@ -13,20 +13,17 @@
                         <h2 class="mb-0">Bill Splitting</h2>
                     </div>
                 </div>
+
                 <div t-if="newOrder" class="main d-flex flex-nowrap flex-grow-1 overflow-hidden">
-                    <div class="lines d-flex flex-shrink-1 flex-grow-1 flex-basis-0 justify-content-center border-end overflow-y-auto ">
-                        <div class="order w-100 h-auto py-2 m-4 border rounded bg-view text-start">
-                            <ul class="orderlines flex-grow-1 h-100 overflow-auto">
-                                <t t-foreach="orderlines" t-as="line" t-key="line.cid">
-                                    <SplitOrderline
-                                        onClickLine.bind="onClickLine"
-                                        line="line"
-                                        split="splitlines[line.id]" />
-                                </t>
-                            </ul>
-                        </div>
+                    <div class="flex-grow-1 mw-50 m-3 bg-view border rounded w-50">
+                        <OrderWidget lines="orderlines" t-slot-scope="scope">
+                            <t t-set="line" t-value="scope.line" />
+                            <Orderline line="getLineData(line)"
+                                t-on-click="() => this.onClickLine(line)"
+                                class="{'selected text-bg-primary': splitlines[line.id].quantity !== 0}" />
+                        </OrderWidget>
                     </div>
-                    <div class="controls d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 flex-basis-0">
+                    <div class="controls border-start flex-column flex-nowrap flex-grow-1 flex-shrink-1 flex-basis-0">
                         <div class="order-info py-4 border-bottom text-center text-success">
                             <span class="subtotal">
                                 <t t-esc="env.utils.formatCurrency(newOrder.get_subtotal())" />

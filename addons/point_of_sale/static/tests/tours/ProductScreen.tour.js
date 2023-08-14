@@ -6,6 +6,7 @@ import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScre
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
@@ -78,11 +79,9 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ProductScreen.do.clickDisplayedProduct("Whiteboard Pen");
         ProductScreen.do.clickDisplayedProduct("Wall Shelf Unit");
         ProductScreen.do.clickOrderline("Whiteboard Pen", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "1.0");
         ProductScreen.do.pressNumpad("2");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "2.0");
         ProductScreen.do.clickOrderline("Wall Shelf Unit", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "1.0");
         ProductScreen.do.pressNumpad("2");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "2.0");
         ProductScreen.do.pressNumpad("⌫");
@@ -101,25 +100,21 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ProductScreen.do.clickDisplayedProduct("Magnetic Board");
         ProductScreen.do.clickDisplayedProduct("Monitor Stand");
         ProductScreen.do.clickOrderline("Whiteboard Pen", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "1.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Whiteboard Pen", "0.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Wall Shelf Unit", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "1.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Wall Shelf Unit", "0.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Small Shelf", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Small Shelf", "1.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Small Shelf", "0.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Monitor Stand", "1.0");
         ProductScreen.do.clickOrderline("Magnetic Board", "1.0");
-        ProductScreen.check.selectedOrderlineHas("Magnetic Board", "1.0");
         ProductScreen.do.pressNumpad("⌫");
         ProductScreen.check.selectedOrderlineHas("Magnetic Board", "0.0");
         ProductScreen.do.pressNumpad("⌫");
@@ -136,7 +131,13 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         TextAreaPopup.check.isShown();
         TextAreaPopup.do.inputText("Test customer note");
         TextAreaPopup.do.clickConfirm();
-        ProductScreen.check.orderlineHasCustomerNote("Desk Organizer", "1", "Test customer note");
+        Order.hasLine({
+            productName: "Desk Organizer",
+            quantity: "1.0",
+            customerNote: "Test customer note",
+            withClass: ".selected",
+        });
+        ProductScreen.check.isShown();
         return getSteps();
     },
 });

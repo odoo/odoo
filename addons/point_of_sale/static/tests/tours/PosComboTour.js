@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             isCheck: true,
         },
         combo.confirm(),
-        ...ProductScreen.do.clickOrderline("Office Combo"),
+        ...ProductScreen.check.selectedOrderlineHas("Office Combo"),
         ...ProductScreen.do.clickOrderline("Combo Product 3"),
         ...ProductScreen.check.selectedOrderlineHas(
             "Combo Product 3",

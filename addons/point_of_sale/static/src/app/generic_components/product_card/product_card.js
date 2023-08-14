@@ -5,7 +5,7 @@ import { Component } from "@odoo/owl";
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
     static props = {
-        class: String,
+        class: { String, optional: true },
         name: String,
         productId: Number,
         price: String,

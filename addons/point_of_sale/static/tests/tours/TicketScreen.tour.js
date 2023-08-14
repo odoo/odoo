@@ -5,6 +5,7 @@ import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScre
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { PartnerListScreen } from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
@@ -125,7 +126,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         TicketScreen.check.filterIs("Paid");
         TicketScreen.do.selectOrder("-0005");
         TicketScreen.check.partnerIs("Colleen Diaz");
-        TicketScreen.do.clickOrderline("Desk Pad");
+        Order.hasLine({ productName: "Desk Pad", withClass: ".selected" });
         ProductScreen.do.pressNumpad("3");
         // Error should show because 2 is more than the number
         // that can be refunded.
@@ -136,7 +137,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         ProductScreen.check.orderIsEmpty();
         ProductScreen.do.clickRefund();
         TicketScreen.do.selectOrder("-0005");
-        TicketScreen.do.clickOrderline("Desk Pad");
+        Order.hasLine({ productName: "Desk Pad", withClass: ".selected" });
         ProductScreen.do.pressNumpad("1");
         TicketScreen.check.toRefundTextContains("To Refund: 1.00");
         TicketScreen.do.confirmRefund();

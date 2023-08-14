@@ -28,8 +28,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
         ProductScreen.check.orderlineIsToOrder("Water");
         ProductScreen.check.orderlineIsToSkip("Coca-Cola");
         ProductScreen.do.clickOrderButton();
-        ProductScreen.check.orderlinesHaveNoChange();
         ProductScreen.check.isPrintingError();
+        ProductScreen.check.orderlinesHaveNoChange();
         ProductScreen.check.totalAmountIs("4.40");
 
         // Create 2nd order (paid)
