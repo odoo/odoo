@@ -80,7 +80,7 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
             if default_data:
                 sim_result.update(default_data)
             # mock enrich only currently, to update further
-            if action == 'enrich':
+            if action == '1/complete/enrich':
                 if sim_error and sim_error == 'credit':
                     raise iap_tools.InsufficientCreditError('InsufficientCreditError')
                 elif sim_error and sim_error == 'jsonrpc_exception':

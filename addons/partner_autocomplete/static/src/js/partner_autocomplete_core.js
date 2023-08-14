@@ -30,9 +30,19 @@ export function usePartnerAutocomplete() {
     async function isVATNumber(value) {
         // Lazyload jsvat only if the component is being used.
         await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-
+        if (value.length >= 7) {
+            var firstTwoChars = value.substring(0, 2).toUpperCase();
+            var lastChars = value.substring(2);
+            var regexVAT = /^(AT|BE|BG|CY|CZ|DE|DK|EE|EL|ES|FI|FR|HR|HU|IE|IT|LT|LU|LV|MT|NL|PL|PT|RO|SE|SI|SK|XI|EU)/;
+            if (regexVAT.test(firstTwoChars)) {
+                var countNumericChars = (lastChars.match(/\d/g) || []).length;
+                if (countNumericChars / lastChars.length >= 0.5) {
+                    return true;
+                }
+            }
+        }
         // checkVATNumber is defined in library jsvat.
-        // It validates that the input has a valid VAT number format
+        // It validates that the input has a valid VAT number format.
         return checkVATNumber(sanitizeVAT(value));
     }
 
