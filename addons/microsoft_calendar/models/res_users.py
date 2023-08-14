@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
 from odoo.addons.microsoft_account.models.microsoft_service import DEFAULT_MICROSOFT_TOKEN_ENDPOINT
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
+from odoo.tools import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -88,9 +89,18 @@ class User(models.Model):
                 error_key)
             raise UserError(error_msg)
 
+    def _get_microsoft_sync_status(self):
+        """ Returns the calendar synchronization status (active, paused or stopped). """
+        status = "sync_active"
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param("microsoft_calendar_sync_paused"), default=False):
+            status = "sync_paused"
+        elif self.microsoft_synchronization_stopped:
+            status = "sync_stopped"
+        return status
+
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        if self.microsoft_synchronization_stopped:
+        if self._get_microsoft_sync_status() != "sync_active":
             return False
         calendar_service = self.env["calendar.event"]._get_microsoft_service()
         full_sync = not bool(self.microsoft_calendar_sync_token)
@@ -138,3 +148,9 @@ class User(models.Model):
         self.microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
+
+    def unpause_microsoft_synchronization(self):
+        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", False)
+
+    def pause_microsoft_synchronization(self):
+        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", True)
