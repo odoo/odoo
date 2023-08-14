@@ -105,7 +105,7 @@ registry
             // Filter should be automatically 'Paid'.
             TicketScreen.check.filterIs('Paid');
             TicketScreen.do.selectOrder('-0001');
-            TicketScreen.do.clickOrderline('Down Payment');
+            TicketScreen.check.hasLine({productName: 'Down Payment', withClass: '.selected', quantity: '1.0'});
             ProductScreen.do.pressNumpad('1');
             TicketScreen.do.confirmRefund();
             ProductScreen.do.clickPayButton();
@@ -150,7 +150,6 @@ registry
             ProductScreen.do.confirmOpeningPopup();
             ProductScreen.do.clickQuotationButton();
             ProductScreen.do.selectFirstOrder();
-            ProductScreen.do.clickOrderline("Product A", "1");
             ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod('Bank');

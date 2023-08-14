@@ -1,6 +1,11 @@
 /** @odoo-module */
 
 import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
+import {
+    adaptForMobile,
+    clickLine,
+} from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 class Do {
     clickNewTicket() {
@@ -130,25 +135,7 @@ class Do {
         ];
     }
     clickOrderline(name) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger: `.ticket-screen .orderline:not(:has(.selected)) .product-name:contains("${name}")`,
-            },
-            {
-                trigger: `.ticket-screen .orderline.selected .product-name:contains("${name}")`,
-                run: () => {},
-            },
-            {
-                content: "go back",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return clickLine(name);
     }
     confirmRefund() {
         return [
@@ -178,6 +165,9 @@ class Check {
                 mobile: true,
             },
         ];
+    }
+    hasLine(options) {
+        return adaptForMobile(Order.hasLine(options));
     }
     /**
      * Check if the nth row contains the given string.
@@ -210,22 +200,7 @@ class Check {
         ];
     }
     orderWidgetIsNotEmpty() {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger: ".ticket-screen:not(:has(.order-empty))",
-                run: () => {},
-            },
-            {
-                content: "go back",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile(Order.hasLine());
     }
     filterIs(name) {
         return [
@@ -244,58 +219,22 @@ class Check {
         ];
     }
     partnerIs(name) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger: `.ticket-screen .set-partner:contains("${name}")`,
-                run: () => {},
-            },
-            {
-                content: "Go back to main TicketScreen when in mobile",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile({
+            trigger: `.ticket-screen .set-partner:contains("${name}")`,
+            isCheck: true,
+        });
     }
     toRefundTextContains(text) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
-                run: () => {},
-            },
-            {
-                content: "Go back to main TicketScreen when in mobile",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile({
+            trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
+            run: () => {},
+        });
     }
     refundedNoteContains(text) {
-        return [
-            {
-                content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
-                mobile: true,
-            },
-            {
-                trigger: `.ticket-screen .refund-note:contains("${text}")`,
-                run: () => {},
-            },
-            {
-                content: "Go back to main TicketScreen when in mobile",
-                trigger: ".pos-rightheader .floor-button",
-                mobile: true,
-            },
-        ];
+        return adaptForMobile({
+            trigger: `.ticket-screen .refund-note:contains("${text}")`,
+            run: () => {},
+        });
     }
     tipContains(amount) {
         return [

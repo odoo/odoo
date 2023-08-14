@@ -34,7 +34,9 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
         ProductScreen.check.orderIsEmpty();
         ProductScreen.do.clickRefund();
         TicketScreen.do.selectOrder("-0001");
-        TicketScreen.do.clickOrderline("Coca-Cola");
+        TicketScreen.check.hasLine({
+            productName: "Coca-Cola",
+        });
         ProductScreen.do.pressNumpad("2");
         TicketScreen.check.toRefundTextContains("To Refund: 2.00");
         TicketScreen.do.confirmRefund();

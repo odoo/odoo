@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.Orderline">
+        <t t-set="line" t-value="props.line" />
+        <li class="orderline w-100 p-2 lh-sm cursor-pointer" t-att-class="props.class">
+            <div class="d-flex justify-content-between">
+                <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                    <span t-esc="line.productName"/>
+                    <t t-slot="product-name"/>
+                </div>
+                <div t-esc="line.price" class="price fw-bolder"/>
+            </div>
+            <ul class="info-list ms-2">
+                <li>
+                    <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" /> 
+                    x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
+                    <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
+                </li>
+                <li t-if="line.discount !== '0'">
+                    With a <em><t t-esc="line.discount" />% </em> discount
+                </li>
+                <li t-if="line.comboParent" class="combo-parent-name">
+                    <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
+                    <t t-esc="line.comboParent" />
+                </li>
+                <t t-slot="default" />
+                <li t-if="line.customerNote" class="customer-note w-50 p-2 my-1 rounded text-bg-warning text-warning bg-opacity-25 text-break">
+                    <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                    <t t-esc="line.customerNote" />
+                </li>
+                <li t-if="line.internalNote" class="internal-note w-50 p-2 my-1 rounded text-bg-info text-info bg-opacity-25 text-break">
+                    <i class="fa fa-tag me-1" role="img" aria-label="Note" title="Note"/>
+                    <t t-esc="line.internalNote" />
+                </li>
+            </ul>
+        </li>
+    </t>
+</templates>

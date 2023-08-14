@@ -22,5 +22,10 @@
                 </button>
             </t>
         </xpath>
+        <xpath expr="//Orderline" position="attributes">
+            <attribute name="t-on-dblclick">
+                () => line.toggleSkipChange()
+            </attribute>
+        </xpath>
     </t>
 </templates>
