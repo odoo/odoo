@@ -1820,8 +1820,6 @@
                                                 </div>
                                             </t>
                                         </t>
-                                        <div class="w-100 mt-4"/>
-                                        <h4 class="mb-3">Address</h4>
                                         <div t-attf-class="mb-2 #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
                                             <label class="col-form-label" for="street">Street and Number *</label>
                                             <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="'street' in checkout and checkout['street']" />
@@ -1893,9 +1891,9 @@
 
                                     <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between mb32 mt16">
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'"
-                                        class="order-3 order-lg-1">
-                                            <i t-if="mode == ('new', 'billing')" class="fw-light fa fa-angle-left me-2"/>
-                                            <t t-out="'Return to cart' if mode == ('new', 'billing') else 'Discard'"/>
+                                        class="btn btn-outline-secondary order-3 order-lg-1">
+                                            <i t-if="mode == ('new', 'billing')" class="fw-light fa fa-long-arrow-left me-2"/>
+                                            Discard
                                         </a>
                                         <div class="position-relative w-100 d-flex d-lg-none justify-content-center align-items-center order-2 my-2 opacity-75">
                                             <hr class="w-100"/>
