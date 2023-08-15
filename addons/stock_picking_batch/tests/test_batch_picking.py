@@ -534,6 +534,33 @@ class TestBatchPicking(TransactionCase):
         self.batch.write({'picking_ids': [[5, 0, 0]]})
         self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
 
+    def test_backorder_on_one_picking(self):
+        """
+        Two pickings. The first only is fully done. The second one is not. The
+        user validates the batch without any backorder. Both pickings should be
+        done and still part of the batch
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 8.0)
+
+        self.batch.action_confirm()
+
+        self.batch.action_assign()
+        self.picking_client_1.move_ids.quantity_done = 10
+        self.picking_client_2.move_ids.quantity_done = 8
+
+        action = self.batch.action_done()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process_cancel_backorder()
+
+        self.assertEqual(self.picking_client_1.state, 'done')
+        self.assertEqual(self.picking_client_2.state, 'done')
+        self.assertEqual(self.batch.picking_ids, self.picking_client_1 | self.picking_client_2)
+        self.assertRecordValues(self.batch.move_ids.sorted('id'), [
+            {'product_id': self.productA.id, 'product_uom_qty': 10.0, 'quantity_done': 10.0, 'state': 'done'},
+            {'product_id': self.productB.id, 'product_uom_qty': 8.0, 'quantity_done': 8.0, 'state': 'done'},
+            {'product_id': self.productB.id, 'product_uom_qty': 2.0, 'quantity_done': 0.0, 'state': 'cancel'},
+        ])
 
 @tagged('-at_install', 'post_install')
 class TestBatchPicking02(TransactionCase):

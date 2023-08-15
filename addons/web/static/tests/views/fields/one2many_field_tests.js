@@ -2510,19 +2510,21 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'", async function (assert) {
-        assert.expect(1);
-        serverData.views = {
-            "turtle,false,form": `
+    QUnit.test(
+        "When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'",
+        async function (assert) {
+            assert.expect(1);
+            serverData.views = {
+                "turtle,false,form": `
                 <form>
                     <h3>Data</h3>
                 </form>`,
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="turtles">
                         <kanban>
@@ -2537,14 +2539,15 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            resId: 1,
-        });
+                resId: 1,
+            });
 
-        // Opening the record to see the footer buttons
-        await click(target.querySelector(".o_kanban_record"));
+            // Opening the record to see the footer buttons
+            await click(target.querySelector(".o_kanban_record"));
 
-        assert.strictEqual(target.querySelector('.o_btn_remove').textContent, 'Delete');
-    });
+            assert.strictEqual(target.querySelector(".o_btn_remove").textContent, "Delete");
+        }
+    );
 
     QUnit.test("open a record in a one2many kanban (mode 'readonly')", async function (assert) {
         serverData.views = {
@@ -2625,6 +2628,51 @@ QUnit.module("Fields", (hooks) => {
             "donatello"
         );
     });
+
+    QUnit.test(
+        "open a record in a one2many kanban (mode 'edit') without access rights",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                <form edit='0'>
+                    <field name="display_name"/>
+                </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <t t-esc="record.display_name.value"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.strictEqual(target.querySelector(".o_kanban_record ").innerText, "donatello");
+
+            await click(target.querySelector(".o_kanban_record"));
+
+            assert.containsOnce(target, ".modal");
+            // There should be no input since it is readonly
+            assert.containsNone(target, ".modal div[name=display_name] input");
+            assert.strictEqual(
+                target.querySelector(".modal div[name=display_name] span").textContent,
+                "donatello"
+            );
+        }
+    );
 
     QUnit.test("add record in a one2many non editable list with context", async function (assert) {
         assert.expect(1);
