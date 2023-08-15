@@ -36,8 +36,8 @@ You accept and agree to the following terms and conditions for Your present and 
 
 
 ```
-Full Name: _________________________________________________
-Email: _____________________________________________________
+Full Name:ahmedou eneha
+Email:21076@supnum.mr
 Telephone: _________________________________________________
 Mailing Address: ___________________________________________
                  ___________________________________________
