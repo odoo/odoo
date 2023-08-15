@@ -516,7 +516,7 @@ export class FloorScreen extends Component {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: `Removing floor ${this.activeFloor.name}`,
                 body: sprintf(
-                    this.env._t("Removing a floor cannot be undone. Do you still wanna remove %s?"),
+                    this.env._t("Removing a floor cannot be undone. Do you still want to remove %s?"),
                     this.activeFloor.name
                 ),
             });
