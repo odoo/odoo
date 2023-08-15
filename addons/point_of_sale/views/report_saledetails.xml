@@ -447,12 +447,12 @@
                     <br/>
                     <t t-if="opening_note" id="opening_note">
                         <strong>Opening of session note:</strong>
-                        <t t-esc="opening_note" />
+                        <p t-esc="opening_note" t-options="{'widget': 'text'}"/>
                     </t>
                     <br/>
                     <t t-if="closing_note" id="closing_note">
                         <strong>End of session note:</strong>
-                        <t t-esc="closing_note" />
+                        <p t-esc="closing_note" t-options="{'widget': 'text'}"/>
                     </t>
                 </div>
             </t>
