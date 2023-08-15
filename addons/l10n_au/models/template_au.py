@@ -12,6 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '5',
             'use_anglo_saxon': True,
             'property_account_receivable_id': 'au_11200',
+            'property_stock_account_production_cost_id': 'au_11350',
             'property_account_payable_id': 'au_21200',
             'property_account_expense_categ_id': 'au_51110',
             'property_account_income_categ_id': 'au_41110',
