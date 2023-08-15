@@ -23,8 +23,6 @@ def requires_auth_token(func):
 class InvalidSyncToken(Exception):
     pass
 
-class InvalidSyncEmail(Exception):
-    pass
 
 class GoogleCalendarService():
 
@@ -52,72 +50,18 @@ class GoogleCalendarService():
             params['singleEvents'] = True
             ## --------------------------------------------------- ##
             status, data, time = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
-            tmp_dict_data = data.copy()
-            tmp_dict_data['items'] = []
-            for res in data.get('items'):
-                if res.get('status'):
-                    if res.get('status') != 'cancelled':
-                        tmp_dict_data['items'].append(res)
-            data = {}
-            data = tmp_dict_data.copy()
         except requests.HTTPError as e:
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content):
                 raise InvalidSyncToken("Invalid sync token. Full sync required")
             raise e
 
-        email_selected = data.get('summary', False)
-        list_items = []
-        for item in data.get('items', []):
-            if 'start' in item:
-                list_items.append(item)
-        sort_list_items = sorted(list_items, key=lambda d: d['start']['dateTime'])
-        if email_selected:
-            if email_selected != self.google_service.env.user.partner_id.email:
-                self.google_service.env.user.sudo().google_calendar_account_id.write({
-                    'calendar_rtoken': None,
-                    'is_valid_email': False
-                })
-                self.google_service.env.cr.commit()
-                raise InvalidSyncEmail("Validation Email for Google Calendar is invalid")
-            else:
-                self.google_service.env.user.sudo().google_calendar_account_id.write({
-                    'is_valid_email': True
-                })
-
         events = data.get('items', [])
         next_page_token = data.get('nextPageToken')
-        is_not_valid_email = False
         while next_page_token:
             params = {'access_token': token, 'pageToken': next_page_token}
             status, data, time = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
-            tmp_dict_data = {}
-            tmp_dict_data = data.copy()
-            tmp_dict_data['items'] = []
-            for res in data.get('items'):
-                if res.get('status'):
-                    if res.get('status') != 'cancelled':
-                        tmp_dict_data['items'].append(res)
-            data = {}
-            data = tmp_dict_data.copy()
             next_page_token = data.get('nextPageToken')
-            email_selected = data.get('summary', False)
-            if email_selected:
-                if email_selected != self.google_service.env.user.partner_id.email:
-                    is_not_valid_email = True
-                    break
             events += data.get('items', [])
-
-        if is_not_valid_email:
-            self.google_service.env.user.sudo().google_calendar_account_id.write({
-                'calendar_rtoken': None,
-                'is_valid_email': False
-            })
-            self.google_service.env.cr.commit()
-            raise InvalidSyncEmail("Validation Email for Google Calendar is invalid")
-        else:
-            self.google_service.env.user.sudo().google_calendar_account_id.write({
-                'is_valid_email': True
-            })
 
         next_sync_token = data.get('nextSyncToken')
         default_reminders = data.get('defaultReminders')
@@ -164,13 +108,14 @@ class GoogleCalendarService():
 
     def _get_calendar_scope(self, RO=False):
         readonly = '.readonly' if RO else ''
-        return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
+        return 'openid email https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def _google_authentication_url(self, from_url='http://www.odoo.com'):
         state = {
             'd': self.google_service.env.cr.dbname,
             's': 'calendar',
-            'f': from_url
+            'f': from_url,
+            'e': self.google_service.env.user.partner_id.email
         }
         base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(

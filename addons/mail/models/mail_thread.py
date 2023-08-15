@@ -1648,13 +1648,14 @@ class MailThread(models.AbstractModel):
             domain = expression.AND([domain, extra_domain])
         partners = self.env['res.users'].sudo().search(domain, order='name ASC').mapped('partner_id')
         # return a search on partner to filter results current user should not see (multi company for example)
-        return self.env['res.partner'].search([('id', 'in', partners.ids)], order='email ASC')
+        return self.env['res.partner'].search([('id', 'in', partners.ids)])
 
     def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
         domain = [('email_normalized', 'in', normalized_emails)]
         if extra_domain:
             domain = expression.AND([domain, extra_domain])
-        return self.env['res.partner'].search(domain, order='email ASC')
+        return self.env['res.partner'].search(domain)
+        # return self.env['res.partner'].search(domain, order='email ASC')
 
     def _mail_find_user_for_gateway(self, email, alias=None):
         """ Utility method to find user from email address that can create documents

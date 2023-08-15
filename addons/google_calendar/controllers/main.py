@@ -4,6 +4,10 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_account.controllers.main import GoogleAuth
+import json
+import requests
+from werkzeug.exceptions import BadRequest
 
 
 class GoogleCalendarController(http.Controller):
@@ -45,7 +49,7 @@ class GoogleCalendarController(http.Controller):
             need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
 
             # If synchronization has been stopped
-            if not need_refresh and (request.env.user.google_synchronization_stopped or not request.env.user.sudo().google_calendar_account_id.is_valid_email):
+            if not need_refresh and request.env.user.google_synchronization_stopped:
                 return {
                     "status": "sync_stopped",
                     "url": ''
@@ -56,3 +60,50 @@ class GoogleCalendarController(http.Controller):
             }
 
         return {"status": "success"}
+
+
+class GoogleCalendarAuth(GoogleAuth):
+
+    @http.route('/google_account/authentication', type='http', auth="public")
+    def oauth2callback(self, **kw):
+        """ This route/function is called by Google when user Accept/Refuse the consent of Google """
+        state = json.loads(kw.get('state', '{}'))
+        service = state.get('s')
+        url_return = state.get('f')
+        if (not service or (kw.get('code') and not url_return)):
+            raise BadRequest()
+
+        if kw.get('code'):
+            base_url = request.httprequest.url_root.strip('/') or request.env.user.get_base_url()
+            access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(
+                kw['code'],
+                service,
+                redirect_uri=f'{base_url}/google_account/authentication'
+            )
+            if service == 'calendar' and access_token:
+                try:
+                    resp_token = requests.request(
+                        method='POST',
+                        url='https://www.googleapis.com/oauth2/v3/userinfo',
+                        params={
+                            'access_token': access_token
+                        }).json()
+                    email = resp_token.get('email')
+                    if not email:
+                        return request.redirect("%s%s%s" % (url_return, "?error=", 'Email Google not Found'))
+                    if email != state.get('e'):
+                        return request.redirect(
+                            "%s%s%s" % (url_return, "?error=", 'Email is not Valid for Sync Google Calendar'))
+                except Exception as e:
+                    return request.redirect(
+                        "%s%s%s" % (url_return, "?error=", 'Failed to Get Google Token -> %s' % str(e)))
+            service_field = f'google_{service}_account_id'
+            if service_field in request.env.user:
+                getattr(request.env.user, service_field)._set_auth_tokens(access_token, refresh_token, ttl)
+            else:
+                raise Warning('No callback field for service <%s>' % service)
+            return request.redirect(url_return)
+        elif kw.get('error'):
+            return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
+        else:
+            return request.redirect("%s%s" % (url_return, "?error=Unknown_error"))
