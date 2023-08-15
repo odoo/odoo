@@ -100,6 +100,7 @@ class PosGlobalState extends PosModel {
         this.user = null;
         this.partners = [];
         this.students = [];
+        this.uploaded_files = []
         this.taxes = [];
         this.pos_session = null;
         this.config = null;
@@ -194,6 +195,7 @@ class PosGlobalState extends PosModel {
         this.bills = loadedData['pos.bill'];
         this.partners = loadedData['res.partner'];
         this.students = loadedData['op.student'];
+        this.uploaded_files = loadedData['file.uploader']
         this.addPartners(this.partners);
         this.picking_type = loadedData['stock.picking.type'];
         this.user = loadedData['res.users'];

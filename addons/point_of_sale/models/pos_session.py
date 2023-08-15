@@ -1653,6 +1653,7 @@ class PosSession(models.Model):
             'pos.payment.method',
             'account.fiscal.position',
             'op.student',
+            'file.uploader',
         ]
 
         return models_to_load
@@ -1830,6 +1831,19 @@ class PosSession(models.Model):
 
     def _get_pos_ui_op_student(self, params):
         return self.env['op.student'].search_read(**params['search_params'])
+
+    def _loader_params_file_uploader(self):
+        return {
+            'search_params': {
+                'domain': [],
+                'fields': [
+                    'destination', 'attachment_id',
+                ],
+            },
+        }
+
+    def _get_pos_ui_file_uploader(self, params):
+        return self.env['file.uploader'].search_read(**params['search_params'])
 
     def _loader_params_stock_picking_type(self):
         return {
