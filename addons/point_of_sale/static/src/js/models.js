@@ -195,7 +195,7 @@ class PosGlobalState extends PosModel {
         this.bills = loadedData['pos.bill'];
         this.partners = loadedData['res.partner'];
         this.students = loadedData['op.student'];
-        this.uploaded_files = loadedData['file.uploader']
+        this.uploaded_files = loadedData['pos.file.uploader']
         this.addPartners(this.partners);
         this.picking_type = loadedData['stock.picking.type'];
         this.user = loadedData['res.users'];
