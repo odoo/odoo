@@ -452,7 +452,8 @@
                         </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
-                                <div class="o_project_kanban_main ">
+                                <div class="o_project_kanban_main d-flex align-items-baseline gap-1">
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1"/>
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
@@ -485,9 +486,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <span>
-                                       <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" />
-                                    </span>
                                 </div>
                                 <div class="o_kanban_record_bottom mt-3">
                                     <div class="oe_kanban_bottom_left">
