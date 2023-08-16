@@ -9,7 +9,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="is_published" invisible="1"/>
                 <field name="main_currency_id" invisible="1"/>
-                <field name="support_fees" invisible="1"/>
                 <field name="support_manual_capture" invisible="1"/>
                 <field name="support_tokenization" invisible="1"/>
                 <field name="support_express_checkout" invisible="1"/>
@@ -106,23 +105,6 @@
                                            options="{'no_create': True}"/>
                                 </group>
                                 <group string="Payment Followup" name="payment_followup" invisible="1"/>
-                            </group>
-                        </page>
-                        <page string="Fees" name="fees" invisible="not support_fees">
-                            <group name="payment_fees">
-                                <group class="oe_inline">
-                                    <field name="fees_active"/>
-                                    <field name="fees_dom_fixed"
-                                           invisible="not fees_active"/>
-                                    <field name="fees_dom_var"
-                                           widget="percentage"
-                                           invisible="not fees_active"/>
-                                    <field name="fees_int_fixed"
-                                           invisible="not fees_active"/>
-                                    <field name="fees_int_var"
-                                           widget="percentage"
-                                           invisible="not fees_active"/>
-                                </group>
                             </group>
                         </page>
                         <page string="Messages"

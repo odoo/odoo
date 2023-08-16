@@ -55,7 +55,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             'partner': self.alipay.alipay_merchant_partner_id,
             'return_url': self._build_url(AlipayController._return_url),
             'subject': self.reference,
-            'total_fee': str(self.amount),  # Fees disabled by default
+            'total_fee': str(self.amount),
         }
 
         if self.alipay.alipay_payment_method == 'standard_checkout':
@@ -90,35 +90,6 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             redirect_form_data['inputs'],
             "Alipay: invalid inputs specified in the redirect form.",
         )
-
-    def test_03_redirect_form_with_fees(self):
-        # update provider: compute fees
-        self.alipay.write({
-            'fees_active': True,
-            'fees_dom_fixed': 1.0,
-            'fees_dom_var': 0.0035,
-            'fees_int_fixed': 1.5,
-            'fees_int_var': 0.005,
-        })
-
-        transaction_fees = self.currency.round(
-            self.alipay._compute_fees(
-                self.amount,
-                self.currency,
-                self.partner.country_id,
-            )
-        )
-        self.assertEqual(transaction_fees, 18.78)
-        total_fee = self.currency.round(self.amount + transaction_fees)
-        self.assertEqual(total_fee, 1129.89)
-
-        tx = self._create_transaction(flow='redirect')
-        self.assertEqual(tx.fees, 18.78)
-        with mute_logger('odoo.addons.payment.models.payment_transaction'):
-            processing_values = tx._get_processing_values()
-        redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
-
-        self.assertEqual(redirect_form_data['inputs']['total_fee'], f'{total_fee:.2f}')
 
     def test_21_standard_checkout_feedback(self):
         self.alipay.alipay_payment_method = 'standard_checkout'

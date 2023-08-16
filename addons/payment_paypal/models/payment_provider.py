@@ -24,15 +24,6 @@ class PaymentProvider(models.Model):
     )
     paypal_pdt_token = fields.Char(string="PDT Identity Token", groups='base.group_system')
 
-    #=== COMPUTE METHODS ===#
-
-    def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
-        super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'paypal').update({
-            'support_fees': True,
-        })
-
     #=== BUSINESS METHODS ===#
 
     def _get_supported_currencies(self):

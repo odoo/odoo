@@ -28,7 +28,6 @@
                             <field name="source_transaction_id"
                                    invisible="not source_transaction_id"/>
                             <field name="amount"/>
-                            <field name="fees" invisible="fees == 0.0"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="provider_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -78,7 +77,6 @@
                 <!-- Needed to display the currency of the amounts -->
                 <field name="currency_id" column_invisible="True"/>
                 <field name="amount"/>
-                <field name="fees"/>
                 <field name="state"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
