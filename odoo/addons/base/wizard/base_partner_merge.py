@@ -218,6 +218,9 @@ class MergePartnerAutomatic(models.TransientModel):
                 # unknown model or field => skip
                 continue
 
+            if Model._abstract:
+                continue
+
             if field.compute is not None:
                 continue
 
