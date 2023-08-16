@@ -347,6 +347,8 @@ export function getBasicData() {
                     store: true,
                     sortable: true,
                     searchable: true,
+                    definition_record: "product_id",
+                    definition_record_field: "properties_definitions",
                 },
                 jsonField: {
                     string: "Json Field",
@@ -413,6 +415,7 @@ export function getBasicData() {
             fields: {
                 name: { string: "Product Name", type: "char" },
                 active: { string: "Active", type: "bool", default: true },
+                properties_definitions: { type: "properties_definitions" },
             },
             records: [
                 {
