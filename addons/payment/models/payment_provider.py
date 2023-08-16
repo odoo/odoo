@@ -123,17 +123,6 @@ class PaymentProvider(models.Model):
         currency_field='main_currency_id',
     )
 
-    # Fees fields
-    fees_active = fields.Boolean(string="Add Extra Fees")
-    fees_dom_fixed = fields.Monetary(
-        string="Fixed domestic fees", currency_field='main_currency_id'
-    )
-    fees_dom_var = fields.Float(string="Variable domestic fees")
-    fees_int_fixed = fields.Monetary(
-        string="Fixed international fees", currency_field='main_currency_id'
-    )
-    fees_int_var = fields.Float(string="Variable international fees")
-
     # Message fields
     display_as = fields.Char(
         string="Displayed as", help="Description of the provider for customers",
@@ -176,9 +165,6 @@ class PaymentProvider(models.Model):
         string="Type of Refund Supported",
         selection=[('full_only', "Full Only"), ('partial', "Partial")],
         compute='_compute_feature_support_fields',
-    )
-    support_fees = fields.Boolean(
-        string="Fees Supported", compute='_compute_feature_support_fields'
     )
 
     # Kanban view fields
@@ -286,7 +272,6 @@ class PaymentProvider(models.Model):
 
         - `support_express_checkout`: Whether the "express checkout" feature is supported. `False`
           by default.
-        - `support_fees`: Whether the "extra fees" feature is supported. `False` by default.
         - `support_manual_capture`: Whether the "manual capture" feature is supported. `False` by
           default.
         - `support_refund`: Which type of the "refunds" feature is supported: `None`,
@@ -302,7 +287,6 @@ class PaymentProvider(models.Model):
         """
         self.update(dict.fromkeys((
             'support_express_checkout',
-            'support_fees',
             'support_manual_capture',
             'support_refund',
             'support_tokenization',
@@ -342,21 +326,6 @@ class PaymentProvider(models.Model):
                         )
                     }
                 }
-
-    #=== CONSTRAINT METHODS ===#
-
-    @api.constrains('fees_dom_var', 'fees_int_var')
-    def _check_fee_var_within_boundaries(self):
-        """ Check that variable fees are within realistic boundaries.
-
-        Variable fee values should always be positive and below 100% to respectively avoid negative
-        and infinite (division by zero) fee amounts.
-
-        :return None
-        """
-        for provider in self:
-            if any(not 0 <= fee < 1 for fee in (provider.fees_dom_var, provider.fees_int_var)):
-                raise ValidationError(_("Variable fees must always be positive and below 100%."))
 
     #=== CRUD METHODS ===#
 
@@ -572,40 +541,6 @@ class PaymentProvider(models.Model):
         :rtype: bool
         """
         return True
-
-    def _compute_fees(self, amount, currency, country):
-        """ Compute the transaction fees.
-
-        The computation is based on the fields `fees_dom_fixed`, `fees_dom_var`, `fees_int_fixed`
-        and `fees_int_var`, and is performed with the formula
-        :code:`fees = (amount * variable + fixed) / (1 - variable)` where the values of `fixed` and
-        `variable` are taken from either the domestic (`dom`) or international (`int`) fields,
-        depending on whether the country matches the company's country.
-
-        For a provider to base the computation on different variables, or to use a different
-        formula, it must override this method and return the resulting fees.
-
-        :param float amount: The amount to pay for the transaction.
-        :param recordset currency: The currency of the transaction, as a `res.currency` record.
-        :param recordset country: The customer country, as a `res.country` record.
-        :return: The computed fees.
-        :rtype: float
-        """
-        self.ensure_one()
-
-        fees = 0.0
-        if self.fees_active:
-            if country == self.company_id.country_id:
-                fixed = self.fees_dom_fixed
-                variable = self.fees_dom_var
-            else:
-                fixed = self.fees_int_fixed
-                variable = self.fees_int_var
-            fixed_converted = self.main_currency_id._convert(
-                fixed, currency, self.company_id, fields.Date.context_today(self)
-            )
-            fees = (amount * variable + fixed_converted) / (1 - variable)
-        return fees
 
     def _get_validation_amount(self):
         """ Return the amount to use for validation operations.

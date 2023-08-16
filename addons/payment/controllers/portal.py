@@ -119,12 +119,6 @@ class PaymentPortal(portal.CustomerPortal):
         # Make sure that the partner's company matches the company passed as parameter.
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
 
-        # Compute the fees taken by providers supporting the feature
-        fees_by_provider = {
-            provider_sudo: provider_sudo._compute_fees(amount, currency, partner_sudo.country_id)
-            for provider_sudo in providers_sudo.filtered('fees_active')
-        }
-
         # Generate a new access token in case the partner id or the currency id was updated
         access_token = payment_utils.generate_access_token(partner_sudo.id, amount, currency.id)
 
@@ -136,7 +130,6 @@ class PaymentPortal(portal.CustomerPortal):
         payment_form_values = {
             'providers': providers_sudo,
             'tokens': tokens_sudo,
-            'fees_by_provider': fees_by_provider,
             'show_tokenize_input': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
