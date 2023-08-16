@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, ReadonlyDict
 import logging
 from typing import Iterator, Mapping
 from collections import abc
@@ -24,14 +24,15 @@ class GoogleEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) ->  Iterator['GoogleEvent']:
         return iter(GoogleEvent([vals]) for vals in self._events.values())

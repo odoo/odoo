@@ -302,3 +302,12 @@ class TestMicrosoftEvent(TestCommon):
 
         self.assertNotIn(self.simple_event, synced_events)
         self.assertIn(self.simple_event, not_synced_events)
+
+    def test_microsoft_event_readonly(self):
+        event = MicrosoftEvent()
+        with self.assertRaises(TypeError):
+            event._events['foo'] = 'bar'
+        with self.assertRaises(AttributeError):
+            event._events.update({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            dict.update(event._events, {'foo': 'bar'})
