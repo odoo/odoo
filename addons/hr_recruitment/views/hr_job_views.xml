@@ -73,19 +73,19 @@
                     </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                            <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header d-flex align-items-baseline gap-1">
+                                <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                 <div class="o_kanban_card_header_title">
-                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                    <div class="o_primary ps-3">
+                                    <div class="o_primary">
                                         <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
                                     </div>
-                                    <div class="ps-3 text-muted">
+                                    <div class="text-muted">
                                         <field name="user_id" />
                                     </div>
-                                    <div class="ps-3 o_secondary" groups="base.group_multi_company">
+                                    <div class="o_secondary" groups="base.group_multi_company">
                                         <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/></small>
                                     </div>
-                                    <div t-if="record.alias_email.value" class="ps-3 o_secondary o_job_alias">
+                                    <div t-if="record.alias_email.value" class="o_secondary o_job_alias">
                                         <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                                     </div>
                                 </div>

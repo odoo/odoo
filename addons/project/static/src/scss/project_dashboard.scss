@@ -22,7 +22,6 @@
 
             &:first-child {
                  margin: 0 5px 0 0;
-                 padding-left: 12px
              }
 
             .o_value {
@@ -54,15 +53,6 @@
     @include media-breakpoint-down(md) {
         .o_view_nocontent {
             top: 15%;
-        }
-    }
-
-    .o_kanban_record {
-        div[name="is_favorite"] .fa-star-o {
-            visibility: hidden;
-        }
-        &:hover div[name="is_favorite"] .fa-star-o {
-            visibility: visible;
         }
     }
 }
