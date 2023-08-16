@@ -2905,7 +2905,7 @@ export class Wysiwyg extends Component {
 
     _hasICEServers() {
         // Hack: check if mail module is installed.
-        session.notification_type
+        return session.notification_type;
     }
 
     /**
