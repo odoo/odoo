@@ -60,23 +60,6 @@ export class TimeOffCalendarController extends CalendarController {
         });
     }
 
-    newAllocationRequest() {
-        const context = {
-            'form_view_ref': 'hr_holidays.hr_leave_allocation_view_form_dashboard',
-        };
-        if (this.employeeId) {
-            context['default_employee_id'] = this.employeeId;
-            context['default_employee_ids'] = [this.employeeId];
-            context['form_view_ref'] = 'hr_holidays.hr_leave_allocation_view_form_manager_dashboard';
-        }
-
-        this.displayDialog(FormViewDialog, {
-            resModel: 'hr.leave.allocation',
-            title: _t('New Allocation'),
-            context: context,
-        });
-    }
-
     deleteRecord(record) {
         if (!record.data.can_cancel) {
             this.displayDialog(ConfirmationDialog, {
