@@ -194,7 +194,7 @@
                         </div>
                     </div>
                     <field name="assignment_domain" widget="domain" string="Domain"
-                        options="{'model': 'crm.lead', 'in_dialog': True}"
+                        options="{'foldable': True, 'model': 'crm.lead', 'in_dialog': True}"
                         invisible="not assignment_enabled"/>
                     <field name="assignment_optout" invisible="not assignment_auto_enabled"/>
                 </xpath>
