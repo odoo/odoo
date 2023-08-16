@@ -68,6 +68,7 @@ export async function freezeOdooData(model) {
         for (const figure of sheet.figures) {
             if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
                 await loadJS("/web/static/lib/Chart/Chart.js");
+                await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
                 const img = odooChartToImage(model, figure);
                 figure.tag = "image";
                 figure.data = {

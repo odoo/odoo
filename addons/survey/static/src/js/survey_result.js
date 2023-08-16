@@ -77,6 +77,7 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
 publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
+        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
     ],
 
     //--------------------------------------------------------------------------
@@ -146,24 +147,33 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             },
             options: {
                 scales: {
-                    xAxes: [{
+                    x: {
                         ticks: {
-                            callback: this._customTick(25),
+                            callback: function (val, index) {
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                const value = this.getLabelForValue(val);
+                                const tickLimit = 25;
+                                return value?.length > tickLimit
+                                    ? `${value.slice(0, tickLimit)}...`
+                                    : value;
+                            },
                         },
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         ticks: {
-                            beginAtZero: true,
                             precision: 0,
                         },
-                    }],
+                        beginAtZero: true,
+                    },
                 },
-                tooltips: {
-                    callbacks: {
-                        title: function (tooltipItem, data) {
-                            return data.labels[tooltipItem[0].index];
-                        }
-                    }
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function (tooltipItem) {
+                                return tooltipItem.label;
+                            },
+                        },
+                    },
                 },
             },
         };
@@ -193,25 +203,34 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 })
             },
             options: {
-                legend: {
-                    display: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
                         ticks: {
-                            callback: this._customTick(35),
+                            callback: function (val, index) {
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                const value = this.getLabelForValue(val);
+                                const tickLimit = 35;
+                                return value?.length > tickLimit
+                                    ? `${value.slice(0, tickLimit)}...`
+                                    : value;
+                            },
                         },
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         ticks: {
-                            beginAtZero: true,
                             precision: 0,
                         },
-                    }],
+                        beginAtZero: true,
+                    },
                 },
-                tooltips: {
-                    enabled: false,
-                }
             },
         };
     },
@@ -237,7 +256,10 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         return D3_COLORS[index % 20];
                     }),
                 }]
-            }
+            },
+            options: {
+                aspectRatio: 2,
+            },
         };
     },
 
@@ -261,10 +283,13 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 }]
             },
             options: {
-                title: {
-                    display: true,
-                    text: _t("Overall Performance"),
+                plugins: {
+                    title: {
+                        display: true,
+                        text: _t("Overall Performance"),
+                    },
                 },
+                aspectRatio: 2,
             }
         };
     },
@@ -325,62 +350,55 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 datasets: datasets
             },
             options: {
-                title: {
-                    display: true,
-                    text: _t("Performance by Section"),
-                },
-                legend: {
-                    display: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: _t("Performance by Section"),
+                    },
+                    legend: {
+                        display: true,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (tooltipItem) => {
+                                const xLabel = tooltipItem.label;
+                                var roundedValue = Math.round(tooltipItem.parsed.y * 100) / 100;
+                                return `${xLabel}: ${roundedValue}%`;
+                            },
+                        },
+                    },
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
                         ticks: {
-                            callback: this._customTick(20),
+                            callback: function (val, index) {
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                const value = this.getLabelForValue(val);
+                                const tickLimit = 20;
+                                return value?.length > tickLimit
+                                    ? `${value.slice(0, tickLimit)}...`
+                                    : value;
+                            },
                         },
-                    }],
-                    yAxes: [{
+                    },
+                    y: {
                         gridLines: {
                             display: false,
                         },
                         ticks: {
-                            beginAtZero: true,
                             precision: 0,
                             callback: function (label) {
                                 return label + '%';
                             },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
                             maxTicksLimit: 5,
                             stepSize: 25,
                         },
-                    }],
+                        beginAtZero: true,
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                    },
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                            var roundedValue = Math.round(tooltipItem.yLabel * 100) / 100;
-                            return `${datasetLabel}: ${roundedValue}%`;
-                        }
-                    }
-                }
             },
-        };
-    },
-
-    /**
-     * Custom Tick function to replace overflowing text with '...'
-     *
-     * @private
-     * @param {Integer} tickLimit
-     */
-    _customTick: function (tickLimit) {
-        return function (label) {
-            if (label.length <= tickLimit) {
-                return label;
-            } else {
-                return label.slice(0, tickLimit) + '...';
-            }
         };
     },
 

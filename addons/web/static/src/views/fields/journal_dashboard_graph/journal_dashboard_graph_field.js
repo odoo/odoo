@@ -48,11 +48,6 @@ export class JournalDashboardGraphField extends Component {
             config = this.getBarChartConfig();
         }
         this.chart = new Chart(this.canvasRef.el, config);
-        // To perform its animations, ChartJS will perform each animation
-        // step in the next animation frame. The initial rendering itself
-        // is delayed for consistency. We can avoid this by manually
-        // advancing the animation service.
-        Chart.animationService.advance();
     }
     getLineChartConfig() {
         const labels = this.data[0].values.map(function (pt) {
@@ -79,21 +74,27 @@ export class JournalDashboardGraphField extends Component {
                 ],
             },
             options: {
-                legend: { display: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        intersect: false,
+                        position: "nearest",
+                        caretSize: 0,
+                    },
+                },
                 scales: {
-                    yAxes: [{ display: false }],
-                    xAxes: [{ display: false }],
+                    y: {
+                        display: false,
+                    },
+                    x: {
+                        display: false,
+                    },
                 },
                 maintainAspectRatio: false,
                 elements: {
                     line: {
                         tension: 0.000001,
                     },
-                },
-                tooltips: {
-                    intersect: false,
-                    position: "nearest",
-                    caretSize: 0,
                 },
             },
         };
@@ -131,16 +132,20 @@ export class JournalDashboardGraphField extends Component {
                 ],
             },
             options: {
-                legend: { display: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        intersect: false,
+                        position: "nearest",
+                        caretSize: 0,
+                    },
+                },
                 scales: {
-                    yAxes: [{ display: false }],
+                    y: {
+                        display: false,
+                    },
                 },
                 maintainAspectRatio: false,
-                tooltips: {
-                    intersect: false,
-                    position: "nearest",
-                    caretSize: 0,
-                },
                 elements: {
                     line: {
                         tension: 0.000001,

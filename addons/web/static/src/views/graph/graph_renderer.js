@@ -57,7 +57,10 @@ export class GraphRenderer extends Component {
         this.tooltip = null;
         this.legendTooltip = null;
 
-        onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
+        onWillStart(async () => {
+            await loadJS("/web/static/lib/Chart/Chart.js");
+            await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
+        });
 
         useEffect(() => this.renderChart());
         onWillUnmount(this.onWillUnmount);
@@ -103,9 +106,10 @@ export class GraphRenderer extends Component {
      * Creates a custom HTML tooltip.
      * @param {Object} data
      * @param {Object} metaData
-     * @param {Object} tooltipModel see chartjs documentation
+     * @param {Object} context see chartjs documentation
      */
-    customTooltip(data, metaData, tooltipModel) {
+    customTooltip(data, metaData, context) {
+        const tooltipModel = context.tooltip;
         const { measure, measures, disableLinking, mode } = metaData;
         this.rootRef.el.style.cursor = "";
         this.removeTooltips();
@@ -185,7 +189,7 @@ export class GraphRenderer extends Component {
     }
 
     /**
-     * Used to format correctly the values in tooltips and yAxes.
+     * Used to format correctly the values in tooltip and y.
      * @param {number} value
      * @param {boolean} [allIntegers=true]
      * @returns {string}
@@ -275,7 +279,7 @@ export class GraphRenderer extends Component {
         const { mode, stacked } = this.model.metaData;
         const elementOptions = {};
         if (mode === "bar") {
-            elementOptions.rectangle = { borderWidth: 1 };
+            elementOptions.bar = { borderWidth: 1 };
         } else if (mode === "line") {
             elementOptions.line = { fill: stacked, tension: 0 };
         }
@@ -453,6 +457,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getScaleOptions() {
+        const labels = this.model.data.labels;
         const { allIntegers, fields, groupBy, measure, measures, mode, stacked } =
             this.model.metaData;
         if (mode === "pie") {
@@ -460,25 +465,30 @@ export class GraphRenderer extends Component {
         }
         const xAxe = {
             type: "category",
-            scaleLabel: {
+            title: {
                 display: Boolean(groupBy.length),
-                labelString: groupBy.length ? fields[groupBy[0].fieldName].string : "",
+                text: groupBy.length ? fields[groupBy[0].fieldName].string : "",
             },
-            ticks: { callback: (value) => shortenLabel(value) },
+            ticks: {
+                callback: (val, index) => {
+                    const value = labels[index];
+                    return shortenLabel(value);
+                },
+            },
         };
         const yAxe = {
             type: "linear",
-            scaleLabel: {
-                labelString: measures[measure].string,
+            title: {
+                text: measures[measure].string,
             },
             ticks: {
                 callback: (value) => this.formatValue(value, allIntegers),
-                suggestedMax: 0,
-                suggestedMin: 0,
             },
+            suggestedMax: 0,
+            suggestedMin: 0,
             stacked: mode === "line" && stacked ? stacked : undefined,
         };
-        return { xAxes: [xAxe], yAxes: [yAxe] };
+        return { x: xAxe, y: yAxe };
     }
 
     /**
@@ -496,7 +506,7 @@ export class GraphRenderer extends Component {
         const sortedDataPoints = sortBy(tooltipModel.dataPoints, "yLabel", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
-            const index = item.index;
+            const index = item.dataIndex;
             // If `datasetIndex` is not found in the `datasets`, then it refers to the `lineOverlayDataset`.
             const dataset = data.datasets[item.datasetIndex] || this.model.lineOverlayDataset;
             let label = dataset.trueLabels[index];
@@ -512,7 +522,7 @@ export class GraphRenderer extends Component {
                 }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);
-                percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
+                percentage = totalData && ((dataset.data[index] * 100) / totalData).toFixed(2);
             } else {
                 if (groupBy.length > 1 || domains.length > 1) {
                     label = `${label} / ${dataset.label}`;
@@ -533,7 +543,7 @@ export class GraphRenderer extends Component {
         const { mode } = metaData;
         const tooltipOptions = {
             enabled: false,
-            custom: this.customTooltip.bind(this, data, metaData),
+            external: this.customTooltip.bind(this, data, metaData),
         };
         if (mode === "line") {
             tooltipOptions.mode = "index";
@@ -547,14 +557,19 @@ export class GraphRenderer extends Component {
      * @param {MouseEvent} ev
      */
     onGraphClicked(ev) {
-        const [activeElement] = this.chart.getElementAtEvent(ev);
+        const [activeElement] = this.chart.getElementsAtEventForMode(
+            ev,
+            "nearest",
+            { intersect: true },
+            false
+        );
         if (!activeElement) {
             return;
         }
-        const { _datasetIndex, _index } = activeElement;
-        const { domains } = this.chart.data.datasets[_datasetIndex];
+        const { datasetIndex, index } = activeElement;
+        const { domains } = this.chart.data.datasets[datasetIndex];
         if (domains) {
-            this.onGraphClickedFinal(domains[_index]);
+            this.onGraphClickedFinal(domains[index]);
         }
     }
 
@@ -623,8 +638,10 @@ export class GraphRenderer extends Component {
         const options = {
             maintainAspectRatio: false,
             scales: this.getScaleOptions(),
-            legend: this.getLegendOptions(),
-            tooltips: this.getTooltipOptions(),
+            plugins: {
+                legend: this.getLegendOptions(),
+                tooltip: this.getTooltipOptions(),
+            },
             elements: this.getElementOptions(),
         };
         if (!disableLinking && mode !== "line") {
@@ -664,11 +681,6 @@ export class GraphRenderer extends Component {
         }
         const config = this.getChartConfig();
         this.chart = new Chart(this.canvasRef.el, config);
-        // To perform its animations, ChartJS will perform each animation
-        // step in the next animation frame. The initial rendering itself
-        // is delayed for consistency. We can avoid this by manually
-        // advancing the animation service.
-        Chart.animationService.advance();
     }
 
     /**
