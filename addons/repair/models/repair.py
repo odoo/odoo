@@ -94,29 +94,33 @@ class Repair(models.Model):
         compute='_compute_picking_type_id', store=True,
         default=_default_picking_type_id,
         domain="[('code', '=', 'repair_operation'), ('company_id', '=', company_id)]",
-        required=True, check_company=True, index=True)
+        required=True, precompute=True, check_company=True, index=True)
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False)
     location_id = fields.Many2one(
         'stock.location', 'Product to Repair Source & Destination Location',
-        compute="_compute_location_ids", store=True,
-        index=True, readonly=False, check_company=True, required=True,
+        compute="_compute_location_id",
+        store=True, readonly=False, required=True, precompute=True,
+        index=True, check_company=True,
         help="This is the location where the product to repair is located.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Added Parts Destination Location',
-        compute="_compute_location_ids", store=True,
-        index=True, readonly=True, check_company=True, required=True,
+        related="picking_type_id.default_location_dest_id", depends=["picking_type_id"],
+        store=True, readonly=True, required=True, precompute=True,
+        index=True, check_company=True,
         help="This is the location where the repaired product is located.")
     parts_location_id = fields.Many2one(
         'stock.location', 'Removed Parts Destination Location',
-        compute="_compute_location_ids", store=True,
-        index=True, readonly=True, check_company=True, required=True,
+        related="picking_type_id.default_remove_location_dest_id", depends=["picking_type_id"],
+        store=True, readonly=True, required=True, precompute=True,
+        index=True, check_company=True,
         help="This is the location where the repair parts are located.")
     recycle_location_id = fields.Many2one(
         'stock.location', 'Recycled Parts Destination Location',
-        compute="_compute_location_ids", store=True,
-        index=True, readonly=False, check_company=True, required=True,
+        compute="_compute_recycle_location_id",
+        store=True, readonly=False, required=True, precompute=True,
+        index=True, check_company=True,
         help="This is the location where the repair parts are located.")
 
     # Parts
@@ -190,9 +194,14 @@ class Repair(models.Model):
                 picking_type_by_company.get((ro.company_id, False))
 
     @api.depends('picking_type_id')
-    def _compute_location_ids(self):
-        for repair_location_field, picking_location_field in MAP_REPAIR_TO_PICKING_LOCATIONS.items():
-            self[repair_location_field] = self.picking_type_id[picking_location_field]
+    def _compute_location_id(self):
+        for repair in self:
+            repair.location_id = repair.picking_type_id.default_location_src_id
+
+    @api.depends('picking_type_id')
+    def _compute_recycle_location_id(self):
+        for repair in self:
+            repair.recycle_location_id = repair.picking_type_id.default_recycle_location_dest_id
 
     @api.depends('state', 'schedule_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_parts_availability(self):
@@ -294,9 +303,6 @@ class Repair(models.Model):
                 vals['name'] = picking_type.sequence_id.next_by_id()
             if not vals.get('procurement_group_id'):
                 vals['procurement_group_id'] = self.env["procurement.group"].create({'name': vals['name']}).id
-            for location_field, picking_field in MAP_REPAIR_TO_PICKING_LOCATIONS.items():
-                if location_field not in vals:
-                    vals[location_field] = picking_type[picking_field].id
         return super().create(vals_list)
 
     def write(self, vals):
