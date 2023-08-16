@@ -27,11 +27,6 @@
         // -------  Kanban Record Titles -------
         // Uniform design across different HTML layouts
 
-        // Provide enough room for the dropdown-toggle
-        .o_primary {
-            padding-right: calc(var(--KanbanRecord-padding-h) * 2);
-        }
-
         // Uniform titles
         .o_kanban_card_header_title .o_primary,
         .o_kanban_primary_left .o_primary > span:first-child,
@@ -45,11 +40,6 @@
             font-weight: 500;
             font-size: $font-size-sm;
             color: $text-muted;
-        }
-
-        // Provide enough room to add an icon before the title
-        &.o_has_icon .o_primary {
-            padding-left: $o-kanban-record-margin*1.5;
         }
 
         // -------  Kanban Content -------
@@ -183,14 +173,6 @@
             }
         }
 
-    }
-
-    .o_favorite {
-        @include o-position-absolute(
-            $top: 3px,
-            $left: calc(var(--KanbanRecord-padding-h) - #{$o-horizontal-padding})
-        );
-        padding: $o-kanban-record-margin;
     }
 }
 
