@@ -587,53 +587,56 @@ class MrpWorkorder(models.Model):
         return rows
 
     def button_start(self):
-        self.ensure_one()
-        if any(not time.date_end for time in self.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
-            return True
-        # As button_start is automatically called in the new view
-        if self.state in ('done', 'cancel'):
-            return True
+        if any(wo.working_state == 'blocked' for wo in self):
+            raise UserError(_('Some workorders require another workorder to be completed first'))
+        for wo in self:
+            if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
+                continue
+            # As button_start is automatically called in the new view
+            if wo.state in ('done', 'cancel'):
+                continue
 
-        if self.product_tracking == 'serial' and self.qty_producing == 0:
-            self.qty_producing = 1.0
-        elif self.qty_producing == 0:
-            self.qty_producing = self.qty_remaining
+            if wo.product_tracking == 'serial' and wo.qty_producing == 0:
+                wo.qty_producing = 1.0
+            elif wo.qty_producing == 0:
+                wo.qty_producing = wo.qty_remaining
 
-        if self._should_start_timer():
-            self.env['mrp.workcenter.productivity'].create(
-                self._prepare_timeline_vals(self.duration, datetime.now())
-            )
+            if wo._should_start_timer():
+                self.env['mrp.workcenter.productivity'].create(
+                    wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
+                )
 
-        if self.production_id.state != 'progress':
-            self.production_id.write({
-                'date_start': datetime.now(),
-            })
-        if self.state == 'progress':
-            return True
-        date_start = fields.Datetime.now()
-        vals = {
-            'state': 'progress',
-            'date_start': date_start,
-        }
-        if not self.leave_id:
-            leave = self.env['resource.calendar.leaves'].create({
-                'name': self.display_name,
-                'calendar_id': self.workcenter_id.resource_calendar_id.id,
-                'date_from': date_start,
-                'date_to': date_start + relativedelta(minutes=self.duration_expected),
-                'resource_id': self.workcenter_id.resource_id.id,
-                'time_type': 'other'
-            })
-            vals['date_finished'] = leave.date_to
-            vals['leave_id'] = leave.id
-            return self.write(vals)
-        else:
-            if not self.date_start or self.date_start > date_start:
-                vals['date_start'] = date_start
-                vals['date_finished'] = self._calculate_date_finished(date_start)
-            if self.date_finished and self.date_finished < date_start:
-                vals['date_finished'] = date_start
-            return self.with_context(bypass_duration_calculation=True).write(vals)
+            if wo.production_id.state != 'progress':
+                wo.production_id.write({
+                    'date_start': fields.Datetime.now()
+                })
+            if wo.state == 'progress':
+                continue
+            date_start = fields.Datetime.now()
+            vals = {
+                'state': 'progress',
+                'date_start': date_start,
+            }
+            if not wo.leave_id:
+                leave = self.env['resource.calendar.leaves'].create({
+                    'name': wo.display_name,
+                    'calendar_id': wo.workcenter_id.resource_calendar_id.id,
+                    'date_from': date_start,
+                    'date_to': date_start + relativedelta(minutes=wo.duration_expected),
+                    'resource_id': wo.workcenter_id.resource_id.id,
+                    'time_type': 'other'
+                })
+                vals['date_finished'] = leave.date_to
+                vals['leave_id'] = leave.id
+                wo.write(vals)
+            else:
+                if not wo.date_start or wo.date_start > date_start:
+                    vals['date_start'] = date_start
+                    vals['date_finished'] = wo._calculate_date_finished(date_start)
+                if wo.date_finished and wo.date_finished < date_start:
+                    vals['date_finished'] = date_start
+                wo.with_context(bypass_duration_calculation=True).write(vals)
+        return True
 
     def button_finish(self):
         date_finished = fields.Datetime.now()
@@ -887,16 +890,6 @@ class MrpWorkorder(models.Model):
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
                 wo.duration_percent = 100
-
-    def action_mass_start(self):
-        for wo in self:
-            if wo.working_state == 'blocked':
-                raise UserError(_('Some workorders require another workorder to be completed first'))
-            wo.button_start()
-
-    def action_mass_pause(self):
-        for wo in self:
-            wo.button_pending()
 
     def _compute_expected_operation_cost(self):
         return (self.duration_expected / 60.0) * self.workcenter_id.costs_hour
