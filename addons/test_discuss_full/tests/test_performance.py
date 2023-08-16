@@ -921,7 +921,7 @@ class TestDiscussFullPerformance(HttpCase):
                         'anonymous_name': 'anon 2',
                         'avatarCacheKey': self.channel_livechat_2._get_avatar_cache_key(),
                         'channel_type': 'livechat',
-                        'channelMembers': [('insert', sorted([
+                        'channelMembers': [('insert', [
                             {
                                 'channel': {
                                     'id': self.channel_livechat_2.id,
@@ -942,18 +942,16 @@ class TestDiscussFullPerformance(HttpCase):
                                 'channel': {
                                     'id': self.channel_livechat_2.id,
                                 },
-                                'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.env.ref('base.public_partner')).id,
+                                'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).id,
                                 'persona': {
-                                    'partner': {
-                                        'active': False,
-                                        'id': self.env.ref('base.public_partner').id,
-                                        'is_bot': False,
-                                        'is_public': True,
-                                        'name': 'Public user',
+                                    'guest': {
+                                        'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.id,
+                                        'im_status': 'offline',
+                                        'name': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.name,
                                     },
                                 },
                             },
-                        ], key=lambda member_data: member_data['id']))],
+                        ])],
                         'custom_channel_name': False,
                         'id': self.channel_livechat_2.id,
                         'memberCount': 2,
@@ -975,12 +973,6 @@ class TestDiscussFullPerformance(HttpCase):
                     'operator_pid': (self.users[0].partner_id.id, 'Ernest Employee'),
                     'rtcSessions': [('insert', [])],
                     'seen_partners_info': [
-                        {
-                            'fetched_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
-                            'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.env.ref('base.public_partner')).id,
-                            'partner_id': self.env.ref('base.public_user').partner_id.id,
-                            'seen_message_id': next(res['message_id'] for res in self.channel_livechat_2._channel_last_message_ids()),
-                        },
                         {
                             'fetched_message_id': False,
                             'id': self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.partner_id == self.users[0].partner_id).id,

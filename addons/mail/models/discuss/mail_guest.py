@@ -2,10 +2,12 @@
 
 import pytz
 import uuid
+from datetime import datetime, timedelta
 from functools import wraps
 from inspect import Parameter, signature
+from werkzeug.exceptions import NotFound
 
-from odoo.tools import consteq
+from odoo.tools import consteq, get_lang
 from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
@@ -175,3 +177,58 @@ class MailGuest(models.Model):
                 data['im_status'] = guest.im_status
             guests_formatted_data[guest] = data
         return guests_formatted_data
+
+    def _find_or_create_for_channel(self, channel, name, country_id, timezone, add_as_member=True, post_joined_message=False):
+        """Get a guest for the given channel. If there is no guest yet,
+        create one.
+
+        :param channel: channel to add the guest to
+        :param guest_name: name of the guest
+        :param country_id: country of the guest
+        :param timezone: timezone of the guest
+        :param add_as_member: whether to add the guest as a member of the channel
+        :param post_joined_message: whether to post a message to the channel
+            to notify that the guest joined
+        """
+        if channel.group_public_id:
+            raise NotFound()
+        guest = self._get_guest_from_context()
+        if not guest:
+            guest = self.create(
+                {
+                    "country_id": country_id,
+                    "lang": get_lang(channel.env).code,
+                    "name": name,
+                    "timezone": timezone,
+                }
+            )
+        if add_as_member:
+            channel = channel.with_context(guest=guest)
+            try:
+                channel.add_members(guest_ids=[guest.id], post_joined_message=post_joined_message)
+            except UserError:
+                raise NotFound()
+        return guest
+
+    def _set_auth_cookie(self):
+        """Add a cookie to the response to identify the guest. Every route
+        that expects a guest will make use of it to authenticate the guest
+        through `_get_as_sudo_from_context` or `_get_as_sudo_from_context_or_raise`.
+        """
+        self.ensure_one()
+        expiration_date = datetime.now() + timedelta(days=365)
+        request.future_response.set_cookie(
+            self._cookie_name,
+            self._format_auth_cookie(),
+            httponly=True,
+            expires=expiration_date,
+        )
+
+    def _format_auth_cookie(self):
+        """Format the cookie value for the given guest.
+
+        :param guest: guest to format the cookie value for
+        :return str: formatted cookie value
+        """
+        self.ensure_one()
+        return f"{self.id}{self._cookie_separator}{self.access_token}"

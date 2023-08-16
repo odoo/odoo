@@ -3,7 +3,7 @@
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 
 
@@ -31,6 +31,12 @@ class ChannelMember(models.Model):
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
     rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
+
+    @api.constrains('partner_id')
+    def _contrains_no_public_member(self):
+        for member in self:
+            if any(user._is_public() for user in member.partner_id.user_ids):
+                raise ValidationError(_("Channel members cannot include public users."))
 
     @api.depends('channel_id.message_ids', 'seen_message_id')
     def _compute_message_unread(self):

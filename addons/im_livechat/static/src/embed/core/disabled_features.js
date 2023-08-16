@@ -52,7 +52,7 @@ for (const [actionName] of threadActionsRegistry.getEntries()) {
         threadActionsRegistry.remove(actionName);
     }
 }
-threadActionsRegistry.addEventListener("UPDATE", ({ operation, key }) => {
+threadActionsRegistry.addEventListener("UPDATE", ({ detail: { operation, key } }) => {
     if (operation === "add" && !allowedThreadActions.has(key)) {
         threadActionsRegistry.remove(key);
     }

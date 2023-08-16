@@ -1,16 +1,18 @@
 /* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("chat window (patch)");
 
 QUnit.test("No call buttons", async () => {
     const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,

@@ -14,13 +14,16 @@
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
         </record>
-        <record id="im_livechat.livechat_channel_session_11_member_public" model="discuss.channel.member">
-            <field name="partner_id" ref="base.public_partner"/>
+        <record id="im_livechat.livechat_channel_session_11_guest" model="mail.guest">
+            <field name="name">Visitor</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_member_guest" model="discuss.channel.member">
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
         </record>
 
         <record id="livechat_channel_session_11_message_1" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now()"/>
             <field name="create_date" eval="datetime.now()"/>
@@ -42,7 +45,7 @@
             <field name="model">discuss.channel</field>
         </record>
         <record id="livechat_channel_session_11_message_3" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(seconds=-25)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=-25)"/>
