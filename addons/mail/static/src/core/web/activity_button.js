@@ -46,7 +46,7 @@ export class ActivityButton extends Component {
                     classes.push(this.props.record.data.activity_type_icon);
                     break;
                 }
-                classes.push("fa-clock-o");
+                classes.push("fa-clock-o btn-link text-dark");
                 break;
         }
         return classes.join(" ");
