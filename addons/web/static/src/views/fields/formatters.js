@@ -78,51 +78,6 @@ export function formatChar(value, options) {
 }
 
 /**
- * Converts a given duration in seconds into a human-readable format.
- *
- * The function takes a duration in seconds and converts it into a human-readable form,
- * such as "1h" or "1 hour, 30 minutes", depending on the value of the `showFullDuration` parameter.
- * If the `showFullDuration` is set to true, the function will display up to two non-zero duration
- * components in long form (e.g: hours, minutes).
- * Otherwise, it will show just the largest non-zero duration component in narrow form (e.g: y or h).
- * Luxon takes care of translations given the current locale.
- *
- * @param {number} seconds - The duration in seconds to be converted.
- * @param {boolean} showFullDuration - If true, the output will have two components in long form.
- * Otherwise, just one component will be displayed in narrow form.
- *
- * @returns {string} A human-readable string representation of the duration.
- *
- * @example
- * // Sample usage
- * const durationInSeconds = 7320; // 2 hours and 2 minutes (2 * 3600 + 2 * 60)
- * const fullDuration = humanizeDuration(durationInSeconds, true);
- * console.log(fullDuration); // Output: "2 hours, 2 minutes"
- *
- * const shortDuration = humanizeDuration(durationInSeconds, false);
- * console.log(shortDuration); // Output: "2h"
- */
-export function formatDuration(seconds, showFullDuration) {
-    const displayStyle = showFullDuration ? "long" : "narrow";
-    const numberOfValuesToDisplay = showFullDuration ? 2 : 1;
-    const durationKeys = ["years", "months", "days", "hours", "minutes"];
-
-    if (seconds < 60) {
-        seconds = 60;
-    }
-    seconds -= seconds % 60;
-
-    let duration = luxon.Duration.fromObject({ seconds: seconds }).shiftTo(...durationKeys);
-    duration = duration.shiftTo(...durationKeys.filter((key) => duration.get(key)));
-    const durationSplit = duration.toHuman({ unitDisplay: displayStyle }).split(",");
-
-    if (!showFullDuration && duration.loc.locale.includes("en") && duration.months > 0) {
-        durationSplit[0] = durationSplit[0].replace("m", "M");
-    }
-    return durationSplit.slice(0, numberOfValuesToDisplay).join(",");
-}
-
-/**
  * Returns a string representing a float.  The result takes into account the
  * user settings (to display the correct decimal separator).
  *

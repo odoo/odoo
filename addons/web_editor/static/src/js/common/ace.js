@@ -4,12 +4,13 @@ import config from "@web/legacy/js/services/config";
 import concurrency from "@web/legacy/js/core/concurrency";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
-import Dialog from "@web/legacy/js/core/dialog";
 import Widget from "@web/legacy/js/core/widget";
 import localStorage from "@web/legacy/js/core/local_storage";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { markup } from "@odoo/owl";
 
 /**
  * Formats a content-check result (@see checkXML, checkSCSS).
@@ -683,20 +684,23 @@ var ViewEditor = Widget.extend({
             }).bind(this)
         );
 
-        var self = this;
         return Promise.all(defs).guardedCatch(function (results) {
             // some overrides handle errors themselves
             if (results === undefined) {
                 return;
             }
             var error = results[1];
-            Dialog.alert(self, '', {
+            const content = _t(
+                "A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted."
+            );
+            const body = markup(`
+                <div>${content}</div>
+                <br/>
+                ${error}
+            `);
+            this.call("dialog", "add", AlertDialog, {
                 title: _t("Server error"),
-                $content: $('<div/>').html(
-                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted.")
-                    + '<br/>'
-                    + error
-                )
+                body,
             });
         });
     },
@@ -1004,12 +1008,13 @@ var ViewEditor = Widget.extend({
      * @private
      */
     _onResetClick: function () {
-        var self = this;
-        Dialog.confirm(this, _t("If you reset this file, all your customizations will be lost as it will be reverted to the default file."), {
-            title: _t("Careful!"),
-            confirm_callback: function () {
-                self._resetResource(self._getSelectedResource());
+        this.call("dialog", "add", ConfirmationDialog, {
+            title: _t("Careful"),
+            body: _t("If you reset this file, all your customizations will be lost as it will be reverted to the default file."),
+            confirm: () => {
+                this._resetResource(this._getSelectedResource());
             },
+            cancel: () => {},
         });
     },
     /**

@@ -1,8 +1,7 @@
 /** @odoo-module **/
-
+    import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
     import { escape } from "@web/core/utils/strings";
     import core from "@web/legacy/js/services/core";
-    import Dialog from "@web/legacy/js/core/dialog";
     import { _t } from "@web/core/l10n/translation";
 
     export default {
@@ -70,18 +69,14 @@
          * @param {string} title - The title of the error
          * @param {string} description - The description of the error
          * @param {string} error - The raw error message
-         * @return {(Dialog|undefined)} A dialog showing the error if no payment option is selected,
-         *                              undefined otherwise.
          */
         _displayError: function (title, description = '', error = '') {
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length !== 1) { // Cannot find selected payment option, show dialog
-                return new Dialog(null, {
+                this.call("dialog", "add", ConfirmationDialog, {
                     title: _t("Error: %s", title),
-                    size: 'medium',
-                    $content: `<p>${escape(description) || ''}</p>`,
-                    buttons: [{text: _t("Ok"), close: true}]
-                }).open();
+                    body: description || '',
+                });
             } else { // Show error in inline form
                 this._hideError(); // Remove any previous error
 

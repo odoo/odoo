@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import { markup } from "@odoo/owl";
+import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import dom from "@web/legacy/js/core/dom";
 import {setCookie} from "@web/legacy/js/core/cookie_utils";
-import Dialog from "@web/legacy/js/core/dialog";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from '@web/legacy/js/core/utils';
@@ -572,17 +573,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         const template = await this._rpc({
             route: $(ev.currentTarget).data('action'),
         });
-        const dialog = new Dialog(this, {
-            size: 'medium',
+        this.call("dialog", "add", FlagMarkAsOffensiveDialog, {
             title: _t("Offensive Post"),
-            $content: template,
-            renderFooter: false,
-        }).open();
-        dialog.opened().then(() => {
-            dialog.$(".btn-link:contains('Discard')").click((ev) => {
-                ev.preventDefault();
-                dialog.close();
-            });
+            body: markup(template),
         });
     },
     _displayAccessDeniedNotification(message) {

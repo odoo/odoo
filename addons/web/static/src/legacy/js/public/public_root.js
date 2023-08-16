@@ -23,13 +23,13 @@ import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
+import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
+import { omit } from "@web/core/utils/objects";
+import { Component, App, whenReady } from "@odoo/owl";
 
 
 const serviceRegistry = registry.category("services");
-import { Component, App, whenReady } from "@odoo/owl";
-import { omit } from '@web/core/utils/objects';
-import { renderToString } from '@web/core/utils/render';
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)

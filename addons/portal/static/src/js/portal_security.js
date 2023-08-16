@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import Dialog from "@web/legacy/js/core/dialog";
 import { _t } from "@web/legacy/js/services/core";
-import { renderToString } from "@web/core/utils/render";
 import session from "web.session";
+import { InputConfirmationDialog } from './components/input_confirmation_dialog/input_confirmation_dialog';
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
     selector: '.o_portal_new_api_key',
@@ -23,46 +24,40 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
             model: 'res.users',
             method: 'api_key_wizard',
             args: [session.user_id],
-        }));
-        const self = this;
-        const d_description = new Dialog(self, {
-            title: _t('New API Key'),
-            $content: renderToString('portal.keydescription'),
-            buttons: [{text: _t('Confirm'), classes: 'btn-primary', close: true, click: async () => {
-                var description = d_description.el.querySelector('[name="description"]').value;
-                var wizard_id = await this._rpc({
-                    model: 'res.users.apikeys.description',
-                    method: 'create',
-                    args: [{name: description}],
+        }), (...args) => this.call("dialog", "add", ...args));
+
+        this.call("dialog", "add", InputConfirmationDialog, {
+            title: _t("New API Key"),
+            body: renderToMarkup("portal.keydescription"),
+            confirmLabel: _t("Confirm"),
+            confirm: async ({ inputEl }) => {
+                const description = inputEl.value;
+                const wizard_id = await this._rpc({
+                    model: "res.users.apikeys.description",
+                    method: "create",
+                    args: [{ name: description }],
                 });
-                var res = await handleCheckIdentity(
+                const res = await handleCheckIdentity(
                     this.proxy('_rpc'),
                     this._rpc({
                         model: 'res.users.apikeys.description',
                         method: 'make_key',
                         args: [wizard_id],
-                    })
+                    }),
+                    (...args) => this.call("dialog", "add", ...args)
                 );
-                const d_show = new Dialog(self, {
-                    title: _t('API Key Ready'),
-                    $content: renderToString('portal.keyshow', {key: res.context.default_key}),
-                    buttons: [{text: _t('Close'), clases: 'btn-primary', close: true}],
-                });
-                d_show.on('closed', this, () => {
-                    window.location = window.location;
-                });
-                d_show.open();
-            }}, {text: _t('Discard'), close: true}],
+
+                this.call("dialog", "add", ConfirmationDialog, {
+                    title: _t("API Key Ready"),
+                    body: renderToMarkup("portal.keyshow", { key: res.context.default_key }),
+                    confirmLabel: _t("Close"),
+                }, {
+                    onClose: () => {
+                        window.location = window.location;
+                    },
+                })
+            }
         });
-        d_description.opened(() => {
-            const input = d_description.el.querySelector('[name="description"]');
-            input.focus();
-            d_description.el.addEventListener('submit', (e) => {
-                e.preventDefault();
-                d_description.$footer.find('.btn-primary').click();
-            });
-        });
-        d_description.open();
     }
 });
 
@@ -80,7 +75,8 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
                 model: 'res.users.apikeys',
                 method: 'remove',
                 args: [parseInt(this.el.id)]
-            })
+            }),
+            (...args) => this.call("dialog", "add", ...args)
         );
         window.location = window.location;
     }
@@ -121,72 +117,49 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
     },
 
     async _onClick() {
-        const rpc = this.proxy('_rpc');
-        const wrapped = this._rpc({
+        const { res_id: checkId } = await this._rpc({
             model: 'res.users',
             method: 'api_key_wizard',
             args: [session.user_id],
         });
-        await handleRevokeSessions(rpc, wrapped);
-        window.location.href = "/web/session/logout?redirect=/";
+        this.call("dialog", "add", InputConfirmationDialog, {
+            title: _t("Log out from all devices?"),
+            body: renderToMarkup("portal.revoke_all_devices_popup_template"),
+            confirmLabel: _t("Log out from all devices"),
+            confirm: async ({ inputEl }) => {
+                if (!inputEl.reportValidity()) {
+                    inputEl.classList.add("is-invalid");
+                    return false;
+                }
 
-        function handleRevokeSessions(rpc, wrapped) {
-            return wrapped.then((inst) => {
-                const check_id = inst.res_id
-                var $content = $(renderToString("portal.revoke_all_devices_popup_template"));
-                return new Promise((resolve) => {
-                    var dialog = new Dialog(this, {
-                        title: _t("Log out from all devices?"),
-                        $content,
-                        buttons: [{
-                            text: _t("Log out from all devices"), classes: 'btn btn-primary',
-                            // nb: if click & close, waits for click to resolve before closing
-                            async click() {
-                                const password_input = this.el.querySelector('[name=password]');
-                                if (!password_input.reportValidity()) {
-                                    password_input.classList.add('is-invalid');
-                                    return;
-                                };
-                                await rpc({
-                                    model: 'res.users.identitycheck',
-                                    method: 'write',
-                                    args: [check_id, {password: password_input.value}]
-                                });
-                                await rpc({
-                                    model: 'res.users.identitycheck',
-                                    method: 'revoke_all_devices',
-                                    args: [check_id]
-                                }).then((inst) => {
-                                    this.close();
-                                    resolve(inst);
-                                }, (err) => {
-                                    err.event.preventDefault(); // suppress crashmanager
-                                    password_input.classList.add('is-invalid');
-                                    password_input.setCustomValidity(_t("Check failed"));
-                                    password_input.reportValidity();
-                                });
-                            }
-                        }, {
-                            text: _t('Cancel'), close: true
-                        }]
+                await this._rpc({
+                    model: "res.users.identitycheck",
+                    method: "write",
+                    args: [checkId, { password: inputEl.value }],
+                });
+                try {
+                    await this._rpc({
+                        model: "res.users.identitycheck",
+                        method: "revoke_all_devices",
+                        args: [checkId],
                     });
-                    dialog.opened(() => {
-                        const password_input = dialog.el.querySelector('[name="password"]');
-                        password_input.focus();
-                        password_input.addEventListener('input', () => {
-                            password_input.classList.remove('is-invalid');
-                            password_input.setCustomValidity('');
-                        });
-                        dialog.el.addEventListener('submit', (e) => {
-                            e.preventDefault();
-                            dialog.$footer.find('.btn-primary').click();
-                        });
-                    });
-                dialog.open();
-                })
-            })
-        }
-    }
+                } catch {
+                    inputEl.classList.add("is-invalid");
+                    inputEl.setCustomValidity(_t("Check failed"));
+                    inputEl.reportValidity();
+                    return false;
+                }
+
+                window.location.href = "/web/session/logout?redirect=/";
+                return true;
+            },
+            cancel: () => {},
+            onInput: ({ inputEl }) => {
+                inputEl.classList.remove("is-invalid");
+                inputEl.setCustomValidity("");
+            },
+        });
+    },
 });
 
 /**
@@ -200,65 +173,52 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
  *
  * @param {Function} rpc Widget#_rpc bound do the widget
  * @param {Promise} wrapped promise to check for an identity check request
+ * @param {Function} addDialog add a dialog to the dialog service
  * @returns {Promise} result of the original call
  */
-export function handleCheckIdentity(rpc, wrapped) {
+export async function handleCheckIdentity(rpc, wrapped, addDialog) {
     return wrapped.then((r) => {
         if (!(r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
             return r;
         }
-        const check_id = r.res_id;
-        return new Promise((resolve, reject) => {
-            const d = new Dialog(null, {
+        const checkId = r.res_id;
+        return new Promise((resolve) => {
+            addDialog(InputConfirmationDialog, {
                 title: _t("Security Control"),
-                $content: renderToString('portal.identitycheck'),
-                buttons: [{
-                    text: _t("Confirm Password"), classes: 'btn btn-primary',
-                    // nb: if click & close, waits for click to resolve before closing
-                    click() {
-                        const password_input = this.el.querySelector('[name=password]');
-                        if (!password_input.reportValidity()) {
-                            password_input.classList.add('is-invalid');
-                            return;
-                        }
-                        return rpc({
-                            model: 'res.users.identitycheck',
-                            method: 'write',
-                            args: [check_id, {password: password_input.value}]
-                        }).then(() => rpc({
-                            model: 'res.users.identitycheck',
-                            method: 'run_check',
-                            args: [check_id]
-                        })).then((r) => {
-                            this.close();
-                            resolve(r);
-                        }, (err) => {
-                            err.event.preventDefault(); // suppress crashmanager
-                            password_input.classList.add('is-invalid');
-                            password_input.setCustomValidity(_t("Check failed"));
-                            password_input.reportValidity();
-                        });
+                body: renderToMarkup("portal.identitycheck"),
+                confirmLabel: _t("Confirm Password"),
+                confirm: async ({ inputEl }) => {
+                    if (!inputEl.reportValidity()) {
+                        inputEl.classList.add("is-invalid");
+                        return false;
                     }
-                }, {
-                    text: _t('Cancel'), close: true
-                }]
-            }).on('close', null, () => {
-                // unlink wizard object?
-                reject();
+                    let result;
+                    await rpc({
+                        model: "res.users.identitycheck",
+                        method: "write",
+                        args: [checkId, { password: inputEl.value }],
+                    });
+                    try {
+                        result = await rpc({
+                            model: "res.users.identitycheck",
+                            method: "run_check",
+                            args: [checkId],
+                        });
+                    } catch {
+                        inputEl.classList.add("is-invalid");
+                        inputEl.setCustomValidity(_t("Check failed"));
+                        inputEl.reportValidity();
+                        return false;
+                    }
+                    resolve(result);
+                    return true;
+                },
+                cancel: () => {},
+                onInput: ({ inputEl }) => {
+                    inputEl.classList.remove("is-invalid");
+                    inputEl.setCustomValidity("");
+                },
             });
-            d.opened(() => {
-                const pw = d.el.querySelector('[name="password"]');
-                pw.focus();
-                pw.addEventListener('input', () => {
-                    pw.classList.remove('is-invalid');
-                    pw.setCustomValidity('');
-                });
-                d.el.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    d.$footer.find('.btn-primary').click();
-                });
-            });
-            d.open();
         });
     });
 }
