@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PopoverWowl" owl="1">
-        <div t-att-role="props.role" t-ref="ref">
+        <div class="o_popover popover" t-att-role="props.role" t-ref="ref">
             <t t-slot="default" />
             <div t-if="!props.fixedPosition and props.enableArrow" t-ref="popoverArrow" class="popover-arrow"/>
         </div>

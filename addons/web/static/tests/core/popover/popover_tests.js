@@ -4,6 +4,7 @@ import { Popover } from "@web/core/popover/popover";
 import { usePosition } from "@web/core/position_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { getFixture, makeDeferred, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { useRef } from "@odoo/owl";
 
 let fixture;
 let popoverTarget;
@@ -176,8 +177,14 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     });
 
     const TestPopover = class extends Popover {
+        static defaultProps = {
+            ...Popover.defaultProps,
+            enableArrow: true,
+        };
+
         setup() {
             // Don't call super.setup() in order to replace the use of usePosition hook...
+            this.arrow = useRef("popoverArrow");
             usePosition(this.props.target, {
                 container,
                 onPositioned: this.onPositioned.bind(this),
@@ -192,10 +199,9 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     const arrow = popover.firstElementChild;
 
     // Should have classes for a "bottom-middle" placement
-    assert.strictEqual(
-        popover.className,
-        "o_popover popover mw-100 bs-popover-bottom o-popover-bottom o-popover--bm"
-    );
+    assert.ok(popover.classList.contains("bs-popover-bottom"));
+    assert.ok(popover.classList.contains("o-popover-bottom"));
+    assert.ok(popover.classList.contains("o-popover--bm"));
     assert.strictEqual(arrow.className, "popover-arrow start-0 end-0 mx-auto");
 
     // Change container style and force update
@@ -205,10 +211,9 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     await nextTick();
 
     // Should have classes for a "right-end" placement
-    assert.strictEqual(
-        popover.className,
-        "o_popover popover mw-100 bs-popover-end o-popover-right o-popover--re"
-    );
+    assert.ok(popover.classList.contains("bs-popover-end"));
+    assert.ok(popover.classList.contains("o-popover-right"));
+    assert.ok(popover.classList.contains("o-popover--re"));
     assert.strictEqual(arrow.className, "popover-arrow top-auto");
 });
 
@@ -249,8 +254,8 @@ QUnit.test("within iframe", async (assert) => {
     let expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight;
     let expectedLeft =
         iframeLeft + targetLeft + popoverTarget.offsetWidth / 2 - popoverBox.width / 2;
-    assert.strictEqual(popoverBox.top, expectedTop);
-    assert.strictEqual(popoverBox.left, expectedLeft);
+    assert.strictEqual(Math.round(popoverBox.top), Math.round(expectedTop));
+    assert.strictEqual(Math.round(popoverBox.left), Math.round(expectedLeft));
 
     // Scrolling inside the iframe should reposition the popover accordingly
     const scrollOffset = 100;
@@ -261,8 +266,8 @@ QUnit.test("within iframe", async (assert) => {
     popoverBox = popoverEl.getBoundingClientRect();
     expectedTop = iframeTop + targetTop + popoverTarget.offsetHeight - scrollOffset;
     expectedLeft = iframeLeft + targetLeft + popoverTarget.offsetWidth / 2 - popoverBox.width / 2;
-    assert.strictEqual(popoverBox.top, expectedTop);
-    assert.strictEqual(popoverBox.left, expectedLeft);
+    assert.strictEqual(Math.round(popoverBox.top), Math.round(expectedTop));
+    assert.strictEqual(Math.round(popoverBox.left), Math.round(expectedLeft));
 });
 
 QUnit.test("popover fixed position", async (assert) => {

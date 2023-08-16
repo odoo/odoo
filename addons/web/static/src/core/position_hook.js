@@ -96,6 +96,26 @@ function getIFrame(el) {
 }
 
 /**
+ * TODO: See if we use this (potential fix for animations)
+ *
+ * Gets the boundingClientRect while ignoring translation
+ * caused by the "transform" property.
+ *
+ * @param {HTMLElement} el
+ * @returns {DOMRect}
+ */
+// function getRectWithoutTranslation(el) {
+//     const rect = el.getBoundingClientRect();
+//     const matrixStr = getComputedStyle(el).getPropertyValue('transform');
+//     if (matrixStr !== "none") {
+//         const matrix = matrixStr.replace(/(matrix\()|\)/g, "").split(",").map(n => parseFloat(n));
+//         rect.x -= matrix[4];
+//         rect.y -= matrix[5];
+//     }
+//     return rect;
+// }
+
+/**
  * Returns the best positioning solution staying in the container or falls back
  * to the requested position.
  * The positioning data used to determine each possible position is based on
@@ -267,6 +287,11 @@ export function reposition(target, popper, iframe, options) {
     }
     options.position = [directionKey, variantKey].join("-");
 
+    const currentPosition = {
+        top: Math.round(parseFloat(popper.style.top.replace("px", ""))),
+        left: Math.round(parseFloat(popper.style.left.replace("px", ""))),
+    };
+
     // Reset popper style
     popper.style.position = "fixed";
     popper.style.top = "0px";
@@ -277,6 +302,10 @@ export function reposition(target, popper, iframe, options) {
     const { top, left, variant } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
+
+    if (Math.round(left) == currentPosition.left && Math.round(top) == currentPosition.top) {
+        return;
+    }
 
     if (variant === "fit") {
         const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";

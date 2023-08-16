@@ -23,6 +23,7 @@ export class Popover extends Component {
             fixedPosition: this.props.fixedPosition,
         });
     }
+
     onPositioned(el, { direction, variant }) {
         const position = `${direction[0]}${variant[0]}`;
 
@@ -30,12 +31,13 @@ export class Popover extends Component {
         this.props.target.setAttribute("data-popover-for", this.id);
 
         // reset all popover classes
-        // const directionMap = {
-        //     top: "top",
-        //     bottom: "bottom",
-        //     left: "start",
-        //     right: "end",
-        // };
+        el.classList = [];
+        const directionMap = {
+            top: "top",
+            bottom: "bottom",
+            left: "start",
+            right: "end",
+        };
         addClassesToElement(
             el,
             "o_popover popover mw-100 shadow",
@@ -47,6 +49,10 @@ export class Popover extends Component {
 
         if (!this.props.enableArrow) {
             el.classList.add("o-popover-no-arrow");
+            return;
+        }
+
+        if (!this.arrow.el) {
             return;
         }
 
