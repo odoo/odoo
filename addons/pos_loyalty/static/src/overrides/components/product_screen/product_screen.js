@@ -108,9 +108,9 @@ patch(ProductScreen.prototype, {
         this.currentOrder._updateRewards();
     },
     async _showDecreaseQuantityPopup() {
-        const result = await this._super();
-        if (result){
+        const result = await super._showDecreaseQuantityPopup();
+        if (result) {
             this.currentOrder._updateRewards();
         }
-    }
+    },
 });
