@@ -3,6 +3,7 @@
 
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
 from . import models
+from . import wizard
 
 
 def _l10n_fr_post_init_hook(env):
