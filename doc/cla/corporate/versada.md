@@ -18,3 +18,4 @@ Naglis Jonaitis naglis@versada.eu https://github.com/naglis
 Paulius Sladkevičius paulius@versada.eu https://github.com/paulius-sladkevicius
 Tomas Račys tomas@versada.eu https://github.com/taezaz
 Andrius Preimantas andrius@versada.eu https://github.com/andrius-preimantas
+Andrius Laukavičius andrius.laukavicius@versada.eu https://github.com/oerp-odoo

@@ -670,24 +670,44 @@ function factory(dependencies) {
          * with these attachments, which are used by attachment box in the chatter.
          */
         async fetchAttachments() {
-            const attachmentsData = await this.async(() => this.env.services.rpc({
-                model: 'ir.attachment',
-                method: 'search_read',
-                domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
-                ],
-                fields: ['id', 'name', 'mimetype'],
-                orderBy: [{ name: 'id', asc: false }],
-            }, { shadow: true }));
-            this.update({
-                originThreadAttachments: [['insert-and-replace',
-                    attachmentsData.map(data =>
-                        this.env.models['mail.attachment'].convertData(data)
-                    )
-                ]],
-            });
-            this.update({ areAttachmentsLoaded: true });
+            return this.fetchData(['attachments']);
+        }
+
+        /**
+         * Requests the given `requestList` data from the server.
+         *
+         * @param {string[]} requestList
+         */
+        async fetchData(requestList) {
+            if (this.isTemporary) {
+                return;
+            }
+            const requestSet = new Set(requestList);
+            if (requestSet.has('attachments')) {
+                this.update({ isLoadingAttachments: true });
+            }
+            const {
+                attachments: attachmentsData,
+            } = await this.env.services.rpc({
+                route: '/mail/thread/data',
+                params: {
+                    request_list: [...requestSet],
+                    thread_id: this.id,
+                    thread_model: this.model,
+                },
+            }, { shadow: true });
+            if (!this.exists()) {
+                return;
+            }
+            const values = {};
+            if (attachmentsData) {
+                Object.assign(values, {
+                    areAttachmentsLoaded: true,
+                    isLoadingAttachments: false,
+                    originThreadAttachments: [['insert-and-replace', attachmentsData]],
+                });
+            }
+            this.update(values);
         }
 
         /**
@@ -911,9 +931,7 @@ function factory(dependencies) {
                 return;
             }
             this.loadNewMessages();
-            this.update({ isLoadingAttachments: true });
             await this.async(() => this.fetchAttachments());
-            this.update({ isLoadingAttachments: false });
         }
 
         async refreshActivities() {
@@ -1181,6 +1199,17 @@ function factory(dependencies) {
                 return [['link', this.members[0]]];
             }
             return [['unlink']];
+        }
+
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeDisplayCounter() {
+            if (this.mass_mailing && this.env.session.notification_type === 'email') {
+                return 0;
+            }
+            return this.localMessageUnreadCounter;
         }
 
         /**
@@ -1840,6 +1869,16 @@ function factory(dependencies) {
         }),
         creator: many2one('mail.user'),
         custom_channel_name: attr(),
+        /**
+         * Determines whether counter should be displayed or not.
+         */
+        displayCounter: attr({
+            compute: '_computeDisplayCounter',
+            dependencies: [
+                'localMessageUnreadCounter',
+                'mass_mailing',
+            ],
+        }),
         displayName: attr({
             compute: '_computeDisplayName',
             dependencies: [

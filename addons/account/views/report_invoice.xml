@@ -21,9 +21,12 @@
                         <span t-if="o.name != '/'" t-field="o.name"/>
                     </h2>
 
-                    <div id="informations" class="row mt32 mb32">
+                    <div id="informations" class="row mt-4 mb-4">
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                            <strong>Invoice Date:</strong>
+                            <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
+                            <t t-else=""><strong>Date:</strong></t>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
@@ -171,8 +174,8 @@
                                                 </tr>
                                             </t>
                                             <t t-if="len(payments_vals) > 0">
-                                                <tr class="border-black">
-                                                    <td><strong>Amount Due</strong></td>
+                                                <tr class="border-black font-weight-bold">
+                                                    <td>Amount Due</td>
                                                     <td class="text-right">
                                                         <span t-field="o.amount_residual"/>
                                                     </td>

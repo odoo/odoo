@@ -249,6 +249,13 @@ different model than this one), then this view's inheritance specs
 (<xpath/>) are applied, and the result is used as if it were this view's
 actual arch.
 """)
+
+    # The "active" field is not updated during updates if <template> is used
+    # instead of <record> to define the view in XML, see _tag_template. For
+    # qweb views, you should not rely on the active field being updated anyway
+    # as those views, if used in frontend layouts, can be duplicated (see COW)
+    # and will thus always require upgrade scripts if you really want to change
+    # the default value of their "active" field.
     active = fields.Boolean(default=True,
                             help="""If this view is inherited,
 * if True, the view always extends its parent
@@ -904,7 +911,7 @@ actual arch.
         Model = self.env[model].sudo(False)
         is_base_model = self.env.context.get('base_model_name', model) == model
 
-        if node.tag in ('kanban', 'tree', 'form', 'activity'):
+        if node.tag in ('kanban', 'tree', 'form', 'activity', 'calendar'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
@@ -1629,7 +1636,12 @@ actual arch.
                 if not attrs.intersection(descendant.attrib):
                     continue
                 self._pop_view_branding(descendant)
-            # TODO: find a better name and check if we have a string to boolean helper
+
+            # Remove the processing instructions indicating where nodes were
+            # removed (see apply_inheritance_specs)
+            for descendant in e.iterdescendants(tag=etree.ProcessingInstruction):
+                if descendant.target == 'apply-inheritance-specs-node-removal':
+                    descendant.getparent().remove(descendant)
             return
 
         node_path = e.get('data-oe-xpath')
@@ -1662,16 +1674,18 @@ actual arch.
                 # TODO: collections.Counter if remove p2.6 compat
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
-                for child in e.iterchildren(tag=etree.Element):
+                for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
                     if child.get('data-oe-xpath') or child.get('data-oe-field-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
-                        # Also, if a node is known to have been replaced during applying xpath
-                        # increment its index to compute an accurate xpath for susequent nodes
-                        replaced_node_tag = child.attrib.pop('meta-oe-xpath-replacing', None)
-                        if replaced_node_tag:
-                            indexes[replaced_node_tag] += 1
                         self.distribute_branding(child)
+                    elif child.tag is etree.ProcessingInstruction:
+                        # If a node is known to have been replaced during
+                        # applying an inheritance, increment its index to
+                        # compute an accurate xpath for subsequent nodes
+                        if child.target == 'apply-inheritance-specs-node-removal':
+                            indexes[child.text] += 1
+                            e.remove(child)
                     else:
                         indexes[child.tag] += 1
                         self.distribute_branding(
@@ -1690,6 +1704,9 @@ actual arch.
         return any(
             (attr in ('data-oe-model', 'groups') or (attr.startswith('t-')))
             for attr in node.attrib
+        ) or (
+            node.tag is etree.ProcessingInstruction
+            and node.target == 'apply-inheritance-specs-node-removal'
         )
 
     @tools.ormcache('self.id')

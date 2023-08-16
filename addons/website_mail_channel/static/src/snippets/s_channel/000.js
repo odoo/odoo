@@ -46,6 +46,13 @@ publicWidget.registry.Channel = publicWidget.Widget.extend({
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this.el.classList.add('d-none');
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private

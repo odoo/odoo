@@ -87,7 +87,7 @@ models.Orderline = models.Orderline.extend({
         json.mp_skip  = this.mp_skip;
         return json;
     },
-    set_quantity: function(quantity) {
+    set_quantity: function(quantity, keep_price) {
         if (this.pos.config.iface_printers && quantity !== this.quantity && this.printable()) {
             this.mp_dirty = true;
         }

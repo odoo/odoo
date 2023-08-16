@@ -36,6 +36,9 @@ class StockRule(models.Model):
                 remaining |= rule
         super(StockRule, remaining)._compute_picking_type_code_domain()
 
+    def _should_auto_confirm_procurement_mo(self, p):
+        return not p.orderpoint_id and p.move_raw_ids
+
     @api.model
     def _run_manufacture(self, procurements):
         productions_values_by_company = defaultdict(list)
@@ -57,7 +60,7 @@ class StockRule(models.Model):
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
             self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
             productions._create_workorder()
-            productions.filtered(lambda p: not p.orderpoint_id and p.move_raw_ids).action_confirm()
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
@@ -104,6 +107,8 @@ class StockRule(models.Model):
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
+        if values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
+            return values['orderpoint_id'].bom_id
         return self.env['mrp.bom']._bom_find(
             product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
@@ -121,6 +126,7 @@ class StockRule(models.Model):
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_planned_start': date_planned,
+            'date_planned_finished': fields.Datetime.from_string(values['date_planned']),
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,

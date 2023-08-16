@@ -172,14 +172,6 @@ class FileUploader extends Component {
                     type: 'danger',
                     message: owl.utils.escape(error),
                 });
-                const relatedTemporaryAttachments = this.env.models['mail.attachment']
-                    .find(attachment =>
-                        attachment.filename === filename &&
-                        attachment.isTemporary
-                    );
-                for (const attachment of relatedTemporaryAttachments) {
-                    attachment.delete();
-                }
                 return;
             }
             // FIXME : needed to avoid problems on uploading

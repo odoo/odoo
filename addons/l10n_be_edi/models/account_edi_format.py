@@ -11,28 +11,27 @@ class AccountEdiFormat(models.Model):
     def _is_efff(self, filename, tree):
         return self.code == 'efff_1' and tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice'
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
-        if self._is_efff(filename, tree):
+        if self._is_efff(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._create_invoice_from_ubl(tree)
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
-        if self._is_efff(filename, tree):
+        if self._is_efff(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._update_invoice_from_ubl(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _is_compatible_with_journal(self, journal):
         self.ensure_one()
-        res = super()._is_compatible_with_journal(journal)
-        if self.code != 'efff_1':
-            return res
+        if self.code != 'efff_1' or self._is_account_edi_ubl_cii_available():
+            return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'BE'
 
     def _post_invoice_edi(self, invoices, test_mode=False):
         self.ensure_one()
-        if self.code != 'efff_1':
+        if self.code != 'efff_1' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices, test_mode=test_mode)
         res = {}
         for invoice in invoices:

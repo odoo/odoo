@@ -78,6 +78,7 @@ var DateWidget = Widget.extend({
             window.removeEventListener('wheel', this._onScroll, true);
         }
         this.__libInput++;
+        this.$input.blur(); // force blur before widget is destroyed
         this.$el.datetimepicker('destroy');
         this.__libInput--;
         this._super.apply(this, arguments);

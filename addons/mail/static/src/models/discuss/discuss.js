@@ -50,13 +50,16 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         async handleAddChannelAutocompleteSelect(ev, ui) {
+            // Necessary in order to prevent AutocompleteSelect event's default
+            // behaviour as html tags visible for a split second in text area
+            ev.preventDefault();
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChannel({
                         name,
-                        privacy: ui.item.special,
+                        privacy: ui.item.special === 'private' ? 'private' : 'groups',
                     })
                 );
                 channel.open();
@@ -190,6 +193,7 @@ function factory(dependencies) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
+                        name: this.env._t("Discuss"),
                         active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(),

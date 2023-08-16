@@ -11,7 +11,9 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Pauline Thiry <pth@odoo.com>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -536,7 +538,7 @@ msgstr "<strong>Min hvh:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr "<strong>Beschikbare hoeveelheid</strong>"
+msgstr "<strong>Werkelijke voorraad</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -3175,6 +3177,15 @@ msgid "Invalid domain right operand %s"
 msgstr "Ongeldige rechter operand %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Ongeldige regel configuratie, de volgende regel veroorzaakt een eindeloze "
+"lus: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
 msgstr "Getelde hoeveelheid"
@@ -3346,6 +3357,16 @@ msgid "Is quantity done editable"
 msgstr "Is de hoeveelheid gereed te bewerken"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Het is niet mogelijk een gereserveerde hoeveelheid te importeren, je moet "
+"het aantal onmiddellijk gebruiken."
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3353,6 +3374,9 @@ msgid ""
 "stock.The correction could unreserve some operations with problematics "
 "products."
 msgstr ""
+"Het is niet mogelijk om de reservering ongedaan te maken van meer producten "
+"van %s dan je in voorraad hebt. De correctie zou sommige bewerkingen met "
+"problematische producten kunnen afboeken."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3361,12 +3385,14 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock. "
 "Contact an administrator."
 msgstr ""
+"Het is niet mogelijk om de reservering ongedaan te maken voor meer producten"
+" van %s van je op voorraad hebt. Neem contact op met een beheerder."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Try our automated action to fix it"
-msgstr ""
+msgstr "Probeer onze geautomatiseerde acties om het op te lossen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3523,7 +3549,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr "Laatste datum waarop de beschikbare hoeveelheid is berekend."
+msgstr "Laatste datum waarop de werkelijke voorraad is berekend."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4232,7 +4258,7 @@ msgstr "Beschikbaar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr "Beschikbare hoeveelheid"
+msgstr "Werkelijke voorraad"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -4240,7 +4266,7 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Beschikbare hoeveelheid die niet is gereserveerd op een verplaatsing, in de "
+"Werkelijke voorraad die niet is gereserveerd op een verplaatsing, in de "
 "standaard maateenheid van het product"
 
 #. module: stock
@@ -5193,6 +5219,17 @@ msgstr "Hvh"
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
+"De hoeveelheden worden automatisch verwijderd wanneer dat nodig is. Als je "
+"ze handmatig moet verwijderen, vraag dan aan een voorraadbeheerder om dit te"
+" doen."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 "Hoeveelheden creatie is beperkt, u kunt deze bewerking niet uitvoeren."
@@ -5245,7 +5282,7 @@ msgstr "Veelvoud"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Aanwezige voorraad"
+msgstr "Werkelijke voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
@@ -5435,7 +5472,7 @@ msgstr "Ontvangen aantal"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr "Herbereken de beschikbare hoeveelheid"
+msgstr "Herbereken de werkelijke voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -6791,15 +6828,12 @@ msgstr "Het product is niet in voldoende hoeveelheid beschikbaar"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"De hoeveelheid gedaan voor het product %s\"\" voldoet niet aan de "
-"afrondingsprecisie gedefinieerd op de maateenheid \"%s\". Wijzig de "
-"hoeveelheid die u hebt gedaan of de afrondingsnauwkeurigheid van uw "
-"maateenheid."
+"De hoeveelheid gereed voor het product \"%s\" , komt niet overeen met de "
+"afrondingsnauwkeurigheid die is gedefinieerd op de maateenheid \"%s\". "
+"Wijzig de hoeveelheid gereed of de afrondingsprecisie van de maateenheid."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7019,9 +7053,8 @@ msgid ""
 msgstr ""
 "Deze levering lijkt aan een andere bewerking gekoppeld te zijn. Zorg er "
 "laten voor, als u de goederen ontvangt die u nu terugstuurt, dat de "
-"teruggekeerde levering <b>omgekeerd</b> wordt om te vermeiden da t "
-"logistieke regels niet opnieuw worden toegepast (wat dubbele bewerkingen zou"
-" aanmaken)"
+"teruggekeerde levering <b>omgekeerd</b> wordt om te vermijden dat logistieke"
+" regels niet opnieuw worden toegepast (wat dubbele bewerkingen zou aanmaken)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7036,6 +7069,26 @@ msgstr ""
 "aangeraden om het producttype te wijzigen, aangezien dit tot inconsistenties"
 " kan leiden. Een betere oplossing zou kunnen zijn om het product te "
 "archiveren en in plaats daarvan een nieuw product te maken."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"Het bedrijf van dit product kan niet worden gewijzigd zolang er hoeveelheden"
+" van een ander bedrijf zijn."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Het bedrijf van dit product kan niet worden gewijzigd zolang er "
+"voorraadverplaatsingen van zijn die bij een ander bedrijf horen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7415,7 +7468,7 @@ msgstr "Maateenheden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
+msgid "Unit of measure"
 msgstr "Maateenheid"
 
 #. module: stock
@@ -7990,6 +8043,12 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8191,6 +8250,14 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Het is niet mogelijk om van een voorraadverplaatsing de reservering ongedaan"
 " te maken welke in de 'Gereed' fase is."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Je kunt een geannuleerde voorraadverplaatsing niet wijzigen, maak liever een"
+" nieuwe regel aan."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

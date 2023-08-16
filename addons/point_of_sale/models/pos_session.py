@@ -93,7 +93,7 @@ class PosSession(models.Model):
         help="Auto-generated session for orphan orders, ignored in constraints",
         readonly=True,
         copy=False)
-    move_id = fields.Many2one('account.move', string='Journal Entry')
+    move_id = fields.Many2one('account.move', string='Journal Entry', index=True)
     payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Payment Methods')
     total_payments_amount = fields.Float(compute='_compute_total_payments_amount', string='Total Payments Amount')
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
@@ -147,6 +147,7 @@ class PosSession(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -332,7 +333,8 @@ class PosSession(models.Model):
             # Users without any accounting rights won't be able to create the journal entry. If this
             # case, switch to sudo for creation and posting.
             try:
-                self.with_company(self.company_id)._create_account_move()
+                with self.env.cr.savepoint():
+                    self.with_company(self.company_id)._create_account_move()
             except AccessError as e:
                 if sudo:
                     self.sudo().with_company(self.company_id)._create_account_move()
@@ -494,7 +496,8 @@ class PosSession(models.Model):
                     invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
-                    order_account_move_receivable_lines[move_line.account_id.id] |= move_line
+                    key = (order.partner_id.commercial_partner_id.id, move_line.account_id.id)
+                    order_account_move_receivable_lines[key] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
                 for order_line in order.lines:
@@ -535,9 +538,12 @@ class PosSession(models.Model):
                     for move in stock_moves:
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                        amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
+                        signed_product_qty = move.product_qty
+                        if move._is_in():
+                            signed_product_qty *= -1
+                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                        if move.location_id.usage == 'customer':
+                        if move._is_in():
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         else:
                             stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -561,9 +567,12 @@ class PosSession(models.Model):
                 for move in stock_moves:
                     exp_key = move.product_id._get_product_accounts()['expense']
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                    amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
+                    signed_product_qty = move.product_qty
+                    if move._is_in():
+                        signed_product_qty *= -1
+                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.product_qty, move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                    if move.location_id.usage == 'customer':
+                    if move._is_in():
                         stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     else:
                         stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -690,10 +699,11 @@ class PosSession(models.Model):
             receivable_lines = MoveLine.create(vals)
             for receivable_line in receivable_lines:
                 if (not receivable_line.reconciled):
-                    if account_id not in invoice_receivable_lines:
-                        invoice_receivable_lines[account_id] = receivable_line
+                    key = (commercial_partner.id, account_id)
+                    if key not in invoice_receivable_lines:
+                        invoice_receivable_lines[key] = receivable_line
                     else:
-                        invoice_receivable_lines[account_id] |= receivable_line
+                        invoice_receivable_lines[key] |= receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
@@ -754,9 +764,9 @@ class PosSession(models.Model):
                 pass
 
         # reconcile invoice receivable lines
-        for account_id in order_account_move_receivable_lines:
-            ( order_account_move_receivable_lines[account_id]
-            | invoice_receivable_lines.get(account_id, self.env['account.move.line'])
+        for key in order_account_move_receivable_lines:
+            ( order_account_move_receivable_lines[key]
+            | invoice_receivable_lines.get(key, self.env['account.move.line'])
             ).reconcile()
 
         # reconcile stock output lines
@@ -777,7 +787,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
@@ -791,11 +801,8 @@ class PosSession(models.Model):
         # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
         # may arise in 'Round Globally'.
         check_refund = lambda x: x.qty * x.price_unit < 0
-        if self.company_id.tax_calculation_rounding_method == 'round_globally':
-            is_refund = all(check_refund(line) for line in order_line.order_id.lines)
-        else:
-            is_refund = check_refund(order_line)
-        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
+        is_refund = check_refund(order_line)
+        tax_data = tax_ids.with_context(force_sign=sign).compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
         taxes = tax_data['taxes']
         # For Cash based taxes, use the account from the repartition line immediately as it has been paid already
         for tax in taxes:

@@ -97,3 +97,8 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False

@@ -9,7 +9,8 @@ import uuid
 from lxml import etree
 
 from odoo import models
-from odoo.modules.module import get_resource_path, get_module_path
+from odoo.tools import misc
+from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
 _match_asset_file_url_regex = re.compile("^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
 
@@ -66,16 +67,9 @@ class Assets(models.AbstractModel):
             return attachment and base64.b64decode(attachment.datas) or False
 
         # If the file is not yet customized, the content is found by reading
-        # the local scss file
-        module = url_info["module"]
-        module_path = get_module_path(module)
-        module_resource_path = get_resource_path(module, url_info["resource_path"])
-        if module_path and module_resource_path:
-            module_path = os.path.join(os.path.normpath(module_path), '')  # join ensures the path ends with '/'
-            module_resource_path = os.path.normpath(module_resource_path)
-            if module_resource_path.startswith(module_path):
-                with open(module_resource_path, "rb") as f:
-                    return f.read()
+        # the local file
+        with misc.file_open(url.strip('/'), 'rb', filter_ext=EXTENSIONS) as f:
+            return f.read()
 
     def get_asset_info(self, url):
         """

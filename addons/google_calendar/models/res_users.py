@@ -96,12 +96,14 @@ class User(models.Model):
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # Odoo -> Google
+        send_updates = not full_sync
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
-        recurrences._sync_odoo2google(calendar_service)
+        recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
         synced_events |= recurrences.calendar_event_ids - recurrences._get_outliers()
+        synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
-        (events - synced_events)._sync_odoo2google(calendar_service)
+        (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
@@ -114,5 +116,7 @@ class User(models.Model):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_google_calendar(google)
+                self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+                self.env.cr.rollback()

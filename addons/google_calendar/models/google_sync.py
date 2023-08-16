@@ -70,7 +70,7 @@ class GoogleSync(models.AbstractModel):
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
         if 'google_id' in vals:
-            self._from_google_ids.clear_cache(self)
+            self._event_ids_from_google_ids.clear_cache(self)
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields:
             vals['need_sync'] = True
@@ -78,20 +78,20 @@ class GoogleSync(models.AbstractModel):
         result = super().write(vals)
         for record in self.filtered('need_sync'):
             if record.google_id:
-                record._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
+                record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
 
         return result
 
     @api.model_create_multi
     def create(self, vals_list):
         if any(vals.get('google_id') for vals in vals_list):
-            self._from_google_ids.clear_cache(self)
+            self._event_ids_from_google_ids.clear_cache(self)
         records = super().create(vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
         records_to_sync = records.filtered(lambda r: r.need_sync and r.active)
         for record in records_to_sync:
-            record._google_insert(google_service, record._google_values(), timeout=3)
+            record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
         return records
 
     def unlink(self):
@@ -111,12 +111,15 @@ class GoogleSync(models.AbstractModel):
             return True
         return super().unlink()
 
-    @api.model
-    @ormcache_context('google_ids', keys=('active_test',))
     def _from_google_ids(self, google_ids):
         if not google_ids:
             return self.browse()
-        return self.search([('google_id', 'in', google_ids)])
+        return self.browse(self._event_ids_from_google_ids(google_ids))
+
+    @api.model
+    @ormcache_context('google_ids', keys=('active_test',))
+    def _event_ids_from_google_ids(self, google_ids):
+        return self.search([('google_id', 'in', google_ids)]).ids
 
     def _sync_odoo2google(self, google_service: GoogleCalendarService):
         if not self:
@@ -130,11 +133,11 @@ class GoogleSync(models.AbstractModel):
         updated_records = records_to_sync.filtered('google_id')
         new_records = records_to_sync - updated_records
         for record in cancelled_records.filtered('google_id'):
-            record._google_delete(google_service, record.google_id)
+            record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
         for record in new_records:
-            record._google_insert(google_service, record._google_values())
+            record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
         for record in updated_records:
-            record._google_patch(google_service, record.google_id, record._google_values())
+            record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
 
     def _cancel(self):
         self.google_id = False
@@ -199,6 +202,8 @@ class GoogleSync(models.AbstractModel):
             return
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
+                send_updates = self._context.get('send_updates', True)
+                google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                 google_id = google_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'google_id': google_id,
@@ -262,5 +267,13 @@ class GoogleSync(models.AbstractModel):
         GoogleCalendar. Among those there will probably be lots of events that will never triggers a notification
         (e.g. single events that occured in the past). Processing all these events through the notification procedure
         of calendar.event.create is a possible performance bottleneck. This method aimed at alleviating that.
+        """
+        raise NotImplementedError()
+
+    def _get_event_user(self):
+        """ Return the correct user to send the request to Google.
+        It's possible that a user creates an event and sets another user as the organizer. Using self.env.user will
+        cause some issues, and It might not be possible to use this user for sending the request, so this method gets
+        the appropriate user accordingly.
         """
         raise NotImplementedError()

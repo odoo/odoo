@@ -7,7 +7,7 @@
 # Natys <support@natys.fr>, 2020
 # Xavier Symons <xsy@openerp.com>, 2020
 # Rémi CAZENAVE, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
+# Alexandra Jubert, 2020
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # Florian <fll@odoo.com>, 2020
@@ -46,13 +46,15 @@
 # 6534c450c77b2549e41c52e2051f5839, 2021
 # Pauline Thiry <pth@odoo.com>, 2021
 # Yann Papouin <ypa@decgroupe.com>, 2021
-# Martin Trigaux, 2021
 # qdelcourte <delcourte.quentin@hotmail.com>, 2021
 # Jonathan Quique <jqu@odoo.com>, 2021
 # Corentin POUHET-BRUNERIE <corentin.pb@gmail.com>, 2021
-# Grégory Schreiner, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2021
 # Pierrick Brun, 2021
 # Jerome Vanhaudenard <jev@odoo.com>, 2022
+# Martin Trigaux, 2022
+# vur1, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -60,13 +62,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jerome Vanhaudenard <jev@odoo.com>, 2022\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -452,7 +454,7 @@ msgstr "Activités"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -1782,7 +1784,7 @@ msgstr "Afficher les photos des catégories"
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2855,6 +2857,13 @@ msgid "Next Order List"
 msgstr "Liste des commandes suivantes"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "No"
+msgstr "Non"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "No Taxes"
@@ -3480,6 +3489,8 @@ msgid "Picking POS"
 msgstr "Opération PdV"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4698,6 +4709,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
+msgstr "Certains numéros de Lot/Série sont manquants"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid ""
@@ -4751,7 +4769,7 @@ msgstr "Commencer la vente à partir d'une catégorie de produits par défaut"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
-msgstr "Balance initiale"
+msgstr "Solde initial"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4827,7 +4845,7 @@ msgstr "Importation réussie"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Sum of opening balance and transactions."
-msgstr "Somme des montants ouverts et transactions"
+msgstr "Somme du solde d'ouverture et des transactions"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -5308,11 +5326,11 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
-"Ce champ montre la différence maximum autorisée entre la balance de fin et "
-"le cash théorique lors de la fermeture d'une session, pour des non-managers "
-"de POS. Si ce montant maximum est atteint, l'utilisateur verra apparaître un"
-" message d'erreur lors de la fermeture de sa session disant qu'il doit "
-"contacter son manager. "
+"Ce champ montre l'écart maximum autorisé entre le solde final et le solde "
+"théorique à la clôture d'une session, pour ceux qui ne sont pas managers du "
+"PdV. Si ce maximum est atteint, l'utilisateur verra apparaître un message "
+"d'erreur à la fermeture de la session lui indiquant qu'il doit contacter son"
+" manager."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -5613,6 +5631,17 @@ msgid "Type of the exception activity on record."
 msgstr "Type d'activité d'exception enregistrée"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Cette commande n'est pas encore synchronisée sur le serveur. Assurez-vous "
+"qu'elle est synchronisée et réessayez."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5798,6 +5827,13 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Commande non synchronisée"
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
@@ -5907,6 +5943,13 @@ msgid "Would you like to load demo data?"
 msgstr "Souhaitez-vous charger les données de démonstration"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Oui"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -5932,6 +5975,17 @@ msgstr ""
 #, python-format
 msgid "You are not allowed to change this quantity"
 msgstr "Vous n'êtes pas autorisé à changer cette quantité"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
+"Vous essayez de vendre des produits avec des numéros de lots/série, mais "
+"certains ne sont pas indiqués. Voulez-vous tout de même continuer ?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -6120,9 +6174,9 @@ msgid ""
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
 msgstr ""
-"Votre balance finale est trop différente par rapport à la balance finale "
-"théorique (%.2f), le maximum autorisé est : %.2f. Vous pouvez contacter "
-"votre responsable pour le forcer."
+"Votre solde final est trop différent par rapport au solde final théorique "
+"(%.2f), le maximum autorisé est : %.2f. Vous pouvez contacter votre "
+"responsable pour le forcer."
 
 #. module: point_of_sale
 #. openerp-web

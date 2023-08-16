@@ -2,8 +2,10 @@ import importlib
 import inspect
 import itertools
 import logging
+import sys
 import threading
 import unittest
+from pathlib import Path
 
 from .. import tools
 from .common import TagsSelector, OdooSuite
@@ -22,7 +24,7 @@ def get_test_modules(module):
     except ImportError:
         pass
     else:
-        results += _get_tests_modules('odoo.upgrade', module)
+        results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -50,24 +52,38 @@ def _get_tests_modules(path, module):
               if name.startswith('test_')]
     return result
 
-def make_suite(module_name, position='at_install'):
-    mods = get_test_modules(module_name)
+def _get_upgrade_test_modules(module):
+    upg = importlib.import_module("odoo.upgrade")
+    for path in map(Path, upg.__path__):
+        for test in (path / module / "tests").glob("test_*.py"):
+            spec = importlib.util.spec_from_file_location(f"odoo.upgrade.{module}.tests.{test.stem}", test)
+            if not spec:
+                continue
+            pymod = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = pymod
+            spec.loader.exec_module(pymod)
+            yield pymod
+
+
+def make_suite(module_names, position='at_install'):
     """ Creates a test suite for all the tests in the specified module,
     filtered by the provided ``position`` and the current test tags
 
-    :param str module_name: module to load tests from
+    :param list[str] module_names: modules to load tests from
     :param str position: "at_install" or "post_install"
     """
     config_tags = TagsSelector(tools.config['test_tags'])
     position_tag = TagsSelector(position)
-    return OdooSuite(
+    tests = (
         t
-        for m in mods
+        for module_name in module_names
+        for m in get_test_modules(module_name)
         for t in unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
         if position_tag.check(t) and config_tags.check(t)
     )
+    return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
-def run_suite(suite, module_name):
+def run_suite(suite, module_name=None):
     # avoid dependency hell
     from ..modules import module
     module.current_test = module_name

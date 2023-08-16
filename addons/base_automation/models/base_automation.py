@@ -342,7 +342,7 @@ class BaseAutomation(models.Model):
                     for old_vals in (records.read(list(vals)) if vals else [])
                 }
                 # call original method
-                write.origin(records, vals, **kw)
+                write.origin(self.with_env(actions.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=old_values):
                     records, domain_post = action._filter_post_export_domain(pre[action])
@@ -432,7 +432,12 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                model._patch_method(name, method)
+                ModelClass = type(model)
+                origin = getattr(ModelClass, name)
+                method.origin = origin
+                wrapped = api.propagate(origin, method)
+                wrapped.origin = origin
+                setattr(ModelClass, name, wrapped)
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):

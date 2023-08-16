@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round
 from odoo.osv import expression
+
+from collections import defaultdict
 
 
 class MrpUnbuild(models.Model):
@@ -45,7 +47,7 @@ class MrpUnbuild(models.Model):
         states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('id', 'in', allowed_mo_ids)]",
+        domain="[('state', '=', 'done'), ('company_id', '=', company_id), ('product_id', '=?', product_id)]",
         states={'done': [('readonly', True)]}, check_company=True)
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
@@ -74,22 +76,9 @@ class MrpUnbuild(models.Model):
         ('done', 'Done')], string='Status', default='draft', index=True)
     allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
 
-    @api.depends('company_id', 'product_id', 'bom_id')
     def _compute_allowed_mo_ids(self):
-        for unbuild in self:
-            domain = [
-                    ('state', '=', 'done'),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
-            if unbuild.bom_id:
-                domain = expression.AND([domain, [('bom_id', '=', unbuild.bom_id.id)]])
-            elif unbuild.product_id:
-                domain = expression.AND([domain, [('product_id', '=', unbuild.product_id.id)]])
-            allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
-            if allowed_mos:
-                unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
-            else:
-                unbuild.allowed_mo_ids = False
+        # the function remains as a stable fix patch that was removed in master
+        self.allowed_mo_ids = False
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -113,6 +102,19 @@ class MrpUnbuild(models.Model):
                 self.product_qty = 1
             else:
                 self.product_qty = self.mo_id.product_qty
+            if self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+                return {'warning': {
+                    'title': _("Warning"),
+                    'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+                }}
+
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        if self.mo_id and self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
+            }}
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -123,7 +125,7 @@ class MrpUnbuild(models.Model):
     @api.constrains('product_qty')
     def _check_qty(self):
         if self.product_qty <= 0:
-            raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
+            raise ValidationError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model
     def create(self, vals):
@@ -175,6 +177,7 @@ class MrpUnbuild(models.Model):
                 finished_move.quantity_done = finished_move.product_uom_qty
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
+        qty_already_used = defaultdict(float)
         for move in produce_moves | consume_moves:
             if move.has_tracking != 'none':
                 original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
@@ -185,7 +188,7 @@ class MrpUnbuild(models.Model):
                     moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
                 for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
-                    taken_quantity = min(needed_quantity, move_line.qty_done)
+                    taken_quantity = min(needed_quantity, move_line.qty_done - qty_already_used[move_line])
                     if taken_quantity:
                         self.env['stock.move.line'].create({
                             'move_id': move.id,
@@ -197,6 +200,7 @@ class MrpUnbuild(models.Model):
                             'location_dest_id': move.location_dest_id.id,
                         })
                         needed_quantity -= taken_quantity
+                        qty_already_used[move_line] += taken_quantity
             else:
                 move.quantity_done = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
 
@@ -215,7 +219,7 @@ class MrpUnbuild(models.Model):
                 finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
                 factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
                 for finished_move in finished_moves:
-                    moves += unbuild._generate_move_from_existing_move(finished_move, factor, finished_move.location_dest_id, finished_move.location_id)
+                    moves += unbuild._generate_move_from_existing_move(finished_move, factor, unbuild.location_id, finished_move.location_id)
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)

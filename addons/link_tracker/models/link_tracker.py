@@ -112,7 +112,7 @@ class LinkTracker(models.Model):
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            head = requests.head(url, timeout=5)
+            head = requests.head(url, allow_redirects=True, timeout=5)
             if (
                     int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
                     or

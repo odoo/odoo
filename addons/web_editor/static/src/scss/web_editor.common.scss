@@ -199,6 +199,9 @@ img.ml-auto, img.mx-auto {
     display: block;
     text-align: center;
 }
+.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+    width: auto;
+}
 
 div.media_iframe_video {
     margin: 0 auto;
@@ -466,10 +469,6 @@ a.o_underline {
     }
 }
 
-.ace_editor > .ace_gutter {
-    display: block !important; // display even with aria-hidden
-}
-
 .o_ace_select2_dropdown {
     width: auto !important;
     padding-top: 4px;
@@ -652,6 +651,9 @@ blockquote {
                     color: $dropdown-link-disabled-color !important;
                 }
             }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            color: $text-muted !important;
         }
     }
 }

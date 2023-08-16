@@ -108,6 +108,18 @@ class MrpBom(models.Model):
                             bom_product=bom_line.parent_product_tmpl_id.display_name
                         ))
 
+    @api.onchange('bom_line_ids', 'product_qty')
+    def onchange_bom_structure(self):
+        if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _(
+                        'The product has already been used at least once, editing its structure may lead to undesirable behaviours. '
+                        'You should rather archive the product and create a new one with a new bill of materials.'),
+                }
+            }
+
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}
@@ -131,8 +143,9 @@ class MrpBom(models.Model):
         res = super().copy(default)
         for bom_line in res.bom_line_ids:
             if bom_line.operation_id:
-                operation = res.operation_ids.filtered(lambda op: op.name == bom_line.operation_id.name and op.workcenter_id == bom_line.operation_id.workcenter_id)
-                bom_line.operation_id = operation
+                operation = res.operation_ids.filtered(lambda op: op._get_comparison_values() == bom_line.operation_id._get_comparison_values())
+                # Two operations could have the same values so we take the first one
+                bom_line.operation_id = operation[:1]
         return res
 
     @api.model
@@ -196,7 +209,7 @@ class MrpBom(models.Model):
         if not products:
             return bom_by_product
         product_templates = products.mapped('product_tmpl_id')
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_templates.ids)]
+        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_templates.ids), ('active', '=', True)]
         if picking_type:
             domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
         if company_id or self.env.context.get('company_id'):
@@ -440,11 +453,11 @@ class MrpBomLine(models.Model):
         self.ensure_one()
         if product._name == 'product.template':
             return False
-        if self.bom_product_template_attribute_value_ids:
-            for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
-                if not any(ptav in product.product_template_attribute_value_ids for ptav in iter_ptav):
-                    return True
-        return False
+        # The intersection of the values of the product and those of the line satisfy:
+        # * the number of items equals the number of attributes (since a product cannot
+        #   have multiple values for the same attribute),
+        # * the attributes are a subset of the attributes of the line.
+        return len(product.product_template_attribute_value_ids & self.bom_product_template_attribute_value_ids) != len(self.bom_product_template_attribute_value_ids.attribute_id)
 
     def action_see_attachments(self):
         domain = [

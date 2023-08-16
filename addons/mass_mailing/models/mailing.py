@@ -37,8 +37,7 @@ image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailing(models.Model):
-    """ MassMailing models a wave of emails for a mass mailign campaign.
-    A mass mailing is an occurence of sending emails. """
+    """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
@@ -239,7 +238,7 @@ class MassMailing(models.Model):
         that mailing_model being mailing.list means contacting mailing.contact
         (see mailing_model_name versus mailing_model_real). """
         for mailing in self:
-            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list']:
+            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list', 'mailing.contact']:
                 mailing.reply_to_mode = 'email'
             else:
                 mailing.reply_to_mode = 'thread'
@@ -481,7 +480,7 @@ class MassMailing(models.Model):
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
+        if 'partner_id' in target._fields and target._fields['partner_id'].store:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
@@ -492,21 +491,21 @@ class MassMailing(models.Model):
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
-        elif 'email_from' in target._fields:
+        elif 'email_from' in target._fields and target._fields['email_from'].store:
             mail_field = 'email_from'
-        elif 'partner_email' in target._fields:
+        elif 'partner_email' in target._fields and target._fields['partner_email'].store:
             mail_field = 'partner_email'
-        elif 'email' in target._fields:
+        elif 'email' in target._fields and target._fields['email'].store:
             mail_field = 'email'
         else:
             raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))
 
         if self.unique_ab_testing:
-            query +="""
+            query += """
                AND s.campaign_id = %%(mailing_campaign_id)s;
             """
         else:
-            query +="""
+            query += """
                AND s.mass_mailing_id = %%(mailing_id)s
                AND s.model = %%(target_model)s;
             """

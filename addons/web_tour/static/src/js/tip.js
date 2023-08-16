@@ -43,6 +43,7 @@ var Tip = Widget.extend({
                 x: 50,
                 y: 50,
             },
+            content: _t("Click here to go to the next step."),
             scrollContent: _t("Scroll to reach the next step."),
         });
         this.position = {

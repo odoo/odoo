@@ -20,6 +20,8 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      */
     onBuilt: function () {
         this._super.apply(this, arguments);
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet_products';
         this._rpc({
             route: '/website_sale/snippet/options_filters'
         }).then((data) => {

@@ -1865,6 +1865,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
@@ -1972,3 +1973,99 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_in_invoice_line_tax_line_delete(self):
+        with Form(self.invoice) as invoice_form:
+            lines_count = len(invoice_form.line_ids)
+            with invoice_form.line_ids.edit(0) as line_form:
+                tax = line_form.tax_line_id
+            invoice_form.line_ids.remove(0)
+            # check that the tax line is recreated
+            self.assertEqual(len(invoice_form.line_ids), lines_count)
+
+        # Assert the tax line is recreated for the tax
+        self.assertIn(tax, self.invoice.line_ids.tax_line_id)
+
+    def test_bill_amount_should_be_editable(self):
+        tax0 = self.env['account.tax'].create({
+            'name': 'test_tax_0',
+            'amount_type': 'percent',
+            'amount': 0.0,
+            'type_tax_use': 'purchase',
+        })
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        invoice_form.partner_id = self.partner_a
+        # Both 15% default tax and 0% tax, will have only one tax line for the 15%
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_1'
+            line.account_id = self.company_data['default_account_expense']
+            line.tax_ids.add(tax0)
+            line.price_unit = 200.0
+        # only the default 15% tax is set
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_2'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 100.0
+        # no tax because of zero price
+        with invoice_form.invoice_line_ids.new() as line:
+            line.name = 'test_line_3'
+            line.account_id = self.company_data['default_account_expense']
+            line.price_unit = 0.0
+
+        invoice = invoice_form.save()
+
+        # mimic the behavior editing taxes with `tax_group_widget`
+        with invoice_form:
+            with invoice_form.line_ids.edit(0) as tax_line_form:
+                tax_line_form.debit = 500.0
+
+        # make sure taxes are not recompute
+        self.assertRecordValues(invoice.line_ids.filtered(lambda line: line.tax_line_id),
+                                [{
+                                    'debit': 500,
+                                    'tax_line_id': self.company_data['default_tax_purchase'].id,
+                                }])
+
+    def test_invoice_sent_to_additional_partner(self):
+        """
+        Make sure that when an invoice is a partner to a partner who is not
+        the invoiced customer, they receive a link containing an access token,
+        allowing them to view the invoice without needing to log in.
+        """
+
+        # Create a simple invoice for the partner
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_a, invoice_date='2023-04-17', amounts=[100])
+
+        # Set the invoice to the 'posted' state
+        invoice.action_post()
+
+        # Create a partner not related to the invoice
+        additional_partner = self.env["res.partner"].create({
+            "name": "Additional Partner",
+            "email": "additional@example.com",
+        })
+
+        # Send the invoice
+        action = invoice.action_invoice_sent()
+        action_context = action["context"]
+
+        # Create the email using the wizard and add the additional partner as a recipient
+        invoice_send_wizard = self.env["account.invoice.send"].with_context(
+            action_context,
+            active_ids=[invoice.id]
+        ).create({'is_print': False})
+        invoice_send_wizard.partner_ids |= additional_partner
+
+        invoice_send_wizard.template_id.auto_delete = False
+
+        invoice_send_wizard.send_and_print_action()
+
+        # Find the email sent to the additional partner
+        additional_partner_mail = self.env["mail.mail"].search([
+            ("res_id", "=", invoice.id),
+            ('recipient_ids', '=', additional_partner.id)
+        ])
+
+        self.assertIn('access_token=', additional_partner_mail.body_html,
+                      "The additional partner should be sent the link including the token")

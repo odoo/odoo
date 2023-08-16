@@ -4,11 +4,9 @@ import base64
 from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
-import importlib
 import io
 import logging
 import os
-import pkg_resources
 import shutil
 import tempfile
 import threading
@@ -320,45 +318,15 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
-    @staticmethod
-    def _check_python_external_dependency(pydep):
-        try:
-            pkg_resources.get_distribution(pydep)
-        except pkg_resources.DistributionNotFound as e:
-            try:
-                importlib.import_module(pydep)
-                _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
-            except ImportError:
-                # backward compatibility attempt failed
-                _logger.warning("DistributionNotFound: %s", e)
-                raise Exception('Python library not installed: %s' % (pydep,))
-        except pkg_resources.VersionConflict as e:
-            _logger.warning("VersionConflict: %s", e)
-            raise Exception('Python library version conflict: %s' % (pydep,))
-        except Exception as e:
-            _logger.warning("get_distribution(%s) failed: %s", pydep, e)
-            raise Exception('Error finding python library %s' % (pydep,))
-
-
-    @staticmethod
-    def _check_external_dependencies(terp):
-        depends = terp.get('external_dependencies')
-        if not depends:
-            return
-        for pydep in depends.get('python', []):
-            Module._check_python_external_dependency(pydep)
-
-        for binary in depends.get('bin', []):
-            try:
-                tools.find_in_path(binary)
-            except IOError:
-                raise Exception('Unable to find %r in path' % (binary,))
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
 
     @classmethod
     def check_external_dependencies(cls, module_name, newstate='to install'):
         terp = cls.get_module_info(module_name)
         try:
-            cls._check_external_dependencies(terp)
+            modules.check_manifest_dependencies(terp)
         except Exception as e:
             if newstate == 'to install':
                 msg = _('Unable to install module "%s" because an external dependency is not met: %s')
@@ -618,8 +586,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
@@ -661,6 +630,16 @@ class Module(models.Model):
         self.update_list()
 
         todo = list(self)
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            todo.extend(self.search([
+                ('state', '=', 'installed'),
+                ('name', '!=', 'studio_customization'),
+                ('id', 'not in', self.ids),
+            ]))
         i = 0
         while i < len(todo):
             module = todo[i]

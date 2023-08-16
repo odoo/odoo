@@ -133,7 +133,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _addEditorMessages: function () {
         const $target = this._targetForEdition();
-        const $skeleton = $target.find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        const $skeleton = $target.find('.oe_structure.oe_empty, [data-oe-type="html"]').filter(':o_editable');
         this.$editorMessageElements = $skeleton.not('[data-editor-message]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
         $skeleton.attr('contenteditable', function () { return !$(this).is(':empty'); });
     },
@@ -185,6 +185,12 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _onEditionWillStop: function (ev) {
         this.$editorMessageElements && this.$editorMessageElements.removeAttr('data-editor-message');
+
+        if (ev.data.noWidgetsStop) {
+            // TODO adapt in master, this was added as a stable fix.
+            return;
+        }
+
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });

@@ -96,18 +96,12 @@ class AccountFrFec(models.TransientModel):
         """
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
-        if is_dom_tom:
+        if not company.vat or is_dom_tom:
             return ''
-        elif company.country_id.code == 'FR':
-            if not company.vat:
-                raise UserError(_("Missing VAT number for company %s") % company.display_name)
-            elif len(company.vat) < 13 or not siren.is_valid(company.vat[4:13]):
-                raise UserError(_("Invalid VAT number for company %s") % company.display_name)
-            else:
-                return company.vat[4:13]
+        elif company.country_id.code == 'FR' and len(company.vat) >= 13 and siren.is_valid(company.vat[4:13]):
+            return company.vat[4:13]
         else:
-            return '' if not company.vat else company.vat
-
+            return company.vat
 
     def generate_fec(self):
         self.ensure_one()
@@ -237,7 +231,8 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id),
+                                                                              ('company_id', '=', company.id)], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
@@ -307,7 +302,8 @@ class AccountFrFec(models.TransientModel):
             rows_to_write.append(listrow)
 
         # LINES
-        sql_query = '''
+        query_limit = int(self.env['ir.config_parameter'].sudo().get_param('l10n_fr_fec.batch_size', 500000)) # To prevent memory errors when fetching the results
+        sql_query = f'''
         SELECT
             REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
             REGEXP_REPLACE(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
@@ -333,7 +329,7 @@ class AccountFrFec(models.TransientModel):
             ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
             END
             AS PieceRef,
-            TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
+            TO_CHAR(COALESCE(am.invoice_date, am.date), 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
                 WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
                 ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
@@ -365,35 +361,54 @@ class AccountFrFec(models.TransientModel):
             am.date >= %s
             AND am.date <= %s
             AND am.company_id = %s
-        '''
-
-        # For official report: only use posted entries
-        if self.export_type == "official":
-            sql_query += '''
-            AND am.state = 'posted'
-            '''
-
-        sql_query += '''
+            {"AND am.state = 'posted'" if self.export_type == 'official' else ""}
         ORDER BY
             am.date,
             am.name,
             aml.id
+        LIMIT %s
+        OFFSET %s
         '''
+
         lang = self.env.user.lang or get_lang(self.env).code
-        self._cr.execute(
-            sql_query, (lang, self.date_from, self.date_to, company.id))
 
-        for row in self._cr.fetchall():
-            rows_to_write.append(list(row))
+        with io.BytesIO() as fecfile:
+            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
 
-        fecvalue = self._csv_write_rows(rows_to_write)
+            # Write header and initial balances
+            for initial_row in rows_to_write:
+                initial_row = list(initial_row)
+                # We don't skip \n at then end of the file if there are only initial balances, for simplicity. An empty period export shouldn't happen IRL.
+                initial_row[-1] += u'\r\n'
+                csv_writer.writerow(initial_row)
+
+            # Write current period's data
+            query_offset = 0
+            has_more_results = True
+            while has_more_results:
+                self._cr.execute(
+                    sql_query,
+                    (lang, self.date_from, self.date_to, company.id, query_limit + 1, query_offset)
+                )
+                query_offset += query_limit
+                has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
+                query_results = self._cr.fetchall()
+                for i, row in enumerate(query_results[:query_limit]):
+                    if i < len(query_results) - 1:
+                        # The file is not allowed to end with an empty line, so we can't use lineterminator on the writer
+                        row = list(row)
+                        row[-1] += u'\r\n'
+                    csv_writer.writerow(row)
+
+            base64_result = base64.encodebytes(fecfile.getvalue())
+
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
             suffix = '-NONOFFICIAL'
 
         self.write({
-            'fec_data': base64.encodebytes(fecvalue),
+            'fec_data': base64_result,
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
             'filename': '%sFEC%s%s.csv' % (company_legal_data, end_date, suffix),
             })
@@ -409,7 +424,7 @@ class AccountFrFec(models.TransientModel):
             'target': 'self',
         }
 
-    def _csv_write_rows(self, rows, lineterminator=u'\r\n'):
+    def _csv_write_rows(self, rows, lineterminator=u'\r\n'): #DEPRECATED; will disappear in master
         """
         Write FEC rows into a file
         It seems that Bercy's bureaucracy is not too happy about the

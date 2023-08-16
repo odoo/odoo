@@ -84,8 +84,8 @@ class AuthorizeAPI():
                     'paymentProfiles': {
                         'customerType': 'business' if partner.is_company else 'individual',
                         'billTo': {
-                            'firstName': '' if partner.is_company else _partner_split_name(partner.name)[0],
-                            'lastName':  _partner_split_name(partner.name)[1],
+                            'firstName': '' if partner.is_company else _partner_split_name(partner.name)[0][:50],
+                            'lastName':  partner.name[:50] if partner.is_company else _partner_split_name(partner.name)[1][:50],
                             'address': (partner.street or '' + (partner.street2 if partner.street2 else '')) or None,
                             'city': partner.city,
                             'state': partner.state_id.name or None,

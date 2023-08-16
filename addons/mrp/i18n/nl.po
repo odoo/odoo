@@ -12,7 +12,8 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Melroy van den Berg <webmaster1989@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2165,6 +2166,17 @@ msgid "It has already been unblocked."
 msgstr "Het is al gedeblokkeerd."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+"Het is niet mogelijk om van één enkele werkorder de planning ongedaan te "
+"maken. Je moet de planning van de productieorder in plaats daarvan ongedaan "
+"maken om alle gekoppelde bewerkingen te annuleren."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "Zijn operaties zijn gepland"
@@ -2839,6 +2851,17 @@ msgstr ""
 "gekoppeld is/zijn aan actieve stuklijsten, wat betekent dat er nog steeds "
 "bewerkingen op kunnen worden gepland. Om dit te voorkomen, wordt in plaats "
 "daarvan aanbevolen de werkplek te verwijderen."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+"Merk op dat het of de producten: '%s' nog steeds gekoppeld is/zijn aan een "
+"actieve stuklijst, wat betekent dat het product er nog steeds op gebruikt "
+"kan worden."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3838,6 +3861,12 @@ msgid "Sequence stock after manufacturing"
 msgstr "Reeks voorraad na productie"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Serial number (%s) has already been produced."
+msgstr "Dit serienummer (%s) is al gemaakt."
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
 msgstr "Handmatig tijdsduur instellen"
@@ -4214,6 +4243,12 @@ msgstr ""
 " in het product formulier."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr "De werkorder (%s) kan niet twee keer worden gestart!"
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4264,6 +4299,18 @@ msgstr ""
 "liggen. Corrigeer dit om de werkorder op te slaan."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+"Het product is al minstens één keer gebruikt, het wijzigen van de structuur "
+"kan leiden tot ongewenst gedrag. Je kunt het product beter archiveren en een"
+" nieuwe aanmaken met een nieuwe stuklijst."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4295,6 +4342,16 @@ msgid ""
 msgstr ""
 "Het serienummer %(number)s dat voor het onderdeel %(component)s wordt "
 "gebruikt, is al verbruikt."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+"Het geselecteerde serienummer komt niet overeen met het serienummer dat is "
+"gebruikt in de productieorder, selecteer een ander."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

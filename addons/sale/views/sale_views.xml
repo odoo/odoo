@@ -121,7 +121,7 @@
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5" quick_add="False">
                     <field name="currency_id" invisible="1"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
@@ -156,7 +156,7 @@
             <field name="name">sale.order.kanban</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
+                <kanban class="o_kanban_mobile" sample="1" quick_create="false">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="amount_total"/>
@@ -564,6 +564,7 @@
                                         widget="many2many_tags"
                                         options="{'no_create': True}"
                                         domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        context="{'active_test': True}"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
@@ -735,7 +736,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Order" filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <field name="partner_id" operator="child_of" context="{'active_test': False}"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="team_id" string="Sales Team"/>
                     <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
@@ -1215,9 +1216,6 @@
                               groups="sale.group_delivery_invoice_address"
                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
-                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">product.group_discount_per_so_line</attribute>
-                    </xpath>
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>

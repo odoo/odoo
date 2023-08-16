@@ -74,8 +74,7 @@ class SurveyInvite(models.TransientModel):
 
     @api.depends('partner_ids', 'survey_id')
     def _compute_existing_partner_ids(self):
-        existing_answers = self.survey_id.user_input_ids
-        self.existing_partner_ids = existing_answers.mapped('partner_id') & self.partner_ids
+        self.existing_partner_ids = list(set(self.survey_id.user_input_ids.partner_id.ids) & set(self.partner_ids.ids))
 
     @api.depends('emails', 'survey_id')
     def _compute_existing_emails(self):
@@ -138,17 +137,23 @@ class SurveyInvite(models.TransientModel):
                         ', '.join(invalid_partners.mapped('name'))
                     ))
 
-    @api.depends('template_id')
+    @api.depends('template_id', 'partner_ids')
     def _compute_subject(self):
         for invite in self:
+            langs = set(invite.partner_ids.mapped('lang')) - {False}
+            if len(langs) == 1:
+                invite = invite.with_context(lang=langs.pop())
             if invite.template_id:
                 invite.subject = invite.template_id.subject
             elif not invite.subject:
                 invite.subject = False
 
-    @api.depends('template_id')
+    @api.depends('template_id', 'partner_ids')
     def _compute_body(self):
         for invite in self:
+            langs = set(invite.partner_ids.mapped('lang')) - {False}
+            if len(langs) == 1:
+                invite = invite.with_context(lang=langs.pop())
             if invite.template_id:
                 invite.body = invite.template_id.body_html
             elif not invite.body:
@@ -253,6 +258,9 @@ class SurveyInvite(models.TransientModel):
 
         # compute partners and emails, try to find partners for given emails
         valid_partners = self.partner_ids
+        langs = set(valid_partners.mapped('lang')) - {False}
+        if len(langs) == 1:
+            self = self.with_context(lang=langs.pop())
         valid_emails = []
         for email in emails_split.split(self.emails or ''):
             partner = False

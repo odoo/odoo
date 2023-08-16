@@ -596,3 +596,158 @@ class TestProcurement(TestMrpCommon):
         mo.button_mark_done()
 
         self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")
+
+    def test_rr_with_dependance_between_bom(self):
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        product_1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
+        })
+        product_3 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_4 = self.env['product.product'].create({
+            'name': 'Product C',
+            'type': 'consu',
+        })
+
+        op1 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 20,
+        })
+
+        op2 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_3.id,
+            'product_min_qty': 5,
+            'product_max_qty': 50,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_2.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_3.id, 'product_qty': 1})]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_3.id,
+            'product_tmpl_id': product_3.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': product_4.id, 'product_qty': 1})]
+        })
+
+        (op1 | op2)._procure_orderpoint_confirm()
+        mo1 = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+        mo3 = self.env['mrp.production'].search([('product_id', '=', product_3.id)])
+
+        self.assertEqual(len(mo1), 1)
+        self.assertEqual(len(mo3), 1)
+        self.assertEqual(mo1.product_qty, 20)
+        self.assertEqual(mo3.product_qty, 50)
+
+    def test_several_boms_same_finished_product(self):
+        """
+        Suppose a product with two BoMs, each one based on a different operation type
+        This test ensures that, when running the scheduler, the generated MOs are based
+        on the correct BoMs
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+
+        stock_location01 = warehouse.lot_stock_id
+        stock_location02 = stock_location01.copy()
+
+        manu_operation01 = warehouse.manu_type_id
+        manu_operation02 = manu_operation01.copy()
+        with Form(manu_operation02) as form:
+            form.name = 'Manufacturing 02'
+            form.sequence_code = 'MO2'
+            form.default_location_dest_id = stock_location02
+
+        manu_rule01 = warehouse.manufacture_pull_id
+        manu_route = manu_rule01.route_id
+        manu_rule02 = manu_rule01.copy()
+        with Form(manu_rule02) as form:
+            form.picking_type_id = manu_operation02
+        manu_route.rule_ids = [(6, 0, (manu_rule01 + manu_rule02).ids)]
+
+        compo01, compo02, finished = self.env['product.product'].create([{
+            'name': 'compo 01',
+            'type': 'consu',
+        }, {
+            'name': 'compo 02',
+            'type': 'consu',
+        }, {
+            'name': 'finished',
+            'type': 'product',
+            'route_ids': [(6, 0, manu_route.ids)],
+        }])
+
+        bom01_form = Form(self.env['mrp.bom'])
+        bom01_form.product_tmpl_id = finished.product_tmpl_id
+        bom01_form.code = '01'
+        bom01_form.picking_type_id = manu_operation01
+        with bom01_form.bom_line_ids.new() as line:
+            line.product_id = compo01
+        bom01 = bom01_form.save()
+
+        bom02_form = Form(self.env['mrp.bom'])
+        bom02_form.product_tmpl_id = finished.product_tmpl_id
+        bom02_form.code = '02'
+        bom02_form.picking_type_id = manu_operation02
+        with bom02_form.bom_line_ids.new() as line:
+            line.product_id = compo02
+        bom02 = bom02_form.save()
+
+        self.env['stock.warehouse.orderpoint'].create([{
+            'warehouse_id': warehouse.id,
+            'location_id': stock_location01.id,
+            'product_id': finished.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+        }, {
+            'warehouse_id': warehouse.id,
+            'location_id': stock_location02.id,
+            'product_id': finished.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        }])
+
+        self.env['procurement.group'].run_scheduler()
+
+        mos = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='origin')
+        self.assertRecordValues(mos, [
+            {'product_qty': 1, 'bom_id': bom01.id, 'picking_type_id': manu_operation01.id, 'location_dest_id': stock_location01.id},
+            {'product_qty': 2, 'bom_id': bom02.id, 'picking_type_id': manu_operation02.id, 'location_dest_id': stock_location02.id},
+        ])

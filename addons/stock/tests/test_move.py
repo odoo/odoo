@@ -2844,6 +2844,32 @@ class StockMove(SavepointCase):
         self.assertEqual(len(self.gather_relevant(self.product_lot, self.stock_location, lot_id=lot1, strict=True)), 0.0)
         self.assertEqual(len(self.gather_relevant(self.product_lot, self.stock_location, lot_id=lot2, strict=True)), 0.0)
 
+    def test_edit_reserved_move_line_9(self):
+        """
+        When writing on the reserved quantity on the SML, a process tries to
+        reserve the quants with that new quantity. If it fails (for instance
+        because the written quantity is more than actually available), this
+        quantity should be reset to 0.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+
+        out_move = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+
+        # try to manually assign more than available
+        out_move.move_line_ids.product_uom_qty = 2
+
+        self.assertTrue(out_move.move_line_ids)
+        self.assertEqual(out_move.move_line_ids.product_uom_qty, 0, "The reserved quantity should be cancelled")
+
     def test_edit_done_move_line_1(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
         directly adapts the transfer. In this case, we edit the sublocation where we take the
@@ -4001,6 +4027,68 @@ class StockMove(SavepointCase):
         })
         insufficient_qty_wizard.action_done()
         self.assertEqual(self.env['stock.quant']._gather(self.product, self.stock_location).quantity, -11)
+
+    def test_scrap_7(self):
+        """
+        Suppose a user wants to scrap some products thanks to internal moves.
+        This test checks the state of the picking based on few cases
+        """
+        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        internal_operation = self.env['stock.picking.type'].with_context(active_test=False).search([('code', '=', 'internal'), ('company_id', '=', self.env.company.id)], limit=1)
+        internal_operation.active = True
+
+        product01 = self.product
+        product02 = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+        })
+
+        self.env['stock.quant']._update_available_quantity(product01, self.stock_location, 3)
+        self.env['stock.quant']._update_available_quantity(product02, self.stock_location, 1)
+
+        scrap_picking01, scrap_picking02, scrap_picking03 = self.env['stock.picking'].create([{
+            'location_id': self.stock_location.id,
+            'location_dest_id': scrap_location.id,
+            'picking_type_id': internal_operation.id,
+            'move_lines': [(0, 0, {
+                'name': 'Scrap %s' % product.display_name,
+                'location_id': self.stock_location.id,
+                'location_dest_id': scrap_location.id,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'picking_type_id': internal_operation.id,
+            }) for product in products],
+        } for products in [(product01,), (product01,), (product01, product02)]])
+
+        (scrap_picking01 + scrap_picking02 + scrap_picking03).action_confirm()
+
+        # All SM are processed
+        scrap_picking01.move_lines.quantity_done = 1
+        scrap_picking01.button_validate()
+
+        # All SM are cancelled
+        scrap_picking02.action_cancel()
+
+        # Process one SM and cancel the other one
+        pick03_prod01_move = scrap_picking03.move_lines.filtered(lambda sm: sm.product_id == product01)
+        pick03_prod02_move = scrap_picking03.move_lines - pick03_prod01_move
+        pick03_prod01_move.quantity_done = 1
+        pick03_prod02_move._action_cancel()
+        scrap_picking03.button_validate()
+
+        self.assertEqual(scrap_picking01.move_lines.state, 'done')
+        self.assertEqual(scrap_picking01.state, 'done')
+
+        self.assertEqual(scrap_picking02.move_lines.state, 'cancel')
+        self.assertEqual(scrap_picking02.state, 'cancel')
+
+        self.assertEqual(pick03_prod01_move.state, 'done')
+        self.assertEqual(pick03_prod02_move.state, 'cancel')
+        self.assertEqual(scrap_picking03.state, 'done')
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product01, self.stock_location), 1)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product02, self.stock_location), 1)
 
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.

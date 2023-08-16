@@ -735,16 +735,7 @@ var FieldDateRange = InputField.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
         var self = this;
-        var startDate;
-        var endDate;
-        if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
-        }
-        if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
-        }
+        const [startDate, endDate] = this._getDateRangeFromInputField();
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
 
@@ -785,16 +776,39 @@ var FieldDateRange = InputField.extend({
     },
     /**
      * Bind the scroll event handle when the daterangepicker is open.
+     * Update the begin and end date with the dates from the input values
      *
      * @private
      */
     _onDateRangePickerShow() {
+        const daterangepicker = this.$el.data('daterangepicker');
         this._onScroll = ev => {
             if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
-                this.$el.data('daterangepicker').hide();
+                daterangepicker.hide();
             }
         };
         window.addEventListener('scroll', this._onScroll, true);
+        const [startDate, endDate] = this._getDateRangeFromInputField();
+        daterangepicker.setStartDate(startDate? startDate.utcOffset(session.getTZOffset(startDate)): moment());
+        daterangepicker.setEndDate(endDate? endDate.utcOffset(session.getTZOffset(endDate)): moment());
+        daterangepicker.updateView();
+    },
+    /**
+     * Get the startDate and endDate of the daterangepicker from the input fields
+     * @returns [Date (moment object), Date (moment object)]
+     * @private
+     */
+    _getDateRangeFromInputField() {
+        let startDate, endDate;
+        if (this.relatedEndDate) {
+            startDate = this._getValue();
+            endDate = field_utils.parse[this.formatType](this.recordData[this.relatedEndDate]);
+        }
+        if (this.relatedStartDate) {
+            startDate = field_utils.parse[this.formatType](this.recordData[this.relatedStartDate]);
+            endDate = this._getValue();
+        }
+        return [startDate, endDate];
     },
 });
 
@@ -922,6 +936,7 @@ var FieldDate = InputField.extend({
 
     /**
      * Confirm the value on hit enter and re-render
+     * It will also remove the offset to get the UTC value
      *
      * @private
      * @override
@@ -930,7 +945,14 @@ var FieldDate = InputField.extend({
     async _onKeydown(ev) {
         this._super(...arguments);
         if (ev.which === $.ui.keyCode.ENTER) {
-            await this._setValue(this.$input.val());
+            let value = this.$input.val();
+            try {
+                value = this._parseValue(value);
+                if (this.datewidget.type_of_date === "datetime") {
+                    value.add(-this.getSession().getTZOffset(value), "minutes");
+                }
+            } catch (err) {}
+            await this._setValue(value);
             this._render();
         }
     },
@@ -1926,10 +1948,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         if (width) {
             $img.attr('width', width);
             $img.css('max-width', width + 'px');
+            if (!height) {
+                $img.css('height', 'auto');
+                $img.css('max-height', '100%');
+            }
         }
         if (height) {
             $img.attr('height', height);
             $img.css('max-height', height + 'px');
+            if (!width) {
+                $img.css('width', 'auto');
+                $img.css('max-width', '100%');
+            }
         }
         this.$('> img').remove();
         this.$el.prepend($img);
@@ -2028,10 +2058,18 @@ var CharImageUrl = AbstractField.extend({
             if (width) {
                 $img.attr('width', width);
                 $img.css('max-width', width + 'px');
+                if (!height) {
+                    $img.css('height', 'auto');
+                    $img.css('max-height', '100%');
+                }
             }
             if (height) {
                 $img.attr('height', height);
                 $img.css('max-height', height + 'px');
+                if (!width) {
+                    $img.css('width', 'auto');
+                    $img.css('max-width', '100%');
+                }
             }
             this.$('> img').remove();
             this.$el.prepend($img);
@@ -2650,8 +2688,20 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: function (event) {
         event.stopPropagation();
-        this._setValue(!this.value);
+        if (!this.$input.prop('disabled')) {
+            this._setValue(!this.value);
+        }
     },
+
+    /**
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
+    }
 });
 
 var StatInfo = AbstractField.extend({

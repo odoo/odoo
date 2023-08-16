@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import ormcache, formataddr
 from odoo.exceptions import AccessError
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.tools import html_escape
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
@@ -106,7 +107,7 @@ class Channel(models.Model):
     # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
-    channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
+    channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel', copy=False)
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
     # access
     public = fields.Selection([
@@ -270,6 +271,7 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self and not self._context.get(MODULE_UNINSTALL_FLAG):
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+        self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), {'info': 'delete'}] for channel in self])
         return super(Channel, self).unlink()
 
     def write(self, vals):
@@ -850,9 +852,16 @@ class Channel(models.Model):
             if channel_partner.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
                 return
-            channel_partner.write({
-                'fetched_message_id': last_message_id,
-            })
+            # Avoid serialization error when multiple tabs are opened.
+            query = """
+                UPDATE mail_channel_partner
+                SET fetched_message_id = %s
+                WHERE id IN (
+                    SELECT id FROM mail_channel_partner WHERE id = %s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """
+            self.env.cr.execute(query, (last_message_id, channel_partner.id))
             data = {
                 'id': channel_partner.id,
                 'info': 'channel_fetched',
@@ -1005,7 +1014,7 @@ class Channel(models.Model):
         return channel_info
 
     @api.model
-    def channel_create(self, name, privacy='public'):
+    def channel_create(self, name, privacy='groups'):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
@@ -1114,13 +1123,13 @@ class Channel(models.Model):
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.", self.name)
+            msg = _("You are in channel <b>#%s</b>.", html_escape(self.name))
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
+            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name) for member in channel_partners) if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
             Type <b>#channel</b> to mention a channel.<br>

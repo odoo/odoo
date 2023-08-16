@@ -2,6 +2,7 @@ odoo.define('web.framework', function (require) {
 "use strict";
 
 var core = require('web.core');
+const config = require("web.config");
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 var disableCrashManager = require('web.CrashManager').disable;
@@ -102,7 +103,11 @@ function unblockUI() {
  */
 function redirect (url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
-    disableCrashManager();
+    // we don't disable the crash manager on mobile phones, because when going back to odoo,
+    // the page is not reloaded, and the crashManager stays disabled.
+    if (!config.device.isIOS && !config.device.isAndroid) {
+        disableCrashManager();
+    }
 
     var load = function() {
         var old = "" + window.location;

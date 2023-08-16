@@ -12,34 +12,6 @@
                 </xpath>
 
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
-                    <button id="l10n_ch_btn_isr_print_highlight"
-                        name="isr_print"
-                        string="Print ISR"
-                        type="object"
-                        attrs="{'invisible':['|', '|', '|', '|',
-                            ('move_type', 'not in', ('out_invoice', 'out_refund')),
-                            ('l10n_ch_isr_sent', '=', True),
-                            ('state', '!=', 'posted'),
-                            ('payment_state', 'not in', ('not_paid', 'partial')),
-                            ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        class="oe_highlight"
-                        groups="base.group_user"
-                        />
-                </xpath>
-
-                <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
-                    <button id="btn_isr_print_normal"
-                        name="isr_print"
-                        string="Print ISR"
-                        type="object"
-                        attrs="{'invisible':['|', '|', '|', '|',
-                            ('move_type', 'not in', ('out_invoice', 'out_refund')),
-                            ('l10n_ch_isr_sent', '=', False),
-                            ('state', '!=', 'posted'),
-                            ('payment_state', 'not in', ('not_paid', 'partial')),
-                            ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
-                        groups="base.group_user"
-                        />
                     <button
                         name="print_ch_qr_bill"
                         string="Print QR-bill"

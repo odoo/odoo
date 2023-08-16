@@ -11,6 +11,8 @@ var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
+const { browser } = owl;
+
 // Summernote Lib (neek change to make accessible: method and object)
 var dom = summernote.core.dom;
 var range = summernote.core.range;
@@ -303,6 +305,7 @@ var RTEWidget = Widget.extend({
         $('.o_not_editable').attr('contentEditable', false);
 
         var $editable = this.editable();
+        this.__$editable = $editable;
 
         // When a undo/redo is performed, the whole DOM is changed so we have
         // to prepare for it (website will restart animations for example)
@@ -332,8 +335,22 @@ var RTEWidget = Widget.extend({
         });
 
         // start element observation
+        let pastingData = false;
+        $(document).on('paste', function (ev) {
+            pastingData = [...self.editable()];
+            browser.setTimeout(function(){ pastingData = false; }, 0);
+        });
         $(document).on('content_changed', function (ev) {
             self.trigger_up('rte_change', {target: ev.target});
+
+            if (pastingData) {
+                const pastedDirtyEls = ev.target.querySelectorAll('[data-oe-id]');
+                _.difference([...pastedDirtyEls], pastingData).forEach(el => {
+                    const dirtyAttributes = el.getAttributeNames().filter(name => !name.indexOf("data-oe-"));
+                    dirtyAttributes.forEach(name => el.removeAttribute(name));
+                })
+                pastingData = false;
+            }
 
             // Add the dirty flag to the element that changed by either adding
             // it on the highest editable ancestor or, if there is no editable

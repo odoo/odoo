@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.addons.account_edi_extended.models.account_edi_document import DEFAULT_BLOCKING_LEVEL
+from odoo.exceptions import UserError
+
 from psycopg2 import OperationalError
 import base64
 import logging
@@ -184,7 +186,7 @@ class AccountEdiDocument(models.Model):
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success') is True:
-                    old_attachment = document.attachment_id
+                    old_attachment = document.sudo().attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
@@ -213,7 +215,7 @@ class AccountEdiDocument(models.Model):
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
+            attachments_to_unlink.sudo().unlink()
 
         test_mode = self._context.get('edi_test_mode', False)
 
@@ -265,12 +267,15 @@ class AccountEdiDocument(models.Model):
                     if attachments_potential_unlink:
                         self._cr.execute('SELECT * FROM ir_attachment WHERE id IN %s FOR UPDATE NOWAIT', [tuple(attachments_potential_unlink.ids)])
 
-                    self._process_job(documents, doc_type)
             except OperationalError as e:
                 if e.pgcode == '55P03':
                     _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                    if not with_commit:
+                        raise UserError(_('This document is being sent by another process already. '))
+                    continue
                 else:
                     raise e
-            else:
-                if with_commit and len(jobs) > 1:
-                    self.env.cr.commit()
+
+            self._process_job(documents, doc_type)
+            if with_commit and len(jobs) > 1:
+                self.env.cr.commit()

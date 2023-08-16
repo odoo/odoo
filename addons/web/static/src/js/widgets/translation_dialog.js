@@ -39,6 +39,7 @@ odoo.define('web.TranslationDialog', function (require) {
             this.currentInterfaceLanguage = session.user_context.lang;
             this.isText = options.isText;
             this.showSrc = options.showSrc;
+            this.node = options.node;
 
             this._super(parent, _.extend({
                 size: 'large',
@@ -153,6 +154,7 @@ odoo.define('web.TranslationDialog', function (require) {
                             dataPointID: this.dataPointID,
                             changes: changes,
                             doNotSetDirty: false,
+                            node: this.node,
                         };
                     }
                 }

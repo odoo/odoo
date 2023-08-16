@@ -665,3 +665,34 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'name': '32 GB',
                 'attribute_id': self.ram_attribute.id,
             })
+
+    def test_inactive_related_product_update(self):
+        """
+            Create a product and give it a product attribute then archive it, delete the product attribute,
+            unarchive the product and check that the product is not related to the product attribute.
+        """
+        product_attribut = self.env['product.attribute'].create({
+            'name': 'PA',
+            'sequence': 1,
+            'create_variant': 'no_variant',
+        })
+        a1 = self.env['product.attribute.value'].create({
+            'name': 'pa_value',
+            'attribute_id': product_attribut.id,
+            'sequence': 1,
+        })
+        product = self.env['product.template'].create({
+            'name': 'P1',
+            'type': 'consu',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': product_attribut.id,
+                'value_ids': [(6, 0, [a1.id])],
+            })]
+        })
+        self.assertTrue(product_attribut.is_used_on_products, 'The product attribute must have an associated product')
+        product.action_archive()
+        self.assertFalse(product.active, 'The product should be archived.')
+        product.write({'attribute_line_ids': [[5, 0, 0]]})
+        product.action_unarchive()
+        self.assertTrue(product.active, 'The product should be unarchived.')
+        self.assertFalse(product_attribut.is_used_on_products, 'The product attribute must not have an associated product')

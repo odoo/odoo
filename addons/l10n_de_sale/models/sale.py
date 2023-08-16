@@ -28,10 +28,14 @@ class SaleOrder(models.Model):
                 data.append((_('Customer Reference'), record.client_order_ref))
             if record.user_id:
                 data.append((_("Salesperson"), record.user_id.name))
+            if 'incoterm' in record._fields and record.incoterm:
+                data.append((_("Incoterm"), record.incoterm.code))
 
     def _compute_l10n_de_document_title(self):
         for record in self:
-            if record.state in ('draft', 'sent'):
+            if self._context.get('proforma'):
+                record.l10n_de_document_title = _('Pro Forma Invoice')
+            elif record.state in ('draft', 'sent'):
                 record.l10n_de_document_title = _('Quotation')
             else:
                 record.l10n_de_document_title = _('Sales Order')

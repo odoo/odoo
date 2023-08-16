@@ -23,6 +23,14 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @override
      */
+    destroy: function () {
+        // The observer needs to be disconnected first.
+        this.observer.disconnect();
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     onClone: function () {
         this._generateNav();
     },
@@ -48,7 +56,17 @@ options.registry.TableOfContent = options.Class.extend({
             $el.attr('id', id);
             $el[0].dataset.anchor = 'true';
         });
-        $nav.find('a:first').addClass('active');
+
+        const tocMainEl = this.$target[0].querySelector('.s_table_of_content_main');
+        if (tocMainEl && tocMainEl.children.length === 0) {
+            this.trigger_up('go_to_parent', {$snippet: this.$target});
+            // destroy public widget and remove the ToC since there are no more
+            // child elements.
+            this.trigger_up('will_remove_snippet', {$target: this.$target});
+            this.$target[0].remove();
+        } else {
+            $nav.find('a:first').addClass('active');
+        }
     },
 });
 

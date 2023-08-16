@@ -3,8 +3,9 @@
 
 from werkzeug import urls
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
+from odoo.exceptions import UserError
 
 
 class RecruitmentSource(models.Model):
@@ -33,6 +34,9 @@ class Applicant(models.Model):
         if 'partner_name' in values:
             values.setdefault('name', '%s\'s Application' % values['partner_name'])
         if values.get('job_id'):
+            job = self.env['hr.job'].browse(values.get('job_id'))
+            if not job.sudo().website_published:
+                raise UserError(_("You cannot apply for this job."))
             stage = self.env['hr.recruitment.stage'].sudo().search([
                 ('fold', '=', False),
                 '|', ('job_ids', '=', False), ('job_ids', '=', values['job_id']),

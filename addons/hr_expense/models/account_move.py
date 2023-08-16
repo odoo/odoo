@@ -12,3 +12,9 @@ class AccountMove(models.Model):
             if l.expense_id:
                 l.expense_id.refuse_expense(reason=_("Payment Cancelled"))
         return super().button_cancel()
+
+    def button_draft(self):
+        for line in self.line_ids:
+            if line.expense_id:
+                line.expense_id.sheet_id.write({'state': 'post'})
+        return super().button_draft()

@@ -54,6 +54,7 @@ ProductConfiguratorWidget.include({
             if (result && result[0].product_add_mode === 'matrix') {
                 self._openGridConfigurator(productTemplateId, self.dataPointID, true);
             } else {
+                self.restoreProductTemplateId = self.recordData.product_template_id;
                 // Call super only if product_add_mode different than matrix
                 // to avoid product configurator opening (which is the default case).
                 self._openProductConfigurator({

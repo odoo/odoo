@@ -31,7 +31,7 @@ from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -243,8 +243,9 @@ class OdooSuite(unittest.suite.TestSuite):
 
 
 class TreeCase(unittest.TestCase):
+    _python_version = sys.version_info
 
-    if sys.version_info < (3, 8):
+    if _python_version < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
         _class_cleanups = []
 
@@ -297,6 +298,7 @@ class MetaCase(type):
             cls.test_tags = {'standard', 'at_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
+            cls.test_sequence = 0
 
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
@@ -432,7 +434,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         """
         if self.warm:
             # mock random in order to avoid random bus gc
-            with self.subTest(), patch('random.random', lambda: 1):
+            with patch('random.random', lambda: 1):
                 login = self.env.user.login
                 expected = counters.get(login, default)
                 if flush:
@@ -451,7 +453,9 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
                     if count > expected:
                         msg = "Query count more than expected for user %s: %d > %d in %s at %s:%s"
-                        self.fail(msg % (login, count, expected, funcname, filename, linenum))
+                        # add a subtest in order to continue the test_method in case of failures
+                        with self.subTest():
+                            self.fail(msg % (login, count, expected, funcname, filename, linenum))
                     else:
                         logger = logging.getLogger(type(self).__module__)
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
@@ -579,6 +583,106 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertCountEqual(a, b, msg=None)
 
+    def _callSetUp(self):
+        # This override is aimed at providing better error logs inside tests.
+        # First, we want errors to be logged whenever they appear instead of
+        # after the test, as the latter makes debugging harder and can even be
+        # confusing in the case of subtests.
+        #
+        # When a subtest is used inside a test, (1) the recovered traceback is
+        # not complete, and (2) the error is delayed to the end of the test
+        # method. There is unfortunately no simple way to hook inside a subtest
+        # to fix this issue. The method TestCase.subTest uses the context
+        # manager _Outcome.testPartExecutor as follows:
+        #
+        #     with self._outcome.testPartExecutor(self._subtest, isTest=True):
+        #         yield
+        #
+        # This context manager is actually also used for the setup, test method,
+        # teardown, cleanups. If an error occurs during any one of those, it is
+        # simply appended in TestCase._outcome.errors, and the latter is
+        # consumed at the end calling _feedErrorsToResult.
+        #
+        # The TestCase._outcome is set just before calling _callSetUp. This
+        # method is actually executed inside a testPartExecutor. Replacing it
+        # here ensures that all errors will be caught.
+        # See https://github.com/odoo/odoo/pull/107572 for more info.
+        self._outcome.errors = _ErrorCatcher(self)
+        super()._callSetUp()
+
+    def patch_requests(self):
+        # requests.get -> requests.api.request -> Session().request
+        # TBD: enable by default & set side_effect=NotImplementedError to force an error
+        p = patch('requests.Session.request', Mock(spec_set=[]))
+        self.addCleanup(p.stop)
+        return p.start()
+
+class _ErrorCatcher(list):
+    """ This extends a list where errors are appended whenever they occur. The
+    purpose of this class is to feed the errors directly to the output, instead
+    of letting them accumulate until the test is over. It also improves the
+    traceback to make it easier to debug.
+    """
+    __slots__ = ['test']
+
+    def __init__(self, test):
+        super().__init__()
+        self.test = test
+
+    def append(self, error):
+        exc_info = error[1]
+        if exc_info is not None:
+            exception_type, exception, tb = exc_info
+            tb = self._complete_traceback(tb)
+            exc_info = (exception_type, exception, tb)
+        self.test._feedErrorsToResult(self.test._outcome.result, [(error[0], exc_info)])
+
+    def _complete_traceback(self, initial_tb):
+        Traceback = type(initial_tb)
+
+        # make the set of frames in the traceback
+        tb_frames = set()
+        tb = initial_tb
+        while tb:
+            tb_frames.add(tb.tb_frame)
+            tb = tb.tb_next
+        tb = initial_tb
+
+        # find the common frame by searching the last frame of the current_stack present in the traceback.
+        current_frame = inspect.currentframe()
+        common_frame = None
+        while current_frame:
+            if current_frame in tb_frames:
+                common_frame = current_frame  # we want to find the last frame in common
+            current_frame = current_frame.f_back
+
+        if not common_frame:  # not really useful but safer
+            _logger.warning('No common frame found with current stack, displaying full stack')
+            tb = initial_tb
+        else:
+            # remove the tb_frames untile the common_frame is reached (keep the current_frame tb since the line is more accurate)
+            while tb and tb.tb_frame != common_frame:
+                tb = tb.tb_next
+
+        # add all current frame elements under the common_frame to tb
+        current_frame = common_frame.f_back
+        while current_frame:
+            tb = Traceback(tb, current_frame, current_frame.f_lasti, current_frame.f_lineno)
+            current_frame = current_frame.f_back
+
+        # remove traceback root part (odoo_bin, main, loading, ...), as
+        # everything under the testCase is not useful. Using '_callTestMethod',
+        # '_callSetUp', '_callTearDown', '_callCleanup' instead of the test
+        # method since the error does not comme especially from the test method.
+        while tb:
+            code = tb.tb_frame.f_code
+            if code.co_filename.endswith('/unittest/case.py') and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
+                return tb.tb_next
+            tb = tb.tb_next
+
+        _logger.warning('No root frame found, displaying full stacks')
+        return initial_tb  # this shouldn't be reached
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
@@ -655,11 +759,23 @@ class SavepointCase(SingleTransactionCase):
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.all.envs
+        for env in list(envs):
+            self.addCleanup(env.clear)
+        # restore the set of known environments as it was at setUp
         self.addCleanup(envs.update, list(envs))
         self.addCleanup(envs.clear)
 
         self.addCleanup(self.registry.clear_caches)
-        self.addCleanup(self.env.clear)
+
+        # This prevents precommit functions and data from piling up
+        # until cr.flush is called in 'assertRaises' clauses
+        # (these are not cleared in self.env.clear or envs.clear)
+        cr = self.env.cr
+        def _reset(cb, funcs, data):
+            cb._funcs = funcs
+            cb.data = data
+        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
+            self.addCleanup(_reset, callback, collections.deque(callback._funcs), dict(callback.data))
 
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
@@ -888,7 +1004,7 @@ class ChromeBrowser():
         raise unittest.SkipTest("Error during Chrome headless connection")
 
     def _open_websocket(self):
-        self.ws = websocket.create_connection(self.ws_url)
+        self.ws = websocket.create_connection(self.ws_url, suppress_origin=True)
         if self.ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         self.ws.settimeout(0.01)
@@ -1095,6 +1211,8 @@ class ChromeBrowser():
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'result': {'type': 'boolean', 'value': True}}
+        # catch errors in ready code to prevent opening error dialogs
+        ready_code = "try { %s } catch {}" % ready_code
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
         last_bad_res = ''
         start_time = time.time()
@@ -1463,7 +1581,7 @@ class HttpSavepointCase(HttpCaseCommon, SavepointCase):
 def users(*logins):
     """ Decorate a method to execute it once for each given user. """
     @decorator
-    def wrapper(func, *args, **kwargs):
+    def _users(func, *args, **kwargs):
         self = args[0]
         old_uid = self.uid
         try:
@@ -1484,7 +1602,7 @@ def users(*logins):
         finally:
             self.uid = old_uid
 
-    return wrapper
+    return _users
 
 
 @decorator
@@ -1760,8 +1878,11 @@ class Form(object):
             return O2MProxy(self, field)
         return v
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
-        d = (modmap or self._view['modifiers'])[field].get(modifier, default)
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
+        if view is None:
+            view = self._view
+
+        d = (modmap or view['modifiers'])[field].get(modifier, default)
         if isinstance(d, bool):
             return d
 
@@ -1802,7 +1923,7 @@ class Form(object):
                     # we're looking up the "current view" so bits might be
                     # missing when processing o2ms in the parent (see
                     # values_to_save:1450 or so)
-                    f_ = self._view['fields'].get(f, {'type': None})
+                    f_ = view['fields'].get(f, {'type': None})
                     if f_['type'] == 'many2many':
                         # field value should be [(6, _, ids)], we want just the ids
                         field_val = field_val[0][2] if field_val else []
@@ -1942,7 +2063,7 @@ class Form(object):
 
             get_modifier = functools.partial(
                 self._get_modifier,
-                f, modmap=view['modifiers'],
+                f, view=view,
                 vals=modifiers_values or record_values
             )
             descr = fields[f]
@@ -2172,11 +2293,11 @@ class O2MForm(Form):
             if hasattr(vals, '_changed'):
                 self._changed.update(vals._changed)
 
-    def _get_modifier(self, field, modifier, default=False, modmap=None, vals=None):
+    def _get_modifier(self, field, modifier, *, default=False, view=None, modmap=None, vals=None):
         if vals is None:
             vals = {**self._values, '•parent•': self._proxy._parent._values}
 
-        return super()._get_modifier(field, modifier, default=default, modmap=modmap, vals=vals)
+        return super()._get_modifier(field, modifier, default=default, view=view, modmap=modmap, vals=vals)
 
     def _onchange_values(self):
         values = super(O2MForm, self)._onchange_values()
@@ -2351,7 +2472,7 @@ class O2MProxy(X2MProxy):
         del self._records[index]
         self._parent._perform_onchange([self._field])
 
-class M2MProxy(X2MProxy, collections.Sequence):
+class M2MProxy(X2MProxy, collections.abc.Sequence):
     """ M2MProxy()
 
     Behaves as a :class:`~collection.Sequence` of recordsets, can be
@@ -2487,6 +2608,10 @@ def tagged(*tags):
         include = {t for t in tags if not t.startswith('-')}
         exclude = {t[1:] for t in tags if t.startswith('-')}
         obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
+        at_install = 'at_install' in obj.test_tags
+        post_install = 'post_install' in obj.test_tags
+        if not (at_install ^ post_install):
+            _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
 

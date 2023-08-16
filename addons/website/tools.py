@@ -90,7 +90,7 @@ def MockRequest(
         env=env,
         httprequest=Mock(
             host='localhost',
-            path='/hello/',
+            path='/hello',
             app=odoo.http.root,
             environ={'REMOTE_ADDR': '127.0.0.1'},
             cookies=cookies or {},
@@ -103,7 +103,8 @@ def MockRequest(
             debug=False,
             sale_order_id=sale_order_id,
         ),
-        website=website
+        website=website,
+        render=lambda *a, **kw: '<MockResponse>',
     )
 
     with contextlib.ExitStack() as s:

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
+from odoo.tools.misc import formatLang
 from odoo import fields
 from odoo.exceptions import UserError
 
@@ -70,7 +71,7 @@ class TestExpenses(TestExpenseCommon):
             # Receivable line (foreign currency):
             {
                 'debit': 0.0,
-                'credit': 862.5,
+                'credit': 575.0,
                 'amount_currency': -1725.0,
                 'account_id': self.company_data['default_account_payable'].id,
                 'product_id': False,
@@ -80,7 +81,7 @@ class TestExpenses(TestExpenseCommon):
             },
             # Tax line (foreign currency):
             {
-                'debit': 112.5,
+                'debit': 75.0,
                 'credit': 0.0,
                 'amount_currency': 225.0,
                 'account_id': self.company_data['default_account_tax_purchase'].id,
@@ -102,7 +103,7 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (foreign currency):
             {
-                'debit': 750.0,
+                'debit': 500.0,
                 'credit': 0.0,
                 'amount_currency': 1500.0,
                 'account_id': self.company_data['default_account_expense'].id,
@@ -133,7 +134,7 @@ class TestExpenses(TestExpenseCommon):
                 'currency_id': self.company_data['currency'].id,
             },
             {
-                'amount': -750.0,
+                'amount': -500.0,
                 'date': fields.Date.from_string('2017-01-01'),
                 'account_id': self.analytic_account_2.id,
                 'currency_id': self.company_data['currency'].id,
@@ -296,3 +297,133 @@ class TestExpenses(TestExpenseCommon):
         move = self.env['account.payment'].browse(action['res_id']).move_id
         move.button_cancel()
         self.assertEqual(sheet.state, 'cancel', 'Sheet state must be cancel when the payment linked to that sheet is canceled')
+
+    def test_print_expense_check(self):
+        """
+        Test the check content when printing a check
+        that comes from an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        payment_method = self.env.company.bank_journal_ids.outbound_payment_method_ids.filtered(lambda m: m.code == 'check_printing')
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            wiz_form.payment_method_id = payment_method
+        wizard = wiz_form.save()
+        action = wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+
+        payment = self.env[action['res_model']].browse(action['res_id'])
+        pages = payment._check_get_pages()
+        stub_line = pages[0]['stub_lines'][:1]
+        self.assertTrue(stub_line)
+        move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+        self.assertDictEqual(stub_line[0], {
+            'due_date': '',
+            'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+            'amount_total': formatLang(self.env, 11.0, currency_obj=self.env.company.currency_id),
+            'amount_residual': '-',
+            'amount_paid': formatLang(self.env, 11.0, currency_obj=self.env.company.currency_id),
+            'currency': self.env.company.currency_id
+        })
+
+    def test_reset_move_to_draft(self):
+        """
+        Test the state of an expense and its report
+        after resetting the paid move to draft
+        """
+        # Create expense and report
+        expense = self.env['hr.expense'].create({
+            'name': 'expense_1',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': 1000.00,
+        })
+        expense.action_submit_expenses()
+        expense_sheet = expense.sheet_id
+
+        self.assertEqual(expense.state, 'draft', 'Expense state must be draft before sheet submission')
+        self.assertEqual(expense_sheet.state, 'draft', 'Sheet state must be draft before submission')
+
+        # Submit report
+        expense_sheet.action_submit_sheet()
+
+        self.assertEqual(expense.state, 'reported', 'Expense state must be reported after sheet submission')
+        self.assertEqual(expense_sheet.state, 'submit', 'Sheet state must be submit after submission')
+
+        # Approve report
+        expense_sheet.approve_expense_sheets()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after sheet approval')
+        self.assertEqual(expense_sheet.state, 'approve', 'Sheet state must be draft after approval')
+
+        # Create move
+        expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after posting move')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be draft after posting move')
+
+        # Pay move
+        move = expense_sheet.account_move_id
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
+
+        # Reset move to draft
+        move.button_draft()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be approved after resetting move to draft')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be done after resetting move to draft')
+
+        # Post and pay move again
+        move.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
+
+    def test_expense_from_attachments(self):
+        # avoid passing through extraction when installed
+        if 'hr.expense.extract.words' in self.env:
+            self.env.company.expense_extract_show_ocr_option_selection = 'no_send'
+        self.env.user.employee_id = self.expense_employee.id
+        attachment = self.env['ir.attachment'].create({
+            'datas': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+        })
+        product = self.env['product.product'].search([('can_be_expensed', '=', True)], limit=1)
+        product.property_account_expense_id = self.company_data['default_account_payable']
+
+        expense_id = self.env['hr.expense'].create_expense_from_attachments(attachment.id)['res_id']
+        expense = self.env['hr.expense'].browse(expense_id)
+        self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")

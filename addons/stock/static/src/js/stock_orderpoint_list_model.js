@@ -14,23 +14,19 @@ var StockOrderpointListModel = ListModel.extend({
     // -------------------------------------------------------------------------
     /**
      */
-    replenish: function (records) {
+    replenish: function (recordResIds) {
       var self = this;
-      var model = records[0].model;
-      var recordResIds = _.pluck(records, 'res_id');
-      var context = records[0].getContext();
       return this._rpc({
-          model: model,
+          model: this.loadParams.modelName,
           method: 'action_replenish',
           args: [recordResIds],
-          context: context,
+          context: this.loadParams.context,
       }).then(function () {
           return self.do_action('stock.action_replenishment');
       });
     },
 
-    snooze: function (records) {
-      var recordResIds = _.pluck(records, 'res_id');
+    snooze: function (recordResIds) {
       var self = this;
       return this.do_action('stock.action_orderpoint_snooze', {
           additional_context: {

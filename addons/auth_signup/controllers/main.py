@@ -3,7 +3,7 @@
 import logging
 import werkzeug
 
-from odoo import http, _
+from odoo import http, tools, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home, SIGN_UP_REQUEST_PARAMS
 from odoo.addons.base_setup.controllers.main import BaseSetup
@@ -36,14 +36,13 @@ class AuthSignupHome(Home):
             try:
                 self.do_signup(qcontext)
                 # Send an account creation confirmation email
-                if qcontext.get('token'):
-                    User = request.env['res.users']
-                    user_sudo = User.sudo().search(
-                        User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
-                    )
-                    template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
-                    if user_sudo and template:
-                        template.sudo().send_mail(user_sudo.id, force_send=True)
+                User = request.env['res.users']
+                user_sudo = User.sudo().search(
+                    User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
+                )
+                template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
+                if user_sudo and template:
+                    template.sudo().send_mail(user_sudo.id, force_send=True)
                 return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.args[0]
@@ -95,6 +94,7 @@ class AuthSignupHome(Home):
 
         get_param = request.env['ir.config_parameter'].sudo().get_param
         return {
+            'disable_database_manager': not tools.config['list_db'],
             'signup_enabled': request.env['res.users']._get_signup_invitation_scope() == 'b2c',
             'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
         }

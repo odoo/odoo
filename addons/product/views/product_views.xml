@@ -111,7 +111,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2', 'default_company_id': company_id}"/>
                             </group>
                         </page>
                     </notebook>
@@ -219,6 +219,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
@@ -261,7 +262,7 @@
                             </group>
                             <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1"
-                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                     </sheet>
@@ -660,7 +661,9 @@
                     <field name="name" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
-                        groups="product.group_product_variant"/>
+                        groups="product.group_product_variant"
+                        domain="[('product_tmpl_id', '=?', context.get('default_product_tmpl_id', False))]"
+                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                     <field name="product_tmpl_id" string="Product" readonly="1"
                         invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="product_name" optional="hide"/>

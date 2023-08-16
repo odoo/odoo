@@ -369,7 +369,9 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         oStyle.anchor = false;
     }
 
-    if (oStyle.image || oStyle.anchor || (oStyle.range && !$(oStyle.range.sc).closest('.note-editable').length)) {
+    if (oStyle.image || oStyle.anchor || (oStyle.range
+        && (!$(oStyle.range.sc).closest('.note-editable').length
+        || !$(oStyle.range.sc).parent().is(':o_editable')))) {
         $airPopover.hide();
     } else {
         $airPopover.show();
@@ -429,9 +431,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
-        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
-        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left ml-auto'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto ml-auto'); break;
+        case 'right': $target.toggleClass('ml-auto float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {

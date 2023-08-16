@@ -12,7 +12,7 @@ class StockInventory(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
-    has_account_moves = fields.Boolean(compute='_compute_has_account_moves')
+    has_account_moves = fields.Boolean(compute='_compute_has_account_moves', compute_sudo=True)
 
     def _compute_has_account_moves(self):
         for inventory in self:

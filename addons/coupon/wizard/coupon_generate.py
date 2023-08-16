@@ -44,5 +44,12 @@ class CouponGenerate(models.TransientModel):
     @api.depends('partners_domain')
     def _compute_has_partner_email(self):
         for record in self:
-            domain = expression.AND([ast.literal_eval(record.partners_domain), [('email', '=', False)]])
+            partners_domain = ast.literal_eval(record.partners_domain)
+            if partners_domain == [['', '=', 1]]:
+                # The field name is not clear. It actually means "all partners have email".
+                # If domain is not set, we don't want to show the warning "there is a partner without email".
+                # So, we explicitly set value to True
+                record.has_partner_email = True
+                continue
+            domain = expression.AND([partners_domain, [('email', '=', False)]])
             record.has_partner_email = self.env['res.partner'].search_count(domain) == 0

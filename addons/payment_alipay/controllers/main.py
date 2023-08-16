@@ -49,9 +49,18 @@ class AlipayController(http.Controller):
             return 'success'
         return ""
 
-    @http.route('/payment/alipay/return', type='http', auth="public", methods=['GET', 'POST'])
+    @http.route('/payment/alipay/return', type='http', auth="public", methods=['GET', 'POST'], save_session=False)
     def alipay_return(self, **post):
-        """ Alipay return """
+        """ Alipay return
+
+        The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
+        to the user if they are redirected to this route with a POST request. Indeed, as the session
+        cookie is created without a `SameSite` attribute, some browsers that don't implement the
+        recommended default `SameSite=Lax` behavior will not include the cookie in the redirection
+        request from the payment provider to Odoo. As the redirection to the '/payment/status' page
+        will satisfy any specification of the `SameSite` attribute, the session of the user will be
+        retrieved and with it the transaction which will be immediately post-processed.
+        """
         _logger.info('Beginning Alipay form_feedback with post data %s', pprint.pformat(post))
         self._alipay_validate_data(**post)
         return werkzeug.utils.redirect('/payment/process')

@@ -281,7 +281,11 @@ class MailComposer(models.TransientModel):
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
             records = self.env[self.model].browse(res_ids)
-            reply_to_value = records._notify_get_reply_to(default=self.email_from)
+            reply_to_value = records._notify_get_reply_to(default=False)
+            # when having no specific reply-to, fetch rendered email_from value
+            for res_id, reply_to in reply_to_value.items():
+                if not reply_to:
+                    reply_to_value[res_id] = rendered_values.get(res_id, {}).get('email_from', False)
 
         blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
@@ -422,9 +426,18 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'use_default_to': True,
             }
             template = self.env['mail.template'].create(values)
+
+            if record.attachment_ids:
+                # transfer pending attachments to the new template
+                attachments = self.env['ir.attachment'].sudo().browse(record.attachment_ids.ids).filtered(
+                    lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+                if attachments:
+                    attachments.write({'res_model': template._name, 'res_id': template.id})
+                template.attachment_ids |= record.attachment_ids
+
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()

@@ -8,7 +8,6 @@
 
 .o_mail_theme_selector {
     > a {
-        @include o-position-absolute(0, 0, auto, 0);
         height: $o-we-toolbar-height;
         line-height: $o-we-toolbar-height;
         border-radius: 0;
@@ -47,7 +46,7 @@
 
         &.show {
             bottom: 31px !important;
-            top: -2px !important;
+            top: 41px !important;
             right: 3px !important;
         }
 
@@ -76,6 +75,10 @@
                 .o_thumb {
                     border: 1px solid black;
                 }
+            }
+
+            &:focus {
+                background-color: $o-we-sidebar-bg;
             }
 
             &.selected .o_thumb {

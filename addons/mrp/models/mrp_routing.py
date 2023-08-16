@@ -77,3 +77,15 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    def _get_comparison_values(self):
+        if not self:
+            return False
+        self.ensure_one()
+        return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual'))
+
+    def write(self, values):
+        if 'bom_id' in values:
+            filtered_lines = self.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == self)
+            filtered_lines.operation_id = False
+        return super().write(values)

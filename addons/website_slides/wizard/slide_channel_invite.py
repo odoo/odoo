@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
@@ -77,6 +77,12 @@ class SlideChannelInvite(models.TransientModel):
 
         if not self.env.user.email:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
+
+        try:
+            self.channel_id.check_access_rights('write')
+            self.channel_id.check_access_rule('write')
+        except AccessError:
+            raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
 
         mail_values = []
         for partner_id in self.partner_ids:

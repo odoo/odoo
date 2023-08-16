@@ -37,6 +37,17 @@ class StockBackorderConfirmation(models.TransientModel):
             # because of webclient limitations
         return res
 
+    def _check_less_quantities_than_expected(self, pickings):
+        for pick_id in pickings:
+            moves_to_log = {}
+            for move in pick_id.move_lines:
+                if float_compare(move.product_uom_qty,
+                                 move.quantity_done,
+                                 precision_rounding=move.product_uom.rounding) > 0:
+                    moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
+            if moves_to_log:
+                pick_id._log_less_quantities_than_expected(moves_to_log)
+
     def process(self):
         pickings_to_do = self.env['stock.picking']
         pickings_not_to_do = self.env['stock.picking']
@@ -46,28 +57,21 @@ class StockBackorderConfirmation(models.TransientModel):
             else:
                 pickings_not_to_do |= line.picking_id
 
-        for pick_id in pickings_not_to_do:
-            moves_to_log = {}
-            for move in pick_id.move_lines:
-                if float_compare(move.product_uom_qty,
-                                 move.quantity_done,
-                                 precision_rounding=move.product_uom.rounding) > 0:
-                    moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
-            pick_id._log_less_quantities_than_expected(moves_to_log)
-
         pickings_to_validate = self.env.context.get('button_validate_picking_ids')
         if pickings_to_validate:
             pickings_to_validate = self.env['stock.picking'].browse(pickings_to_validate).with_context(skip_backorder=True)
             if pickings_not_to_do:
+                self._check_less_quantities_than_expected(pickings_not_to_do)
                 pickings_to_validate = pickings_to_validate.with_context(picking_ids_not_to_backorder=pickings_not_to_do.ids)
             return pickings_to_validate.button_validate()
         return True
 
     def process_cancel_backorder(self):
-        pickings_to_validate = self.env.context.get('button_validate_picking_ids')
-        if pickings_to_validate:
-            return self.env['stock.picking']\
-                .browse(pickings_to_validate)\
+        pickings_to_validate_ids = self.env.context.get('button_validate_picking_ids')
+        if pickings_to_validate_ids:
+            pickings_to_validate = self.env['stock.picking'].browse(pickings_to_validate_ids)
+            self._check_less_quantities_than_expected(pickings_to_validate)
+            return pickings_to_validate\
                 .with_context(skip_backorder=True, picking_ids_not_to_backorder=self.pick_ids.ids)\
                 .button_validate()
         return True

@@ -5,7 +5,7 @@
         <t groups="website.group_website_publisher" t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)">
             <li t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
                 <label class="o_switch o_switch_danger js_publish_btn" t-att-accesskey="desktop_navbar and 'p'">
-                    <input type="checkbox" t-att-checked="main_object.website_published"/>
+                    <input type="checkbox" disabled="disabled" t-att-checked="main_object.website_published"/>
                     <span/>
                     <span class="css_publish">Unpublished</span>
                     <span class="css_unpublish">Published</span>

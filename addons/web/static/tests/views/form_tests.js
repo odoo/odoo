@@ -2352,6 +2352,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('remove default value in subviews', async function (assert) {
+        assert.expect(2);
+
+        this.data.product.onchanges = {}
+        this.data.product.onchanges.name = function () {};
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            viewOptions: {
+                context: {default_state: "ab"}
+            },
+            arch: '<form string="Partners">' +
+                    '<field name="product_ids" context="{\'default_product_uom_qty\': 68}">' +
+                      '<tree editable="top">' +
+                        '<field name="name"/>' +
+                      '</tree>' +
+                    '</field>' +
+                  '</form>',
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/partner/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_state: 'ab',
+                    })
+                }
+                else if (route === "/web/dataset/call_kw/product/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_product_uom_qty: 68,
+                    })
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.destroy();
+    });
+
     QUnit.test('reference field in one2many list', async function (assert) {
         assert.expect(1);
 
@@ -7240,6 +7278,44 @@ QUnit.module('Views', {
         // click on button, and click on ok in confirm dialog
         await testUtils.dom.click(form.$('.o_statusbar_buttons button'));
         assert.verifySteps([]);
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+        assert.verifySteps(['create', 'read', 'execute_action']);
+
+        form.destroy();
+    });
+
+    QUnit.test('buttons with "confirm" attribute: click twice on "Ok"', async function (assert) {
+        assert.expect(7);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object" confirm="U sure?"/>
+                    </header>
+                </form>`,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.step('execute_action'); // should be called only once
+                    event.data.on_success();
+                },
+            },
+        });
+
+        assert.verifySteps(["onchange"]);
+
+        await testUtils.dom.click(form.$('.o_statusbar_buttons button'));
+        assert.verifySteps([]);
+
+        testUtils.dom.click($('.modal-footer button.btn-primary'));
+        await Promise.resolve();
         await testUtils.dom.click($('.modal-footer button.btn-primary'));
         assert.verifySteps(['create', 'read', 'execute_action']);
 

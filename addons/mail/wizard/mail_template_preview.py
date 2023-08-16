@@ -68,7 +68,7 @@ class MailTemplatePreview(models.TransientModel):
             else:
                 copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
                 mail_values = mail_template.with_context(template_preview_lang=self.lang).generate_email(
-                    self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS)
+                    self.resource_ref.id, self._MAIL_TEMPLATE_FIELDS + ['partner_to'])
                 self._set_mail_attributes(values=mail_values)
             self.error_msg = False
         except UserError as user_error:

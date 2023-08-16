@@ -73,6 +73,13 @@ class CustomerPortal(CustomerPortal):
 
         return values
 
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
+
     #
     # Quotations and Sales Orders
     #
@@ -85,11 +92,7 @@ class CustomerPortal(CustomerPortal):
 
         domain = self._prepare_quotations_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
 
         # default sortby order
         if not sortby:
@@ -132,11 +135,8 @@ class CustomerPortal(CustomerPortal):
 
         domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -189,7 +189,7 @@ class CustomerPortal(CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,

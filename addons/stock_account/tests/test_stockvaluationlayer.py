@@ -29,19 +29,21 @@ class TestStockValuationCommon(SavepointCase):
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
+        loc_dest = loc_dest or self.stock_location
+        pick_type = pick_type or self.picking_type_in
         in_move = self.env['stock.move'].create({
             'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
+            'location_dest_id': loc_dest.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
-            'picking_type_id': self.picking_type_in.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -60,17 +62,19 @@ class TestStockValuationCommon(SavepointCase):
         self.days += 1
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False):
+    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None):
         """ Helper to create and validate a delivery move.
         """
+        loc_src = loc_src or self.stock_location
+        pick_type = pick_type or self.picking_type_out
         out_move = self.env['stock.move'].create({
             'name': 'out %s units' % str(quantity),
             'product_id': product.id,
-            'location_id': self.stock_location.id,
+            'location_id': loc_src.id,
             'location_dest_id': self.customer_location.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
+            'picking_type_id': pick_type.id,
         })
 
         if create_picking:
@@ -299,6 +303,30 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertTrue(product2.stock_valuation_layer_ids)
         self.assertFalse(product1.stock_valuation_layer_ids)
 
+    def test_currency_precision_and_standard_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+            product = self.product1.with_company(new_company)
+            product.standard_price = 3
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     def setUp(self):
@@ -515,6 +543,55 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.standard_price, 1.01)
 
+    def test_rounding_svl_3(self):
+        self._make_in_move(self.product1, 1000, unit_cost=0.17)
+        self._make_in_move(self.product1, 800, unit_cost=0.23)
+
+        self.assertEqual(self.product1.standard_price, 0.20)
+
+        self._make_out_move(self.product1, 1000, create_picking=True)
+        self._make_out_move(self.product1, 800, create_picking=True)
+
+        self.assertEqual(self.product1.value_svl, 0)
+
+    def test_rounding_svl_4(self):
+        """
+        The first 2 In moves result in a rounded standard_price at 3.4943, which is rounded at 3.49.
+        This test ensures that no rounding error is generated with small out quantities.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 2, unit_cost=4.63)
+        self._make_in_move(self.product1, 5, unit_cost=3.04)
+        self.assertEqual(self.product1.standard_price, 3.49)
+
+        for _ in range(70):
+            self._make_out_move(self.product1, 0.1)
+
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.value_svl, 0)
+
+    def test_return_delivery_2(self):
+        self.product1.write({"standard_price": 1})
+        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
+
+        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.quantity_svl, 10)
+        self.assertEqual(self.product1.standard_price, 2)
+
+    def test_return_delivery_rounding(self):
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
+        self.product1.write({"standard_price": 1})
+        self._make_in_move(self.product1, 1, unit_cost=13.13)
+        self._make_in_move(self.product1, 1, unit_cost=12.20)
+        move3 = self._make_out_move(self.product1, 2, create_picking=True)
+        move4 = self._make_return(move3, 2)
+
+        self.assertAlmostEqual(abs(move3.stock_valuation_layer_ids[0].value), abs(move4.stock_valuation_layer_ids[0].value))
+        self.assertAlmostEqual(self.product1.value_svl, 25.33)
+        self.assertEqual(self.product1.quantity_svl, 2)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     def setUp(self):
@@ -685,6 +762,39 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         returned = self._make_return(out_move02, 1)
         self.assertEqual(returned.stock_valuation_layer_ids.value, 0)
 
+    def test_return_delivery_3(self):
+        self.product1.write({"standard_price": 1})
+        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product1, 10, unit_cost=2)
+        self._make_return(move1, 10)
+
+        self.assertEqual(self.product1.value_svl, 20)
+        self.assertEqual(self.product1.quantity_svl, 10)
+
+    def test_currency_precision_and_fifo_svl_value(self):
+        currency = self.env['res.currency'].create({
+            'name': 'Odoo',
+            'symbol': 'O',
+            'rounding': 1,
+        })
+        new_company = self.env['res.company'].create({
+            'name': 'Super Company',
+            'currency_id': currency.id,
+        })
+
+        old_company = self.env.user.company_id
+        try:
+            self.env.user.company_id = new_company
+            product = self.product1.with_company(new_company)
+            product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
+
+            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id, unit_cost=3)
+            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+
+            self.assertEqual(product.value_svl, 0.0)
+        finally:
+            self.env.user.company_id = old_company
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
@@ -798,7 +908,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 190)
         self.assertEqual(self.product1.quantity_svl, 19)
 
-
+@tagged('post_install', '-at_install')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):

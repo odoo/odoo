@@ -90,7 +90,7 @@ odoo.define('sale.product_configurator_tests', function (require) {
             // move first row below second
             const $firstHandle = form.$('.o_data_row:nth(0) .o_row_handle');
             const $secondHandle = form.$('.o_data_row:nth(1) .o_row_handle');
-            await testUtils.dom.dragAndDrop($firstHandle, $secondHandle);
+            await testUtils.dom.dragAndDrop($firstHandle, $secondHandle, { position: 'bottom' });
 
             assert.strictEqual(form.$('.o_data_row').text(), 'TableChair');
 

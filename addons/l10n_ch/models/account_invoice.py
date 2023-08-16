@@ -244,7 +244,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_bank_id', 'payment_reference')
     def _compute_l10n_ch_isr_needs_fixing(self):
         for inv in self:
-            if inv.move_type == 'in_invoice' and inv.company_id.country_id.code == "CH":
+            if inv.move_type == 'in_invoice' and inv.company_id.country_id.code in ('CH', 'LI'):
                 partner_bank = inv.partner_bank_id
                 if partner_bank:
                     needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
@@ -285,6 +285,8 @@ class AccountMove(models.Model):
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.
+        This button isn't available anymore and will be removed in 16.2.
+        This function is kept for stable policy.
         """
         self.ensure_one()
         if self.l10n_ch_isr_valid:
@@ -350,3 +352,11 @@ class AccountMove(models.Model):
             i -= 5
 
         return spaced_qrr_ref
+
+    @api.model
+    def space_scor_reference(self, iso11649_ref):
+        """ Makes the provided SCOR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+
+        return ' '.join(iso11649_ref[i:i + 4] for i in range(0, len(iso11649_ref), 4))

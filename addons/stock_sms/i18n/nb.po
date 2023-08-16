@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Jorunn D. Newth, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-16 08:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
-"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -35,6 +35,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: Vi er glade for å kunne informere om at ordre ${object.origin} er sendt.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: Vi er glade for å kunne informere om at ordren din er sendt.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    Ditt sporingsnummer er ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -74,7 +84,7 @@ msgstr "Opprettet"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Levering: Send med SMS Tekstmelding"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms

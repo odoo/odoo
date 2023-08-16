@@ -431,7 +431,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         const product1el = parent.el.querySelector(
             'article.product[aria-labelledby="article_product_1"]'
         );
-        assert.ok(product1el.querySelector('.product-img img[alt="Water"]'));
+        assert.ok(product1el.querySelector('.product-img img[data-alt="Water"]'));
         assert.ok(product1el.querySelector('.product-img .price-tag').textContent.includes('$2'));
         await testUtils.dom.click(product1el);
         await testUtils.nextTick();

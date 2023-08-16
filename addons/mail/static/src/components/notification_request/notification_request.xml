@@ -5,7 +5,7 @@
         <div class="o_NotificationRequest" t-on-click="_onClick">
             <div class="o_NotificationRequest_sidebar">
                 <div class="o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem">
-                    <img class="o_NotificationRequest_image rounded-circle" src="/mail/static/src/img/odoobot.png" alt="Avatar of OdooBot"/>
+                    <img class="o_NotificationRequest_image rounded-circle" t-att-src="env.messaging.partnerRoot.avatarUrl" alt="Avatar of OdooBot"/>
                     <PartnerImStatusIcon
                         class="o_NotificationRequest_partnerImStatusIcon"
                         t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"

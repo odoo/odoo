@@ -16,11 +16,11 @@ from odoo.exceptions import AccessError, MissingError, UserError
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
     record = request.env[res_model].browse(res_id).sudo()
-    if token:  # Token Case: token is the global one of the document
+    if _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
+        return consteq(_hash, record._sign_token(pid))
+    elif token:  # Token Case: token is the global one of the document
         token_field = request.env[res_model]._mail_post_token_field
         return (token and record and consteq(record[token_field], token))
-    elif _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
-        return consteq(_hash, record._sign_token(pid))
     else:
         raise Forbidden()
 
@@ -65,8 +65,11 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
     # deduce author of message
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
 
+    # Signed Token Case: author_id is forced
+    if _hash and pid:
+        author_id = pid
     # Token Case: author is document customer (if not logged) or itself even if user has not the access
-    if token:
+    elif token:
         if request.env.user._is_public():
             # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
             # TODO : Author must be Public User (to rename to 'Anonymous')
@@ -74,9 +77,6 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
         else:
             if not author_id:
                 raise NotFound()
-    # Signed Token Case: author_id is forced
-    elif _hash and pid:
-        author_id = pid
 
     email_from = None
     if author_id and 'email_from' not in kw:
@@ -102,7 +102,7 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
 class PortalChatter(http.Controller):
 
     def _portal_post_filter_params(self):
-        return ['token', 'hash', 'pid']
+        return ['token', 'pid']
 
     def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
         if len(attachment_tokens) != len(attachment_ids):
@@ -142,6 +142,7 @@ class PortalChatter(http.Controller):
                 'attachment_ids': False,  # will be added afterward
             }
             post_values.update((fname, kw.get(fname)) for fname in self._portal_post_filter_params())
+            post_values['_hash'] = kw.get('hash')
             message = _message_post_helper(**post_values)
 
             if attachment_ids:
@@ -184,7 +185,11 @@ class PortalChatter(http.Controller):
         model = request.env[res_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
-        domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
+        domain = expression.AND([
+            domain,
+            field_domain,
+            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
+        ])
 
         # Check access
         Message = request.env['mail.message']
@@ -225,6 +230,10 @@ class MailController(MailController):
             If so, those two parameters are used to authentify the recipient in the chatter, if any.
         :return:
         """
+        # no model / res_id, meaning no possible record -> direct skip to super
+        if not model or not res_id or model not in request.env:
+            return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
+
         if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
@@ -244,4 +253,4 @@ class MailController(MailController):
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return werkzeug.utils.redirect(url)
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)

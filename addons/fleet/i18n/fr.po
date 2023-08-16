@@ -7,6 +7,7 @@
 # Laura Piraux <lap@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # Daniel Deyris <daniel.deyris@phidias.fr>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Florian <fll@odoo.com>, 2020
@@ -15,7 +16,6 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2020
@@ -27,11 +27,12 @@
 # Olivier de Witte <odw@taktik.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # khalid chamakh <elbissat@gmail.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # SADEBP <sarah.dereix@beproject.fr>, 2021
 # Tivisse <yti@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -39,13 +40,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -129,7 +130,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
@@ -179,7 +180,7 @@ msgstr "Remplacement de l'alternateur"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Analyse vehicle costs with analytic accounting"
-msgstr ""
+msgstr "Analyser le coût des véhicules grâce à la comptabilité analytique"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -189,7 +190,7 @@ msgstr "Comptabilité analytique"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__module_fleet_account
 msgid "Analytic Accounting Fleet"
-msgstr ""
+msgstr "Comptabilité analytique du parc automobile"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -215,7 +216,7 @@ msgstr "Date d'affectation"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignment Logs"
-msgstr ""
+msgstr "Journaux d'attribution"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_9
@@ -262,7 +263,7 @@ msgstr "Replacement de la batterie"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__bike
 msgid "Bike"
-msgstr ""
+msgstr "Vélo"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -678,7 +679,7 @@ msgstr "Diesel"
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:fleet.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
@@ -1646,7 +1647,7 @@ msgstr "En reparation"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
 msgid "Replacement Vehicle"
-msgstr "Replacement du véhicule"
+msgstr "Véhicule de remplacement"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting

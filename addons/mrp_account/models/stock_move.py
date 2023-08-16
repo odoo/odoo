@@ -27,3 +27,7 @@ class StockMove(models.Model):
         res = super(StockMove, self)._filter_anglo_saxon_moves(product)
         res += self.filtered(lambda m: m.bom_line_id.bom_id.product_tmpl_id.id == product.product_tmpl_id.id)
         return res
+
+    def _should_force_price_unit(self):
+        self.ensure_one()
+        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()

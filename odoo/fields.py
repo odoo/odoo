@@ -64,6 +64,29 @@ def resolve_mro(model, name, predicate):
     return result
 
 
+def determine(needle, records, *args):
+    """ Simple helper for calling a method given as a string or a function.
+
+    :param needle: callable or name of method to call on ``records``
+    :param BaseModel records: recordset to call ``needle`` on or with
+    :params args: additional arguments to pass to the determinant
+    :returns: the determined value if the determinant is a method name or callable
+    :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
+                      a callable or valid method name
+    """
+    if not isinstance(records, BaseModel):
+        raise TypeError("Determination requires a subject recordset")
+    if isinstance(needle, str):
+        needle = getattr(records, needle)
+        if needle.__name__.find('__'):
+            return needle(*args)
+    elif callable(needle):
+        if needle.__name__.find('__'):
+            return needle(records, *args)
+
+    raise TypeError("Determination requires a callable or method name")
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -252,10 +275,6 @@ class Field(MetaField('DummyField', (object,), {})):
         kwargs['string'] = string
         self._sequence = kwargs['_sequence'] = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
-
-    def new(self, **kwargs):
-        """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -482,7 +501,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for attr, prop in self.related_attrs:
             # check whether 'attr' is explicitly set on self (from its field
             # definition), and ignore its class-level value (only a default)
-            if attr not in self.__dict__:
+            if attr not in self.__dict__ and prop.startswith('_related_'):
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():
@@ -662,6 +681,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return a dictionary that describes the field ``self``. """
         desc = {'type': self.type}
         for attr, prop in self.description_attrs:
+            if not prop.startswith('_description_'):
+                continue
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
@@ -998,7 +1019,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs._fetch_field(self)
                 except AccessError:
                     record._fetch_field(self)
-                if not env.cache.contains(record, self) and not record.exists():
+                if not env.cache.contains(record, self):
                     raise MissingError("\n".join([
                         _("Record does not exist or has been deleted."),
                         _("(Record: %s, User: %s)") % (record, env.uid),
@@ -1183,22 +1204,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, str):
-            getattr(records, self.inverse)()
-        else:
-            self.inverse(records)
+        determine(self.inverse, records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if isinstance(self.search, str):
-            return getattr(records, self.search)(operator, value)
-        else:
-            return self.search(records, operator, value)
-
-    ############################################################################
-    #
-    # Notification when fields are modified
-    #
+        return determine(self.search, records, operator, value)
 
 
 class Boolean(Field):
@@ -1398,10 +1408,14 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
+        cur_field = record._fields[self.currency_field]
         if values and self.currency_field in values:
-            field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+            dummy = record.new({self.currency_field: values[self.currency_field]})
+            currency = dummy[self.currency_field]
+        elif values and cur_field.related and cur_field.related[0] in values:
+            rel_fname = cur_field.related[0]
+            dummy = record.new({rel_fname: values[rel_fname]})
+            currency = dummy[self.currency_field]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
@@ -2157,7 +2171,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -2379,10 +2393,8 @@ class Selection(Field):
             translated according to context language
         """
         selection = self.selection
-        if isinstance(selection, str):
-            return getattr(env[self.model_name], selection)()
-        if callable(selection):
-            return selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            return determine(selection, env[self.model_name])
 
         # translate selection labels
         if env.lang:
@@ -2393,10 +2405,8 @@ class Selection(Field):
     def get_values(self, env):
         """Return a list of the possible values."""
         selection = self.selection
-        if isinstance(selection, str):
-            selection = getattr(env[self.model_name], selection)()
-        elif callable(selection):
-            selection = selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            selection = determine(selection, env[self.model_name])
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -2429,7 +2439,7 @@ class Reference(Selection):
     """ Pseudo-relational field (no FK in database).
 
     The field value is stored as a :class:`string <str>` following the pattern
-    ``"res_model.res_id"`` in database.
+    ``"res_model,res_id"`` in database.
     """
     type = 'reference'
 
@@ -2712,9 +2722,8 @@ class Many2one(_Relational):
         return ustr(value.display_name)
 
     def convert_to_onchange(self, value, record, names):
-        if not value.id:
-            return False
-        return super(Many2one, self).convert_to_onchange(value, record, names)
+        # if value is a new record, serialize its origin instead
+        return super().convert_to_onchange(value._origin, record, names)
 
     def write(self, records, value):
         # discard recomputation of self on records
@@ -3404,7 +3413,7 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    ondelete = None                     # optional ondelete for the column2 fkey
+    ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3419,17 +3428,15 @@ class Many2many(_RelationalMulti):
 
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
-        # 3 cases:
-        # 1) The ondelete attribute is not defined, we assign it a sensible default
-        # 2) The ondelete attribute is defined and its definition makes sense
-        # 3) The ondelete attribute is explicitly defined as 'set null' for a m2m,
+        # 2 cases:
+        # 1) The ondelete attribute is defined and its definition makes sense
+        # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
         #    this is considered a programming error.
-        self.ondelete = self.ondelete or 'cascade'
-        if self.ondelete == 'set null':
+        if self.ondelete not in ('cascade', 'restrict'):
             raise ValueError(
                 "The m2m field %s of model %s declares its ondelete policy "
-                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                % (self.name, model._name)
+                "as being %r. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name, self.ondelete)
             )
         if self.store:
             if not (self.relation and self.column1 and self.column2):
@@ -3497,6 +3504,8 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
+            return True
 
         model.pool.post_init(self.update_db_foreign_keys, model)
 
@@ -3549,13 +3558,14 @@ class Many2many(_RelationalMulti):
         if not records_commands_list:
             return
 
-        comodel = records_commands_list[0][0].env[self.comodel_name].with_context(**self.context)
-        cr = records_commands_list[0][0].env.cr
+        model = records_commands_list[0][0].browse()
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        cr = model.env.cr
 
         # determine old and new relation {x: ys}
         set = OrderedSet
-        ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
-        records = records_commands_list[0][0].browse(ids)
+        ids = set(rid for recs, cs in records_commands_list for rid in recs.ids)
+        records = model.browse(ids)
 
         if self.store:
             # Using `record[self.name]` generates 2 SQL queries when the value
@@ -3566,13 +3576,9 @@ class Many2many(_RelationalMulti):
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
+        # determine new relation {x: ys}
         old_relation = {record.id: set(record[self.name]._ids) for record in records}
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
-
-        # determine new relation {x: ys}
-        new_relation = defaultdict(set)
-        for x, ys in old_relation.items():
-            new_relation[x] = set(ys)
 
         # operations on new relation
         def relation_add(xs, y):

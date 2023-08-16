@@ -57,7 +57,13 @@ class Meeting(models.Model):
         if google_event.is_cancelled():
             return {'active': False}
 
-        alarm_commands = self._odoo_reminders_commands(google_event.reminders.get('overrides') or default_reminders)
+        # default_reminders is never () it is set to google's default reminder (30 min before)
+        # we need to check 'useDefault' for the event to determine if we have to use google's
+        # default reminder or not
+        reminder_command = google_event.reminders.get('overrides')
+        if not reminder_command:
+            reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
+        alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         values = {
             'name': google_event.summary or _("(No title)"),
@@ -81,6 +87,7 @@ class Meeting(models.Model):
         else:
             start = parse(google_event.start.get('date'))
             stop = parse(google_event.end.get('date')) - relativedelta(days=1)
+            stop = max(start, stop)  # For the cases that start date and end date were the same
             values['allday'] = True
         values['start'] = start
         values['stop'] = stop
@@ -176,7 +183,6 @@ class Meeting(models.Model):
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
         } for alarm in self.alarm_ids]
-        attendee_ids = self.attendee_ids.filtered(lambda a: a.partner_id not in self.user_id.partner_id)
         values = {
             'id': self.google_id,
             'start': start,
@@ -186,7 +192,10 @@ class Meeting(models.Model):
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
-            'attendees': [{'email': attendee.email, 'responseStatus': attendee.state} for attendee in self.attendee_ids],
+            'attendees': [{
+                'email': attendee.email,
+                'responseStatus': attendee.state or 'needsAction',
+            } for attendee in self.attendee_ids if attendee.email],
             'extendedProperties': {
                 'shared': {
                     '%s_odoo_id' % self.env.cr.dbname: self.id,
@@ -233,3 +242,9 @@ class Meeting(models.Model):
         partners = need_notifs.partner_ids
         if partners:
             self.env['calendar.alarm_manager']._notify_next_alarm(partners.ids)
+
+    def _get_event_user(self):
+        self.ensure_one()
+        if self.user_id and self.user_id.sudo().google_calendar_token:
+            return self.user_id
+        return self.env.user
