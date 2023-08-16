@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
-from odoo.tools import mute_logger
 
 
 @tagged('event_flow')
-class TestEventCrmFlow(TestEventCrmCommon):
+class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -28,6 +30,44 @@ class TestEventCrmFlow(TestEventCrmCommon):
         self.assertEqual(self.event_customer.email_normalized, 'constantin@test.example.com')
         self.assertFalse(self.event_customer.mobile)
         self.assertEqual(self.event_customer.phone, '0485112233')
+
+    @users('user_eventmanager')
+    @patch('odoo.addons.event_crm.models.event_lead_request.EventLeadRequest._REGISTRATIONS_BATCH_SIZE', 4)
+    def test_action_generate_leads(self):
+        """ Test that the action to manually generate leads on an event works in batch as expected. """
+        LeadRequestSudo = self.env['event.lead.request'].sudo()
+
+        # modify the create rule to not match anything
+        self.test_rule_attendee.event_registration_filter = [['email', 'ilike', '@nomatch.com']]
+        self.env['event.registration'].create(self.registration_values)
+        self.assertEqual(len(self.event_0.registration_ids), 5)
+
+        # as the rule did not match anything, no leads were created
+        self.assertFalse(bool(self.test_rule_attendee.lead_ids))
+
+        # modify the rule again to match everything then manually ask to generate leads on the event
+        # calling the action should create the generation request as well as a CRON trigger
+        self.test_rule_attendee.event_registration_filter = False
+        with self.capture_triggers('event_crm.ir_cron_generate_leads') as captured_trigger:
+            self.event_0.action_generate_leads()
+        self.assertEqual(len(LeadRequestSudo.search([])), 1)
+        self.assertEqual(len(captured_trigger.records), 1)
+
+        # first CRON run creates 4 leads (see patched batch size) and a CRON trigger
+        with self.capture_triggers('event_crm.ir_cron_generate_leads') as captured_trigger:
+            LeadRequestSudo._cron_generate_leads()
+
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 4)
+        self.assertEqual(len(captured_trigger.records), 1)
+
+        # second and last CRON run creates the final lead and completes the batch
+        # it should unlink the generation request and not create a CRON trigger
+        with self.capture_triggers('event_crm.ir_cron_generate_leads') as captured_trigger:
+            LeadRequestSudo._cron_generate_leads()
+
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 5)
+        self.assertEqual(len(captured_trigger.records), 0)
+        self.assertFalse(bool(LeadRequestSudo.search([])))
 
     @users('user_eventregistrationdesk')
     def test_event_crm_flow_batch_create(self):
