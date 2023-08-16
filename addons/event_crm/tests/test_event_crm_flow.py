@@ -195,3 +195,26 @@ class TestEventCrmFlow(TestEventCrmCommon):
         })
         self.assertEqual(len(self.test_rule_order.lead_ids), 1)
         self.assertEqual(len(test_rule_order_2.lead_ids), 0)
+
+    def test_action_generate_leads(self):
+        event = self.env['event.event'].create({'name': 'test'})
+        registrations = self.env['event.registration'].create([{'event_id': event.id} for i in range(20)])
+        self.env['event.lead.rule'].create({
+            'name': 'All registrations for event',
+            'lead_creation_trigger': 'confirm',
+            'event_id': event.id,
+        })
+        # check that leads are created once and only once
+        self.assertEqual(len(event.lead_ids), 0)
+        event.action_generate_leads()
+        self.assertEqual(len(event.lead_ids), 0)
+        registrations.state = 'open'
+        self.assertEqual(len(event.lead_ids), 20)
+        event.action_generate_leads()
+        self.assertEqual(len(event.lead_ids), 20)
+
+        # check that leads are recreated after being deleted
+        event.lead_ids[0:10].unlink()
+        self.assertEqual(len(event.lead_ids), 10)
+        event.action_generate_leads()
+        self.assertEqual(len(event.lead_ids), 20)

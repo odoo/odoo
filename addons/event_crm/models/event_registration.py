@@ -32,15 +32,30 @@ class EventRegistration(models.Model):
         # as registrations can be automatically confirmed, or even created directly
         # with a state given in values
         if not self.env.context.get('event_lead_rule_skip'):
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()._run_on_registrations(registrations)
-            open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
-            if open_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(open_registrations)
-            done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
-            if done_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(done_registrations)
-
+            self.create_leads_from_event_lead_rules(registrations)
         return registrations
+
+    @api.model
+    def create_leads_from_event_lead_rules(self, registrations):
+        leads = self.env['crm.lead']
+        open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
+        done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
+
+        leads |= (self.env['event.lead.rule']
+                  .search([('lead_creation_trigger', '=', 'create')])
+                  .sudo()
+                  ._run_on_registrations(registrations))
+        if open_registrations:
+            leads |= (self.env['event.lead.rule']
+                      .search([('lead_creation_trigger', '=', 'confirm')])
+                      .sudo()
+                      ._run_on_registrations(open_registrations))
+        if done_registrations:
+            leads |= (self.env['event.lead.rule']
+                      .search([('lead_creation_trigger', '=', 'done')])
+                      .sudo()
+                      ._run_on_registrations(done_registrations))
+        return leads
 
     def write(self, vals):
         """ Update the lead values depending on fields updated in registrations.
