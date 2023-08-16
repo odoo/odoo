@@ -9,16 +9,11 @@
                         <button class="btn btn-primary btn-time-off " t-on-click="newTimeOffRequest" type="button">
                             New
                         </button>
-                        <Dropdown togglerClass="'btn btn-primary'" showCaret="true" class="'btn-group'">
-                                <button class="btn btn-link" t-on-click="newAllocationRequest" type="button">
-                                    <t t-if="employeeId">Grant Time</t>
-                                    <t t-else="">New Allocation Request</t>
-                                </button>
-                        </Dropdown>
                     </div>
                 </span>
             </t>
         </xpath>
+        <DatePicker position="replace"/>
     </t>
 
 </templates>

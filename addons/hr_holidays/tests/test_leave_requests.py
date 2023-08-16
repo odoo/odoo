@@ -197,10 +197,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         """ Create an allocation request """
         # employee should be set to current user
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
-        allocation_form.name = 'New Allocation Request'
         allocation_form.holiday_status_id = self.holidays_type_2
         allocation_form.date_from = date(2019, 5, 6)
         allocation_form.date_to = date(2019, 5, 6)
+        allocation_form.name = 'New Allocation Request'
         allocation = allocation_form.save()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

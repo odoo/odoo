@@ -5,7 +5,6 @@
         <xpath expr="//t[@t-foreach='props.model.filterSections']" position="after">
             <div class="o_calendar_filter">
                 <h5>Legend</h5>
-
                 <div class="d-flex flex-column">
                     <span><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
                     <span><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
@@ -14,7 +13,7 @@
 
                 <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
                     <h5>Mandatory Days</h5>
-                    <ul class="ps-2">
+                    <ul class="ps-0">
                         <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
                             <strong
                                 t-esc="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
@@ -26,7 +25,7 @@
 
                 <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
                     <h5>Public Holidays</h5>
-                    <ul class="ps-2">
+                    <ul class="ps-0">
                         <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
                             <strong
                                 t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
