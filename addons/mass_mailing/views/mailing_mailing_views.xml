@@ -73,7 +73,7 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info d-flex align-items-center h-100 my-0 py-0" role="alert"
+                    <div class="alert alert-info" role="alert"
                             invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
                         <div class="o_mails_canceled" invisible="canceled == 0">
                             <button class="btn btn-link py-0"
@@ -387,9 +387,6 @@
                     <attribute name="js_class">mailing_mailing_view_form_full_width</attribute>
                     <attribute name="class">o_form_view o_mass_mailing_mailing_form o_mass_mailing_form_full_width</attribute>
                 </xpath>
-                <field name="state" position="before">
-                    <xpath expr="//div[hasclass('alert-info')]" position="move"/>
-                </field>
                 <xpath expr="//div[hasclass('alert-info')]" position="attributes">
                     <attribute name="invisible">state == 'draft' or state != 'in_queue' and failed == 0</attribute>
                 </xpath>
