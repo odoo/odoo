@@ -8,6 +8,7 @@ const ChartWidget = publicWidget.Widget.extend({
     disabledInEditableMode: false,
     jsLibs: [
         '/web/static/lib/Chart/Chart.js',
+        '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
     ],
 
     /**
@@ -36,38 +37,67 @@ const ChartWidget = publicWidget.Widget.extend({
             el.borderWidth = this.el.dataset.borderWidth;
         });
 
+        const radialAxis = {
+            beginAtZero: true,
+        };
+
+        const linearAxis = {
+            type: "linear",
+            stacked: this.el.dataset.stacked === "true",
+            beginAtZero: true,
+            min: parseInt(this.el.dataset.ticksMin),
+            max: parseInt(this.el.dataset.ticksMax),
+        };
+
+        const categoryAxis = {
+            type: "category",
+        };
+
         // Make chart data
         const chartData = {
             type: this.el.dataset.type,
             data: data,
             options: {
-                legend: {
-                    display: this.el.dataset.legendPosition !== 'none',
-                    position: this.el.dataset.legendPosition,
+                plugins: {
+                    legend: {
+                        display: this.el.dataset.legendPosition !== 'none',
+                        position: this.el.dataset.legendPosition,
+                    },
+                    tooltip: {
+                        enabled: this.el.dataset.tooltipDisplay === 'true',
+                        position: "custom",
+                    },
+                    title: {
+                        display: !!this.el.dataset.title,
+                        text: this.el.dataset.title,
+                    },
                 },
-                tooltips: {
-                    enabled: this.el.dataset.tooltipDisplay === 'true',
-                    position: 'custom',
+                scales: {
+                    x: categoryAxis,
+                    y: linearAxis,
                 },
-                title: {
-                    display: !!this.el.dataset.title,
-                    text: this.el.dataset.title,
-                },
+                aspectRatio: 2,
             },
         };
 
         // Add type specific options
         if (this.el.dataset.type === 'radar') {
-            chartData.options.scale = {
-                ticks: {
-                    beginAtZero: true,
-                }
+            chartData.options.scales = {
+                r: radialAxis,
             };
+        } else if (this.el.dataset.type === "horizontalBar") {
+            chartData.type = "bar";
+            chartData.options.scales = {
+                x: linearAxis,
+                y: categoryAxis,
+            };
+            chartData.options.indexAxis = "y";
         } else if (['pie', 'doughnut'].includes(this.el.dataset.type)) {
-            chartData.options.tooltips.callbacks = {
-                label: (tooltipItem, data) => {
-                    const label = data.datasets[tooltipItem.datasetIndex].label;
-                    const secondLabel = data.labels[tooltipItem.index];
+            chartData.options.scales = {};
+            chartData.options.plugins.tooltip.callbacks = {
+                label: (tooltipItem) => {
+                    const label = tooltipItem.label;
+                    const secondLabel = tooltipItem.dataset.label;
                     let final = label;
                     if (label) {
                         if (secondLabel) {
@@ -76,35 +106,8 @@ const ChartWidget = publicWidget.Widget.extend({
                     } else if (secondLabel) {
                         final = secondLabel;
                     }
-                    return final + ':' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                    return final + ':' + tooltipItem.formattedValue;
                 },
-            };
-        } else {
-            // For extending the range of the axis while maintaining the auto
-            // fit behavior
-            const beforeBuildTicks = (scale) => {
-                scale.min = parseInt(this.el.dataset.ticksMin) || scale.min;
-                scale.max = parseInt(this.el.dataset.ticksMax) || scale.max;
-            };
-            chartData.options.scales = {
-                xAxes: [{
-                    stacked: this.el.dataset.stacked === 'true',
-                    ticks: {
-                        beginAtZero: true
-                    },
-                    // Maintaining the gap between two values on
-                    // vertical/horizontally axis
-                    beforeBuildTicks: beforeBuildTicks,
-                }],
-                yAxes: [{
-                    stacked: this.el.dataset.stacked === 'true',
-                    ticks: {
-                        beginAtZero: true
-                    },
-                    // Maintaining the gap between two values on
-                    // vertical/horizontally axis
-                    beforeBuildTicks: beforeBuildTicks,
-                }],
             };
         }
 
