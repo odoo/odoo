@@ -206,6 +206,16 @@ $input-border-radius: o-website-value('input-border-radius') !default;
 $input-border-radius-lg: o-website-value('input-border-radius-lg') !default;
 $input-border-radius-sm: o-website-value('input-border-radius-sm') !default;
 
+$input-bg: var(--o-input-bg, #{$light}) !default;
+$input-border-color: var(--o-input-border-color, #{$light}) !default;
+$input-color: color-contrast($light) !default;
+$input-focus-bg: $body-bg !default;
+$input-focus-color: $body-color !default;
+$input-placeholder-color: var(--o-input-placeholder-color, #{rgba($input-color, .5)}) !default;
+
+$form-check-input-border: ($input-border-width or 1px) solid $input-border-color !default;
+$form-range-track-bg: $light !default;
+
 // Badge
 $badge-padding-y: 0.25em !default;
 $badge-padding-x: 0.4em !default;
