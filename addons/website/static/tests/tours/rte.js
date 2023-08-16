@@ -6,13 +6,16 @@ import { whenReady } from "@odoo/owl";
 wTourUtils.registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
+    edition: true,
     wait_for: whenReady(),
-}, () => [{
-    content: "click language dropdown",
-    trigger: 'iframe .js_language_selector .dropdown-toggle',
-}, {
+}, () => [
+wTourUtils.goToTheme(),
+{
     content: "click on Add a language",
-    trigger: 'iframe a.o_add_language',
+    trigger: "we-button[data-add-language]"
+}, {
+    content: "confirm leave editor",
+    trigger: ".modal-dialog button.btn-primary"
 }, {
     content: "type Parseltongue",
     trigger: 'div[name="lang_ids"] .o_input_dropdown input',

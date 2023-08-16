@@ -27,7 +27,7 @@ export class WebsiteSwitcherSystray extends Component {
                     const path = pathname + search + hash;
                     window.location.href = `${encodeURI(website.domain)}/web#action=website.website_preview&path=${encodeURIComponent(path)}&website_id=${encodeURIComponent(website.id)}`;
                 } else {
-                    this.websiteService.goToWebsite({ websiteId: website.id });
+                    this.websiteService.goToWebsite({ websiteId: website.id, path: "", lang: "default" });
                     if (!website.domain) {
                         const closeFn = this.notificationService.add(
                             _t(

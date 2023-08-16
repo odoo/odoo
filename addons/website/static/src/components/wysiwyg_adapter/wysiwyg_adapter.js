@@ -988,7 +988,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         } else if (event.data.action) {
             callback = () => {
                 this.leaveEditMode({
-                    onLeave: () => this.action.doAction(event.data.action),
+                    onLeave: () => this.action.doAction(event.data.action, event.data.options || {}),
                     forceLeave: true,
                     reloadIframe: false,
                 });
