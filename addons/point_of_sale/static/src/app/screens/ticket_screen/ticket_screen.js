@@ -126,8 +126,8 @@ export class TicketScreen extends Component {
             order.get_orderlines().length > 0
         ) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Existing orderlines"),
-                body: this.env._t(
+                title: _t("Existing orderlines"),
+                body: _t(
                     "%s has a total amount of %s, are you sure you want to delete this order?",
                     order.name,
                     this.getTotal(order)
@@ -208,8 +208,8 @@ export class TicketScreen extends Component {
             if (quantity > refundableQty) {
                 this.numberBuffer.reset();
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Maximum Exceeded"),
-                    body: this.env._t(
+                    title: _t("Maximum Exceeded"),
+                    body: _t(
                         "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
                         quantity,
                         refundableQty
@@ -344,7 +344,7 @@ export class TicketScreen extends Component {
     }
     getStatus(order) {
         if (order.locked) {
-            return this.env._t("Paid");
+            return _t("Paid");
         } else {
             const screen = order.get_screen_data();
             return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
@@ -561,7 +561,7 @@ export class TicketScreen extends Component {
     }
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
-        orderStates.set("SYNCED", { text: this.env._t("Paid") });
+        orderStates.set("SYNCED", { text: _t("Paid") });
         return orderStates;
     }
     /**
@@ -571,18 +571,18 @@ export class TicketScreen extends Component {
         const fields = {
             RECEIPT_NUMBER: {
                 repr: (order) => order.name,
-                displayName: this.env._t("Receipt Number"),
+                displayName: _t("Receipt Number"),
                 modelField: "pos_reference",
             },
             DATE: {
                 repr: (order) =>
                     deserializeDate(order.creation_date).toFormat("yyyy-MM-dd HH:mm a"),
-                displayName: this.env._t("Date"),
+                displayName: _t("Date"),
                 modelField: "date_order",
             },
             PARTNER: {
                 repr: (order) => order.get_partner_name(),
-                displayName: this.env._t("Customer"),
+                displayName: _t("Customer"),
                 modelField: "partner_id.complete_name",
             },
         };
@@ -590,7 +590,7 @@ export class TicketScreen extends Component {
         if (this.showCardholderName()) {
             fields.CARDHOLDER_NAME = {
                 repr: (order) => order.get_cardholder_name(),
-                displayName: this.env._t("Cardholder Name"),
+                displayName: _t("Cardholder Name"),
                 modelField: "payment_ids.cardholder_name",
             };
         }
@@ -620,20 +620,20 @@ export class TicketScreen extends Component {
         // We need the items to be ordered, therefore, Map is used instead of normal object.
         const states = new Map();
         states.set("ACTIVE_ORDERS", {
-            text: this.env._t("All active orders"),
+            text: _t("All active orders"),
         });
         // The spaces are important to make sure the following states
         // are under the category of `All active orders`.
         states.set("ONGOING", {
-            text: this.env._t("Ongoing"),
+            text: _t("Ongoing"),
             indented: true,
         });
         states.set("PAYMENT", {
-            text: this.env._t("Payment"),
+            text: _t("Payment"),
             indented: true,
         });
         states.set("RECEIPT", {
-            text: this.env._t("Receipt"),
+            text: _t("Receipt"),
             indented: true,
         });
         return states;

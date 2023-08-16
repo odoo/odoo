@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { isBarcodeScannerSupported, scanBarcode } from "@web/webclient/barcode/barcode_scanner";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -29,7 +30,7 @@ export class BarcodeScanner extends Component {
                 window.navigator.vibrate(100);
             }
         } else {
-            this.notification.add(error || this.env._t("Please, Scan again!"), {
+            this.notification.add(error || _t("Please, Scan again!"), {
                 type: "warning",
             });
         }

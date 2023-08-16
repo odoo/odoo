@@ -19,7 +19,7 @@ class CreateConfirmationDialog extends Component {
     static components = { Dialog };
 
     get title() {
-        return this.env._t("New: %s", this.props.name);
+        return _t("New: %s", this.props.name);
     }
 
     async onCreate() {
@@ -268,7 +268,7 @@ export class Many2OneField extends Component {
                 browser.navigator.vibrate(100);
             }
         } else {
-            this.notification.add(this.env._t("Please, scan again!"), {
+            this.notification.add(_t("Please, scan again!"), {
                 type: "warning",
             });
         }

@@ -13,7 +13,7 @@ function documentationItem(env) {
     return {
         type: "item",
         id: "documentation",
-        description: env._t("Documentation"),
+        description: _t("Documentation"),
         href: documentationURL,
         callback: () => {
             browser.open(documentationURL, "_blank");
@@ -27,7 +27,7 @@ function supportItem(env) {
     return {
         type: "item",
         id: "support",
-        description: env._t("Support"),
+        description: _t("Support"),
         href: url,
         callback: () => {
             browser.open(url, "_blank");
@@ -75,7 +75,7 @@ export function preferencesItem(env) {
     return {
         type: "item",
         id: "settings",
-        description: env._t("Preferences"),
+        description: _t("Preferences"),
         callback: async function () {
             const actionDescription = await env.services.orm.call("res.users", "action_get");
             actionDescription.res_id = env.services.user.userId;
@@ -89,7 +89,7 @@ function odooAccountItem(env) {
     return {
         type: "item",
         id: "account",
-        description: env._t("My Odoo.com account"),
+        description: _t("My Odoo.com account"),
         callback: () => {
             env.services
                 .rpc("/web/session/account")
@@ -109,7 +109,7 @@ function logOutItem(env) {
     return {
         type: "item",
         id: "logout",
-        description: env._t("Log out"),
+        description: _t("Log out"),
         href: `${browser.location.origin}${route}`,
         callback: () => {
             browser.location.href = route;

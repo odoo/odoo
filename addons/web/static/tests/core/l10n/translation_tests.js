@@ -82,17 +82,6 @@ QUnit.test("can lazy translate", async (assert) => {
     assert.strictEqual(target.innerText, "Bonjour");
 });
 
-QUnit.test("_t is in env", async (assert) => {
-    assert.expect(1);
-    TestComponent.template = xml`<div><t t-esc="env._t('Hello')"/></div>`;
-    serviceRegistry.add("localization", makeFakeLocalizationService());
-    const env = await makeTestEnv();
-    patchWithCleanup(translatedTerms, { ...terms });
-    const target = getFixture();
-    await mount(TestComponent, target, { env });
-    assert.strictEqual(target.innerText, "Bonjour");
-});
-
 QUnit.test("luxon is configured in the correct lang", async (assert) => {
     await patchLang("fr_BE");
     assert.strictEqual(DateTime.utc(2021, 12, 10).toFormat("MMMM"), "décembre");

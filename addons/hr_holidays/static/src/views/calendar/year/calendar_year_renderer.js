@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { CalendarYearRenderer } from '@web/views/calendar/calendar_year/calendar_year_renderer';
 
 import { useService } from "@web/core/utils/hooks";
@@ -35,7 +36,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         return Object.assign(super.options, {
             weekNumbers: true,
             weekNumbersWithinDays: false,
-            weekLabel: this.env._t('Week'),
+            weekLabel: _t('Week'),
         });
     }
 

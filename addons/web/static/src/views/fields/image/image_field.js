@@ -57,7 +57,7 @@ export class ImageField extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.orm = useService('orm');
+        this.orm = useService("orm");
         this.isMobile = isMobileOS();
         this.state = useState({
             isValid: true,
@@ -127,55 +127,68 @@ export class ImageField extends Component {
     }
     async onFileUploaded(info) {
         this.state.isValid = true;
-        if (info.type === 'image/webp') {
+        if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
-            const image = document.createElement('img');
+            const image = document.createElement("img");
             image.src = `data:image/webp;base64,${info.data}`;
-            await new Promise(resolve => image.addEventListener('load', resolve));
+            await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
+            const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
             let referenceId = undefined;
             for (const size of [originalSize, ...smallerSizes]) {
                 const ratio = size / originalSize;
-                const canvas = document.createElement('canvas');
+                const canvas = document.createElement("canvas");
                 canvas.width = image.width * ratio;
                 canvas.height = image.height * ratio;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'rgb(255, 255, 255)';
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = "rgb(255, 255, 255)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-                const [resizedId] = await this.orm.call(
-                    'ir.attachment',
-                    'create_unique',
-                    [[{
-                        'name': info.name,
-                        'description': size === originalSize ? '' : `resize: ${size}`,
-                        'datas': size === originalSize ? info.data : canvas.toDataURL('image/webp', 0.75).split(',')[1],
-                        'res_id': referenceId,
-                        'res_model': 'ir.attachment',
-                        'mimetype': 'image/webp',
-                    }]],
+                ctx.drawImage(
+                    image,
+                    0,
+                    0,
+                    image.width,
+                    image.height,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
                 );
+                const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
+                    [
+                        {
+                            name: info.name,
+                            description: size === originalSize ? "" : `resize: ${size}`,
+                            datas:
+                                size === originalSize
+                                    ? info.data
+                                    : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                            res_id: referenceId,
+                            res_model: "ir.attachment",
+                            mimetype: "image/webp",
+                        },
+                    ],
+                ]);
                 referenceId = referenceId || resizedId; // Keep track of original.
-                await this.orm.call(
-                    'ir.attachment',
-                    'create_unique',
-                    [[{
-                        'name': info.name.replace(/\.webp$/, '.jpg'),
-                        'description': 'format: jpeg',
-                        'datas': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
-                        'res_id': resizedId,
-                        'res_model': 'ir.attachment',
-                        'mimetype': 'image/jpeg',
-                    }]],
-                );
+                await this.orm.call("ir.attachment", "create_unique", [
+                    [
+                        {
+                            name: info.name.replace(/\.webp$/, ".jpg"),
+                            description: "format: jpeg",
+                            datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                            res_id: resizedId,
+                            res_model: "ir.attachment",
+                            mimetype: "image/jpeg",
+                        },
+                    ],
+                ]);
             }
         }
         this.props.record.update({ [this.props.name]: info.data });
     }
     onLoadFailed() {
         this.state.isValid = false;
-        this.notification.add(this.env._t("Could not display the selected image"), {
+        this.notification.add(_t("Could not display the selected image"), {
             type: "danger",
         });
     }

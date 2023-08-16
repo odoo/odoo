@@ -7,6 +7,7 @@ import { download } from "@web/core/network/download";
 import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
+import { _t } from "@web/core/l10n/translation";
 import { registerCleanup } from "./cleanup";
 
 import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
@@ -729,7 +730,7 @@ export async function mount(Comp, target, config = {}) {
         props,
     };
     if (env.services && "localization" in env.services) {
-        configuration.translateFn = env._t;
+        configuration.translateFn = _t;
     }
     const app = new App(Comp, configuration);
     registerCleanup(() => app.destroy());

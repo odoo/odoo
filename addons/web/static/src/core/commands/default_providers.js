@@ -80,7 +80,7 @@ commandProviderRegistry.add("data-hotkeys", {
                 el.placeholder ||
                 (el.innerText &&
                     `${el.innerText.slice(0, 50)}${el.innerText.length > 50 ? "..." : ""}`) ||
-                env._t("no description provided");
+                _t("no description provided");
 
             commands.push({
                 Component: HotkeyCommandItem,

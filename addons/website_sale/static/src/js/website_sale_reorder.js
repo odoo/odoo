@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { localization as l10n } from "@web/core/l10n/localization";
@@ -159,7 +160,7 @@ export class ReorderDialog extends Component {
 
     getWarningForProduct(product) {
         if (!product.add_to_cart_allowed) {
-            return this.env._t("This product is not available for purchase.");
+            return _t("This product is not available for purchase.");
         }
         return false;
     }
@@ -192,7 +193,7 @@ export class ReorderDialog extends Component {
         if (this.cartQty) {
             // Open confirmation modal
             this.dialogService.add(ReorderConfirmationDialog, {
-                body: this.env._t("Do you wish to clear your cart before adding products to it?"),
+                body: _t("Do you wish to clear your cart before adding products to it?"),
                 confirm: async () => {
                     await this.rpc("/shop/cart/clear");
                     await onConfirm();

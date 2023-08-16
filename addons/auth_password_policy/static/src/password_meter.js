@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { computeScore } from "./password_policy";
 
 const { Component, xml } = owl;
 
 export class Meter extends Component {
     get title() {
-        return this.env._t(
+        return _t(
             "Required: %s\n\nHint: to increase password strength, increase length, use multiple words, and use non-letter characters.",
-            String(this.props.required) || this.env._t("no requirements")
+            String(this.props.required) || _t("no requirements")
         );
     }
 

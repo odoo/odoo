@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Switch } from '@website/components/switch/switch';
 import { useService, useBus } from '@web/core/utils/hooks';
@@ -22,7 +23,7 @@ class PublishSystray extends Component {
     }
 
     get label() {
-        return this.state.published ? this.env._t("Published") : this.env._t("Unpublished");
+        return this.state.published ? _t("Published") : _t("Unpublished");
     }
 
     /**

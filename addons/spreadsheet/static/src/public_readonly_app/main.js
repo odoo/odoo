@@ -4,6 +4,7 @@ import { PublicReadonlySpreadsheet } from "./public_readonly";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
+import { _t } from "@web/core/l10n/translation";
 
 (async function boot() {
     odoo.info = {
@@ -20,7 +21,7 @@ import { session } from "@web/session";
         env,
         props: session.spreadsheet_public_props,
         templates,
-        translateFn: env._t,
+        translateFn: _t,
         dev: env.debug,
         warnIfNoStaticProps: env.debug,
         translatableAttributes: ["data-tooltip"],

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -35,12 +36,8 @@ export class AddToBoard extends Component {
 
     async addToBoard() {
         const { domain, globalContext } = this.env.searchModel;
-        const {
-            comparison,
-            context,
-            groupBys,
-            orderBy,
-        } = this.env.searchModel.getPreFavoriteValues();
+        const { comparison, context, groupBys, orderBy } =
+            this.env.searchModel.getPreFavoriteValues();
         const contextToSave = {
             ...globalContext,
             ...context,
@@ -60,15 +57,15 @@ export class AddToBoard extends Component {
 
         if (result) {
             this.notification.add(
-                this.env._t("Please refresh your browser for the changes to take effect."),
+                _t("Please refresh your browser for the changes to take effect."),
                 {
-                    title: this.env._t("“%s” added to dashboard", this.state.name),
+                    title: _t("“%s” added to dashboard", this.state.name),
                     type: "warning",
                 }
             );
             this.state.name = this.env.config.getDisplayName();
         } else {
-            this.notification.add(this.env._t("Could not add filter to dashboard"), {
+            this.notification.add(_t("Could not add filter to dashboard"), {
                 type: "danger",
             });
         }

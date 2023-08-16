@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { debounce } from '@web/core/utils/timing';
 
@@ -22,40 +23,40 @@ export class VideoSelector extends Component {
 
         this.OPTIONS = {
             autoplay: {
-                label: this.env._t("Autoplay"),
-                description: this.env._t("Videos are muted when autoplay is enabled"),
+                label: _t("Autoplay"),
+                description: _t("Videos are muted when autoplay is enabled"),
                 platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
                 urlParameter: 'autoplay=1',
             },
             loop: {
-                label: this.env._t("Loop"),
+                label: _t("Loop"),
                 platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: 'loop=1',
             },
             hide_controls: {
-                label: this.env._t("Hide player controls"),
+                label: _t("Hide player controls"),
                 platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
                 urlParameter: 'controls=0',
             },
             hide_fullscreen: {
-                label: this.env._t("Hide fullscreen button"),
+                label: _t("Hide fullscreen button"),
                 platforms: [this.PLATFORMS.youtube],
                 urlParameter: 'fs=0',
                 isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
             },
             hide_yt_logo: {
-                label: this.env._t("Hide Youtube logo"),
+                label: _t("Hide Youtube logo"),
                 platforms: [this.PLATFORMS.youtube],
                 urlParameter: 'modestbranding=1',
                 isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
             },
             hide_dm_logo: {
-                label: this.env._t("Hide Dailymotion logo"),
+                label: _t("Hide Dailymotion logo"),
                 platforms: [this.PLATFORMS.dailymotion],
                 urlParameter: 'ui-logo=0',
             },
             hide_dm_share: {
-                label: this.env._t("Hide sharing button"),
+                label: _t("Hide sharing button"),
                 platforms: [this.PLATFORMS.dailymotion],
                 urlParameter: 'sharing-enable=0',
             },
@@ -152,10 +153,10 @@ export class VideoSelector extends Component {
         const { embed_url: src, platform } = await this._getVideoURLData(url, options);
 
         if (!src) {
-            this.state.errorMessage = this.env._t("The provided url is not valid");
+            this.state.errorMessage = _t("The provided url is not valid");
         } else if (!platform) {
             this.state.errorMessage =
-                this.env._t("The provided url does not reference any supported video");
+                _t("The provided url does not reference any supported video");
         } else {
             this.state.errorMessage = '';
         }

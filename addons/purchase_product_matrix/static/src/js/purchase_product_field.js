@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
@@ -28,7 +29,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
     }
 
     get configurationButtonHelp() {
-        return this.env._t("Edit Configuration");
+        return _t("Edit Configuration");
     }
     get isConfigurableTemplate() {
         return this.props.record.data.is_configurable_product;

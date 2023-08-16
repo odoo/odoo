@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
@@ -17,7 +18,7 @@ export class DiscountButton extends Component {
     async click() {
         var self = this;
         const { confirmed, payload } = await this.popup.add(NumberPopup, {
-            title: this.env._t("Discount Percentage"),
+            title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
             isInputSelected: true,
         });
@@ -33,8 +34,8 @@ export class DiscountButton extends Component {
         const product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
         if (product === undefined) {
             await this.popup.add(ErrorPopup, {
-                title: this.env._t("No discount product found"),
-                body: this.env._t(
+                title: _t("No discount product found"),
+                body: _t(
                     "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
                 ),
             });
@@ -72,13 +73,13 @@ export class DiscountButton extends Component {
                     description:
                         `${pc}%, ` +
                         (tax_ids_array.length
-                            ? this.env._t(
+                            ? _t(
                                   "Tax: %s",
                                   tax_ids_array
                                       .map((taxId) => this.pos.taxes_by_id[taxId].amount + "%")
                                       .join(", ")
                               )
-                            : this.env._t("No tax")),
+                            : _t("No tax")),
                     extras: {
                         price_type: "automatic",
                     },

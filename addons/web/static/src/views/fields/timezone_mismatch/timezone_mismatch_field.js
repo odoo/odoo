@@ -41,7 +41,7 @@ export class TimezoneMismatchField extends SelectionField {
     }
     get mismatchTitle() {
         if (!this.props.record.data[this.props.name]) {
-            return this.env._t("Set a timezone on your user");
+            return _t("Set a timezone on your user");
         }
         return this.props.mismatchTitle;
     }

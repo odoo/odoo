@@ -57,7 +57,7 @@ export class X2ManyField extends Component {
                 : [
                       {
                           type: "create",
-                          string: this.props.addLabel || this.env._t("Add"),
+                          string: this.props.addLabel || _t("Add"),
                           class: "o-kanban-button-new",
                       },
                   ];
@@ -257,7 +257,7 @@ export class X2ManyField extends Component {
         context = makeContext([this.props.context, context]);
         if (this.isMany2Many) {
             const { string } = this.props;
-            const title = this.env._t("Add: %s", string);
+            const title = _t("Add: %s", string);
             return this.selectCreate({ domain, context, title });
         }
         if (editable) {

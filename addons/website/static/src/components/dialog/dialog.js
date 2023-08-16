@@ -80,9 +80,9 @@ export class AddPageDialog extends Component {
         super.setup();
         useAutofocus();
 
-        this.title = this.env._t("New Page");
-        this.primaryTitle = this.env._t("Create");
-        this.switchLabel = this.env._t("Add to menu");
+        this.title = _t("New Page");
+        this.primaryTitle = _t("Create");
+        this.switchLabel = _t("Add to menu");
         this.website = useService('website');
         this.orm = useService('orm');
         this.http = useService('http');

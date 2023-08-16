@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
@@ -19,7 +20,7 @@ export const LunchRendererMixin = (T) => class LunchRendererMixin extends T {
 
         let action = {
             res_model: 'lunch.order',
-            name: this.env._t('Configure Your Order'),
+            name: _t('Configure Your Order'),
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',

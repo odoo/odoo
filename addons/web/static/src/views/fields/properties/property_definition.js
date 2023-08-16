@@ -245,7 +245,7 @@ export class PropertyDefinition extends Component {
      */
     onButtonDomainClick() {
         this.addDialog(SelectCreateDialog, {
-            title: this.env._t("Selected records"),
+            title: _t("Selected records"),
             noCreate: true,
             multiSelect: false,
             resModel: this.state.propertyDefinition.comodel,

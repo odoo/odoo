@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { evalDomain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -307,7 +308,6 @@ export class KanbanRecord extends Component {
      * @param {Object} params
      */
     triggerAction(params) {
-        const env = this.env;
         const { archInfo, openRecord, deleteRecord, record } = this.props;
         const { type } = params;
         switch (type) {
@@ -333,7 +333,7 @@ export class KanbanRecord extends Component {
                 ) {
                     this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
                 } else {
-                    const warning = env._t(
+                    const warning = _t(
                         `Could not set the cover image: incorrect field ("%s") is provided in the view.`,
                         fieldName
                     );
@@ -342,7 +342,7 @@ export class KanbanRecord extends Component {
                 break;
             }
             default: {
-                return this.notification.add(env._t("Kanban: no action for type: ") + type, {
+                return this.notification.add(_t("Kanban: no action for type: ") + type, {
                     type: "danger",
                 });
             }

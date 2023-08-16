@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -30,12 +31,12 @@ export class WebsiteSwitcherSystray extends Component {
                     this.websiteService.goToWebsite({ websiteId: website.id });
                     if (!website.domain) {
                         const closeFn = this.notificationService.add(
-                            this.env._t(
+                            _t(
                                 "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\nTo remove this message please set a domain in your website settings"
                             ),
                             {
                                 type: "warning",
-                                title: this.env._t(
+                                title: _t(
                                     "No website domain configured for this website."
                                 ),
                                 sticky: true,

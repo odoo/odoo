@@ -93,8 +93,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
 
             if (selectedLine.noDecrease) {
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Invalid action"),
-                    body: this.env._t("You are not allowed to change this quantity"),
+                    title: _t("Invalid action"),
+                    body: _t("You are not allowed to change this quantity"),
                 });
                 return;
             }
@@ -188,7 +188,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         if (!partner) {
             // find the partner in the backend by the barcode
             const foundPartnerIds = await this.orm.search("res.partner", [
-                ["barcode", "=", code.code]
+                ["barcode", "=", code.code],
             ]);
             if (foundPartnerIds.length) {
                 await this.pos._loadPartners(foundPartnerIds);
@@ -246,7 +246,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.reset();
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: 0,
-            title: this.env._t("Set the new quantity"),
+            title: _t("Set the new quantity"),
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
         if (confirmed && newQuantity !== null) {
@@ -324,7 +324,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     this.pos.showScreen("TicketScreen", {
                         ui: { filter: "SYNCED", searchDetails },
                     });
-                    this.notification.add(this.env._t("The order has been already paid."), 3000);
+                    this.notification.add(_t("The order has been already paid."), 3000);
                     this.pos.removeOrder(this.pos.get_order(), false);
                     this.pos.add_new_order();
                     return;

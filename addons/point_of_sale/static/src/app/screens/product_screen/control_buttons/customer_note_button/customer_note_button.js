@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { TextAreaPopup } from "@point_of_sale/app/utils/input_popups/textarea_popup";
@@ -21,7 +22,7 @@ export class OrderlineCustomerNoteButton extends Component {
         }
         const { confirmed, payload: inputNote } = await this.popup.add(TextAreaPopup, {
             startingValue: selectedOrderline.get_customer_note(),
-            title: this.env._t("Add Customer Note"),
+            title: _t("Add Customer Note"),
         });
 
         if (confirmed) {

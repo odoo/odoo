@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import {
     StateSelectionField,
     stateSelectionField,
@@ -43,7 +44,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         if (this.props.viewType != 'form') {
             super.setup();
         } else {
-            const commandName = this.env._t("Set state as...");
+            const commandName = _t("Set state as...");
             useCommand(
                 commandName,
                 () => {
@@ -73,14 +74,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
 
     get options() {
         const options = [
-            ["1_canceled", this.env._t("Canceled")],
-            ["1_done", this.env._t("Done")],
+            ["1_canceled", _t("Canceled")],
+            ["1_done", _t("Done")],
         ];
         if (this.currentValue != "04_waiting_normal") {
             return [
-                ["01_in_progress", this.env._t("In Progress")],
-                ["02_changes_requested", this.env._t("Changes Requested")],
-                ["03_approved", this.env._t("Approved")],
+                ["01_in_progress", _t("In Progress")],
+                ["02_changes_requested", _t("Changes Requested")],
+                ["03_approved", _t("Approved")],
                 ...options,
             ];
         }

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 
@@ -50,7 +51,7 @@ export class OrderWidget extends Component {
         const isAllowOnlyOneLot = orderline.product.isAllowOnlyOneLot();
         const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
         const { confirmed, payload } = await this.popup.add(EditListPopup, {
-            title: this.env._t("Lot/Serial Number(s) Required"),
+            title: _t("Lot/Serial Number(s) Required"),
             name: orderline.product.display_name,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,

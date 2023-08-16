@@ -5,6 +5,7 @@ import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";
 
 import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class FilterValue extends Component {
     setup() {
@@ -25,6 +26,10 @@ export class FilterValue extends Component {
             value: values.map((record) => record.id),
             displayNames: values.map((record) => record.display_name),
         });
+    }
+
+    translate(text) {
+        return _t(text);
     }
 
     onClear(id) {

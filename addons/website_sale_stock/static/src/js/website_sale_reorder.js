@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ReorderDialog } from "@website_sale/js/website_sale_reorder";
 import { patch } from "@web/core/utils/patch";
 
@@ -32,7 +33,7 @@ patch(ReorderDialog.prototype, {
             product.add_to_cart_allowed = false;
         }
         if (product.max_quantity_available < product.qty) {
-            product.qty_warning = this.env._t(
+            product.qty_warning = _t(
                 "You ask for %s Units but only %s are available.",
                 product.qty.toFixed(1),
                 product.max_quantity_available.toFixed(1)
@@ -40,7 +41,7 @@ patch(ReorderDialog.prototype, {
             product.qty = product.max_quantity_available;
             product.stock_warning = true;
         } else if (product.combinationInfo.cart_qty) {
-            product.qty_warning = this.env._t(
+            product.qty_warning = _t(
                 "You already have %s Units in your cart.",
                 product.combinationInfo.cart_qty.toFixed(1)
             );
@@ -52,7 +53,7 @@ patch(ReorderDialog.prototype, {
      */
     getWarningForProduct(product) {
         if (product.hasOwnProperty("max_quantity_available") && !product.max_quantity_available) {
-            return this.env._t("This product is out of stock.");
+            return _t("This product is out of stock.");
         }
         return super.getWarningForProduct(...arguments);
     },
@@ -62,7 +63,7 @@ patch(ReorderDialog.prototype, {
      */
     changeProductQty(product, newQty) {
         if (product.max_quantity_available && newQty > product.max_quantity_available) {
-            product.qty_warning = this.env._t(
+            product.qty_warning = _t(
                 "You ask for %s Units but only %s are available.",
                 newQty.toFixed(1),
                 product.max_quantity_available.toFixed(1)

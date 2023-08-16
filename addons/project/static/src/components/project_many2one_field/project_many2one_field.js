@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 
@@ -8,7 +9,7 @@ export class ProjectMany2OneField extends Many2OneField {
         const props = super.Many2XAutocompleteProps;
         const { project_id, parent_id } = this.props.record.data;
         if (!project_id && !parent_id) {
-            props.placeholder = this.env._t("Private");
+            props.placeholder = _t("Private");
         }
         return props;
     }

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
 import { AbstractReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/abstract_receipt_screen";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
@@ -61,7 +62,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     onSendEmail() {
         if (this.buttonMailReceipt.el.classList.contains("fa-spin")) {
             this.orderUiState.emailSuccessful = false;
-            this.orderUiState.emailNotice = this.env._t("Sending in progress.");
+            this.orderUiState.emailNotice = _t("Sending in progress.");
             return;
         }
         this.buttonMailReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
@@ -70,7 +71,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         if (!this.isValidEmail()) {
             this.orderUiState.emailSuccessful = false;
             this.buttonMailReceipt.el.className = "fa fa-paper-plane";
-            this.orderUiState.emailNotice = this.env._t("Invalid email.");
+            this.orderUiState.emailNotice = _t("Invalid email.");
             return;
         }
 
@@ -79,12 +80,10 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             try {
                 await this._sendReceiptToCustomer();
                 this.orderUiState.emailSuccessful = true;
-                this.orderUiState.emailNotice = this.env._t("Email sent.");
+                this.orderUiState.emailNotice = _t("Email sent.");
             } catch {
                 this.orderUiState.emailSuccessful = false;
-                this.orderUiState.emailNotice = this.env._t(
-                    "Sending email failed. Please try again."
-                );
+                this.orderUiState.emailNotice = _t("Sending email failed. Please try again.");
             }
             this.buttonMailReceipt.el.className = "fa fa-paper-plane";
         }, 1000);
@@ -196,8 +195,8 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         const order_server_id = this.pos.validated_orders_name_server_id_map[orderName];
         if (!order_server_id) {
             this.popup.add(OfflineErrorPopup, {
-                title: this.env._t("Unsynced order"),
-                body: this.env._t(
+                title: _t("Unsynced order"),
+                body: _t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
                 ),
             });

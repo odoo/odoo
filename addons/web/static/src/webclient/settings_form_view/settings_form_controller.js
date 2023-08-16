@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { formView } from "@web/views/form/form_view";
@@ -70,7 +71,7 @@ export class SettingsFormController extends formView.Controller {
     }
 
     displayName() {
-        return this.env._t("Settings");
+        return _t("Settings");
     }
 
     async beforeLeave() {
@@ -117,7 +118,7 @@ export class SettingsFormController extends formView.Controller {
         let _continue = true;
         await new Promise((resolve) => {
             this.dialogService.add(SettingsConfirmationDialog, {
-                body: this.env._t("Would you like to save your changes?"),
+                body: _t("Would you like to save your changes?"),
                 confirm: async () => {
                     await this._save();
                     // It doesn't make sense to do the action of the button

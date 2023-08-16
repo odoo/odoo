@@ -581,7 +581,7 @@ async function actionAddProperty(env) {
     if (addProperty) {
         addProperty.click();
     } else {
-        const message = env._t("You can not create a new property.");
+        const message = _t("You can not create a new property.");
         env.services.notification.add(message, { type: "danger" });
     }
 }

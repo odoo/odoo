@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
@@ -51,8 +52,8 @@ export class AbstractReceiptScreen extends Component {
             return true;
         } catch {
             await this.popup.add(ErrorPopup, {
-                title: this.env._t("Printing is not supported on some browsers"),
-                body: this.env._t(
+                title: _t("Printing is not supported on some browsers"),
+                body: _t(
                     "Printing is not supported on some browsers due to no default printing protocol " +
                         "is available. It is possible to print your tickets by making use of an IoT Box."
                 ),

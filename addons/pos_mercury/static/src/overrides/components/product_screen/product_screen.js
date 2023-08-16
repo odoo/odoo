@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { patch } from "@web/core/utils/patch";
@@ -14,7 +15,7 @@ patch(ProductScreen.prototype, {
     },
     credit_error_action() {
         this.popup.add(ErrorPopup, {
-            body: this.env._t("Go to payment screen to use cards"),
+            body: _t("Go to payment screen to use cards"),
         });
     },
 });

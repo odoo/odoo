@@ -29,11 +29,11 @@ export class ErrorTracebackPopup extends ErrorPopup {
         return URL.createObjectURL(blob);
     }
     get tracebackFilename() {
-        return `${this.env._t("error")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.txt`;
+        return `${_t("error")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.txt`;
     }
     emailTraceback() {
         const address = this.pos.company.email;
-        const subject = this.env._t("IMPORTANT: Bug Report From Odoo Point Of Sale");
+        const subject = _t("IMPORTANT: Bug Report From Odoo Point Of Sale");
         window.open(
             "mailto:" +
                 address +

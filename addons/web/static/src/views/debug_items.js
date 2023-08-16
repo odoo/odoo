@@ -44,7 +44,7 @@ export function getView({ component, env }) {
     }
     return {
         type: "item",
-        description: env._t("Get View"),
+        description: _t("Get View"),
         callback: () => {
             env.services.dialog.add(GetViewDialog, { arch });
         },
@@ -70,7 +70,7 @@ export function editView({ accessRights, component, env }) {
         type = type === "tree" ? "list" : type;
     }
     const displayName = type[0].toUpperCase() + type.slice(1);
-    const description = env._t("Edit View: ") + displayName;
+    const description = _t("Edit View: ") + displayName;
     return {
         type: "item",
         description,
@@ -102,7 +102,7 @@ export function editSearchView({ accessRights, component, env }) {
     if (searchViewId === undefined) {
         return null;
     }
-    const description = env._t("Edit SearchView");
+    const description = _t("Edit SearchView");
     return {
         type: "item",
         description,
@@ -123,7 +123,7 @@ class GetMetadataDialog extends Component {
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
-        this.title = this.env._t("View Metadata");
+        this.title = _t("View Metadata");
         this.state = useState({});
         onWillStart(() => this.loadMetadata());
     }
@@ -173,7 +173,7 @@ export function viewMetadata({ component, env }) {
     }
     return {
         type: "item",
-        description: env._t("View Metadata"),
+        description: _t("View Metadata"),
         callback: () => {
             env.services.dialog.add(GetMetadataDialog, {
                 resModel: component.props.resModel,
@@ -193,7 +193,7 @@ debugRegistry.category("form").add("viewMetadata", viewMetadata);
 class SetDefaultDialog extends Component {
     setup() {
         this.orm = useService("orm");
-        this.title = this.env._t("Set Defaults");
+        this.title = _t("Set Defaults");
         this.state = {
             fieldToSet: "",
             condition: "",
@@ -305,7 +305,7 @@ SetDefaultDialog.props = {
 export function setDefaults({ component, env }) {
     return {
         type: "item",
-        description: env._t("Set Defaults"),
+        description: _t("Set Defaults"),
         callback: () => {
             env.services.dialog.add(SetDefaultDialog, {
                 record: component.model.root,
@@ -326,7 +326,7 @@ export function manageAttachments({ component, env }) {
     if (!resId) {
         return null; // No record
     }
-    const description = env._t("Manage Attachments");
+    const description = _t("Manage Attachments");
     return {
         type: "item",
         description,

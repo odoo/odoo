@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, onMounted, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -26,7 +27,7 @@ export class ImportAction extends Component {
         this.router = useService("router");
         this.user = useService("user");
 
-        this.env.config.setDisplayName(this.props.action.name || this.env._t("Import a File"));
+        this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
         this.resModel = this.props.action.params.model;
         this.model = useImportModel({
             env: this.env,
@@ -124,7 +125,7 @@ export class ImportAction extends Component {
         this.state.filename = files[0].name;
         this.state.importMessages = [];
 
-        this.model.block(this.env._t("Loading file..."));
+        this.model.block(_t("Loading file..."));
         const { res, error } = await this.model.updateData(true);
 
         if (error) {
@@ -137,7 +138,7 @@ export class ImportAction extends Component {
     }
 
     async handleImport(isTest = true) {
-        const message = isTest ? this.env._t("Testing") : this.env._t("Importing");
+        const message = isTest ? _t("Testing") : _t("Importing");
 
         let blockComponent;
         if (this.isBatched) {
@@ -170,7 +171,7 @@ export class ImportAction extends Component {
         }
 
         if (!isTest && res.ids.length) {
-            this.notification.add(this.env._t("%s records successfully imported", res.ids.length), {
+            this.notification.add(_t("%s records successfully imported", res.ids.length), {
                 type: "success",
             });
             this.exit();

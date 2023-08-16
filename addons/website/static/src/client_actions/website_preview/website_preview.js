@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { useService, useBus } from '@web/core/utils/hooks';
@@ -68,8 +69,8 @@ export class WebsitePreview extends Component {
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
                 this.dialogService.add(WebsiteDialog, {
-                    title: this.env._t("Redirecting..."),
-                    body: this.env._t("You are about to be redirected to the domain configured for your website ( %s ). This is necessary to edit or view your website from the Website app. You might need to log back in.", this.websiteDomain),
+                    title: _t("Redirecting..."),
+                    body: _t("You are about to be redirected to the domain configured for your website ( %s ). This is necessary to edit or view your website from the Website app. You might need to log back in.", this.websiteDomain),
                     showSecondaryButton: false,
                 }, {
                     onClose: () => {

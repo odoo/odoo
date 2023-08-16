@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
@@ -34,7 +35,7 @@ export class MenuDialog extends Component {
     setup() {
         this.rpc = useService('rpc');
         this.website = useService('website');
-        this.title = this.env._t("Add a menu item");
+        this.title = _t("Add a menu item");
         useAutofocus();
 
         this.name = useControlledInput(this.props.name, value => !!value);
@@ -106,8 +107,8 @@ export class EditMenuDialog extends Component {
         this.website = useService('website');
         this.dialogs = useService('dialog');
 
-        this.title = this.env._t("Edit Menu");
-        this.saveButton = this.env._t("Save");
+        this.title = _t("Edit Menu");
+        this.saveButton = _t("Save");
 
         this.menuEditor = useRef('menu-editor');
 

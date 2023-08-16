@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -99,9 +100,9 @@ export class ExportDataDialog extends Component {
             isSmall: this.env.isSmall,
         });
 
-        this.title = this.env._t("Export Data");
-        this.newTemplateText = this.env._t("New template");
-        this.removeFieldText = this.env._t("Remove field");
+        this.title = _t("Export Data");
+        this.newTemplateText = _t("New template");
+        this.removeFieldText = _t("Remove field");
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
 
@@ -300,7 +301,7 @@ export class ExportDataDialog extends Component {
     async onSaveExportTemplate() {
         const name = this.exportListRef.el.value;
         if (!name) {
-            return this.notification.add(this.env._t("Please enter save field list name"), {
+            return this.notification.add(_t("Please enter save field list name"), {
                 type: "danger",
             });
         }
@@ -337,12 +338,9 @@ export class ExportDataDialog extends Component {
 
     async onClickExportButton() {
         if (!this.state.exportList.length) {
-            return this.notification.add(
-                this.env._t("Please select fields to save export list..."),
-                {
-                    type: "danger",
-                }
-            );
+            return this.notification.add(_t("Please select fields to save export list..."), {
+                type: "danger",
+            });
         }
         await this.props.download(
             this.state.exportList,
@@ -353,7 +351,7 @@ export class ExportDataDialog extends Component {
 
     async onDeleteExportTemplate() {
         this.dialog.add(DeleteExportListDialog, {
-            text: this.env._t("Do you really want to delete this export template?"),
+            text: _t("Do you really want to delete this export template?"),
             delete: async () => {
                 const id = Number(this.state.templateId);
                 await this.orm.unlink("ir.exports", [id], { context: this.props.context });

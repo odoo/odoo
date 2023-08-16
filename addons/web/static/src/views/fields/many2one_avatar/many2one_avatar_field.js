@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { many2OneField, Many2OneField } from "../many2one/many2one_field";
@@ -85,7 +86,7 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
             canCreate: false,
             canCreateEdit: false,
             canQuickCreate: false,
-            placeholder: this.env._t("Search user..."),
+            placeholder: _t("Search user..."),
         });
     }
 }

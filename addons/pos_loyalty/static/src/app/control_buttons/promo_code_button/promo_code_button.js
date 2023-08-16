@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
@@ -16,9 +17,9 @@ export class PromoCodeButton extends Component {
 
     async click() {
         let { confirmed, payload: code } = await this.popup.add(TextInputPopup, {
-            title: this.env._t("Enter Code"),
+            title: _t("Enter Code"),
             startingValue: "",
-            placeholder: this.env._t("Gift card or Discount code"),
+            placeholder: _t("Gift card or Discount code"),
         });
         if (confirmed) {
             code = code.trim();

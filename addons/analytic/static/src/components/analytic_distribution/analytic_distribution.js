@@ -69,7 +69,7 @@ export class AnalyticDistribution extends Component {
             onClose: () => {
                 this.mainRef.el.focus();
             },
-            fieldString: this.env._t("Analytic Distribution Template"),
+            fieldString: _t("Analytic Distribution Template"),
         });
         this.allPlans = [];
         this.lastAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
@@ -202,7 +202,7 @@ export class AnalyticDistribution extends Component {
 
     optionsSourceAnalytic(groupId) {
         return {
-            placeholder: this.env._t("Loading..."),
+            placeholder: _t("Loading..."),
             options:(searchTerm) => this.loadOptionsSourceAnalytic(groupId, searchTerm),
         };
     }
@@ -249,7 +249,7 @@ export class AnalyticDistribution extends Component {
 
         if (records.length) {
             options.push({
-                label: this.env._t("View all"),
+                label: _t("View all"),
                 action: (editedTag) => this.onViewAll(searchTerm, editedTag),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_view_all",
             });
@@ -257,7 +257,7 @@ export class AnalyticDistribution extends Component {
 
         else {
             options.push({
-                label: this.env._t("No Analytic Accounts for this plan"),
+                label: _t("No Analytic Accounts for this plan"),
                 classList: "o_m2o_no_result",
                 unselectable: true,
             });
@@ -271,14 +271,14 @@ export class AnalyticDistribution extends Component {
         if (searchTerm.length) {
             dynamicFilters = [
                 {
-                    description: this.env._t("Quick search: %s", searchTerm),
+                    description: _t("Quick search: %s", searchTerm),
                     domain: this.searchAnalyticDomain(searchTerm),
                 },
             ];
         }
         this.selectCreateIsOpen = true;
         this.addDialog(SelectCreateDialog, {
-            title: this.env._t("Search: Analytic Account"),
+            title: _t("Search: Analytic Account"),
             noCreate: true,
             multiSelect: true,
             resModel: 'account.analytic.account',

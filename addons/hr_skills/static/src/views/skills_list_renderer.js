@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 export class CommonSkillsListRenderer extends ListRenderer {
@@ -26,7 +27,7 @@ export class CommonSkillsListRenderer extends ListRenderer {
             if (grouped[group[1]] === undefined) {
                 grouped[group[1]] = {
                     id: parseInt(group[0]),
-                    name: group[1] || this.env._t('Other'),
+                    name: group[1] || _t('Other'),
                     list: {
                         records: [],
                     },

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
@@ -18,7 +19,7 @@ export class SetPricelistButton extends Component {
     }
     get currentPricelistName() {
         const order = this.currentOrder;
-        return order && order.pricelist ? order.pricelist.display_name : this.env._t("Pricelist");
+        return order && order.pricelist ? order.pricelist.display_name : _t("Pricelist");
     }
     async click() {
         // Create the list to be passed to the SelectionPopup.
@@ -35,14 +36,14 @@ export class SetPricelistButton extends Component {
         if (!this.pos.default_pricelist) {
             selectionList.push({
                 id: null,
-                label: this.env._t("Default Price"),
+                label: _t("Default Price"),
                 isSelected: !this.currentOrder.pricelist,
                 item: null,
             });
         }
 
         const { confirmed, payload: selectedPricelist } = await this.popup.add(SelectionPopup, {
-            title: this.env._t("Select the pricelist"),
+            title: _t("Select the pricelist"),
             list: selectionList,
         });
 

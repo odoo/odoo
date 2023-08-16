@@ -106,7 +106,7 @@ export class ListRenderer extends Component {
 
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
-            : [{ type: "create", string: this.env._t("Add a line") }];
+            : [{ type: "create", string: _t("Add a line") }];
 
         this.cellToFocus = null;
         this.activeRowId = null;
@@ -218,7 +218,7 @@ export class ListRenderer extends Component {
     }
 
     displaySaveNotification() {
-        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+        this.notificationService.add(_t('Please click on the "save" button first'), {
             type: "danger",
         });
     }
@@ -915,7 +915,6 @@ export class ListRenderer extends Component {
     }
 
     getGroupDisplayName(group) {
-        const { _t } = this.env;
         if (group.groupByField.type === "boolean") {
             return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");
         } else {

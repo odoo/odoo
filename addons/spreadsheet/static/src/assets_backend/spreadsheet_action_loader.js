@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getBundle, loadBundle } from "@web/core/assets";
 import { sprintf } from "@web/core/utils/strings";
@@ -26,7 +27,7 @@ export async function loadSpreadsheetAction(env, actionName, actionLazyLoader) {
         actionRegistry.add(
             actionName,
             () => {
-                const msg = sprintf(env._t("%s couldn't be loaded"), actionName);
+                const msg = sprintf(_t("%s couldn't be loaded"), actionName);
                 env.services.notification.add(msg, { type: "danger" });
             },
             { force: true }

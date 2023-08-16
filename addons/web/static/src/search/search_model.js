@@ -1655,7 +1655,7 @@ export class SearchModel extends EventBus {
                 groupId: group.id,
                 type,
                 values,
-                separator: type === "groupBy" ? ">" : this.env._t("or"),
+                separator: type === "groupBy" ? ">" : _t("or"),
             };
             if (type === "field") {
                 facet.title = title;

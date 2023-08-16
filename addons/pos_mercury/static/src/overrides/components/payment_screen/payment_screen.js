@@ -178,9 +178,9 @@ patch(PaymentScreen.prototype, {
                     response.message;
             } else {
                 if (can_connect_to_server) {
-                    message = self.env._t("No response from Vantiv (Vantiv down?)");
+                    message = _t("No response from Vantiv (Vantiv down?)");
                 } else {
-                    message = self.env._t("No response from server (connected to network?)");
+                    message = _t("No response from server (connected to network?)");
                 }
             }
             def.resolve({
@@ -194,8 +194,8 @@ patch(PaymentScreen.prototype, {
         const order = this.pos.get_order();
         if (order.get_due(order.selected_paymentline) < 0) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Refunds not supported"),
-                body: this.env._t(
+                title: _t("Refunds not supported"),
+                body: _t(
                     "Credit card refunds are not supported. Instead select your credit card payment method, click 'Validate' and refund the original charge manually through the Vantiv backend."
                 ),
             });
@@ -210,8 +210,8 @@ patch(PaymentScreen.prototype, {
 
         if (!decodedMagtek) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Could not read card"),
-                body: this.env._t(
+                title: _t("Could not read card"),
+                body: _t(
                     "This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International)."
                 ),
             });
@@ -248,7 +248,7 @@ patch(PaymentScreen.prototype, {
                 transaction: def,
             });
             def.notify({
-                message: this.env._t("Handling transaction..."),
+                message: _t("Handling transaction..."),
             });
         }
         // FIXME POSREF timeout
@@ -270,14 +270,14 @@ patch(PaymentScreen.prototype, {
 
                 if (data === "not setup") {
                     def.resolve({
-                        message: this.env._t("Please setup your Vantiv merchant account."),
+                        message: _t("Please setup your Vantiv merchant account."),
                     });
                     return;
                 }
 
                 if (data === "internal error") {
                     def.resolve({
-                        message: this.env._t("Odoo error while processing transaction."),
+                        message: _t("Odoo error while processing transaction."),
                     });
                     return;
                 }
@@ -330,7 +330,7 @@ patch(PaymentScreen.prototype, {
 
                         if (response.message === "PARTIAL AP") {
                             def.resolve({
-                                message: this.env._t("Partially approved"),
+                                message: _t("Partially approved"),
                                 auto_close: false,
                             });
                         } else {
@@ -393,7 +393,7 @@ patch(PaymentScreen.prototype, {
             }));
             this.popup
                 .add(SelectionPopup, {
-                    title: this.env._t("Pay with: "),
+                    title: _t("Pay with: "),
                     list: selectionList,
                 })
                 .then(({ confirmed, payload: selectedPaymentMethod }) => {
@@ -433,10 +433,10 @@ patch(PaymentScreen.prototype, {
         var rpc_method = "";
 
         if (is_voidsale) {
-            message = this.env._t("Reversal failed, sending VoidSale...");
+            message = _t("Reversal failed, sending VoidSale...");
             rpc_method = "do_voidsale";
         } else {
-            message = this.env._t("Sending reversal...");
+            message = _t("Sending reversal...");
             rpc_method = "do_reversal";
         }
 
@@ -461,7 +461,7 @@ patch(PaymentScreen.prototype, {
 
                 if (data === "internal error") {
                     def.resolve({
-                        message: self.env._t("Odoo error while processing transaction."),
+                        message: _t("Odoo error while processing transaction."),
                     });
                     return;
                 }
@@ -475,7 +475,7 @@ patch(PaymentScreen.prototype, {
                     } else {
                         // reversal was successful
                         def.resolve({
-                            message: self.env._t("Reversal succeeded"),
+                            message: _t("Reversal succeeded"),
                         });
 
                         self.remove_paymentline_by_ref(line);
@@ -484,7 +484,7 @@ patch(PaymentScreen.prototype, {
                     // voidsale ended, nothing more we can do
                     if (response.status === "Approved") {
                         def.resolve({
-                            message: self.env._t("VoidSale succeeded"),
+                            message: _t("VoidSale succeeded"),
                         });
 
                         self.remove_paymentline_by_ref(line);

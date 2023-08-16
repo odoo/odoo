@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import ToursDialog from "@web_tour/debug/tour_dialog_component";
@@ -15,7 +16,7 @@ export function disableTours({ env }) {
     }
     return {
         type: "item",
-        description: env._t("Disable Tours"),
+        description: _t("Disable Tours"),
         callback: async () => {
             await env.services.orm.call("web_tour.tour", "consume", [activeTourNames]);
             for (const tourName of activeTourNames) {
@@ -33,7 +34,7 @@ export function startTour({ env }) {
     }
     return {
         type: "item",
-        description: env._t("Start Tour"),
+        description: _t("Start Tour"),
         callback: async () => {
             env.services.dialog.add(ToursDialog);
         },

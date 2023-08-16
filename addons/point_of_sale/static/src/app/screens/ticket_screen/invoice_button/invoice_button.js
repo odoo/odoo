@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
@@ -24,9 +25,9 @@ export class InvoiceButton extends Component {
     }
     get commandName() {
         if (!this.props.order) {
-            return this.env._t("Invoice");
+            return _t("Invoice");
         } else {
-            return this.isAlreadyInvoiced ? this.env._t("Reprint Invoice") : this.env._t("Invoice");
+            return this.isAlreadyInvoiced ? _t("Reprint Invoice") : _t("Invoice");
         }
     }
     async _downloadInvoice(orderId) {
@@ -48,8 +49,8 @@ export class InvoiceButton extends Component {
             } else {
                 // NOTE: error here is most probably undefined
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Network Error"),
-                    body: this.env._t("Unable to download invoice."),
+                    title: _t("Network Error"),
+                    body: _t("Unable to download invoice."),
                 });
             }
         }
@@ -75,8 +76,8 @@ export class InvoiceButton extends Component {
         // Write to pos.order the selected partner.
         if (!order.get_partner()) {
             const { confirmed: confirmedPopup } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Need customer to invoice"),
-                body: this.env._t("Do you want to open the customer list to select customer?"),
+                title: _t("Need customer to invoice"),
+                body: _t("Do you want to open the customer list to select customer?"),
             });
             if (!confirmedPopup) {
                 return;

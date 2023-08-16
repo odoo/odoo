@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useEffect } from '@odoo/owl';
 import { registry } from "@web/core/registry";
 import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
@@ -61,7 +62,7 @@ export class SaleOrderLineProductField extends Many2OneField {
     }
 
     get configurationButtonHelp() {
-        return this.env._t("Edit Configuration");
+        return _t("Edit Configuration");
     }
 
     get configurationButtonIcon() {

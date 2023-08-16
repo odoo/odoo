@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Attachment, FileSelector, IMAGE_MIMETYPES } from './file_selector';
 
 export class DocumentAttachment extends Attachment {}
@@ -9,11 +10,11 @@ export class DocumentSelector extends FileSelector {
     setup() {
         super.setup();
 
-        this.uploadText = this.env._t("Upload a document");
+        this.uploadText = _t("Upload a document");
         this.urlPlaceholder = "https://www.odoo.com/mydocument";
-        this.addText = this.env._t("Add document");
-        this.searchPlaceholder = this.env._t("Search a document");
-        this.allLoadedText = this.env._t("All documents have been loaded");
+        this.addText = _t("Add document");
+        this.searchPlaceholder = _t("Search a document");
+        this.allLoadedText = _t("All documents have been loaded");
     }
 
     get attachmentsDomain() {

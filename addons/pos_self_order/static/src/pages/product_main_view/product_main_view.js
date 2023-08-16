@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/self_order_service";
 import { NavBar } from "@pos_self_order/components/navbar/navbar";
@@ -90,7 +91,7 @@ export class ProductMainView extends Component {
 
         if (!increase && sentQty === currentQty) {
             this.selfOrder.notification.add(
-                this.env._t(
+                _t(
                     "You cannot reduce the quantity of an order that has already been sent!"
                 ),
                 { type: "danger" }

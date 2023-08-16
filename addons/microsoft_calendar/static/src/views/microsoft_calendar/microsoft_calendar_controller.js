@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
@@ -24,14 +25,14 @@ patch(AttendeeCalendarController.prototype, {
         } else if (syncResult.status === "need_config_from_admin") {
             if (this.isSystemUser) {
                 this.dialog.add(ConfirmationDialog, {
-                    title: this.env._t("Configuration"),
-                    body: this.env._t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),
+                    title: _t("Configuration"),
+                    body: _t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),
                     confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
                 });
             } else {
                 this.dialog.add(AlertDialog, {
-                    title: this.env._t("Configuration"),
-                    body: this.env._t("An administrator needs to configure Outlook Synchronization before you can use it!"),
+                    title: _t("Configuration"),
+                    body: _t("An administrator needs to configure Outlook Synchronization before you can use it!"),
                 });
             }
         } else if (syncResult.status === "need_refresh") {
@@ -41,7 +42,7 @@ patch(AttendeeCalendarController.prototype, {
 
     async onStopMicrosoftSynchronization() {
         this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"),
+            body: _t("You are about to stop the synchronization of your calendar with Outlook. Are you sure you want to continue?"),
             confirm: async () => {
                 await this.orm.call(
                     "res.users",
@@ -49,9 +50,9 @@ patch(AttendeeCalendarController.prototype, {
                     [[this.user.userId]],
                 );
                 this.notification.add(
-                    this.env._t("The synchronization with Outlook calendar was successfully stopped."),
+                    _t("The synchronization with Outlook calendar was successfully stopped."),
                     {
-                        title: this.env._t("Success"),
+                        title: _t("Success"),
                         type: "success",
                     },
                 );

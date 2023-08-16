@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -27,7 +28,7 @@ export class JournalDashboardActivity extends Component {
     async openActivity(activity) {
         this.action.doAction({
             type: 'ir.actions.act_window',
-            name: this.env._t('Journal Entry'),
+            name: _t('Journal Entry'),
             target: 'current',
             res_id: activity.res_id,
             res_model: 'account.move',
@@ -38,7 +39,7 @@ export class JournalDashboardActivity extends Component {
     openAllActivities(e) {
         this.action.doAction({
             type: 'ir.actions.act_window',
-            name: this.env._t('Journal Entries'),
+            name: _t('Journal Entries'),
             res_model: 'account.move',
             views: [[false, 'kanban'], [false, 'form']],
             search_view_id: [false],
