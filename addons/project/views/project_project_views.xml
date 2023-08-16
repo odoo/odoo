@@ -479,7 +479,8 @@
                                                 </div>
                                             </a>
                                             <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
-                                                class="o_kanban_inline_block text-muted small"
+                                                class="o_kanban_inline_block btn-link text-dark small"
+                                                role="button"
                                                 name="action_get_list_view"
                                                 type="object"
                                                 t-attf-title="#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
