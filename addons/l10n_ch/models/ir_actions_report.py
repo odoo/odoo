@@ -66,14 +66,23 @@ class IrActionsReport(models.Model):
                         },
                         res_ids=qr_inv_ids,
                     )
+                    # Reassign QR codes to the appropriate index in case of multiple invoices
+                    if len(qr_res) > 1:
+                        stream_qr_pdf_combine = [value for value in qr_res.values() if value['stream'] is not None][0]
+                        for i in range(len(qr_res)-1):
+                            attachment_writer = OdooPdfFileWriter()
+                            attachment_writer.addPage(OdooPdfFileReader(stream_qr_pdf_combine['stream']).getPage(i))
+                            stream = io.BytesIO()
+                            attachment_writer.write(stream)
+                            qr_res[qr_inv_ids[i]]['stream'] = stream
 
                     for invoice_id, stream in qr_res.items():
-                        qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
+                        if not invoice_id:
+                            continue
                         header_pdf = OdooPdfFileReader(header_res[invoice_id]['stream'], strict=False)
-
                         page = header_pdf.getPage(0)
+                        qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
                         page.mergePage(qr_pdf.getPage(0))
-
                         output_pdf = OdooPdfFileWriter()
                         output_pdf.addPage(page)
                         new_pdf_stream = io.BytesIO()
