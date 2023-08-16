@@ -6,18 +6,27 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="has_lead_request" invisible="1"/>
+                <button name="action_generate_leads" groups="event.group_event_manager"
+                    class="btn btn-secondary" type="object"
+                    invisible="not seats_taken or has_lead_request">
+                    Generate Leads
+                </button>
+            </xpath>
             <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
-                <button name="%(crm_lead_action_from_event)d" class="oe_stat_button" type="action" icon="fa-star"
-                    invisible="lead_count == 0" groups="sales_team.group_sale_salesman">
-                    <div class="o_stat_info">
-                        <field name="lead_count"/>
-                        <span class="o_stat_text"> Leads</span>
-                    </div>
+                <button name="%(crm_lead_action_from_event)d"
+                        type="action"
+                        groups="sales_team.group_sale_salesman"
+                        class="oe_stat_button"
+                        icon="fa-star"
+                        invisible="lead_count == 0">
+                    <field name="lead_count" widget="statinfo" string="Leads"/>
                 </button>
             </xpath>
         </field>
     </record>
-    
+
     <record id="event_view_tree" model="ir.ui.view">
         <field name="name">event.event.tree.inherit.event.crm</field>
         <field name="model">event.event</field>
