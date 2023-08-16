@@ -1,60 +1,8 @@
 /** @odoo-module **/
 
 import { debounce } from "@web/core/utils/timing";
-import Dialog from "@web/legacy/js/core/dialog";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { Markup } from "@web/legacy/js/core/utils";
-
-var ExhibitorConnectClosedDialog = Dialog.extend({
-    events: Object.assign({}, Dialog.prototype.events, {
-        'click .o_wesponsor_js_connect_modal_contry': '_onClickCountryFlag',
-    }),
-    template: 'exhibitor.connect.closed.modal',
-
-    /**
-     * @override
-     * @param {Object} parent;
-     * @param {Object} options holding a sponsorData obj with required values to
-     *   display (see .xml for details);
-     */
-    init: function (parent, options) {
-        options = Object.assign({
-            size: 'medium',
-            renderHeader: false,
-            renderFooter: false,
-            backdrop: true,
-        }, options || {});
-        this.sponsorId = options.sponsorId;
-        this._super(parent, options);
-    },
-
-    /**
-     * @override
-     * Wait for fetching sponsor data;
-     */
-    willStart: function () {
-        return Promise.all([
-            this._super(...arguments),
-            this._fetchSponsor()
-        ]);
-    },
-
-    //---------------------------------------------------------------------
-    // Private
-    //---------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    async _fetchSponsor() {
-        const sponsorData = await this._rpc({
-            route: `/event_sponsor/${encodeURIComponent(this.sponsorId)}/read`
-        });
-        sponsorData.website_description = Markup(sponsorData.website_description);
-        this.sponsorData = sponsorData;
-    },
-});
-
+import { ExhibitorConnectClosedDialog } from "../components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog";
 
 publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
     selector: '.o_wesponsor_connect_button',
@@ -113,17 +61,12 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
 
     _openClosedDialog: function ($element) {
         const sponsorId = this.$el.data('sponsorId');
-        return new ExhibitorConnectClosedDialog(
-            this, {
-                sponsorId: sponsorId,
-            }
-        ).open();
+        this.call("dialog", "add", ExhibitorConnectClosedDialog, { sponsorId });
     },
 
 });
 
 
 export default {
-    ExhibitorConnectClosedDialog: ExhibitorConnectClosedDialog,
     eventExhibitorConnect: publicWidget.registry.eventExhibitorConnect,
 };

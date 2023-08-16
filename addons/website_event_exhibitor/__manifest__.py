@@ -38,6 +38,7 @@
             'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
             'website_event_exhibitor/static/src/js/event_sponsor_search.js',
             'website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml',
+            'website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/**/*',
         ],
         'web.report_assets_common': [
             '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.scss',

@@ -75,6 +75,7 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/js/website_forum.js',
             'website_forum/static/src/js/website_forum.share.js',
             'website_forum/static/src/xml/public_templates.xml',
+            'website_forum/static/src/components/flag_mark_as_offensive/**/*',
         ],
     },
     'license': 'LGPL-3',

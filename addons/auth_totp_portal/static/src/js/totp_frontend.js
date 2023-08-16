@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
+import { markup } from "@odoo/owl";
+import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
+import { handleCheckIdentity } from "@portal/js/portal_security";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import Dialog from "@web/legacy/js/core/dialog";
-import {handleCheckIdentity} from "@portal/js/portal_security";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
@@ -131,67 +132,6 @@ function fixupViewBody(oldNode, record) {
     return [node, qrcode, code]
 }
 
-/**
- * Converts a backend <button> element and a bunch of metadata into a structure
- * which can kinda be of use to Dialog.
- */
-class Button {
-    constructor(parent, model, record_id, input_node, button_node) {
-        this._parent = parent;
-        this.model = model;
-        this.record_id = record_id;
-        this.input = input_node;
-        this.text = button_node.getAttribute('string');
-        this.classes = button_node.getAttribute('class') || null;
-        this.action = button_node.getAttribute('name');
-        if (button_node.getAttribute('special') === 'cancel') {
-            this.close = true;
-            this.click = null;
-        } else {
-            this.close = false;
-            // because Dialog doesnt' call() click on the descriptor object
-            this.click = this._click.bind(this);
-        }
-    }
-    async _click() {
-        if (!this.input.reportValidity()) {
-            this.input.classList.add('is-invalid');
-            return;
-        }
-
-        try {
-            await this.callAction(this.record_id, {code: this.input.value});
-        } catch (e) {
-            this.input.classList.add('is-invalid');
-            // show custom validity error message
-            this.input.setCustomValidity(e.message);
-            this.input.reportValidity();
-            return;
-        }
-        this.input.classList.remove('is-invalid');
-        // reloads page, avoid window.location.reload() because it re-posts forms
-        window.location = window.location;
-    }
-    async callAction(id, update) {
-        try {
-            await this._parent._rpc({model: this.model, method: 'write', args: [id, update]});
-            await handleCheckIdentity(
-                this._parent.proxy('_rpc'),
-                this._parent._rpc({model: this.model, method: this.action, args: [id]})
-            );
-        } catch(e) {
-            // avoid error toast (crashmanager)
-            e.event.preventDefault();
-            // try to unwrap mess of an error object to a usable error message
-            throw new Error(
-                !e.message ? e.toString()
-              : !e.message.data ? e.message.message
-              : e.message.data.message || _t("Operation failed for unknown reason.")
-            );
-        }
-    }
-}
-
 publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
     selector: '#auth_totp_portal_enable',
     events: {
@@ -205,7 +145,7 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
             model: 'res.users',
             method: 'action_totp_enable_wizard',
             args: [this.getSession().user_id]
-        }));
+        }), (...args) => this.call("dialog", "add", ...args));
 
         if (!w) {
             // TOTP probably already enabled, just reload page
@@ -225,27 +165,49 @@ publicWidget.registry.TOTPButton = publicWidget.Widget.extend({
         );
 
         const xmlBody = doc.querySelector('sheet *');
-        const [body, , codeInput] = fixupViewBody(xmlBody, record);
-        // remove custom validity error message any time the field changes
-        // otherwise it sticks and browsers suppress submit
-        codeInput.addEventListener('input', () => codeInput.setCustomValidity(''));
+        const [body, ,] = fixupViewBody(xmlBody, record);
 
-        const buttons = [];
-        for(const button of doc.querySelectorAll('footer button')) {
-            buttons.push(new Button(this, model, record.id, codeInput, button));
-        }
+        this.call("dialog", "add", InputConfirmationDialog, {
+            body: markup(body.outerHTML),
+            onInput: ({ inputEl }) => {
+                inputEl.setCustomValidity("");
+            },
+            confirmLabel: _t("Activate"),
+            confirm: async ({ inputEl }) => {
+                if (!inputEl.reportValidity()) {
+                    inputEl.classList.add("is-invalid");
+                    return false;
+                }
 
-        // wrap in a root host of .modal-body otherwise it breaks our neat flex layout
-        const $content = document.createElement('form');
-        $content.appendChild(body);
-        // implicit submission by pressing [return] from within input
-        $content.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // sadness: footer not available as normal element
-            dialog.$footer.find('.btn-primary').click();
+                try {
+                    await this._rpc({
+                        model,
+                        method: "write",
+                        args: [record.id, { code: inputEl.value }],
+                    });
+                    await handleCheckIdentity(
+                        this.proxy("_rpc"),
+                        this._rpc({ model, method: "enable", args: [record.id] }),
+                        (...args) => this.call("dialog", "add", ...args)
+                    );
+                } catch (e) {
+                    const errorMessage = (
+                        !e.message ? e.toString()
+                      : !e.message.data ? e.message.message
+                      : e.message.data.message || _t("Operation failed for unknown reason.")
+                    );
+                    inputEl.classList.add("is-invalid");
+                    // show custom validity error message
+                    inputEl.setCustomValidity(errorMessage);
+                    inputEl.reportValidity();
+                    return false;
+                }
+                // reloads page, avoid window.location.reload() because it re-posts forms
+                window.location = window.location;
+            },
+            cancel: () => {},
         });
-        var dialog = new Dialog(this, {$content, buttons}).open();
-    }
+    },
 });
 publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
     selector: '#auth_totp_portal_disable',
@@ -257,7 +219,8 @@ publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
         e.preventDefault();
         await handleCheckIdentity(
             this.proxy('_rpc'),
-            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().user_id]})
+            this._rpc({model: 'res.users', method: 'action_totp_disable', args: [this.getSession().user_id]}),
+            (...args) => this.call("dialog", "add", ...args)
         )
         window.location = window.location;
     }
@@ -276,7 +239,8 @@ publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
                 model: 'auth_totp.device',
                 method: 'remove',
                 args: [parseInt(this.el.id)]
-            })
+            }),
+            (...args) => this.call("dialog", "add", ...args)
         );
         window.location = window.location;
     }
@@ -295,7 +259,8 @@ publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend
                 model: 'res.users',
                 method: 'revoke_all_devices',
                 args: [this.getSession().user_id]
-            })
+            }),
+            (...args) => this.call("dialog", "add", ...args)
         );
         window.location = window.location;
     }

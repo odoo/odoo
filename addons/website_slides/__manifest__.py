@@ -109,12 +109,12 @@ Featuring
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/website_slides_share.xml',
             'website_slides/static/src/xml/website_slides_channel_tag.xml',
-            'website_slides/static/src/xml/website_slides_unsubscribe.xml',
             'website_slides/static/src/xml/slide_management.xml',
             'website_slides/static/src/xml/slide_course_join.xml',
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
             'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
+            'website_slides/static/src/js/public/**/*',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

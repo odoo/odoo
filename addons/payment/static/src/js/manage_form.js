@@ -1,8 +1,9 @@
 /** @odoo-module **/
+    import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+    import { renderToMarkup } from "@web/core/utils/render";
 
     import { _t } from "@web/core/l10n/translation";
     import publicWidget from "@web/legacy/js/public/public_widget";
-    import Dialog from "@web/legacy/js/core/dialog";
 
     import paymentFormMixin from "@payment/js/payment_form_mixin";
 import { debounce } from "@web/core/utils/timing";
@@ -68,49 +69,24 @@ import { debounce } from "@web/core/utils/timing";
         },
 
         /**
-         * Build the confirmation dialog based on the linked records' information.
+         * Build and open the confirmation dialog based on the linked records' information.
          *
          * @private
          * @param {Array} linkedRecordsInfo - The list of information about linked records.
          * @param confirmCallback - The callback method called when the user clicks on the
          *                          confirmation button.
-         * @return {object}
          */
-        _buildConfirmationDialog: function (linkedRecordsInfo, confirmCallback) {
-            const $dialogContentMessage = $(
-                '<span>', {text: _t("Are you sure you want to delete this payment method?")}
+        _openConfirmationDialog: function (linkedRecordsInfo, confirmCallback) {
+            const body = renderToMarkup(
+                "payment.ManageFormConfirmationDialog",
+                { linkedRecordsInfo }
             );
-            if (linkedRecordsInfo.length > 0) { // List the documents linked to the token.
-                $dialogContentMessage.append($('<br>'));
-                $dialogContentMessage.append($(
-                    '<span>', {text: _t("It is currently linked to the following documents:")}
-                ));
-                const $documentInfoList = $('<ul>');
-                linkedRecordsInfo.forEach(documentInfo => {
-                    $documentInfoList.append($('<li>').append($(
-                        '<a>', {
-                            href: documentInfo.url,
-                            target: '_blank',
-                            title: documentInfo.description,
-                            text: documentInfo.name
-                        }
-                    )));
-                });
-                $dialogContentMessage.append($documentInfoList);
-            }
-            return new Dialog(this, {
+            this.call("dialog", "add", ConfirmationDialog, {
                 title: _t("Warning!"),
-                size: 'medium',
-                $content: $('<div>').append($dialogContentMessage),
-                buttons: [
-                    {
-                        text: _t("Confirm Deletion"), classes: 'btn-primary', close: true,
-                        click: confirmCallback,
-                    },
-                    {
-                        text: _t("Cancel"), close: true
-                    },
-                ],
+                body,
+                confirmLabel: _t("Confirm Deletion"),
+                confirm: confirmCallback,
+                cancel: () => {},
             });
         },
 
@@ -154,7 +130,7 @@ import { debounce } from "@web/core/utils/timing";
                 method: 'get_linked_records_info',
                 args: [tokenId],
             }).then(linkedRecordsInfo => {
-                this._buildConfirmationDialog(linkedRecordsInfo, execute).open();
+                this._openConfirmationDialog(linkedRecordsInfo, execute);
             }).guardedCatch(error => {
                 this._displayError(
                     _t("Server Error"),

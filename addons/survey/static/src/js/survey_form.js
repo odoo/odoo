@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { formatDateTime, parseDate, parseDateTime} from "@web/legacy/js/core/dates";
 import time from "@web/legacy/js/core/time";
 import config from "@web/legacy/js/services/config";
 import { _t } from "@web/core/l10n/translation";
-import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_utils";
 
@@ -1055,14 +1055,22 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             locale: moment.locale(),
             allowInputToggle: true,
         });
-        $dateGroup.on('error.datetimepicker', function (err) {
+        $dateGroup.on('error.datetimepicker', (err) => {
             if (err.date) {
                 if (err.date < minDate) {
-                    Dialog.alert(this, _t('The date you selected is lower than the minimum date: ') + minDate.format(datetimepickerFormat));
+                    this.call("dialog", "add", AlertDialog, {
+                        body:
+                            _t("The date you selected is lower than the minimum date: ") +
+                            minDate.format(datetimepickerFormat),
+                    });
                 }
 
                 if (err.date > maxDate) {
-                    Dialog.alert(this, _t('The date you selected is greater than the maximum date: ') + maxDate.format(datetimepickerFormat));
+                    this.call("dialog", "add", AlertDialog, {
+                        body:
+                            _t("The date you selected is greater than the maximum date: ") +
+                            maxDate.format(datetimepickerFormat),
+                    });
                 }
             }
             return false;
