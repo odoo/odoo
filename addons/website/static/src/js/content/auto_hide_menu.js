@@ -68,8 +68,10 @@ async function autoHideMenu(el, options) {
             if (!isUserNavbar) {
                 item.classList.add('nav-item');
                 const itemLink = item.querySelector('.dropdown-item');
-                itemLink.classList.remove('dropdown-item');
-                itemLink.classList.add('nav-link');
+                if (itemLink) {
+                    itemLink.classList.remove('dropdown-item');
+                    itemLink.classList.add('nav-link');
+                }
             } else {
                 item.classList.remove('dropdown-item');
                 const dropdownSubMenu = item.querySelector('.dropdown-menu');
@@ -133,9 +135,11 @@ async function autoHideMenu(el, options) {
             if (!isUserNavbar) {
                 const navLink = el.querySelector('.nav-link, a');
                 el.classList.remove('nav-item');
-                navLink.classList.remove('nav-link');
-                navLink.classList.add('dropdown-item');
-                navLink.classList.toggle('active', el.classList.contains('active'));
+                if (navLink) {
+                    navLink.classList.remove('nav-link');
+                    navLink.classList.add('dropdown-item');
+                    navLink.classList.toggle('active', el.classList.contains('active'));
+                }
             } else {
                 const dropdownSubMenu = el.querySelector('.dropdown-menu');
                 const dropdownSubMenuButton = el.querySelector('.dropdown-toggle');
