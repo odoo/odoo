@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
@@ -52,7 +53,7 @@ export const websiteCustomMenus = {
                             // 'navbar menus' display system.
                             filteredSections.push(...website.currentWebsite.metadata.contentMenus.map((menu, index) => ({
                                 ...section,
-                                name: env._t("Edit %s", menu[0]),
+                                name: _t("Edit %s", menu[0]),
                                 dynamicProps: {rootID: parseInt(menu[1], 10)},
                                 // Prevent a 't-foreach' duplicate key on menus template.
                                 id: `${section.id}-${index}`,

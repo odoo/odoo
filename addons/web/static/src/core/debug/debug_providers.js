@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
 import { routeToUrl } from "../browser/router_service";
@@ -16,7 +17,7 @@ commandProviderRegistry.add("debug", {
                         browser.location.search = "?debug=assets";
                     },
                     category: "debug",
-                    name: env._t("Activate debug mode (with assets)"),
+                    name: _t("Activate debug mode (with assets)"),
                 });
             }
             result.push({
@@ -26,7 +27,7 @@ commandProviderRegistry.add("debug", {
                     browser.location.href = browser.location.origin + routeToUrl(route);
                 },
                 category: "debug",
-                name: env._t("Deactivate debug mode"),
+                name: _t("Deactivate debug mode"),
             });
             result.push({
                 action() {
@@ -34,7 +35,7 @@ commandProviderRegistry.add("debug", {
                     browser.open(runTestsURL);
                 },
                 category: "debug",
-                name: env._t("Run JS Tests"),
+                name: _t("Run JS Tests"),
             });
             result.push({
                 action() {
@@ -42,7 +43,7 @@ commandProviderRegistry.add("debug", {
                     browser.open(runTestsURL);
                 },
                 category: "debug",
-                name: env._t("Run JS Mobile Tests"),
+                name: _t("Run JS Mobile Tests"),
             });
         } else {
             if (options.searchValue.toLowerCase() === "debug") {
@@ -51,7 +52,7 @@ commandProviderRegistry.add("debug", {
                         browser.location.search = "?debug=assets";
                     },
                     category: "debug",
-                    name: env._t("Activate debug mode (with assets)"),
+                    name: _t("Activate debug mode (with assets)"),
                 });
             }
         }

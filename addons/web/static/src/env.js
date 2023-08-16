@@ -31,9 +31,6 @@ export function makeEnv() {
         bus: new EventBus(),
         services: {},
         debug: odoo.debug,
-        _t: () => {
-            throw new Error("Translations are not ready yet. Maybe use _lt instead?");
-        },
         get isSmall() {
             throw new Error("UI service not initialized!");
         },

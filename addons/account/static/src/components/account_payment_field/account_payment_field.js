@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -53,7 +54,7 @@ export class AccountPaymentField extends Component {
 
     onInfoClick(ev, idx) {
         this.popover.open(ev.currentTarget, {
-            title: this.env._t("Journal Entry Info"),
+            title: _t("Journal Entry Info"),
             ...this.lines[idx],
             _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
             _onOpenMove: this.openMove.bind(this),

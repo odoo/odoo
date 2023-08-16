@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { registry } from "@web/core/registry";
@@ -33,7 +34,7 @@ class InvalidAction extends Component {
     }
 
     onMounted() {
-        const message = this.env._t("No action with id '%s' could be found", this.props.actionId);
+        const message = _t("No action with id '%s' could be found", this.props.actionId);
         this.notification.add(message, { type: "danger" });
     }
 }

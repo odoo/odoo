@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from '@web/views/calendar/calendar_controller';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
@@ -49,7 +50,7 @@ export class TimeOffCalendarController extends CalendarController {
 
         this.displayDialog(FormViewDialog, {
             resModel: 'hr.leave',
-            title: this.env._t('New Time Off'),
+            title: _t('New Time Off'),
             viewId: this.model.formViewId,
             onRecordSaved: () => {
                 this.model.load();
@@ -71,7 +72,7 @@ export class TimeOffCalendarController extends CalendarController {
 
         this.displayDialog(FormViewDialog, {
             resModel: 'hr.leave.allocation',
-            title: this.env._t('New Allocation'),
+            title: _t('New Allocation'),
             context: context,
         });
     }
@@ -79,8 +80,8 @@ export class TimeOffCalendarController extends CalendarController {
     deleteRecord(record) {
         if (!record.can_cancel) {
             this.displayDialog(ConfirmationDialog, {
-                title: this.env._t("Confirmation"),
-                body: this.env._t("Are you sure you want to delete this record?"),
+                title: _t("Confirmation"),
+                body: _t("Are you sure you want to delete this record?"),
                 confirm: async () => {
                     await this.model.unlinkRecord(record.id);
                     this.env.timeOffBus.trigger('update_dashboard');

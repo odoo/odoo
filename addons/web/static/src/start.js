@@ -8,7 +8,7 @@ import { session } from "@web/session";
 import { renderToString } from "./core/utils/render";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { hasTouch } from "@web/core/browser/feature_detection";
-
+import { _t } from "@web/core/l10n/translation";
 import { App, whenReady } from "@odoo/owl";
 
 /**
@@ -43,7 +43,7 @@ export async function startWebClient(Webclient) {
         dev: env.debug,
         warnIfNoStaticProps: true,
         translatableAttributes: ["data-tooltip"],
-        translateFn: env._t,
+        translateFn: _t,
     });
     renderToString.app = app;
     setLoadXmlDefaultApp(app);

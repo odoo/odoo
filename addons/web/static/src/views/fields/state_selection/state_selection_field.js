@@ -35,7 +35,7 @@ export class StateSelectionField extends Component {
             const hotkeys = ["D", "F", "G"];
             for (const [index, [value, label]] of this.options.entries()) {
                 useCommand(
-                    this.env._t("Set kanban state as %s", label),
+                    _t("Set kanban state as %s", label),
                     () => {
                         this.updateRecord(value);
                     },

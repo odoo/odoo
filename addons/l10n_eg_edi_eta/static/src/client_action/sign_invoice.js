@@ -2,11 +2,11 @@
 
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
 async function actionGetDrive(env, action, type) {
     const { drive_id, sign_host: host } = action.params;
     const { orm, http, dialog, action: actionService } = env.services;
-    const { _t } = env;
 
     let route = host;
     let key, method;

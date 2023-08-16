@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
@@ -41,7 +42,7 @@ NewContentElement.defaultProps = {
 
 class InstallModuleDialog extends Component {
     setup() {
-        this.installButton = this.env._t("Install");
+        this.installButton = _t("Install");
     }
 
     onClickInstall() {
@@ -63,10 +64,10 @@ export class NewContentModal extends Component {
         this.isSystem = this.user.isSystem;
 
         this.newContentText = {
-            failed: this.env._t('Failed to install "%s"'),
-            installInProgress: this.env._t("The installation of an App is already in progress."),
-            installNeeded: this.env._t('Do you want to install the "%s" App?'),
-            installPleaseWait: this.env._t('Installing "%s"'),
+            failed: _t('Failed to install "%s"'),
+            installInProgress: _t("The installation of an App is already in progress."),
+            installNeeded: _t('Do you want to install the "%s" App?'),
+            installPleaseWait: _t('Installing "%s"'),
         };
 
         this.state = useState({
@@ -76,14 +77,14 @@ export class NewContentModal extends Component {
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-newspaper-o"/>`,
-                    title: this.env._t('Blog Post'),
+                    title: _t('Blog Post'),
                 },
                 {
                     moduleName: 'website_event',
                     moduleXmlId: 'base.module_website_event',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-ticket"/>`,
-                    title: this.env._t('Event'),
+                    title: _t('Event'),
                 },
                 {
                     moduleName: 'website_forum',
@@ -91,35 +92,35 @@ export class NewContentModal extends Component {
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comment"/>`,
                     redirectUrl: '/forum',
-                    title: this.env._t('Forum'),
+                    title: _t('Forum'),
                 },
                 {
                     moduleName: 'website_hr_recruitment',
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
-                    title: this.env._t('Job Position'),
+                    title: _t('Job Position'),
                 },
                 {
                     moduleName: 'website_sale',
                     moduleXmlId: 'base.module_website_sale',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-shopping-cart"/>`,
-                    title: this.env._t('Product'),
+                    title: _t('Product'),
                 },
                 {
                     moduleName: 'website_slides',
                     moduleXmlId: 'base.module_website_slides',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');background-repeat: no-repeat; background-position: center;"/>`,
-                    title: this.env._t('Course'),
+                    title: _t('Course'),
                 },
                 {
                     moduleName: 'website_livechat',
                     moduleXmlId: 'base.module_website_livechat',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comments"/>`,
-                    title: this.env._t('Livechat Widget'),
+                    title: _t('Livechat Widget'),
                     redirectUrl: '/livechat'
                 },
             ]
@@ -216,7 +217,7 @@ export class NewContentModal extends Component {
                     }
                     return el;
                 });
-                this.website.showLoader({ title: this.env._t("Building your %s", name) });
+                this.website.showLoader({ title: _t("Building your %s", name) });
                 try {
                     await this.installModule(id, element.redirectUrl);
                 } catch (error) {

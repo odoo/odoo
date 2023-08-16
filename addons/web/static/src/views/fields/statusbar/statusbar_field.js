@@ -35,7 +35,7 @@ export class StatusBarField extends Component {
 
     setup() {
         if (this.props.withCommand) {
-            const commandName = this.env._t("Move to %s...", escape(this.displayName));
+            const commandName = _t("Move to %s...", escape(this.displayName));
             useCommand(
                 commandName,
                 () => {
@@ -61,7 +61,7 @@ export class StatusBarField extends Component {
                 }
             );
             useCommand(
-                this.env._t("Move to next %s", this.displayName),
+                _t("Move to next %s", this.displayName),
                 () => {
                     const options = this.computeItems(false);
                     const nextOption =

@@ -34,6 +34,7 @@ import {
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView } from "./helpers";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 
 const serviceRegistry = registry.category("services");
 
@@ -405,7 +406,7 @@ QUnit.module("Views", (hooks) => {
         // this is important for export functionality.
         assert.strictEqual(
             pivot.model.metaData.title.toString(),
-            pivot.env._t("Untitled"),
+            _t("Untitled"),
             "should have a valid title"
         );
     });

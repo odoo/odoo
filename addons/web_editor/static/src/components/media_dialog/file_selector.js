@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { Dialog } from '@web/core/dialog/dialog';
@@ -14,9 +15,9 @@ export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'
 
 class RemoveButton extends Component {
     setup() {
-        this.removeTitle = this.env._t("This file is attached to the current record.");
+        this.removeTitle = _t("This file is attached to the current record.");
         if (this.props.model === 'ir.ui.view') {
-            this.removeTitle = this.env._t("This file is a public view attachment.");
+            this.removeTitle = _t("This file is a public view attachment.");
         }
     }
 
@@ -29,7 +30,7 @@ RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove p
 
 export class AttachmentError extends Component {
     setup() {
-        this.title = this.env._t("Alert");
+        this.title = _t("Alert");
     }
 }
 AttachmentError.components = { Dialog };
@@ -61,7 +62,7 @@ export class Attachment extends Component {
 
     remove() {
         this.dialogs.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this file?"),
+            body: _t("Are you sure you want to delete this file?"),
             confirm: async () => {
                 const prevented = await this.rpc('/web_editor/attachment/remove', {
                     ids: [this.props.id],
@@ -269,8 +270,8 @@ export class FileSelector extends Component {
                 imageEl.onerror = () => {
                     // This message is about the blob fetch failure.
                     // It is only displayed if the fallback did not work.
-                    this.notificationService.add(this.env._t("An error occurred while fetching the entered URL."), {
-                        title: this.env._t("Error"),
+                    this.notificationService.add(_t("An error occurred while fetching the entered URL."), {
+                        title: _t("Error"),
                         sticky: true,
                     });
                     resolve();

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { loadLegacyWysiwygAssets } from '@web_editor/js/frontend/loader';
 
@@ -272,7 +273,7 @@ export const websiteService = {
                         .catch(() => {});
                 }
                 await modelNamesProm;
-                return modelNames[model] || env._t("Data");
+                return modelNames[model] || _t("Data");
             },
         };
     },

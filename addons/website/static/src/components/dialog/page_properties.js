@@ -52,7 +52,7 @@ export class PageDependencies extends Component {
 
     showDependencies() {
         $(this.action.el).popover({
-            title: this.env._t("Dependencies"),
+            title: _t("Dependencies"),
             boundary: 'viewport',
             placement: 'right',
             trigger: 'focus',
@@ -79,9 +79,9 @@ PageDependencies.props = {
 export class DeletePageDialog extends Component {
     setup() {
         this.website = useService('website');
-        this.title = this.env._t("Delete Page");
-        this.deleteButton = this.env._t("Ok");
-        this.cancelButton = this.env._t("Cancel");
+        this.title = _t("Delete Page");
+        this.deleteButton = _t("Ok");
+        this.cancelButton = _t("Cancel");
 
         this.state = useState({
             confirm: false,

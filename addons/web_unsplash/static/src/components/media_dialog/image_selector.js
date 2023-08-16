@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { MediaDialog, TABS } from '@web_editor/components/media_dialog/media_dialog';
@@ -52,16 +53,16 @@ patch(ImageSelector.prototype, {
 
         this.errorMessages = {
             'key_not_found': {
-                title: this.env._t("Setup Unsplash to access royalty free photos."),
+                title: _t("Setup Unsplash to access royalty free photos."),
                 subtitle: "",
             },
             401: {
-                title: this.env._t("Unauthorized Key"),
-                subtitle: this.env._t("Please check your Unsplash access key and application ID."),
+                title: _t("Unauthorized Key"),
+                subtitle: _t("Please check your Unsplash access key and application ID."),
             },
             403: {
-                title: this.env._t("Search is temporarily unavailable"),
-                subtitle: this.env._t("The max number of searches is exceeded. Please retry in an hour or extend to a better account."),
+                title: _t("Search is temporarily unavailable"),
+                subtitle: _t("The max number of searches is exceeded. Please retry in an hour or extend to a better account."),
             },
         };
     },
@@ -88,14 +89,14 @@ patch(ImageSelector.prototype, {
         if (this.errorMessages[this.state.unsplashError]) {
             return this.errorMessages[this.state.unsplashError].title;
         }
-        return this.env._t("Something went wrong");
+        return _t("Something went wrong");
     },
 
     get errorSubtitle() {
         if (this.errorMessages[this.state.unsplashError]) {
             return this.errorMessages[this.state.unsplashError].subtitle;
         }
-        return this.env._t("Please check your internet connection or contact administrator.");
+        return _t("Please check your internet connection or contact administrator.");
     },
 
     get selectedRecordIds() {
@@ -243,8 +244,8 @@ patch(uploadService, {
                 const file = service.addFile({
                     id: service.fileId,
                     name: records.length > 1 ?
-                    env._t("Uploading %s '%s' images.", records.length, records[0].query) :
-                    env._t("Uploading '%s' image.", records[0].query),
+                    _t("Uploading %s '%s' images.", records.length, records[0].query) :
+                    _t("Uploading '%s' image.", records[0].query),
                     size: null,
                     progress: 0,
                 });

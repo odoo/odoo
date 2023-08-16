@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
@@ -27,9 +28,7 @@ export class eWalletButton extends Component {
     }
     async _onClickWalletButton() {
         const order = this.pos.get_order();
-        const eWalletPrograms = this.pos.programs.filter(
-            (p) => p.program_type == "ewallet"
-        );
+        const eWalletPrograms = this.pos.programs.filter((p) => p.program_type == "ewallet");
         const orderTotal = order.get_total_with_tax();
         const eWalletRewards = this._getEWalletRewards(order);
         if (orderTotal < 0 && eWalletPrograms.length >= 1) {
@@ -38,7 +37,7 @@ export class eWalletButton extends Component {
                 selectedProgram = eWalletPrograms[0];
             } else {
                 const { confirmed, payload } = await this.popup.add(SelectionPopup, {
-                    title: this.env._t("Refund with eWallet"),
+                    title: _t("Refund with eWallet"),
                     list: eWalletPrograms.map((program) => ({
                         id: program.id,
                         item: program,
@@ -65,7 +64,7 @@ export class eWalletButton extends Component {
                 eWalletReward = eWalletRewards[0];
             } else {
                 const { confirmed, payload } = await this.popup.add(SelectionPopup, {
-                    title: this.env._t("Use eWallet to pay"),
+                    title: _t("Use eWallet to pay"),
                     list: eWalletRewards.map(({ reward, coupon_id }) => ({
                         id: reward.id,
                         item: { reward, coupon_id },
@@ -85,7 +84,7 @@ export class eWalletButton extends Component {
                 if (result !== true) {
                     // Returned an error
                     this.popup.add(ErrorPopup, {
-                        title: this.env._t("Error"),
+                        title: _t("Error"),
                         body: result,
                     });
                 }
@@ -98,11 +97,11 @@ export class eWalletButton extends Component {
     }
     _getText(orderTotal, eWalletPrograms, eWalletRewards) {
         if (orderTotal < 0 && eWalletPrograms.length >= 1) {
-            return this.env._t("eWallet Refund");
+            return _t("eWallet Refund");
         } else if (eWalletRewards.length >= 1) {
-            return this.env._t("eWallet Pay");
+            return _t("eWallet Pay");
         } else {
-            return this.env._t("eWallet");
+            return _t("eWallet");
         }
     }
 }

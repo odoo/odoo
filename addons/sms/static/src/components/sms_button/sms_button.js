@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
@@ -8,7 +9,7 @@ export class SendSMSButton extends Component {
     setup() {
         this.action = useService("action");
         this.user = useService("user");
-        this.title = this.env._t("Send SMS Text Message");
+        this.title = _t("Send SMS Text Message");
     }
     get phoneHref() {
         return "sms:" + this.props.record.data[this.props.name].replace(/\s+/g, "");

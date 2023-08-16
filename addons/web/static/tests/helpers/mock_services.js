@@ -5,7 +5,6 @@ import { browser } from "@web/core/browser/browser";
 import { routerService } from "@web/core/browser/router_service";
 import { effectService } from "@web/core/effects/effect_service";
 import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
 import { rpcService } from "@web/core/network/rpc_service";
 import { ormService } from "@web/core/orm_service";
 import { overlayService } from "@web/core/overlay/overlay_service";
@@ -42,7 +41,6 @@ export function makeFakeLocalizationService(config = {}) {
     return {
         name: "localization",
         start: async (env) => {
-            env._t = _t;
             return localization;
         },
     };

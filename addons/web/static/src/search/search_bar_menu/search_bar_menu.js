@@ -197,12 +197,10 @@ export class SearchBarMenu extends Component {
     openConfirmationDialog(itemId) {
         const { userId } = this.favoriteItems.find((item) => item.id === itemId);
         const dialogProps = {
-            title: this.env._t("Warning"),
+            title: _t("Warning"),
             body: userId
-                ? this.env._t("Are you sure that you want to remove this filter?")
-                : this.env._t(
-                      "This filter is global and will be removed for everybody if you continue."
-                  ),
+                ? _t("Are you sure that you want to remove this filter?")
+                : _t("This filter is global and will be removed for everybody if you continue."),
             confirm: () => this.env.searchModel.deleteFavorite(itemId),
             cancel: () => {},
         };

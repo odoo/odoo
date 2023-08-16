@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "../l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Component, useRef, useState } from "@odoo/owl";
 import { Dialog } from "../dialog/dialog";
 import { Domain } from "@web/core/domain";
@@ -71,7 +71,7 @@ export class DomainSelectorDialog extends Component {
             if (this.confirmButtonRef.el) {
                 this.confirmButtonRef.el.disabled = false;
             }
-            this.notification.add(this.env._t("Domain is invalid. Please correct it"), {
+            this.notification.add(_t("Domain is invalid. Please correct it"), {
                 type: "danger",
             });
             return;

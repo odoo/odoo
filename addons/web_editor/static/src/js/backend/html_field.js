@@ -182,10 +182,10 @@ export class HtmlField extends Component {
                 // generator.
                 powerboxCommands: [
                     {
-                        category: this.env._t('Marketing Tools'),
-                        name: this.env._t('Dynamic Placeholder'),
+                        category: _t('Marketing Tools'),
+                        name: _t('Dynamic Placeholder'),
                         priority: 10,
-                        description: this.env._t('Insert personalized content'),
+                        description: _t('Insert personalized content'),
                         fontawesome: 'fa-magic',
                         callback: () => {
                             this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);

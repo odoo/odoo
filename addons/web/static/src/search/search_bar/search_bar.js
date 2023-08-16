@@ -133,7 +133,7 @@ export class SearchBar extends Component {
         const fieldType = type === "reference" ? "char" : type;
 
         /** @todo do something with respect to localization (rtl) */
-        let preposition = this.env._t(["date", "datetime"].includes(fieldType) ? "at" : "for");
+        let preposition = _t(["date", "datetime"].includes(fieldType) ? "at" : "for");
 
         if ((isFieldProperty && FOLDABLE_TYPES.includes(fieldType)) || fieldType === "properties") {
             // Do not chose preposition for foldable properties
@@ -143,8 +143,8 @@ export class SearchBar extends Component {
 
         if (["selection", "boolean", "tags"].includes(fieldType)) {
             const booleanOptions = [
-                [true, this.env._t("Yes")],
-                [false, this.env._t("No")],
+                [true, _t("Yes")],
+                [false, _t("No")],
             ];
             let options;
             if (isFieldProperty) {
@@ -288,7 +288,7 @@ export class SearchBar extends Component {
                 id: nextItemId++,
                 isChild: true,
                 searchItemId: searchItem.id,
-                label: this.env._t("(no result)"),
+                label: _t("(no result)"),
                 unselectable: true,
             });
         }

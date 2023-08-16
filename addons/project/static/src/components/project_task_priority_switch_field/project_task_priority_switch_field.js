@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { PriorityField, priorityField } from "@web/views/fields/priority/priority_field";
 
 export class PrioritySwitchField extends PriorityField {
     get commands() {
         return this.options.map(([id, name]) => [
-            this.env._t("Set priority as %s", name),
+            _t("Set priority as %s", name),
             () => this.updateRecord(id),
             {
                 category: "smart_action",

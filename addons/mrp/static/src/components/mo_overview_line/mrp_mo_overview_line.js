@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
@@ -111,7 +112,7 @@ export class MoOverviewLine extends Component {
     }
 
     get foldButtonTitle() {
-        return this.props.isFolded ? this.env._t("Unfold") : this.env._t("Fold");
+        return this.props.isFolded ? _t("Unfold") : _t("Fold");
     }
 
     get forecastAction() {

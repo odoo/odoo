@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 const { onMounted, onPatched, useRef } = owl;
@@ -33,7 +34,7 @@ export const ExpenseMobileQRCode = (T) => class ExpenseMobileQRCode extends T {
         const url = ev.currentTarget && ev.currentTarget.href;
         if (!this.env.isSmall) {
             this.actionService.doAction({
-                name: this.env._t("Download our App"),
+                name: _t("Download our App"),
                 type: "ir.actions.client",
                 tag: 'expense_qr_code_modal',
                 target: "new",

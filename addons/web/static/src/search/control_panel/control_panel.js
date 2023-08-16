@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
@@ -33,14 +34,10 @@ export class ControlPanel extends Component {
 
         const { viewSwitcherEntries, viewType } = this.env.config;
         for (const view of viewSwitcherEntries || []) {
-            useCommand(
-                this.env._t("Show %s view", view.name),
-                () => this.onViewClicked(view.type),
-                {
-                    category: "view_switcher",
-                    isAvailable: () => view.type !== viewType,
-                }
-            );
+            useCommand(_t("Show %s view", view.name), () => this.onViewClicked(view.type), {
+                category: "view_switcher",
+                isAvailable: () => view.type !== viewType,
+            });
         }
 
         useExternalListener(window, "click", this.onWindowClick);

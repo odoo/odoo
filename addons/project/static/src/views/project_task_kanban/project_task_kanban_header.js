@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -33,7 +35,7 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
             context,
             resId: this.group.value,
             resModel: this.group.groupByField.relation,
-            title: this.env._t('Edit Personal Stage'),
+            title: _t('Edit Personal Stage'),
             onRecordSaved: async () => {
                 await this.props.list.load();
             },
@@ -67,9 +69,9 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
      */
     _getEmptyGroupLabel(fieldName) {
         if (fieldName === "project_id") {
-            return this.env._t("🔒 Private");
+            return _t("🔒 Private");
         } else if (fieldName === "user_ids") {
-            return this.env._t("👤 Unassigned");
+            return _t("👤 Unassigned");
         } else {
             return super._getEmptyGroupLabel(fieldName);
         }

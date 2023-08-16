@@ -2,6 +2,7 @@
 
     import { LegacyComponent } from "@web/legacy/legacy_component";
     import { templates } from "@web/core/assets";
+    import { _t } from "@web/core/l10n/translation";
 
     /**
      * This file defines the necessary tools for the transition phase where Odoo
@@ -284,7 +285,7 @@
             env,
             dev: env.isDebug(),
             translatableAttributes: ["data-tooltip"],
-            translateFn: env._t,
+            translateFn: _t,
         });
         if (!("Component" in props)) {
             props.Component = owl.Component;
@@ -540,7 +541,7 @@
                 templates,
                 dev: "isDebug" in env ? env.isDebug() : env.debug,
                 translatableAttributes: ["data-tooltip"],
-                translateFn: env._t,
+                translateFn: _t,
             };
             const app = new App(null, appConfig);
             this.app = app;

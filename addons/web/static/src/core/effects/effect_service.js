@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { RainbowMan } from "./rainbow_man";
 
@@ -45,7 +46,7 @@ function rainbowMan(env, params = {}) {
         );
         message = message.outerHTML;
     } else if (!message) {
-        message = env._t("Well Done!");
+        message = _t("Well Done!");
     }
     if (env.services.user.showEffect) {
         /** @type {import("./rainbow_man").RainbowManProps} */

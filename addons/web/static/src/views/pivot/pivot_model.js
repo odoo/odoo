@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
@@ -1178,7 +1179,7 @@ export class PivotModel extends Model {
                         height: 1,
                         measure: measure,
                         originIndexes: [originIndex - 1, originIndex],
-                        title: this.env._t("Variation"),
+                        title: _t("Variation"),
                         width: 1,
                     };
                     if (isSortedByVariation && sortedColumn.originIndexes[1] === originIndex) {
@@ -1200,7 +1201,6 @@ export class PivotModel extends Model {
      * @returns {Object[]}
      */
     _getTableHeaders() {
-        const _t = this.env._t;
         const colGroupBys = this.metaData.fullColGroupBys;
         const height = colGroupBys.length + 1;
         const measureCount = this.metaData.activeMeasures.length;
@@ -1292,9 +1292,7 @@ export class PivotModel extends Model {
         let rows = [];
         const group = tree.root;
         const rowGroupId = [group.values, []];
-        const title = group.labels.length
-            ? group.labels[group.labels.length - 1]
-            : this.env._t("Total");
+        const title = group.labels.length ? group.labels[group.labels.length - 1] : _t("Total");
         const indent = group.labels.length;
         const isLeaf = !tree.directSubTrees.size;
         const rowGroupBys = this.metaData.fullRowGroupBys;
@@ -1527,7 +1525,7 @@ export class PivotModel extends Model {
     }
 
     _getEmptyGroupLabel(fieldName) {
-        return this.env._t("None");
+        return _t("None");
     }
 
     /**
@@ -1547,11 +1545,7 @@ export class PivotModel extends Model {
             metaData.fields[fieldName] &&
             metaData.fields[fieldName].type === "boolean"
         ) {
-            return value === undefined
-                ? this.env._t("None")
-                : value
-                ? this.env._t("Yes")
-                : this.env._t("No");
+            return value === undefined ? _t("None") : value ? _t("Yes") : _t("No");
         }
         if (value === false) {
             return this._getEmptyGroupLabel(fieldName);

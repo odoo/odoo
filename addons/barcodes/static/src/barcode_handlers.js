@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { MacroEngine } from "@web/core/macro";
@@ -78,8 +79,8 @@ export const barcodeGenericHandlers = {
                 if (fn) {
                     fn();
                 } else {
-                    notification.add(env._t("Barcode: ") + `'${barcode}'`, {
-                        title: env._t("Unknown barcode command"),
+                    notification.add(_t("Barcode: ") + `'${barcode}'`, {
+                        title: _t("Unknown barcode command"),
                         type: "danger"
                     });
                 }

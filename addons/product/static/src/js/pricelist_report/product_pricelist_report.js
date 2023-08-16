@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-
+import { _t } from "@web/core/l10n/translation";
 import { Component, markup, onRendered, onWillStart, useState } from "@odoo/owl";
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
@@ -46,7 +46,7 @@ export class ProductPricelistReport extends Component {
         });
 
         onRendered(() => {
-            this.env.config.setDisplayName(this.env._t("Pricelist Report"));
+            this.env.config.setDisplayName(_t("Pricelist Report"));
         });
 
         /*
@@ -122,7 +122,7 @@ export class ProductPricelistReport extends Component {
         ev.preventDefault(); // avoid automatic reloading of the page
 
         if (this.quantities.length >= this.MAX_QTY) {
-            let message = this.env._t(
+            let message = _t(
                 "At most %s quantities can be displayed simultaneously. Remove a selected quantity to add others.",
                 this.MAX_QTY
             );
@@ -138,12 +138,12 @@ export class ProductPricelistReport extends Component {
                 this.quantities = this.quantities.sort((a, b) => a - b);
                 this.renderHtml();
             } else {
-                let message = this.env._t("Quantity already present (%s).", qty);
+                let message = _t("Quantity already present (%s).", qty);
                 await this.action.doAction(sendCustomNotification("info", message));
             }
         } else {
             await this.action.doAction(
-                sendCustomNotification("info", this.env._t("Please enter a positive whole number."))
+                sendCustomNotification("info", _t("Please enter a positive whole number."))
             );
         }
     }
@@ -179,7 +179,7 @@ export class ProductPricelistReport extends Component {
     async onClickRemoveQty(ev) {
         if (this.quantities.length <= 1) {
             await this.action.doAction(
-                sendCustomNotification("warning", this.env._t("You must leave at least one quantity."))
+                sendCustomNotification("warning", _t("You must leave at least one quantity."))
             );
             return;
         }

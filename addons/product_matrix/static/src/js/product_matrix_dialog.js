@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Dialog } from '@web/core/dialog/dialog';
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -9,7 +10,7 @@ const { Component, onMounted, markup, useRef } = owl;
 export class ProductMatrixDialog extends Component {
     setup() {
         this.size = 'xl';
-        this.title = this.env._t("Choose Product Variants");
+        this.title = _t("Choose Product Variants");
 
         const productMatrixRef = useRef('productMatrix');
         useHotkey("enter", () => this._onConfirm(), {

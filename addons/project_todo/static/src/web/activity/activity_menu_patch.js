@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { useEffect, useRef, useState } from "@odoo/owl";
@@ -65,7 +66,7 @@ patch(ActivityMenu.prototype, {
         });
         document.body.click(); // hack to close dropdown
         this.notification.add(
-            this.env._t("Your to-do has been successfully added to your tasks and scheduled for completion."),
+            _t("Your to-do has been successfully added to your tasks and scheduled for completion."),
             { type: "success" },
         );
         this.state.addingTodo = false;

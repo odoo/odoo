@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { ListController } from "@web/views/list/list_controller";
 
@@ -13,8 +14,8 @@ export class InventoryReportListController extends ListController {
             // hack so we don't show some of the default actions when it's inappropriate to
             const { print, action } = actionMenus;
             return {
-                action: action.filter((a) => a.name !== this.env._t("Set")),
-                print: print.filter((a) => a.name !== this.env._t("Count Sheet")),
+                action: action.filter((a) => a.name !== _t("Set")),
+                print: print.filter((a) => a.name !== _t("Count Sheet")),
             };
         }
         return actionMenus;

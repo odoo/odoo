@@ -1,5 +1,6 @@
-/* @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useMessaging } from "@mail/core/common/messaging_hook";
 
 import { Component, useState } from "@odoo/owl";
@@ -47,7 +48,7 @@ export class ActivityController extends Component {
             resModel: this.props.resModel,
             searchViewId: this.env.searchModel.searchViewId,
             domain: this.model.originalDomain,
-            title: this.env._t("Search: %s", this.props.archInfo.title),
+            title: _t("Search: %s", this.props.archInfo.title),
             multiSelect: false,
             context: this.props.context,
             onSelected: async (resIds) => {

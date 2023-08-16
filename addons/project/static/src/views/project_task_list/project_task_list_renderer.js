@@ -2,6 +2,7 @@
 
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { getRawValue } from "@web/views/kanban/kanban_record";
+import { _t } from "@web/core/l10n/translation";
 
 export class ProjectTaskListRenderer extends ListRenderer {
     isCellReadonly(column, record) {
@@ -17,7 +18,6 @@ export class ProjectTaskListRenderer extends ListRenderer {
     }
 
     getGroupDisplayName(group) {
-        const { _t } = this.env;
         if (group.groupByField.name === "project_id" && !group.value) {
             return _t("🔒 Private");
         } else if (group.groupByField.name === "user_ids" && !group.value) {

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
@@ -61,7 +62,7 @@ patch(PaymentScreen.prototype, {
                 }
                 if (!successful) {
                     this.popup.add(ErrorPopup, {
-                        title: this.env._t("Error validating rewards"),
+                        title: _t("Error validating rewards"),
                         body: payload.message,
                     });
                     return;

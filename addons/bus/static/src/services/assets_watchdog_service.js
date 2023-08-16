@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -28,13 +29,13 @@ export const assetsWatchdogService = {
                 // We wait until things settle down
                 browser.clearTimeout(bundleNotifTimerID);
                 bundleNotifTimerID = browser.setTimeout(() => {
-                    notification.add(env._t("The page appears to be out of date."), {
-                        title: env._t("Refresh"),
+                    notification.add(_t("The page appears to be out of date."), {
+                        title: _t("Refresh"),
                         type: "warning",
                         sticky: true,
                         buttons: [
                             {
-                                name: env._t("Refresh"),
+                                name: _t("Refresh"),
                                 primary: true,
                                 onClick: () => {
                                     browser.location.reload();

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
@@ -54,7 +55,7 @@ export class CalendarCommonRenderer extends Component {
     get options() {
         return {
             allDaySlot: this.props.model.hasAllDaySlot,
-            allDayText: this.env._t("All day"),
+            allDayText: _t("All day"),
             columnHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
@@ -94,8 +95,7 @@ export class CalendarCommonRenderer extends Component {
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
             unselectAuto: false,
-            weekLabel:
-                this.props.model.scale === "month" && this.env.isSmall ? "" : this.env._t("Week"),
+            weekLabel: this.props.model.scale === "month" && this.env.isSmall ? "" : _t("Week"),
             weekends: this.props.isWeekendVisible,
             weekNumberCalculation: "ISO",
             weekNumbers: true,

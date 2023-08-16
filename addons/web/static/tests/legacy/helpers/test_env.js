@@ -25,27 +25,7 @@
             setLoadXmlDefaultApp(app);
         }
 
-        const defaultTranslationParamters = {
-            code: "en_US",
-            date_format: '%m/%d/%Y',
-            decimal_point: ".",
-            direction: 'ltr',
-            grouping: [],
-            thousands_sep: ",",
-            time_format: '%H:%M:%S',
-        };
-
-        let _t;
-        if ('_t' in env) {
-            _t = Object.assign(env._t, {database: env._t.database || {}})
-        } else {
-            _t = Object.assign(((s) => s), { database: {} });
-        }
-
-        _t.database.parameters = Object.assign(defaultTranslationParamters, _t.database.parameters);
-
         const defaultEnv = {
-            _t,
             browser: Object.assign({
                 setTimeout: window.setTimeout.bind(window),
                 clearTimeout: window.clearTimeout.bind(window),

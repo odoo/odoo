@@ -211,8 +211,8 @@ export class CalendarController extends Component {
     }
     deleteRecord(record) {
         this.displayDialog(ConfirmationDialog, {
-            title: this.env._t("Confirmation"),
-            body: this.env._t("Are you sure you want to delete this record?"),
+            title: _t("Confirmation"),
+            body: _t("Are you sure you want to delete this record?"),
             confirm: () => {
                 this.model.unlinkRecord(record.id);
             },

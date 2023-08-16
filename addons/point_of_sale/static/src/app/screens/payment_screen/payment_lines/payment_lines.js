@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
@@ -28,7 +29,7 @@ export class PaymentScreenPaymentLines extends Component {
 
         if (this.ui.isSmall) {
             const { confirmed, payload } = await this.popup.add(NumberPopup, {
-                title: this.env._t("New amount"),
+                title: _t("New amount"),
                 startingValue: parseFloat(paymentline.amount),
                 isInputSelected: true,
                 nbrDecimal: this.pos.currency.decimal_places,

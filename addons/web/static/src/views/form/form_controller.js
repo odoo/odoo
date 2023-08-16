@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
@@ -312,7 +313,7 @@ export class FormController extends Component {
     }
 
     displayName() {
-        return this.model.root.data.display_name || this.env._t("New");
+        return this.model.root.data.display_name || _t("New");
     }
 
     async onPagerUpdate({ offset, resIds }) {
@@ -358,7 +359,7 @@ export class FormController extends Component {
             archive: {
                 isAvailable: () => this.archiveEnabled && this.model.root.isActive,
                 sequence: 10,
-                description: this.env._t("Archive"),
+                description: _t("Archive"),
                 icon: "oi oi-archive",
                 callback: () => {
                     this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
@@ -368,21 +369,21 @@ export class FormController extends Component {
                 isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
                 sequence: 20,
                 icon: "oi oi-unarchive",
-                description: this.env._t("Unarchive"),
+                description: _t("Unarchive"),
                 callback: () => this.model.root.unarchive(),
             },
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,
                 sequence: 30,
                 icon: "fa fa-clone",
-                description: this.env._t("Duplicate"),
+                description: _t("Duplicate"),
                 callback: () => this.duplicateRecord(),
             },
             delete: {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
                 sequence: 40,
                 icon: "fa fa-trash-o",
-                description: this.env._t("Delete"),
+                description: _t("Delete"),
                 callback: () => this.deleteRecord(),
                 skipSave: true,
             },
@@ -391,8 +392,8 @@ export class FormController extends Component {
 
     get archiveDialogProps() {
         return {
-            body: this.env._t("Are you sure that you want to archive this record?"),
-            confirmLabel: this.env._t("Archive"),
+            body: _t("Are you sure that you want to archive this record?"),
+            confirmLabel: _t("Archive"),
             confirm: () => this.model.root.archive(),
             cancel: () => {},
         };
@@ -446,14 +447,14 @@ export class FormController extends Component {
 
     get deleteConfirmationDialogProps() {
         return {
-            body: this.env._t("Are you sure you want to delete this record?"),
+            body: _t("Are you sure you want to delete this record?"),
             confirm: async () => {
                 await this.model.root.delete();
                 if (!this.model.root.resId) {
                     this.env.config.historyBack();
                 }
             },
-            confirmLabel: this.env._t("Delete"),
+            confirmLabel: _t("Delete"),
             cancel: () => {},
         };
     }

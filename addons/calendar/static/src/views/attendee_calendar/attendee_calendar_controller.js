@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -101,7 +102,7 @@ export class AttendeeCalendarController extends CalendarController {
 
     configureCalendarProviderSync(providerName) {
         this.actionService.doAction({
-            name: this.env._t('Connect your Calendar'),
+            name: _t('Connect your Calendar'),
             type: 'ir.actions.act_window',
             res_model: 'calendar.provider.config',
             views: [[false, "form"]],

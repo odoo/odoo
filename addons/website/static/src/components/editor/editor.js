@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
 import { useActiveElement } from '@web/core/ui/ui_service';
@@ -103,8 +105,8 @@ export class WebsiteEditorComponent extends Component {
      * @returns {Promise<void>}
      */
     async reload({ snippetOptionSelector, url, invalidateSnippetCache } = {}) {
-        this.notificationService.add(this.env._t("Your modifications were saved to apply this option."), {
-            title: this.env._t("Content saved."),
+        this.notificationService.add(_t("Your modifications were saved to apply this option."), {
+            title: _t("Content saved."),
             type: 'success'
         });
         if (invalidateSnippetCache) {

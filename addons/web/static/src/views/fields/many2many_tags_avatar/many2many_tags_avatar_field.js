@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import {
@@ -119,7 +120,7 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
             canCreate: false,
             canCreateEdit: false,
             canQuickCreate: false,
-            placeholder: this.env._t("Search users..."),
+            placeholder: _t("Search users..."),
         });
     }
     get canDisplayQuickAssignAvatar() {
