@@ -600,7 +600,8 @@
                                         <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
                                             <a t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
                                                t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
-                                               class="subtask_list_button text-muted">
+                                               class="subtask_list_button btn-link text-dark"
+                                               role="button">
                                                 <span class="fa fa-check-square-o me-1"/>
                                                 <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
                                             </a>
