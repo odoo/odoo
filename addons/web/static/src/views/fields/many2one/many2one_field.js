@@ -324,7 +324,7 @@ export const many2OneField = {
         },
         {
             label: _lt("Disable opening"),
-            name: "no_opening",
+            name: "no_open",
             type: "boolean",
         },
         {
