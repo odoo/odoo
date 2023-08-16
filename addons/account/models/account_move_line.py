@@ -1606,23 +1606,29 @@ class AccountMoveLine(models.Model):
             return self[field]
 
     @api.model
-    def _prepare_move_line_residual_amounts(self, aml_values, counterpart_currency, shadowed_aml_values=None):
+    def _prepare_move_line_residual_amounts(self, aml_values, counterpart_currency, shadowed_aml_values=None, other_aml_values=None):
         """ Prepare the available residual amounts for each currency.
         :param aml_values: The values of account.move.line to consider.
         :param counterpart_currency: The currency of the opposite line this line will be reconciled with.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
                                     This is usefull if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
+        :param other_aml_values:    The other aml values to be reconciled with the current one.
         :return: A mapping currency -> dictionary containing:
             * residual: The residual amount left for this currency.
             * rate:     The rate applied regarding the company's currency.
         """
 
-        def get_odoo_rate(aml, currency):
+        def is_payment(aml):
+            return aml.move_id.payment_id or aml.move_id.statement_line_id
+
+        def get_odoo_rate(aml, other_aml, currency):
             if aml.move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = aml.move_id.invoice_date
             else:
                 exchange_rate_date = aml._get_reconciliation_aml_field_value('date', shadowed_aml_values)
+            if other_aml and not is_payment(aml) and is_payment(other_aml):
+                exchange_rate_date = other_aml._get_reconciliation_aml_field_value('date', shadowed_aml_values)
             return currency._get_conversion_rate(aml.company_currency_id, currency, aml.company_id, exchange_rate_date)
 
         def get_accounting_rate(aml, currency):
@@ -1632,6 +1638,7 @@ class AccountMoveLine(models.Model):
                 return abs(amount_currency / balance)
 
         aml = aml_values['aml']
+        other_aml = (other_aml_values or {}).get('aml')
         remaining_amount_curr = aml_values['amount_residual_currency']
         remaining_amount = aml_values['amount_residual']
         company_currency = aml.company_currency_id
@@ -1658,7 +1665,7 @@ class AccountMoveLine(models.Model):
             and is_rec_pay_account \
             and not has_zero_residual \
             and counterpart_currency != company_currency:
-            rate = get_odoo_rate(aml, counterpart_currency)
+            rate = get_odoo_rate(aml, other_aml, counterpart_currency)
             residual_in_foreign_curr = counterpart_currency.round(remaining_amount * rate)
             if not counterpart_currency.is_zero(residual_in_foreign_curr):
                 available_residual_per_currency[counterpart_currency] = {
@@ -1711,11 +1718,13 @@ class AccountMoveLine(models.Model):
             debit_values,
             credit_currency,
             shadowed_aml_values=shadowed_aml_values,
+            other_aml_values=credit_values,
         )
         credit_available_residual_amounts = self._prepare_move_line_residual_amounts(
             credit_values,
             debit_currency,
             shadowed_aml_values=shadowed_aml_values,
+            other_aml_values=debit_values,
         )
 
         if debit_currency != company_currency \
