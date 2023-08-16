@@ -1,32 +1,27 @@
-#-*- coding:utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
-import base64
 import io
-
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessDenied
 from odoo.tools import float_is_zero, pycompat
+from odoo import fields, models, api
 from odoo.tools.misc import get_lang
 from stdnum.fr import siren
 
 
-class AccountFrFec(models.TransientModel):
-    _name = 'account.fr.fec'
-    _description = 'Ficher Echange Informatise'
+class FecExportWizard(models.TransientModel):
+    _name = 'l10n_fr.fec.export.wizard'
+    _description = 'Fichier Echange Informatise'
 
-    date_from = fields.Date(string='Start Date', required=True)
-    date_to = fields.Date(string='End Date', required=True)
-    fec_data = fields.Binary('FEC File', readonly=True)
+    date_from = fields.Date(string='Start Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_from'))
+    date_to = fields.Date(string='End Date', required=True, default=lambda self: self._context.get('report_dates', {}).get('date_to'))
     filename = fields.Char(string='Filename', size=256, readonly=True)
     test_file = fields.Boolean()
     export_type = fields.Selection([
         ('official', 'Official FEC report (posted entries only)'),
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
     ], string='Export Type', required=True, default='official')
-    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', 'parent_of', current_company_id)]")
+    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals",
+                                            domain="[('company_id', 'parent_of', current_company_id)]")
 
     @api.onchange('test_file')
     def _onchange_export_file(self):
@@ -50,34 +45,35 @@ class AccountFrFec(models.TransientModel):
         '''
         where_query, where_params = self._get_where_query()
         sql_query = f'''
-        SELECT
-            'OUV' AS JournalCode,
-            'Balance initiale' AS JournalLib,
-            'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
-            %(formatted_date_from)s AS EcritureDate,
-            '120/129' AS CompteNum,
-            'Benefice (perte) reporte(e)' AS CompteLib,
-            '' AS CompAuxNum,
-            '' AS CompAuxLib,
-            '-' AS PieceRef,
-            %(formatted_date_from)s AS PieceDate,
-            '/' AS EcritureLib,
-            replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
-            '' AS EcritureLet,
-            '' AS DateLet,
-            %(formatted_date_from)s AS ValidDate,
-            '' AS Montantdevise,
-            '' AS Idevise
-        FROM
-            account_move_line aml
-            LEFT JOIN account_move am ON am.id=aml.move_id
-            JOIN account_account aa ON aa.id = aml.account_id
-        WHERE
-            {where_query}
-            AND am.date < %(date_from)s
-            AND aa.include_initial_balance IS NOT TRUE
-        '''
+           SELECT
+               'OUV' AS JournalCode,
+               'Balance initiale' AS JournalLib,
+               'OUVERTURE/' || %(formatted_date_year)s AS EcritureNum,
+               %(formatted_date_from)s AS EcritureDate,
+               '120/129' AS CompteNum,
+               'Benefice (perte) reporte(e)' AS CompteLib,
+               '' AS CompAuxNum,
+               '' AS CompAuxLib,
+               '-' AS PieceRef,
+               %(formatted_date_from)s AS PieceDate,
+               '/' AS EcritureLib,
+               replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+               replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
+               '' AS EcritureLet,
+               '' AS DateLet,
+               %(formatted_date_from)s AS ValidDate,
+               '' AS Montantdevise,
+               '' AS Idevise
+           FROM
+               account_move_line aml
+               LEFT JOIN account_move am ON am.id=aml.move_id
+               JOIN account_account aa ON aa.id = aml.account_id
+           WHERE
+               {where_query}
+               AND am.date < %(date_from)s
+               AND aa.include_initial_balance IS NOT TRUE
+           '''
+        self.env.flush_all()
         self._cr.execute(sql_query, {
             **where_params,
             'formatted_date_year': self.date_from.year,
@@ -107,24 +103,11 @@ class AccountFrFec(models.TransientModel):
             return company.vat
 
     def generate_fec(self):
-        #pylint: disable=sql-injection
-        self.ensure_one()
-        if not (self.env.is_admin() or self.env.user.has_group('account.group_account_user')):
-            raise AccessDenied()
-        # We choose to implement the flat file instead of the XML
-        # file for 2 reasons :
-        # 1) the XSD file impose to have the label on the account.move
-        # but Odoo has the label on the account.move.line, so that's a
-        # problem !
-        # 2) CSV files are easier to read/use for a regular accountant.
-        # So it will be easier for the accountant to check the file before
-        # sending it to the fiscal administration
-        today = fields.Date.today()
-        if self.date_from > today or self.date_to > today:
-            raise UserError(_('You could not set the start date or the end date in the future.'))
-        if self.date_from >= self.date_to:
-            raise UserError(_('The start date must be inferior to the end date.'))
-
+        # We choose to implement the flat file instead of the XML file for 2 reasons :
+        # 1) the XSD file impose to have the label on the account.move, but Odoo has the label on the account.move.line,
+        # so that's a  problem !
+        # 2) CSV files are easier to read/use for a regular accountant. So it will be easier for the accountant to check
+        # the file before sending it to the fiscal administration
         company = self.env.company
         company_legal_data = self._get_company_legal_data(company)
 
@@ -389,53 +372,26 @@ class AccountFrFec(models.TransientModel):
                         row = list(row)
                         row[-1] += u'\r\n'
                     csv_writer.writerow(row)
+            content = fecfile.getvalue()
 
-            base64_result = base64.encodebytes(fecfile.getvalue())
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
             suffix = '-NONOFFICIAL'
 
-        self.write({
-            'fec_data': base64_result,
-            # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
-            'filename': '%sFEC%s%s.csv' % (company_legal_data, end_date, suffix),
-        })
-
         # Set fiscal year lock date to the end date (not in test)
         fiscalyear_lock_date = self.env.company.fiscalyear_lock_date
         if not self.test_file and (not fiscalyear_lock_date or fiscalyear_lock_date < self.date_to):
             self.env.company.write({'fiscalyear_lock_date': self.date_to})
+
         return {
-            'name': 'FEC',
-            'type': 'ir.actions.act_url',
-            'url': "web/content/?model=account.fr.fec&id=" + str(self.id) + "&filename_field=filename&field=fec_data&download=true&filename=" + self.filename,
-            'target': 'new',
+            'file_name': f"{company_legal_data}FEC{end_date}{suffix}.csv",
+            'file_content': content,
+            'file_type': 'csv'
         }
 
-    def _csv_write_rows(self, rows, lineterminator=u'\r\n'): #DEPRECATED; will disappear in master
-        """
-        Write FEC rows into a file
-        It seems that Bercy's bureaucracy is not too happy about the
-        empty new line at the End Of File.
+    def create_fec_report_action(self):
+        # HOOK
+        return
 
-        @param {list(list)} rows: the list of rows. Each row is a list of strings
-        @param {unicode string} [optional] lineterminator: effective line terminator
-            Has nothing to do with the csv writer parameter
-            The last line written won't be terminated with it
-
-        @return the value of the file
-        """
-        fecfile = io.BytesIO()
-        writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
-
-        rows_length = len(rows)
-        for i, row in enumerate(rows):
-            if not i == rows_length - 1:
-                row[-1] += lineterminator
-            writer.writerow(row)
-
-        fecvalue = fecfile.getvalue()
-        fecfile.close()
-        return fecvalue
