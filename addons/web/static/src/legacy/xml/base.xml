@@ -3,58 +3,6 @@
 
 <!-- Owl Templates -->
 
-<t t-name="web.DialogButton.tooltip">
-    <div class="oe_tooltip_string" role="tooltip">
-        <div class="tooltip-inner">
-            <t>Hit ENTER to <t t-esc="title"/></t>
-        </div>
-    </div>
-</t>
-
-<t t-name="web.legacy.Pager">
-    <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
-        <span class="o_pager_counter" t-on-click.stop="">
-            <input t-if="state.editing" type="text"
-                class="o_pager_value o_input d-inline-block w-auto text-end"
-                size="7"
-                t-ref="autofocus"
-                t-att-value="value"
-                t-on-blur="() => { this.state.editing = false }"
-                t-on-change="_onValueChange"
-                t-on-keydown.stop="_onValueKeydown"
-            />
-            <span t-else=""
-                class="o_pager_value d-inline-block border-bottom border-white"
-                t-esc="value"
-                t-on-click="_onEdit"
-            />
-            <span> / </span>
-            <span class="o_pager_limit" t-esc="props.size"/>
-        </span>
-        <span class="btn-group" aria-atomic="true">
-            <!-- accesskeys not wanted in X2Many widgets -->
-            <button type="button"
-                class="oi oi-chevron-left px-2 btn btn-secondary o_pager_previous rounded-start"
-                t-att-disabled="state.disabled || singlePage"
-                t-att-accesskey="props.withAccessKey ? 'p' : false"
-                aria-label="Previous page"
-                title="Previous page"
-                tabindex="-1"
-                t-on-click="ev => this._changeSelection(-1, ev)"
-            />
-            <button type="button"
-                class="oi oi-chevron-right px-2 btn btn-secondary o_pager_next rounded-end"
-                t-att-disabled="state.disabled || singlePage"
-                t-att-accesskey="props.withAccessKey ? 'n' : false"
-                aria-label="Next page"
-                title="Next page"
-                tabindex="-1"
-                t-on-click="ev => this._changeSelection(1, ev)"
-            />
-        </span>
-    </nav>
-</t>
-
 <t t-name="web.ViewSwitcherButton">
     <t t-set="buttonLabel">View %s</t>
     <button type="button"
@@ -69,10 +17,6 @@
 </t>
 
 <!-- Legacy Templates -->
-
-<div t-name="Action" class="o_action">
-    <div class="o_content"/>
-</div>
 
 <t t-name="FormButton.tooltip">
     <div class="oe_tooltip_string" role="tooltip">
@@ -96,183 +40,6 @@
         <span class="o_datepicker_button"/>
     </div>
 </t>
-<t t-name="web.Legacy.FieldSelection">
-    <span t-if="widget.mode === 'readonly'"/>
-
-    <select t-if="widget.mode !== 'readonly'"
-        class="o_input"
-        t-att-name="widget.name"
-        t-att-tabindex="widget.attrs.tabindex"
-        t-att-autofocus="widget.attrs.autofocus"
-        t-att-id="widget.idForLabel"/>
-</t>
-<t t-name="FieldRadio.button">
-    <div class="form-check o_radio_item" aria-atomic="true">
-        <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
-            t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
-        <label class="form-check-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
-    </div>
-</t>
-
-<t t-name="FieldMany2One">
-    <t t-if="widget.mode === 'readonly'">
-        <a t-if="!widget.noOpen" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
-        <span t-if="widget.noOpen"/>
-    </t>
-    <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
-        <div class="o_field_many2one_selection">
-            <div class="o_input_dropdown">
-                <input type="text" class="o_input form-control"
-                    t-att-barcode_events="widget.nodeOptions.barcode_events"
-                    t-att-tabindex="widget.attrs.tabindex"
-                    t-att-autofocus="widget.attrs.autofocus"
-                    t-att-placeholder="widget.attrs.placeholder"
-                    t-att-id="widget.idForLabel"/>
-                <a role="button" class="o_dropdown_button" draggable="false"/>
-            </div>
-            <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
-        </div>
-        <div class="o_field_many2one_extra"/>
-    </div>
-</t>
-
-<t t-name="web.Many2OneAvatar">
-    <div class="o_m2o_avatar">
-        <img t-if="widget.value" t-att-src="url" t-att-alt="value"/>
-        <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
-        <span t-if="widget.mode === 'readonly'" t-esc="value"/>
-    </div>
-</t>
-
-<t t-name="FieldMany2ManyTag">
-    <t t-foreach="elements" t-as="el" t-key="el_index">
-        <t t-set="color" t-value="el[colorField] || 0"/>
-        <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div t-attf-class="badge rounded-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
-            <t t-set="_badge_text">
-                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
-            </t>
-            <t t-if="hasDropdown">
-                <a role="button" href="#" class="dropdown-toggle o-no-caret" aria-expanded="false">
-                    <t t-out="_badge_text"/>
-                </a>
-            </t>
-            <t t-else="">
-                <t t-out="_badge_text"/>
-            </t>
-            <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
-        </div>
-    </t>
-</t>
-<t t-name="FieldMany2ManyTagAvatar" t-extend="FieldMany2ManyTag">
-    <t t-jquery="t[t-set='_badge_text']" t-operation="before">
-        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
-    </t>
-</t>
-<t t-name="KanbanMany2ManyTagAvatar">
-    <t t-set="visibleElements" t-value="elements.length === widget.visibleAvatarCount ? elements : elements.slice(0, widget.visibleAvatarCount - 1)"/>
-    <t t-foreach="visibleElements" t-as="el" t-key="el_index">
-        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
-    </t>
-    <t t-if="elements.length > widget.visibleAvatarCount">
-        <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
-            <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
-            <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
-        </span>
-    </t>
-</t>
-<t t-name="ListMany2ManyTagAvatar">
-    <t t-if="widget.mode !== 'readonly'">
-        <t t-call="FieldMany2ManyTagAvatar"/>
-    </t>
-    <t t-else="">
-        <t t-if="elements.length === 1">
-            <div>
-                <img t-attf-src="/web/image/#{avatarModel}/#{elements[0].id}/#{avatarField}" t-att-data-id="elements[0].id" class="rounded-circle o_m2m_avatar"/>
-                <span t-esc="elements[0].display_name"/>
-            </div>
-        </t>
-        <t t-else="">
-            <t t-set="visibleElements" t-value="elements.length === widget.visibleAvatarCount ? elements : elements.slice(0, widget.visibleAvatarCount - 1)"/>
-            <t t-foreach="visibleElements" t-as="el" t-key="el_index">
-                <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-title="el.display_name" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
-            </t>
-            <t t-if="elements.length > widget.visibleAvatarCount">
-                <span class="o_m2m_avatar_empty rounded-circle text-center fw-bold">
-                    <span t-if="elements.length - widget.visibleAvatarCount + 1 > 9">9+</span>
-                    <span t-else="">+<t t-esc="elements.length - widget.visibleAvatarCount + 1"/></span>
-                </span>
-            </t>
-        </t>
-    </t>
-</t>
-<t t-name="Many2ManyTagAvatarPopover">
-    <t t-foreach="elements" t-as="el" t-key="el_index">
-        <div><t t-esc="el.display_name"/></div>
-    </t>
-</t>
-<t t-name="FieldMany2ManyTag.colorpicker">
-    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
-        <ul>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_1" data-color="1" title="Red" aria-label="Red"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_2" data-color="2" title="Orange" aria-label="Orange"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_3" data-color="3" title="Yellow" aria-label="Yellow"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_4" data-color="4" title="Light blue" aria-label="Light blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_5" data-color="5" title="Dark purple" aria-label="Dark purple"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_6" data-color="6" title="Salmon pink" aria-label="Salmon pink"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_7" data-color="7" title="Medium blue" aria-label="Medium blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_8" data-color="8" title="Dark blue" aria-label="Dark blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_9" data-color="9" title="Fushia" aria-label="Fushia"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_10" data-color="10" title="Green" aria-label="Green"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_11" data-color="11" title="Purple" aria-label="Purple"/></li>
-            <li> <!-- checkbox for tag color 0 -->
-                <div role="menuitem" class="o_hide_in_kanban"
-                     t-att-data-id="tag_id"
-                     t-att-data-color="0">
-                    <div class="form-check">
-                        <input type="checkbox" id="o_hide_in_kanban_checkbox" class="form-check-input"/>
-                        <label for="o_hide_in_kanban_checkbox" class="form-check-label">Hide in Kanban</label>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
-</t>
-<t t-name="FieldBinaryFile">
-    <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
-
-    <div t-if="widget.mode !== 'readonly'" class="o_field_binary_file" aria-atomic="true">
-        <input type="text" class="o_input"
-            readonly="readonly"
-            t-att-name="widget.name"
-            t-att-tabindex="widget.attrs.tabindex"
-            t-att-autofocus="widget.attrs.autofocus"/>
-
-        <button type="button" class="btn btn-primary o_select_file_button" title="Select">Upload your file</button>
-        <button type="button" class="btn btn-secondary fa fa-pencil o_select_file_button" title="Select" aria-label="Select"/>
-        <button type="button" class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear"/>
-
-        <span class="o_form_binary_progress">Uploading...</span>
-        <t t-call="HiddenInputFile">
-            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
-        </t>
-    </div>
-</t>
-
-<t t-name="HiddenInputFile">
-    <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style" aria-atomic="true">
-        <form class="o_form_binary_form" t-att-target="fileupload_id"
-              method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
-            <input type="hidden" name="csrf_token" t-att-value="window.odoo.csrf_token"/>
-            <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <input type="file" class="o_input_file" name="ufile"
-                t-att="{'multiple': multi_upload ? 'multiple' : null, 'accept': widget.accepted_file_extensions || '*'}"/>
-            <t t-out="0"/>
-        </form>
-        <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
-    </div>
-</t>
 
 <t t-name="Throbber">
     <div>
@@ -282,19 +49,6 @@
         <br />
         <div class="oe_throbber_message" style="color:white"></div>
     </div>
-</t>
-<t t-name="Spinner">
-    <div class="o_spinner"><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
-</t>
-<t t-name="M2ODialog">
-    <div>
-        Create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
-    </div>
-</t>
-<t t-name="toggle_button">
-    <button type="button" class="o_icon_button" t-att-title="widget.string" t-att-aria-label="widget.string" aria-pressed="false">
-        <i class="fa fa-circle" t-att-title="widget.string"/>
-    </button>
 </t>
 
 </templates>
