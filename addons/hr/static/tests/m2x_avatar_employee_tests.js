@@ -1,108 +1,129 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-
 import { start } from "@mail/../tests/helpers/test_utils";
-
-import { dom } from "@web/../tests/legacy/helpers/test_utils";
 import { contains } from "@web/../tests/utils";
+import { patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
-QUnit.module("M2XAvatarEmployee");
+// The widgets M2XAVatarEmployee inherits from M2XAvatarUser. Those tests therefore allows
+// to test the opening of popover employee cards for both widgets type. If the widgets
+// M2XAvatarEmployee are removed in the future, the tests related to opening of popover
+// card should be kept as the extension of M2XAvatarUser to support this model is done in
+// hr.
 
-QUnit.test("many2one_avatar_employee widget in list view", async function (assert) {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { display_name: "Mario" },
-        { display_name: "Luigi" },
-    ]);
-    const [userId_1, userId_2] = pyEnv["res.users"].create([
-        { partner_id: partnerId_1 },
-        { partner_id: partnerId_2 },
-    ]);
-    const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
-        { name: "Mario", user_id: userId_1, user_partner_id: partnerId_1 },
-        { name: "Luigi", user_id: userId_2, user_partner_id: partnerId_2 },
-    ]);
-    pyEnv["m2x.avatar.employee"].create([
-        {
-            employee_id: employeeId_1,
-            employee_ids: [employeeId_1, employeeId_2],
-        },
-        { employee_id: employeeId_2 },
-        { employee_id: employeeId_1 },
-    ]);
-    const views = {
-        "m2x.avatar.employee,false,list":
+QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
+    beforeEach(() => {
+        patchWithCleanup(AvatarCardPopover.prototype, patchAvatarCardPopover);
+    });
+
+    QUnit.test("many2one_avatar_employee widget in list view", async function (assert) {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { display_name: "Mario" },
+            { display_name: "Luigi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            {
+                partner_id: partnerId_1,
+            },
+            { partner_id: partnerId_2 },
+        ]);
+        const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
+            {
+                name: "Mario",
+                user_id: userId_1,
+                user_partner_id: partnerId_1,
+                work_email: "Mario@partner.com",
+                phone: "+45687468",
+            },
+            { name: "Luigi", user_id: userId_2, user_partner_id: partnerId_2 },
+        ]);
+        pyEnv["m2x.avatar.employee"].create([
+            {
+                employee_id: employeeId_1,
+                employee_ids: [employeeId_1, employeeId_2],
+            },
+            { employee_id: employeeId_2 },
+            { employee_id: employeeId_1 },
+        ]);
+        const views = {
+            "m2x.avatar.employee,false,list":
             '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
-    };
-    const { openView } = await start({
-        mockRPC(route, args) {
-            if (args.method === "read") {
-                assert.step(`read ${args.model} ${args.args[0]}`);
-            }
-        },
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.employee",
-        views: [[false, "list"]],
-    });
-    assert.strictEqual(
-        document.querySelector(".o_data_cell div[name='employee_id']").innerText,
-        "Mario"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(".o_data_cell div[name='employee_id']")[1].innerText,
-        "Luigi"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(".o_data_cell div[name='employee_id']")[2].innerText,
-        "Mario"
-    );
-    // TODO: avatar card employee
-    // click on first employee
-    // dom.click(document.querySelector(".o_data_cell .o_m2o_avatar > img"));
-    // await contains(".o-mail-ChatWindow");
-    // assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow").textContent, "Mario");
+        };
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            res_model: "m2x.avatar.employee",
+            views: [[false, "list"]],
+        });
+        assert.strictEqual(
+            document.querySelector(".o_data_cell div[name='employee_id']").innerText,
+            "Mario"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_cell div[name='employee_id']")[1].innerText,
+            "Luigi"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_cell div[name='employee_id']")[2].innerText,
+            "Mario"
+        );
 
-    // // click on second employee
-    // dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1]);
-    // await contains(".o-mail-ChatWindow", { count: 2 });
-    // assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    // assert.strictEqual(
-    //     document.querySelectorAll(".o-mail-ChatWindow")[1].textContent,
-    //     "Luigi"
-    // );
+        // click on first employee avatar
+        await click(document.querySelector(".o_data_cell .o_m2o_avatar > img"));
+        await contains(".o_avatar_card");
+        await contains(".o_card_user_infos > span", { text: "Mario" });
+        await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+        await contains(".o_card_user_infos > a", { text: "+45687468" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow");
+        assert.strictEqual(document.querySelector('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate').textContent, "Mario");
 
-    // // click on third employee (same as first)
-    // dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[2]);
-    // assert.containsN(
-    //     document.body,
-    //     ".o-mail-ChatWindow",
-    //     2,
-    //     "should still have only 2 chat windows because third is the same partner as first"
-    // );
-    // assert.verifySteps(
-    //     [],
-    //     "employee should not have been read again because we already know its partner"
-    // );
-});
+        // click on second employee
+        await click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1]);
+        await contains(".o_card_user_infos span", { text: "Luigi" });
+        await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow", { count: 2 });
+        assert.strictEqual(
+            document.querySelectorAll('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate')[1].textContent,
+            "Luigi"
+        );
 
-QUnit.test("many2one_avatar_employee widget in kanban view", async function (assert) {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    const employeeId = pyEnv["hr.employee.public"].create({
-        user_id: userId,
-        user_partner_id: partnerId,
+        // click on third employee (same as first)
+        await click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[2]);
+        await contains(".o_card_user_infos span", { text: "Mario" });
+        await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+        assert.strictEqual(document.querySelector(".o_card_user_infos span").textContent, "Mario");
+        await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+        await contains(".o_card_user_infos > a", { text: "+45687468" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        assert.containsN(
+            document.body,
+            ".o-mail-ChatWindow",
+            2,
+            "should still have only 2 chat windows because third is the same partner as first"
+        );
     });
-    pyEnv["m2x.avatar.employee"].create({
-        employee_id: employeeId,
-        employee_ids: [employeeId],
-    });
-    const views = {
-        "m2x.avatar.employee,false,kanban": `<kanban>
+
+    QUnit.test("many2one_avatar_employee widget in kanban view", async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const employeeId = pyEnv["hr.employee.public"].create({
+            user_id: userId,
+            user_partner_id: partnerId,
+        });
+        pyEnv["m2x.avatar.employee"].create({
+            employee_id: employeeId,
+            employee_ids: [employeeId],
+        });
+        const views = {
+            "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -111,187 +132,237 @@ QUnit.test("many2one_avatar_employee widget in kanban view", async function (ass
                     </t>
                 </templates>
             </kanban>`,
-    };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_model: "m2x.avatar.employee",
-        views: [[false, "kanban"]],
+        };
+        const { openView } = await start({ serverData: { views } });
+        await openView({
+            res_model: "m2x.avatar.employee",
+            views: [[false, "kanban"]],
+        });
+        assert.strictEqual(document.querySelector(".o_kanban_record").innerText.trim(), "");
+        await contains(".o_m2o_avatar");
+        assert.strictEqual(
+            document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
+            `/web/image/hr.employee.public/${employeeId}/avatar_128`
+        );
     });
-    assert.strictEqual(document.querySelector(".o_kanban_record").innerText.trim(), "");
-    await contains(".o_m2o_avatar");
-    assert.strictEqual(
-        document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId}/avatar_128`
-    );
-});
 
-QUnit.test(
-    "many2one_avatar_employee: click on an employee not associated with a user",
-    async function (assert) {
+    QUnit.test(
+        "many2one_avatar_employee: click on an employee not associated with a user",
+        async function (assert) {
+            const pyEnv = await startServer();
+            const employeeId = pyEnv["hr.employee.public"].create({ name: "Mario" });
+            const avatarId = pyEnv["m2x.avatar.employee"].create({ employee_id: employeeId });
+            const views = {
+                "m2x.avatar.employee,false,form":
+                '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
+            };
+            const { openView } = await start({
+                mockRPC(route, args) {
+                    if (args.method === "web_read") {
+                        assert.step(`web_read ${args.model} ${args.args[0]}`);
+                        assert.deepEqual(args.kwargs.specification, {
+                            display_name: {},
+                            employee_id: {
+                                fields: {
+                                    display_name: {},
+                                },
+                            },
+                        });
+                    }
+                },
+                serverData: { views },
+            });
+            await openView({
+                res_model: "m2x.avatar.employee",
+                res_id: avatarId,
+                views: [[false, "form"]],
+            });
+            await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
+            await click(document.querySelector(".o_m2o_avatar > img"));
+            assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
+            // Nothing should happen
+        }
+    );
+
+    QUnit.test("many2many_avatar_employee widget in form view", async function (assert) {
         const pyEnv = await startServer();
-        const employeeId = pyEnv["hr.employee.public"].create({ name: "Mario" });
-        const avatarId = pyEnv["m2x.avatar.employee"].create({ employee_id: employeeId });
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { display_name: "Mario" },
+            { display_name: "Luigi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            {
+                partner_id: partnerId_1,
+            },
+            { partner_id: partnerId_2 },
+        ]);
+        const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
+            {
+                user_id: userId_1,
+                user_partner_id: partnerId_1,
+                name: "Mario",
+                work_email: "Mario@partner.com",
+                phone: "+45687468",
+            },
+            { user_id: userId_2, user_partner_id: partnerId_2, name: "Luigi" },
+        ]);
+        const avatarId_1 = pyEnv["m2x.avatar.employee"].create({
+            employee_ids: [employeeId_1, employeeId_2],
+        });
         const views = {
             "m2x.avatar.employee,false,form":
-                '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
+            '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
         };
         const { openView } = await start({
-            mockRPC(route, args) {
-                if (args.method === "web_read") {
-                    assert.step(`web_read ${args.model} ${args.args[0]}`);
-                    assert.deepEqual(args.kwargs.specification, {
-                        display_name: {},
-                        employee_id: {
-                            fields: {
-                                display_name: {},
-                            },
-                        },
-                    });
-                }
-            },
             serverData: { views },
         });
         await openView({
             res_model: "m2x.avatar.employee",
-            res_id: avatarId,
+            res_id: avatarId_1,
             views: [[false, "form"]],
         });
-        await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
-        await dom.click(document.querySelector(".o_m2o_avatar > img"));
-        assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
-        // Nothing should happen
-    }
-);
+        assert.containsN(
+            document.body,
+            ".o_field_many2many_avatar_employee .o_tag",
+            2,
+            "should have 2 records"
+        );
+        assert.strictEqual(
+            document
+                .querySelector(".o_field_many2many_avatar_employee .o_tag img")
+                .getAttribute("data-src"),
+            `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+        );
 
-QUnit.test("many2many_avatar_employee widget in form view", async function (assert) {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
-    const [userId_1, userId_2] = pyEnv["res.users"].create([
-        { partner_id: partnerId_1 },
-        { partner_id: partnerId_2 },
-    ]);
-    const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
-        { user_id: userId_1, user_partner_id: partnerId_1 },
-        { user_id: userId_2, user_partner_id: partnerId_2 },
-    ]);
-    const avatarId_1 = pyEnv["m2x.avatar.employee"].create({
-        employee_ids: [employeeId_1, employeeId_2],
-    });
-    const views = {
-        "m2x.avatar.employee,false,form":
-            '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
-    };
-    const { openView } = await start({
-        mockRPC(route, args) {
-            if (args.method === "web_read") {
-                assert.step(`web_read ${args.model} ${args.args[0]}`);
-            }
-            if (args.method === "read") {
-                assert.step(`read ${args.model} ${args.args[0]}`);
-            }
-        },
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.employee",
-        res_id: avatarId_1,
-        views: [[false, "form"]],
-    });
-    assert.containsN(
-        document.body,
-        ".o_field_many2many_avatar_employee .o_tag",
-        2,
-        "should have 2 records"
-    );
-    assert.strictEqual(
-        document
-            .querySelector(".o_field_many2many_avatar_employee .o_tag img")
-            .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
-    );
+        // Clicking on first employee's avatar
+        await click(
+            document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
+        );
+        await contains(".o_avatar_card");
+        await contains(".o_card_user_infos > span", { text: "Mario" });
+        await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+        await contains(".o_card_user_infos > a", { text: "+45687468" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow");
+        assert.strictEqual(document.querySelector('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate').textContent, "Mario");
 
-    await dom.click(
-        document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
-    );
-    await dom.click(
-        document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
-    );
-    // TODO: avatar card employee
-    assert.verifySteps([`web_read m2x.avatar.employee ${avatarId_1}`]);
-});
-
-QUnit.test("many2many_avatar_employee widget in list view", async function (assert) {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { name: "Mario" },
-        { name: "Yoshi" },
-    ]);
-    const [userId_1, userId_2] = pyEnv["res.users"].create([
-        { partner_id: partnerId_1 },
-        { partner_id: partnerId_2 },
-    ]);
-    const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
-        { user_id: userId_1, user_partner_id: partnerId_1 },
-        { user_id: userId_2, user_partner_id: partnerId_2 },
-    ]);
-    pyEnv["m2x.avatar.employee"].create({
-        employee_ids: [employeeId_1, employeeId_2],
+        // Clicking on second employee's avatar
+        await click(
+            document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
+        );
+        await contains(".o_card_user_infos span", { text: "Luigi" });
+        await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow", { count: 2 });
+        assert.strictEqual(
+            document.querySelectorAll('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate')[1].textContent,
+            "Luigi"
+        );
     });
-    const views = {
-        "m2x.avatar.employee,false,list":
+
+    QUnit.test("many2many_avatar_employee widget in list view", async function (assert) {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Mario" },
+            { name: "Yoshi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            {
+                partner_id: partnerId_1,
+            },
+            { partner_id: partnerId_2 },
+        ]);
+        const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
+            {
+                name: "Mario",
+                user_id: userId_1,
+                user_partner_id: partnerId_1,
+                phone: "+45687468",
+                email: "Mario@partner.com",
+            },
+            {
+                name: "Yoshi",
+                user_id: userId_2,
+                user_partner_id: partnerId_2,
+            },
+        ]);
+        pyEnv["m2x.avatar.employee"].create({
+            employee_ids: [employeeId_1, employeeId_2],
+        });
+        const views = {
+            "m2x.avatar.employee,false,list":
             '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
-    };
-    const { openView } = await start({
-        mockRPC(route, args) {
-            if (args.method === "read") {
-                assert.step(`read ${args.model} ${args.args[0]}`);
-            }
-        },
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.employee",
-        views: [[false, "list"]],
-    });
-    assert.containsN(
-        document.body,
-        ".o_data_cell:first .o_field_many2many_avatar_employee > div > span",
-        2,
-        "should have two avatar"
-    );
-    // TODO: avatar card employee
-    // // click on first employee badge
-    // dom.click(document.querySelector(".o_data_cell .o_m2m_avatar"));
-    // await contains(".o-mail-ChatWindow");
-    // assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    // assert.strictEqual(document.querySelector(".o-mail-ChatWindow").textContent, "Mario");
+        };
+        const { openView } = await start({
+            serverData: { views },
+        });
+        await openView({
+            res_model: "m2x.avatar.employee",
+            views: [[false, "list"]],
+        });
+        assert.containsN(
+            document.body,
+            ".o_data_cell:first .o_field_many2many_avatar_employee > div > span",
+            2,
+            "should have two avatar"
+        );
 
-    // // click on second employee
-    // dom.click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1]);
-    // await contains(".o-mail-ChatWindow", { count: 2 });
-    // assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    // assert.strictEqual(
-    //     document.querySelectorAll(".o-mail-ChatWindow")[1].textContent,
-    //     "Yoshi"
-    // );
-});
+        // Clicking on first employee's avatar
+        await click(document.querySelector(".o_data_cell .o_m2m_avatar"));
+        await contains(".o_avatar_card");
+        await contains(".o_card_user_infos > span", { text: "Mario" });
+        await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+        await contains(".o_card_user_infos > a", { text: "+45687468" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow");
+        assert.strictEqual(
+            document.querySelector('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate').textContent,
+            "Mario"
+        );
 
-QUnit.test("many2many_avatar_employee widget in kanban view", async function (assert) {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
-    const [userId_1, userId_2] = pyEnv["res.users"].create([
-        { partner_id: partnerId_1 },
-        { partner_id: partnerId_2 },
-    ]);
-    const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
-        { user_id: userId_1, user_partner_id: partnerId_1 },
-        { user_id: userId_2, user_partner_id: partnerId_2 },
-    ]);
-    pyEnv["m2x.avatar.employee"].create({
-        employee_ids: [employeeId_1, employeeId_2],
+        // Clicking on second employee's avatar
+        await click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1]);
+        await contains(".o_card_user_infos span", { text: "Yoshi" });
+        await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow", { count: 2 });
+        assert.strictEqual(
+            document.querySelectorAll('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate')[1].textContent,
+            "Yoshi"
+        );
     });
-    const views = {
-        "m2x.avatar.employee,false,kanban": `<kanban>
+
+    QUnit.test("many2many_avatar_employee widget in kanban view", async function (assert) {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { display_name: "Mario" },
+            { display_name: "Luigi" },
+        ]);
+        const [userId_1, userId_2] = pyEnv["res.users"].create([
+            {
+                partner_id: partnerId_1,
+            },
+            { partner_id: partnerId_2 },
+        ]);
+        const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
+            {
+                user_id: userId_1,
+                user_partner_id: partnerId_1,
+                name: "Mario",
+                work_email: "Mario@partner.com",
+                phone: "+45687468",
+            },
+            { user_id: userId_2, user_partner_id: partnerId_2, name: "Luigi" },
+        ]);
+        pyEnv["m2x.avatar.employee"].create({
+            employee_ids: [employeeId_1, employeeId_2],
+        });
+        const views = {
+            "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -306,92 +377,125 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
                     </t>
                 </templates>
             </kanban>`,
-    };
-    const { openView } = await start({
-        mockRPC(route, args) {
-            if (args.method === "read") {
-                assert.step(`read ${args.model} ${args.args[0]}`);
-            }
-        },
-        serverData: { views },
-    });
-    await openView({
-        res_model: "m2x.avatar.employee",
-        views: [[false, "kanban"]],
-    });
-    assert.containsN(
-        document.body,
-        ".o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar",
-        2,
-        "should have 2 avatar images"
-    );
-    assert.strictEqual(
-        document
-            .querySelector(".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar")
-            .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_2}/avatar_128`
-    );
-    assert.strictEqual(
-        document
-            .querySelectorAll(
-                ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
-            )[1]
-            .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
-    );
-
-    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[1]);
-    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[0]);
-    // TODO: avatar card employee
-});
-
-QUnit.test(
-    "many2many_avatar_employee: click on an employee not associated with a user",
-    async function (assert) {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-        const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
-            {},
-            { user_id: userId, user_partner_id: partnerId },
-        ]);
-        const avatarId = pyEnv["m2x.avatar.employee"].create({
-            employee_ids: [employeeId_1, employeeId_2],
-        });
-        const views = {
-            "m2x.avatar.employee,false,form":
-                '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
         };
         const { openView } = await start({
-            mockRPC(route, args) {
-                if (args.method === "read") {
-                    assert.step(`read ${args.model} ${args.args[0]}`);
-                }
-                if (args.method === "web_read") {
-                    assert.step(`web_read ${args.model} ${args.args[0]}`);
-                }
-            },
             serverData: { views },
         });
         await openView({
             res_model: "m2x.avatar.employee",
-            res_id: avatarId,
-            views: [[false, "form"]],
+            views: [[false, "kanban"]],
         });
-        await contains(".o_field_many2many_avatar_employee .o_tag", { count: 2 });
+        assert.containsN(
+            document.body,
+            ".o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar",
+            2,
+            "should have 2 avatar images"
+        );
         assert.strictEqual(
             document
-                .querySelector(".o_field_many2many_avatar_employee .o_tag img")
+                .querySelector(".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar")
+                .getAttribute("data-src"),
+            `/web/image/hr.employee.public/${employeeId_2}/avatar_128`
+        );
+        assert.strictEqual(
+            document
+                .querySelectorAll(
+                    ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
+                )[1]
                 .getAttribute("data-src"),
             `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
         );
-        await dom.click(
-            document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
+
+        // Clicking on first employee's avatar
+        await click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[1]);
+        await contains(".o_avatar_card");
+        await contains(".o_card_user_infos > span", { text: "Mario" });
+        await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+        await contains(".o_card_user_infos > a", { text: "+45687468" });
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow");
+        assert.strictEqual(document.querySelector('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate').textContent, "Mario");
+
+        // Clicking on second employee's avatar
+        await click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[0]);
+        await contains(".o_card_user_infos span", { text: "Luigi" });
+        await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+        assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+        await click(document.querySelector(".o_avatar_card_buttons button"));
+        await contains(".o-mail-ChatWindow", { count: 2 });
+        assert.strictEqual(
+            document.querySelectorAll('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate')[1].textContent,
+            "Luigi"
         );
-        await dom.click(
-            document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
-        );
-        assert.verifySteps([`web_read m2x.avatar.employee ${employeeId_1}`]);
-        // TODO: avtar card employee
-    }
-);
+    });
+
+    QUnit.test(
+        "many2many_avatar_employee: click on an employee not associated with a user",
+        async function (assert) {
+            const pyEnv = await startServer();
+            const partnerId = pyEnv["res.partner"].create({ display_name: "Luigi" });
+            const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+            const [employeeId_1, employeeId_2] = pyEnv["hr.employee.public"].create([
+                {
+                    name: "Mario",
+                    work_email: "Mario@partner.com",
+                },
+                {
+                    name: "Luigi",
+                    user_id: userId,
+                    user_partner_id: partnerId,
+                },
+            ]);
+            const avatarId = pyEnv["m2x.avatar.employee"].create({
+                employee_ids: [employeeId_1, employeeId_2],
+            });
+            const views = {
+                "m2x.avatar.employee,false,form":
+                '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+            };
+            const { openView } = await start({
+                serverData: { views },
+            });
+            await openView({
+                res_model: "m2x.avatar.employee",
+                res_id: avatarId,
+                views: [[false, "form"]],
+            });
+            await contains(".o_field_many2many_avatar_employee .o_tag", { count: 2 });
+            assert.strictEqual(
+                document
+                    .querySelector(".o_field_many2many_avatar_employee .o_tag img")
+                    .getAttribute("data-src"),
+                `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+            );
+
+            // Clicking on first employee's avatar (employee with no user)
+            await click(
+                document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
+            );
+            await contains(".o_avatar_card");
+            await contains(".o_card_user_infos > span", { text: "Mario" });
+            await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
+            assert.strictEqual(
+                document.querySelector(".o_avatar_card_buttons button").textContent,
+                " View profile ",
+                'No "Send Message" should be displayed for this employee as it is linked to no user'
+            );
+
+            // Clicking on second employee's avatar (employee with user)
+            await click(
+                document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
+            );
+            await contains(".o_card_user_infos span", { text: "Luigi" });
+            await contains(".o_avatar_card", { count: 1 }, 'Only one popover employee card should be opened at a time');
+            assert.strictEqual(document.querySelector(".o_avatar_card_buttons button").textContent, " Send message ");
+            await click(document.querySelector(".o_avatar_card_buttons button"));
+            await contains(".o-mail-ChatWindow", { count: 1 });
+            assert.strictEqual(
+                document.querySelector('.o-mail-ChatWindow-header > .o-dropdown > button.o-mail-ChatWindow-command > .text-truncate').textContent,
+                "Luigi"
+            );
+        }
+    );
+});
