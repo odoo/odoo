@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { TimeOffCard } from './time_off_card';
+import { useNewAllocationRequest } from '@hr_holidays/views/hooks';
 import { useBus, useService } from "@web/core/utils/hooks";
 
 const { Component, useState, onWillStart } = owl;
@@ -8,6 +9,7 @@ const { Component, useState, onWillStart } = owl;
 export class TimeOffDashboard extends Component {
     setup() {
         this.orm = useService("orm");
+        this.newRequest = useNewAllocationRequest();
         this.state = useState({
             holidays: [],
         });
@@ -19,7 +21,7 @@ export class TimeOffDashboard extends Component {
             await this.loadDashboardData();
         });
     }
-    
+
     async loadDashboardData() {
         const context = {};
         if (this.props.employeeId !== null) {
@@ -34,6 +36,9 @@ export class TimeOffDashboard extends Component {
                 context: context
             }
         );
+    }
+    async newAllocationRequest() {
+        await this.newRequest(this.props.employeeId);
     }
 }
 

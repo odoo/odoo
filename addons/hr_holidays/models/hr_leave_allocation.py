@@ -151,7 +151,9 @@ class HolidaysAllocation(models.Model):
     def _compute_is_officer(self):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
+    # Useless depends, so that name is computed on new, before saving the record
     @api.depends_context('uid')
+    @api.depends('holiday_status_id')
     def _compute_description(self):
         self.check_access_rights('read')
         self.check_access_rule('read')
@@ -162,11 +164,14 @@ class HolidaysAllocation(models.Model):
             if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 title = allocation.sudo().private_name
                 if allocation.env.context.get('is_employee_allocation'):
-                    allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                    title = _(" %s Allocation Request ( %s %s)" % (
-                        allocation.holiday_status_id.name,
-                        allocation_duration,
-                        allocation.type_request_unit))
+                    if allocation.holiday_status_id:
+                        allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
+                        title = _(" %s Allocation Request ( %s %s)" % (
+                            allocation.holiday_status_id.name,
+                            allocation_duration,
+                            allocation.type_request_unit))
+                    else:
+                        title = _("Allocation Request")
                 allocation.name = title
             else:
                 allocation.name = '*****'
@@ -589,6 +594,7 @@ class HolidaysAllocation(models.Model):
             if 'lastcall' not in values:
                 values['lastcall'] = fields.Date.today()
         holidays = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        created_from_dashboard = self.env.context.get('created_from_dashboard')
         for holiday in holidays:
             partners_to_subscribe = set()
             if holiday.employee_id.user_id:
@@ -600,6 +606,8 @@ class HolidaysAllocation(models.Model):
             if not self._context.get('import_file'):
                 holiday.activity_update()
             if holiday.validation_type == 'no' and holiday.state == 'draft':
+                holiday.action_confirm()
+            if created_from_dashboard:
                 holiday.action_confirm()
         return holidays
 

@@ -457,6 +457,7 @@ class HolidaysType(models.Model):
                 'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to) if self.closest_allocation_to_expire.date_to else False,
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
+                'id': self.id,
                 }, self.requires_allocation, self.id)
 
     def _get_contextual_employee_id(self):
