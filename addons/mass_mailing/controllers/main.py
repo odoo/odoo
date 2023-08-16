@@ -257,4 +257,4 @@ class MassMailController(http.Controller):
         We do this to avoid duplicating the template."""
         if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
             raise NotFound
-        return request.env['ir.qweb']._render('mass_mailing.iframe_css_assets_edit')
+        return request.env['ir.qweb']._get_asset_bundle('mass_mailing.iframe_css_assets_edit').preprocess_css()

@@ -29,7 +29,7 @@ export class MassMailingMobilePreviewDialog extends Dialog {
 
     _getSourceDocument() {
         return '<!DOCTYPE html><html>' +
-                    '<head>' + this.styleSheets + '</head>' +
+                    '<head>' + '<style>' + this.styleSheets + '</style>' + '</head>' +
                     '<body>' + this.props.preview + '</body>' +
                 '</html>';
     }
