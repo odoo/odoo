@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import Dialog from "@web/legacy/js/core/dialog";
-import options from "@web_editor/js/editor/snippets.options";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.mailing_list_subscribe = options.Class.extend({
     /**
@@ -14,17 +14,19 @@ options.registry.mailing_list_subscribe = options.Class.extend({
         if (this.mailingLists.length) {
             this.$target.attr("data-list-id", this.mailingLists[0][0]);
         } else {
-            Dialog.confirm(this, _t("No mailing list found, do you want to create a new one? This will save all your changes, are you sure you want to proceed?"), {
-                confirm_callback: () => {
-                    this.trigger_up('request_save', {
+            this.call("dialog", "add", ConfirmationDialog, {
+                body: _t("No mailing list found, do you want to create a new one? This will save all your changes, are you sure you want to proceed?"),
+                confirm: () => {
+                    this.trigger_up("request_save", {
                         reload: false,
                         onSuccess: () => {
-                            window.location.href = '/web#action=mass_mailing.action_view_mass_mailing_lists';
+                            window.location.href =
+                                "/web#action=mass_mailing.action_view_mass_mailing_lists";
                         },
                     });
                 },
-                cancel_callback: () => {
-                    this.trigger_up('remove_snippet', {
+                cancel: () => {
+                    this.trigger_up("remove_snippet", {
                         $snippet: this.$target,
                     });
                 },
