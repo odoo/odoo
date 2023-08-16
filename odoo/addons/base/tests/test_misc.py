@@ -473,3 +473,14 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCannotRead(__file__, ValueError, filter_ext=('.png',))
         # file doesnt exist but has wrong extension
         self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
+
+
+class TestDictTools(BaseCase):
+    def test_readonly_dict(self):
+        d = misc.ReadonlyDict({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            d['baz'] = 'xyz'
+        with self.assertRaises(AttributeError):
+            d.update({'baz': 'xyz'})
+        with self.assertRaises(TypeError):
+            dict.update(d, {'baz': 'xyz'})

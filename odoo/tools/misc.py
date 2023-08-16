@@ -1644,6 +1644,40 @@ pickle.dumps = pickle_.dumps
 pickle.HIGHEST_PROTOCOL = pickle_.HIGHEST_PROTOCOL
 
 
+class ReadonlyDict(Mapping):
+    """Helper for an unmodifiable dictionary, not even updatable using `dict.update`.
+
+    This is similar to a `frozendict`, with one drawback and one advantage:
+
+    - `dict.update` works for a `frozendict` but not for a `ReadonlyDict`.
+    - `json.dumps` works for a `frozendict` by default but not for a `ReadonlyDict`.
+
+    This comes from the fact `frozendict` inherits from `dict`
+    while `ReadonlyDict` inherits from `collections.abc.Mapping`.
+
+    So, depending on your needs,
+    whether you absolutely must prevent the dictionary from being updated (e.g., for security reasons)
+    or you require it to be supported by `json.dumps`, you can choose either option.
+
+        E.g.
+          data = ReadonlyDict({'foo': 'bar'})
+          data['baz'] = 'xyz' # raises exception
+          data.update({'baz', 'xyz'}) # raises exception
+          dict.update(data, {'baz': 'xyz'}) # raises exception
+    """
+    def __init__(self, data):
+        self.__data = dict(data)
+
+    def __getitem__(self, key):
+        return self.__data[key]
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+
 class DotDict(dict):
     """Helper for dot.notation access to dictionary attributes
 
