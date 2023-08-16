@@ -44,6 +44,8 @@ import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/u
  * @property {EdgeScrollingOptions} [edgeScrolling]
  * @property {number} [tolerance]
  * @property {DraggableHookCurrentContext} current
+ * @property {readonly boolean} dragging
+ * @property {boolean} willDrag
  *
  * @typedef DraggableHookCurrentContext
  * @property {HTMLElement} [current.container]
@@ -181,10 +183,9 @@ function getScrollParentY(el) {
 }
 
 /**
- * @param {Function} [defaultCleanupFn]
  * @returns {CleanupManager}
  */
-function makeCleanupManager(defaultCleanupFn) {
+function makeCleanupManager() {
     /**
      * Registers the given cleanup function to be called when cleaning up hooks.
      * @param {Function} [cleanupFn]
@@ -198,12 +199,9 @@ function makeCleanupManager(defaultCleanupFn) {
         while (cleanups.length) {
             cleanups.pop()();
         }
-        add(defaultCleanupFn);
     };
 
     const cleanups = [];
-
-    add(defaultCleanupFn);
 
     return { add, cleanup };
 }
@@ -465,6 +463,8 @@ export function makeDraggableHook(hookParams) {
              */
             const dragStart = () => {
                 state.dragging = true;
+                ctx.willDrag = false;
+                cleanup.add(() => (state.dragging = false));
 
                 // Compute scrollable parent
                 [ctx.current.scrollParentX, ctx.current.scrollParentY] = getScrollParents(
@@ -581,7 +581,7 @@ export function makeDraggableHook(hookParams) {
              * @param {KeyboardEvent} ev
              */
             const onKeyDown = (ev) => {
-                if (!state.dragging || !ctx.enable()) {
+                if (!(state.dragging || ctx.willDrag) || !ctx.enable()) {
                     return;
                 }
                 if (!WHITE_LISTED_KEYS.includes(ev.key)) {
@@ -640,7 +640,7 @@ export function makeDraggableHook(hookParams) {
 
                 ev.preventDefault();
 
-                if (!state.dragging) {
+                if (ctx.willDrag && !state.dragging) {
                     if (!canStartDrag()) {
                         return;
                     }
@@ -735,16 +735,20 @@ export function makeDraggableHook(hookParams) {
              * @param {Element} target
              */
             const willStartDrag = (target) => {
+                ctx.willDrag = true;
                 ctx.current.element = target.closest(ctx.elementSelector);
                 ctx.current.container = ctx.ref.el;
 
-                cleanup.add(() => (ctx.current = {}));
+                cleanup.add(() => {
+                    ctx.current = {};
+                    ctx.willDrag = false;
+                });
 
                 callBuildHandler("onWillStartDrag");
             };
 
             // Initialize helpers
-            const cleanup = makeCleanupManager(() => (state.dragging = false));
+            const cleanup = makeCleanupManager();
             const effectCleanup = makeCleanupManager();
             const dom = makeDOMHelpers(cleanup);
 
