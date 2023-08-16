@@ -813,6 +813,13 @@ blockquote {
                     border-color: $-btn-primary-color;
                 }
             }
+
+            // Forms
+            @if ($-bg-color == $light and $-bg-color != $body-bg) {
+                --o-input-bg: #{$body-bg};
+                --o-input-border-color: var(--o-border-color);
+                --o-input-placeholder-color: #{rgba(color-contrast($body-bg), .5)};
+            }
         }
     }
 }
