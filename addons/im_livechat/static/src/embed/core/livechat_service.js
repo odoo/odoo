@@ -2,6 +2,7 @@
 
 import { reactive } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -25,6 +26,11 @@ export const SESSION_STATE = Object.freeze({
     CREATED: "CREATED",
     PERSISTED: "PERSISTED",
 });
+
+export const ODOO_VERSION_KEY = `${location.origin.replace(
+    /:\/{0,2}/g,
+    "_"
+)}_im_livechat.odoo_version`;
 
 export class LivechatService {
     SESSION_COOKIE = "im_livechat_session";
@@ -53,6 +59,7 @@ export class LivechatService {
      * }} services
      */
     setup(env, services) {
+        this.env = env;
         this.cookie = services.cookie;
         this.busService = services.bus_service;
         this.rpc = services.rpc;
@@ -68,6 +75,19 @@ export class LivechatService {
             init = await this.rpc("/im_livechat/init", {
                 channel_id: this.options.channel_id,
             });
+            // Clear session if it is outdated.
+            const prevOdooVersion = browser.localStorage.getItem(ODOO_VERSION_KEY);
+            const currOdooVersion = init?.odoo_version;
+            const visitorUid = this.visitorUid || false;
+            const userId = session.user_id || false;
+            if (
+                prevOdooVersion !== currOdooVersion ||
+                (this.sessionCookie && visitorUid !== userId)
+            ) {
+                this.leaveSession();
+                this.state = SESSION_STATE.NONE;
+            }
+            browser.localStorage.setItem(ODOO_VERSION_KEY, currOdooVersion);
         }
         this.available = init?.available_for_me ?? this.available;
         this.rule = init?.rule ?? {};
@@ -145,22 +165,35 @@ export class LivechatService {
         let session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? false);
         if (session?.uuid && this.state === SESSION_STATE.NONE) {
             // Channel is already created on the server.
-            session.messages = await this.rpc("/im_livechat/chat_history", {
-                uuid: session.uuid,
-            });
-            session.messages.reverse();
-            this.busService.addChannel(session.uuid);
+            this.state = SESSION_STATE.PERSISTED;
+            const [messages] = await Promise.all([
+                this.rpc("/im_livechat/chat_history", {
+                    uuid: session.uuid,
+                }),
+                await this.initializePersistedSession(),
+            ]);
+            session.messages = messages.reverse();
         }
         if (!session || (!session.uuid && persisted)) {
             session = await this._createSession({ persisted });
-            if (session?.uuid) {
-                this.busService.addChannel(session.uuid);
+            if (this.state === SESSION_STATE.PERSISTED) {
+                await this.initializePersistedSession();
             }
         }
-        if (session) {
-            this.state = session?.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-        }
         return session;
+    }
+
+    async initializePersistedSession() {
+        await this.busService.updateContext({
+            ...this.busService.context,
+            guest_token: this.guestToken,
+        });
+        if (this.busService.isActive) {
+            this.busService.forceUpdateChannels();
+        } else {
+            await this.busService.start();
+        }
+        await this.env.services["mail.messaging"].initialize();
     }
 
     /**
@@ -198,8 +231,11 @@ export class LivechatService {
         return Boolean(this.cookie.current[this.SESSION_COOKIE]);
     }
 
-    get shouldDeleteSession() {
-        return this.sessionCookie && this.sessionCookie.visitor_uid !== session.user_id;
+    /**
+     * @returns {string|undefined}
+     */
+    get guestToken() {
+        return this.sessionCookie?.guest_token;
     }
 
     /**
@@ -221,10 +257,6 @@ export const livechatService = {
     dependencies: ["cookie", "notification", "rpc", "bus_service", "mail.store"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
-        if (livechat.shouldDeleteSession) {
-            livechat.leaveSession();
-            livechat.state = SESSION_STATE.NONE;
-        }
         if (livechat.available) {
             livechat.initialize();
         }

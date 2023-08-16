@@ -10,12 +10,13 @@ QUnit.module("messaging service (patch)");
 
 QUnit.test("Notify message received out of focus", async () => {
     const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.adminPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId }),
         ],
     });
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
@@ -28,14 +29,11 @@ QUnit.test("Notify message received out of focus", async () => {
             }),
         },
     });
-    await pyEnv.withUser(pyEnv.publicUserId, () =>
+    await pyEnv.withGuest(guestId, () =>
         env.services.rpc("/im_livechat/chat_post", {
             message_content: "Hello",
             uuid: channel.uuid,
         })
     );
-    await contains(".o_notification.border-info .o_notification_title", {
-        text: "New message",
-    });
     await contains(".o_notification.border-info .o_notification_content", { text: "Hello" });
 });

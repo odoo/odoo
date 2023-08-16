@@ -22,7 +22,6 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
     def test_channel_get_livechat_visitor_info(self):
         belgium = self.env.ref('base.be')
-        public_user = self.env.ref('base.public_user')
         test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'password': self.password, 'country_id': belgium.id})
 
         # ensure visitor info are correct with anonymous
@@ -42,19 +41,17 @@ class TestGetDiscussChannel(TestImLivechatCommon):
 
         # ensure member info are hidden (in particular email and real name when livechat username is present)
         # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
-        self.assertEqual(sorted(map(lambda m: m['persona']['partner'], channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
+        self.assertEqual(sorted((m['persona'].get('partner', m['persona'].get('guest')) for m in channel_info['channel']['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
+            'id': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
+            'name': 'Visitor',
+            'im_status': 'offline',
+        }, {
             'active': True,
             'country': [['clear']],
             'id': operator.partner_id.id,
             'is_bot': False,
             'is_public': False,
             'user_livechat_username': 'Michel Operator',
-        }, {
-            'active': False,
-            'id': public_user.partner_id.id,
-            'is_bot': False,
-            'is_public': True,
-            'name': 'Public user',
         }], key=lambda m: m['id']))
 
         # ensure visitor info are correct with real user
@@ -143,7 +140,6 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         return discuss_channels
 
     def test_channel_not_pinned_for_operator_before_first_message(self):
-        public_user = self.env.ref('base.public_user')
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'whatever', 'channel_id': self.livechat_channel.id})
         operator_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         self.assertEqual(len(operator_channel_member), 1, "operator should be member of channel")
@@ -155,7 +151,6 @@ class TestGetDiscussChannel(TestImLivechatCommon):
     def test_operator_livechat_username(self):
         """Ensures the operator livechat_username is returned by `_channel_fetch_message`, which is
         the method called by the public route displaying chat history."""
-        public_user = self.env.ref('base.public_user')
         operator = self.operators[0]
         operator.write({
             'email': 'michel@example.com',
@@ -164,14 +159,13 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'whatever', 'channel_id': self.livechat_channel.id})
         channel = self.env['discuss.channel'].browse(channel_info['id'])
         channel.with_user(operator).message_post(body='Hello', message_type='comment', subtype_xmlid='mail.mt_comment')
-        message_formats = channel.with_user(public_user).sudo()._channel_fetch_message()
+        message_formats = channel.with_user(None).sudo()._channel_fetch_message()
         self.assertEqual(len(message_formats), 1)
         self.assertEqual(message_formats[0]['author']['id'], operator.partner_id.id)
         self.assertEqual(message_formats[0]['author']['user_livechat_username'], operator.livechat_username)
         self.assertFalse(message_formats[0].get('email_from'), "should not send email_from to livechat user")
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
-        public_user = self.env.ref('base.public_user')
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         message = self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
@@ -183,7 +177,6 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
 
     def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
-        public_user = self.env.ref('base.public_user')
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
