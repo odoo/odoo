@@ -40,6 +40,8 @@ configuration of their taxes and fiscal positions manually.
         'views/l10n_fr_view.xml',
         'data/tax_report_data.xml',
         'data/res_country_data.xml',
+        'wizard/account_fr_fec_export_wizard_view.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
