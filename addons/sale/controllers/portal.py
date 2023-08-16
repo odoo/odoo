@@ -189,17 +189,11 @@ class CustomerPortal(portal.CustomerPortal):
             sale_order_id=order_sudo.id,
             **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if not logged in).
-        fees_by_provider = {
-            provider: provider._compute_fees(
-                amount, currency, partner.country_id
-            ) for provider in providers_sudo.filtered('fees_active')
-        }
         payment_form_values = {
             'providers': providers_sudo,
             'tokens': request.env['payment.token']._get_available_tokens(
                 providers_sudo.ids, partner.id, **kwargs
             ),
-            'fees_by_provider': fees_by_provider,
             'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
                 providers_sudo, sale_order_id=order_sudo.id
             ),

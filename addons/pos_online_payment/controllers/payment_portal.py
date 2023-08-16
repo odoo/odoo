@@ -128,13 +128,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         providers_sudo = self._get_allowed_providers_sudo(pos_order_sudo, partner_sudo.id, amount_to_pay)
 
-        # Compute the fees taken by providers supporting the feature
-        fees_by_provider = {
-            provider_sudo: provider_sudo._compute_fees(
-                amount_to_pay, currency_id, partner_sudo.country_id)
-            for provider_sudo in providers_sudo.filtered('fees_active')
-        }
-
         if logged_in:
             tokens_sudo = request.env['payment.token']._get_available_tokens(
                 providers_sudo.ids, partner_sudo.id)
@@ -147,7 +140,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
         rendering_context.update({
             'providers': providers_sudo,
             'tokens': tokens_sudo,
-            'fees_by_provider': fees_by_provider,
             'show_tokenize_input': show_tokenize_input,
             **self._get_custom_rendering_context_values(**kwargs),
         })

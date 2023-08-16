@@ -11,7 +11,6 @@ class PaypalCommon(PaymentCommon):
 
         cls.paypal = cls._prepare_provider('paypal', update_values={
             'paypal_email_account': 'dummy@test.mail.com',
-            'fees_active': False,
         })
 
         # Override default values
