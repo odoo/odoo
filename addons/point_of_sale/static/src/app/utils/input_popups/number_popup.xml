@@ -72,7 +72,7 @@
                 <t t-esc="props.title" />
             </header>
             <main>
-                <input type="text" t-model="state.payload" t-ref="input" class="value payment-input-number" inputmode="decimal">
+                <input type="text" t-model="state.payload" t-ref="input" class="value payment-input-number" inputmode="decimal"/>
             </main>
             <footer class="footer centered modal-footer">
                 <button class="button confirm highlight btn btn-lg btn-primary" t-on-mousedown.prevent="confirm">
