@@ -8,6 +8,7 @@ patch(Store.prototype, {
         super.setup(...arguments);
         this.livechatChannels = this.makeCachedFetchData({ livechat_channels: true });
         this.has_access_livechat = false;
+        this.chatbotData = this.makeCachedFetchData({ chatbots: true });
     },
     /**
      * @override

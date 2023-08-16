@@ -95,7 +95,7 @@ export class Chatbot extends Record {
         if (!this.thread || this.currentStep?.isLast) {
             return;
         }
-        if (this.steps.at(-1)?.eq(this.currentStep)) {
+        if (this.steps.at(-1)?.eq(this.currentStep) || !this.steps.length) {
             const storeData = await rpc("/chatbot/step/trigger", {
                 channel_id: this.thread.id,
                 chatbot_script_id: this.script.id,

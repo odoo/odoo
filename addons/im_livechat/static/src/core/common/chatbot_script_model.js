@@ -8,7 +8,5 @@ export class ChatbotScript extends Record {
     id;
     /** @type {string} */
     title;
-    isLivechatTourRunning = false;
-    operator_partner_id = Record.one("Persona");
 }
 ChatbotScript.register();

@@ -22,3 +22,5 @@ class WebClient(WebclientController):
             store.add(
                 request.env["im_livechat.channel"].search([]), fields=["are_you_inside", "name"]
             )
+        if kwargs.get("chatbots"):
+            store.add(request.env["chatbot.script"].search([]), fields=["title"])

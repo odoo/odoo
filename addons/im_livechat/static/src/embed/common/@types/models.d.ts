@@ -10,11 +10,15 @@ declare module "models" {
     export interface ChatbotStep extends ChatbotStepClass { }
     export interface Chatbot extends ChatbotClass { }
     export interface ChatbotScriptStepAnswer extends ChatbotScriptStepAnswerClass { }
-    export interface ChatbotScript extends ChatbotScriptClass { }
     export interface LivechatRule extends LivechatRuleClass { }
 
-    export interface ChatWindpw {
+    export interface ChatWindow {
         hasFeedbackPanel: boolean,
+    }
+
+    export interface ChatbotScript {
+        isLivechatTourRunning: boolean,
+        operator_partner_id: Persona,
     }
 
     export interface Message {
@@ -32,7 +36,6 @@ declare module "models" {
         "ChatbotStep": ChatbotStep,
         "Chatbot": Chatbot,
         "ChatbotScriptStepAnswer": ChatbotScriptStepAnswer,
-        "chatbot.script": ChatbotScript,
         "LivechatRule": LivechatRule,
     }
 }
