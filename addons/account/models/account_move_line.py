@@ -1655,11 +1655,16 @@ class AccountMoveLine(models.Model):
             * exchange_values:  The values to create an exchange difference linked to this partial.
         """
 
-        def get_odoo_rate(aml, currency):
+        def is_payment(aml):
+            return aml.move_id.payment_id or aml.move_id.statement_line_id
+
+        def get_odoo_rate(aml, other_aml, currency):
             if aml.move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = aml.move_id.invoice_date
             else:
                 exchange_rate_date = aml.date
+            if not is_payment(aml) and is_payment(other_aml):
+                exchange_rate_date = other_aml.date
             return currency._get_conversion_rate(aml.company_currency_id, currency, aml.company_id, exchange_rate_date)
 
         def get_accounting_rate(aml):
@@ -1703,7 +1708,7 @@ class AccountMoveLine(models.Model):
             # The credit line is using a foreign currency but not the opposite line.
             # In that case, convert the amount in company currency to the foreign currency one.
             recon_currency = credit_aml.currency_id
-            debit_rate = get_odoo_rate(debit_aml, recon_currency)
+            debit_rate = get_odoo_rate(debit_aml, credit_aml, recon_currency)
             credit_rate = get_accounting_rate(credit_aml)
             recon_debit_amount = recon_currency.round(remaining_debit_amount * debit_rate)
             recon_credit_amount = -remaining_credit_amount_curr
@@ -1725,7 +1730,7 @@ class AccountMoveLine(models.Model):
             # In that case, convert the amount in company currency to the foreign currency one.
             recon_currency = debit_aml.currency_id
             debit_rate = get_accounting_rate(debit_aml)
-            credit_rate = get_odoo_rate(credit_aml, recon_currency)
+            credit_rate = get_odoo_rate(credit_aml, debit_aml, recon_currency)
             recon_debit_amount = remaining_debit_amount_curr
             recon_credit_amount = recon_currency.round(-remaining_credit_amount * credit_rate)
 
