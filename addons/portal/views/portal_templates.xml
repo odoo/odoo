@@ -131,7 +131,7 @@
                     <div class="col-10">
                         <t t-call="portal.portal_breadcrumbs"></t>
                     </div>
-                    <div t-if="prev_record or next_record" class="col-2 flex-grow-0 text-center">
+                    <div t-if="prev_record or next_record" class="col-2 flex-grow-0 text-end">
                         <t t-call='portal.record_pager'/>
                     </div>
                 </div>
