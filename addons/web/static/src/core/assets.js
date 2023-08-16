@@ -113,21 +113,9 @@ export const _loadXML = (assets.loadXML = function loadXML(xml, app = defaultApp
     }
 
     for (const element of doc.querySelectorAll("templates > [t-name]")) {
-        const name = element.getAttribute("t-name");
-        const previous = templates.querySelector(`[t-name="${name}"]`);
-        if (previous) {
-            console.debug("Override template: " + name);
-            previous.replaceWith(element);
-        } else {
-            templates.documentElement.appendChild(element);
-        }
+        templates.documentElement.appendChild(element);
     }
-    if (app || defaultApp) {
-        console.debug("Add templates in Owl app.");
-        app.addTemplates(templates, app || defaultApp);
-    } else {
-        console.debug("Add templates on window Owl container.");
-    }
+    app?.addTemplates(templates, app);
 });
 /**
  * Update the default app to load templates.
