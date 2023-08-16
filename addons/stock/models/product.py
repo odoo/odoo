@@ -260,6 +260,11 @@ class Product(models.Model):
             else:
                 location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
 
+        if not location_ids:  # This should never happen
+            raise UserError(
+                _("No location matched the specification for warehouse=%s and location=%s") % (warehouse, location)
+            )
+
         return self._get_domain_locations_new(location_ids, compute_child=self.env.context.get('compute_child', True))
 
     def _get_domain_locations_new(self, location_ids, company_id=False, compute_child=True):

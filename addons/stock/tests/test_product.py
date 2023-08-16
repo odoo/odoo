@@ -276,3 +276,103 @@ class TestVirtualAvailable(TestStockCommon):
         res = self.env['product.template'].name_search(name='123', operator='not ilike')
         res_ids = [r[0] for r in res]
         self.assertNotIn(template.id, res_ids)
+
+    def test_qty_available_multi_warehouse_location_context(self):
+        """
+        Test computed quantities of a product with multiple warehouses and locations in context
+        """
+        warehouse1 = self.env["stock.warehouse"].create({"name": "Primary Warehouse", "code": "PWH",
+                                                         "delivery_steps": "pick_ship"})
+        wh1_location = warehouse1.lot_stock_id
+        wh1_sublocation = self.env["stock.location"].create({"name": "Sublocation", "location_id": wh1_location.id})
+
+        warehouse2 = self.env["stock.warehouse"].create({"name": "Secondary Warehouse", "code": "SWH"})
+        wh2_location = warehouse2.lot_stock_id
+        wh2_sublocation = self.env["stock.location"].create({"name": "Sublocation", "location_id": wh2_location.id})
+
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': wh1_location.id,
+            'quantity': 7.0})
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': wh1_sublocation.id,
+            'quantity': 2.0})
+
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': warehouse2.lot_stock_id.id,
+            'quantity': 5.0})
+        self.env['stock.quant'].create({
+            'product_id': self.product_3.id,
+            'location_id': wh2_sublocation.id,
+            'quantity': 10.0})
+
+        # Check if quantity at wh1 and wh1_loc is correct
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse1.id,
+                                                     location=wh1_location.id).qty_available, 9)
+
+        # Check wh1 and wh1_sublocation
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse1.id,
+                                                     location=wh1_sublocation.id).qty_available, 2)
+
+        # Check total in wh2
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse2.id,
+                                                     ).qty_available, 15)
+
+        # Check total in wh2_location
+        self.assertEqual(self.product_3.with_context(location=wh2_location.id,
+                                                     ).qty_available, 15)
+
+        # Check total in wh2 and wh2_location
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse2.id,
+                                                     location=wh2_location.id,
+                                                     ).qty_available, 15)
+
+        # Check total in wh2 and wh2_sublocation
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse2.id, location=wh2_sublocation.id
+                                                     ).qty_available, 10)
+
+        # Check total of all warehouses
+        self.assertEqual(self.product_3.qty_available, 64)
+
+        # Check if error raises, if there are no locations found based on wh2 and wh1_location
+        with self.assertRaises(UserError):
+            self.product_3.with_context(warehouse=warehouse2.id,
+                                        location=wh1_location.id).qty_available
+
+        warehouse1.delivery_route_id.rule_ids[0].procure_method = "mts_else_mto"
+
+        def _create_picking(quantity):
+            picking = self.env['stock.picking'].create({'picking_type_id': warehouse1.out_type_id.id,
+                                                        "location_id": warehouse1.wh_output_stock_loc_id.id,
+                                                        "location_dest_id": self.env.ref(
+                                                            "stock.stock_location_customers").id,
+                                                        })
+            move = self.env["stock.move"].create({
+                "name": "Test",
+                "location_id": warehouse1.wh_output_stock_loc_id.id,
+                "product_id": self.product_3.id,
+                "product_uom_qty": quantity,
+                "picking_id": picking.id,
+                'product_uom': self.product_3.uom_id.id,
+                "picking_type_id": warehouse1.pick_type_id.id,
+                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
+            })
+            move.route_ids = warehouse1.delivery_route_id
+            move.procure_method = "make_to_order"
+            return picking
+
+        # Confirming a 2-step picking with warehouse in context should correctly apply the stock rules
+        picking = _create_picking(5).with_context(warehouse=warehouse1.id)
+        picking.action_confirm()
+        picking.move_lines.move_orig_ids._action_assign()
+        self.assertEqual(picking.move_lines.move_orig_ids.move_line_ids.product_uom_qty, 5)
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse1.id).free_qty, 4)
+
+        # A location in context should not break applying the stock rules
+        picking2 = _create_picking(2).with_context(warehouse=warehouse1.id, location=wh2_location.id)
+        picking2.action_confirm()
+        picking2.move_lines.move_orig_ids._action_assign()
+        self.assertEqual(picking2.move_lines.move_orig_ids.move_line_ids.product_uom_qty, 7)
+        self.assertEqual(self.product_3.with_context(warehouse=warehouse1.id).free_qty, 2)
