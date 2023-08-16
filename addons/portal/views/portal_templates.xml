@@ -71,6 +71,7 @@
     <template id="language_selector" name="Language Selector">
         <t t-nocache="The query strings can change for the same page and the same rendering."
            t-nocache-no_text="no_text"
+           t-nocache-codes="codes"
            t-nocache-_div_classes="_div_classes"
            t-nocache-_btn_class="_btn_class"
            t-nocache-_dropdown_menu_class="_dropdown_menu_class">
@@ -81,6 +82,7 @@
                     <span t-if="not no_text"
                             class="align-middle"
                             t-esc="active_lang[2].split('/').pop()"/>
+                    <span t-elif="codes" class="align-middle" t-esc="active_lang[1].split('_').pop(0).upper()"/>
                 </button>
                 <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                     <t t-foreach="languages" t-as="lg">
@@ -88,6 +90,7 @@
                         t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
                         t-att-data-url_code="lg[1]">
                             <span t-if="not no_text" t-esc="lg[2].split('/').pop()"/>
+                            <span t-elif="codes" class="align-middle" t-esc="lg[1].split('_').pop(0).upper()"/>
                         </a>
                     </t>
                 </div>

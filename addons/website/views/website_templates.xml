@@ -1997,18 +1997,6 @@
         </t>
     </xpath>
 
-    <!-- Always show the language selector on editable websites -->
-    <xpath expr="//t[@t-set='language_selector_visible']" position="after">
-        <t t-set="language_selector_visible" t-value="language_selector_visible or (website and (editable or translatable))"/>
-    </xpath>
-
-    <!-- Add the button to add a language -->
-    <xpath expr="//t[@t-foreach='languages']" position="after">
-        <t t-call="website.language_selector_add_language">
-            <t t-set="dropdown" t-value="True"/>
-        </t>
-    </xpath>
-
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
@@ -2040,18 +2028,11 @@
             <span class="list-inline-item">|</span>
         </t>
     </xpath>
-    <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
-        <span class="o_add_language list-inline-item"
-            groups="website.group_website_restricted_editor">|</span>
-        <t t-call="website.language_selector_add_language">
-            <t t-set="dropdown" t-value="False"/>
-        </t>
-    </xpath>
 </template>
 
 <template id="placeholder_header_language_selector" name="Placeholder Header Language Selector"/>
 
-<template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
+<template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
         <t id="header_language_selector_call" t-call="portal.language_selector">
             <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
@@ -2065,9 +2046,15 @@
     </xpath>
 </template>
 
-<template id="header_language_selector_flag" name="Header Language Selector Flag" inherit_id="website.header_language_selector" active="True">
+<template id="header_language_selector_flag" name="Header Language Selector Flag" inherit_id="website.header_language_selector" active="False">
     <xpath expr="//t[@id='header_language_selector_call']" position="before">
         <t t-set="flags" t-value="True"/>
+    </xpath>
+</template>
+
+<template id="header_language_selector_code" name="Header Language Selector Code" inherit_id="website.header_language_selector" active="False">
+    <xpath expr="//t[@id='header_language_selector_call']" position="before">
+        <t t-set="codes" t-value="True"/>
     </xpath>
 </template>
 
@@ -2077,15 +2064,21 @@
     </xpath>
 </template>
 
-<template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="False">
+<template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="True">
     <xpath expr="//t[@id='language_selector_call']" position="replace">
         <t id="language_selector_call" t-call="website.language_selector_inline"/>
     </xpath>
 </template>
 
-<template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="portal.footer_language_selector" active="True">
+<template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="portal.footer_language_selector" active="False">
     <xpath expr="//t[@id='language_selector_call']" position="before">
         <t t-set="flags" t-value="True"/>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_code" name="Footer Language Selector Code" inherit_id="portal.footer_language_selector" active="False">
+    <xpath expr="//t[@id='language_selector_call']" position="before">
+        <t t-set="codes" t-value="True"/>
     </xpath>
 </template>
 

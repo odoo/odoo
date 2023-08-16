@@ -45,7 +45,38 @@ import { jsonrpc } from "@web/core/network/rpc_service";
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
 const resetOuids = OdooEditorLib.resetOuids;
-
+let _serviceCache = {
+    orm: {},
+    rpc: {},
+};
+const clearServiceCache = () => {
+    _serviceCache = {
+        orm: {},
+        rpc: {},
+    };
+};
+/**
+ * Caches rpc/orm service
+ * @param {Function} service
+ * @param  {...any} args
+ * @returns
+ */
+function serviceCached(service) {
+    const cache = _serviceCache;
+    return Object.assign(Object.create(service), {
+        call() {
+            const serviceName = Object.prototype.hasOwnProperty.call(service, "call")
+                ? "orm"
+                : "rpc";
+            const cacheId = JSON.stringify(arguments);
+            if (!cache[serviceName][cacheId]) {
+                cache[serviceName][cacheId] =
+                    serviceName == "rpc" ? service(...arguments) : service.call(...arguments);
+            }
+            return cache[serviceName][cacheId];
+        },
+    });
+}
 /**
  * @param {HTMLElement} el
  * @param {string} [title]
@@ -2596,10 +2627,6 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     }
 });
 
-let m2oRpcCache = {};
-const clearM2oRpcCache = () => {
-    m2oRpcCache = {};
-};
 const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
     events: Object.assign({}, SelectUserValueWidget.prototype.events, {
@@ -2621,7 +2648,6 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     init(parent, title, options, $target) {
         this.afterSearch = [];
         this.displayNameCache = {};
-        this._rpcCache = m2oRpcCache;
         const {dataAttributes} = options;
         Object.assign(options, {
             limit: '5',
@@ -2645,7 +2671,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         options.nullText = $target[0].dataset.nullText ||
             JSON.parse($target[0].dataset.oeContactOptions || '{}')['null_text'];
 
-        this.orm = this._withCache(this.bindService("orm"));
+        this.orm = serviceCached(this.bindService("orm"));
 
         return this._super(...arguments);
     },
@@ -2773,23 +2799,6 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Caches the rpc.
-     *
-     * @override
-     */
-    _withCache(orm) {
-        const cache = this._rpcCache;
-        return Object.assign(Object.create(orm), {
-            call() {
-                const cacheId = JSON.stringify(arguments);
-                if (!cache[cacheId]) {
-                    cache[cacheId] = orm.call(...arguments);
-                }
-                return cache[cacheId];
-            },
-        });
-    },
     /**
      * Searches the database for corresponding records and updates the dropdown
      *
@@ -9209,6 +9218,6 @@ export default {
     // Other names for convenience
     Class: SnippetOptionWidget,
     registry: registry,
-
-    clearM2oRpcCache,
+    serviceCached,
+    clearServiceCache,
 };

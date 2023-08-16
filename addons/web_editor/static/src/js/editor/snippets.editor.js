@@ -2109,7 +2109,7 @@ var SnippetsMenu = Widget.extend({
         this.el.ownerDocument.body.classList.remove('editor_has_snippets');
         // Dispose BS tooltips.
         this.tooltips.dispose();
-        options.clearM2oRpcCache();
+        options.clearServiceCache();
     },
 
     //--------------------------------------------------------------------------

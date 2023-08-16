@@ -1393,6 +1393,39 @@ options.registry.OptionsTab = options.Class.extend({
     /**
      * @see this.selectClass for parameters
      */
+    async addLanguage(previewMode, widgetValue, params) {
+        // Retrieve the website id to check by default the website checkbox in 
+        // the dialog box 'action_view_base_language_install'
+        const websiteId = this.options.context.website_id;
+        const save = await new Promise((resolve) => {
+            Dialog.confirm(
+                this,
+                _t("Adding a language requires to leave the editor. This will save all your changes, are you sure you want to proceed?"),
+                {
+                    confirm_callback: () => resolve(true),
+                    cancel_callback: () => resolve(false),
+                }
+            );
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up("request_save", {
+            reload: false,
+            action: "base.action_view_base_language_install",
+            options: {
+                additionalContext: {
+                    params: {
+                        website_id: websiteId,
+                        url_return: "[lang]",
+                    }
+                },
+            }
+        });
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
     async customizeButtonStyle(previewMode, widgetValue, params) {
         await this._customizeWebsiteVariables({
             [`btn-${params.button}-outline`]: widgetValue === 'outline',
@@ -2175,7 +2208,13 @@ options.registry.collapse = options.Class.extend({
 options.registry.WebsiteLevelColor = options.Class.extend({
     specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
         .concat(['customizeWebsiteLayer2Color']),
-
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._rpc = options.serviceCached(this.bindService("rpc"));
+    },
     /**
      * @see this.selectClass for parameters
      */
@@ -2218,6 +2257,24 @@ options.registry.WebsiteLevelColor = options.Class.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        const _super = this._super.bind(this);
+        if (
+            [
+                "footer_language_selector_label_opt",
+                "footer_language_selector_opt",
+            ].includes(widgetName)
+        ) {
+            this._languages = await this._rpc.call("/website/get_languages");
+            if (this._languages.length === 1) {
+                return false;
+            }
+        }
+        return _super(...arguments);
+    },
 });
 
 options.registry.HeaderLayout = options.registry.WebsiteLevelColor.extend({
@@ -2255,6 +2312,7 @@ options.registry.HeaderNavbar = options.Class.extend({
     init() {
         this._super(...arguments);
         this.setTarget(this.$target.closest('#wrapwrap > header'));
+        this._rpc = options.serviceCached(this.bindService("rpc"));
     },
 
     //--------------------------------------------------------------------------
@@ -2330,7 +2388,15 @@ options.registry.HeaderNavbar = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
+        const _super = this._super.bind(this);
         switch (widgetName) {
+            case "header_language_selector_label_opt":
+            case "header_language_selector_opt":
+                this._languages = await this._rpc.call("/website/get_languages");
+                if (this._languages.length === 1) {
+                    return false;
+                }
+                break;
             case 'option_logo_height_scrolled': {
                 return !!this.$('.navbar-brand').length;
             }
@@ -2346,7 +2412,7 @@ options.registry.HeaderNavbar = options.Class.extend({
             }
             return true;
         }
-        return this._super(...arguments);
+        return _super(...arguments);
     },
 });
 
