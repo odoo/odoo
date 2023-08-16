@@ -5160,6 +5160,44 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["notify"]);
     });
 
+    QUnit.test("delete all records matching the domain in groupBy", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["bar"],
+            allowSelectors: true,
+            mockRPC(route, args) {
+                if (args.method === "unlink") {
+                    assert.step(`unlink:${args.args[0]}`);
+                }
+            },
+            actionMenus: {},
+        });
+
+        // unfolding the first group
+        await click(target.querySelector(".o_group_header"));
+
+        // selecting all displayed elements
+        await click(target.querySelector("thead .o_list_record_selector input"));
+
+        // selecting the domain now
+        assert.containsOnce(target, ".o_list_selection_box .o_list_select_domain");
+        await click(target.querySelector(".o_list_selection_box .o_list_select_domain"));
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        assert.hasClass(
+            document.querySelector("body"),
+            "modal-open",
+            "body should have modal-open class"
+        );
+
+        await click(document, "body .modal footer button.btn-primary");
+        assert.verifySteps(["unlink:4", "unlink:1,2,3"]);
+    });
+
     QUnit.test("archiving one record", async function (assert) {
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
