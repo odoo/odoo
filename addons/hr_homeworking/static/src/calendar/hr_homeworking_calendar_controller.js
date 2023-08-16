@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -14,7 +15,7 @@ patch(AttendeeCalendarController.prototype, {
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {
         if ('rawRecord' in record && 'date' in record.rawRecord) {
             return this.action.doAction('hr_homeworking.hr_employee_location_action',{
-                name: this.env._t("Edit Record"),
+                name: _t("Edit Record"),
                 additionalContext: {
                     'default_start_date': serializeDate(record.start),
                     'default_end_date_create': serializeDate(record.end),
@@ -31,7 +32,7 @@ patch(AttendeeCalendarController.prototype, {
     createRecord(record) {
         if (record.homework) {
             return this.action.doAction('hr_homeworking.hr_employee_location_action',{
-                name: this.env._t("Create Record"),
+                name: _t("Create Record"),
                 additionalContext: {
                     'default_start_date': serializeDate(record.start),
                     'default_end_date_create': serializeDate(record.start),
@@ -51,8 +52,8 @@ patch(AttendeeCalendarController.prototype, {
                 this.openRecurringDeletionWizardForHomework(record);
             } else {
                 this.displayDialog(ConfirmationDialog, {
-                    title: this.env._t("Confirmation"),
-                    body: this.env._t("Are you sure you want to delete this work location?"),
+                    title: _t("Confirmation"),
+                    body: _t("Are you sure you want to delete this work location?"),
                     confirm: () => {
                         this.orm.call('hr.employee.location', "unlink", [
                             record.rawRecord.idInDB,

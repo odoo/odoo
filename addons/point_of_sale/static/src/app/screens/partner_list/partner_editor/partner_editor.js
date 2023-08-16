@@ -87,10 +87,8 @@ export class PartnerDetailsEdit extends Component {
         const file = event.target.files[0];
         if (!file.type.match(/image.*/)) {
             await this.popup.add(ErrorPopup, {
-                title: this.env._t("Unsupported File Format"),
-                body: this.env._t(
-                    "Only web-compatible Image formats such as .png or .jpeg are supported."
-                ),
+                title: _t("Unsupported File Format"),
+                body: _t("Only web-compatible Image formats such as .png or .jpeg are supported."),
             });
         } else {
             const imageUrl = await getDataURLFromFile(file);
@@ -133,8 +131,8 @@ export class PartnerDetailsEdit extends Component {
             img.addEventListener("load", () => resolve(img));
             img.addEventListener("error", () => {
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Loading Image Error"),
-                    body: this.env._t("Encountered error when loading image. Please try again."),
+                    title: _t("Loading Image Error"),
+                    body: _t("Encountered error when loading image. Please try again."),
                 });
                 resolve(false);
             });

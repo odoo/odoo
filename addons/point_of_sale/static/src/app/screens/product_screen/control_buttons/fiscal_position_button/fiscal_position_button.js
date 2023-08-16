@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
@@ -19,14 +20,14 @@ export class SetFiscalPositionButton extends Component {
     get currentFiscalPositionName() {
         return this.currentOrder && this.currentOrder.fiscal_position
             ? this.currentOrder.fiscal_position.display_name
-            : this.env._t("Tax");
+            : _t("Tax");
     }
     async click() {
         const currentFiscalPosition = this.currentOrder.fiscal_position;
         const fiscalPosList = [
             {
                 id: -1,
-                label: this.env._t("None"),
+                label: _t("None"),
                 isSelected: !currentFiscalPosition,
             },
         ];
@@ -43,7 +44,7 @@ export class SetFiscalPositionButton extends Component {
         const { confirmed, payload: selectedFiscalPosition } = await this.popup.add(
             SelectionPopup,
             {
-                title: this.env._t("Select Fiscal Position"),
+                title: _t("Select Fiscal Position"),
                 list: fiscalPosList,
             }
         );

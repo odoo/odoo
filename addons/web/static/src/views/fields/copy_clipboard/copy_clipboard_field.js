@@ -22,8 +22,8 @@ class CopyClipboardField extends Component {
     };
 
     setup() {
-        this.copyText = this.props.string || this.env._t("Copy");
-        this.successText = this.env._t("Copied");
+        this.copyText = this.props.string || _t("Copy");
+        this.successText = _t("Copied");
     }
 
     get copyButtonClassName() {

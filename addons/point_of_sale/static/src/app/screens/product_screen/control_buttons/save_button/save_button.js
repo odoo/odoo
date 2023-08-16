@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -15,11 +16,11 @@ export class SaveButton extends Component {
     onClick() {
         const orderline = this.pos.get_order().get_selected_orderline();
         if (!orderline) {
-            this.notification.add(this.env._t("You cannot save an empty order"), 3000);
+            this.notification.add(_t("You cannot save an empty order"), 3000);
             return;
         }
         this._selectEmptyOrder();
-        this.notification.add(this.env._t("Order saved for later"), 3000);
+        this.notification.add(_t("Order saved for later"), 3000);
     }
     _selectEmptyOrder() {
         const orders = this.pos.get_order_list();

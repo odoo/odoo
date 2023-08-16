@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "../utils/hooks";
 import { ConfirmationDialog } from "../confirmation_dialog/confirmation_dialog";
 
@@ -15,10 +16,7 @@ export class FileUploadProgressBar extends Component {
             return;
         }
         this.dialogService.add(ConfirmationDialog, {
-            body: this.env._t(
-                "Do you really want to cancel the upload of %s?",
-                this.props.fileUpload.title
-            ),
+            body: _t("Do you really want to cancel the upload of %s?", this.props.fileUpload.title),
             confirm: () => {
                 this.props.fileUpload.xhr.abort();
             },

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="calendar.AskRecurrenceUpdatePolicyDialog">
-        <Dialog size="'sm'" title="env._t('Edit Recurrent event')">
+        <t t-set="edit_recurrent_event">Edit Recurrent event</t>
+        <Dialog size="'sm'" title="edit_recurrent_event">
             <t t-foreach="Object.entries(possibleValues)" t-as="value" t-key="value[0]">
                 <t t-set="name" t-value="value[0]"/>
                 <t t-set="state" t-value="value[1]"/>

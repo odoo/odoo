@@ -3,6 +3,7 @@
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useComponent } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "./dynamic_placeholder_popover";
 
 export function useDynamicPlaceholder(elementRef) {
@@ -64,9 +65,7 @@ export function useDynamicPlaceholder(elementRef) {
     async function open(opts) {
         if (!model) {
             return notification.add(
-                ownerField.env._t(
-                    "You need to select a model before opening the dynamic placeholder selector."
-                ),
+                _t("You need to select a model before opening the dynamic placeholder selector."),
                 { type: "danger" }
             );
         }

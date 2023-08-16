@@ -274,7 +274,7 @@ export class MassMailingHtmlField extends HtmlField {
                 el.style.setProperty('pointer-events', 'none');
             });
             this.mobilePreview = this.dialog.add(MassMailingMobilePreviewDialog, {
-                title: this.env._t("Mobile Preview"),
+                title: _t("Mobile Preview"),
                 preview: mailingHtml.body.innerHTML,
             }, {
                 onClose: () => $previewBtn.prop('disabled', false),
@@ -382,7 +382,7 @@ export class MassMailingHtmlField extends HtmlField {
             const $editable = this.wysiwyg.$editable.find('.o_editable');
             this.$editorMessageElements = $editable
                 .not('[data-editor-message]')
-                .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
+                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             $editable.filter(':empty').attr('contenteditable', false);
 
             // Wait the next tick because some mutation have to be processed by

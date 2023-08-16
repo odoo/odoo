@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
@@ -37,7 +38,7 @@ export class MediaDialog extends Component {
     setup() {
         this.size = 'xl';
         this.contentClass = 'o_select_media_dialog';
-        this.title = this.env._t("Select a media");
+        this.title = _t("Select a media");
 
         this.rpc = useService('rpc');
         this.orm = useService('orm');

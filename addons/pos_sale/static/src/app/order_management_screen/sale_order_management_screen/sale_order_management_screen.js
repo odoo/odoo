@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -92,17 +93,17 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
     }
     async onClickSaleOrder(clickedOrder) {
         const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
-            title: this.env._t("What do you want to do?"),
+            title: _t("What do you want to do?"),
             list: [
-                { id: "0", label: this.env._t("Settle the order"), item: "settle" },
+                { id: "0", label: _t("Settle the order"), item: "settle" },
                 {
                     id: "1",
-                    label: this.env._t("Apply a down payment (percentage)"),
+                    label: _t("Apply a down payment (percentage)"),
                     item: "dpPercentage",
                 },
                 {
                     id: "2",
-                    label: this.env._t("Apply a down payment (fixed amount)"),
+                    label: _t("Apply a down payment (fixed amount)"),
                     item: "dpAmount",
                 },
             ],
@@ -124,7 +125,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     getId(linkedSO.partner_shipping_id) !== getId(sale_order.partner_shipping_id)
                 ) {
                     currentPOSOrder = this.pos.add_new_order();
-                    this.notification.add(this.env._t("A new order has been created."), 4000);
+                    this.notification.add(_t("A new order has been created."), 4000);
                 }
             }
 
@@ -140,8 +141,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 try {
                     await this.pos._loadPartners([sale_order.partner_id[0]]);
                 } catch {
-                    const title = this.env._t("Customer loading error");
-                    const body = this.env._t(
+                    const title = _t("Customer loading error");
+                    const body = _t(
                         "There was a problem in loading the %s customer.",
                         sale_order.partner_id[1]
                     );
@@ -176,12 +177,12 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
                     const { confirmed } = await this.popup.add(ConfirmPopup, {
-                        title: this.env._t("Products not available in POS"),
-                        body: this.env._t(
+                        title: _t("Products not available in POS"),
+                        body: _t(
                             "Some of the products in your Sale Order are not available in POS, do you want to import them?"
                         ),
-                        confirmText: this.env._t("Yes"),
-                        cancelText: this.env._t("No"),
+                        confirmText: _t("Yes"),
+                        cancelText: _t("No"),
                     });
                     if (confirmed) {
                         await this.pos._addProducts(product_to_add_in_pos);
@@ -232,12 +233,12 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         const { confirmed } =
                             useLoadedLots === undefined
                                 ? await this.popup.add(ConfirmPopup, {
-                                      title: this.env._t("SN/Lots Loading"),
-                                      body: this.env._t(
+                                      title: _t("SN/Lots Loading"),
+                                      body: _t(
                                           "Do you want to load the SN/Lots linked to the Sales Order?"
                                       ),
-                                      confirmText: this.env._t("Yes"),
-                                      cancelText: this.env._t("No"),
+                                      confirmText: _t("Yes"),
+                                      cancelText: _t("No"),
                                   })
                                 : { confirmed: useLoadedLots };
                         useLoadedLots = confirmed;
@@ -271,9 +272,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         this.pos.config.down_payment_product_id[0]
                     );
                     if (!down_payment_product) {
-                        await this.pos._addProducts([
-                            this.pos.config.down_payment_product_id[0],
-                        ]);
+                        await this.pos._addProducts([this.pos.config.down_payment_product_id[0]]);
                         down_payment_product = this.pos.db.get_product_by_id(
                             this.pos.config.down_payment_product_id[0]
                         );
@@ -293,12 +292,12 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     let popupInputSuffix = "";
                     const popupTotalDue = sale_order.amount_total;
                     let getInputBufferReminder = () => false;
-                    const popupSubtitle = this.env._t("Due balance: %s");
+                    const popupSubtitle = _t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
-                        popupTitle = this.env._t("Down Payment");
+                        popupTitle = _t("Down Payment");
                         popupInputSuffix = this.pos.currency.symbol;
                     } else {
-                        popupTitle = this.env._t("Down Payment");
+                        popupTitle = _t("Down Payment");
                         popupInputSuffix = "%";
                         getInputBufferReminder = (buffer) => {
                             if (buffer && buffer.length > 0) {
@@ -335,7 +334,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
-                        const errorBody = this.env._t(
+                        const errorBody = _t(
                             "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line.",
                             this.env.utils.formatCurrency(down_payment),
                             this.env.utils.formatCurrency(sale_order.amount_unpaid),
@@ -365,8 +364,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     new_line.set_unit_price(down_payment);
                     this.pos.get_order().add_orderline(new_line);
                 } else {
-                    const title = this.env._t("No down payment product");
-                    const body = this.env._t(
+                    const title = _t("No down payment product");
+                    const body = _t(
                         "It seems that you didn't configure a down payment product in your point of sale.\
                         You can go to your point of sale configuration to choose one."
                     );

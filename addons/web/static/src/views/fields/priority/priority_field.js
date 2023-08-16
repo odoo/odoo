@@ -27,7 +27,7 @@ export class PriorityField extends Component {
     }
 
     get commands() {
-        const commandName = this.env._t("Set priority...");
+        const commandName = _t("Set priority...");
         return [
             [
                 commandName,

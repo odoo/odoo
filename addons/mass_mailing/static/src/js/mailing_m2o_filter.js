@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Domain } from '@web/core/domain';
 import { registry } from '@web/core/registry';
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -132,7 +133,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
         const filterName = filterInput.value.trim();
         if (filterName.length === 0) {
             this.notification.add(
-                this.env._t("Please provide a name for the filter"),
+                _t("Please provide a name for the filter"),
                 {type: 'danger'}
             );
             // Keep the drop-down open, and re-focus the input

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import weUtils from '@web_editor/js/common/utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
@@ -60,12 +61,12 @@ export class ImageSelector extends FileSelector {
         this.state.showOptimized = false;
         this.NUMBER_OF_MEDIA_TO_DISPLAY = 10;
 
-        this.uploadText = this.env._t("Upload an image");
+        this.uploadText = _t("Upload an image");
         this.urlPlaceholder = "https://www.odoo.com/logo.png";
-        this.addText = this.env._t("Add URL");
-        this.searchPlaceholder = this.env._t("Search an image");
-        this.urlWarningTitle = this.env._t("Uploaded image's format is not supported. Try with: " + IMAGE_EXTENSIONS.join(', '));
-        this.allLoadedText = this.env._t("All images have been loaded");
+        this.addText = _t("Add URL");
+        this.searchPlaceholder = _t("Search an image");
+        this.urlWarningTitle = _t("Uploaded image's format is not supported. Try with: " + IMAGE_EXTENSIONS.join(', '));
+        this.allLoadedText = _t("All images have been loaded");
         this.showOptimizedOption = this.env.debug;
         this.MIN_ROW_HEIGHT = 128;
 

@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-const { useComponent, useEnv } = owl;
+const { useComponent } = owl;
 
 export function useArchiveEmployee() {
     const component = useComponent();
-    const env = useEnv();
     const action = useService("action");
     return (id) => {
         action.doAction({
             type: 'ir.actions.act_window',
-            name: env._t('Employee Termination'),
+            name: _t('Employee Termination'),
             res_model: 'hr.departure.wizard',
             views: [[false, 'form']],
             view_mode: 'form',

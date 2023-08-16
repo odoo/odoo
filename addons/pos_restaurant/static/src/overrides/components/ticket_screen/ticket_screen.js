@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -36,7 +38,7 @@ patch(TicketScreen.prototype, {
         return Object.assign({}, super._getSearchFields(...arguments), {
             TABLE: {
                 repr: this.getTable.bind(this),
-                displayName: this.env._t("Table"),
+                displayName: _t("Table"),
                 modelField: "table_id.name",
             },
         });
@@ -118,8 +120,8 @@ patch(TicketScreen.prototype, {
         const result = super._getOrderStates(...arguments);
         if (this.pos.config.set_tip_after_payment) {
             result.delete("PAYMENT");
-            result.set("OPEN", { text: this.env._t("Open"), indented: true });
-            result.set("TIPPING", { text: this.env._t("Tipping"), indented: true });
+            result.set("OPEN", { text: _t("Open"), indented: true });
+            result.set("TIPPING", { text: _t("Tipping"), indented: true });
         }
         return result;
     },

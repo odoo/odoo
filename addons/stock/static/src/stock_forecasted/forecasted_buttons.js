@@ -1,4 +1,6 @@
 /** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 const { Component} = owl;
 
@@ -32,7 +34,7 @@ export class ForecastedButtons extends Component {
 
         const action = {
             res_model: 'product.replenish',
-            name: this.env._t('Product Replenish'),
+            name: _t('Product Replenish'),
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',

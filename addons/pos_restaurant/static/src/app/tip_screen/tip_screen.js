@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
@@ -51,8 +52,8 @@ export class TipScreen extends Component {
 
         if (!serverId) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Unsynced order"),
-                body: this.env._t(
+                title: _t("Unsynced order"),
+                body: _t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
                 ),
             });
@@ -143,8 +144,8 @@ export class TipScreen extends Component {
             window.print();
         } catch {
             await this.popup.add(ErrorPopup, {
-                title: this.env._t("Printing is not supported on some browsers"),
-                body: this.env._t(
+                title: _t("Printing is not supported on some browsers"),
+                body: _t(
                     "Printing is not supported on some browsers due to no default printing protocol " +
                         "is available. It is possible to print your tickets by making use of an IoT Box."
                 ),

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { FormController } from "@web/views/form/form_controller";
 import { TodoEditableBreadcrumbName } from "@project_todo/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name";
 import { TodoDoneCheckmark } from "@project_todo/components/todo_done_checkmark/todo_done_checkmark";
@@ -29,7 +30,7 @@ export class TodoFormController extends FormController {
 
         if (this.projectAccess) {
             filteredActions.push({
-                description: this.env._t("Convert to Task"),
+                description: _t("Convert to Task"),
                 callback: () => {
                     this.model.action.doAction(
                         "project_todo.project_task_action_convert_todo_to_task",

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
 import { OnlinePaymentPopup } from "@pos_online_payment/app/utils/online_payment_popup/online_payment_popup";
@@ -21,8 +22,8 @@ patch(PaymentScreen.prototype, {
             amount = line.get_amount();
             if (amount <= 0) {
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Invalid online payment"),
-                    body: this.env._t(
+                    title: _t("Invalid online payment"),
+                    body: _t(
                         "Online payments cannot have a negative amount (%s: %s).",
                         line.payment_method.name,
                         this.env.utils.formatCurrency(amount)
@@ -34,8 +35,8 @@ patch(PaymentScreen.prototype, {
         }
         if (!floatIsZero(unpaidAmount - remainingAmount, this.pos.currency.decimal_places)) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Invalid online payments"),
-                body: this.env._t(
+                title: _t("Invalid online payments"),
+                body: _t(
                     "The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s).",
                     this.env.utils.formatCurrency(remainingAmount),
                     this.env.utils.formatCurrency(unpaidAmount)
@@ -99,8 +100,8 @@ patch(PaymentScreen.prototype, {
             if (!qrCodeData || qrCodeData.length == 0) {
                 this.cancelOnlinePayment(this.currentOrder);
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Online payment unavailable"),
-                    body: this.env._t("The QR Code for paying could not be generated."),
+                    title: _t("Online payment unavailable"),
+                    body: _t("The QR Code for paying could not be generated."),
                 });
                 return false;
             }
@@ -113,8 +114,8 @@ patch(PaymentScreen.prototype, {
                 lastOrderServerOPData = await this.currentOrder.update_online_payments_data_with_server(this.pos.orm, onlinePaymentLineAmount);
                 if (!lastOrderServerOPData) {
                     this.popup.add(ErrorPopup, {
-                        title: this.env._t("Online payment unavailable"),
-                        body: this.env._t("There is a problem with the server. The order online payment status cannot be retrieved."),
+                        title: _t("Online payment unavailable"),
+                        body: _t("There is a problem with the server. The order online payment status cannot be retrieved."),
                     });
                     return false;
                 }
@@ -152,9 +153,9 @@ patch(PaymentScreen.prototype, {
             const orderServerOPData = await this.currentOrder.update_online_payments_data_with_server(this.pos.orm, 0);
             if (!orderServerOPData) {
                 const { confirmed } = await this.popup.add(ConfirmPopup, {
-                    title: this.env._t("Online payment unavailable"),
-                    body: this.env._t("There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"),
-                    confirmText: this.env._t("Yes"),
+                    title: _t("Online payment unavailable"),
+                    body: _t("There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"),
+                    confirmText: _t("Yes"),
                 });
                 if (!confirmed) {
                     return false;
@@ -178,14 +179,14 @@ patch(PaymentScreen.prototype, {
     },
     showSaveOrderOnServerErrorPopup() {
         this.popup.add(ErrorPopup, {
-            title: this.env._t("Online payment unavailable"),
-            body: this.env._t("There is a problem with the server. The order cannot be saved and therefore the online payment is not possible."),
+            title: _t("Online payment unavailable"),
+            body: _t("There is a problem with the server. The order cannot be saved and therefore the online payment is not possible."),
         });
     },
     showModifiedOnlinePaymentsPopup() {
         this.popup.add(ErrorPopup, {
-            title: this.env._t("Updated online payments"),
-            body: this.env._t("There are online payments that were missing in your view."),
+            title: _t("Updated online payments"),
+            body: _t("There are online payments that were missing in your view."),
         });
     },
     async showOnlinePaymentQrCode(qrCodeData, amount) {
@@ -212,8 +213,8 @@ patch(PaymentScreen.prototype, {
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Server error"),
-                body: this.env._t("The saved order could not be retrieved."),
+                title: _t("Server error"),
+                body: _t("The saved order could not be retrieved."),
             });
             return;
         }
@@ -232,8 +233,8 @@ patch(PaymentScreen.prototype, {
         const updatedOrder = this.pos.createReactiveOrder(orderJSON);
         if (!updatedOrder || this.currentOrder.server_id !== updatedOrder.backendId) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Order saving issue"),
-                body: this.env._t("The order has not been saved correctly on the server."),
+                title: _t("Order saving issue"),
+                body: _t("The order has not been saved correctly on the server."),
             });
             return;
         }
@@ -253,8 +254,8 @@ patch(PaymentScreen.prototype, {
         if (isInvoiceRequested) {
             if (!this.currentOrder.account_move) {
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Invoice could not be generated"),
-                    body: this.env._t("The invoice could not be generated."),
+                    title: _t("Invoice could not be generated"),
+                    body: _t("The invoice could not be generated."),
                 });
             } else {
                 await this.report.download("account.account_invoices", [

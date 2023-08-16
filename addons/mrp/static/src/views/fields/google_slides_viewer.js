@@ -45,7 +45,7 @@ export class SlidesViewer extends CharField {
 
     onLoadFailed() {
         this.state.isValid = false;
-        this.notification.add(this.env._t("Could not display the selected spreadsheet"), {
+        this.notification.add(_t("Could not display the selected spreadsheet"), {
             type: "danger",
         });
     }

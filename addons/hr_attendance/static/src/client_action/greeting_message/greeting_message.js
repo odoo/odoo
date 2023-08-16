@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { Component, onWillStart, onWillUnmount, useState } from "@odoo/owl";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -72,7 +73,7 @@ export class GreetingMessage extends Component {
                 .toFormat("hh-mm")
                 .split("-");
 
-            this.hours_today = this.env._t("%(hours)s hours, %(minutes)s minutes", {
+            this.hours_today = _t("%(hours)s hours, %(minutes)s minutes", {
                 hours: duration[0],
                 minutes: duration[1],
             });
@@ -133,7 +134,6 @@ export class GreetingMessage extends Component {
     }
 
     setWelcomeMessage() {
-        const { _t } = this.env;
         const now = this.attendance.check_in;
         if (now.hour < 5) {
             this.state.message = _t("Good night");
@@ -169,7 +169,6 @@ export class GreetingMessage extends Component {
     }
 
     setFarewellMessage() {
-        const { _t } = this.env;
         const now = this.attendance.check_out;
 
         if (this.previous_attendance_change_date) {

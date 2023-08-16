@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -104,7 +105,7 @@ export class TraceabilityReport extends Component {
         this.actionService.doAction({
             type: "ir.actions.client",
             tag: "stock_report_generic",
-            name: this.env._t("Traceability Report"),
+            name: _t("Traceability Report"),
             context: {
                 active_id: line.model_id,
                 active_model: line.model,

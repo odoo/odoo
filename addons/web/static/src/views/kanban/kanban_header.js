@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Component, useRef } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -76,14 +77,14 @@ export class KanbanHeader extends Component {
     }
 
     _getEmptyGroupLabel(fieldName) {
-        return this.env._t("None");
+        return _t("None");
     }
 
     get groupName() {
         const { groupByField, displayName } = this.group;
         let name = displayName;
         if (groupByField.type === "boolean") {
-            name = name ? this.env._t("Yes") : this.env._t("No");
+            name = name ? _t("Yes") : _t("No");
         } else if (!name) {
             if (
                 isRelational(groupByField) ||
@@ -133,9 +134,7 @@ export class KanbanHeader extends Component {
 
     archiveGroup() {
         this.dialog.add(ConfirmationDialog, {
-            body: this.env._t(
-                "Are you sure that you want to archive all the records from this column?"
-            ),
+            body: _t("Are you sure that you want to archive all the records from this column?"),
             confirm: async () => {
                 await this.group.list.archive();
                 this.props.progressBarState?.updateCounts(this.group);
@@ -151,11 +150,11 @@ export class KanbanHeader extends Component {
 
     deleteGroup() {
         this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this column?"),
+            body: _t("Are you sure you want to delete this column?"),
             confirm: async () => {
                 this.props.deleteGroup(this.group);
             },
-            confirmLabel: this.env._t("Delete"),
+            confirmLabel: _t("Delete"),
             cancel: () => {},
         });
     }
@@ -167,7 +166,7 @@ export class KanbanHeader extends Component {
                 context,
                 resId: value,
                 resModel: groupByField.relation,
-                title: this.env._t("Edit: %s", displayName),
+                title: _t("Edit: %s", displayName),
                 onRecordSaved: async () => {
                     await this.props.list.load();
                     this.props.list.model.notify();

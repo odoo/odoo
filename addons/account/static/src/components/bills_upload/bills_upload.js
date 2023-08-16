@@ -105,7 +105,7 @@ export class AccountDropZone extends Component {
             uploadInput.dispatchEvent(new Event("change"));
         } else {
             this.notificationService.add(
-                this.env._t("Could not upload files"),
+                _t("Could not upload files"),
                 {
                     type: "danger",
                 });

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -328,7 +329,7 @@ export class KanbanRenderer extends Component {
         if (this.exampleData && this.exampleData.ghostColumns) {
             colNames = this.exampleData.ghostColumns;
         } else {
-            colNames = [1, 2, 3, 4].map((num) => this.env._t("Column %s", num));
+            colNames = [1, 2, 3, 4].map((num) => _t("Column %s", num));
         }
         return colNames.map((colName) => ({
             name: colName,

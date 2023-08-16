@@ -1,12 +1,13 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
-import { GS1BarcodeError } from '@barcodes_gs1_nomenclature/js/barcode_parser';
+import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 
 export class BarcodeReader {
     static serviceDependencies = ["popup", "hardware_proxy"];
@@ -130,7 +131,9 @@ export const barcodeReaderService = {
                 orm,
                 session.fallback_nomenclature_id
             );
-            barcodeReader.fallbackParser = new BarcodeParser({ nomenclature: fallbackNomenclature });
+            barcodeReader.fallbackParser = new BarcodeParser({
+                nomenclature: fallbackNomenclature,
+            });
         }
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
@@ -138,8 +141,8 @@ export const barcodeReaderService = {
                 barcodeReader.scan(ev.detail.barcode);
             } else {
                 popup.add(ErrorPopup, {
-                    title: env._t("Unable to parse barcode"),
-                    body: env._t(
+                    title: _t("Unable to parse barcode"),
+                    body: _t(
                         "No barcode nomenclature has been configured. This can be changed in the configuration settings."
                     ),
                 });

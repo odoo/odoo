@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
@@ -157,7 +158,7 @@ export class PivotRenderer extends Component {
     onDownloadButtonClicked() {
         if (this.model.getTableWidth() > 16384) {
             throw new Error(
-                this.env._t(
+                _t(
                     "For Excel compatibility, data cannot be exported if there are more than 16384 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."
                 )
             );

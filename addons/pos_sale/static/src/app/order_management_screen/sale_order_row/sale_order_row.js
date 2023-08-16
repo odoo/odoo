@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -52,11 +54,11 @@ export class SaleOrderRow extends Component {
     }
     get state() {
         const state_mapping = {
-            draft: this.env._t("Quotation"),
-            sent: this.env._t("Quotation Sent"),
-            sale: this.env._t("Sales Order"),
-            done: this.env._t("Locked"),
-            cancel: this.env._t("Cancelled"),
+            draft: _t("Quotation"),
+            sent: _t("Quotation Sent"),
+            sale: _t("Sales Order"),
+            done: _t("Locked"),
+            cancel: _t("Cancelled"),
         };
 
         return state_mapping[this.order.state];

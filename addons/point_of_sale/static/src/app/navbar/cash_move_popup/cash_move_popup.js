@@ -40,11 +40,11 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             if (!(err instanceof InvalidNumberError)) {
                 throw err;
             }
-            this.state.errorMessage = this.env._t("Invalid amount");
+            this.state.errorMessage = _t("Invalid amount");
             return;
         }
         if (amount < 0) {
-            this.state.errorMessage = this.env._t("Insert a positive amount");
+            this.state.errorMessage = _t("Insert a positive amount");
             return;
         }
         const formattedAmount = this.env.utils.formatCurrency(amount);
@@ -92,7 +92,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         }
         this.props.close();
         this.notification.add(
-            this.env._t("Successfully made a cash %s of %s.", type, formattedAmount),
+            _t("Successfully made a cash %s of %s.", type, formattedAmount),
             3000
         );
     }
@@ -114,6 +114,8 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.amountInput.el.focus();
     }
     format(value) {
-        return this.env.utils.isValidFloat(value) ? this.env.utils.formatCurrency(parseFloat(value)) : "!!!";
+        return this.env.utils.isValidFloat(value)
+            ? this.env.utils.formatCurrency(parseFloat(value))
+            : "!!!";
     }
 }

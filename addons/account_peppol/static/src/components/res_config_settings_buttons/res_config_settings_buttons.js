@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -55,8 +56,8 @@ class PeppolSettingsButtons extends Component {
     }
 
     showConfirmation(warning, methodName) {
-        const message = this.env._t(warning);
-        const confirmMessage = this.env._t("You will not be able to send or receive Peppol documents in Odoo anymore. Are you sure you want to proceed?");
+        const message = _t(warning);
+        const confirmMessage = _t("You will not be able to send or receive Peppol documents in Odoo anymore. Are you sure you want to proceed?");
         this.dialogService.add(ConfirmationDialog, {
             body: markup(
                 `<div class="text-danger">${escape(message)}</div>
@@ -90,7 +91,7 @@ class PeppolSettingsButtons extends Component {
         // changes on both the client side and the iap side need to be saved within one method
         await this._callConfigMethod("button_update_peppol_user_data", true);
         this.notification.add(
-            this.env._t("Contact details were updated."),
+            _t("Contact details were updated."),
             { type: "success" }
         );
     }

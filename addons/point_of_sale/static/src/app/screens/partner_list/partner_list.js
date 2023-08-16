@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
@@ -127,14 +128,11 @@ export class PartnerListScreen extends Component {
         const result = await this.searchPartner();
         if (result.length > 0) {
             this.notification.add(
-                this.env._t('%s customer(s) found for "%s".', result.length, this.state.query),
+                _t('%s customer(s) found for "%s".', result.length, this.state.query),
                 3000
             );
         } else {
-            this.notification.add(
-                this.env._t('No more customer found for "%s".', this.state.query),
-                3000
-            );
+            this.notification.add(_t('No more customer found for "%s".', this.state.query), 3000);
         }
     }
     _clearSearch() {

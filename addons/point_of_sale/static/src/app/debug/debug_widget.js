@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { constrain, getLimits, useMovable } from "@point_of_sale/app/utils/movable_hook";
@@ -93,8 +94,8 @@ export class DebugWidget extends Component {
     }
     async deleteOrders() {
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Delete Paid Orders?"),
-            body: this.env._t(
+            title: _t("Delete Paid Orders?"),
+            body: _t(
                 "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
             ),
         });
@@ -105,8 +106,8 @@ export class DebugWidget extends Component {
     }
     async deleteUnpaidOrders() {
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Delete Unpaid Orders?"),
-            body: this.env._t(
+            title: _t("Delete Unpaid Orders?"),
+            body: _t(
                 "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
             ),
         });
@@ -132,7 +133,10 @@ export class DebugWidget extends Component {
         }
     }
     get paidOrdersFilename() {
-        return `${this.env._t("paid orders")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
+        return `${_t("paid orders")} ${serializeDateTime(DateTime.now()).replace(
+            /:|\s/gi,
+            "-"
+        )}.json`;
     }
     get paidOrdersURL() {
         var URL = window.URL || window.webkitURL;
@@ -148,7 +152,10 @@ export class DebugWidget extends Component {
         }
     }
     get unpaidOrdersFilename() {
-        return `${this.env._t("unpaid orders")} ${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
+        return `${_t("unpaid orders")} ${serializeDateTime(DateTime.now()).replace(
+            /:|\s/gi,
+            "-"
+        )}.json`;
     }
     get unpaidOrdersURL() {
         var URL = window.URL || window.webkitURL;

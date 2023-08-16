@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { patch } from "@web/core/utils/patch";
@@ -25,9 +26,7 @@ patch(ProductScreen.prototype, {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
                 this.notification.add(
-                    this.env._t(
-                        "You cannot set negative quantity or price to gift card or ewallet."
-                    ),
+                    _t("You cannot set negative quantity or price to gift card or ewallet."),
                     4000
                 );
                 return;
@@ -41,13 +40,13 @@ patch(ProductScreen.prototype, {
         ) {
             const reward = this.pos.reward_by_id[selectedLine.reward_id];
             const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Deactivating reward"),
-                body: this.env._t(
+                title: _t("Deactivating reward"),
+                body: _t(
                     "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button.",
                     reward.description
                 ),
-                cancelText: this.env._t("No"),
-                confirmText: this.env._t("Yes"),
+                cancelText: _t("No"),
+                confirmText: _t("Yes"),
             });
             if (confirmed) {
                 buffer = null;
