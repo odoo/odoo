@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, Command
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class Website(models.Model):
@@ -11,7 +12,8 @@ class Website(models.Model):
 
     channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel')
 
-    def get_livechat_channel_info(self):
+    @add_guest_to_context
+    def _get_livechat_channel_info(self):
         """ Get the livechat info dict (button text, channel name, ...) for the livechat channel of
             the current website.
         """
@@ -44,6 +46,17 @@ class Website(models.Model):
                 ('has_message', '=', True)
             ], order='create_date desc', limit=1)
             if chat_request_channel:
+                if not visitor.partner_id:
+                    current_guest = self.env['mail.guest']._get_guest_from_context()
+                    channel_guest = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
+                    if current_guest and current_guest != channel_guest:
+                        # Channel was created with a guest but the visitor was
+                        # linked to another guest in the meantime. We need to
+                        # update the channel to link it to the current guest.
+                        channel_guest_member = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id == current_guest)
+                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member), Command.link(current_guest)]})
+                    if not current_guest:
+                        channel_guest._set_auth_cookie()
                 return {
                     "folded": False,
                     "id": chat_request_channel.id,

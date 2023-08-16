@@ -59,12 +59,12 @@ class TestMailPublicPage(HttpCase):
     def test_discuss_channel_public_page_as_guest(self):
         self.start_tour(self.channel.invitation_url, "mail/static/tests/tours/discuss_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
-        self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"})
+        self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
     def test_mail_group_public_page_as_guest(self):
         self.start_tour(self.group.invitation_url, "mail/static/tests/tours/discuss_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
-        self.start_tour(self.group.invitation_url, self.tour, cookies={guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"})
+        self.start_tour(self.group.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
     def test_discuss_channel_public_page_as_internal(self):
         self._open_channel_page_as_user('demo')

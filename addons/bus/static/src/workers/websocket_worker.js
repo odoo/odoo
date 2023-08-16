@@ -63,7 +63,7 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         // Context to be attached to each websocket request
         this._context = {};
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300, true);
+        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
 
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);

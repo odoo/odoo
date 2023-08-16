@@ -45,7 +45,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
 
     def test_empty_chat_request_flow_no_rating_no_close_ui(self):
         # Open an empty chat request
-        self.visitor_tour.with_user(self.operator).action_send_chat_request()
+        self.visitor_tour.with_user(self.operator).sudo().action_send_chat_request()
         chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
 
         # Visitor ask a new livechat session before the operator start to send message in chat request session
@@ -62,7 +62,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
 
     def test_chat_request_flow_with_rating_ui(self):
         # Open a chat request
-        self.visitor_tour.with_user(self.operator).action_send_chat_request()
+        self.visitor_tour.with_user(self.operator).sudo().action_send_chat_request()
         chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
 
         # Operator send a message to the visitor
@@ -78,7 +78,8 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel, chat_request, "The active livechat session must be the chat request one.")
 
         # Visitor reload the page and continues the chat with the operator normally
-        self.start_tour("/", 'website_livechat_chat_request_part_2_end_session_tour')
+        guest = channel.channel_member_ids.filtered(lambda m: m.guest_id).guest_id
+        self.start_tour("/", 'website_livechat_chat_request_part_2_end_session_tour', cookies={guest._cookie_name: guest._format_auth_cookie()})
         self._check_end_of_rating_tours()
 
     def _check_end_of_rating_tours(self):

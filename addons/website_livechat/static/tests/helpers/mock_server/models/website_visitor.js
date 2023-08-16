@@ -18,8 +18,6 @@ patch(MockServer.prototype, {
             const membersToAdd = [[0, 0, { partner_id: this.pyEnv.currentPartnerId }]];
             if (visitor.partner_id) {
                 membersToAdd.push([0, 0, { partner_id: visitor.partner_id }]);
-            } else {
-                membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
             }
             const livechatId = this.pyEnv["discuss.channel"].create({
                 anonymous_name: visitor_name,
@@ -27,6 +25,9 @@ patch(MockServer.prototype, {
                 channel_type: "livechat",
                 livechat_operator_id: this.pyEnv.currentPartnerId,
             });
+            if (!visitor.partner_id) {
+                this._mockMailGuest__findOrCreateForChannel(livechatId, `Visitor #${visitor.id}`);
+            }
             // notify operator
             this.pyEnv["bus.bus"]._sendone(
                 this.pyEnv.currentPartner,

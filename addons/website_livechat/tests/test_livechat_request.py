@@ -32,7 +32,7 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
         })
 
         # Open Chat Request
-        self.visitor.with_user(self.operator_b).action_send_chat_request()
+        self.visitor.with_user(self.operator_b).sudo().action_send_chat_request()
         chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
 
@@ -49,7 +49,7 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Operator for active livechat session must be Michel Operator")
 
     def _common_chat_request_flow(self):
-        self.visitor.with_user(self.operator).action_send_chat_request()
+        self.visitor.with_user(self.operator).sudo().action_send_chat_request()
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         self.assertEqual(len(channel), 1)
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Michel Operator should be the operator of this channel.")

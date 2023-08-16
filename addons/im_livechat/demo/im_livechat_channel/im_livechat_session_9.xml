@@ -14,13 +14,16 @@
             <field name="channel_id" ref="im_livechat.livechat_channel_session_9"/>
             <field name="is_pinned">False</field>
         </record>
-        <record id="im_livechat.livechat_channel_session_9_member_public" model="discuss.channel.member">
-            <field name="partner_id" ref="base.public_partner"/>
+        <record id="im_livechat.livechat_channel_session_9_guest" model="mail.guest">
+            <field name="name">Visitor</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_9_member_guest" model="discuss.channel.member">
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_9"/>
         </record>
 
         <record id="livechat_channel_session_9_message_1" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
@@ -41,7 +44,7 @@
             <field name="model">discuss.channel</field>
         </record>
         <record id="livechat_channel_session_9_message_3" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
@@ -62,7 +65,7 @@
             <field name="model">discuss.channel</field>
         </record>
         <record id="livechat_channel_session_9_message_5" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-42)"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-42)"/>
@@ -73,7 +76,7 @@
             <field name="model">discuss.channel</field>
         </record>
         <record id="livechat_channel_session_9_message_6" model="mail.message">
-            <field name="author_id" eval="False"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
@@ -86,7 +89,7 @@
         <record id="livechat_channel_session_9_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
-            <field name="author_id" ref="base.public_partner"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_9_guest"/>
             <field name="subtype_id" ref="mail.mt_note"/>
             <field eval="datetime.now() - timedelta(days=1, seconds=-60)" name="date"/>
         </record>

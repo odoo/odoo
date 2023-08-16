@@ -4,9 +4,10 @@ from markupsafe import Markup
 import re
 from werkzeug.exceptions import NotFound
 
-from odoo import http, tools, _
+from odoo import http, tools, _, release
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class LivechatController(http.Controller):
@@ -101,6 +102,7 @@ class LivechatController(http.Controller):
                 chatbot_script = matching_rule.chatbot_script_id
                 rule.update({'chatbot': chatbot_script._format_for_frontend()})
         return {
+            'odoo_version': release.version,
             'available_for_me': (rule and rule.get('chatbot'))
                                 or operator_available and (not rule or rule['action'] != 'hide_button'),
             'rule': rule,
@@ -138,7 +140,11 @@ class LivechatController(http.Controller):
             placeholder='mail/static/src/img/smiley/avatar.jpg',
         ).get_response()
 
-    @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
+    def _get_guest_name(self):
+        return _("Visitor")
+
+    @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public', cors="*")
+    @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         user_id = None
         country_id = None
@@ -161,16 +167,39 @@ class LivechatController(http.Controller):
         if chatbot_script_id:
             frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
             chatbot_script = request.env['chatbot.script'].sudo().with_context(lang=frontend_lang).browse(chatbot_script_id)
-
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_discuss_channel(
+        channel_vals = request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_livechat_discuss_channel_vals(
             anonymous_name,
             previous_operator_id=previous_operator_id,
             chatbot_script=chatbot_script,
             user_id=user_id,
             country_id=country_id,
-            persisted=persisted,
             lang=request.httprequest.cookies.get('frontend_lang')
         )
+        if not channel_vals:
+            return False
+        if not persisted:
+            operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
+            display_name = operator_partner.user_livechat_username or operator_partner.display_name
+            return {
+                'name': channel_vals['name'],
+                'chatbot_current_step_id': channel_vals['chatbot_current_step_id'],
+                'state': 'open',
+                'operator_pid': (operator_partner.id, display_name.replace(',', '')),
+                'chatbot_script_id': chatbot_script.id if chatbot_script else None
+            }
+        channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
+        __, guest = channel._find_or_create_persona_for_channel(
+            guest_name=self._get_guest_name(),
+            country_code=request.geoip.country_code,
+            timezone=request.env['mail.guest']._get_timezone_from_request(request),
+            post_joined_message=False
+        )
+        if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
+            channel._broadcast([channel.livechat_operator_id.id])
+        channel_info = channel._channel_info()[0]
+        if guest:
+            channel_info['guest_token'] = guest._format_auth_cookie()
+        return channel_info
 
     def _post_feedback_message(self, channel, rating, reason):
         reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
@@ -254,35 +283,6 @@ class LivechatController(http.Controller):
         discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)])
         if discuss_channel:
             discuss_channel._close_livechat_session()
-
-    @http.route('/im_livechat/chat_post', type="json", auth="public", cors="*")
-    def im_livechat_chat_post(self, uuid, message_content, context=None):
-        if context:
-            request.update_context(**context)
-        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
-        if not channel:
-            return False
-        # find the author from the user session
-        if request.session.uid:
-            author = request.env['res.users'].sudo().browse(request.session.uid).partner_id
-            author_id = author.id
-            email_from = author.email_formatted
-        else:  # If Public User, use catchall email from company
-            author_id = False
-            email_from = channel.anonymous_name or channel.create_uid.company_id.catchall_formatted
-        # post a message without adding followers to the channel. email_from=False avoid to get author from email data
-        body = Markup(message_content) # contains html such as links.
-        message = channel.with_context(mail_create_nosubscribe=True).message_post(
-            author_id=author_id,
-            email_from=email_from,
-            body=body,
-            message_type='comment',
-            subtype_xmlid='mail.mt_comment'
-        )
-        message_format = message.message_format()[0]
-        if 'temporary_id' in request.context:
-            message_format['temporary_id'] = request.env.context['temporary_id']
-        return message.message_format()[0] if message else False
 
     @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
     def im_livechat_chat_history(self, uuid, last_id=False, limit=20):

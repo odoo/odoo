@@ -14,12 +14,13 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
         name: "James",
         user_ids: [userId],
     });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         name: "Visitor 20",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -49,11 +50,12 @@ QUnit.test("Available operators come first", async () => {
     pyEnv["im_livechat.channel"].create({
         available_operator_ids: [Command.create({ partner_id: ronId })],
     });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #1",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
     });
@@ -78,21 +80,23 @@ QUnit.test("Partners invited most frequently by the current user come first", as
         im_status: "offline",
         user_ids: [pyEnv["res.users"].create({ name: "Albert" })],
     });
+    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #1",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId_1 }),
         ],
         livechat_operator_id: pyEnv.currentPartnerId,
     });
+    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #2",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId_2 }),
         ],
         livechat_operator_id: pyEnv.currentPartnerId,
     });

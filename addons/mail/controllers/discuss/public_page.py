@@ -1,15 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
 from psycopg2 import IntegrityError
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.tools.misc import get_lang
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
@@ -86,58 +83,24 @@ class PublicPageController(http.Controller):
         discuss_public_view_data = {
             "isChannelTokenSecret": is_channel_token_secret,
         }
-        add_guest_cookie = False
-        channel_member_sudo = channel_sudo.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=channel_sudo.id)
-        if channel_member_sudo:
-            channel_sudo = channel_member_sudo.channel_id  # ensure guest is in context
-        else:
-            if not channel_sudo.env.user._is_public():
-                try:
-                    channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
-                except UserError:
-                    raise NotFound()
-            else:
-                guest = channel_sudo.env["mail.guest"]._get_guest_from_context()
-                if guest:
-                    channel_sudo = channel_sudo.with_context(guest=guest)
-                    try:
-                        channel_sudo.add_members(guest_ids=[guest.id])
-                    except UserError:
-                        raise NotFound()
-                else:
-                    if channel_sudo.group_public_id:
-                        raise NotFound()
-                    guest = channel_sudo.env["mail.guest"].create(
-                        {
-                            "country_id": channel_sudo.env["res.country"]
-                            .search([("code", "=", request.geoip.country_code)], limit=1)
-                            .id,
-                            "lang": get_lang(channel_sudo.env).code,
-                            "name": _("Guest"),
-                            "timezone": channel_sudo.env["mail.guest"]._get_timezone_from_request(request),
-                        }
-                    )
-                    add_guest_cookie = True
-                    discuss_public_view_data.update(
-                        {
-                            "addGuestAsMemberOnJoin": True,
-                            "shouldDisplayWelcomeViewInitially": True,
-                        }
-                    )
-                channel_sudo = channel_sudo.with_context(guest=guest)
+        guest_already_known = channel_sudo.env["mail.guest"]._get_guest_from_context().exists()
+        __, guest = channel_sudo._find_or_create_persona_for_channel(
+            guest_name=_("Guest"),
+            country_code=request.geoip.country_code,
+            timezone=request.env['mail.guest']._get_timezone_from_request(request),
+            add_as_member=guest_already_known or not channel_sudo.env.user._is_public(),
+        )
+        if guest and not guest_already_known:
+            discuss_public_view_data.update(
+                {
+                    "addGuestAsMemberOnJoin": True,
+                    "shouldDisplayWelcomeViewInitially": True,
+                }
+            )
+        channel_sudo = channel_sudo.with_context(guest=guest)
         response = self._response_discuss_public_template(
             channel_sudo=channel_sudo, discuss_public_view_data=discuss_public_view_data
         )
-        if add_guest_cookie:
-            # Discuss Guest ID: every route in this file will make use of it to authenticate
-            # the guest through `_get_as_sudo_from_context` or `_get_as_sudo_from_context_or_raise`.
-            expiration_date = datetime.now() + timedelta(days=365)
-            response.set_cookie(
-                guest._cookie_name,
-                f"{guest.id}{guest._cookie_separator}{guest.access_token}",
-                httponly=True,
-                expires=expiration_date,
-            )
         return response
 
     def _response_discuss_public_template(self, channel_sudo, discuss_public_view_data=None):

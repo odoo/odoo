@@ -68,8 +68,6 @@ class WebsiteVisitor(models.Model):
             members_to_add = [Command.link(operator.partner_id.id)]
             if visitor.partner_id:
                 members_to_add.append(Command.link(visitor.partner_id.id))
-            else:
-                members_to_add.append(Command.link(self.env.ref('base.public_partner').id))
             discuss_channel_vals_list.append({
                 'channel_partner_ids': members_to_add,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
@@ -81,8 +79,16 @@ class WebsiteVisitor(models.Model):
                 'livechat_visitor_id': visitor.id,
                 'livechat_active': True,
             })
-        if discuss_channel_vals_list:
             discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
+            for channel in discuss_channels:
+                if not channel.livechat_visitor_id.partner_id:
+                    self.env['mail.guest']._find_or_create_for_channel(
+                        channel,
+                        country_id=country.id,
+                        name=_("Visitor #%d") % channel.livechat_visitor_id.id,
+                        post_joined_message=False,
+                        timezone=visitor.timezone
+                    )
             # Open empty chatter to allow the operator to start chatting with the visitor.
             channel_members = self.env['discuss.channel.member'].sudo().search([
                 ('partner_id', '=', self.env.user.partner_id.id),

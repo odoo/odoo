@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests.common import users
+from odoo.tests.common import users, HttpCase
 
 
-class TestLivechatLead(TestCrmCommon):
+class TestLivechatLead(HttpCase, TestCrmCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestLivechatLead, cls).setUpClass()
 
-        cls.user_anonymous = mail_new_test_user(
-            cls.env, login='user_anonymous',
-            name='Anonymous Website', email=False,
-            company_id=cls.company_main.id,
-            notification_type='email',
-            groups='base.group_public',
-        )
+        cls.env['bus.presence'].create({'user_id': cls.user_sales_leads.id, 'status': 'online'})
+        cls.livechat_channel = cls.env['im_livechat.channel'].create({
+            'name': 'Test Livechat Channel',
+            'user_ids': [Command.link(cls.user_sales_leads.id)],
+        })
         cls.user_portal = mail_new_test_user(
             cls.env, login='user_portal',
             name='Paulette Portal', email='user_portal@test.example.com',
@@ -31,16 +30,16 @@ class TestLivechatLead(TestCrmCommon):
     def test_crm_lead_creation_guest(self):
         """ Test customer set on lead: not if public, guest if not public """
         # public: should not be set as customer
-        channel = self.env['discuss.channel'].create({
-            'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.user_anonymous.partner_id.id)]
+        channel_info = self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'Visitor',
+            'channel_id': self.livechat_channel.id,
+            'persisted': True,
         })
+        channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
-        self.assertEqual(
-            channel.channel_partner_ids,
-            self.user_sales_leads.partner_id | self.user_anonymous.partner_id
-        )
+        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
+        self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
         self.assertEqual(lead.name, 'TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
@@ -48,18 +47,16 @@ class TestLivechatLead(TestCrmCommon):
         # 'base.public_user' is archived by default
         self.assertFalse(self.env.ref('base.public_user').active)
 
-        channel = self.env['discuss.channel'].create({
-            'name': 'Chat with Visitor',
-            'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)]
+        channel_info = self.make_jsonrpc_request("/im_livechat/get_session", {
+            'anonymous_name': 'Visitor',
+            'channel_id': self.livechat_channel.id,
+            'persisted': True,
         })
+        channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
-        self.assertEqual(
-            channel.channel_member_ids.partner_id,
-            self.user_sales_leads.partner_id | self.env.ref('base.public_partner')
-        )
-        self.assertEqual(lead.name, 'TestLead command')
-        self.assertEqual(lead.partner_id, self.env['res.partner'])
+        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
+        self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
 
         # public + someone else: no customer (as they were anonymous)
         channel.write({

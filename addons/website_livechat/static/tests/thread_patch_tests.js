@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("thread (patch)");
@@ -17,11 +18,12 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     pyEnv["website.visitor"].write([visitorId], {
         display_name: `Visitor #${visitorId}`,
     });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: `Visitor #${visitorId}`,
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -36,7 +38,10 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     );
     assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    assert.containsOnce($, `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`);
+    assert.containsOnce(
+        $,
+        `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`
+    );
     assert.containsOnce($, "span:contains(English)");
     assert.containsOnce($, "span>:contains(General website)");
     assert.containsOnce($, "span:contains(Home → Contact)");
@@ -53,11 +58,12 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
         lang_name: "English",
         website_name: "General website",
     });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #11" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,

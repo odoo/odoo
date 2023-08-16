@@ -81,13 +81,39 @@ patch(MockServer.prototype, {
                 anonymous_name = anonymous_name + " (" + country.name + ")";
             }
         }
-        return this._mockImLivechatChannel_openLivechatDiscussChannel(
+        const channelVals = this._mockImLivechatChannel_getLivechatDiscussChannelVals(
             channel_id,
             anonymous_name,
             previous_operator_id,
             country_id,
             persisted
         );
+        if (!channelVals) {
+            return false;
+        }
+        if (!persisted) {
+            const [operatorPartner] = this.pyEnv["res.partner"].searchRead([
+                ["id", "=", channelVals.livechat_operator_id],
+            ]);
+            const [operator] = this.pyEnv["res.users"].searchRead([
+                ["partner_id", "=", operatorPartner.id],
+            ]);
+            return {
+                name: channelVals["name"],
+                chatbot_current_step_id: channelVals.chatbot_current_step_id,
+                state: "open",
+                operator_pid: [operatorPartner.id, operator.name],
+            };
+        }
+        const channelId = this.pyEnv["discuss.channel"].create(channelVals);
+        this._mockDiscussChannel__findOrCreatePersonaForChannel(
+            channelId,
+            this._mock__getGuestName()
+        );
+        return this._mockDiscussChannelChannelInfo([channelId])[0];
+    },
+    _mock__getGuestName() {
+        return "Visitor";
     },
     /**
      * Simulates the `/im_livechat/notify_typing` route.

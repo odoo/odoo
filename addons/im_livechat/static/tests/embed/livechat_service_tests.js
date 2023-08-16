@@ -12,10 +12,12 @@ QUnit.module("livechat service");
 QUnit.test("persisted session history", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    pyEnv.cookie.set("dgid", guestId);
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.adminPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,

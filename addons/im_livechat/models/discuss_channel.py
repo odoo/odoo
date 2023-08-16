@@ -42,23 +42,6 @@ class DiscussChannel(models.Model):
             if record.channel_type == 'livechat':
                 record.is_chat = True
 
-    def _channel_message_notifications(self, message, message_format=False):
-        """ When a anonymous user create a discuss.channel, the operator is not notify (to avoid massive polling when
-            clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
-            should be added to the notification, since the user cannot be listining to the channel.
-        """
-        notifications = super()._channel_message_notifications(message=message, message_format=message_format)
-        for channel in self:
-            # add uuid to allow anonymous to listen
-            if channel.channel_type == 'livechat':
-                notifications.append([channel.uuid, 'discuss.channel/new_message', notifications[0][2]])
-        if not message.author_id:
-            unpinned_members = self.channel_member_ids.filtered(lambda member: not member.is_pinned)
-            if unpinned_members:
-                unpinned_members.write({'is_pinned': True})
-                notifications = self._channel_channel_notifications(unpinned_members.partner_id.ids) + notifications
-        return notifications
-
     def _channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)

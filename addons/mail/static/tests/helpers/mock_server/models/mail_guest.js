@@ -18,7 +18,7 @@ patch(MockServer.prototype, {
             },
             current_partner: false,
             current_user_id: false,
-            current_user_settings: false,
+            current_user_settings: {},
             hasGifPickerFeature: true,
             hasLinkPreviewFeature: true,
             initBusId: this.lastBusNotificationId,

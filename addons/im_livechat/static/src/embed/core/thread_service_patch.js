@@ -1,9 +1,6 @@
 /* @odoo-module */
 
-import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
-
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
-import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { markup } from "@odoo/owl";
 
@@ -36,57 +33,51 @@ patch(ThreadService.prototype, {
         this.chatWindowService = services["mail.chat_window"];
         this.chatbotService = services["im_livechat.chatbot"];
         this.notification = services.notification;
+        /** @type {Promise<import("@mail/core/common/thread_model").Thread>?} */
+        this.persistPromise = null;
     },
 
-    getMessagePostRoute(thread) {
-        if (thread.type !== "livechat") {
-            return super.getMessagePostRoute(...arguments);
+    /**
+     * Persist the given thread  and swap it with the temporary thread.
+     *
+     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @returns {import("@mail/core/common/thread_model").Thread} The
+     * persisted thread.
+     */
+    async persistThread(thread) {
+        if (thread.id !== this.TEMPORARY_ID) {
+            return thread;
         }
-        return "/im_livechat/chat_post";
-    },
-
-    async getMessagePostParams({ thread, body }) {
-        if (thread.type !== "livechat") {
-            return super.getMessagePostParams(...arguments);
+        if (this.persistPromise) {
+            return this.persistPromise;
         }
-        return {
-            uuid: thread.uuid,
-            message_content: await prettifyMessageContent(body),
-        };
+        this.persistPromise = this.getLivechatThread({ persisted: true });
+        const persistedThread = await this.persistPromise;
+        const chatWindow = this.store.ChatWindow.records.find(
+            (c) => c.threadLocalId === thread.localId
+        );
+        if (!persistedThread) {
+            this.chatWindowService.close(chatWindow);
+            this.remove(thread);
+            return;
+        }
+        chatWindow.thread = persistedThread;
+        this.remove(thread);
+        if (this.chatbotService.active) {
+            await this.chatbotService.postWelcomeSteps();
+        }
+        return persistedThread;
     },
 
     /**
      * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === thread.localId
-        );
-        if (
-            this.livechatService.state !== SESSION_STATE.PERSISTED &&
-            thread.localId === this.livechatService.thread?.localId
-        ) {
-            // replace temporary thread by the persisted one.
-            const temporaryThread = thread;
-            thread = await this.getLivechatThread({ persisted: true });
-            if (!thread) {
-                this.chatWindowService.close(chatWindow);
-                this.remove(temporaryThread);
-                return;
-            }
-            chatWindow.thread = thread;
-            this.remove(temporaryThread);
-            if (this.chatbotService.active) {
-                await this.chatbotService.postWelcomeSteps();
-            }
-        }
-        const message = await super.post(thread, body, params);
-        if (!message) {
-            this.notificationService.add(_t("Session expired... Please refresh and try again."));
-            this.chatWindowService.close(chatWindow);
-            this.livechatService.leaveSession({ notifyServer: false });
+        thread = await this.persistThread(thread);
+        if (!thread) {
             return;
         }
+        const message = await super.post(thread, body, params);
         this.chatbotService.bus.trigger("MESSAGE_POST", message);
         return message;
     },

@@ -7,6 +7,7 @@ from hashlib import sha512
 from markupsafe import Markup
 from secrets import choice
 from markupsafe import Markup
+from werkzeug.exceptions import NotFound
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
@@ -240,7 +241,7 @@ class Channel(models.Model):
             partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
             # is_pinned + ensure they have rights to see channel
-            if not self.env.context.get('install_mode'):
+            if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
             vals['channel_member_ids'] = membership_ids_cmd + [
                 (0, 0, {'partner_id': pid})
@@ -406,8 +407,9 @@ class Channel(models.Model):
                         notification = (Markup('<div class="o_mail_notification">%s</div>') % _("invited %s to the channel")) % member.partner_id._get_html_link()
                     member.channel_id.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
             for member in new_members.filtered(lambda member: member.guest_id):
-                member.channel_id.message_post(body=Markup('<div class="o_mail_notification">%s</div>') % _('joined the channel'),
-                    message_type="notification", subtype_xmlid="mail.mt_comment")
+                if post_joined_message:
+                    member.channel_id.message_post(body=Markup('<div class="o_mail_notification">%s</div>') % _('joined the channel'),
+                        message_type="notification", subtype_xmlid="mail.mt_comment")
                 guest = member.guest_id
                 if guest:
                     notifications.append((guest, 'discuss.channel/joined', {
@@ -746,6 +748,40 @@ class Channel(models.Model):
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+
+    def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, add_as_member=True, post_joined_message=True):
+        """
+        :param channel: channel to add the persona to
+        :param guest_name: name of the persona
+        :param add_as_member: whether to add the persona as a member of the channel
+        :param post_joined_message: whether to post a message to the channel
+            to notify that the persona joined
+        :return tuple(partner, guest):
+        """
+        self.ensure_one()
+        guest = None
+        member = self.env["discuss.channel.member"]._get_as_sudo_from_context(channel_id=self.id)
+        if member:
+            return member.partner_id, member.guest_id
+        if not self.env.user._is_public() and add_as_member:
+            try:
+                self.add_members([self.env.user.partner_id.id], post_joined_message=post_joined_message)
+            except UserError:
+                raise NotFound()
+        elif self.env.user._is_public():
+            is_guest_known = self.env["mail.guest"]._get_guest_from_context().exists()
+            country_id = self.env["res.country"].search([("code", "=", country_code)], limit=1).id
+            guest = self.env["mail.guest"]._find_or_create_for_channel(
+                add_as_member=add_as_member,
+                channel=self,
+                country_id=country_id,
+                name=guest_name,
+                post_joined_message=post_joined_message,
+                timezone=timezone,
+            )
+            if not is_guest_known:
+                guest._set_auth_cookie()
+        return self.env.user.partner_id if not guest else None, guest
 
     def _channel_info(self):
         """ Get the informations header for the current channels

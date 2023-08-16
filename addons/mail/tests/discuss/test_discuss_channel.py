@@ -9,7 +9,7 @@ from odoo import Command, fields
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import html_escape, mute_logger
@@ -36,7 +36,6 @@ class TestChannelAccessRights(MailCommon):
         cls.chat_user_employee = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_employee.partner_id.ids)['id'])
         cls.chat_user_employee_1 = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_employee_1.partner_id.ids)['id'])
         cls.chat_user_portal = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_portal.partner_id.ids)['id'])
-        cls.chat_user_public = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_get(cls.user_public.partner_id.ids)['id'])
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_public')
@@ -51,20 +50,15 @@ class TestChannelAccessRights(MailCommon):
         with self.assertRaises(AccessError):
             self.env['discuss.channel'].browse(self.private_group.id).read()
 
-        # Being a member of public channel: -> ok
-        self.public_channel.add_members(self.user_public.partner_id.id)
+        # Being a member of public channel: -> ko
+        with self.assertRaises(ValidationError):
+            self.public_channel.add_members(self.user_public.partner_id.id)
         # Being a member of group restricted channel: -> ko, no access rights
         with self.assertRaises(UserError):
             self.group_restricted_channel.add_members(self.user_public.partner_id.id)
-        # Being a group member: -> ok
-        self.private_group.add_members(self.user_public.partner_id.id)
-
-        # Read a group when being a member: -> ko, no access rights
-        with self.assertRaises(AccessError):
-            self.env['discuss.channel'].browse(self.private_group.id).read()
-        # Read a chat when being a member: -> ko, no access rights
-        with self.assertRaises(AccessError):
-            self.env['discuss.channel'].browse(self.chat_user_public.id).read()
+        # Being a group member: -> ko
+        with self.assertRaises(ValidationError):
+            self.private_group.add_members(self.user_public.partner_id.id)
 
         # Create channel/group/chat: ko, no access rights
         with self.assertRaises(AccessError):
@@ -81,8 +75,6 @@ class TestChannelAccessRights(MailCommon):
             self.env['discuss.channel'].browse(self.group_restricted_channel.id).write({'name': 'modified'})
         with self.assertRaises(AccessError):
             self.env['discuss.channel'].browse(self.private_group.id).write({'name': 'modified'})
-        with self.assertRaises(AccessError):
-            self.env['discuss.channel'].browse(self.chat_user_public.id).write({'name': 'modified'})
 
         # Unlink channel/group/chat: ko, no access rights
         with self.assertRaises(AccessError):
@@ -91,8 +83,6 @@ class TestChannelAccessRights(MailCommon):
             self.env['discuss.channel'].browse(self.group_restricted_channel.id).unlink()
         with self.assertRaises(AccessError):
             self.env['discuss.channel'].browse(self.private_group.id).unlink()
-        with self.assertRaises(AccessError):
-            self.env['discuss.channel'].browse(self.chat_user_public.id).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model', 'odoo.models')
     @users('employee')
@@ -110,7 +100,7 @@ class TestChannelAccessRights(MailCommon):
             self.env['discuss.channel'].browse(self.chat_user_employee_1.id).write({'name': 'modified'})
 
         # Being a channel/group member: -> ok
-        self.public_channel.add_members(self.user_public.partner_id.id)
+        self.public_channel.add_members(self.env.user.partner_id.id)
         self.group_restricted_channel.add_members(self.env.user.partner_id.id)
         self.private_group.add_members(self.env.user.partner_id.id)
 

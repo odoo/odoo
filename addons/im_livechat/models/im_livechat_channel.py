@@ -132,14 +132,33 @@ class ImLivechatChannel(models.Model):
     # --------------------------
     # Channel Methods
     # --------------------------
-    def _get_livechat_discuss_channel_vals(self, anonymous_name, operator=None, chatbot_script=None, user_id=None, country_id=None):
+    def _get_livechat_discuss_channel_vals(
+        self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
+    ):
+        user_operator = False
+        if chatbot_script:
+            if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
+                return False
+        elif previous_operator_id:
+            # previous_operator_id is the partner_id of the previous operator, need to convert to user
+            if previous_operator_id in self.available_operator_ids.mapped("partner_id").ids:
+                user_operator = next(
+                    available_user
+                    for available_user in self.available_operator_ids
+                    if available_user.partner_id.id == previous_operator_id
+                )
+        if not user_operator and not chatbot_script:
+            user_operator = self._get_random_operator(lang=lang, country_id=country_id)
+            if not user_operator:
+                # no one available
+                return False
         # partner to add to the discuss.channel
-        operator_partner_id = operator.partner_id.id if operator else chatbot_script.operator_partner_id.id
+        operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
         members_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active and operator and visitor_user != operator:  # valid session user (not public)
+            if visitor_user and visitor_user.active and user_operator and visitor_user != user_operator:  # valid session user (not public)
                 members_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
 
         if chatbot_script:
@@ -147,7 +166,7 @@ class ImLivechatChannel(models.Model):
         else:
             name = ' '.join([
                 visitor_user.display_name if visitor_user else anonymous_name,
-                operator.livechat_username if operator.livechat_username else operator.name
+                user_operator.livechat_username or user_operator.name
             ])
 
         return {
@@ -161,56 +180,6 @@ class ImLivechatChannel(models.Model):
             'channel_type': 'livechat',
             'name': name,
         }
-
-    def _open_livechat_discuss_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True, lang=None):
-        """ Return a livechat session. If the session is persisted, creates a discuss.channel record with a connected operator or with Odoobot as
-            an operator if a chatbot has been configured, or return false otherwise
-            :param anonymous_name : the name of the anonymous person of the session
-            :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
-            :param chatbot_script : chatbot script if there is one configured
-            :param user_id : the id of the logged in visitor, if any
-            :param country_code : the country of the anonymous person of the session
-            :param persisted: whether or not the session should be persisted
-            :param lang: code of the preferred lang of the visitor.
-            :type anonymous_name : str
-            :return : channel header
-            :rtype : dict
-
-            If this visitor already had an operator within the last 7 days (information stored with the 'im_livechat_previous_operator_pid' cookie),
-            the system will first try to assign that operator if he's available (to improve user experience).
-        """
-        self.ensure_one()
-        user_operator = False
-        if chatbot_script:
-            if chatbot_script.id not in self.env['im_livechat.channel.rule'].search(
-                    [('channel_id', 'in', self.ids)]).mapped('chatbot_script_id').ids:
-                return False
-        elif previous_operator_id:
-            # previous_operator_id is the partner_id of the previous operator, need to convert to user
-            if previous_operator_id in self.available_operator_ids.mapped('partner_id').ids:
-                user_operator = next(available_user for available_user in self.available_operator_ids if available_user.partner_id.id == previous_operator_id)
-        if not user_operator and not chatbot_script:
-            user_operator = self._get_random_operator(lang=lang, country_id=country_id)
-        if not user_operator and not chatbot_script:
-            # no one available
-            return False
-        discuss_channel_vals = self._get_livechat_discuss_channel_vals(anonymous_name, user_operator, chatbot_script, user_id=user_id, country_id=country_id)
-        if persisted:
-            # create the session, and add the link with the given channel
-            discuss_channel = self.env["discuss.channel"].with_context(mail_create_nosubscribe=False).sudo().create(discuss_channel_vals)
-            if user_operator:
-                discuss_channel._broadcast([user_operator.partner_id.id])
-            return discuss_channel.sudo()._channel_info()[0]
-        else:
-            operator_partner_id = user_operator.partner_id if user_operator else chatbot_script.operator_partner_id
-            display_name = operator_partner_id.user_livechat_username or operator_partner_id.display_name
-            return {
-                'name': discuss_channel_vals['name'],
-                'chatbot_current_step_id': discuss_channel_vals['chatbot_current_step_id'],
-                'state': 'open',
-                'operator_pid': (operator_partner_id.id, display_name.replace(',', '')),
-                'chatbot_script_id': chatbot_script.id if chatbot_script else None
-            }
 
     def _get_less_active_operator(self, active_channels, operators):
         """ Get the operator with the less active conversations.

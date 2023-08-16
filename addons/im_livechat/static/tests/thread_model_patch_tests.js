@@ -14,11 +14,12 @@ QUnit.test("Thread name unchanged when inviting new users", async () => {
         name: "James",
         user_ids: [userId],
     });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: pyEnv.publicPartnerId }),
+            Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,

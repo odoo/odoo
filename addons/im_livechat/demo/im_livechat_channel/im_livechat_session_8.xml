@@ -13,8 +13,11 @@
             <field name="channel_id" ref="im_livechat.livechat_channel_session_8"/>
             <field name="is_pinned">False</field>
         </record>
-        <record id="im_livechat.livechat_channel_session_8_member_public" model="discuss.channel.member">
-            <field name="partner_id" ref="base.public_partner"/>
+        <record id="im_livechat.livechat_channel_session_8_guest" model="mail.guest">
+            <field name="name">Visitor #722</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_8_member_guest" model="discuss.channel.member">
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_8_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_8"/>
         </record>
 
@@ -31,7 +34,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_8"/>
             <field name="message_type">email</field>
-            <field eval="False" name="author_id"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_8_guest"/>
             <field name="body">Heeeey Marc, how are you?</field>
             <field name="message_type">comment</field>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=31)" name="date"/>
@@ -49,7 +52,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_8"/>
             <field name="message_type">email</field>
-            <field eval="False" name="author_id"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_8_guest"/>
             <field name="body">I'm great, thanks for asking!</field>
             <field name="message_type">comment</field>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=33)" name="date"/>
@@ -57,7 +60,7 @@
         <record id="livechat_channel_session_8_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_8"/>
-            <field name="author_id" ref="base.public_partner"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_8_guest"/>
             <field name="subtype_id" ref="mail.mt_note"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-7, minutes=52)" name="date"/>
         </record>
