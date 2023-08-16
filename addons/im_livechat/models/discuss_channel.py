@@ -104,6 +104,28 @@ class DiscussChannel(models.Model):
     def execute_command_history(self, **kwargs):
         self.env['bus.bus']._sendone(self, 'im_livechat.history_command', {'id': self.id})
 
+    def execute_command_bot(self, bot_id, **kwargs):
+        chatbot_script = self.env['chatbot.script'].browse(bot_id)
+        if not self or not chatbot_script.exists():
+            self._send_transient_message(self.env.user.partner_id, _("Please select a chatbot"))
+            return
+        if self.livechat_operator_id != chatbot_script.operator_partner_id:
+            operator_partner = self.env['chatbot.script'].search([('operator_partner_id', '=', self.livechat_operator_id.id)], limit=1).operator_partner_id
+            if operator_partner:
+                # sudo - discuss.channel: non admin operator can remove other operators
+                self.sudo()._action_unfollow(operator_partner, post_left_message=False)
+            self.add_members(partner_ids=[chatbot_script.operator_partner_id.id], post_joined_message=False)
+        self._chatbot_restart(chatbot_script, post_restart_message=False)
+        self.livechat_operator_id = chatbot_script.operator_partner_id
+        self.env['bus.bus']._sendone(self, 'im_livechat.bot_command', {
+            'Thread': {
+                'id': self.id,
+                'model': 'discuss.channel',
+                'chatbot': {'script': chatbot_script._format_for_frontend()},
+                'operator': chatbot_script.operator_partner_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[self.livechat_operator_id]
+            }
+        })
+
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')
         if page_history:
@@ -164,8 +186,9 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
+        # sudo - res.partner: public user can access internal user messages
         return Markup('').join(
-            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
+            Markup('%s: %s<br/>') % (message.sudo().author_id.name or self.anonymous_name, html2plaintext(message.body))
             for message in self.message_ids.sorted('id')
         )
 
@@ -239,11 +262,13 @@ class DiscussChannel(models.Model):
             })
         return super()._message_post_after_hook(message, msg_vals)
 
-    def _chatbot_restart(self, chatbot_script):
+    def _chatbot_restart(self, chatbot_script, post_restart_message=True):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
+        if not post_restart_message:
+            return
         # sudo: mail.message - chat bot can send the restart message
         return self.sudo()._chatbot_post_message(
             chatbot_script,

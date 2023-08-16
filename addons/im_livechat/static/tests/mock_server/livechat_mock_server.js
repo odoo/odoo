@@ -182,7 +182,7 @@ async function get_emoji_bundle(request) {
 patch(mailDataHelpers, {
     async processRequest(request) {
         const res = await super.processRequest(...arguments);
-        const { livechat_channels } = await parseRequestParams(request);
+        const { livechat_channels, chatbots } = await parseRequestParams(request);
         if (livechat_channels) {
             const LivechatChannel = this.env["im_livechat.channel"];
             mailDataHelpers.addToRes(res, {
@@ -190,6 +190,15 @@ patch(mailDataHelpers, {
                     id: channel.id,
                     name: channel.name,
                     hasSelfAsMember: channel.user_ids.includes(this.env.user.id),
+                })),
+            });
+        }
+        if (chatbots) {
+            const ChatbotScript = this.env["chatbot.script"];
+            mailDataHelpers.addToRes(res, {
+                ChatbotScript: ChatbotScript.search_read([]).map((chatbot) => ({
+                    id: chatbot.id,
+                    name: chatbot.title,
                 })),
             });
         }

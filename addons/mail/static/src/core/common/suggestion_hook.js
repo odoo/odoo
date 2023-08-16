@@ -1,7 +1,10 @@
 import { useSequential } from "@mail/utils/common/hooks";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+
+const commandRegistry = registry.category("discuss.channel_commands");
 
 class UseSuggestion {
     constructor(comp) {
@@ -64,6 +67,12 @@ class UseSuggestion {
         position: undefined,
         term: "",
     };
+    clearCommand() {
+        if (this.composer.command) {
+            this.composer.command.subCommandData = {};
+            this.composer.command = undefined;
+        }
+    }
     clearRawMentions() {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
@@ -86,6 +95,9 @@ class UseSuggestion {
             // avoid interfering with multi-char selection
             this.clearSearch();
             return;
+        }
+        if (text.length < this.composer.command?.endPosition) {
+            this.clearCommand();
         }
         const candidatePositions = [];
         // consider the chars before the current cursor position
@@ -123,7 +135,11 @@ class UseSuggestion {
                 continue;
             }
             const charBeforeCandidate = text[candidatePosition - 1];
-            if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
+            if (
+                charBeforeCandidate &&
+                !/\s/.test(charBeforeCandidate) &&
+                !this.composer.command?.hasSubCommand
+            ) {
                 continue;
             }
             Object.assign(this.search, {
@@ -162,6 +178,15 @@ class UseSuggestion {
         }
         if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
+        }
+        if (this.search.delimiter === " ") {
+            this.composer.command.subCommandData = option;
+        } else if (this.search.delimiter === "/") {
+            this.composer.command = {
+                endPosition: before.length + option.label.length,
+                name: option.label,
+                ...commandRegistry.get(option.label),
+            };
         }
         this.clearSearch();
         this.composer.text = before + option.label + " " + after;

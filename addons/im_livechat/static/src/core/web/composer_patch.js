@@ -3,6 +3,28 @@ import { Composer } from "@mail/core/common/composer";
 import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
+    get navigableListProps() {
+        const props = super.navigableListProps;
+        if (!this.hasSuggestions) {
+            return props;
+        }
+        switch (this.suggestion.state.items.type) {
+            case "Chatbot":
+                {
+                    props.options = this.suggestion.state.items.suggestions.map((item) => {
+                        return {
+                            label: item.name,
+                            bot_id: item.id,
+                            classList: "o-mail-Composer-suggestion",
+                        };
+                    });
+                    props.optionTemplate = "mail.Composer.suggestionChannelCommand";
+                }
+                break;
+        }
+        return props;
+    },
+
     onKeydown(ev) {
         super.onKeydown(ev);
         if (
