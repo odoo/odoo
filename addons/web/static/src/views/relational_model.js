@@ -2278,6 +2278,9 @@ export class DynamicGroupList extends DynamicList {
             group.count = group.count - resIds.length;
             allResIds.push(...resIds);
         }
+        if (this.isDomainSelected && allResIds.length > 0) {
+            await this.load();
+        }
         // Return the list of all deleted resIds.
         // Will be used by the calling group to update its count.
         return allResIds;
@@ -2354,6 +2357,13 @@ export class DynamicGroupList extends DynamicList {
             return;
         }
         super.sortBy(fieldName);
+    }
+
+    selectDomain(value) {
+        for (const group of this.groups) {
+            group.list.selectDomain(value);
+        }
+        super.selectDomain(value);
     }
 
     // ------------------------------------------------------------------------
