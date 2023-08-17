@@ -745,13 +745,25 @@ class IrActionsReport(models.Model):
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
-            # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
+            # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
+            # pages one by one.
+            html_ids_wo_none = [x for x in html_ids if x]
+            reader = PdfFileReader(pdf_content_stream)
+            if reader.numPages == len(res_ids_wo_stream):
+                for i in range(reader.numPages):
+                    attachment_writer = PdfFileWriter()
+                    attachment_writer.addPage(reader.getPage(i))
+                    stream = io.BytesIO()
+                    attachment_writer.write(stream)
+                    collected_streams[res_ids[i]]['stream'] = stream
+                return collected_streams
+
+            # In cases where the number of res_ids != the number of pages,
+            # we split the pdf based on top outlines computed by wkhtmltopdf.
             # An outline is a <h?> html tag found on the document. To retrieve this table,
             # we look on the pdf structure using pypdf to compute the outlines_pages from
             # the top level heading in /Outlines.
-            html_ids_wo_none = [x for x in html_ids if x]
             if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
-                reader = PdfFileReader(pdf_content_stream)
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
