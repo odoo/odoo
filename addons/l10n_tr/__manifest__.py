@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/saas-16.3/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['tr'],
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
