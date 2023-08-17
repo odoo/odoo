@@ -27,6 +27,13 @@ $-seen-urls: ();
         --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
     }
 
+    // Border color
+    // Let borders color adapt according to body and CCs. Also, set a fallback
+    // value for browsers that don't support the color-mix function (used by
+    // 'fade-currentColor').
+    --o-border-color: #{o-color('300')};
+    --o-border-color: #{fade-currentColor()};
+
     // The theme customize modal JS will need to know the value of some scss
     // variables used to render the user website, and those may have been
     // customized by themes, the user or anything else (so there is no file to
@@ -2485,4 +2492,9 @@ input[value*="data-oe-translation-initial-sha"] {
 // Odoo dropdown menu
 .o_dropdown_menu {
     @extend .dropdown-menu;
+}
+
+// Override web_editor's rules
+.o_table tr {
+    border-color: $table-border-color;
 }
