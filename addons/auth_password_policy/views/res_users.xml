@@ -19,4 +19,14 @@
             </xpath>
         </field>
     </record>
+    <record id="change_password_own_form_inherit" model="ir.ui.view">
+        <field name="name">Check if the new password is already leaked</field>
+        <field name="inherit_id" ref="base.change_password_own_form"/>
+        <field name="model">change.password.own</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">change_password_form</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
