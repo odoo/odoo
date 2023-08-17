@@ -37,7 +37,7 @@ class FleetVehicleLogServices(models.Model):
         ('running', 'Running'),
         ('done', 'Done'),
         ('cancelled', 'Cancelled'),
-    ], default='new', string='Stage', group_expand='_expand_states')
+    ], default='new', string='Stage', group_expand='_expand_states', tracking=True)
 
     def _get_odometer(self):
         self.odometer = 0
