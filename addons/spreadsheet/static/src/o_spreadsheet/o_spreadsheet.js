@@ -24066,8 +24066,10 @@
         }
         onKeyup(ev) {
             if (this.contentHelper.el === document.activeElement) {
-                const isSelectingForComposer = this.env.model.getters.isSelectingForComposer();
-                if (isSelectingForComposer && ev.key?.startsWith("Arrow")) {
+                if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+                    return;
+                }
+                if (this.env.model.getters.isSelectingForComposer() && ev.key?.startsWith("Arrow")) {
                     return;
                 }
                 const { start: oldStart, end: oldEnd } = this.env.model.getters.getComposerSelection();
@@ -48734,6 +48736,9 @@
 
     function addFormula(cell) {
         const formula = cell.content;
+        if (!formula) {
+            return { attrs: [], node: escapeXml `` };
+        }
         const attrs = [];
         let node = escapeXml ``;
         let cycle = escapeXml ``;
@@ -49437,7 +49442,14 @@
   `;
     }
 
-    const TABLE_DEFAULT_STYLE = escapeXml /*xml*/ `<tableStyleInfo name="TableStyleLight8" showFirstColumn="0" showLastColumn="0" showRowStripes="0" showColumnStripes="0"/>`;
+    const TABLE_DEFAULT_ATTRS = [
+        ["name", "TableStyleLight8"],
+        ["showFirstColumn", "0"],
+        ["showLastColumn", "0"],
+        ["showRowStripes", "0"],
+        ["showColumnStripes", "0"],
+    ];
+    const TABLE_DEFAULT_STYLE = escapeXml /*xml*/ `<tableStyleInfo ${formatAttributes(TABLE_DEFAULT_ATTRS)}/>`;
     function createTable(table, tableId, sheetData) {
         const tableAttributes = [
             ["id", tableId],
@@ -50545,9 +50557,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.3';
-    __info__.date = '2023-08-09T12:00:37.403Z';
-    __info__.hash = '1dbd302';
+    __info__.version = '16.4.4';
+    __info__.date = '2023-08-17T11:14:00.931Z';
+    __info__.hash = 'bdb3a4c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
