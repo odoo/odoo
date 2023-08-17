@@ -24,17 +24,18 @@
                 <h1 class="text-center">
                     QR Code Menu
                 </h1>
+                <div class="oe_structure"></div>
                 <!-- There is a very annoying problem here:
                 wkhtmltopdf does not handle flex-wrap. ( at least not in this version )
                 This makes it so the bootstrap grid system does not work.
                 We have to do a workaround -->
-
                 <t t-foreach="floors" t-as="floor">
                 <!-- MDN states that "page-break-after" has been replaced by "break-after",
                 but "break-after" is not supported in this version of wkhtmltopdf so we 
                 have to keep using "page-break-after" -->
                     <div style="page-break-after: always;">
-                        <h3 t-if="floor.get('name')" t-out="floor['name']" class="mb-5"/>
+                        <h3 t-if="floor.get('name')" t-out="floor['name']" class="mb-5">Sample Floor Name</h3>
+                        <div class="oe_structure"></div>
                         <div
                             t-foreach="floor['rows_of_tables']"
                             t-as="row_of_tables"
@@ -46,6 +47,7 @@
                                 />
                         </div>
                     </div>
+                    <div class="oe_structure"></div>
                 </t>
             </div>
         </t>
@@ -61,8 +63,9 @@
                 style="margin-top: 20px"
                 t-if="table['id']"
                 >
-                Table: <t t-esc="table['name']"/>
+                Table: <span t-out="table['name']">Sample Table Name</span>
             </h4>
+            <div class="oe_structure"></div>
             <div class="p-3">
                 <div class="mt-1 mb-4 position-relative top-0 start-0">
                     <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)"
