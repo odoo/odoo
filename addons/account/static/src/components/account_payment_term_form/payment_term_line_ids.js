@@ -2,25 +2,21 @@
 
 import { registry } from "@web/core/registry";
 
-import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-
-export class PaymentTermLineIdsRenderer extends ListRenderer {
-
-    /* override */
-    onGlobalClick(ev) {
-        // Prevent the discard of new records when clicking outside of the sheet.
-        // This is needed because the user is not forced to edit something on the newly
-        // created record. Therefore, there is no reason to remove this record when he
-        // attempt to save the form.
-        this.props.list.editedRecord = null;
-        super.onGlobalClick(ev);
-    }
-
-}
+import { useAddInlineRecord } from "@web/views/fields/relational_utils";
 
 export class PaymentTermLineIdsOne2Many extends X2ManyField {
-    static components = {...X2ManyField.components, ListRenderer: PaymentTermLineIdsRenderer}
+    setup() {
+        super.setup();
+        // Overloads the addInLine method to mark all new records as 'dirty' by calling update with an empty object.
+        // This prevents the records from being abandoned if the user clicks globally or on an existing record.
+        this.addInLine = useAddInlineRecord({
+            addNew: async (...args) => {
+                const newRecord = await this.list.addNewRecord(...args);
+                newRecord.update({});
+            }
+        });
+    }
 }
 
 export const PaymentTermLineIds = {
