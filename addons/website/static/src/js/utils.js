@@ -88,6 +88,9 @@ function autocompleteWithPages(self, $input, options) {
                 // avoid useless call to /website/get_suggested_links
                 response();
             } else {
+                if (self.isDestroyed?.()) {
+                    return ;
+                }
                 return self._rpc({
                     route: '/website/get_suggested_links',
                     params: {

@@ -4,6 +4,8 @@ import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 
+import {status} from '@odoo/owl';
+
 import wUtils from "website.utils";
 import { debounce } from "@web/core/utils/timing";
 
@@ -12,7 +14,6 @@ const LINK_DEBOUNCE = 1000;
 patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
     setup() {
         this.rpc = useService('rpc');
-        this.rpc = this.env.services.rpc;
         return this._super.apply(this, arguments);
     },
     /**
@@ -42,8 +43,9 @@ patch(LinkTools.prototype, 'website/static/src/js/editor/widget_link.js', {
         // wUtils.autocompleteWithPages rely on a widget that has a _rpc and
         // trigger_up method.
         const fakeWidget = {
-            _rpc: ({ route, params }) => this.rpc(route, params),
+            _rpc: this.rpc.bind(this),
             trigger_up: this._onAutocompleteClose.bind(this),
+            isDestroyed: () => status(this) === 'destroyed',
         };
         wUtils.autocompleteWithPages(fakeWidget, this.$el.find('input[name="url"]'), options);
         this._adaptPageAnchor();
