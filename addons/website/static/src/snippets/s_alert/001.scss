@@ -1,8 +1,6 @@
 
-.s_alert:not([data-vcss]) {
+.s_alert[data-vcss='001'] {
     margin: $grid-gutter-width/2 0;
-    border: $alert-border-width solid;
-    border-radius: $alert-border-radius;
     p, ul, ol {
         &:last-child {
             margin-bottom: 0;
@@ -22,7 +20,8 @@
     }
     .s_alert_icon {
         float: left;
-        margin-right: 10px;
+        background-color: rgba($black, 10%); // Fallback
+        background-color: fade-currentColor(15%);
     }
     .s_alert_content {
         overflow: hidden;

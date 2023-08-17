@@ -305,6 +305,7 @@
             'website/static/src/js/editor/snippets.editor.js',
             'website/static/src/js/editor/snippets.options.js',
             'website/static/src/js/editor/shared_options/pricelist.js',
+            'website/static/src/snippets/s_alert/options.js',
             'website/static/src/snippets/s_facebook_page/options.js',
             'website/static/src/snippets/s_image/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',
