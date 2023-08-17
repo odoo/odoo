@@ -15,16 +15,8 @@ class BusWebTests(odoo.tests.HttpCase):
         - The interface deals with those bus messages by displaying one notification
         """
         db_name = self.env.registry.db_name
-        bundle_xml_ids = ('web.assets_common', 'web.assets_backend')
-
-        domain = []
-        for bundle in bundle_xml_ids:
-            domain = expression.OR([
-                domain,
-                [('name', 'ilike', bundle + '%')]
-            ])
         # start from a clean slate
-        self.env['ir.attachment'].search(domain).unlink()
+        self.env['ir.attachment'].search([('name', 'ilike', 'web.assets_backend%')]).unlink()
         self.env.registry.clear_cache()
 
         sendones = []
@@ -42,7 +34,7 @@ class BusWebTests(odoo.tests.HttpCase):
         # One sendone for each asset bundle and for each CSS / JS
         self.assertEqual(
             len(sendones),
-            4,
+            2,
             'Received %s' % '\n'.join('%s - %s' % (tmp[0], tmp[1]) for tmp in sendones)
         )
         for (channel, message) in sendones:

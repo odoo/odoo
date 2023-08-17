@@ -36,21 +36,19 @@ This module provides the core of the Odoo Web Client.
         # 3) an arbitrary name, relevant to the content of the bundle.
         #
         # Examples:
-        #   > web.assets_common = assets common to backend clients and others
-        #     (not frontend).
         #   > web_editor.assets_legacy_wysiwyg = assets needed by components defined in the "web_editor" module.
 
-        # Warning: Layouts using "assets_frontend" assets do not have the
-        # "assets_common" assets anymore. So, if it make sense, files added in
-        # "assets_common" should also be added in "assets_frontend".
-        # TODO in the future, probably remove "assets_common" definition
-        # entirely and let all "main" bundles evolve on their own, including the
-        # files they need in their bundle.
-        'web.assets_common': [
+        'web.assets_emoji': [
+            'web/static/src/core/emoji_picker/emoji_data.js'
+        ],
+        'web.assets_backend': [
             ('include', 'web._assets_helpers'),
-
+            ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            ('include', 'web._assets_bootstrap_backend'),
+
+            ('include', 'web._assets_core'),
 
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
@@ -61,22 +59,15 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
-            'web/static/src/core/colorpicker/colorpicker.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/boot.js',
-            'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
             'web/static/lib/moment/moment.js',
-            'web/static/lib/luxon/luxon.js',
-            'web/static/lib/owl/owl.js',
-            'web/static/lib/owl/odoo_module.js',
-            'web/static/src/owl2_compatibility/*.js',
             'web/static/src/legacy/js/component_extension.js',
             'web/static/src/legacy/legacy_component.js',
             'web/static/lib/jquery/jquery.js',
@@ -113,7 +104,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
@@ -139,40 +129,24 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/xml/name_and_signature.xml',
-        ],
-        'web.assets_emoji': [
-            'web/static/src/core/emoji_picker/emoji_data.js'
-        ],
-        'web.assets_backend': [
-            ('include', 'web._assets_helpers'),
-            ('include', 'web._assets_backend_helpers'),
-
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-
-            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
 
             'web/static/src/core/utils/transitions.scss',
-            'web/static/src/core/**/*',
             'web/static/src/model/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
             'web/static/src/views/**/*',
             'web/static/src/webclient/**/*',
-            ('remove', 'web/static/src/webclient/navbar/navbar.scss'),  # already in assets_common
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
-            ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
             'web/static/src/webclient/actions/reports/*.js',
             'web/static/src/webclient/actions/reports/*.xml',
 
-            'web/static/src/env.js',
+            'web/static/src/libs/pdfjs.js',
 
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
@@ -295,7 +269,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
@@ -330,6 +303,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/public/error_notifications.js',
+            'web/static/src/libs/pdfjs.js',
 
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/core/dates.js',
@@ -425,10 +399,6 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
         # COLOR SCHEME BUNDLES
         # ---------------------------------------------------------------------
-        "web.dark_mode_assets_common": [
-            ('include', 'web.assets_common'),
-            'web/static/src/core/file_viewer/file_viewer.dark.scss',
-        ],
         "web.dark_mode_assets_backend": [
             ('include', 'web.assets_backend'),
             'web/static/src/**/*.dark.scss',
@@ -443,10 +413,23 @@ This module provides the core of the Odoo Web Client.
         # Their naming conventions are similar to those of the main bundles,
         # with the addition of a prefixed underscore to reflect the "private"
         # aspect.
-        #
-        # Examples:
-        #   > web._assets_helpers = define assets needed in most main bundles
 
+        # Bare javascript essentials: module loader, core folder and core libs
+        'web._assets_core': [
+            # module loader
+            'web/static/src/boot.js',
+            # libs
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/src/owl2_compatibility/*.js',
+            'web/static/lib/owl/odoo_module.js',
+            # core
+            'web/static/src/env.js',
+            'web/static/src/session.js',
+            'web/static/src/core/utils/transitions.scss',
+            'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
+        ],
         'web._assets_primary_variables': [
             'web/static/src/scss/primary_variables.scss',
             'web/static/src/**/*.variables.scss',
@@ -504,8 +487,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/ignore_missing_deps_stop.js',
         ],
         # remove this bundle alongside the owl2 compatibility layer
-        'web.tests_assets_common': [
-            ('include', 'web.assets_common'),
+        'web.assets_backend_tests': [
+            ('include', 'web.assets_backend'),
             ('after', 'web/static/src/owl2_compatibility/app.js', 'web/static/tests/owl2_compatibility_app.js'),
         ],
         'web.tests_assets': [

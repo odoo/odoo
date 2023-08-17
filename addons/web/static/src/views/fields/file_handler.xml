@@ -11,7 +11,7 @@
             type="file"
             t-att-name="props.inputName"
             t-ref="fileInput"
-            t-attf-class="o_input_file o_hidden {{ props.fileUploadClass or '' }}"
+            t-attf-class="o_input_file d-none {{ props.fileUploadClass or '' }}"
             t-att-multiple="props.multiUpload ? 'multiple' : false" t-att-accept="props.acceptedFileExtensions or '*'"
             t-on-change="onFileChange"
         />
