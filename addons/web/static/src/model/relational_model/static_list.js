@@ -197,6 +197,7 @@ export class StaticList extends DataPoint {
      * @param {Object} params.fields
      * @param {Object} [params.context]
      * @param {boolean} [params.withoutParent]
+     * @param {string} [params.mode]
      * @param {Record} [record]
      * @returns {Record}
      */
@@ -225,9 +226,8 @@ export class StaticList extends DataPoint {
                 // case 1: the record already exists
                 if (this._extendedRecords.has(record.id)) {
                     // case 1.1: the record has already been extended
-                    // -> simply switch it to edit and store a savepoint
+                    // -> simply store a savepoint
                     this.model._updateConfig(record.config, config, { noReload: true });
-                    record._switchMode("edit");
                     record._addSavePoint();
                     return record;
                 }
