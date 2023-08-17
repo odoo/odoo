@@ -105,10 +105,27 @@ class MrpRoutingWorkcenter(models.Model):
         if not self._check_m2m_recursion('blocked_by_operation_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.bom_id._set_outdated_bom_in_productions()
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        self.bom_id._set_outdated_bom_in_productions()
+        return res
+
     def action_archive(self):
         res = super().action_archive()
         bom_lines = self.env['mrp.bom.line'].search([('operation_id', 'in', self.ids)])
         bom_lines.write({'operation_id': False})
+        self.bom_id._set_outdated_bom_in_productions()
+        return res
+
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        self.bom_id._set_outdated_bom_in_productions()
         return res
 
     def copy_to_bom(self):

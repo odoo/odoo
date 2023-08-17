@@ -1955,3 +1955,47 @@ class TestBoM(TestMrpCommon):
         # Check that component 1 is set again and component 2 is removed
         self.assertEqual(mo_form.move_raw_ids._records[0]['product_id'], self.product_1.id)
         self.assertEqual(len(mo_form.move_raw_ids._records), 1)
+
+    def test_update_operations(self):
+        """Update the operations in BoM which reflects the changes in Manufacturing Order"""
+
+        mo_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
+        mo_form.product_id = self.product_7_1
+        mo_form.product_qty = 1.0
+        mo_form.bom_id = self.bom_2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        self.bom_2.operation_ids.write({
+            'name': 'Painting',
+            'workcenter_id': self.workcenter_2.id
+        })
+        self.assertTrue(mo.is_outdated_bom)
+
+        mo.action_update_bom()
+        self.assertEqual(self.bom_2.operation_ids.name, mo.workorder_ids.name)
+        self.assertEqual(self.bom_2.operation_ids.workcenter_id, mo.workorder_ids.workcenter_id)
+
+    def test_archive_operations(self):
+        """Archive the operation in BoM and update the BoM in MO
+        Unarchive the operation which will reflect in BoM and MO"""
+
+        mo_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
+
+        mo_form.product_id = self.product_7_1
+        mo_form.product_qty = 1.0
+        mo_form.bom_id = self.bom_2
+        mo_order = mo_form.save()
+        mo_order.action_confirm()
+
+        operation_ids = self.bom_2.operation_ids.ids
+        self.bom_2.operation_ids.action_archive()
+        self.assertTrue(mo_order.is_outdated_bom)
+
+        mo_order.action_update_bom()
+        self.assertEqual(len(mo_order.workorder_ids), 0)
+
+        self.env['mrp.routing.workcenter'].browse(operation_ids).action_unarchive()
+        self.assertTrue(mo_order.is_outdated_bom)
+        mo_order.action_update_bom()
+        self.assertEqual(len(mo_order.workorder_ids), 1)
