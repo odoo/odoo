@@ -743,6 +743,30 @@ QUnit.test("<br/> tags in message body preview are transformed in spaces", async
 });
 
 QUnit.test(
+    "Messaging menu notification body of chat should show author name once",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        });
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "<p>Hey!</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        assert.strictEqual($(".o-mail-NotificationItem").text().split("Demo User").length - 1, 1);
+    }
+);
+
+QUnit.test(
     "Group chat should be displayed inside the chat section of the messaging menu",
     async (assert) => {
         const pyEnv = await startServer();
