@@ -181,6 +181,9 @@ var BoardRenderer = FormRenderer.extend({
      */
     changeLayout: function (layout) {
         var $dashboard = this.$('.oe_dashboard');
+        if (!$dashboard.length) {
+            return;
+        }
         var current_layout = $dashboard.attr('data-layout');
         if (current_layout !== layout) {
             var clayout = current_layout.split('-').length,
