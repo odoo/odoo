@@ -373,3 +373,44 @@ class StockGenerateCommon(TransactionCase):
             {'qty_done': 1, 'lot_name': '003', 'location_dest_id': sub_loc_03.id},
             {'qty_done': 1, 'lot_name': '004', 'location_dest_id': sub_loc_04.id},
         ])
+
+    def test_default_next_serial_count(self):
+        """ Ensure the number of serial number to generate is well populated
+        in the generation wizard.
+        """
+        receipt_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.location_dest.id,
+            'state': 'draft',
+            'immediate_transfer': False,
+        })
+        move = self.env['stock.move'].create({
+            'name': self.product_serial.name,
+            'product_id': self.product_serial.id,
+            'product_uom': self.product_serial.uom_id.id,
+            'product_uom_qty': 10.0,
+            'picking_id': receipt_picking.id,
+            'location_id': receipt_picking.location_id.id,
+            'location_dest_id': receipt_picking.location_dest_id.id,
+        })
+        receipt_picking.action_confirm()
+        wizard = Form(self.env['stock.generate.serial'].with_context(
+            default_move_id=move.id,
+        ))
+        self.assertEqual(wizard.next_serial_count, 10)
+
+        # Encode first 3 serial numbers
+        generate_wizard = Form(self.env['stock.assign.serial'].with_context(
+            default_move_id=move.id,
+            default_next_serial_number='001',
+        ))
+        generate_wizard.next_serial_count = 3
+        wiz = generate_wizard.save()
+        wiz.generate_serial_numbers()
+
+        # Check we have 7 left
+        wizard = Form(self.env['stock.generate.serial'].with_context(
+            default_move_id=move.id,
+        ))
+        self.assertEqual(wizard.next_serial_count, 7)

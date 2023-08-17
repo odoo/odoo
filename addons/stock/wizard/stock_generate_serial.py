@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 
@@ -8,7 +8,7 @@ class StockGenerateSerial(models.TransientModel):
 
     move_id = fields.Many2one('stock.move')
     next_serial = fields.Char('First SN')
-    next_serial_count = fields.Integer('Number of SN')
+    next_serial_count = fields.Integer('Number of SN', compute='_compute_next_serial_count', store=True)
     move_location_dest_id = fields.Many2one('stock.location', 'Move Destination Location', related='move_id.location_dest_id')
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', domain="[('id', 'child_of', move_location_dest_id)]")
     picking_code = fields.Selection(related='move_id.picking_code')
@@ -23,3 +23,8 @@ class StockGenerateSerial(models.TransientModel):
             raise UserError(_("You need to set a Serial Number before generating more."))
         self.move_id._generate_serial_numbers(self.next_serial, self.next_serial_count, location_id=self.location_dest_id)
         return self.move_id.action_show_details()
+
+    @api.depends("move_id")
+    def _compute_next_serial_count(self):
+        for wizard in self:
+            wizard.next_serial_count = wizard.move_id.next_serial_count - wizard.move_id.quantity_done
