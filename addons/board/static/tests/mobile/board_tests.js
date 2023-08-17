@@ -113,4 +113,35 @@ odoo.define("board.dashboard_tests", function (require) {
 
         target.destroy();
     });
+
+    QUnit.test("empty board view", async function (assert) {
+        assert.expect(2);
+        const target = await createView({
+            View: BoardView,
+            debug: 1,
+            model: "board",
+            data: this.data,
+            arch: `<form string="My Dashboard">
+                <board style="2-1">
+                    <column/>
+                </board>
+            </form>`,
+            archs: {
+                "partner,4,list": '<tree string="Partner"><field name="foo"/></tree>',
+            },
+        });
+
+        assert.hasClass(
+            target.renderer.$el,
+            "o_dashboard",
+            "with a dashboard, the renderer should have the proper css class"
+        );
+        assert.containsOnce(
+            target,
+            ".o_dashboard .o_view_nocontent",
+            "should have a no content helper"
+        );
+
+        target.destroy();
+    });
 });
