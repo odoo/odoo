@@ -1,5 +1,4 @@
 /** @odoo-module **/
-'use strict';
 
 import './commands/deleteBackward.js';
 import './commands/deleteForward.js';
