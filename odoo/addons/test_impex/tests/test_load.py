@@ -725,6 +725,20 @@ class test_m2o(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 
+    @mute_logger('odoo.sql_db')
+    def test_name_create_enabled_m2o_required_field(self):
+        self.model = self.env['export.many2one.required.subfield']
+        self.env['export.with.required.field'].create({'name': 'ipsum', 'value': 10})
+        context = {'name_create_enabled_fields': {'name': True}}
+        result = self.import_(['name'], [['lorem'], ['ipsum']], context=context)
+        messages = result['messages']
+        self.assertTrue(messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0]['message'],
+                         "No matching record found for name 'lorem' in field 'Name' and the following error was "
+                         "encountered when we attempted to create one: Cannot create new 'export.with.required.field' "
+                         "records from their name alone. Please create those records manually and try importing again.")
+
 class TestInvalidStrings(ImporterCase):
     model_name = 'export.m2o.str'
 
