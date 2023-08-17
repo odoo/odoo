@@ -12,7 +12,7 @@
                             <field name="will_send_mail" invisible="1"/>
                             <field name="program_type" invisible="1"/>
                             <field name="mode" widget="radio" invisible="program_type == 'ewallet'"/>
-                            <field name="customer_ids" widget="many2many_tags" invisible="mode == 'anonymous'"/>
+                            <field name="customer_ids" widget="many2many_tags" placeholder="For all customers" invisible="mode == 'anonymous'"/>
                             <field name="customer_tag_ids" widget="many2many_tags" invisible="mode == 'anonymous'" options="{'color_field': 'color'}"/>
                             <field name="coupon_qty" string="Quantity to generate" readonly="mode == 'selected'" required="mode == 'anonymous'"/>
                             <label string="Coupon value" for="points_granted" groups="base.group_no_one" invisible="program_type != 'coupons'"/>
@@ -33,6 +33,9 @@
                             <field name="valid_until"/>
                         </group>
                     </group>
+                    <div class="alert alert-warning text-center" invisible="customer_ids or mode == 'anonymous'" role="alert">
+                        <field name="confirmation_message"/>
+                    </div>
                 </sheet>
                 <footer>
                     <button name="generate_coupons" type="object" class="btn-primary" data-hotkey="q">
