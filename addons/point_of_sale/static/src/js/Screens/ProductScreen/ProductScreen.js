@@ -239,7 +239,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     foundProductIds = await this.rpc({
                         model: 'product.product',
                         method: 'search',
-                        args: [[['barcode', '=', code.base_code], ['sale_ok', '=', true]]],
+                        args: [[
+                            ['barcode', '=', code.base_code],
+                            ['sale_ok', '=', true],
+                            ['available_in_pos', '=', true]
+                        ]],
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
@@ -253,7 +257,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     }
                 }
                 if (foundProductIds.length) {
-                    await this.env.pos._addProducts(foundProductIds);
+                    await this.env.pos._addProducts(foundProductIds, false);
                     // assume that the result is unique.
                     product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
                 } else {
