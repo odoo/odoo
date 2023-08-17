@@ -13,7 +13,9 @@
             <div t-if="isInSaleOrder()"
                     class="input-group o_sale_product_catalog_quantity o_sale_product_catalog_cancel_global_click w-50">
                 <button class="btn btn-primary border"
-                        t-on-click="this.env.decreaseQuantity">
+                        t-on-click="this.env.decreaseQuantity"
+                        t-att-disabled="disableRemove"
+                        t-att-data-tooltip="disabledButtonTooltip">
                     <i class="fa fa-minus center"/>
                 </button>
                 <input class="o_input form-control border text-center text-bg-light"
@@ -32,12 +34,14 @@
                     <i class="fa fa-shopping-cart"/>
                     Add
                 </button>
-                <button t-else=""
-                        t-on-click="this.env.removeProduct"
-                        class="btn btn-light border">
-                    <i class="fa fa-trash"/>
-                    Remove
-                </button>
+                <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
+                    <button t-on-click="this.env.removeProduct"
+                            t-att-disabled="disableRemove"
+                            class="btn btn-light border">
+                        <i class="fa fa-trash"/>
+                        Remove
+                    </button>
+                </div>
             </div>
         </div>
     </t>

@@ -19,6 +19,14 @@ export class ProductCatalogSOL extends Component {
         return this.props.quantity !== 0;
     }
 
+    get disableRemove() {
+        return false;
+    }
+
+    get disabledButtonTooltip() {
+        return "";
+    }
+
     get price() {
         return formatMonetary(this.props.price, { currencyId: this.env.currencyId, digits: this.env.digits });
     }

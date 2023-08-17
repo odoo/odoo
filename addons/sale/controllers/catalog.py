@@ -38,7 +38,7 @@ class CatalogController(Controller):
             product_ids.remove(product.id)
 
         default_data = request.env['sale.order.line']._get_catalog_info()
-        default_data['readOnly'] = order._is_readonly()
+        default_data['readOnly'] = order._is_readonly() if order else False
 
         sale_order_line_info.update({
             id: {
