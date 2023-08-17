@@ -88,13 +88,13 @@
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
-                <button name="button_start" type="object" string="Start" class="btn-success"
+                <button name="button_start" type="object" string="Start" class="btn-success" context="{'from_wo_overview': True}"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'cancel')), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
                   attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
-                <button name="button_finish" type="object" string="Done" class="btn-success"
+                <button name="button_finish" type="object" string="Done" class="btn-success" context="{'from_wo_overview': True}"
                   attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
-                <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
+                <button name="button_block" type="object" string="Block" context="{'default_workcenter_id': workcenter_id, 'from_wo_overview': True}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>

@@ -690,6 +690,9 @@ class MrpWorkorder(models.Model):
         self.end_previous()
         return True
 
+    def button_block(self):
+        return self.env["ir.actions.actions"]._for_xml_id("mrp.act_mrp_block_workcenter_wo")
+
     def button_unblock(self):
         for order in self:
             order.workcenter_id.unblock()
