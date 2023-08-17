@@ -270,7 +270,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     }
                 }
                 if (foundProductIds.length) {
-                    await this.env.pos._addProducts(foundProductIds);
+                    await this.env.pos._addProducts(foundProductIds, false);
                     if (foundPackagings.length) {
                         this.env.pos.db.add_packagings(foundPackagings);
                     }
