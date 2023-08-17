@@ -159,7 +159,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 [odoo.pos_session_id, code.base_code],
             );
             if (product_id.length) {
-                await this.pos._addProducts(product_id);
+                await this.pos._addProducts(product_id, false);
                 if (packaging.length) {
                     this.pos.db.add_packagings(packaging);
                 }
