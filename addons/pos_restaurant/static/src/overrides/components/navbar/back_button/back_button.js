@@ -18,6 +18,10 @@ patch(BackButton.prototype, {
      * the logic of the back button changes a bit.
      */
     async backToFloorScreen() {
+        if(this.pos.tempScreen) {
+            this.pos.closeTempScreen();
+            return;
+        }
         if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
