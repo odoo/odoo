@@ -26,6 +26,7 @@ import {
     useState,
 } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -33,6 +34,8 @@ import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
+
+export const DELAY_FOR_SPINNER = 1000;
 
 /**
  * @typedef {Object} Props
@@ -82,6 +85,8 @@ export class Chatter extends Component {
         isInFormSheetBg: true,
         threadId: false,
     };
+    /** @type {number|null} */
+    loadingAttachmentTimeout = null;
 
     setup() {
         this.action = useService("action");
@@ -97,6 +102,7 @@ export class Chatter extends Component {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
             showActivities: true,
+            showAttachmentLoading: false,
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
         });
@@ -168,6 +174,21 @@ export class Chatter extends Component {
                 }
             },
             () => [this.state.isAttachmentBoxOpened]
+        );
+        useEffect(
+            () => {
+                browser.clearTimeout(this.loadingAttachmentTimeout);
+                if (this.state.thread?.isLoadingAttachments) {
+                    this.loadingAttachmentTimeout = browser.setTimeout(
+                        () => (this.state.showAttachmentLoading = true),
+                        DELAY_FOR_SPINNER
+                    );
+                } else {
+                    this.state.showAttachmentLoading = false;
+                }
+                return () => browser.clearTimeout(this.loadingAttachmentTimeout);
+            },
+            () => [this.state.thread?.isLoadingAttachments]
         );
     }
 

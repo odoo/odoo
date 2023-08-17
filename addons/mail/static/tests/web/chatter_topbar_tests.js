@@ -6,7 +6,9 @@ import {
     nextAnimationFrame,
     start,
     startServer,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
 
@@ -181,7 +183,8 @@ QUnit.test("attachment counter with attachments", async (assert) => {
 QUnit.test("attachment counter while loading attachments", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { openView } = await start({
+    const { advanceTime, openView } = await start({
+        hasTimeControl: true,
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
                 await makeDeferred(); // simulate long loading
@@ -193,7 +196,8 @@ QUnit.test("attachment counter while loading attachments", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button[aria-label='Attach files'] .fa-spin");
+    await advanceTime(DELAY_FOR_SPINNER);
+    await waitUntil("button[aria-label='Attach files'] .fa-spin");
     assert.containsNone($, "button[aria-label='Attach files']:contains(0)");
 });
 
@@ -201,7 +205,8 @@ QUnit.test("attachment counter transition when attachments become loaded", async
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const deferred = makeDeferred();
-    const { openView } = await start({
+    const { advanceTime, openView } = await start({
+        hasTimeControl: true,
         async mockRPC(route) {
             if (route.includes("/mail/thread/data")) {
                 await deferred;
@@ -213,7 +218,8 @@ QUnit.test("attachment counter transition when attachments become loaded", async
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button[aria-label='Attach files'] .fa-spin");
+    await advanceTime(DELAY_FOR_SPINNER);
+    await waitUntil("button[aria-label='Attach files'] .fa-spin");
 
     await afterNextRender(() => deferred.resolve());
     assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
