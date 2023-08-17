@@ -18,7 +18,7 @@ export class Group extends DataPoint {
         super.setup(...arguments);
         this.groupByField = this.fields[config.groupByFieldName];
         this.range = data.range;
-        this._rawValue = data[this.groupByField.name];
+        this._rawValue = data.rawValue;
         /** @type {number} */
         this.count = data.count;
         this.value = data.value;
