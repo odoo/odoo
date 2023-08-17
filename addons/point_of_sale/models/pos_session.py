@@ -2054,7 +2054,11 @@ class PosSession(models.Model):
         return partners
 
     def find_product_by_barcode(self, barcode):
-        product = self.env['product.product'].search([['barcode', '=', barcode], ['sale_ok', '=', True]])
+        product = self.env['product.product'].search([
+            ('barcode', '=', barcode),
+            ('sale_ok', '=', True),
+            ('available_in_pos', '=', True),
+        ])
         if product:
             return {'product_id': [product.id]}
 
