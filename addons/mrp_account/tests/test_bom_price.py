@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 from odoo.tests import common, Form
 from odoo.tools.float_utils import float_round, float_compare
 
@@ -111,15 +112,16 @@ class TestBomPrice(TestBomPriceCommon):
 
     def test_01_compute_price_operation_cost(self):
         """Test calcuation of bom cost with operations."""
-        workcenter_form1 = Form(self.env['mrp.workcenter'])
-        workcenter_form1.name = 'Workcenter'
-        workcenter_form1.time_efficiency = 80
-        workcenter_form1.default_capacity = 2
-        workcenter_form1.oee_target = 100
-        workcenter_form1.time_start = 15
-        workcenter_form1.time_stop = 15
-        workcenter_form1.costs_hour = 100
-        workcenter_1 = workcenter_form1.save()
+        with mute_logger('odoo.tests.form.onchange'):
+            workcenter_from1 = Form(self.env['mrp.workcenter'])
+        workcenter_from1.name = 'Workcenter'
+        workcenter_from1.time_efficiency = 80
+        workcenter_from1.default_capacity = 2
+        workcenter_from1.oee_target = 100
+        workcenter_from1.time_start = 15
+        workcenter_from1.time_stop = 15
+        workcenter_from1.costs_hour = 100
+        workcenter_1 = workcenter_from1.save()
 
         self.env['mrp.workcenter.capacity'].create({
             'product_id': self.dining_table.id,
