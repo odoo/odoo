@@ -173,6 +173,7 @@
             'website/static/src/scss/website.backend.scss',
             'website/static/src/scss/website_visitor_views.scss',
             'website/static/src/js/backend/**/*',
+            'website/static/src/js/tours/tour_utils.js',
             'website/static/src/client_actions/*/*',
             ('remove', 'website/static/src/client_actions/website_preview/website_preview_test_mode.js'),
             'website/static/src/components/fields/*',
@@ -194,9 +195,6 @@
             'website/static/src/scss/website.backend.dark.scss',
             'website/static/src/client_actions/*/*.dark.scss',
             'website/static/src/components/website_loader/website_loader.dark.scss'
-        ],
-        'web.assets_common': [
-            'website/static/src/js/tours/tour_utils.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/redirect_field_tests.js',

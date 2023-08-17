@@ -196,7 +196,6 @@ Featuring
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/pdfjs.js',
             'website/static/src/libs/zoomodoo/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
             'web/static/src/legacy/js/core/ajax.js',
@@ -225,6 +224,7 @@ Featuring
             'web/static/src/legacy/xml/name_and_signature.xml',
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
+            'web/static/src/libs/pdfjs.js',
             'web/static/src/legacy/js/services/session.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 

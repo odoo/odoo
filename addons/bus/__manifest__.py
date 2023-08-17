@@ -10,7 +10,7 @@
     'installable': True,
     'auto_install': True,
     'assets': {
-        'web.assets_common': [
+        'web.assets_backend': [
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',

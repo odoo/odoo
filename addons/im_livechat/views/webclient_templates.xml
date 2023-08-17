@@ -11,8 +11,6 @@
                         <t t-set="info" t-value="{ 'available': True, 'server_url': server_url }"/>
                     </t>
                 </script>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.tests_assets_common" t-css="false"/>
                 <t t-call-assets="im_livechat.embed_test_assets"/>
                 <t t-call-assets="im_livechat.qunit_embed_suite"/>
             </t>

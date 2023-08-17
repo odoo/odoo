@@ -17,14 +17,8 @@ Odoo Web tours.
         'views/tour_views.xml'
     ],
     'assets': {
-        'web.assets_common': [
-            'web_tour/static/src/tour_pointer/**/*',
-            'web_tour/static/src/tour_service/**/*',
-        ],
         'web.assets_backend': [
-            'web_tour/static/src/debug/debug_manager.js',
-            'web_tour/static/src/debug/tour_dialog_component.js',
-            'web_tour/static/src/debug/tour_dialog_component.xml',
+            'web_tour/static/src/**/*',
         ],
         'web.assets_frontend': [
             'web_tour/static/src/tour_pointer/**/*',

@@ -98,6 +98,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_survey_views.scss',
             'survey/static/src/scss/survey_question_views.scss',
             'survey/static/src/scss/survey_templates_results.scss',
+            'survey/static/src/js/tours/survey_tour.js',
         ],
         "web.dark_mode_assets_backend": [
             'survey/static/src/scss/*.dark.scss',
@@ -107,9 +108,6 @@ sent mails with personal token for the invitation of the survey.
         ],
         'web.qunit_suite_tests': [
             'survey/static/tests/components/*.js',
-        ],
-        'web.assets_common': [
-            'survey/static/src/js/tours/survey_tour.js',
         ],
         'web.assets_frontend': [
             'survey/static/src/js/tours/survey_tour.js',

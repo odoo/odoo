@@ -206,9 +206,8 @@ span.o_force_ltr {
     color: #FFFFFF;
     font-size: 1rem;
 
-    // Needed as the parent button could be using font-awesome.
-    // Can't be put to a BS variable here as we are in assets common (will be
-    // overridden for backend but left with 'sans-serif' for frontend to not
-    // have an useless frontend rule.
+    // Needed as the parent button could be using font-awesome. Can't be put to a BS variable here
+    // as this file will be included in both backend and frontend, and will be overridden for
+    // backend but left with 'sans-serif' for frontend to not have an useless frontend rule.
     font-family: sans-serif;
 }
