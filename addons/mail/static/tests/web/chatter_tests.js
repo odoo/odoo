@@ -12,6 +12,7 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 
 import { editInput, triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
@@ -130,7 +131,8 @@ QUnit.test("No attachment loading spinner when creating records", async (assert)
 QUnit.test(
     "No attachment loading spinner when switching from loading record to creation of record",
     async (assert) => {
-        const { openFormView, pyEnv } = await start({
+        const { advanceTime, openFormView, pyEnv } = await start({
+            hasTimeControl: true,
             async mockRPC(route) {
                 if (route === "/mail/thread/data") {
                     await new Promise(() => {});
@@ -139,7 +141,8 @@ QUnit.test(
         });
         const partnerId = pyEnv["res.partner"].create({ name: "John" });
         await openFormView("res.partner", partnerId, { waitUntilDataLoaded: false });
-        assert.containsOnce($, "button[aria-label='Attach files'] .fa-spin");
+        await advanceTime(DELAY_FOR_SPINNER);
+        await waitUntil("button[aria-label='Attach files'] .fa-spin");
         await click(".o_form_button_create");
         assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
     }
