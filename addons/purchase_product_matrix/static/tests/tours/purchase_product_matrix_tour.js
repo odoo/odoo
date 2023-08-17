@@ -24,18 +24,20 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: "text Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
-}, {
+}, 
+{
     trigger: '.o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
         $('.o_matrix_input').val(1);
     }
-}, {
+},
+{
     trigger: 'button:contains("Confirm")',
     run: 'click'
 }, {
     trigger: '.o_form_button_save',
-    run: 'click' // SAVE Sales Order.
+    run: 'click' // SAVE Purchase Order.
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
@@ -43,19 +45,21 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
-}, {
+},
+{
     trigger: '.o_matrix_input_table',
     run: function () {
         // update some of the matrix values.
         $('.o_matrix_input').slice(8, 16).val(4);
     } // set the qty to 4 for half of the matrix products.
-}, {
+},
+{
     trigger: 'button:contains("Confirm")',
     run: 'click' // apply the matrix
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
-    run: 'click' // SAVE Sales Order, after matrix has been applied (extra_trigger).
+    run: 'click' // SAVE Purchase Order, after matrix has been applied (extra_trigger).
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {

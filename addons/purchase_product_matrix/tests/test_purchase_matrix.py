@@ -9,6 +9,8 @@ from odoo.addons.product_matrix.tests.common import TestMatrixCommon
 class TestPurchaseMatrixUi(TestMatrixCommon):
 
     def test_purchase_matrix_ui(self):
+        self.matrix_template.purchase_add_mode = "matrix_purchase"
+
         self.start_tour("/web", 'purchase_matrix_tour', login="admin")
 
         # Ensures some dynamic create variants have been created by the matrix
@@ -19,7 +21,7 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
         self.assertEqual(len(self.matrix_template.attribute_line_ids.product_template_value_ids), 8)
         self.env['purchase.order.line'].search([('product_id', 'in', self.matrix_template.product_variant_ids.ids)]).order_id.button_confirm()
 
-        self.matrix_template.flush_recordset()
+        self.env.flush_all()
         self.assertEqual(round(self.matrix_template.purchased_product_qty, 2), 56.8)
         for variant in self.matrix_template.product_variant_ids:
             # 5 and 9.2 because of no variant attributes

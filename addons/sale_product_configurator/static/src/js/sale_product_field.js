@@ -48,12 +48,14 @@ patch(SaleOrderLineProductField.prototype, {
 
     async _onProductTemplateUpdate() {
         super._onProductTemplateUpdate(...arguments);
+        const context = this.context;
+        context['from_sale'] = true;
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
             [this.props.record.data.product_template_id[0]],
             {
-                context: this.context,
+                context: context
             }
         );
         if(result && result.product_id) {
