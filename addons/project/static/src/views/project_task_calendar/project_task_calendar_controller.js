@@ -15,6 +15,10 @@ export class ProjectTaskCalendarController extends CalendarController {
         this.env.config.setDisplayName(this.env.config.getDisplayName() + _t(" - Tasks by Deadline"));
     }
 
+    get editRecordDefaultDisplayText() {
+        return _t("New Task");
+    }
+
     deleteRecord(record) {
         if  (!record.rawRecord.subtask_count) {
             return super.deleteRecord(record);
