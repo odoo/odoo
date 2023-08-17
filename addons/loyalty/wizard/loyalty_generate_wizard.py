@@ -27,6 +27,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
     points_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     valid_until = fields.Date()
     will_send_mail = fields.Boolean(compute='_compute_will_send_mail')
+    confirmation_message = fields.Char(compute='_compute_confirmation_message')
 
     def _get_partners(self):
         self.ensure_one()
@@ -38,6 +39,17 @@ class LoyaltyGenerateWizard(models.TransientModel):
         if self.customer_tag_ids:
             domain = expression.OR([domain, [('category_id', 'in', self.customer_tag_ids.ids)]])
         return self.env['res.partner'].search(domain)
+
+    @api.depends('program_type', 'points_granted', 'coupon_qty')
+    def _compute_confirmation_message(self):
+        self.confirmation_message = False
+        for wizard in self:
+            program_desc = dict(wizard._fields['program_type']._description_selection(wizard.env))
+            wizard.confirmation_message = _("You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers",
+                program_type=program_desc[wizard.program_type],
+                value=wizard.points_granted,
+                customer_number=wizard.coupon_qty,
+            )
 
     @api.depends('customer_ids', 'customer_tag_ids', 'mode')
     def _compute_coupon_qty(self):

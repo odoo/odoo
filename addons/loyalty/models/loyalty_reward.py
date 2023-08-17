@@ -34,8 +34,8 @@ class LoyaltyReward(models.Model):
         symbol = self.env.context.get('currency_symbol', self.env.company.currency_id.symbol)
         return [
             ('percent', '%'),
+            ('per_order', symbol),
             ('per_point', _('%s per point', symbol)),
-            ('per_order', _('%s per order', symbol))
         ]
 
     @api.depends('program_id', 'description')
@@ -181,7 +181,7 @@ class LoyaltyReward(models.Model):
                 elif reward.discount_mode == 'per_point':
                     reward_string = _('%s per point on ', formatted_amount)
                 elif reward.discount_mode == 'per_order':
-                    reward_string = _('%s per order on ', formatted_amount)
+                    reward_string = _('%s on ', formatted_amount)
                 if reward.discount_applicability == 'order':
                     reward_string += _('your order')
                 elif reward.discount_applicability == 'cheapest':
