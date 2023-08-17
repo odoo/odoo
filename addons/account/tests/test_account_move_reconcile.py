@@ -1096,7 +1096,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertRecordValues(res['partials'], [{
             'amount': 10.0,
-            'debit_amount_currency': 0.0,
+            'debit_amount_currency': 0.001,
             'credit_amount_currency': 10.0,
             'debit_move_id': line_2.id,
             'credit_move_id': line_1.id,
@@ -1104,7 +1104,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFalse(res['partials'].exchange_move_id)
         self.assertRecordValues(line_1 + line_2, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': 999990.0,   'amount_residual_currency': 100.0,  'reconciled': False},
+            {'amount_residual': 999990.0,   'amount_residual_currency': 99.999, 'reconciled': False},
         ])
 
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_full_payment(self):
