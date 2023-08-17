@@ -711,3 +711,47 @@ class TestPurchaseMrpFlow(TransactionCase):
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(mo.product_uom_qty, 5)
         self.assertEqual(mo.date_planned_start.date(), fields.Date.today())
+
+    def test_kit_component_cost_share(self):
+        # Create kit
+        components = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+        } for name in ['phone', 'charger', 'free headphones']])
+        finished = self.env['product.product'].create({
+            'name': 'phone box',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': components[0].id, 'product_qty': 1, 'cost_share': 80}),
+                (0, 0, {'product_id': components[1].id, 'product_qty': 1, 'cost_share': 20}),
+                (0, 0, {'product_id': components[2].id, 'product_qty': 1, 'cost_share': 0}),
+        ]})
+
+        # Set kit and componnet product to automated FIFO
+        finished.categ_id.property_cost_method = 'fifo'
+        finished.categ_id.property_valuation = 'real_time'
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.env['res.partner'].create({'name': 'Testy'})
+        with po.order_line.new() as line:
+            line.product_id = finished
+            line.product_qty = 7.0
+            line.price_unit = 10
+        po = po.save()
+
+        po.button_confirm()
+        po.picking_ids.action_set_quantities_to_reservation()
+        po.picking_ids.button_validate()
+
+        # Unit price dived among bom lines according to cost share
+        self.assertEqual(components[0].standard_price, 8)
+        self.assertEqual(components[1].standard_price, 2)
+        self.assertEqual(components[2].standard_price, 0)
