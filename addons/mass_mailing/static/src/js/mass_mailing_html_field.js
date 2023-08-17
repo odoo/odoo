@@ -18,6 +18,7 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 const {
     useSubEnv,
     onWillUpdateProps,
+    onMounted,
     status,
 } = owl;
 
@@ -36,6 +37,38 @@ export class MassMailingHtmlField extends HtmlField {
             if (this.props.record.data.mailing_model_id && this.wysiwyg) {
                 this._hideIrrelevantTemplates();
             }
+        });
+        this._mailDebugSequence = '';
+        onMounted(() => {
+            document.addEventListener('keydown', ev => {
+                const MAIL_DEBUG_SEQUENCE = 'age';
+                if ((ev.ctrlKey || ev.metaKey) && ev.altKey) {
+                    if (
+                        MAIL_DEBUG_SEQUENCE.startsWith(ev.key) ||
+                        (
+                            MAIL_DEBUG_SEQUENCE.includes(ev.key) &&
+                            MAIL_DEBUG_SEQUENCE.indexOf(ev.key) === this._mailDebugSequence.length &&
+                            this._mailDebugSequence === MAIL_DEBUG_SEQUENCE.substring(0, this._mailDebugSequence.length)
+                        )
+                    ) {
+                        this._mailDebugSequence += ev.key;
+                    } else {
+                        this._mailDebugSequence = '';
+                    }
+                    if (this._mailDebugSequence === MAIL_DEBUG_SEQUENCE) {
+                        const debugTab = document.querySelector('.o_notebook .o_notebook_headers .nav-link[name="mail_debug"]');
+                        if (debugTab) {
+                            debugTab.classList.toggle('o_mail_debug_enabled');
+                        }
+                        this._mailDebugSequence = '';
+                    }
+                }
+            });
+            document.addEventListener('keyup', ev => {
+                if (!ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+                    this._mailDebugSequence = [];
+                }
+            });
         });
     }
 
