@@ -1721,7 +1721,6 @@ class AccountMoveLine(models.Model):
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
                 debit_rate = 1
-                credit_rate = None
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
 
@@ -1742,7 +1741,6 @@ class AccountMoveLine(models.Model):
             # try to fallback on the company currency instead.
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
-                debit_rate = None
                 credit_rate = 1
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
