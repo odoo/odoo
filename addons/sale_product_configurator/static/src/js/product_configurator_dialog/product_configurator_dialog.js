@@ -251,18 +251,24 @@ export class ProductConfiguratorDialog extends Component {
         const childProducts = this._getChildProducts(product.product_tmpl_id)
         const ptavList = product.attribute_lines.flat().flatMap(ptal => ptal.attribute_values)
         ptavList.map(ptav => ptav.excluded = false); // Reset all the values
+        ptavList.setExcluded = function (excludedPtavId) {
+            const excludedPtav = this.find(ptav => ptav.id === excludedPtavId);
+            if (excludedPtav) {
+                excludedPtav.excluded = true;
+            }
+        };
 
         if (exclusions) {
             for(const ptavId of combination) {
                 for(const excludedPtavId of exclusions[ptavId]) {
-                    ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    ptavList.setExcluded(excludedPtavId);
                 }
             }
         }
         if (parentCombination) {
             for(const ptavId of parentCombination) {
                 for(const excludedPtavId of (parentExclusions[ptavId]||[])) {
-                    ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                    ptavList.setExcluded(excludedPtavId);
                 }
             }
         }
@@ -271,17 +277,13 @@ export class ProductConfiguratorDialog extends Component {
                 const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
                 if (ptavCommon.length === combination.length) {
                     for(const excludedPtavId of ptavCommon) {
-                        ptavList.find(ptav => ptav.id === excludedPtavId).excluded = true;
+                        ptavList.setExcluded(excludedPtavId);
                     }
                 } else if (ptavCommon.length === (combination.length - 1)) {
                     // In this case we only need to disable the remaining ptav
-                    const disabledPtavId = excludedCombination.find(
+                    ptavList.setExcluded(excludedCombination.find(
                         (ptav) => !combination.includes(ptav)
-                    );
-                    const excludedPtav = ptavList.find(ptav => ptav.id === disabledPtavId)
-                    if (excludedPtav) {
-                        excludedPtav.excluded = true;
-                    }
+                    ));
                 }
             }
         }
