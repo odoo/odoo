@@ -46561,7 +46561,14 @@
   `;
     }
 
-    const TABLE_DEFAULT_STYLE = escapeXml /*xml*/ `<tableStyleInfo name="TableStyleLight8" showFirstColumn="0" showLastColumn="0" showRowStripes="0" showColumnStripes="0"/>`;
+    const TABLE_DEFAULT_ATTRS = [
+        ["name", "TableStyleLight8"],
+        ["showFirstColumn", "0"],
+        ["showLastColumn", "0"],
+        ["showRowStripes", "0"],
+        ["showColumnStripes", "0"],
+    ];
+    const TABLE_DEFAULT_STYLE = escapeXml /*xml*/ `<tableStyleInfo ${formatAttributes(TABLE_DEFAULT_ATTRS)}/>`;
     function createTable(table, tableId, sheetData) {
         const tableAttributes = [
             ["id", tableId],
@@ -47655,9 +47662,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.7';
-    __info__.date = '2023-08-09T11:59:53.998Z';
-    __info__.hash = 'd2dbcc3';
+    __info__.version = '16.3.8';
+    __info__.date = '2023-08-17T11:13:16.000Z';
+    __info__.hash = 'af65228';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
