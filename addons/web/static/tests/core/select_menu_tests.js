@@ -2,13 +2,14 @@
 
 import { browser } from "@web/core/browser/browser";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { overlayService } from "@web/core/overlay/overlay_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     getFixture,
     patchWithCleanup,
-    mount,
     click,
     triggerEvent,
     nextTick,
@@ -17,6 +18,7 @@ import {
 } from "../helpers/utils";
 
 import { Component, useState, xml } from "@odoo/owl";
+import { mountInFixture } from "../helpers/mountInFixture";
 
 const serviceRegistry = registry.category("services");
 
@@ -28,6 +30,8 @@ QUnit.module("Web Components", (hooks) => {
 
     hooks.beforeEach(async () => {
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("overlay", overlayService);
+        serviceRegistry.add("popover", popoverService);
         env = await makeTestEnv();
         target = getFixture();
         patchWithCleanup(browser, {
@@ -74,7 +78,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Can be rendered", async (assert) => {
         const Parent = getDefaultComponent();
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.containsOnce(target, ".o_select_menu");
         assert.containsOnce(target, ".o_select_menu_toggler");
 
@@ -92,7 +96,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Default value correctly set", async (assert) => {
         const Parent = getDefaultComponent();
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.strictEqual(getValue(), "World");
     });
 
@@ -126,7 +130,7 @@ QUnit.module("Web Components", (hooks) => {
             />
         `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             assert.strictEqual(getValue(), "World");
 
             await open();
@@ -144,7 +148,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Close dropdown on click outside", async (assert) => {
         const Parent = getDefaultComponent();
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.containsNone(target, ".o_select_menu_menu");
 
         await open();
@@ -157,7 +161,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Close dropdown on escape keydown", async (assert) => {
         const Parent = getDefaultComponent();
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.containsNone(target, ".o_select_menu_menu");
 
         await open();
@@ -170,7 +174,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("Search input should be present and auto-focused", async (assert) => {
         const Parent = getDefaultComponent();
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
         assert.containsOnce(target, "input.o_select_menu_sticky");
         assert.equal(document.activeElement, target.querySelector("input.o_select_menu_sticky"));
@@ -199,7 +203,7 @@ QUnit.module("Web Components", (hooks) => {
                 }
             }
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             assert.equal(getValue(), "", `The toggler should be empty`);
         }
     );
@@ -225,7 +229,7 @@ QUnit.module("Web Components", (hooks) => {
             }
         }
 
-        const comp = await mount(Parent, target, { env });
+        const comp = await mountInFixture(Parent, target, { env });
         assert.equal(getValue(), "A", `The select value shoud be "A"`);
 
         comp.setValue("world");
@@ -263,7 +267,7 @@ QUnit.module("Web Components", (hooks) => {
             />
         `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             assert.containsOnce(target, ".o_select_menu_toggler_clear");
             assert.strictEqual(getValue(), "Hello");
 
@@ -297,7 +301,7 @@ QUnit.module("Web Components", (hooks) => {
             />
         `;
 
-            const parent = await mount(Parent, target, { env });
+            const parent = await mountInFixture(Parent, target, { env });
             assert.containsNone(
                 target,
                 ".o_select_menu_toggler_clear",
@@ -333,7 +337,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
 
         const choices = [...target.querySelectorAll(".o_select_menu_item_label")];
@@ -361,7 +365,7 @@ QUnit.module("Web Components", (hooks) => {
                 </SelectMenu>
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.containsOnce(target, ".select_menu_test");
 
         await open();
@@ -393,7 +397,7 @@ QUnit.module("Web Components", (hooks) => {
                 </SelectMenu>
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
         assert.containsN(target, ".coolClass", 2);
         assert.strictEqual(target.querySelector(".coolClass").textContent, "Hello");
@@ -434,7 +438,7 @@ QUnit.module("Web Components", (hooks) => {
                 </SelectMenu>
             `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             await open();
             assert.strictEqual(
                 target.querySelector(".o_select_menu_bottom_area").textContent.trim(),
@@ -478,7 +482,7 @@ QUnit.module("Web Components", (hooks) => {
                 </SelectMenu>
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
         assert.containsNone(target, ".coolClass");
 
@@ -510,7 +514,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
 
         assert.containsOnce(target, ".o_select_menu_group");
@@ -552,7 +556,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
 
         const elements = Array.from(
@@ -590,7 +594,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             await open();
 
             let elements = Array.from(
@@ -643,7 +647,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             assert.containsNone(
                 target,
                 ".o_select_menu .o_tag_badge_text",
@@ -735,7 +739,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             assert.containsN(
                 target,
                 ".o_select_menu .o_tag_badge_text",
@@ -774,7 +778,7 @@ QUnit.module("Web Components", (hooks) => {
     );
 
     QUnit.test("Navigation is possible from the input when it is focused", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         class Parent extends Component {
             setup() {
@@ -800,7 +804,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         await open();
         assert.equal(
             document.activeElement,
@@ -810,23 +814,31 @@ QUnit.module("Web Components", (hooks) => {
 
         await triggerHotkey("ArrowDown");
         assert.strictEqual(
-            document.activeElement.textContent,
+            target.querySelector(".focus").textContent,
             "A",
-            "first item is focused after keyboard navigation"
+            "first item is virtually focused after keyboard navigation"
         );
-
-        await triggerHotkey("ArrowDown");
-        assert.strictEqual(document.activeElement.textContent, "B", "second item is now focused");
-
-        await triggerHotkey("ArrowUp");
-        await triggerHotkey("ArrowUp");
         assert.equal(
             document.activeElement,
             target.querySelector("input.o_select_menu_sticky"),
-            "search input is focused again"
+            "search input has kept focus after keyboard navigation"
         );
 
         await triggerHotkey("ArrowDown");
+        assert.strictEqual(
+            target.querySelector(".focus").textContent,
+            "B",
+            "second item is now virtually focused"
+        );
+
+        await triggerHotkey("ArrowDown");
+        await triggerHotkey("ArrowDown");
+        assert.strictEqual(
+            target.querySelector(".focus").textContent,
+            "A",
+            "first item is now virtually focused"
+        );
+
         await triggerHotkey("Enter");
         assert.verifySteps(["a"], "value has been selected after keyboard navigation");
     });
@@ -860,7 +872,7 @@ QUnit.module("Web Components", (hooks) => {
                 />
             `;
 
-            await mount(Parent, target, { env });
+            await mountInFixture(Parent, target, { env });
             await open();
             await editInput(target, "input.o_select_menu_sticky", "a");
             await triggerHotkey("Enter");
@@ -901,7 +913,7 @@ QUnit.module("Web Components", (hooks) => {
             />
         `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.strictEqual(getValue(), "Hello");
 
         await open();
@@ -965,7 +977,7 @@ QUnit.module("Web Components", (hooks) => {
             />
         `;
 
-        await mount(Parent, target, { env });
+        await mountInFixture(Parent, target, { env });
         assert.strictEqual(getValue(), "Hello");
 
         await open();
