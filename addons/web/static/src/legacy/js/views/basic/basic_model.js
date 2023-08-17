@@ -3948,14 +3948,6 @@ var BasicModel = AbstractModel.extend({
                         relDataPoint = self._applyX2ManyOperations(self.localData[fieldValue]);
                         ids = relDataPoint.res_ids.slice(0);
                     }
-                    if (field.type === 'one2many') { // Ids are evaluated as a list of ids
-                        /* Filtering out virtual ids from the ids list
-                        * The server will crash if there are virtual ids in there
-                        * The webClient doesn't do literal id list comparison like ids == list
-                        * Only relevant in o2m: m2m does create actual records in db
-                        */
-                        ids = ids.filter(id => typeof id !== 'string');
-                    }
                     return ids;
                 }
                 if (field.type === "properties" && Array.isArray(fieldValue)) {
