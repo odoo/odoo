@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Turkey - Accounting',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
