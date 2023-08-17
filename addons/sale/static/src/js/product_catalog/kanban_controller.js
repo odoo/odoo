@@ -3,7 +3,7 @@
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-
+import { _t } from "@web/core/l10n/translation";
 
 export class ProductCatalogKanbanController extends KanbanController {
     static template = "sale.ProductCatalogKanbanController";
@@ -14,19 +14,25 @@ export class ProductCatalogKanbanController extends KanbanController {
         this.orm = useService("orm");
         this.orderId = this.props.context.order_id;
 
-        onWillStart(async () => {
-            // Define the content of the button.
-            const orderStateInfo = await this.orm.searchRead(
-                "sale.order", [["id", "=", this.orderId]], ["state"]
-            );
-            const orderIsQuotation = ["draft", "sent"].includes(orderStateInfo[0].state);
-            this.buttonString = `Back to ${orderIsQuotation ? "Quotation" : "Order"}`
-        })
+        onWillStart(async () => this._defineButtonContent());
     }
 
     // Force the slot for the "Back to Quotation" button to always be shown.
     get canCreate() {
         return true;
+    }
+
+    async _defineButtonContent() {
+        // Define the content of the button.
+        const orderStateInfo = await this.orm.searchRead(
+            "sale.order", [["id", "=", this.orderId]], ["state"]
+        );
+        const orderIsQuotation = ["draft", "sent"].includes(orderStateInfo[0].state);
+        if (orderIsQuotation) {
+            this.buttonString = _t("Back to Quotation");
+        } else {
+            this.buttonString = _t("Back to Order");
+        }
     }
 
     async backToQuotation() {
