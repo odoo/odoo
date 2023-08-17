@@ -151,9 +151,17 @@
             <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
             </DatiOrdineAcquisto>
-            <DatiFattureCollegate t-if="record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name[-20:])"/>
-                <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
+            <DatiFattureCollegate
+                t-foreach="record.line_ids.mapped('matched_credit_ids.credit_move_id.move_id')"
+                t-as="credit_note">
+                <IdDocumento t-out="format_alphanumeric(credit_note.name[-20:])"/>
+                <Data t-out="format_date(credit_note.invoice_date)"/>
+            </DatiFattureCollegate>
+            <DatiFattureCollegate
+                t-foreach="record.line_ids.mapped('matched_debit_ids.debit_move_id.move_id')"
+                t-as="debit_note">
+                <IdDocumento t-out="format_alphanumeric(debit_note.name[-20:])"/>
+                <Data t-out="format_date(debit_note.invoice_date)"/>
             </DatiFattureCollegate>
             <DatiFattureCollegate t-foreach="downpayment_moves" t-as="downpayment_move">
                 <IdDocumento t-out="format_alphanumeric(downpayment_move.name[-20:])"/>

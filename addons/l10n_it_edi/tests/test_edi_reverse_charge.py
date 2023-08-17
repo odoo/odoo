@@ -169,9 +169,6 @@ class TestItEdiReverseCharge(TestItEdi):
             ),
         }
         cls.reverse_charge_bill_2 = cls.env['account.move'].with_company(cls.company).create(bill_data_2)
-        cls.reverse_charge_refund = cls.reverse_charge_bill.with_company(cls.company)._reverse_moves([{
-            'invoice_date': fields.Date.from_string('2022-03-24'),
-        }])
 
         # Import bill San Marino
         bill_data_san_marino = {
@@ -193,7 +190,6 @@ class TestItEdiReverseCharge(TestItEdi):
         cls.reverse_charge_bill._post()
         cls.reverse_charge_bill_2._post()
         cls.reverse_charge_bill_san_marino._post()
-        cls.reverse_charge_refund._post()
 
     def test_reverse_charge_invoice(self):
         self._test_invoice_with_sample_file(self.reverse_charge_invoice, "reverse_charge_invoice.xml")
@@ -253,6 +249,10 @@ class TestItEdiReverseCharge(TestItEdi):
         )
 
     def test_reverse_charge_refund(self):
+        self.reverse_charge_refund = self.reverse_charge_bill.with_company(self.company)._reverse_moves([{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+        }], cancel=True)
+
         self._test_invoice_with_sample_file(
             self.reverse_charge_refund,
             "reverse_charge_bill.xml",
