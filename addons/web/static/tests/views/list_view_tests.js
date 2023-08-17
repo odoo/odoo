@@ -1994,6 +1994,33 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("group a list view with the aggregable field 'value'", async function (assert) {
+        serverData.models.foo.fields.value = {
+            string: "Value",
+            type: "integer",
+            group_operator: "sum",
+        };
+        for (const record of serverData.models.foo.records) {
+            record.value = 1;
+        }
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                    <tree>
+                        <field name="bar"/>
+                        <field name="value" sum="Sum1"/>
+                    </tree>`,
+            groupBy: ["bar"],
+        });
+        assert.containsN(target, ".o_group_header", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_group_header")].map((el) => el.textContent),
+            ["No (1) 1", "Yes (3) 3"]
+        );
+    });
+
     QUnit.test("basic grouped list rendering with groupby m2m field", async function (assert) {
         await makeView({
             type: "list",

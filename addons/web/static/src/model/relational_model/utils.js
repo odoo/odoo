@@ -426,9 +426,8 @@ export function getDisplayNameFromGroupData(field, rawValue) {
  * @param {any} rawValue
  * @returns {any}
  */
-export function getValueFromGroupData(groupData, field, rawValue) {
+export function getValueFromGroupData(groupData, field, rawValue, range) {
     if (["date", "datetime"].includes(field.type)) {
-        const range = groupData.range;
         if (!range) {
             return false;
         }
