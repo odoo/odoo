@@ -10,7 +10,6 @@
                 <block title="Electronic Document Invoicing" attrs="{'invisible':[('country_code', '!=', 'IT')]}" id='account_edi'>
                     <setting>
                         <div class="group-content">
-                            <field name="l10n_it_edi_proxy_current_state" invisible="1"/>
                             <span class="o_form_label">
                                 Fattura Elettronica mode
                             </span>
@@ -21,25 +20,17 @@
                                 Saving this change will direct all companies on this database to this use this configuration.
                                 Once registered for testing or official, the mode cannot be changed.
                             </div>
-                            <field name="l10n_it_edi_sdicoop_demo_mode"
-                                    widget="radio"
-                                    options="{'horizontal': true}"/>
+                            <field name="l10n_it_edi_mode" widget="radio" options="{'horizontal': true}"/>
                         </div>
-                        <div class="mt8 content-group" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','=','active'), '&amp;', ('l10n_it_edi_proxy_current_state','=','demo'), ('l10n_it_edi_sdicoop_demo_mode','=','demo')]}">
+                        <field name="l10n_it_edi_mode_old" invisible="1"/>
+                        <div class="mt8 content-group">
                             <span class="o_form_label">Allow Odoo to process invoices</span>
                             <div class="text-muted">
                                 By checking this box, I accept that Odoo may process my invoices.
                             </div>
-                            <div class="content-group">
-                                <field name="l10n_it_edi_sdicoop_register"/>
+                            <div class="content-group" attrs="{'readonly': [('l10n_it_edi_mode_old', '!=', False)]}">
+                                <field name="l10n_it_edi_register"/>
                             </div>
-
-                        </div>
-                        <div class="text-success mt8" attrs="{'invisible': [('l10n_it_edi_proxy_current_state','in', ['inactive', 'demo'])]}">
-                            An Official or Test service has been registered.
-                        </div>
-                        <div class="text-success mt8" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','!=', 'demo'), ('l10n_it_edi_sdicoop_demo_mode', '!=', 'demo')]}">
-                            A Demo service is in use.
                         </div>
                     </setting>
                 </block>
