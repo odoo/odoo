@@ -13293,4 +13293,30 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.verifySteps([]);
     });
+
+    QUnit.test("invisible button base on x2many", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" >
+                        <tree editable="bottom">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                    <button name="abc" string="Do it" class="my_button" attrs="{'invisible': [('p', '=', [])]}"/>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsNone(target, "button.my_button");
+
+        await addRow(target);
+        await editInput(target, "[name='foo'] input", "Test");
+        assert.containsOnce(target, "button.my_button");
+
+        await click(target, "button.fa-trash-o");
+        assert.containsNone(target, "button.my_button");
+    });
 });
