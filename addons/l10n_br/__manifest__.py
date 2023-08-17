@@ -46,9 +46,11 @@ come with any additional paid permission for online use of 'private modules'.
     'depends': [
         'account',
         'base_vat',
+        'l10n_latam_base',
     ],
     'data': [
         'data/account_tax_report_data.xml',
+        'data/l10n_latam.identification.type.csv',
         'views/account_view.xml',
         'views/account_fiscal_position_views.xml',
         'views/res_company_views.xml',
