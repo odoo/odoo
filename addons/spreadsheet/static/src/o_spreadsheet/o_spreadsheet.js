@@ -1,17 +1,13 @@
 (function (exports, owl) {
     'use strict';
 
-    /*
-     * usage: every string should be translated with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
-     *  sub-env of Spreadsheet components as _t
-     * */
     // define a mock translation function, when o-spreadsheet runs in standalone it doesn't translate any string
     let _translate = (s) => s;
     let _loaded = () => false;
     function sprintf(s, ...values) {
-        if (values.length === 1 && typeof values[0] === "object") {
+        if (values.length === 1 && typeof values[0] === "object" && !(values[0] instanceof String)) {
             const valuesDict = values[0];
-            s = s.replace(/\%\(?([^\)]+)\)s/g, (match, value) => valuesDict[value]);
+            s = s.replace(/\%\(([^\)]+)\)s/g, (match, value) => valuesDict[value]);
         }
         else if (values.length > 0) {
             s = s.replace(/\%s/g, () => values.shift());
@@ -647,18 +643,6 @@
         const cleanObject = { ...obj };
         Object.keys(cleanObject).forEach((key) => !cleanObject[key] && delete cleanObject[key]);
         return cleanObject;
-    }
-    function transpose2dArray(matrix, callback = (val) => val) {
-        if (!matrix.length)
-            return [];
-        const transposed = Array(matrix[0].length);
-        for (let i = 0; i < matrix[0].length; i++) {
-            transposed[i] = Array(matrix.length);
-            for (let j = 0; j < matrix.length; j++) {
-                transposed[i][j] = callback(matrix[j][i]);
-            }
-        }
-        return transposed;
     }
     /**
      * Equivalent to "\s" in regexp, minus the new lines characters
@@ -3760,6 +3744,9 @@
         get chartPadding() {
             return this.props.figure.width * CHART_PADDING_RATIO;
         }
+        translate(term) {
+            return _t(term);
+        }
         getTextStyles() {
             // If the widest text overflows horizontally, scale it down, and apply the same scaling factors to all the other fonts.
             const maxLineWidth = this.props.figure.width * (1 - 2 * CHART_PADDING_RATIO);
@@ -3768,8 +3755,8 @@
             const fontSizeMatchingWidth = getFontSizeMatchingWidth(maxLineWidth, baseFontSize, (fontSize) => widestElement.getElementWidth(fontSize, this.ctx, this));
             let scalingFactor = fontSizeMatchingWidth / baseFontSize;
             // Fonts sizes in px
-            const keyFontSize = new KeyValueElement().getElementMaxFontSize(this.getDrawableHeight(), this) * scalingFactor;
-            const baselineFontSize = new BaselineElement().getElementMaxFontSize(this.getDrawableHeight(), this) * scalingFactor;
+            const keyFontSize = new KeyValueElement(this.runtime.keyValueStyle).getElementMaxFontSize(this.getDrawableHeight(), this) * scalingFactor;
+            const baselineFontSize = new BaselineElement(this.runtime.baselineStyle).getElementMaxFontSize(this.getDrawableHeight(), this) * scalingFactor;
             return {
                 titleStyle: this.getTextStyle({
                     fontSize: TITLE_FONT_SIZE,
@@ -3813,26 +3800,36 @@
         }
         /** Return the element with he widest text in the chart */
         getWidestElement() {
-            const baseline = new BaselineElement();
-            const keyValue = new KeyValueElement();
+            const baseline = new BaselineElement(this.runtime.baselineStyle);
+            const keyValue = new KeyValueElement(this.runtime.keyValueStyle);
             return baseline.getElementWidth(BASELINE_BOX_HEIGHT_RATIO, this.ctx, this) >
                 keyValue.getElementWidth(KEY_BOX_HEIGHT_RATIO, this.ctx, this)
                 ? baseline
                 : keyValue;
         }
     }
-    class BaselineElement {
+    class ScorecardScalableElement {
+        style;
+        constructor(style = {}) {
+            this.style = style;
+        }
+        measureTextWidth(ctx, text, fontSize) {
+            const italic = this.style.italic ? "italic" : "";
+            const weight = this.style.bold ? "bold" : "";
+            ctx.font = `${italic} ${weight} ${fontSize}px ${DEFAULT_FONT}`;
+            return ctx.measureText(text).width;
+        }
+    }
+    class BaselineElement extends ScorecardScalableElement {
         getElementWidth(fontSize, ctx, chart) {
             if (!chart.runtime)
                 return 0;
             const baselineStr = chart.baseline;
             // Put mock text to simulate the width of the up/down arrow
             const largeText = chart.baselineArrowDirection !== "neutral" ? "A " + baselineStr : baselineStr;
-            ctx.font = `${fontSize}px ${DEFAULT_FONT}`;
-            let textWidth = ctx.measureText(largeText).width;
+            let textWidth = this.measureTextWidth(ctx, largeText, fontSize);
             // Baseline descr font size should be smaller than baseline font size
-            ctx.font = `${fontSize * BASELINE_DESCR_FONT_RATIO}px ${DEFAULT_FONT}`;
-            textWidth += ctx.measureText(chart.baselineDescr).width;
+            textWidth += this.measureTextWidth(ctx, chart.baselineDescr, fontSize * BASELINE_DESCR_FONT_RATIO);
             return textWidth;
         }
         getElementMaxFontSize(availableHeight, chart) {
@@ -3843,13 +3840,12 @@
             return maxHeight / LINE_HEIGHT;
         }
     }
-    class KeyValueElement {
+    class KeyValueElement extends ScorecardScalableElement {
         getElementWidth(fontSize, ctx, chart) {
             if (!chart.runtime)
                 return 0;
             const str = chart.keyValue || "";
-            ctx.font = `${fontSize}px ${DEFAULT_FONT}`;
-            return ctx.measureText(str).width;
+            return this.measureTextWidth(ctx, str, fontSize);
         }
         getElementMaxFontSize(availableHeight, chart) {
             if (!chart.runtime)
@@ -4356,13 +4352,6 @@
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "");
     }
-    /**
-     * Normalize a value.
-     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
-     */
-    function normalizeValue(value) {
-        return typeof value === "string" ? normalizeString(value) : value;
-    }
     const expectBooleanValueError = (value) => _t("The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, and cannot be coerced to a number.", value);
     function toBoolean(value) {
         switch (typeof value) {
@@ -4402,7 +4391,7 @@
     // -----------------------------------------------------------------------------
     function visitArgs(args, cellCb, dataCb) {
         for (let arg of args) {
-            if (Array.isArray(arg)) {
+            if (isMatrix(arg)) {
                 // arg is ref to a Cell/Range
                 const lenRow = arg.length;
                 const lenCol = arg[0].length;
@@ -4436,7 +4425,7 @@
     function reduceArgs(args, cellCb, dataCb, initialValue, dir = "rowFirst") {
         let val = initialValue;
         for (let arg of args) {
-            if (Array.isArray(arg)) {
+            if (isMatrix(arg)) {
                 // arg is ref to a Cell/Range
                 const numberOfCols = arg.length;
                 const numberOfRows = arg[0].length;
@@ -4494,6 +4483,34 @@
         }, initialValue);
     }
     // -----------------------------------------------------------------------------
+    // MATRIX FUNCTIONS
+    // -----------------------------------------------------------------------------
+    /**
+     * Generate a matrix of size nColumns x nRows and apply a callback on each position
+     */
+    function generateMatrix(nColumns, nRows, callback) {
+        const returned = Array(nColumns);
+        for (let col = 0; col < nColumns; col++) {
+            returned[col] = Array(nRows);
+            for (let row = 0; row < nRows; row++) {
+                returned[col][row] = callback(col, row);
+            }
+        }
+        return returned;
+    }
+    function matrixMap(matrix, fn) {
+        if (matrix.length === 0) {
+            return [];
+        }
+        return generateMatrix(matrix.length, matrix[0].length, (col, row) => fn(matrix[col][row]));
+    }
+    function transposeMatrix(matrix) {
+        if (!matrix.length) {
+            return [];
+        }
+        return generateMatrix(matrix[0].length, matrix.length, (i, j) => matrix[j][i]);
+    }
+    // -----------------------------------------------------------------------------
     // CONDITIONAL EXPLORE FUNCTIONS
     // -----------------------------------------------------------------------------
     /**
@@ -4502,13 +4519,13 @@
      */
     function conditionalVisitArgs(args, cellCb, dataCb) {
         for (let arg of args) {
-            if (Array.isArray(arg)) {
+            if (isMatrix(arg)) {
                 // arg is ref to a Cell/Range
                 const lenRow = arg.length;
                 const lenCol = arg[0].length;
                 for (let y = 0; y < lenCol; y++) {
                     for (let x = 0; x < lenRow; x++) {
-                        if (!cellCb(arg[x][y]))
+                        if (!cellCb(arg[x][y] ?? undefined))
                             return;
                     }
                 }
@@ -4596,7 +4613,7 @@
     }
     function evaluatePredicate(value, criterion) {
         const { operator, operand } = criterion;
-        if (value === undefined || operand === undefined) {
+        if (value === undefined || operand === undefined || value === null || operand === null) {
             return false;
         }
         if (typeof operand === "number" && operator === "=") {
@@ -4665,7 +4682,7 @@
         let predicates = [];
         for (let i = 0; i < countArg - 1; i += 2) {
             const criteriaRange = args[i];
-            if (!Array.isArray(criteriaRange) ||
+            if (!isMatrix(criteriaRange) ||
                 criteriaRange.length !== dimRow ||
                 criteriaRange[0].length !== dimCol) {
                 throw new Error(_t(`Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension`));
@@ -4679,7 +4696,7 @@
                 for (let k = 0; k < countArg - 1; k += 2) {
                     const criteriaValue = args[k][i][j];
                     const criterion = predicates[k / 2];
-                    validatedPredicates = evaluatePredicate(criteriaValue, criterion);
+                    validatedPredicates = evaluatePredicate(criteriaValue ?? undefined, criterion);
                     if (!validatedPredicates) {
                         break;
                     }
@@ -4693,12 +4710,6 @@
     // -----------------------------------------------------------------------------
     // COMMON FUNCTIONS
     // -----------------------------------------------------------------------------
-    function getNormalizedValueFromColumnRange(range, index) {
-        return normalizeValue(range[0][index]);
-    }
-    function getNormalizedValueFromRowRange(range, index) {
-        return normalizeValue(range[index][0]);
-    }
     /**
      * Perform a dichotomic search on an array and return the index of the nearest match.
      *
@@ -4718,7 +4729,8 @@
         if (target === null || target === undefined) {
             return -1;
         }
-        const targetType = typeof target;
+        const _target = normalizeValue(target);
+        const targetType = typeof _target;
         let matchVal = undefined;
         let matchValIndex = undefined;
         let indexLeft = 0;
@@ -4730,25 +4742,26 @@
         while (indexRight - indexLeft >= 0) {
             indexMedian = Math.floor((indexLeft + indexRight) / 2);
             currentIndex = indexMedian;
-            currentVal = getValueInData(data, currentIndex);
+            currentVal = normalizeValue(getValueInData(data, currentIndex));
             currentType = typeof currentVal;
             // 1 - linear search to find value with the same type
             while (indexLeft < currentIndex && targetType !== currentType) {
                 currentIndex--;
-                currentVal = getValueInData(data, currentIndex);
+                currentVal = normalizeValue(getValueInData(data, currentIndex));
                 currentType = typeof currentVal;
             }
-            if (currentType !== targetType || currentVal === undefined) {
+            if (currentType !== targetType || currentVal === undefined || currentVal === null) {
                 indexLeft = indexMedian + 1;
                 continue;
             }
             // 2 - check if value match
-            if (mode === "strict" && currentVal === target) {
+            if (mode === "strict" && currentVal === _target) {
                 matchVal = currentVal;
                 matchValIndex = currentIndex;
             }
-            else if (mode === "nextSmaller" && currentVal <= target) {
+            else if (mode === "nextSmaller" && currentVal <= _target) {
                 if (matchVal === undefined ||
+                    matchVal === null ||
                     matchVal < currentVal ||
                     (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
                     (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
@@ -4756,7 +4769,7 @@
                     matchValIndex = currentIndex;
                 }
             }
-            else if (mode === "nextGreater" && currentVal >= target) {
+            else if (mode === "nextGreater" && currentVal >= _target) {
                 if (matchVal === undefined ||
                     matchVal > currentVal ||
                     (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
@@ -4766,8 +4779,8 @@
                 }
             }
             // 3 - give new indexes for the Binary search
-            if ((sortOrder === "asc" && currentVal > target) ||
-                (sortOrder === "desc" && currentVal <= target)) {
+            if ((sortOrder === "asc" && currentVal > _target) ||
+                (sortOrder === "desc" && currentVal <= _target)) {
                 indexRight = currentIndex - 1;
             }
             else {
@@ -4799,32 +4812,40 @@
     function linearSearch(data, target, mode, numberOfValues, getValueInData, reverseSearch = false) {
         if (target === null || target === undefined)
             return -1;
+        const _target = normalizeValue(target);
         const getValue = reverseSearch
             ? (data, i) => getValueInData(data, numberOfValues - i - 1)
             : getValueInData;
         let closestMatch = undefined;
         let closestMatchIndex = -1;
         for (let i = 0; i < numberOfValues; i++) {
-            const value = getValue(data, i);
-            if (value === target) {
+            const value = normalizeValue(getValue(data, i));
+            if (value === _target) {
                 return reverseSearch ? numberOfValues - i - 1 : i;
             }
             if (mode === "nextSmaller") {
-                if ((!closestMatch && compareCellValues(target, value) >= 0) ||
-                    (compareCellValues(target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
+                if ((!closestMatch && compareCellValues(_target, value) >= 0) ||
+                    (compareCellValues(_target, value) >= 0 && compareCellValues(value, closestMatch) > 0)) {
                     closestMatch = value;
                     closestMatchIndex = i;
                 }
             }
             else if (mode === "nextGreater") {
-                if ((!closestMatch && compareCellValues(target, value) <= 0) ||
-                    (compareCellValues(target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
+                if ((!closestMatch && compareCellValues(_target, value) <= 0) ||
+                    (compareCellValues(_target, value) <= 0 && compareCellValues(value, closestMatch) < 0)) {
                     closestMatch = value;
                     closestMatchIndex = i;
                 }
             }
         }
         return reverseSearch ? numberOfValues - closestMatchIndex - 1 : closestMatchIndex;
+    }
+    /**
+     * Normalize a value.
+     * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
+     */
+    function normalizeValue(value) {
+        return typeof value === "string" ? normalizeString(value) : value;
     }
     function compareCellValues(left, right) {
         let typeOrder = SORT_TYPES_ORDER.indexOf(typeof left) - SORT_TYPES_ORDER.indexOf(typeof right);
@@ -4841,34 +4862,11 @@
         }
         return typeOrder;
     }
-    function matrixMap(matrix, fn) {
-        let result = new Array(matrix.length);
-        for (let i = 0; i < matrix.length; i++) {
-            result[i] = new Array(matrix[i].length);
-            for (let j = 0; j < matrix[i].length; j++) {
-                result[i][j] = fn(matrix[i][j]);
-            }
+    function toMatrix(data) {
+        if (data === undefined) {
+            return [[]];
         }
-        return result;
-    }
-    function toCellValueMatrix(values) {
-        return matrixMap(values, toCellValue);
-    }
-    function toCellValue(value) {
-        if (value === null || value === undefined)
-            return 0;
-        if (typeof value === "number")
-            return value;
-        if (typeof value === "string")
-            return value;
-        if (typeof value === "boolean")
-            return value;
-        return String(value);
-    }
-    function toMatrixArgValue(values) {
-        if (isMatrix(values))
-            return values;
-        return [[values === null ? 0 : values]];
+        return isMatrix(data) ? data : [[data]];
     }
     /**
      * Flatten an array of items, where each item can be a single value or a 2D array, and apply the
@@ -4877,19 +4875,11 @@
      * The 2D array are flattened row first.
      */
     function flattenRowFirst(items, callback) {
-        const flattened = [];
-        for (const item of items) {
-            if (!Array.isArray(item)) {
-                flattened.push(callback(item));
-                continue;
-            }
-            for (let row = 0; row < item[0].length; row++) {
-                for (let col = 0; col < item.length; col++) {
-                    flattened.push(callback(item[col][row]));
-                }
-            }
-        }
-        return flattened;
+        /**/
+        return reduceAny(items, (array, val) => {
+            array.push(callback(val));
+            return array;
+        }, [], "rowFirst");
     }
 
     function evaluateLiteral(content, localeFormat) {
@@ -5505,7 +5495,7 @@
             this.env.model.dispatch("UPDATE_FILTER", {
                 ...position,
                 sheetId: this.env.model.getters.getActiveSheetId(),
-                values: this.state.values.filter((val) => !val.checked).map((val) => val.string),
+                hiddenValues: this.state.values.filter((val) => !val.checked).map((val) => val.string),
             });
             this.props.onClosed?.();
         }
@@ -6600,23 +6590,15 @@
             arg("columns (number)", _t("The number of columns in the constrained array.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (array, rows, columns) {
-            const _array = toMatrixArgValue(array);
-            const _rowsArg = toInteger(rows, this.locale);
-            const _columnsArg = toInteger(columns, this.locale);
+        computeValueAndFormat: function (array, rows, columns) {
+            const _array = toMatrix(array);
+            const _rowsArg = toInteger(rows?.value, this.locale);
+            const _columnsArg = toInteger(columns?.value, this.locale);
             assertPositive(_t("The rows argument (%s) must be strictly positive.", _rowsArg.toString()), _rowsArg);
             assertPositive(_t("The columns argument (%s) must be strictly positive.", _rowsArg.toString()), _columnsArg);
-            const _rows = Math.min(_rowsArg, _array[0].length);
-            const _columns = Math.min(_columnsArg, _array.length);
-            const result = Array(_columns);
-            for (let col = 0; col < _columns; col++) {
-                result[col] = Array(_rows);
-                for (let row = 0; row < _rows; row++) {
-                    result[col][row] = toCellValue(_array[col][row]);
-                }
-            }
-            return result;
+            const _nbRows = Math.min(_rowsArg, _array[0].length);
+            const _nbColumns = Math.min(_columnsArg, _array.length);
+            return generateMatrix(_nbColumns, _nbRows, (col, row) => _array[col][row]);
         },
         isExported: false,
     };
@@ -6631,17 +6613,16 @@
             arg("col_num2 (number, range<number>, repeating)", _t("The columns indexes of the columns to be returned.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (array, ...columns) {
-            const _array = toMatrixArgValue(array);
-            const _columns = flattenRowFirst(columns, (val) => toInteger(val, this.locale));
+        computeValueAndFormat: function (array, ...columns) {
+            const _array = toMatrix(array);
+            const _columns = flattenRowFirst(columns, (item) => toInteger(item?.value, this.locale));
             assert(() => _columns.every((col) => col > 0 && col <= _array.length), _t("The columns arguments must be between 1 and %s (got %s).", _array.length.toString(), (_columns.find((col) => col <= 0 || col > _array.length) || 0).toString()));
             const result = Array(_columns.length);
-            for (let i = 0; i < _columns.length; i++) {
-                const colIndex = _columns[i] - 1; // -1 because columns arguments are 1-indexed
-                result[i] = _array[colIndex];
+            for (let col = 0; col < _columns.length; col++) {
+                const colIndex = _columns[col] - 1; // -1 because columns arguments are 1-indexed
+                result[col] = _array[colIndex];
             }
-            return toCellValueMatrix(result);
+            return result;
         },
         isExported: true,
     };
@@ -6656,20 +6637,12 @@
             arg("row_num2 (number, range<number>, repeating)", _t("The rows indexes of the rows to be returned.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (array, ...rows) {
-            const _array = toMatrixArgValue(array);
-            const _rows = flattenRowFirst(rows, (val) => toInteger(val, this.locale));
+        computeValueAndFormat: function (array, ...rows) {
+            const _array = toMatrix(array);
+            const _rows = flattenRowFirst(rows, (item) => toInteger(item?.value, this.locale));
+            const _nbColumns = _array.length;
             assert(() => _rows.every((row) => row > 0 && row <= _array[0].length), _t("The rows arguments must be between 1 and %s (got %s).", _array[0].length.toString(), (_rows.find((row) => row <= 0 || row > _array[0].length) || 0).toString()));
-            const result = Array(_array.length);
-            for (let col = 0; col < _array.length; col++) {
-                result[col] = Array(_rows.length);
-                for (let row = 0; row < _rows.length; row++) {
-                    const rowIndex = _rows[row] - 1; // -1 because rows arguments are 1-indexed
-                    result[col][row] = toCellValue(_array[col][rowIndex]);
-                }
-            }
-            return result;
+            return generateMatrix(_nbColumns, _rows.length, (col, row) => _array[col][_rows[row] - 1]); // -1 because rows arguments are 1-indexed
         },
         isExported: true,
     };
@@ -6685,27 +6658,14 @@
             arg("pad_with (any, default=0)", _t("The value with which to pad.")), // @compatibility: on Excel, pad with #N/A
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (array, rows, columns, padWith = 0) {
-            const _array = toMatrixArgValue(array);
-            const _rows = toInteger(rows, this.locale);
-            const _columns = columns !== undefined ? toInteger(columns, this.locale) : _array.length;
-            const _padWith = padWith !== undefined && padWith !== null ? padWith : 0; // TODO : Replace with #N/A errors once it's supported
-            assert(() => _rows >= _array[0].length, _t("The rows arguments (%s) must be greater or equal than the number of rows of the array.", _rows.toString()));
-            assert(() => _columns >= _array.length, _t("The columns arguments (%s) must be greater or equal than the number of columns of the array.", _columns.toString()));
-            const result = [];
-            for (let col = 0; col < _columns; col++) {
-                result[col] = [];
-                for (let row = 0; row < _rows; row++) {
-                    if (col >= _array.length || row >= _array[col].length) {
-                        result[col][row] = _padWith;
-                    }
-                    else {
-                        result[col][row] = _array[col][row] ?? 0;
-                    }
-                }
-            }
-            return result;
+        computeValueAndFormat: function (arg, rows, columns, padWith = { value: 0 } // TODO : Replace with #N/A errors once it's supported
+        ) {
+            const _array = toMatrix(arg);
+            const _nbRows = toInteger(rows?.value, this.locale);
+            const _nbColumns = columns !== undefined ? toInteger(columns.value, this.local) : _array.length;
+            assert(() => _nbRows >= _array[0].length, _t("The rows arguments (%s) must be greater or equal than the number of rows of the array.", _nbRows.toString()));
+            assert(() => _nbColumns >= _array.length, _t("The columns arguments (%s) must be greater or equal than the number of columns of the array.", _nbColumns.toString()));
+            return generateMatrix(_nbColumns, _nbRows, (col, row) => col >= _array.length || row >= _array[col].length ? padWith : _array[col][row]);
         },
         isExported: true,
     };
@@ -6719,8 +6679,8 @@
             arg("range2 (any, range<any>, repeating)", _t("Additional ranges to flatten.")),
         ],
         returns: ["RANGE<ANY>"],
-        compute: function (...ranges) {
-            return [flattenRowFirst(ranges, toCellValue)];
+        computeValueAndFormat: function (...ranges) {
+            return [flattenRowFirst(ranges, (val) => (val === undefined ? { value: "" } : val))];
         },
         isExported: false,
     };
@@ -6782,22 +6742,21 @@
             arg("range2 (any, range<any>, repeating)", _t("Additional ranges to add to range1.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (...ranges) {
-            const _ranges = ranges.map((range) => toMatrixArgValue(range));
-            const nRows = Math.max(..._ranges.map((range) => range[0].length));
-            const colArray = [];
-            for (const range of _ranges) {
-                for (const col of range) {
+        computeValueAndFormat: function (...ranges) {
+            const nbRows = Math.max(...ranges.map((r) => r?.[0]?.length ?? 0));
+            const result = [];
+            for (const range of ranges) {
+                const _range = toMatrix(range);
+                for (let col = 0; col < _range.length; col++) {
                     //TODO: fill with #N/A for unavailable values instead of zeroes
-                    const paddedCol = Array(nRows).fill(0);
-                    for (let i = 0; i < col.length; i++) {
-                        paddedCol[i] = toCellValue(col[i]);
+                    const array = Array(nbRows).fill({ value: null });
+                    for (let row = 0; row < _range[col].length; row++) {
+                        array[row] = _range[col][row];
                     }
-                    colArray.push(paddedCol);
+                    result.push(array);
                 }
             }
-            return colArray;
+            return result;
         },
         isExported: true,
     };
@@ -6811,7 +6770,7 @@
         ],
         returns: ["NUMBER"],
         compute: function (matrix) {
-            const _matrix = toMatrixArgValue(matrix);
+            const _matrix = toMatrix(matrix);
             assertSquareMatrix(_t("The argument square_matrix must have the same number of columns and rows."), _matrix);
             if (!isNumberMatrix(_matrix)) {
                 throw new Error(_t("The argument square_matrix must be a matrix of numbers."));
@@ -6831,7 +6790,7 @@
         ],
         returns: ["RANGE<NUMBER>"],
         compute: function (matrix) {
-            const _matrix = toMatrixArgValue(matrix);
+            const _matrix = toMatrix(matrix);
             assertSquareMatrix(_t("The argument square_matrix must have the same number of columns and rows."), _matrix);
             if (!isNumberMatrix(_matrix)) {
                 throw new Error(_t("The argument square_matrix must be a matrix of numbers."));
@@ -6855,8 +6814,8 @@
         ],
         returns: ["RANGE<NUMBER>"],
         compute: function (matrix1, matrix2) {
-            const _matrix1 = toMatrixArgValue(matrix1);
-            const _matrix2 = toMatrixArgValue(matrix2);
+            const _matrix1 = toMatrix(matrix1);
+            const _matrix2 = toMatrix(matrix2);
             assert(() => _matrix1.length === _matrix2[0].length, _t("In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be equal to the \
         number of rows of the second matrix (%s).", _matrix1.length.toString(), _matrix2[0].length.toString()));
             if (!isNumberMatrix(_matrix1) || !isNumberMatrix(_matrix2)) {
@@ -6878,16 +6837,16 @@
         returns: ["NUMBER"],
         compute: function (...args) {
             assertSameDimensions(_t("All the ranges must have the same dimensions."), ...args);
-            const _args = args.map(toMatrixArgValue);
+            const _args = args.map(toMatrix);
             let result = 0;
-            for (let i = 0; i < _args[0].length; i++) {
-                for (let j = 0; j < _args[0][i].length; j++) {
-                    if (!_args.every((range) => typeof range[i][j] === "number")) {
+            for (let col = 0; col < _args[0].length; col++) {
+                for (let row = 0; row < _args[0][col].length; row++) {
+                    if (!_args.every((range) => typeof range[col][row] === "number")) {
                         continue;
                     }
                     let product = 1;
                     for (const range of _args) {
-                        product *= toNumber(range[i][j], this.locale);
+                        product *= toNumber(range[col][row], this.locale);
                     }
                     result += product;
                 }
@@ -6906,14 +6865,14 @@
      */
     function getSumXAndY(arrayX, arrayY, cb) {
         assertSameDimensions("The arguments array_x and array_y must have the same dimensions.", arrayX, arrayY);
-        const _arrayX = toMatrixArgValue(arrayX);
-        const _arrayY = toMatrixArgValue(arrayY);
+        const _arrayX = toMatrix(arrayX);
+        const _arrayY = toMatrix(arrayY);
         let validPairFound = false;
         let result = 0;
-        for (const i in _arrayX) {
-            for (const j in _arrayX[i]) {
-                const arrayXValue = _arrayX[i][j];
-                const arrayYValue = _arrayY[i][j];
+        for (const col in _arrayX) {
+            for (const row in _arrayX[col]) {
+                const arrayXValue = _arrayX[col][row];
+                const arrayYValue = _arrayY[col][row];
                 if (typeof arrayXValue !== "number" || typeof arrayYValue !== "number") {
                     continue;
                 }
@@ -6983,22 +6942,16 @@
         description: _t("Transforms a range of cells into a single column."),
         args: TO_COL_ROW_ARGS,
         returns: ["RANGE<ANY>"],
-        //TODO compute format
-        compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
-            const _array = toMatrixArgValue(array);
-            const _ignore = toInteger(ignore, this.locale);
-            const _scanByColumn = toBoolean(scanByColumn);
+        computeValueAndFormat: function (array, ignore = { value: TO_COL_ROW_DEFAULT_IGNORE }, scanByColumn = { value: TO_COL_ROW_DEFAULT_SCAN }) {
+            const _array = toMatrix(array);
+            const _ignore = toInteger(ignore.value, this.locale);
+            const _scanByColumn = toBoolean(scanByColumn.value);
             assert(() => _ignore >= 0 && _ignore <= 3, _t("Argument ignore must be between 0 and 3"));
-            const mappedFn = (acc, item) => {
-                // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
-                // the array w/o crashing
-                if ((_ignore === 1 || _ignore === 3) && (item === undefined || item === null)) {
-                    return acc;
-                }
-                acc.push(toCellValue(item));
-                return acc;
-            };
-            const result = reduceAny([_array], mappedFn, [], _scanByColumn ? "colFirst" : "rowFirst");
+            // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
+            // the array w/o crashing
+            const result = (_scanByColumn ? _array : transposeMatrix(_array))
+                .flat()
+                .filter((item) => (_ignore !== 1 && _ignore !== 3) || (item.value !== undefined && item.value !== null));
             if (result.length === 0) {
                 throw new NotAvailableError(_t("No results for the given arguments of TOCOL."));
             }
@@ -7013,22 +6966,17 @@
         description: _t("Transforms a range of cells into a single row."),
         args: TO_COL_ROW_ARGS,
         returns: ["RANGE<ANY>"],
-        //TODO compute format
-        compute: function (array, ignore = TO_COL_ROW_DEFAULT_IGNORE, scanByColumn = TO_COL_ROW_DEFAULT_SCAN) {
-            const _array = toMatrixArgValue(array);
-            const _ignore = toInteger(ignore, this.locale);
-            const _scanByColumn = toBoolean(scanByColumn);
+        computeValueAndFormat: function (array, ignore = { value: TO_COL_ROW_DEFAULT_IGNORE }, scanByColumn = { value: TO_COL_ROW_DEFAULT_SCAN }) {
+            const _array = toMatrix(array);
+            const _ignore = toInteger(ignore.value, this.locale);
+            const _scanByColumn = toBoolean(scanByColumn.value);
             assert(() => _ignore >= 0 && _ignore <= 3, _t("Argument ignore must be between 0 and 3"));
-            const mappedFn = (acc, item) => {
-                // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
-                // the array w/o crashing
-                if ((_ignore === 1 || _ignore === 3) && (item === undefined || item === null)) {
-                    return acc;
-                }
-                acc.push([toCellValue(item)]);
-                return acc;
-            };
-            const result = reduceAny([_array], mappedFn, [], _scanByColumn ? "colFirst" : "rowFirst");
+            // TODO : implement ignore value 2 (ignore error) & 3 (ignore blanks and errors) once we can have errors in
+            // the array w/o crashing
+            const result = (_scanByColumn ? _array : transposeMatrix(_array))
+                .flat()
+                .filter((item) => (_ignore !== 1 && _ignore !== 3) || (item.value !== undefined && item.value !== null))
+                .map((item) => [item]);
             if (result.length === 0 || result[0].length === 0) {
                 throw new NotAvailableError(_t("No results for the given arguments of TOROW."));
             }
@@ -7042,19 +6990,12 @@
     const TRANSPOSE = {
         description: _t("Transposes the rows and columns of a range."),
         args: [arg("range (any, range<any>)", _t("The range to be transposed."))],
-        returns: ["RANGE<ANY>"],
-        computeFormat: (values) => {
-            if (!values.format) {
-                return undefined;
-            }
-            if (!isMatrix(values.format)) {
-                return values.format;
-            }
-            return transpose2dArray(values.format);
-        },
-        compute: function (values) {
-            const _values = toMatrixArgValue(values);
-            return transpose2dArray(_values, toCellValue);
+        returns: ["RANGE"],
+        computeValueAndFormat: function (arg) {
+            const _array = toMatrix(arg);
+            const nbColumns = _array[0].length;
+            const nbRows = _array.length;
+            return generateMatrix(nbColumns, nbRows, (col, row) => _array[row][col]);
         },
         isExported: true,
     };
@@ -7068,22 +7009,21 @@
             arg("range2 (any, range<any>, repeating)", _t("Additional ranges to add to range1.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (...ranges) {
-            const _ranges = ranges.map((range) => toMatrixArgValue(range));
-            const nCols = Math.max(..._ranges.map((range) => range.length));
-            const nRows = _ranges.reduce((acc, range) => acc + range[0].length, 0);
-            const result = Array(nCols)
+        computeValueAndFormat: function (...ranges) {
+            const nbColumns = Math.max(...ranges.map((range) => toMatrix(range).length));
+            const nbRows = ranges.reduce((acc, range) => acc + toMatrix(range)[0].length, 0);
+            const result = Array(nbColumns)
                 .fill([])
-                .map(() => Array(nRows).fill(0)); // TODO fill with #N/A
+                .map(() => Array(nbRows).fill({ value: 0 })); // TODO fill with #N/A
             let currentRow = 0;
-            for (const range of _ranges) {
-                for (let col = 0; col < range.length; col++) {
-                    for (let row = 0; row < range[col].length; row++) {
-                        result[col][currentRow + row] = toCellValue(range[col][row]);
+            for (const range of ranges) {
+                const _array = toMatrix(range);
+                for (let col = 0; col < _array.length; col++) {
+                    for (let row = 0; row < _array[col].length; row++) {
+                        result[col][currentRow + row] = _array[col][row];
                     }
                 }
-                currentRow += range[0].length;
+                currentRow += _array[0].length;
             }
             return result;
         },
@@ -7101,25 +7041,16 @@
             _t("The value with which to fill the extra cells in the range.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (range, wrapCount, padWith = 0) {
-            const _range = toMatrixArgValue(range);
-            const nOfRows = toInteger(wrapCount, this.locale);
-            const _padWith = padWith === null ? 0 : padWith;
-            assertSingleColOrRow(_t("Argument range must be a single row or column."), _range);
-            const values = _range.flat();
-            const nOfCols = Math.ceil(values.length / nOfRows);
-            const result = Array(nOfCols);
-            for (let col = 0; col < nOfCols; col++) {
-                result[col] = Array(nOfRows).fill(_padWith);
-                for (let row = 0; row < nOfRows; row++) {
-                    const index = col * nOfRows + row;
-                    if (index < values.length) {
-                        result[col][row] = toCellValue(values[index]);
-                    }
-                }
-            }
-            return result;
+        computeValueAndFormat: function (range, wrapCount, padWith = { value: 0 }) {
+            const _array = toMatrix(range);
+            const nbRows = toInteger(wrapCount?.value, this.locale);
+            assertSingleColOrRow(_t("Argument range must be a single row or column."), _array);
+            const array = _array.flat();
+            const nbColumns = Math.ceil(array.length / nbRows);
+            return generateMatrix(nbColumns, nbRows, (col, row) => {
+                const index = col * nbRows + row;
+                return index < array.length ? array[index] : padWith;
+            });
         },
         isExported: true,
     };
@@ -7135,26 +7066,16 @@
             _t("The value with which to fill the extra cells in the range.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (range, wrapCount, padWith = 0) {
-            const _range = toMatrixArgValue(range);
-            const nOfCols = toInteger(wrapCount, this.locale);
-            const _padWith = padWith === null ? 0 : padWith;
-            assertSingleColOrRow(_t("Argument range must be a single row or column."), _range);
-            const values = _range.flat();
-            const nOfRows = Math.ceil(values.length / nOfCols);
-            const result = Array(nOfCols)
-                .fill([])
-                .map(() => Array(nOfRows).fill(_padWith));
-            for (let row = 0; row < nOfRows; row++) {
-                for (let col = 0; col < nOfCols; col++) {
-                    const index = row * nOfCols + col;
-                    if (index < values.length) {
-                        result[col][row] = toCellValue(values[index]);
-                    }
-                }
-            }
-            return result;
+        computeValueAndFormat: function (range, wrapCount, padWith = { value: 0 }) {
+            const _array = toMatrix(range);
+            const nbColumns = toInteger(wrapCount?.value, this.locale);
+            assertSingleColOrRow(_t("Argument range must be a single row or column."), _array);
+            const array = _array.flat();
+            const nbRows = Math.ceil(array.length / nbColumns);
+            return generateMatrix(nbColumns, nbRows, (col, row) => {
+                const index = row * nbColumns + col;
+                return index < array.length ? array[index] : padWith;
+            });
         },
         isExported: true,
     };
@@ -7194,8 +7115,8 @@
         ],
         returns: ["NUMBER"],
         computeFormat: function (arg, unit) {
-            const value = Math.abs(toNumber(arg.value, this.locale));
-            const format = arg.format;
+            const value = Math.abs(toNumber(arg?.value, this.locale));
+            const format = arg?.format;
             if (unit !== undefined) {
                 const postFix = unit?.value;
                 switch (postFix) {
@@ -7911,13 +7832,13 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (factor1) => {
-            return Array.isArray(factor1?.format) ? factor1.format[0][0] : factor1?.format;
+            return isMatrix(factor1) ? factor1[0][0]?.format : factor1?.format;
         },
         compute: function (...factors) {
             let count = 0;
             let acc = 1;
             for (let n of factors) {
-                if (Array.isArray(n)) {
+                if (isMatrix(n)) {
                     for (let i of n) {
                         for (let j of i) {
                             if (typeof j === "number") {
@@ -8178,7 +8099,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             return reduceNumbers(values, (acc, a) => acc + a, 0, this.locale);
@@ -8196,7 +8117,7 @@
             arg("sum_range (range, default=criteria_range)", _t("The range to be summed, if different from range.")),
         ],
         returns: ["NUMBER"],
-        compute: function (criteriaRange, criterion, sumRange = undefined) {
+        compute: function (criteriaRange, criterion, sumRange) {
             if (sumRange === undefined) {
                 sumRange = criteriaRange;
             }
@@ -8452,7 +8373,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             let count = 0;
@@ -8480,7 +8401,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (values) => {
-            return Array.isArray(values?.format) ? values.format[0][0] : values?.format;
+            return isMatrix(values) ? values[0][0]?.format : values?.format;
         },
         compute: function (...values) {
             let sum = 0;
@@ -8494,8 +8415,8 @@
                 // if (typeof value != typeof weight) {
                 //   throw new Error(rangeError);
                 // }
-                if (Array.isArray(value)) {
-                    assert(() => Array.isArray(weight), rangeError);
+                if (isMatrix(value)) {
+                    assert(() => isMatrix(weight), rangeError);
                     let dimColValue = value.length;
                     let dimLinValue = value[0].length;
                     assert(() => dimColValue === weight.length && dimLinValue === weight[0].length, rangeError);
@@ -8538,7 +8459,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             let count = 0;
@@ -8557,19 +8478,18 @@
     const AVERAGEIF = {
         description: _t(`Average of values depending on criteria.`),
         args: [
-            arg("criteria_range (range)", _t("The range to check against criterion.")),
+            arg("criteria_range (number, range<number>)", _t("The range to check against criterion.")),
             arg("criterion (string)", _t("The pattern or test to apply to criteria_range.")),
-            arg("average_range (range, default=criteria_range)", _t("The range to average. If not included, criteria_range is used for the average instead.")),
+            arg("average_range (number, range<number>, default=criteria_range)", _t("The range to average. If not included, criteria_range is used for the average instead.")),
         ],
         returns: ["NUMBER"],
         compute: function (criteriaRange, criterion, averageRange) {
-            if (averageRange === undefined || averageRange === null) {
-                averageRange = criteriaRange;
-            }
+            const _criteriaRange = toMatrix(criteriaRange);
+            const _averageRange = averageRange === undefined ? _criteriaRange : toMatrix(averageRange);
             let count = 0;
             let sum = 0;
             visitMatchingRanges([criteriaRange, criterion], (i, j) => {
-                const value = (averageRange || criteriaRange)[i][j];
+                const value = _averageRange[i][j];
                 if (typeof value === "number") {
                     count += 1;
                     sum += value;
@@ -8594,10 +8514,11 @@
         ],
         returns: ["NUMBER"],
         compute: function (averageRange, ...values) {
+            const _averageRange = toMatrix(averageRange);
             let count = 0;
             let sum = 0;
             visitMatchingRanges(values, (i, j) => {
-                const value = averageRange[i][j];
+                const value = _averageRange[i][j];
                 if (typeof value === "number") {
                     count += 1;
                     sum += value;
@@ -8621,7 +8542,7 @@
         compute: function (...values) {
             let count = 0;
             for (let n of values) {
-                if (Array.isArray(n)) {
+                if (isMatrix(n)) {
                     for (let i of n) {
                         for (let j of i) {
                             if (typeof j === "number") {
@@ -8712,17 +8633,14 @@
             arg("n (number)", _t("The rank from largest to smallest of the element to return.")),
         ],
         returns: ["NUMBER"],
-        computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
-        },
-        compute: function (data, n) {
-            const _n = Math.trunc(toNumber(n, this.locale));
+        computeValueAndFormat: function (data, n) {
+            const _n = Math.trunc(toNumber(n?.value, this.locale));
             let largests = [];
             let index;
             let count = 0;
             visitAny([data], (d) => {
-                if (typeof d === "number") {
-                    index = dichotomicSearch(largests, d, "nextSmaller", "asc", largests.length, (array, i) => array[i]);
+                if (typeof d.value === "number") {
+                    index = dichotomicSearch(largests, d.value, "nextSmaller", "asc", largests.length, (array, i) => array[i].value);
                     largests.splice(index + 1, 0, d);
                     count++;
                     if (count > _n) {
@@ -8749,7 +8667,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             const result = reduceNumbers(values, (acc, a) => (acc < a ? a : acc), -Infinity, this.locale);
@@ -8768,7 +8686,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             const maxa = reduceNumbersTextAs0(values, (acc, a) => {
@@ -8793,8 +8711,9 @@
         returns: ["NUMBER"],
         compute: function (range, ...args) {
             let result = -Infinity;
+            const _range = toMatrix(range);
             visitMatchingRanges(args, (i, j) => {
-                const value = range[i][j];
+                const value = _range[i][j];
                 if (typeof value === "number") {
                     result = result < value ? value : result;
                 }
@@ -8814,7 +8733,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             let data = [];
@@ -8836,7 +8755,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             const result = reduceNumbers(values, (acc, a) => (a < acc ? a : acc), Infinity, this.locale);
@@ -8855,7 +8774,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
+            return isMatrix(value1) ? value1[0][0]?.format : value1?.format;
         },
         compute: function (...values) {
             const mina = reduceNumbersTextAs0(values, (acc, a) => {
@@ -8880,8 +8799,9 @@
         returns: ["NUMBER"],
         compute: function (range, ...args) {
             let result = Infinity;
+            const _range = toMatrix(range);
             visitMatchingRanges(args, (i, j) => {
-                const value = range[i][j];
+                const value = _range[i][j];
                 if (typeof value === "number") {
                     result = result > value ? value : result;
                 }
@@ -8901,7 +8821,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, percentile) {
             return PERCENTILE_INC.compute.bind(this)(data, percentile);
@@ -8919,7 +8839,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, percentile) {
             return centile([data], percentile, false, this.locale);
@@ -8937,7 +8857,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, percentile) {
             return centile([data], percentile, true, this.locale);
@@ -8955,7 +8875,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, quartileNumber) {
             return QUARTILE_INC.compute.bind(this)(data, quartileNumber);
@@ -8973,7 +8893,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, quartileNumber) {
             const _quartileNumber = Math.trunc(toNumber(quartileNumber, this.locale));
@@ -8992,7 +8912,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
+            return isMatrix(data) ? data[0][0]?.format : data?.format;
         },
         compute: function (data, quartileNumber) {
             const _quartileNumber = Math.trunc(toNumber(quartileNumber, this.locale));
@@ -9010,17 +8930,14 @@
             arg("n (number)", _t("The rank from smallest to largest of the element to return.")),
         ],
         returns: ["NUMBER"],
-        computeFormat: (data) => {
-            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
-        },
-        compute: function (data, n) {
-            const _n = Math.trunc(toNumber(n, this.locale));
+        computeValueAndFormat: function (data, n) {
+            const _n = Math.trunc(toNumber(n?.value, this.locale));
             let largests = [];
             let index;
             let count = 0;
             visitAny([data], (d) => {
-                if (typeof d === "number") {
-                    index = dichotomicSearch(largests, d, "nextSmaller", "asc", largests.length, (array, i) => array[i]);
+                if (typeof d.value === "number") {
+                    index = dichotomicSearch(largests, d.value, "nextSmaller", "asc", largests.length, (array, i) => array[i].value);
                     largests.splice(index + 1, 0, d);
                     count++;
                     if (count > _n) {
@@ -9311,7 +9228,7 @@
                 const currentName = toString(criteria[indexCol][0]).toUpperCase();
                 const indexColDB = indexColNameDB.get(currentName);
                 const criter = criteria[indexCol][indexRow];
-                if (criter !== undefined) {
+                if (criter !== null) {
                     if (indexColDB !== undefined) {
                         args.push([database[indexColDB].slice(1, dimColDB)]);
                         args.push(criter);
@@ -9339,7 +9256,7 @@
         }
         // Example continuation: matchingRows = {0, 2}
         // 4 - return for each database row corresponding, the cells corresponding to the field parameter
-        const fieldCol = database[index];
+        const fieldCol = database[index].map((col) => col);
         // Example continuation:: fieldCol = ["C", "j", "k", 7]
         const matchingCells = [...matchingRows].map((x) => fieldCol[x + 1]);
         // Example continuation:: matchingCells = ["j", 7]
@@ -10132,7 +10049,7 @@
             return this.locale.dateFormat;
         },
         compute: function (startDate, numDays, holidays = undefined) {
-            return WORKDAY_INTL.compute.bind(this)(startDate, numDays, 1, holidays);
+            return WORKDAY_INTL.compute.bind(this)(startDate, numDays, 1, holidays ?? null);
         },
         isExported: true,
     };
@@ -10397,27 +10314,26 @@
             arg("condition2 (boolean, range<boolean>, repeating)", _t("Additional column or row containing true or false values.")),
         ],
         returns: ["RANGE<ANY>"],
-        //TODO computeFormat
-        compute: function (range, ...conditions) {
-            let _range = toMatrixArgValue(range);
-            const _conditionsMatrices = conditions.map((cond) => toMatrixArgValue(cond));
+        computeValueAndFormat: function (range, ...conditions) {
+            let _array = toMatrix(range);
+            const _conditionsMatrices = conditions.map((cond) => matrixMap(toMatrix(cond), (data) => data.value));
             _conditionsMatrices.map((c) => assertSingleColOrRow(_t("The arguments condition must be a single column or row."), c));
             assertSameDimensions(_t("The arguments conditions must have the same dimensions."), ..._conditionsMatrices);
             const _conditions = _conditionsMatrices.map((c) => c.flat());
             const mode = _conditionsMatrices[0].length === 1 ? "row" : "col";
-            _range = mode === "row" ? transpose2dArray(_range) : _range;
-            assert(() => _conditions.every((cond) => cond.length === _range.length), _t(`FILTER has mismatched sizes on the range and conditions.`));
-            const results = [];
-            for (let i = 0; i < _range.length; i++) {
-                const row = _range[i];
+            _array = mode === "row" ? transposeMatrix(_array) : _array;
+            assert(() => _conditions.every((cond) => cond.length === _array.length), _t(`FILTER has mismatched sizes on the range and conditions.`));
+            const result = [];
+            for (let i = 0; i < _array.length; i++) {
+                const row = _array[i];
                 if (_conditions.every((c) => c[i])) {
-                    results.push(row);
+                    result.push(row);
                 }
             }
-            if (!results.length) {
+            if (!result.length) {
                 throw new NotAvailableError(_t("No match found in FILTER evaluation"));
             }
-            return toCellValueMatrix(mode === "row" ? transpose2dArray(results) : results);
+            return mode === "row" ? transposeMatrix(result) : result;
         },
         isExported: true,
     };
@@ -10432,32 +10348,36 @@
             arg("exactly_once (boolean, default=FALSE)", _t("Whether to return only entries with no duplicates.")),
         ],
         returns: ["RANGE<NUMBER>"],
-        // TODO computeFormat
-        compute: function (range, byColumn, exactlyOnce) {
+        computeValueAndFormat: function (range = { value: "" }, byColumn, exactlyOnce) {
             if (!isMatrix(range)) {
-                return toCellValue(range);
+                return [[range]];
             }
-            const _byColumn = toBoolean(byColumn) || false;
-            const _exactlyOnce = toBoolean(exactlyOnce) || false;
-            if (!_byColumn)
-                range = transpose2dArray(range);
+            const _byColumn = toBoolean(byColumn?.value) || false;
+            const _exactlyOnce = toBoolean(exactlyOnce?.value) || false;
+            if (!_byColumn) {
+                range = transposeMatrix(range);
+            }
             const map = new Map();
-            for (const row of range) {
-                const key = JSON.stringify(row);
+            for (const data of range) {
+                const key = JSON.stringify(data.map((item) => item.value));
                 const occurrence = map.get(key);
                 if (!occurrence) {
-                    map.set(key, { val: row, count: 1 });
+                    map.set(key, { data, count: 1 });
                 }
                 else {
                     occurrence.count++;
                 }
             }
-            const results = _exactlyOnce
-                ? [...map.values()].filter((v) => v.count === 1).map((v) => v.val)
-                : [...map.values()].map((v) => v.val);
-            if (!results.length)
+            const result = [];
+            for (const row of map.values()) {
+                if (_exactlyOnce && row.count > 1) {
+                    continue;
+                }
+                result.push(row.data);
+            }
+            if (!result.length)
                 throw new Error(_t("No unique values found"));
-            return toCellValueMatrix(_byColumn ? results : transpose2dArray(results));
+            return _byColumn ? result : transposeMatrix(result);
         },
         isExported: true,
     };
@@ -11427,9 +11347,9 @@
         compute: function (cashflowAmount, financingRate, reinvestmentRate) {
             const fRate = toNumber(financingRate, this.locale);
             const rRate = toNumber(reinvestmentRate, this.locale);
-            const cashFlow = transpose2dArray(cashflowAmount)
+            const cashFlow = transposeMatrix(cashflowAmount)
                 .flat()
-                .filter(isDefined$1)
+                .filter((t) => t !== null)
                 .map((val) => toNumber(val, this.locale));
             const n = cashFlow.length;
             /**
@@ -12284,13 +12204,13 @@
         returns: ["NUMBER"],
         compute: function (discount, cashflowAmounts, cashflowDates) {
             const rate = toNumber(discount, this.locale);
-            const _cashFlows = Array.isArray(cashflowAmounts)
+            const _cashFlows = isMatrix(cashflowAmounts)
                 ? cashflowAmounts.flat().map((val) => strictToNumber(val, this.locale))
                 : [strictToNumber(cashflowAmounts, this.locale)];
-            const _dates = Array.isArray(cashflowDates)
+            const _dates = isMatrix(cashflowDates)
                 ? cashflowDates.flat().map((val) => strictToNumber(val, this.locale))
                 : [strictToNumber(cashflowDates, this.locale)];
-            if (Array.isArray(cashflowDates) && Array.isArray(cashflowAmounts)) {
+            if (isMatrix(cashflowDates) && isMatrix(cashflowAmounts)) {
                 assertCashFlowsAndDatesHaveSameDimension(cashflowAmounts, cashflowDates);
             }
             else {
@@ -12748,9 +12668,15 @@
             arg("value_if_false (any, lazy, default=FALSE)", _t("The value the function returns if logical_expression is FALSE.")),
         ],
         returns: ["ANY"],
-        compute: function (logicalExpression, valueIfTrue, valueIfFalse = () => false) {
-            const result = toBoolean(logicalExpression) ? valueIfTrue() : valueIfFalse();
-            return result === null || result === undefined ? "" : result;
+        computeValueAndFormat: function (logicalExpression, valueIfTrue, valueIfFalse = () => ({ value: false })) {
+            const result = toBoolean(logicalExpression?.value) ? valueIfTrue() : valueIfFalse();
+            if (result === undefined) {
+                return { value: "" };
+            }
+            if (result.value === null) {
+                result.value = "";
+            }
+            return result;
         },
         isExported: true,
     };
@@ -12764,15 +12690,7 @@
             arg(`value_if_error (any, lazy, default="empty")`, _t("The value the function returns if value is an error.")),
         ],
         returns: ["ANY"],
-        computeFormat: (value, valueIfError = () => ({ value: "" })) => {
-            try {
-                return value().format;
-            }
-            catch (e) {
-                return valueIfError()?.format;
-            }
-        },
-        compute: function (value, valueIfError = () => "") {
+        computeValueAndFormat: function (value, valueIfError = () => ({ value: "" })) {
             let result;
             try {
                 result = value();
@@ -12780,7 +12698,13 @@
             catch (e) {
                 result = valueIfError();
             }
-            return result === null || result === undefined ? "" : result;
+            if (result === undefined) {
+                return { value: "" };
+            }
+            if (result.value === null) {
+                result.value = "";
+            }
+            return result;
         },
         isExported: true,
     };
@@ -12794,7 +12718,7 @@
             arg(`value_if_error (any, lazy, default="empty")`, _t("The value the function returns if value is an #N/A error.")),
         ],
         returns: ["ANY"],
-        compute: function (value, valueIfError = () => "") {
+        computeValueAndFormat: function (value, valueIfError = () => ({ value: "" })) {
             let result;
             try {
                 result = value();
@@ -12807,7 +12731,13 @@
                     result = value();
                 }
             }
-            return result === null || result === undefined ? "" : result;
+            if (result === undefined) {
+                return { value: "" };
+            }
+            if (result.value === null) {
+                result.value = "";
+            }
+            return result;
         },
         isExported: true,
     };
@@ -12823,12 +12753,18 @@
             arg("value2 (any, lazy, repeating)", _t("Additional values to be returned if their corresponding conditions are TRUE.")),
         ],
         returns: ["ANY"],
-        compute: function (...values) {
+        computeValueAndFormat: function (...values) {
             assert(() => values.length % 2 === 0, _t(`Wrong number of arguments. Expected an even number of arguments.`));
             for (let n = 0; n < values.length - 1; n += 2) {
-                if (toBoolean(values[n]())) {
-                    const returnValue = values[n + 1]();
-                    return returnValue !== null ? returnValue : "";
+                if (toBoolean(values[n]()?.value)) {
+                    const result = values[n + 1]();
+                    if (result === undefined) {
+                        return { value: "" };
+                    }
+                    if (result.value === null) {
+                        result.value = "";
+                    }
+                    return result;
                 }
             }
             throw new Error(_t(`No match.`));
@@ -13014,20 +12950,16 @@
             arg(`is_sorted (boolean, default=${DEFAULT_IS_SORTED})`, _t("Indicates whether the row to be searched (the first row of the specified range) is sorted, in which case the closest match for search_key will be returned.")),
         ],
         returns: ["ANY"],
-        compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
-            const _index = Math.trunc(toNumber(index, this.locale));
-            const _searchKey = normalizeValue(searchKey);
+        computeValueAndFormat: function (searchKey, range, index, isSorted = { value: DEFAULT_IS_SORTED }) {
+            const _index = Math.trunc(toNumber(index?.value, this.locale));
             assert(() => 1 <= _index && _index <= range[0].length, _t("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
-            const _isSorted = toBoolean(isSorted);
-            let colIndex;
-            if (_isSorted) {
-                colIndex = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", range.length, getNormalizedValueFromRowRange);
-            }
-            else {
-                colIndex = linearSearch(range, _searchKey, "strict", range.length, getNormalizedValueFromRowRange);
-            }
+            const getValueFromRange = (range, index) => range[index][0].value;
+            const _isSorted = toBoolean(isSorted.value);
+            const colIndex = _isSorted
+                ? dichotomicSearch(range, searchKey?.value, "nextSmaller", "asc", range.length, getValueFromRange)
+                : linearSearch(range, searchKey?.value, "strict", range.length, getValueFromRange);
             const col = range[colIndex];
-            assertAvailable(col, searchKey);
+            assertAvailable(col, searchKey?.value);
             return col[_index - 1];
         },
         isExported: true,
@@ -13043,21 +12975,21 @@
             arg("column (number, default=0)", _t("The index of the column to be returned from within the reference range of cells.")),
         ],
         returns: ["ANY"],
-        compute: function (reference, row = 0, column = 0) {
+        computeValueAndFormat: function (reference, row = { value: 0 }, column = { value: 0 }) {
             const _reference = isMatrix(reference) ? reference : [[reference]];
-            const _row = toNumber(row, this.locale);
-            const _column = toNumber(column, this.locale);
+            const _row = toNumber(row.value, this.locale);
+            const _column = toNumber(column.value, this.locale);
             assert(() => _column >= 0 &&
                 _column - 1 < _reference.length &&
                 _row >= 0 &&
                 _row - 1 < _reference[0].length, _t("Index out of range."));
-            if (row === 0 && column === 0) {
+            if (_row === 0 && _column === 0) {
                 return _reference;
             }
-            if (row === 0) {
+            if (_row === 0) {
                 return [_reference[_column - 1]];
             }
-            if (column === 0) {
+            if (_column === 0) {
                 return _reference.map((col) => [col[_row - 1]]);
             }
             return _reference[_column - 1][_row - 1];
@@ -13075,23 +13007,22 @@
             arg("result_range (range, optional)", _t("The range from which to return a result. The value returned corresponds to the location where search_key is found in search_range. This range must be only a single row or column and should not be used if using the search_result_array method.")),
         ],
         returns: ["ANY"],
-        compute: function (searchKey, searchArray, resultRange) {
+        computeValueAndFormat: function (searchKey, searchArray, resultRange) {
             let nbCol = searchArray.length;
             let nbRow = searchArray[0].length;
-            const _searchKey = normalizeValue(searchKey);
             const verticalSearch = nbRow >= nbCol;
             const getElement = verticalSearch
-                ? getNormalizedValueFromColumnRange
-                : getNormalizedValueFromRowRange;
+                ? (range, index) => range[0][index].value
+                : (range, index) => range[index][0].value;
             const rangeLength = verticalSearch ? nbRow : nbCol;
-            const index = dichotomicSearch(searchArray, _searchKey, "nextSmaller", "asc", rangeLength, getElement);
+            const index = dichotomicSearch(searchArray, searchKey?.value, "nextSmaller", "asc", rangeLength, getElement);
             if (index === -1)
-                assertAvailable(undefined, searchKey);
+                assertAvailable(undefined, searchKey?.value);
             verticalSearch
-                ? assertAvailable(searchArray[0][index], searchKey)
-                : assertAvailable(searchArray[index][nbRow - 1], searchKey);
+                ? assertAvailable(searchArray[0][index], searchKey?.value)
+                : assertAvailable(searchArray[index][nbRow - 1], searchKey?.value);
             if (resultRange === undefined) {
-                return (verticalSearch ? searchArray[nbCol - 1][index] : searchArray[index][nbRow - 1]);
+                return verticalSearch ? searchArray[nbCol - 1][index] : searchArray[index][nbRow - 1];
             }
             nbCol = resultRange.length;
             nbRow = resultRange[0].length;
@@ -13119,23 +13050,24 @@
         returns: ["NUMBER"],
         compute: function (searchKey, range, searchType = DEFAULT_SEARCH_TYPE) {
             let _searchType = toNumber(searchType, this.locale);
-            const _searchKey = normalizeValue(searchKey);
             const nbCol = range.length;
             const nbRow = range[0].length;
             assert(() => nbCol === 1 || nbRow === 1, _t("The range must be a single row or a single column."));
             let index = -1;
-            const getElement = nbCol === 1 ? getNormalizedValueFromColumnRange : getNormalizedValueFromRowRange;
+            const getElement = nbCol === 1
+                ? (range, index) => range[0][index]
+                : (range, index) => range[index][0];
             const rangeLen = nbCol === 1 ? range[0].length : range.length;
             _searchType = Math.sign(_searchType);
             switch (_searchType) {
                 case 1:
-                    index = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", rangeLen, getElement);
+                    index = dichotomicSearch(range, searchKey, "nextSmaller", "asc", rangeLen, getElement);
                     break;
                 case 0:
-                    index = linearSearch(range, _searchKey, "strict", rangeLen, getElement);
+                    index = linearSearch(range, searchKey, "strict", rangeLen, getElement);
                     break;
                 case -1:
-                    index = dichotomicSearch(range, _searchKey, "nextGreater", "desc", rangeLen, getElement);
+                    index = dichotomicSearch(range, searchKey, "nextGreater", "desc", rangeLen, getElement);
                     break;
             }
             assertAvailable(nbCol === 1 ? range[0][index] : range[index], searchKey);
@@ -13185,18 +13117,14 @@
             arg(`is_sorted (boolean, default=${DEFAULT_IS_SORTED})`, _t("Indicates whether the column to be searched (the first column of the specified range) is sorted, in which case the closest match for search_key will be returned.")),
         ],
         returns: ["ANY"],
-        compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
-            const _index = Math.trunc(toNumber(index, this.locale));
-            const _searchKey = normalizeValue(searchKey);
+        computeValueAndFormat: function (searchKey, range, index, isSorted = { value: DEFAULT_IS_SORTED }) {
+            const _index = Math.trunc(toNumber(index?.value, this.locale));
             assert(() => 1 <= _index && _index <= range.length, _t("[[FUNCTION_NAME]] evaluates to an out of bounds range."));
-            const _isSorted = toBoolean(isSorted);
-            let rowIndex;
-            if (_isSorted) {
-                rowIndex = dichotomicSearch(range, _searchKey, "nextSmaller", "asc", range[0].length, getNormalizedValueFromColumnRange);
-            }
-            else {
-                rowIndex = linearSearch(range, _searchKey, "strict", range[0].length, getNormalizedValueFromColumnRange);
-            }
+            const getValueFromRange = (range, index) => range[0][index].value;
+            const _isSorted = toBoolean(isSorted.value);
+            const rowIndex = _isSorted
+                ? dichotomicSearch(range, searchKey?.value, "nextSmaller", "asc", range[0].length, getValueFromRange)
+                : linearSearch(range, searchKey?.value, "strict", range[0].length, getValueFromRange);
             const value = range[_index - 1][rowIndex];
             assertAvailable(value, searchKey);
             return value;
@@ -13221,10 +13149,9 @@
       ")),
         ],
         returns: ["ANY"],
-        compute: function (searchKey, lookupRange, returnRange, defaultValue, matchMode = DEFAULT_MATCH_MODE, searchMode = DEFAULT_SEARCH_MODE) {
-            const _matchMode = Math.trunc(toNumber(matchMode, this.locale));
-            const _searchMode = Math.trunc(toNumber(searchMode, this.locale));
-            const _searchKey = normalizeValue(searchKey);
+        computeValueAndFormat: function (searchKey, lookupRange, returnRange, defaultValue, matchMode = { value: DEFAULT_MATCH_MODE }, searchMode = { value: DEFAULT_SEARCH_MODE }) {
+            const _matchMode = Math.trunc(toNumber(matchMode.value, this.locale));
+            const _searchMode = Math.trunc(toNumber(searchMode.value, this.locale));
             assert(() => lookupRange.length === 1 || lookupRange[0].length === 1, _t("lookup_range should be either a single row or single column."));
             assert(() => [-1, 1, -2, 2].includes(_searchMode), _t("searchMode should be a value in [-1, 1, -2, 2]."));
             assert(() => [-1, 0, 1].includes(_matchMode), _t("matchMode should be a value in [-1, 0, 1]."));
@@ -13233,25 +13160,22 @@
                 ? returnRange[0].length === lookupRange[0].length
                 : returnRange.length === lookupRange.length, _t("return_range should have the same dimensions as lookup_range."));
             const getElement = lookupDirection === "col"
-                ? getNormalizedValueFromColumnRange
-                : getNormalizedValueFromRowRange;
+                ? (range, index) => range[0][index].value
+                : (range, index) => range[index][0].value;
             const rangeLen = lookupDirection === "col" ? lookupRange[0].length : lookupRange.length;
             const mode = _matchMode === 0 ? "strict" : _matchMode === 1 ? "nextGreater" : "nextSmaller";
             const reverseSearch = _searchMode === -1;
-            let index;
-            if (_searchMode === 2 || _searchMode === -2) {
-                const sortOrder = _searchMode === 2 ? "asc" : "desc";
-                index = dichotomicSearch(lookupRange, _searchKey, mode, sortOrder, rangeLen, getElement);
-            }
-            else {
-                index = linearSearch(lookupRange, _searchKey, mode, rangeLen, getElement, reverseSearch);
-            }
+            const index = _searchMode === 2 || _searchMode === -2
+                ? dichotomicSearch(lookupRange, searchKey?.value, mode, _searchMode === 2 ? "asc" : "desc", rangeLen, getElement)
+                : linearSearch(lookupRange, searchKey?.value, mode, rangeLen, getElement, reverseSearch);
             if (index !== -1) {
-                return toCellValueMatrix(lookupDirection === "col" ? returnRange.map((col) => [col[index]]) : [returnRange[index]]);
+                return lookupDirection === "col"
+                    ? returnRange.map((col) => [col[index]])
+                    : [returnRange[index]];
             }
             const _defaultValue = defaultValue?.();
             assertAvailable(_defaultValue, searchKey);
-            return _defaultValue;
+            return [[_defaultValue]];
         },
         isExported: true,
     };
@@ -13514,7 +13438,7 @@
         args: [arg("value (any)", _t("The number to return."))],
         returns: ["ANY"],
         computeFormat: (value) => value?.format,
-        compute: function (value) {
+        compute: function (value = "") {
             return value === null ? "" : value;
         },
     };
@@ -13814,7 +13738,7 @@
             if (_removeEmptyText) {
                 result = result.filter((text) => text !== "");
             }
-            return transpose2dArray([result]);
+            return transposeMatrix([result]);
         },
         isExported: true,
     };
@@ -13990,29 +13914,45 @@
             }
             const descr = addMetaInfoFromArg(addDescr);
             validateArguments(descr.args);
-            function computeValueAndFormat(...args) {
-                const computeValue = descr.compute.bind(this);
-                const computeFormat = descr.computeFormat ? descr.computeFormat.bind(this) : () => undefined;
-                const value = computeValue(...extractArgValuesFromArgs(args));
-                const format = computeFormat(...args);
-                if (isMatrix(value)) {
-                    return {
-                        value,
-                        format,
-                    };
-                }
-                if (!isMatrix(format)) {
-                    return {
-                        value,
-                        format,
-                    };
-                }
-                throw new Error("A format matrix should never be associated with a scalar value");
-            }
-            this.mapping[name] = computeValueAndFormat;
+            this.mapping[name] = createComputeFunctionFromDescription(descr);
             super.add(name, descr);
             return this;
         }
+    }
+    function createComputeFunctionFromDescription(descr) {
+        const computeValueAndFormat = "computeValueAndFormat" in descr;
+        const computeValue = "compute" in descr;
+        const computeFormat = "computeFormat" in descr;
+        if (!computeValueAndFormat && !computeValue) {
+            throw new Error("Invalid function description, need at least one 'compute' or 'computeValueAndFormat' function");
+        }
+        if (computeValueAndFormat && (computeValue || computeFormat)) {
+            throw new Error("Invalid function description, cannot have both 'computeValueAndFormat' and 'compute'/'computeFormat' functions");
+        }
+        if (computeValueAndFormat) {
+            return descr.computeValueAndFormat;
+        }
+        // case computeValue
+        return buildComputeFunctionFromDescription(descr);
+    }
+    function buildComputeFunctionFromDescription(descr) {
+        return function (...args) {
+            const computeValue = descr.compute.bind(this);
+            const computeFormat = descr.computeFormat?.bind(this) || (() => undefined);
+            const value = computeValue(...extractArgValuesFromArgs(args));
+            const format = computeFormat(...args);
+            if (isMatrix(value)) {
+                if (format === undefined || isMatrix(format)) {
+                    return value.map((col, i) => col.map((row, j) => ({ value: row, format: format?.[i]?.[j] })));
+                }
+            }
+            else {
+                if (format === undefined || !isMatrix(format)) {
+                    return { value, format };
+                }
+            }
+            throw new Error("A format matrix should never be associated with a scalar value");
+        };
     }
     function extractArgValuesFromArgs(args) {
         return args.map((arg) => {
@@ -14020,10 +13960,16 @@
                 return undefined;
             }
             if (typeof arg === "function") {
-                return () => arg()?.value;
+                return () => extractArgValueFromArg(arg());
             }
-            return arg.value;
+            return extractArgValueFromArg(arg);
         });
+    }
+    function extractArgValueFromArg(arg) {
+        if (isMatrix(arg)) {
+            return matrixMap(arg, (data) => data.value);
+        }
+        return arg?.value;
     }
     const functionRegistry = new FunctionRegistry();
     for (let category of categories) {
@@ -21879,6 +21825,9 @@
                 title: this.state.title,
             });
         }
+        translate(term) {
+            return _t(term);
+        }
         updateBaselineDescr(ev) {
             this.props.updateChart(this.props.figureId, { baselineDescr: ev.target.value });
         }
@@ -22914,7 +22863,7 @@
                 });
             }
             const emptyCurrency = {
-                name: this.env._t(CustomCurrencyTerms.Custom),
+                name: _t(CustomCurrencyTerms.Custom),
                 code: "",
                 symbol: "",
                 decimalPlaces: 2,
@@ -22976,20 +22925,6 @@
 
     css /* scss */ `
   .o-find-and-replace {
-    .o-far-item {
-      display: block;
-      .o-far-checkbox {
-        display: inline-block;
-        .o-far-input {
-          vertical-align: middle;
-        }
-        .o-far-label {
-          position: relative;
-          top: 1.5px;
-          padding-left: 4px;
-        }
-      }
-    }
     outline: none;
     height: 100%;
     .o-input-search-container {
@@ -24389,8 +24324,10 @@
         }
         onKeyup(ev) {
             if (this.contentHelper.el === document.activeElement) {
-                const isSelectingForComposer = this.env.model.getters.isSelectingForComposer();
-                if (isSelectingForComposer && ev.key?.startsWith("Arrow")) {
+                if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+                    return;
+                }
+                if (this.env.model.getters.isSelectingForComposer() && ev.key?.startsWith("Arrow")) {
                     return;
                 }
                 const { start: oldStart, end: oldEnd } = this.env.model.getters.getComposerSelection();
@@ -35606,13 +35543,13 @@
             if (range.invalidSheetName) {
                 throw new Error(_t("Invalid sheet name: %s", range.invalidSheetName));
             }
-            return this.readCell(range);
+            const position = { sheetId: range.sheetId, col: range.zone.left, row: range.zone.top };
+            return this.readCell(position);
         }
-        readCell(range) {
-            if (!this.getters.tryGetSheet(range.sheetId)) {
+        readCell(position) {
+            if (!this.getters.tryGetSheet(position.sheetId)) {
                 throw new Error(_t("Invalid sheet name"));
             }
-            const position = { sheetId: range.sheetId, col: range.zone.left, row: range.zone.top };
             const evaluatedCell = this.getEvaluatedCellIfNotEmpty(position);
             if (evaluatedCell === undefined) {
                 return { value: null, format: this.getters.getCell(position)?.format };
@@ -35653,27 +35590,20 @@
             const sheetZone = this.getters.getSheetZone(sheetId);
             const _zone = intersection(zone, sheetZone);
             if (!_zone) {
-                return { value: [[]], format: [[]] };
+                return [[]];
             }
             const height = _zone.bottom - _zone.top + 1;
             const width = _zone.right - _zone.left + 1;
-            const value = Array.from({ length: width }, () => Array.from({ length: height }));
-            const format = Array.from({ length: width }, () => Array.from({ length: height }));
+            const matrix = Array.from({ length: width }, () => Array.from({ length: height }));
             // Performance issue: nested loop is faster than a map here
             for (let col = _zone.left; col <= _zone.right; col++) {
                 for (let row = _zone.top; row <= _zone.bottom; row++) {
-                    const evaluatedCell = this.getEvaluatedCellIfNotEmpty({ sheetId: sheetId, col, row });
-                    if (evaluatedCell) {
-                        const colIndex = col - _zone.left;
-                        const rowIndex = row - _zone.top;
-                        value[colIndex][rowIndex] = evaluatedCell.value;
-                        if (evaluatedCell.format !== undefined) {
-                            format[colIndex][rowIndex] = evaluatedCell.format;
-                        }
-                    }
+                    const colIndex = col - _zone.left;
+                    const rowIndex = row - _zone.top;
+                    matrix[colIndex][rowIndex] = this.readCell({ sheetId, col, row });
                 }
             }
-            return { value, format };
+            return matrix;
         }
     }
 
@@ -36005,24 +35935,23 @@
                 return toXC(position.col, position.row);
             };
             const formulaReturn = cellData.compiledFormula.execute(cellData.dependencies, ...this.compilationParams);
-            assertFormulaReturnHasConsistentDimensions(formulaReturn);
-            const { value: computedValue, format: computedFormat } = formulaReturn;
-            if (!isMatrix(computedValue)) {
-                return createEvaluatedCell(computedValue, {
-                    format: cellData.format || computedFormat,
+            if (!isMatrix(formulaReturn)) {
+                return createEvaluatedCell(formulaReturn.value, {
+                    format: cellData.format || formulaReturn.format,
                     locale: this.getters.getLocale(),
                 });
             }
             const formulaPosition = this.getters.getCellPosition(cellId);
-            this.assertSheetHasEnoughSpaceToSpreadFormulaResult(formulaPosition, computedValue);
-            forEachSpreadPositionInMatrix(computedValue, this.updateSpreadRelation(formulaPosition));
-            forEachSpreadPositionInMatrix(computedValue, this.checkCollision(formulaPosition));
-            forEachSpreadPositionInMatrix(computedValue, 
-            // due the isMatrix check above, we know that formulaReturn is MatrixFunctionReturn
+            this.assertSheetHasEnoughSpaceToSpreadFormulaResult(formulaPosition, formulaReturn);
+            const nbColumns = formulaReturn.length;
+            const nbRows = formulaReturn[0].length;
+            forEachSpreadPositionInMatrix(nbColumns, nbRows, this.updateSpreadRelation(formulaPosition));
+            forEachSpreadPositionInMatrix(nbColumns, nbRows, this.checkCollision(formulaPosition));
+            forEachSpreadPositionInMatrix(nbColumns, nbRows, 
+            // thanks to the isMatrix check above, we know that formulaReturn is MatrixFunctionReturn
             this.spreadValues(formulaPosition, formulaReturn));
-            const formatFromPosition = formatFromPositionAccess(computedFormat);
-            return createEvaluatedCell(computedValue[0][0], {
-                format: cellData.format || formatFromPosition(0, 0),
+            return createEvaluatedCell(formulaReturn[0][0].value, {
+                format: cellData.format || formulaReturn[0][0]?.format,
                 locale: this.getters.getLocale(),
             });
         }
@@ -36064,13 +35993,12 @@
             };
         }
         spreadValues({ sheetId, col, row }, matrixResult) {
-            const formatFromPosition = formatFromPositionAccess(matrixResult.format);
             return (i, j) => {
                 const position = { sheetId, col: i + col, row: j + row };
                 const cell = this.getters.getCell(position);
                 const format = cell?.format;
-                const evaluatedCell = createEvaluatedCell(matrixResult.value[i][j], {
-                    format: format || formatFromPosition(i, j),
+                const evaluatedCell = createEvaluatedCell(matrixResult[i][j].value, {
+                    format: format || matrixResult[i][j]?.format,
                     locale: this.getters.getLocale(),
                 });
                 const positionId = this.encodePosition(position);
@@ -36130,32 +36058,13 @@
             return this.positionEncoder.decode(positionId);
         }
     }
-    function forEachSpreadPositionInMatrix(matrix, callback) {
-        for (let i = 0; i < matrix.length; ++i) {
-            for (let j = 0; j < matrix[i].length; ++j) {
+    function forEachSpreadPositionInMatrix(nbColumns, nbRows, callback) {
+        for (let i = 0; i < nbColumns; ++i) {
+            for (let j = 0; j < nbRows; ++j) {
                 if (i === 0 && j === 0) {
                     continue;
                 }
                 callback(i, j);
-            }
-        }
-    }
-    function formatFromPositionAccess(format) {
-        return isMatrix(format) ? (i, j) => format[i][j] : () => format;
-    }
-    function assertFormulaReturnHasConsistentDimensions(formulaReturn) {
-        const { value: computedValue, format: computedFormat } = formulaReturn;
-        if (!isMatrix(computedValue)) {
-            if (isMatrix(computedFormat)) {
-                throw new Error("A format matrix should never be associated with a scalar value");
-            }
-            return;
-        }
-        if (isMatrix(computedFormat)) {
-            const sameDimensions = computedValue.length === computedFormat.length &&
-                computedValue[0].length === computedFormat[0].length;
-            if (!sameDimensions) {
-                throw new Error("Formats and values should have the same dimensions!");
             }
         }
     }
@@ -36389,7 +36298,11 @@
             for (let xc of compiledFormula.dependencies) {
                 ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
             }
-            return compiledFormula.execute(ranges, ...this.compilationParams).value;
+            const array = compiledFormula.execute(ranges, ...this.compilationParams);
+            if (isMatrix(array)) {
+                return array.map((col) => col.map((row) => row.value));
+            }
+            return array.value;
         }
         /**
          * Return the value of each cell in the range as they are displayed in the grid.
@@ -36980,11 +36893,11 @@
                     return false;
                 }
                 const locale = this.getters.getLocale();
-                const values = rule.values.map((value) => {
-                    if (value.startsWith("=")) {
-                        return this.getters.evaluateFormula(target.sheetId, value);
+                const [value0, value1] = rule.values.map((val) => {
+                    if (val.startsWith("=")) {
+                        return this.getters.evaluateFormula(target.sheetId, val);
                     }
-                    return parseLiteral(value, locale);
+                    return parseLiteral(val, locale);
                 });
                 switch (rule.operator) {
                     case "IsEmpty":
@@ -36992,41 +36905,41 @@
                     case "IsNotEmpty":
                         return cell.value.toString().trim() !== "";
                     case "BeginsWith":
-                        if (values[0] === "") {
+                        if (value0 === "") {
                             return false;
                         }
-                        return cell.value.toString().startsWith(values[0].toString());
+                        return cell.value.toString().startsWith(value0.toString());
                     case "EndsWith":
-                        if (values[0] === "") {
+                        if (value0 === "") {
                             return false;
                         }
-                        return cell.value.toString().endsWith(values[0].toString());
+                        return cell.value.toString().endsWith(value0.toString());
                     case "Between":
-                        return cell.value >= values[0] && cell.value <= values[1];
+                        return cell.value >= value0 && cell.value <= value1;
                     case "NotBetween":
-                        return !(cell.value >= values[0] && cell.value <= values[1]);
+                        return !(cell.value >= value0 && cell.value <= value1);
                     case "ContainsText":
-                        return cell.value.toString().indexOf(values[0].toString()) > -1;
+                        return cell.value.toString().indexOf(value0.toString()) > -1;
                     case "NotContains":
-                        return !cell.value || cell.value.toString().indexOf(values[0].toString()) === -1;
+                        return !cell.value || cell.value.toString().indexOf(value0.toString()) === -1;
                     case "GreaterThan":
-                        return cell.value > values[0];
+                        return cell.value > value0;
                     case "GreaterThanOrEqual":
-                        return cell.value >= values[0];
+                        return cell.value >= value0;
                     case "LessThan":
-                        return cell.value < values[0];
+                        return cell.value < value0;
                     case "LessThanOrEqual":
-                        return cell.value <= values[0];
+                        return cell.value <= value0;
                     case "NotEqual":
-                        if (values[0] === "") {
+                        if (value0 === "") {
                             return false;
                         }
-                        return cell.value !== values[0];
+                        return cell.value !== value0;
                     case "Equal":
-                        if (values[0] === "") {
+                        if (value0 === "") {
                             return true;
                         }
-                        return cell.value === values[0];
+                        return cell.value === value0;
                     default:
                         console.warn(_t("Not implemented operator %s for kind of conditional formatting:  %s", rule.operator, rule.type));
                 }
@@ -41813,7 +41726,7 @@
                         sheetId,
                         col: newTableZone.left + i,
                         row: newTableZone.top,
-                        values: table.filtersValues[i],
+                        hiddenValues: table.filtersValues[i],
                     });
                 }
             }
@@ -43246,13 +43159,13 @@
                 bottom: this.getters.findVisibleHeader(sheetId, "ROW", zone.bottom, zone.top),
             };
         }
-        updateFilter({ col, row, values, sheetId }) {
+        updateFilter({ col, row, hiddenValues, sheetId }) {
             const id = this.getters.getFilterId({ sheetId, col, row });
             if (!id)
                 return;
             if (!this.filterValues[sheetId])
                 this.filterValues[sheetId] = {};
-            this.filterValues[sheetId][id] = values;
+            this.filterValues[sheetId][id] = hiddenValues;
         }
         updateHiddenRows() {
             const sheetId = this.getters.getActiveSheetId();
@@ -45680,7 +45593,7 @@
             const activeSheetId = this.env.model.getters.getActiveSheetId();
             const position = this.env.model.getters.getSheetIds().findIndex((sheetId) => sheetId === activeSheetId) + 1;
             const sheetId = this.env.model.uuidGenerator.uuidv4();
-            const name = this.env.model.getters.getNextSheetName(this.env._t("Sheet"));
+            const name = this.env.model.getters.getNextSheetName(_t("Sheet"));
             this.env.model.dispatch("CREATE_SHEET", { sheetId, position, name });
             this.env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
         }
@@ -46131,12 +46044,10 @@
     }
 
     .o-checkbox {
-      label {
-        display: flex;
-        justify-items: center;
-        input {
-          margin-right: 5px;
-        }
+      display: flex;
+      justify-items: center;
+      input {
+        margin-right: 5px;
       }
     }
 
@@ -47018,11 +46929,9 @@
     }
   }
 `;
-    const t = (s) => s;
     class Spreadsheet extends owl.Component {
         static template = "o-spreadsheet-Spreadsheet";
         static components = { TopBar, Grid, BottomBar, SidePanel, SpreadsheetDashboard };
-        static _t = t;
         sidePanel;
         composer;
         _focusGrid;
@@ -47056,7 +46965,6 @@
                 isDashboard: () => this.model.getters.isDashboard(),
                 openSidePanel: this.openSidePanel.bind(this),
                 toggleSidePanel: this.toggleSidePanel.bind(this),
-                _t: Spreadsheet._t,
                 clipboard: this.env.clipboard || instantiateClipboard(),
                 startCellEdition: (content) => this.onGridComposerCellFocused(content),
             });
@@ -49076,6 +48984,9 @@
 
     function addFormula(cell) {
         const formula = cell.content;
+        if (!formula) {
+            return { attrs: [], node: escapeXml `` };
+        }
         const attrs = [];
         let node = escapeXml ``;
         let cycle = escapeXml ``;
@@ -50905,9 +50816,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.5.0-alpha.4';
-    __info__.date = '2023-08-10T09:44:45.710Z';
-    __info__.hash = 'c8db018';
+    __info__.version = '16.5.0-alpha.5';
+    __info__.date = '2023-08-17T11:19:14.474Z';
+    __info__.hash = 'e0cb3aa';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
