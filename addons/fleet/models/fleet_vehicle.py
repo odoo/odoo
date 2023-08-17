@@ -192,7 +192,7 @@ class FleetVehicle(models.Model):
             vehicle.contract_count = mapped_log_data[vehicle.id][vehicle.active]
             vehicle.history_count = mapped_history_data[vehicle.id]
 
-    @api.depends('log_contracts')
+    @api.depends('log_contracts.state')
     def _compute_contract_reminder(self):
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
@@ -219,11 +219,18 @@ class FleetVehicle(models.Model):
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
                             ('state', 'in', ('open', 'expired'))
-                            ], limit=1, order='expiration_date asc')
+                            ], limit=1, order='expiration_date desc')
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
                             name = log_contract.name
                             state = log_contract.state
+                            if log_contract.state == 'open':
+                                if overdue:
+                                    total -= 1
+                                    overdue = False
+                                if due_soon:
+                                    total -= 1
+                                    due_soon = False
 
             record.contract_renewal_overdue = overdue
             record.contract_renewal_due_soon = due_soon

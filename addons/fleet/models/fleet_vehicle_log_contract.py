@@ -25,7 +25,7 @@ class FleetVehicleLogContract(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     name = fields.Char(string='Name', compute='_compute_contract_name', store=True, readonly=False)
     active = fields.Boolean(default=True)
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user, index=True)
+    user_id = fields.Many2one(related='vehicle_id.manager_id')
     start_date = fields.Date(
         'Contract Start Date', default=fields.Date.context_today,
         help='Date when the coverage of the contract begins')
@@ -39,11 +39,11 @@ class FleetVehicleLogContract(models.Model):
     purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Driver')
     ins_ref = fields.Char('Reference', size=64, copy=False)
     state = fields.Selection(
-        [('futur', 'Incoming'),
-         ('open', 'In Progress'),
+        [('futur', 'New'),
+         ('open', 'Running'),
          ('expired', 'Expired'),
-         ('closed', 'Closed')
-        ], 'Status', default='open', readonly=True,
+         ('closed', 'Cancelled')
+        ], 'Status', default='futur', readonly=True,
         help='Choose whether the contract is still valid or not',
         tracking=True,
         copy=False)
