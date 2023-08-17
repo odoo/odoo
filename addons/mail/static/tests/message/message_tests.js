@@ -611,7 +611,9 @@ QUnit.test("basic rendering of message", async (assert) => {
     assert.hasAttrValue(
         $message.find(".o-mail-Message-header .o-mail-Message-date"),
         "title",
-        deserializeDateTime("2019-04-20 10:00:00").toLocaleString(DateTime.DATETIME_SHORT)
+        deserializeDateTime("2019-04-20 10:00:00").toLocaleString(
+            DateTime.DATETIME_SHORT_WITH_SECONDS
+        )
     );
     assert.containsOnce($message, ".o-mail-Message-content");
     assert.strictEqual($message.find(".o-mail-Message-content").text(), "body");
