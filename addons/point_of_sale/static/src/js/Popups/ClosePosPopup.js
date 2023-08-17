@@ -95,7 +95,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
     handleInputChange(paymentId, event) {
         if (event.target.classList.contains('invalid-cash-input')) return;
         let expectedAmount;
-        if (paymentId === this.defaultCashDetails.id) {
+        if (paymentId === this.defaultCashDetails?.id) {
             this.manualInputCashCount = true;
             this.moneyDetails = null;
             this.state.notes = "";
