@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { getBundle } from "@web/core/assets";
+
 const { useEffect, onWillStart } = owl;
+
 
 export class MassMailingMobilePreviewDialog extends Dialog {
     setup() {
         super.setup();
-        this.rpc = useService("rpc");
         onWillStart(async () => {
-            this.styleSheets = await this.rpc("/mailing/get_preview_assets");
+            this.bundle = await getBundle("mass_mailing.iframe_css_assets_edit");
         });
         useEffect((modalEl) => {
             if (modalEl) {
@@ -28,10 +29,19 @@ export class MassMailingMobilePreviewDialog extends Dialog {
     }
 
     _getSourceDocument() {
-        return '<!DOCTYPE html><html>' +
-                    '<head>' + this.styleSheets + '</head>' +
-                    '<body>' + this.props.preview + '</body>' +
-                '</html>';
+        const links = this.bundle.cssLibs.map((src) => {
+            const link = document.createElement("link");
+            link.setAttribute("type", "text/css");
+            link.setAttribute("rel", "stylesheet");
+            link.setAttribute("href", src);
+            return link.outerHTML;
+        });
+        return `
+            <!DOCTYPE html><html>
+                <head> ${links.join("")} </head>
+                <body> ${this.props.preview} </body>
+            </html>
+        `;
     }
 }
 

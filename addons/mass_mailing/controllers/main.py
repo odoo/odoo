@@ -246,15 +246,3 @@ class MassMailController(http.Controller):
             'mailing_link': Markup(f'<a href="#" data-oe-model="mailing.mailing" data-oe-id="{mailing.id}">{escape(mailing.subject)}</a>'),
             'record_link': Markup(f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'),
         }
-
-    # ------------------------------------------------------------
-    # MISCELLANEOUS
-    # ------------------------------------------------------------
-
-    @http.route('/mailing/get_preview_assets', type='json', auth='user')
-    def get_mobile_preview_styling(self):
-        """ This route allows a rpc call to get the styling needed for email template conversion.
-        We do this to avoid duplicating the template."""
-        if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
-            raise NotFound
-        return request.env['ir.qweb']._render('mass_mailing.iframe_css_assets_edit')
