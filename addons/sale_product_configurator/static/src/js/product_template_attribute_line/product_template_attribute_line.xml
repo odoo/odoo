@@ -93,6 +93,7 @@
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-1">
                 <label
+                    t-att-title="ptav.name"
                     t-attf-style="background-color:#{ptav.is_custom ? '' : ptav.html_color}"
                     t-att-class="{'o_sale_product_configurator_ptav_color': true, 'active': ptav.id === this.props.selected_attribute_value_id, 'custom_value': ptav.is_custom, 'transparent': !ptav.is_custom and !ptav.html_color, 'css_not_available': ptav.excluded }">
                     <input
