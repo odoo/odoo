@@ -1,5 +1,4 @@
 /** @odoo-module **/
-"use strict";
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";

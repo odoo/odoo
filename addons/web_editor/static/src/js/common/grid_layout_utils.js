@@ -1,5 +1,4 @@
 /** @odoo-module **/
-'use strict';
 
 import { renderToElement } from "@web/core/utils/render";
 import {descendants, preserveCursor} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
