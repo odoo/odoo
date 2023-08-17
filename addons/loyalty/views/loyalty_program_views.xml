@@ -97,7 +97,7 @@
                             <field name="trigger" invisible="1"/>
                             <field name="trigger" string="Program trigger" groups="base.group_no_one" widget="selection" readonly="1" force_save="1"/>
                             <field name="applies_on" invisible="1"/>
-                            <field name="applies_on" string="Use points on" groups="base.group_no_one" widget="radio" readonly="1" force_save="1"/>
+                            <field name="applies_on" string="Use points on" groups="base.group_no_one" widget="radio" force_save="1" readonly="program_type != 'loyalty'"/>
                         </group>
                         <group>
                             <field name="date_from" invisible="program_type in ('gift_card', 'ewallet')"/>
