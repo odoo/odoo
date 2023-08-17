@@ -466,7 +466,7 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
             'name': 'Hol10',
             'holiday_status_id': self.leave_type.id,
             'holiday_type': 'company',
-            'mode_company_id': 1,
+            'mode_company_id': self.company.id,
         }
         self.request_leave(self.user_hrmanager_id, datetime.today() + relativedelta(days=5), 1, values)
 
@@ -782,6 +782,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
             'leave_validation_type': 'hr',
             'requires_allocation': 'no',
         })
+        cls.employee_emp.company_id = cls.new_company
         cls.rd_dept.manager_id = False
         cls.hr_dept.manager_id = False
 
@@ -827,6 +828,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_user(self):
+        self.employee_emp.company_id = self.user_employee.company_id
         self.leave_type.write({'company_id': False})
         employee_leave = self.employee_leave.with_user(self.user_employee)
 
@@ -837,6 +839,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_officer(self):
+        self.employee_emp.company_id = self.user_employee.company_id
         self.leave_type.write({'company_id': False})
         employee_leave_hruser = self.employee_leave.with_user(self.user_hruser)
 
@@ -846,6 +849,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_manager(self):
+        self.employee_emp.company_id = self.user_employee.company_id
         self.leave_type.write({'company_id': False})
         employee_leave_hrmanager = self.employee_leave.with_user(self.user_hrmanager)
 
