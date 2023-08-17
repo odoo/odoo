@@ -721,9 +721,6 @@ class Module(models.Model):
     @assert_log_admin_access
     @api.model
     def update_list(self):
-        res = [0, 0]    # [update, add]
-
-        default_version = modules.adapt_version('1.0')
         known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
@@ -741,8 +738,6 @@ class Module(models.Model):
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
-                if parse_version(terp.get('version', default_version)) > parse_version(mod.latest_version or default_version):
-                    res[0] += 1
                 if updated_values:
                     mod.write(updated_values)
             else:
@@ -751,13 +746,12 @@ class Module(models.Model):
                     continue
                 state = "uninstalled" if terp.get('installable', True) else "uninstallable"
                 mod = self.create(dict(name=mod_name, state=state, **values))
-                res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
 
-        return res
+        return True
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
         self.env['ir.module.module.dependency'].flush_model()
