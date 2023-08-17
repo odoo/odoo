@@ -32,7 +32,7 @@ export class ActivityMenu extends Component {
     }
 
     sortActivityGroups() {
-        this.store.activityGroups.sort((g1, g2) => g1.id - g2.id);
+        this.store.activityGroups.sort((g1, g2) => g1.sequence - g2.sequence);
     }
 
     onBeforeOpen() {

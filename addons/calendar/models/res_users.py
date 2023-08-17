@@ -47,13 +47,13 @@ class Users(models.Model):
         if meetings_lines:
             meeting_label = _("Today's Meetings")
             meetings_systray = {
-                'id': self.env['ir.model']._get('calendar.event').id,
+                'sequence': 0,
                 'type': 'meeting',
                 'name': meeting_label,
                 'model': 'calendar.event',
                 'icon': modules.module.get_module_icon(self.env['calendar.event']._original_module),
                 'meetings': meetings_lines,
             }
-            res.insert(0, meetings_systray)
+            res.append(meetings_systray)
 
         return res

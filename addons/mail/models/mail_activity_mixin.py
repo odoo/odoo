@@ -5,6 +5,7 @@ from datetime import datetime
 
 import logging
 import pytz
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -458,3 +459,23 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    @api.model
+    def _sort_activities_by_record(self, activities, module=False):
+        """ Sort activities linked to records of the current model by record
+            and module. By default, all activities are sorted in the original module
+            of the current model. This method can be overriden in specific model
+            to change this behavior.
+
+        :param activities: mail.activity records whose res_model is the current model
+        :param module: if set, force the grouping of activities in `module` instead of
+                       the original module of the current model.
+        :return: a dictionary with modules as key containing a dictionary of
+                 activities sorted by records they are linked to
+        :rtype: dict(dict())
+                e.g. {'module 1': {record1: [activity1, ...], ...}, 'module2': ...}
+        """
+        activities_by_res_id = defaultdict(lambda: self.env["mail.activity"])
+        for activity in activities:
+            activities_by_res_id[activity.res_id] += activity
+        return {module or self._original_module: activities_by_res_id}
