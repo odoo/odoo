@@ -2151,15 +2151,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         orderpoints_context_by_company = defaultdict(dict)
+        orderpoints = self.env['stock.warehouse.orderpoint'].search_fetch([
+            ('product_id', 'in', self.product_id.ids),
+            ('trigger', '=', 'auto'),
+            ('location_id', 'parent_of', self.location_id.ids),
+            ('company_id', 'in', self.company_id.ids),
+        ], ['product_id', 'location_id', 'company_id', 'product_min_qty'])
         for move in self:
-            orderpoint = self.env['stock.warehouse.orderpoint'].search([
-                ('product_id', '=', move.product_id.id),
-                ('trigger', '=', 'auto'),
-                ('location_id', 'parent_of', move.location_id.id),
-                ('company_id', '=', move.company_id.id),
-                '!', ('location_id', 'parent_of', move.location_dest_id.id),
-            ], limit=1)
+            orderpoint = orderpoints.filtered(lambda o: o.product_id == move.product_id and
+                                              str(o.location_id.id) in move.location_id.parent_path and
+                                              o.company_id == move.company_id and
+                                              not str(o.location_id.id) in move.location_dest_id.parent_path)
             if orderpoint:
+                orderpoint = orderpoint[0]
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
             if orderpoint and move.product_qty > orderpoint.product_min_qty and move.origin:
                 orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
