@@ -3,7 +3,7 @@
 import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
+import { hidePDFJSButtons } from "@web/libs/pdfjs";
 
 /**
  * @typedef {Object} Props

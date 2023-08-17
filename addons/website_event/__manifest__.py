@@ -49,7 +49,7 @@
     ],
     'application': True,
     'assets': {
-        'web.assets_common': [
+        'web.assets_backend': [
             'website_event/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [

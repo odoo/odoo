@@ -87,6 +87,7 @@
             'website_sale/static/src/scss/primary_variables.scss',
         ],
         'web.assets_backend': [
+            'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/js/website_sale_video_field_preview.js',
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/js/tours/website_sale_shop.js',
@@ -103,9 +104,6 @@
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
-        ],
-        'web.assets_common': [
-            'website_sale/static/src/js/tours/tour_utils.js',
         ],
         'web.assets_tests': [
             'website_sale/static/tests/**/*',

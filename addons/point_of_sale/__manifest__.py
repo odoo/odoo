@@ -104,12 +104,7 @@
 
 
             # JS framework
-            'web/static/src/boot.js',
-            'web/static/src/session.js',
-            'web/static/src/env.js',
-            'web/static/src/core/utils/transitions.scss', # needs to be loaded before other scss files
-            'web/static/src/core/**/*',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            ('include', 'web._assets_core'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             # formatMonetary
             'web/static/src/views/fields/formatters.js',
@@ -132,9 +127,6 @@
             'web/static/src/webclient/actions/reports/utils.js',
             # libs
             'point_of_sale/static/lib/**/*',
-            'web/static/lib/luxon/luxon.js',
-            'web/static/lib/owl/owl.js',
-            'web/static/lib/owl/odoo_module.js',
             'web_editor/static/lib/html2canvas.js',
             'web/static/lib/zxing-library/zxing-library.js',
             # PoS files

@@ -117,6 +117,7 @@
             'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
             'mass_mailing/static/src/xml/mass_mailing.xml',
+            'mass_mailing/static/src/js/tours/**/*',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
@@ -136,9 +137,6 @@
         ],
         'web_editor.assets_legacy_wysiwyg': [
             'mass_mailing/static/src/js/snippets.editor.js',
-        ],
-        'web.assets_common': [
-            'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
