@@ -133,7 +133,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
-            _logger.exception("Error while generating report %s", reportname)
+            _logger.warning("Error while generating report %s", reportname, exc_info=True)
             se = http.serialize_exception(e)
             error = {
                 'code': 200,
