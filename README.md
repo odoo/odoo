@@ -16,7 +16,10 @@ npm install -g rtlcss
 sudo apt install python3-pip libldap2-dev libpq-dev libsasl2-dev
 pip install -r requirements.txt
 ```
-5. 
+5. Start odoo with
+```bash
+./start.sh
+```
 
 
 Getting started with Odoo
