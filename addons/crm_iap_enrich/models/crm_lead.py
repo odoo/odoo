@@ -89,27 +89,23 @@ class Lead(models.Model):
                         try:
                             iap_response = self.env['iap.enrich.api']._request_enrich(lead_emails)
                         except iap_tools.InsufficientCreditError:
-                            _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
+                            _logger.info('Lead enrichment failed because of insufficient credit')
                             if not from_cron:
-                                self.env['iap.account']._send_iap_bus_notification(
+                                self.env['iap.account']._send_no_credit_notification(
                                     service_name='reveal',
-                                    title=_("Not enough credits for Lead Enrichment"),
-                                    error_type='credit')
+                                    title=_("Not enough credits for Lead Enrichment"))
                             # Since there are no credits left, there is no point to process the other batches
                             break
                         except Exception as e:
                             if not from_cron:
-                                self.env['iap.account']._send_iap_bus_notification(
-                                    service_name='reveal',
-                                    error_type="exception",
-                                    title=_('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e))
-                            _logger.info('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e)
+                                self.env['iap.account']._send_error_notification(
+                                    message=_('An error occurred during lead enrichment'))
+                            _logger.info('An error occurred during lead enrichment: %s', e)
                         else:
                             if not from_cron:
-                                self.env['iap.account']._send_iap_bus_notification(
-                                    service_name='reveal',
-                                    title=_("The leads/opportunities have successfully been enriched"))
-                            _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
+                                self.env['iap.account']._send_success_notification(
+                                    message=_("The leads/opportunities have successfully been enriched"))
+                            _logger.info('Batch of %s leads successfully enriched', len(lead_emails))
                             self._iap_enrich_from_response(iap_response)
                 except OperationalError:
                     _logger.error('A batch of leads could not be enriched :%s', repr(leads))
