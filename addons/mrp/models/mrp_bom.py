@@ -244,22 +244,9 @@ class MrpBom(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty', 'operation_ids']
+        relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty']
         if any(field_name in vals for field_name in relevant_fields):
-            # Searches for MOs using these BoMs to notify them that their BoM has been updated.
-            list_of_domain_by_bom = []
-            for bom in self:
-                domain_by_products = [('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)]
-                if bom.product_id:
-                    domain_by_products = [('product_id', '=', bom.product_id.id)]
-                domain_for_confirmed_mo = AND([[('state', '=', 'confirmed')], domain_by_products])
-                # Avoid confirmed MOs if the BoM's product was changed.
-                domain_by_states = OR([[('state', '=', 'draft')], domain_for_confirmed_mo])
-                list_of_domain_by_bom.append(AND([[('bom_id', '=', bom.id)], domain_by_states]))
-            domain = OR(list_of_domain_by_bom)
-            productions = self.env['mrp.production'].search(domain)
-            if productions:
-                productions.is_outdated_bom = True
+            self._set_outdated_bom_in_productions()
         if 'sequence' in vals and self and self[-1].id == self._prefetch_ids[-1]:
             self.browse(self._prefetch_ids)._check_bom_cycle()
         return res
@@ -427,6 +414,23 @@ class MrpBom(models.Model):
             'label': _('Import Template for Bills of Materials'),
             'template': '/mrp/static/xls/mrp_bom.xls'
         }]
+
+    def _set_outdated_bom_in_productions(self):
+        # Searches for MOs using these BoMs to notify them that their BoM has been updated.
+        list_of_domain_by_bom = []
+        for bom in self:
+            domain_by_products = [('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)]
+            if bom.product_id:
+                domain_by_products = [('product_id', '=', bom.product_id.id)]
+            domain_for_confirmed_mo = AND([[('state', '=', 'confirmed')], domain_by_products])
+            # Avoid confirmed MOs if the BoM's product was changed.
+            domain_by_states = OR([[('state', '=', 'draft')], domain_for_confirmed_mo])
+            list_of_domain_by_bom.append(AND([[('bom_id', '=', bom.id)], domain_by_states]))
+        if list_of_domain_by_bom:
+            domain = OR(list_of_domain_by_bom)
+            productions = self.env['mrp.production'].search(domain)
+            if productions:
+                productions.is_outdated_bom = True
 
 
 class MrpBomLine(models.Model):
