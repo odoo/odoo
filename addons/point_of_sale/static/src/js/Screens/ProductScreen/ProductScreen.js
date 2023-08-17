@@ -271,7 +271,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                 context: this.env.session.user_context,
             });
             if (product_id.length) {
-                await this.env.pos._addProducts(product_id);
+                await this.env.pos._addProducts(product_id, false);
                 if (packaging.length) {
                     this.env.pos.db.add_packagings(packaging);
                 }
