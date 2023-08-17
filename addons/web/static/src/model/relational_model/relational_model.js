@@ -619,6 +619,9 @@ export class RelationalModel extends Model {
      */
     async _updateConfig(config, patch, options = {}) {
         const tmpConfig = { ...config, ...patch };
+        markRaw(tmpConfig.activeFields);
+        markRaw(tmpConfig.fields);
+
         let data;
         if (!options.noReload) {
             data = await this._loadData(tmpConfig);
