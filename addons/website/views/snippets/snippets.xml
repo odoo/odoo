@@ -1652,6 +1652,7 @@
         <t t-set="display_label">Display</t>
         <we-collapse>
             <we-input string="Font size"
+                      title="Heading 1"
                       data-customize-website-variable="null"
                       data-variable="h1-font-size"
                       data-unit="px"
@@ -1674,7 +1675,7 @@
             </t>
         </we-collapse>
         <we-collapse>
-            <we-row string="Font family">
+            <we-row string="Font family" title="Heading 1">
                 <we-fontfamilypicker data-variable="headings-font"/>
                 <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
                     data-customize-website-variable="" data-variable="headings-font"
@@ -1700,6 +1701,7 @@
         <we-collapse>
             <!-- "× ": \u00D7\u2000 -->
             <we-input string="Line height"
+                      title="Heading 1"
                       data-customize-website-variable="null"
                       data-variable="headings-line-height"
                       data-fake-unit="× "/>
@@ -1717,7 +1719,7 @@
             </t>
         </we-collapse>
         <we-collapse>
-            <we-row string="Margins">
+            <we-row string="Margins" title="Heading 1">
                 <we-input title="Top" data-customize-website-variable="" data-variable="headings-margin-top" data-unit="px" data-save-unit="px"/>
                 <we-input title="Bottom" data-customize-website-variable="" data-variable="headings-margin-bottom" data-unit="px" data-save-unit="px"/>
             </we-row>
