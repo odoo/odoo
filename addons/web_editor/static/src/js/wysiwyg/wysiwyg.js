@@ -3350,22 +3350,49 @@ export class Wysiwyg extends Component {
             // robust enough.
             return;
         }
-        const attachment = await this._serviceRpc(
+        let attachment = await this._serviceRpc(
             '/web_editor/attachment/add_data',
             {
                 name: el.dataset.fileName || '',
                 data: imageData,
                 is_image: true,
-                res_model: resModel,
-                res_id: resId,
+                res_model: resModel || "ir.ui.view",
+                res_id: resId || false,
+                mimetype: el.dataset.mimetype || "",
             },
         );
-        if (attachment.mimetype === 'image/webp') {
-            el.classList.add('o_modified_image_to_save');
+        // Catch a possible error
+        if (attachment.error) {
+            // The mime type is not valid. Let's transform the base64 to a common jpeg image and save it
+            const isBackground = !el.matches("img");
+            const image = document.createElement("img");
+            image.src = isBackground ? el.dataset.bgSrc : el.getAttribute("src");
+            await new Promise(resolve => image.addEventListener("load", resolve));
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+            let data = canvas.toDataURL("image/jpeg", 0.75).split(",")[1];
+            attachment = await this._serviceRpc(
+                "/web_editor/attachment/add_data",
+                {
+                    name: el.dataset.fileName || "",
+                    data: data,
+                    is_image: true,
+                    res_model: resModel || "ir.ui.view",
+                    res_id: resId || false,
+                    mimetype: "image/jpeg",
+                },
+            );
+        }
+        if (attachment.mimetype === "image/webp") {
             el.dataset.originalId = attachment.id;
             el.dataset.mimetype = attachment.mimetype;
             el.dataset.fileName = attachment.name;
-            this._saveModifiedImage(el, resModel, resId);
+            await this._saveModifiedImage(el, resModel, resId);
         } else {
             let src = attachment.image_src;
             if (!attachment.public) {
