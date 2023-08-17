@@ -2178,3 +2178,8 @@ $o-theme-font-configs: (
     }
     @return $-map;
 }
+
+// Fade-in 'currentColor' by a customizable amount
+@function fade-currentColor($-opacity: 15%) {
+    @return color-mix(in srgb, currentColor #{$-opacity}, transparent);
+}
