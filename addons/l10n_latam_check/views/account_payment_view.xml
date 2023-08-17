@@ -64,7 +64,7 @@
                     string='Check Number'
                     invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)"
                     readonly="state != 'draft'"
-                    required="(payment_method_code == 'new_third_party_checks' or payment_method_code == 'check_printing') and l10n_latam_manual_checks"/>
+                    required="payment_method_code == 'new_third_party_checks' or (payment_method_code == 'check_printing' and l10n_latam_manual_checks)"/>
                 <field name="l10n_latam_check_payment_date" invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)" readonly="state != 'draft'"/>
                 <field name="l10n_latam_check_bank_id" string="Check Bank"
                     invisible="payment_method_code != 'new_third_party_checks'"
