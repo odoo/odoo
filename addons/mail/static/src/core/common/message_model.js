@@ -110,7 +110,7 @@ export class Message {
     }
 
     get datetimeShort() {
-        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT);
+        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
     }
 
     get isSelfMentioned() {
