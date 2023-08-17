@@ -8,17 +8,12 @@ export class Many2OneAvatarEmployeeField extends Many2OneAvatarUserField {}
 Many2OneAvatarEmployeeField.extractProps = ({ field, attrs }) => {
     return {
         ...Many2OneAvatarUserField.extractProps({ field, attrs }),
+        relation: (attrs.options && attrs.options.relation) || field.relation,
         canQuickCreate: false,
     }
 };
 
 Many2OneAvatarEmployeeField.additionalClasses = [...Many2OneAvatarUserField.additionalClasses, "o_field_many2one_avatar_user"];
-Many2OneAvatarEmployeeField.extractProps = ({ attrs, field }) => {
-    return {
-        ...Many2OneAvatarUserField.extractProps({ attrs, field }),
-        relation: (attrs.options && attrs.options.relation) || field.relation,
-    };
-};
 
 registry.category("fields").add("many2one_avatar_employee", Many2OneAvatarEmployeeField);
 
