@@ -3017,6 +3017,47 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("open a record in an one2many readonly", async function (assert) {
+        serverData.views = {
+            "turtle,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles" readonly='1'>
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal div[name=display_name] span").textContent,
+            "donatello"
+        );
+
+        await click(target, ".modal .o_form_button_cancel");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal div[name=display_name] span").textContent,
+            "donatello"
+        );
+    });
+
     QUnit.test(
         "one2many in kanban: add a line custom control create editable",
         async function (assert) {
