@@ -3060,6 +3060,70 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
+        "open a record in a one2many kanban with an x2m in the form",
+        async function (assert) {
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[1].p = [4];
+
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <t t-esc="record.display_name.value"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+                resId: 1,
+                async mockRPC(route, args) {
+                    if (args.method === "web_read" && args.args[0][0] === 2) {
+                        assert.step("web_read: 2");
+                        await def;
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_kanban_record"));
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".modal [name=display_name] input").value,
+                "second record"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent),
+                ["aaa"]
+            );
+
+            assert.verifySteps(["web_read: 2"]);
+        }
+    );
+
+    QUnit.test(
         "one2many in kanban: add a line custom control create editable",
         async function (assert) {
             serverData.views = {
