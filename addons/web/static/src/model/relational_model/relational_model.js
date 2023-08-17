@@ -373,7 +373,7 @@ export class RelationalModel extends Model {
                     config.fields[o.name].group_operator !== undefined)
         );
         const response = await this._webReadGroup(config, firstGroupByName, orderBy);
-        const { groups, length } = response;
+        const { groups: groupsData, length } = response;
         const groupBy = config.groupBy.slice(1);
         const groupByField = config.fields[config.groupBy[0].split(":")[0]];
         const commonConfig = {
@@ -392,25 +392,34 @@ export class RelationalModel extends Model {
         }
         const proms = [];
         let nbOpenGroups = 0;
-        for (const group of groups) {
+
+        const groups = [];
+        for (const groupData of groupsData) {
+            const group = {};
             // When group_by_no_leaf key is present FIELD_ID_count doesn't exist
             // we have to get the count from `__count` instead
             // see _read_group_raw in models.py
-            group.count = group.__count || group[`${firstGroupByName}_count`];
+            group.count = groupData.__count || groupData[`${firstGroupByName}_count`];
             group.length = group.count;
-            group.range = group.__range ? group.__range[config.groupBy[0]] : null;
-            delete group.__count;
-            delete group[`${firstGroupByName}_count`];
-            delete group.__range;
-            group.value = getValueFromGroupData(group, groupByField, group[config.groupBy[0]]);
-            group.displayName = getDisplayNameFromGroupData(groupByField, group[config.groupBy[0]]);
-            group.aggregates = getAggregatesFromGroupData(group, config.fields);
-            // delete group[config.groupBy[0]];
+            group.range = groupData.__range ? groupData.__range[config.groupBy[0]] : null;
+            group.value = getValueFromGroupData(
+                groupData,
+                groupByField,
+                groupData[config.groupBy[0]],
+                group.range
+            );
+            group.rawValue = groupData[groupByField.name];
+            group.displayName = getDisplayNameFromGroupData(
+                groupByField,
+                groupData[config.groupBy[0]]
+            );
+            group.aggregates = getAggregatesFromGroupData(groupData, config.fields);
             if (!config.groups[group.value]) {
                 config.groups[group.value] = {
                     ...commonConfig,
                     groupByFieldName: groupByField.name,
-                    isFolded: "__fold" in group ? group.__fold : !config.openGroupsByDefault,
+                    isFolded:
+                        "__fold" in groupData ? groupData.__fold : !config.openGroupsByDefault,
                     extraDomain: false,
                     value: group.value,
                     list: {
@@ -433,14 +442,14 @@ export class RelationalModel extends Model {
             }
             const groupConfig = config.groups[group.value];
             groupConfig.list.orderBy = config.orderBy;
-            groupConfig.initialDomain = group.__domain;
+            groupConfig.initialDomain = groupData.__domain;
             if (groupConfig.extraDomain) {
                 groupConfig.list.domain = Domain.and([
-                    group.__domain,
+                    groupData.__domain,
                     groupConfig.extraDomain,
                 ]).toList();
             } else {
-                groupConfig.list.domain = group.__domain;
+                groupConfig.list.domain = groupData.__domain;
             }
             const context = {
                 ...config.context,
@@ -472,6 +481,7 @@ export class RelationalModel extends Model {
                 });
                 proms.push(prom);
             }
+            groups.push(group);
         }
         if (groupRecordConfig && Object.keys(groupRecordConfig.activeFields).length) {
             const prom = this._loadRecords({
