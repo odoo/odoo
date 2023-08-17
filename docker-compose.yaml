@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgres:15
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    container_name: git-odoo-db
