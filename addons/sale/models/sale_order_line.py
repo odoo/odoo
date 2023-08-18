@@ -1188,6 +1188,62 @@ class SaleOrderLine(models.Model):
             product_catalog_digits=order.order_line._fields['price_unit'].get_digits(order.env),
         )
 
+    def _get_catalog_info(self):
+        """ Return information about sale order lines in `self`.
+
+        If `self` is empty, this method returns only the default value(s) needed for the product
+        catalog. In this case, the quantity that equals 0.
+
+        Otherwise, it returns a quantity and a price based on the product of the SOL(s) and whether
+        the product is read-only or not.
+
+        A product is considered read-only if the order is considered read-only (see
+        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records.
+
+        Note: This method cannot be called with multiple records that have different products linked.
+
+        :raise odoo.exceptions.ValueError: ``len(self.product_id) != 1``
+        :rtype: dict
+        :return: A dict with the following structure:
+            {
+                'quantity': float,
+                'price': float,
+                'readOnly': bool,
+            }
+        """
+        if len(self) == 1:
+            return {
+                'quantity': self.product_uom_qty,
+                'price': self.price_unit,
+                'readOnly': self.order_id._is_readonly(),
+            }
+        elif self:
+            self.product_id.ensure_one()
+            order_line = self[0]
+            order = order_line.order_id
+            return {
+                'readOnly': True,
+                'price': order.pricelist._get_product_price(
+                    product=order_line.product_id,
+                    quantity=1.0,
+                    currency=order.currency_id,
+                    date=order.date_order,
+                ),
+                'quantity': sum(
+                    self.mapped(
+                        lambda line: line.product_uom._compute_quantity(
+                            qty=line.product_uom_qty,
+                            to_unit=line.product_id.uom_id,
+                        )
+                    )
+                ),
+            }
+        else:
+            return {
+                'quantity': 0,
+                # price will be computed in batch with pricelist utils so not given here
+            }
+
     #=== TOOLING ===#
 
     def _convert_to_sol_currency(self, amount, currency):

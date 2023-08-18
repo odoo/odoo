@@ -23,7 +23,6 @@ export class ProductCatalogKanbanModel extends RelationalModel {
         });
         for (const record of result.records) {
             record.productCatalogData = saleOrderLinesInfo[record.id];
-            record.productCatalogData.quantity = record.productCatalogData.quantity || 0;
         }
         return result;
     }
