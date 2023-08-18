@@ -1167,4 +1167,310 @@
             }),
         ]"/>
     </record>
+
+    <!-- Split Payment (Scissione dei pagamenti) ......................................................... -->
+
+    <record id="22vsp" model="account.tax.template">
+        <field name="description">22% Scissione dei Pagamenti pos.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">22% SP pos.</field>
+        <field name="sequence">350</field>
+        <field name="amount">22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="22vsp_storno" model="account.tax.template">
+        <field name="description">22% Scissione dei Pagamenti neg.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">22% SP neg.</field>
+        <field name="sequence">360</field>
+        <field name="amount">-22</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+    </record>
+    <record id="22vsp_group" model="account.tax.template">
+        <field name="description">22%</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">22% SP</field>
+        <field name="sequence">370</field>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('22vsp'),ref('22vsp_storno')])]"/>
+    </record>
+
+    <record id="10vsp" model="account.tax.template">
+        <field name="description">10% Scissione dei Pagamenti pos.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">10% SP pos.</field>
+        <field name="sequence">350</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="10vsp_storno" model="account.tax.template">
+        <field name="description">10% Scissione dei Pagamenti neg.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">10% SP neg.</field>
+        <field name="sequence">360</field>
+        <field name="amount">-10</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+    </record>
+    <record id="10vsp_group" model="account.tax.template">
+        <field name="description">10%</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">10% SP</field>
+        <field name="sequence">370</field>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('10vsp'),ref('10vsp_storno')])]"/>
+    </record>
+
+    <record id="5vsp" model="account.tax.template">
+        <field name="description">5% Scissione dei Pagamenti pos.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">5% SP pos.</field>
+        <field name="sequence">350</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="5vsp_storno" model="account.tax.template">
+        <field name="description">5% Scissione dei Pagamenti neg.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">5% SP neg.</field>
+        <field name="sequence">360</field>
+        <field name="amount">-5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+    </record>
+    <record id="5vsp_group" model="account.tax.template">
+        <field name="description">5%</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">5% SP</field>
+        <field name="sequence">370</field>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('5vsp'),ref('5vsp_storno')])]"/>
+    </record>
+
+    <record id="4vsp" model="account.tax.template">
+        <field name="description">4% Scissione dei Pagamenti pos.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">4% SP pos.</field>
+        <field name="sequence">350</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="4vsp_storno" model="account.tax.template">
+        <field name="description">4% Scissione dei Pagamenti neg.</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">4% SP neg.</field>
+        <field name="sequence">360</field>
+        <field name="amount">-4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('2608'),
+                'use_in_tax_closing': False,
+            }),
+        ]"/>
+    </record>
+    <record id="4vsp_group" model="account.tax.template">
+        <field name="description">4%</field>
+        <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
+        <field name="name">4% SP</field>
+        <field name="sequence">370</field>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_split_payment"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('4vsp'),ref('4vsp_storno')])]"/>
+    </record>
 </odoo>

@@ -32,6 +32,15 @@ class AccountMove(models.Model):
 
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", compute='_compute_l10n_it_einvoice')
 
+    def _get_l10n_it_amount_split_payment(self):
+        self.ensure_one()
+        amount = 0.0
+        if self.is_invoice(True):
+            for line in [line for line in self.line_ids if line.tax_line_id]:
+                if line.tax_line_id._l10n_it_is_split_payment() and line.credit > 0.0:
+                    amount += line.credit
+        return amount
+
     @api.depends('edi_document_ids', 'edi_document_ids.attachment_id')
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
@@ -104,13 +113,14 @@ class AccountMove(models.Model):
                     sep = ', ' if description else ''
                     description = f"{description}{sep}{downpayment_moves_description}"
 
+            vat_tax = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0)
             invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-                'vat_tax': line.tax_ids._l10n_it_filter_kind('vat'),
+                'vat_tax': vat_tax,
                 'downpayment_moves': downpayment_moves,
             })
         return invoice_lines
@@ -121,11 +131,17 @@ class AccountMove(models.Model):
         tax_lines = []
         for _tax_name, tax_dict in tax_details['tax_details'].items():
             # The assumption is that the company currency is EUR.
+            tax = tax_dict['tax']
             base_amount = tax_dict['base_amount']
             tax_amount = tax_dict['tax_amount']
-            tax_rate = tax_dict['tax'].amount
+            tax_rate = tax.amount
+            tax_exigibility_code = (
+                'S' if tax._l10n_it_is_split_payment()
+                else 'D' if tax.tax_exigibility == 'on_payment'
+                else 'I' if tax.tax_exigibility == 'on_invoice'
+                else False
+            )
             expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
-            tax = tax_dict['tax']
             # Constraints within the edi make local rounding on price included taxes a problem.
             # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
             #   taxable base = sum(taxable base for each unit) + Arrotondamento
@@ -139,6 +155,7 @@ class AccountMove(models.Model):
                 'rounding': tax_dict.get('rounding', False),
                 'base_amount': tax_dict['base_amount'],
                 'tax_amount': tax_dict['tax_amount'],
+                'exigibility_code': tax_exigibility_code,
             }
             tax_lines.append(tax_line_dict)
         return tax_lines
@@ -239,6 +256,9 @@ class AccountMove(models.Model):
             document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
             if reverse_charge_refund:
                 document_total = -abs(document_total)
+        split_payment_amount = self._get_l10n_it_amount_split_payment()
+        if split_payment_amount:
+            document_total += split_payment_amount
 
         # Reference line for finding the conversion rate used in the document
         conversion_line = self.invoice_line_ids.sorted(lambda l: abs(l.balance), reverse=True)[0] if self.invoice_line_ids else None
@@ -266,6 +286,7 @@ class AccountMove(models.Model):
             'buyer_is_company': is_self_invoice or partner.is_company,
             'seller': seller,
             'seller_partner': company.partner_id if not is_self_invoice else partner,
+            'origin_document_type': False, # see module l10n_it_edi_origin_document, will be merged in master
             'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
             'document_total': document_total,
             'representative': company.l10n_it_tax_representative_partner_id,
@@ -373,15 +394,36 @@ class AccountTax(models.Model):
                     'l10n_it_kind_exoneration',
                     'l10n_it_law_reference',
                     'amount',
-                    'l10n_it_vat_due_date')
+                    'invoice_repartition_line_ids',
+                    'refund_repartition_line_ids')
     def _check_exoneration_with_no_tax(self):
         for tax in self:
             if tax.l10n_it_has_exoneration:
                 if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
-                if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
-                    raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+                if tax.l10n_it_kind_exoneration == 'N6' and tax._l10n_it_is_split_payment():
+                    raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
 
     def _l10n_it_filter_kind(self, kind):
         """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
         return self if kind == 'vat' else self.env['account.tax']
+
+    def _l10n_it_is_split_payment(self):
+        """ Split payment means that the Public Administration buyer will pay VAT
+            to the tax agency instead of the vendor
+        """
+        self.ensure_one()
+
+        tax_tags = self.get_tax_tags(is_refund=False, repartition_type='tax')
+        if not tax_tags:
+            return False
+
+        it_tax_report_ve38_lines = self.env['account.report.line'].search([
+            ('report_id.country_id.code', '=', 'IT'),
+            ('code', '=', 'VE38'),
+        ])
+        if not it_tax_report_ve38_lines:
+            return False
+
+        ve38_lines_tags = it_tax_report_ve38_lines.expression_ids._get_matching_tags()
+        return bool(tax_tags & ve38_lines_tags)
