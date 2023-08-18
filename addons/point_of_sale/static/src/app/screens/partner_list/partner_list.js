@@ -109,8 +109,8 @@ export class PartnerListScreen extends Component {
             );
             if (indexOfSelectedPartner !== -1) {
                 res.splice(indexOfSelectedPartner, 1);
-                res.unshift(this.state.selectedPartner);
             }
+            res.unshift(this.state.selectedPartner);
         }
         return res;
     }
