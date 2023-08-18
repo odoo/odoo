@@ -270,15 +270,15 @@ class Survey(http.Controller):
             'format_date': lambda date: format_date(request.env, date)
         }
         if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
+            triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
-                'triggering_answer_by_question': {
-                    question.id: triggering_answer_by_question[question].id for question in triggering_answer_by_question.keys()
-                    if triggering_answer_by_question[question]
+                'triggering_answers_by_question': {
+                    question.id: triggering_answers.ids
+                    for question, triggering_answers in triggering_answers_by_question.items() if triggering_answers
                 },
                 'triggered_questions_by_answer': {
-                    answer.id: triggered_questions_by_answer[answer].ids
-                    for answer in triggered_questions_by_answer.keys()
+                    answer.id: triggered_questions.ids
+                    for answer, triggered_questions in triggered_questions_by_answer.items()
                 },
                 'selected_answers': selected_answers.ids
             })

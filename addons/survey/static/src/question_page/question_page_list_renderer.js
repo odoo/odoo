@@ -134,7 +134,7 @@ export class QuestionPageListRenderer extends ListRenderer {
      */
     async onDeleteRecord(record) {
         const triggeredRecords = this.props.list.records.filter(
-            (rec) => rec.data.triggering_question_id[0] === record.resId
+            (rec) => rec.data.triggering_question_ids.records.map(a => a.resId).includes(record.resId)
         );
         if (triggeredRecords.length) {
             const res = await super.onDeleteRecord(record);
