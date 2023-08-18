@@ -159,4 +159,26 @@ QUnit.module("CalendarView - CommonRenderer", ({ beforeEach }) => {
             assert.strictEqual(els[i].textContent, dates[i]);
         }
     });
+
+    QUnit.test("Day: automatically scroll to 6am", async (assert) => {
+        // Make calendar scrollable
+        target.style.height = "500px";
+        await start({ model: { scale: "day" } });
+        const containerDimensions = target.querySelector(".fc-scroller").getBoundingClientRect();
+        const dayStartDimensions = target
+            .querySelector('tr[data-time="06:00:00"')
+            .getBoundingClientRect();
+        assert.ok(Math.abs(dayStartDimensions.y - containerDimensions.y) <= 2);
+    });
+
+    QUnit.test("Week: automatically scroll to 6am", async (assert) => {
+        // Make calendar scrollable
+        target.style.height = "500px";
+        await start({ model: { scale: "week" } });
+        const containerDimensions = target.querySelector(".fc-scroller").getBoundingClientRect();
+        const dayStartDimensions = target
+            .querySelector('tr[data-time="06:00:00"')
+            .getBoundingClientRect();
+        assert.ok(Math.abs(dayStartDimensions.y - containerDimensions.y) <= 2);
+    });
 });
