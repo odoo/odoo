@@ -73,7 +73,6 @@
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/jquery/jquery.browser.js',
-            'web/static/lib/jquery.blockUI/jquery.blockUI.js',
             'web/static/lib/jquery.hotkeys/jquery.hotkeys.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
             'web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js',
