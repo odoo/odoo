@@ -6,6 +6,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { ScrollPosition } from "@mail/core/scroll_position_model";
 import { createLocalId } from "../utils/misc";
 import { Deferred } from "@web/core/utils/concurrency";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * @typedef SeenInfo
@@ -420,7 +421,7 @@ export class Thread {
         if (!this.last_interest_dt) {
             return undefined;
         }
-        return luxon.DateTime.fromISO(new Date(this.last_interest_dt).toISOString());
+        return deserializeDateTime(this.last_interest_dt);
     }
 
     /**
