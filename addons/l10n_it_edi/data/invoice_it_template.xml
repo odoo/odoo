@@ -140,11 +140,11 @@
                 </DatiBollo>
                 <ImportoTotaleDocumento t-out="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
-            <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
+            <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiOrdineAcquisto>
             <DatiOrdineAcquisto t-elif="record.ref and not record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.ref; 20)"/>
+                <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
             </DatiOrdineAcquisto>
             <DatiContratto t-if="origin_document_type == 'contract'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
