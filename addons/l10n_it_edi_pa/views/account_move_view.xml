@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_invoice_form_l10n_it_pa" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.it.pa</field>
+        <field name="model">account.move</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="l10n_it_edi.account_invoice_form_l10n_it"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='electronic_invoicing']/group" position="inside">
+                <field name="l10n_it_partner_pa" invisible="1"/>
+                <group attrs="{'invisible': [('l10n_it_partner_pa', '=', False)]}">
+                    <field name="l10n_it_origin_document_type"/>
+                    <field name="l10n_it_origin_document_name"/>
+                    <field name="l10n_it_origin_document_date"/>
+                    <field name="l10n_it_cig"/>
+                    <field name="l10n_it_cup"/>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+</odoo>
