@@ -3,6 +3,8 @@
 import { Persona } from "@mail/core/persona_model";
 import { assignDefined, createLocalId, nullifyClearCommands } from "../utils/misc";
 import { registry } from "@web/core/registry";
+import { useSequential } from "@mail/utils/hooks";
+import { markRaw } from "@odoo/owl";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
@@ -14,8 +16,15 @@ export class PersonaService {
     setup(env, services) {
         this.env = env;
         this.rpc = services.rpc;
+        this.orm = services.orm;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
+        this.sequential = useSequential();
+        /** Queue used for handling sequential of fetching is_company of persona */
+        this._sQueue = markRaw({
+            /** @type {Set<number>} */
+            todo: new Set(),
+        });
     }
 
     async updateGuestName(guest, name) {
@@ -55,10 +64,48 @@ export class PersonaService {
             this.store.registeredImStatusPartners?.push(persona.id);
         }
     }
+
+    async fetchIsCompany(persona) {
+        if (persona.type !== "partner") {
+            // non-partner persona are always considered as not a company
+            persona.is_company = false;
+            return;
+        }
+        this._sQueue.todo.add(persona.id);
+        await new Promise(setTimeout); // group synchronous request to fetch is_company
+        await this.sequential(async () => {
+            const ongoing = new Set();
+            if (this._sQueue.todo.size === 0) {
+                return;
+            }
+            // load 'todo' into 'ongoing'
+            this._sQueue.todo.forEach((id) => ongoing.add(id));
+            this._sQueue.todo.clear();
+            // fetch is_company
+            const partnerData = await this.orm.silent.read(
+                "res.partner",
+                [...ongoing],
+                ["is_company"],
+                {
+                    context: { active_test: false },
+                }
+            );
+            for (const { id, is_company } of partnerData) {
+                this.insert({ id, is_company, type: "partner" });
+                ongoing.delete(id);
+                this._sQueue.todo.delete(id);
+            }
+            for (const id of ongoing) {
+                // no is_company found => assumes persona is not a company
+                this.insert({ id, is_company: false, type: "partner" });
+                this._sQueue.todo.delete(id);
+            }
+        });
+    }
 }
 
 export const personaService = {
-    dependencies: ["rpc", "mail.store"],
+    dependencies: ["orm", "rpc", "mail.store"],
     start(env, services) {
         return new PersonaService(env, services);
     },
