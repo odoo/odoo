@@ -932,9 +932,12 @@ class Picking(models.Model):
         picking_to_reset = self.filtered(lambda p: p.state not in ('done', 'cancel'))
         picking_to_reset.do_unreserve()
         picking_to_reset.immediate_transfer = False
-        picking_to_reset.move_ids.quantity_done = 0
-        picking_to_reset.move_ids.move_line_ids.unlink()
-        picking_to_reset.move_ids.state = 'draft'
+        if picking_to_reset.move_ids:
+            picking_to_reset.move_ids.quantity_done = 0
+            picking_to_reset.move_ids.move_line_ids.unlink()
+            picking_to_reset.move_ids.state = 'draft'
+        else:
+            picking_to_reset.state = 'draft'
 
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
