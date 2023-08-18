@@ -3,6 +3,7 @@
     <data>
         <template id="stock_picking_batch.report_picking_batch">
             <t t-call="web.html_container">
+                <div class="oe_structure"></div>
                 <t t-foreach="docs" t-as="o">
                     <t t-set="move_line_ids" t-value="o.picking_ids.mapped('move_line_ids')"/>
                     <t t-set="has_package" t-value="move_line_ids.filtered('result_package_id')" groups="stock.group_tracking_lot"/>
@@ -12,15 +13,16 @@
                     <t t-call="web.external_layout">
                         <div class="page">
                             <div class="d-flex">
-                                <div><h3>Summary: <span t-field="o.name"/></h3></div>
+                                <div><h3>Summary: <span t-field="o.name">Batch Name</span></h3></div>
                                 <div class="me-auto">
-                                    <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:300px;height:50px;'}"/>
+                                    <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:300px;height:50px;'}">Batch</span>
                                 </div>
                             </div>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
-                                <span t-field="o.user_id"/>
+                                <span t-field="o.user_id">John Doe</span>
                             </div><br/>
+                            <div class="oe_structure"></div>
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
@@ -33,26 +35,28 @@
                                 <tbody>
                                     <tr t-foreach="o.picking_ids" t-as="pick">
                                         <td>
-                                            <span t-field="pick.name"/>
+                                            <span t-field="pick.name">Transfer Name</span>
                                         </td>
                                         <td>
-                                            <div t-field="pick.name" t-options="{'widget': 'barcode', 'quiet': 0, 'width': 400, 'height': 100, 'img_style': 'width:200px;height:50px;'}"/>
+                                            <span t-field="pick.name" t-options="{'widget': 'barcode', 'quiet': 0, 'width': 400, 'height': 100, 'img_style': 'width:200px;height:50px;'}">Transfer</span>
                                         </td>
                                         <td>
-                                            <span t-field="pick.state"/>
+                                            <span t-field="pick.state">Gujarat</span>
                                         </td>
                                         <td >
-                                            <span t-field="pick.scheduled_date"/>
+                                            <span t-field="pick.scheduled_date">2023-08-20</span>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <p style="page-break-after: always;"/>
-                            <h3><span t-field="o.name"/></h3>
+                            <div class="oe_structure"></div>
+                            <h3><span t-field="o.name">Batch Name</span></h3>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
-                                <span t-field="o.user_id"/>
+                                <span t-field="o.user_id">John Doe</span>
                             </div><br/>
+                            <div class="oe_structure"></div>
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
@@ -79,34 +83,32 @@
                                             <tr>
                                                 <td style="background-color:lightgrey" colspan="6" >
                                                     <p style="margin:0px"><strong>FROM</strong>
-                                                    <span t-esc="move_lines.location_id.display_name"/></p>
+                                                    <span t-out="move_lines.location_id.display_name">Location From Name</span></p>
                                                     <p style="margin:0px"><strong>TO</strong>
-                                                    <span t-esc="move_lines.location_dest_id.display_name"/></p>
+                                                    <span t-out="move_lines.location_dest_id.display_name">Location To Name</span></p>
                                                 </td>
                                             </tr>
                                             <tr t-foreach="move_lines" t-as="move_operation">
                                                 <td>
-                                                    <span t-field="move_operation.display_name"/>
+                                                    <span t-field="move_operation.display_name">Product Name</span>
                                                 </td>
                                                 <td>
-                                                    <span t-esc="sum(move_operation.mapped('quantity'))"/>
-                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom"/>
+                                                    <span t-esc="sum(move_operation.mapped('quantity'))">Quantity Done</span>
+                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom">Unit of Measure</span>
                                                 </td>
                                                 <td>
-                                                    <span t-esc="move_operation.picking_id.display_name"/>
+                                                    <span t-out="move_operation.picking_id.display_name">Transfer Display Name</span>
                                                 </td>
                                                 <td t-if="has_serial_number" class="text-center h6" width="15%">
-                                                    <div t-if="move_operation.lot_id or move_operation.lot_name" t-field="move_operation.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                                                    <span t-if="move_operation.lot_id or move_operation.lot_name" t-field="move_operation.lot_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}">Lot Number</span>
                                                 </td>
                                                 <td width="15%" class="text-center" t-if="has_barcode">
-                                                    <span t-if="move_operation.product_id and move_operation.product_id.barcode">
-                                                        <div t-field="move_operation.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
-                                                    </span>
+                                                    <span t-field="move_operation.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px;'}">Product Barcode</span>
                                                 </td>
                                                 <td t-if="has_package" width="15%">
-                                                    <span t-field="move_operation.package_id"/>
+                                                    <span t-field="move_operation.package_id">Package ID</span>
                                                     <t t-if="move_operation.result_package_id">
-                                                        <strong>→</strong> <span t-field="move_operation.result_package_id"/>
+                                                        <strong>→</strong> <span t-field="move_operation.result_package_id">Result Package ID</span>
                                                     </t>
                                                 </td>
                                             </tr>

@@ -5,6 +5,7 @@
 <template id="report_generic_barcode">
     <t t-call="web.basic_layout">
         <t t-call="web.html_container">
+            <div class="oe_structure"></div>
             <t t-set="nRows" t-value="7"/>
             <t t-set="nCols" t-value="4"/>
             <t t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs">
@@ -19,11 +20,11 @@
                                         <td>
                                             <div class="o_label_full" style="width:47mm;height:37.1mm;border: 1px solid black;">
                                                 <div class="o_label_name text-center">
-                                                    <strong t-field="o.name"/>
+                                                    <strong><span t-field="o.name">WH/Stock</span></strong>
                                                 </div>
                                                 <div class="text-center mt-3">
-                                                    <div t-if="o.barcode" t-field="o.barcode" style="padding:0"
-                                                         t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:47mm;height:11mm'}"/>
+                                                    <span t-if="o.barcode" t-field="o.barcode" style="padding:0"
+                                                        t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:47mm;height:11mm'}">1234567890</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -35,6 +36,7 @@
                 </div>
             </t>
         </t>
+        <div class="oe_structure"></div>
     </t>
 </template>
 
