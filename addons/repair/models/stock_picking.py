@@ -21,11 +21,9 @@ class PickingType(models.Model):
     count_repair_late = fields.Integer(
         string="Number of Repair Orders Late", compute='_compute_count_repair')
 
-    default_location_dest_id = fields.Many2one(
-        readonly={"code", "=", "repair_operation"})
     default_remove_location_dest_id = fields.Many2one(
         'stock.location', 'Default Remove Destination Location',
-        check_company=True, readonly=True,
+        check_company=True,
         help="This is the default remove destination location when you create a repair order with this operation type.")
 
     default_recycle_location_dest_id = fields.Many2one(
@@ -78,6 +76,21 @@ class PickingType(models.Model):
         for picking_type in self:
             if not(picking_type.code == 'incoming' and picking_type.return_type_of_ids):
                 picking_type.is_repairable = False
+
+    @api.onchange('code')
+    def _onchange_picking_code(self):
+        super()._onchange_picking_code()
+
+        if self.code == 'repair_operation':
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+            stock_location = warehouse.lot_stock_id
+            prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
+            scrap_location = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.company_id.id, False])], limit=1)
+
+            self.default_location_src_id = stock_location.id
+            self.default_location_dest_id = prod_location.id
+            self.default_remove_location_dest_id = scrap_location.id
+            self.default_recycle_location_dest_id = stock_location.id
 
     def get_repair_stock_picking_action_picking_type(self):
         action = self.env["ir.actions.actions"]._for_xml_id('repair.action_picking_repair')
