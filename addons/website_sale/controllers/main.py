@@ -582,6 +582,8 @@ class WebsiteSale(http.Controller):
         other_image = product_images[new_image_idx]
         source_field = hasattr(image_to_resequence, 'video_url') and image_to_resequence.video_url and 'video_url' or 'image_1920'
         target_field = hasattr(other_image, 'video_url') and other_image.video_url and 'video_url' or 'image_1920'
+        if target_field == 'video_url' and image_res_model == 'product.product':
+            raise ValidationError(_("Can not resequence a video at first position."))
         previous_data = other_image[target_field]
         other_image[source_field] = image_to_resequence[source_field]
         image_to_resequence[target_field] = previous_data
