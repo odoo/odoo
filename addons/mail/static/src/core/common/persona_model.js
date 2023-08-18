@@ -15,6 +15,8 @@ export class Persona {
     localId;
     /** @type {number} */
     id;
+    /** @type {boolean | undefined} */
+    is_company;
     /** @type {'partner' | 'guest'} */
     type;
     /** @type {string} */

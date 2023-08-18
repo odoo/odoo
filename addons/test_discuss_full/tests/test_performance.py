@@ -132,6 +132,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'email': 'e.e@example.com',
                                     'id': self.users[0].partner_id.id,
                                     'im_status': 'offline',
+                                    'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
                                     'user': {
@@ -182,6 +183,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'email': 'e.e@example.com',
                                     'id': self.users[0].partner_id.id,
                                     'im_status': 'offline',
+                                    'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
                                     'user': {
@@ -232,6 +234,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'email': 'e.e@example.com',
                                     'id': self.users[0].partner_id.id,
                                     'im_status': 'offline',
+                                    'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
                                     'user': {
@@ -282,6 +285,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'email': 'e.e@example.com',
                                     'id': self.users[0].partner_id.id,
                                     'im_status': 'offline',
+                                    'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
                                     'user': {
@@ -332,6 +336,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                     'email': 'e.e@example.com',
                                     'id': self.users[0].partner_id.id,
                                     'im_status': 'offline',
+                                    'is_company': False,
                                     'name': 'Ernest Employee',
                                     'out_of_office_date_end': False,
                                     'user': {
@@ -383,6 +388,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'e.e@example.com',
                                         'id': self.users[0].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -403,6 +409,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': False,
                                         'id': self.users[12].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'test12',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -469,6 +476,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'e.e@example.com',
                                         'id': self.users[0].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -489,6 +497,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': False,
                                         'id': self.users[14].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'test14',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -555,6 +564,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'e.e@example.com',
                                         'id': self.users[0].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -575,6 +585,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': False,
                                         'id': self.users[15].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'test15',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -641,6 +652,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'e.e@example.com',
                                         'id': self.users[0].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -661,6 +673,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'test2@example.com',
                                         'id': self.users[2].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'test2',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -727,6 +740,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': 'e.e@example.com',
                                         'id': self.users[0].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'Ernest Employee',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -747,6 +761,7 @@ class TestDiscussFullPerformance(TransactionCase):
                                         'email': False,
                                         'id': self.users[3].partner_id.id,
                                         'im_status': 'offline',
+                                        'is_company': False,
                                         'name': 'test3',
                                         'out_of_office_date_end': False,
                                         'user': {
@@ -980,6 +995,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'email': 'odoobot@example.com',
                 'id': self.user_root.partner_id.id,
                 'im_status': 'bot',
+                'is_company': False,
                 'name': 'OdooBot',
                 'out_of_office_date_end': False,
                 'user': [('clear',)],
@@ -990,6 +1006,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'email': 'e.e@example.com',
                 'id': self.users[0].partner_id.id,
                 'im_status': 'offline',
+                'is_company': False,
                 'name': 'Ernest Employee',
                 'out_of_office_date_end': False,
                 'user': {

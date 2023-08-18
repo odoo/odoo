@@ -1065,6 +1065,9 @@ export class ThreadService {
         if (!persona) {
             return DEFAULT_AVATAR;
         }
+        if (persona.is_company === undefined) {
+            this.personaService.fetchIsCompany(persona);
+        }
         if (thread?.model === "discuss.channel") {
             if (persona.type === "partner") {
                 return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
