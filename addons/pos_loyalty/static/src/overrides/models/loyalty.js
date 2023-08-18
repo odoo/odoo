@@ -869,7 +869,7 @@ patch(Order.prototype, {
                     }
                 }
             }
-            const res = points ? [{ points }] : [];
+            const res = (points || program.program_type === 'coupons') ? [{ points }] : [];
             if (splitPoints.length) {
                 res.push(...splitPoints);
             }
