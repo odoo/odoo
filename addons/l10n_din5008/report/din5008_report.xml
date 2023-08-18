@@ -104,12 +104,25 @@
                         </tr>
                     </table>
                     <h2>
+<<<<<<< HEAD:addons/l10n_din5008/report/din5008_report.xml
                         <span t-if="not o and not docs"><t t-esc="company.l10n_din5008_document_title"/></span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />
                             <span t-if="'l10n_din5008_document_title' in o"><t t-esc="o.l10n_din5008_document_title"/></span>
                             <span t-elif="'name' in o" t-field="o.name"/>
                         </span>
+||||||| parent of 0b175507dc7 (temp):addons/l10n_de/report/din5008_report.xml
+                        <span t-if="not o and not docs"><t t-esc="company.l10n_de_document_title"/></span>
+                        <span t-else="">
+                            <t t-set="o" t-value="docs[0]" t-if="not o" />
+                            <span t-if="'l10n_de_document_title' in o"><t t-esc="o.l10n_de_document_title"/></span>
+                            <span t-elif="'name' in o" t-field="o.name"/>
+                        </span>
+=======
+                        <t t-set="o" t-value="docs[0]" t-if="not o" />
+                        <span t-if="'l10n_de_document_title' in o"><t t-esc="o.l10n_de_document_title"/></span>
+                        <span t-elif="'name' in o" t-field="o.name"/>
+>>>>>>> 0b175507dc7 (temp):addons/l10n_de/report/din5008_report.xml
                     </h2>
                     <t t-out="0"/>
                 </div>
