@@ -48,9 +48,7 @@ export class TextField extends Component {
         });
         useSpellCheck({ refName: "textarea" });
 
-        if (!this.props.readonly) {
-            useAutoresize(this.textareaRef, { minimumHeight: this.minimumHeight });
-        }
+        useAutoresize(this.textareaRef, { minimumHeight: this.minimumHeight });
     }
 
     get isTranslatable() {
