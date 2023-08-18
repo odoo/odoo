@@ -399,7 +399,8 @@ class MrpBomLine(models.Model):
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
     manual_consumption = fields.Boolean(
-        'Manual Consumption', default=False, compute='_compute_manual_consumption', store=True, copy=True,
+        'Manual Consumption', default=False, compute='_compute_manual_consumption',
+        readonly=False, store=True, copy=True,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
     manual_consumption_readonly = fields.Boolean(
