@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { AccountMoveFormRenderer } from "@account/components/account_move_form/account_move_form";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { accountMove as accountMoveService} from '@account/components/account_move_service/account_move_service';
 
 QUnit.module("Views", {}, function (hooks) {
@@ -17,22 +16,23 @@ QUnit.module("Views", {}, function (hooks) {
                 `<form js_class='account_move_form'>
                         <sheet>
                             <notebook>
-                                <page id="invoice_tab" name="invoice_tab" string="Invoice Lines"></page>
+                                <page id="invoice_tab" name="invoice_tab" string="Invoice Lines">
+                                    <field name="name"/>
+                                </page>
                                 <page id="aml_tab" string="Journal Items" name="aml_tab"></page>
                             </notebook>
                         </sheet>
                      </form>`,
         };
-        const { click, openView } = await start({
+        const { click, insertText, openView } = await start({
             serverData: { views },
             services: {
                 'account_move': accountMoveService,
-            }
-        });
-        patchWithCleanup(AccountMoveFormRenderer.prototype, {
-            saveBeforeTabChange() {
-                super.saveBeforeTabChange();
-                assert.step("tab saved");
+            },
+            async mockRPC(route) {
+                if (route === "/web/dataset/call_kw/account.move/write") {
+                    assert.step("tab saved");
+                }
             },
         });
         await openView({
@@ -40,8 +40,10 @@ QUnit.module("Views", {}, function (hooks) {
             res_model: 'account.move',
             views: [[false, 'form']],
         });
+        await insertText("[name='name'] input", "somebody save me!");
+        triggerHotkey("Enter")
 
-        click('a[name="aml_tab"]');
+        await click('a[name="aml_tab"]');
         assert.verifySteps(["tab saved"],
             "When clicking on a tab, the saving method should be called and succeed");
     });
