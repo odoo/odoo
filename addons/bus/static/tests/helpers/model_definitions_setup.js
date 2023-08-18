@@ -28,6 +28,7 @@ addModelNamesToFetch([
 
 insertModelFields("res.partner", {
     description: { string: "description", type: "text" },
+    is_company: { default: () => false },
 });
 
 //--------------------------------------------------------------------------
