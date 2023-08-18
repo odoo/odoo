@@ -10,6 +10,7 @@ import {
     onWillDestroy,
     onWillUpdateProps,
 } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { Markup }  from "web.utils";
 
 export class ImageCrop extends Component {
@@ -46,6 +47,7 @@ export class ImageCrop extends Component {
         this.mountedPromise = new Promise((resolve) => {
             this.mountedResolve = resolve;
         });
+        this.notification = useService("notification");
         onMounted(async () => {
             const $el = $(this.elRef.el);
             this.$ = $el.find.bind($el);
@@ -133,11 +135,13 @@ export class ImageCrop extends Component {
         }
 
         if (this.uncroppable) {
-            this.displayNotification({
-              type: 'warning',
-              title: _t("This image is an external image"),
-              message: Markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
-            });
+            this.notification.add(
+                Markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
+                {
+                    title: _t("This image is an external image"),
+                    type: 'warning',
+                }
+            )
             return this._closeCropper();
         }
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
