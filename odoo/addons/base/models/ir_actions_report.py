@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path, ustr
-from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
+from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
@@ -26,6 +26,8 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+from itertools import islice
+
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -50,6 +52,25 @@ except Exception:
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
 
+def _split_table(tree, max_rows):
+    """
+    Walks through the etree and splits tables with more than max_rows rows into
+    multiple tables with max_rows rows.
+
+    This function is needed because wkhtmltopdf has a exponential processing
+    time growth when processing tables with many rows. This function is a
+    workaround for this problem.
+
+    :param tree: The etree to process
+    :param max_rows: The maximum number of rows per table
+    """
+    for table in list(tree.iter('table')):
+        prev = table
+        for rows in islice(split_every(max_rows, table), 1, None):
+            sibling = etree.Element('table', attrib=table.attrib)
+            sibling.extend(rows)
+            prev.addnext(sibling)
+            prev = sibling
 
 # Check the presence of Wkhtmltopdf and return its version at Odoo start-up
 wkhtmltopdf_state = 'install'
@@ -440,7 +461,19 @@ class IrActionsReport(models.Model):
             prefix = '%s%d.' % ('report.body.tmp.', i)
             body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
             with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
-                body_file.write(body.encode())
+                # HACK: wkhtmltopdf doesn't like big table at all and the
+                #       processing time become exponential with the number
+                #       of rows (like 1H for 250k rows).
+                #
+                #       So we split the table into multiple tables containing
+                #       500 rows each. This reduce the processing time to 1min
+                #       for 250k rows. The number 500 was taken from opw-1689673
+                if len(body) < 4 * 1024 * 1024: # 4Mib
+                    body_file.write(body.encode())
+                else:
+                    tree = lxml.html.fromstring(body)
+                    _split_table(tree, 500)
+                    body_file.write(lxml.html.tostring(tree))
             paths.append(body_file_path)
             temporary_files.append(body_file_path)
 
