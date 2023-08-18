@@ -135,10 +135,7 @@ class TestDDT(TestSaleCommon):
         wiz.process()
 
         invoice_1 = so._create_invoices()
-        invoice_form = Form(invoice_1)
-        with invoice_form.invoice_line_ids.edit(0) as line:
-            line.quantity = 1.0
-        invoice_1 = invoice_form.save()
+        invoice_1.invoice_line_ids[0].quantity = 1.0
         invoice_1.action_post()
 
         picking_2 = so.picking_ids.filtered(lambda p: p.state != 'done')
