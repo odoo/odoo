@@ -108,10 +108,11 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button string="Document" icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_model or not res_id"/>
+                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not res_id">
+                            <field name="res_model_name"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
                     <field name="active" invisible="1"/>
                     <field name="user_can_edit" invisible="1"/>
@@ -375,6 +376,8 @@
                 <field name="display_description" invisible="1"/>
                 <field name="description" invisible="not display_description" options="{'icon': 'fa fa-bars'}"/>
                 <field name="privacy" invisible="1"/>
+                <field name="res_model_name" invisible="not res_model_name" 
+                       options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag'}"/>
                 <!-- For recurrence update Dialog -->

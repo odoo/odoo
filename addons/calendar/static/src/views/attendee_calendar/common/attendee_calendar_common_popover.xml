@@ -4,6 +4,16 @@
         <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]" position="attributes">
             <attribute name="t-if">isEventDetailsVisible</attribute>
         </xpath>
+        <xpath expr="//div[hasclass('flex-grow-1')]" position="attributes">
+            <attribute name="t-if">!fieldInfo.options.shouldOpenRecord</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-grow-1')]" position="after">
+            <t t-if="fieldInfo.options.shouldOpenRecord">
+                <a href="#" t-on-click="onClickOpenRecord">
+                    <t t-out="props.record.rawRecord.res_model_name"/>
+                </a>
+        </t>
+        </xpath>
     </t>
 
     <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">

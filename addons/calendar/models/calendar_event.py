@@ -176,6 +176,7 @@ class Meeting(models.Model):
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
+    res_model_name = fields.Char(related='res_model_id.name')
     # messaging
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
     # attendees

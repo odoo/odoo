@@ -12,6 +12,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         super.setup();
         this.user = useService("user");
         this.orm = useService("orm");
+        this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
 
         onWillStart(this.onWillStart);
@@ -66,6 +67,15 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
 
     get isEventArchivable() {
         return false;
+    }
+    
+    async onClickOpenRecord() {
+        const action = await this.orm.call(
+            'calendar.event', 
+            'action_open_calendar_event', 
+            [this.props.record.id]
+        );
+        this.actionService.doAction(action); 
     }
 
     /**
