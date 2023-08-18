@@ -33,31 +33,20 @@ class TestSurveyInternals(common.TestSurveyCommon):
         survey_1_q_1, survey_1_q_2, _ = survey_1.question_ids
         survey_2_q_1, survey_2_q_2, _ = survey_2.question_ids
 
-        # Make sure they are already configured as conditionally triggered
-        survey_1_q_2.write({
-            'is_conditional': True,
-            'triggering_question_id': survey_1_q_1,
-            'triggering_answer_id': survey_1_q_1.suggested_answer_ids[0]
-        })
-        survey_2_q_2.write({
-            'is_conditional': True,
-            'triggering_question_id': survey_2_q_1,
-            'triggering_answer_id': survey_2_q_1.suggested_answer_ids[0]
-        })
-
         with self.subTest('Editing existing questions'):
             # Only previous questions from the same survey
-            self.assertFalse(survey_1_q_2.allowed_triggering_question_ids & survey_2_q_2.allowed_triggering_question_ids)
+            self.assertFalse(bool(survey_1_q_2.allowed_triggering_question_ids & survey_2_q_2.allowed_triggering_question_ids))
             self.assertEqual(survey_1_q_2.allowed_triggering_question_ids, survey_1_q_1)
             self.assertEqual(survey_2_q_2.allowed_triggering_question_ids, survey_2_q_1)
 
-        survey_1_new_question = self.env['survey.question'].new({'survey_id': survey_1, 'is_conditional': True})
-        survey_2_new_question = self.env['survey.question'].new({'survey_id': survey_2, 'is_conditional': True})
+        survey_1_new_question = self.env['survey.question'].new({'survey_id': survey_1})
+        survey_2_new_question = self.env['survey.question'].new({'survey_id': survey_2})
 
         with self.subTest('New questions'):
             # New questions should be allowed to use any question with choices from the same survey
-            self.assertFalse(survey_1_new_question.allowed_triggering_question_ids
-                             & survey_2_new_question.allowed_triggering_question_ids)
+            self.assertFalse(
+                bool(survey_1_new_question.allowed_triggering_question_ids & survey_2_new_question.allowed_triggering_question_ids)
+            )
             self.assertEqual(survey_1_new_question.allowed_triggering_question_ids.ids, survey_1.question_ids.ids)
             self.assertEqual(survey_2_new_question.allowed_triggering_question_ids.ids, survey_2.question_ids.ids)
 
@@ -358,19 +347,18 @@ class TestSurveyInternals(common.TestSurveyCommon):
         q_is_vegetarian_text = 'Are you vegetarian?'
         q_is_vegetarian = self._add_question(
             self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
-            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
+            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}, {'value': 'Sometimes'}])
         q_food_vegetarian_text = 'Choose your green meal'
         self._add_question(self.page_0, q_food_vegetarian_text, 'multiple_choice',
-                           is_conditional=True, sequence=101,
-                           triggering_question_id=q_is_vegetarian.id,
-                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
+                           sequence=101,
+                           triggering_answer_ids=[q_is_vegetarian.suggested_answer_ids[0].id,
+                                                  q_is_vegetarian.suggested_answer_ids[2].id],
                            survey_id=self.survey.id,
                            labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
-        q_food_not_vegetarian_text = 'Choose your meal'
+        q_food_not_vegetarian_text = 'Choose your meal in case we serve meet/fish'
         self._add_question(self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
-                           is_conditional=True, sequence=102,
-                           triggering_question_id=q_is_vegetarian.id,
-                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
+                           sequence=102,
+                           triggering_answer_ids=q_is_vegetarian.suggested_answer_ids[1].ids,
                            survey_id=self.survey.id,
                            labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
 
@@ -382,29 +370,25 @@ class TestSurveyInternals(common.TestSurveyCommon):
         q_food_vegetarian_cloned = get_question_by_title(survey_clone, q_food_vegetarian_text)
         q_food_not_vegetarian_cloned = get_question_by_title(survey_clone, q_food_not_vegetarian_text)
 
-        self.assertFalse(q_is_vegetarian_cloned.is_conditional)
+        self.assertFalse(bool(q_is_vegetarian_cloned.triggering_answer_ids))
 
         # Vegetarian choice
-        self.assertTrue(q_food_vegetarian_cloned)
+        self.assertTrue(bool(q_food_vegetarian_cloned))
         # Correct conditional layout
-        self.assertEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
-        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
-                         q_is_vegetarian_cloned.suggested_answer_ids[0].id)
+        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_ids.ids,
+                         [q_is_vegetarian_cloned.suggested_answer_ids[0].id, q_is_vegetarian_cloned.suggested_answer_ids[2].id])
         # Doesn't reference the original survey
-        self.assertNotEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
-        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
-                            q_is_vegetarian.suggested_answer_ids[0].id)
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_ids.ids,
+                            [q_is_vegetarian.suggested_answer_ids[0].id, q_is_vegetarian.suggested_answer_ids[2].id])
 
         # Not vegetarian choice
-        self.assertTrue(q_food_not_vegetarian_cloned.is_conditional)
+        self.assertTrue(bool(q_food_not_vegetarian_cloned.triggering_answer_ids))
         # Correct conditional layout
-        self.assertEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
-        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
-                         q_is_vegetarian_cloned.suggested_answer_ids[1].id)
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_ids.ids,
+                         q_is_vegetarian_cloned.suggested_answer_ids[1].ids)
         # Doesn't reference the original survey
-        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
-        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
-                            q_is_vegetarian.suggested_answer_ids[1].id)
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_ids.ids,
+                            q_is_vegetarian.suggested_answer_ids[1].ids)
 
     @users('survey_manager')
     def test_copy_conditional_question_with_sequence_changed(self):
@@ -427,11 +411,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
         q_2.write({'sequence': 100})
 
         # Set a conditional question on the first question
-        q_1.write({
-            'is_conditional': True,
-            'triggering_question_id': q_2.id,
-            'triggering_answer_id': q_2.suggested_answer_ids[0].id,
-        })
+        q_1.write({'triggering_answer_ids': [Command.set([q_2.suggested_answer_ids[0].id])]})
 
         (q_1 | q_2).invalidate_recordset()
 
@@ -443,51 +423,101 @@ class TestSurveyInternals(common.TestSurveyCommon):
         self.assertEqual(get_question_by_title(cloned_survey, 'Q2').sequence, q_2.sequence)
 
         # Check that the conditional question is correctly copied to the right question
-        self.assertEqual(get_question_by_title(cloned_survey, 'Q1').triggering_question_id.title, q_1.triggering_question_id.title)
-        self.assertFalse(get_question_by_title(cloned_survey, 'Q2').triggering_question_id)
+        self.assertEqual(
+            get_question_by_title(cloned_survey, 'Q1').triggering_answer_ids[0].value, q_1.triggering_answer_ids[0].value
+        )
+        self.assertFalse(bool(get_question_by_title(cloned_survey, 'Q2').triggering_answer_ids))
+
+    @users('survey_manager')
+    def test_suggested_answer_display_name(self):
+        """Check that answers' display name is not too long and allows to identify the question & answer."""
+        # A case's shape is: (question_title, answer value, expected display name)
+        cases = [
+            (
+                'Question 1',
+                'Answer A is short',
+                'Question 1 : Answer A is short',
+            ), (
+                'Question 2',
+                'Answer B is a very long answer, so it should itself be shortened or we would go too far',
+                'Question 2 : Answer B is a very long answer, so it should itself be shortened or we...',
+            ), (
+                'Question 3 is a very long question, so what can we do?',
+                'Answer A is short',
+                'Question 3 is a very long question, so what can we do? : Answer A is short',
+            ), (
+                'Question 4 is a very long question, so what can we do?',
+                'Answer B is a bit too long for Q4 now',
+                'Question 4 is a very long question, so what can... : Answer B is a bit too long for Q4 now',
+            ), (
+                'Question 5 is a very long question, so what can we do?',
+                'Answer C is so long that both the question and the answer will be shortened',
+                'Question 5 is a very long... : Answer C is so long that both the question and the...',
+            ),
+        ]
+
+        for question_title, answer_value, exp_display_name in cases:
+            question = self.env['survey.question'].create({
+                'title': question_title,
+                'suggested_answer_ids': [Command.create({'value': answer_value})],
+            })
+
+            with self.subTest(question=question_title, answer=answer_value):
+                self.assertEqual(question.suggested_answer_ids[0].display_name, exp_display_name)
 
     @users('survey_manager')
     def test_unlink_triggers(self):
         # Create the survey questions
         q_is_vegetarian_text = 'Are you vegetarian?'
         q_is_vegetarian = self._add_question(
-            self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
-            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
+            self.page_0, q_is_vegetarian_text, 'simple_choice', survey_id=self.survey.id, sequence=100,
+            labels=[{'value': 'Yes'}, {'value': 'No'}, {'value': 'It depends'}], constr_mandatory=True,
+        )
+
+        q_is_kinda_vegetarian_text = 'Would you prefer a veggie meal if possible?'
+        q_is_kinda_vegetarian = self._add_question(
+            self.page_0, q_is_kinda_vegetarian_text, 'simple_choice', survey_id=self.survey.id, sequence=101,
+            labels=[{'value': 'Yes'}, {'value': 'No'}], constr_mandatory=True, triggering_answer_ids=[
+                Command.link(q_is_vegetarian.suggested_answer_ids[1].id),  # It depends
+            ],
+        )
+
         q_food_vegetarian_text = 'Choose your green meal'
         veggie_question = self._add_question(
-            self.page_0, q_food_vegetarian_text, 'multiple_choice',
-            is_conditional=True, sequence=101,
-            triggering_question_id=q_is_vegetarian.id,
-            triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
-            survey_id=self.survey.id,
-            labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
+            self.page_0, q_food_vegetarian_text, 'simple_choice', survey_id=self.survey.id, sequence=102,
+            labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}], constr_mandatory=True,
+            triggering_answer_ids=[
+                Command.link(q_is_vegetarian.suggested_answer_ids[0].id),  # Veggie
+                Command.link(q_is_kinda_vegetarian.suggested_answer_ids[0].id),  # Would prefer veggie
+            ])
+
         q_food_not_vegetarian_text = 'Choose your meal'
         not_veggie_question = self._add_question(
-            self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
-            is_conditional=True, sequence=102,
-            triggering_question_id=q_is_vegetarian.id,
-            triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
-            survey_id=self.survey.id,
-            labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
+            self.page_0, q_food_not_vegetarian_text, 'simple_choice', survey_id=self.survey.id, sequence=103,
+            labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}], constr_mandatory=True,
+            triggering_answer_ids=[
+                Command.link(q_is_vegetarian.suggested_answer_ids[1].id),  # Not a veggie
+                Command.link(q_is_kinda_vegetarian.suggested_answer_ids[1].id),  # Would not prefer veggie
+            ],
+        )
+
+        q_is_kinda_vegetarian.unlink()
+
+        # Deleting one trigger but maintaining another keeps conditional behavior
+        self.assertTrue(bool(veggie_question.triggering_answer_ids))
 
         q_is_vegetarian.suggested_answer_ids[0].unlink()
 
         # Deleting answer Yes makes the following question always visible
-        self.assertEqual(veggie_question.is_conditional, False)
-        self.assertEqual(veggie_question.triggering_question_id.id, False)
-        self.assertEqual(veggie_question.triggering_answer_id.id, False)
+        self.assertFalse(bool(veggie_question.triggering_answer_ids))
 
         # But the other is still conditional
-        self.assertEqual(not_veggie_question.is_conditional, True)
-        self.assertEqual(not_veggie_question.triggering_question_id.id, q_is_vegetarian.id)
-        self.assertEqual(not_veggie_question.triggering_answer_id.id, q_is_vegetarian.suggested_answer_ids[0].id)
+        self.assertEqual(not_veggie_question.triggering_answer_ids[0].id, q_is_vegetarian.suggested_answer_ids[0].id)
 
         q_is_vegetarian.unlink()
 
         # Now it will also be always visible
-        self.assertEqual(not_veggie_question.is_conditional, False)
-        self.assertEqual(not_veggie_question.triggering_question_id.id, False)
-        self.assertEqual(not_veggie_question.triggering_answer_id.id, False)
+        self.assertFalse(bool(not_veggie_question.triggering_answer_ids))
 
     def test_get_pages_and_questions_to_show(self):
         """
@@ -497,20 +527,15 @@ class TestSurveyInternals(common.TestSurveyCommon):
 
         Structure of the test survey:
 
-        sequence    | type                          | trigger       | validity
+        sequence   | type                         | trigger           | validity
         ----------------------------------------------------------------------
-        1           | page, no description          | /             | X
-        2           | text_box                      | trigger is 6  | X
-        3           | numerical_box                 | trigger is 2  | X
-        4           | simple_choice                 | /             | V
-        5           | page, description             | /             | V
-        6           | multiple_choice               | /             | V
-        7           | multiple_choice, no answers   | /             | V
-        8           | text_box                      | trigger is 6  | V
-        9           | matrix                        | trigger is 5  | X
-        10          | simple_choice                 | trigger is 7  | X
-        11          | simple_choice, no answers     | trigger is 8  | X
-        12          | text_box                      | trigger is 11 | X
+        1          | page, no description         | /                 | X
+        2          | simple_choice                | trigger is 5      | X
+        3          | simple_choice                | trigger is 2      | X
+        4          | page, description            | /                 | V
+        5          | multiple_choice              | /                 | V
+        6          | text_box                     | triggers are 5+7  | V
+        7          | multiple_choice              |                   | V
         """
 
         my_survey = self.env['survey.survey'].create({
@@ -521,17 +546,12 @@ class TestSurveyInternals(common.TestSurveyCommon):
         })
         [
             page_without_description,
-            text_box_1,
-            numerical_box,
-            _simple_choice_1,
-            page_with_description,
-            multiple_choice_1,
-            multiple_choice_2,
-            text_box_2,
-            matrix,
+            simple_choice_1,
             simple_choice_2,
-            simple_choice_3,
-            text_box_3,
+            _page_with_description,
+            multiple_choice_1,
+            text_box_2,
+            multiple_choice_2,
         ] = self.env['survey.question'].create([{
             'title': 'no desc',
             'survey_id': my_survey.id,
@@ -540,86 +560,52 @@ class TestSurveyInternals(common.TestSurveyCommon):
             'is_page': True,
             'description': False,
         }, {
-            'title': 'text_box with invalid trigger',
+            'title': 'simple choice with invalid trigger',
             'survey_id': my_survey.id,
             'sequence': 2,
             'is_page': False,
             'question_type': 'simple_choice',
+            'suggested_answer_ids': [(0, 0, {'value': 'a'})],
         }, {
-            'title': 'numerical box with trigger that is invalid',
+            'title': 'simple_choice with chained invalid trigger',
             'survey_id': my_survey.id,
             'sequence': 3,
-            'is_page': False,
-            'question_type': 'numerical_box',
-        }, {
-            'title': 'valid simple_choice',
-            'survey_id': my_survey.id,
-            'sequence': 4,
             'is_page': False,
             'question_type': 'simple_choice',
             'suggested_answer_ids': [(0, 0, {'value': 'a'})],
         }, {
             'title': 'with desc',
             'survey_id': my_survey.id,
-            'sequence': 5,
+            'sequence': 4,
             'is_page': True,
             'question_type': False,
             'description': 'This page has a description',
         }, {
             'title': 'multiple choice not conditional',
             'survey_id': my_survey.id,
-            'sequence': 6,
+            'sequence': 5,
             'is_page': False,
             'question_type': 'multiple_choice',
             'suggested_answer_ids': [(0, 0, {'value': 'a'})]
         }, {
-            'title': 'multiple_choice with no answers',
+            'title': 'text_box with valid trigger',
+            'survey_id': my_survey.id,
+            'sequence': 6,
+            'is_page': False,
+            'question_type': 'text_box',
+        }, {
+            'title': 'valid multiple_choice',
             'survey_id': my_survey.id,
             'sequence': 7,
             'is_page': False,
             'question_type': 'multiple_choice',
-        }, {
-            'title': 'text_box with valid trigger',
-            'survey_id': my_survey.id,
-            'sequence': 8,
-            'is_page': False,
-            'question_type': 'text_box',
-        }, {
-            'title': 'matrix with invalid trigger (page)',
-            'survey_id': my_survey.id,
-            'sequence': 9,
-            'is_page': False,
-            'question_type': 'matrix',
-        }, {
-            'title': 'simple choice w/ invalid trigger (no suggested_answer_ids)',
-            'survey_id': my_survey.id,
-            'sequence': 10,
-            'is_page': False,
-            'question_type': 'simple_choice',
-        }, {
-            'title': 'text_box w/ invalid trigger (not a mcq)',
-            'survey_id': my_survey.id,
-            'sequence': 11,
-            'is_page': False,
-            'question_type': 'simple_choice',
-            'suggested_answer_ids': False,
-        }, {
-            'title': 'text_box w/ invalid trigger (suggested_answer_ids is False)',
-            'survey_id': my_survey.id,
-            'sequence': 12,
-            'is_page': False,
-            'question_type': 'text_box',
+            'suggested_answer_ids': [(0, 0, {'value': 'a'})]
         }])
-        text_box_1.write({'is_conditional': True, 'triggering_question_id': multiple_choice_1.id})
-        numerical_box.write({'is_conditional': True, 'triggering_question_id': text_box_1.id})
-        text_box_2.write({'is_conditional': True, 'triggering_question_id': multiple_choice_1.id})
-        matrix.write({'is_conditional': True, 'triggering_question_id': page_with_description.id})
-        simple_choice_2.write({'is_conditional': True, 'triggering_question_id': multiple_choice_2.id})
-        simple_choice_3.write({'is_conditional': True, 'triggering_question_id': text_box_2.id})
-        text_box_3.write({'is_conditional': True, 'triggering_question_id': simple_choice_3.id})
+        simple_choice_1.write({'triggering_answer_ids': multiple_choice_1.suggested_answer_ids})
+        simple_choice_2.write({'triggering_answer_ids': multiple_choice_1.suggested_answer_ids})
+        text_box_2.write({'triggering_answer_ids': (multiple_choice_1 | multiple_choice_2).suggested_answer_ids})
 
-        invalid_records = page_without_description + text_box_1 + numerical_box \
-            + matrix + simple_choice_2 + simple_choice_3 + text_box_3
+        invalid_records = page_without_description + simple_choice_1 + simple_choice_2
         question_and_page_ids = my_survey.question_and_page_ids
         returned_questions_and_pages = my_survey._get_pages_and_questions_to_show()
 
