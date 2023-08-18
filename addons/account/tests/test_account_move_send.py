@@ -7,6 +7,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import UserError
 from odoo.tests.common import Form, users, warmup
 from odoo.tests import tagged
 from odoo.tools import formataddr, mute_logger
@@ -760,6 +761,28 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'datas': extra_attachment2.datas,
             },
         ])
+
+    def test_invoice_web_service_after_pdf_rendering(self):
+        """ Test the ir.attachment for the PDF is not generated when the web service
+        is called after the PDF generation but performing a cr.commit even in case of error.
+        """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        def call_web_service_after_invoice_pdf_render(record, invoices_data):
+            for invoice_data in invoices_data.values():
+                invoice_data['error'] = "turlututu"
+
+        with patch.object(type(wizard), '_call_web_service_after_invoice_pdf_render', call_web_service_after_invoice_pdf_render):
+            try:
+                wizard.action_send_and_print(allow_fallback_pdf=False)
+            except UserError:
+                # Prevent a rollback in case of UserError because we can't commit in this test.
+                # Instead, ignore the raised error.
+                pass
+
+        # The PDF is not generated in case of error.
+        self.assertFalse(invoice.invoice_pdf_report_id)
 
     def test_proforma_pdf(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
