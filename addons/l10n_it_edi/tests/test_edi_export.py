@@ -235,25 +235,6 @@ class TestItEdiExport(TestItEdi):
         with self.assertRaises(UserError):
             invoice.action_post()
 
-    def test_invoice_send_pa_partner(self):
-        invoice = self.env['account.move'].with_company(self.company).create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2022-03-24',
-            'invoice_date_due': '2022-03-24',
-            'partner_id': self.italian_partner_b.id,
-            'partner_bank_id': self.test_bank.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'standard_line',
-                    'price_unit': 800.40,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-            ],
-        })
-
-        res = self.edi_format._l10n_it_post_invoices_step_1(invoice)
-        self.assertEqual(res[invoice], {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True})
-
     def test_invoice_zero_percent_taxes(self):
         tax_zero_percent_hundred_percent_repartition = self.env['account.tax'].with_company(self.company).create({
             'name': 'all of nothing',
