@@ -29,18 +29,18 @@
                                     (package barcode)
                                 </div>
                             </div>
-                            <p t-field="o.name">Package Reference</p>
+                            <span t-field="o.name">Package Reference</span>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
                     <div class="row mt32 mb32">
                         <div t-if="o.pack_date" class="col-auto">
                             <strong>Pack Date:</strong>
-                            <p t-field="o.pack_date">2021-9-01</p>
+                            <span t-field="o.pack_date">2021-9-01</span>
                         </div>
                         <div t-if="o.package_type_id" class="o_packaging_type col-auto">
                             <strong>Package Type:</strong>
-                            <p t-field="o.package_type_id.name">Pallet</p>
+                            <span t-field="o.package_type_id.name">Pallet</span>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -59,7 +59,7 @@
                         <tbody>
                             <tr t-foreach="o.quant_ids" t-as="l">
                                 <td>
-                                   <span  t-field="l.product_id.name">Customizable Desk</span>
+                                   <span t-field="l.product_id.name">Customizable Desk</span>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="l.quantity">3.00</span>
@@ -114,26 +114,29 @@
                         <div class="row">
                             <t t-set="barcode" t-value="'00' + o.name"/>
                             <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
-                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}"/>
+                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px">
+                                <span t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}">Barcode Demo</span>
+                            </div>
                             <div class="col-7 text-start" style="font-size:20px;">
-                                <div class="row">SSCC: <span t-field="o.name"/></div>
-                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date"/></div>
-                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name"/></div>
+                                <div class="row">SSCC: <span t-field="o.name">SSCC Demo</span></div>
+                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date">Pack Date Demo</span></div>
+                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name">Package Type Demo</span></div>
                             </div>
                         </div>
                     </t>
                     <t t-else="">
                         <div class="row">
                             <div class="text-center col-12">
-                                <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}"/>
-                                <div t-field="o.name" style="font-size:20px;"/>
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
+                                <span t-field="o.name" style="font-size:20px; margin:100px;">Name Demo</span>
                             </div>
                         </div>
-                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date"/></div>
+                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>
                         <div class="row o_packaging_type" t-if="o.package_type_id">
-                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name"/></div>
+                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name">Package Type Demo</span></div>
                         </div>
                     </t>
+                    <div class="oe_structure"/>
                 </div>
             </t>
         </t>
