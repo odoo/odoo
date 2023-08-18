@@ -24,12 +24,13 @@
         <field name="name">sale.order.calendar</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5" quick_add="False">
+            <calendar string="Sales Orders" create="0" mode="month" date_start="activity_date_deadline" color="state" event_limit="5" quick_add="False">
                 <field name="currency_id" invisible="1"/>
-                <field name="partner_id" avatar_field="avatar_128"/>
+                <field name="state" filters="1" invisible="1"/>
+                <field name="activity_ids" options="{'icon': 'fa fa-clock-o'}"/>
+                <field name="partner_id" avatar_field="avatar_128" options="{'icon': 'fa fa-users'}"/>
                 <field name="amount_total" widget="monetary"/>
                 <field name="payment_term_id"/>
-                <field name="state" filters="1" invisible="1"/>
             </calendar>
         </field>
     </record>
