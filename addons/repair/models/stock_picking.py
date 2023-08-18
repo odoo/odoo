@@ -25,7 +25,7 @@ class PickingType(models.Model):
         readonly={"code", "=", "repair_operation"})
     default_remove_location_dest_id = fields.Many2one(
         'stock.location', 'Default Remove Destination Location',
-        check_company=True, readonly=True,
+        check_company=True,
         help="This is the default remove destination location when you create a repair order with this operation type.")
 
     default_recycle_location_dest_id = fields.Many2one(
