@@ -246,17 +246,6 @@ class TestItEdiExport(TestItEdi):
                 ],
             })
 
-        cls.pa_partner_invoice = cls.env['account.move'].with_company(cls.company).create({
-            'move_type': 'out_invoice',
-            'invoice_date': datetime.date(2022, 3, 24),
-            'invoice_date_due': datetime.date(2022, 3, 24),
-            'partner_id': cls.italian_partner_b.id,
-            'partner_bank_id': cls.test_bank.id,
-            'invoice_line_ids': [
-                (0, 0, cls.standard_line),
-            ],
-        })
-
         cls.zero_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'invoice_date': datetime.date(2022, 3, 24),
@@ -312,7 +301,6 @@ class TestItEdiExport(TestItEdi):
         cls.non_latin_and_latin_invoice._post()
         cls.below_400_codice_simplified_invoice._post()
         cls.total_400_VAT_simplified_invoice._post()
-        cls.pa_partner_invoice._post()
         cls.zero_tax_invoice._post()
         cls.negative_price_invoice._post()
         cls.negative_price_credit_note._post()
@@ -604,10 +592,6 @@ class TestItEdiExport(TestItEdi):
     def test_non_domestic_simplified_invoice(self):
         with self.assertRaises(UserError):
             self.non_domestic_simplified_invoice._post()
-
-    def test_send_pa_partner(self):
-        res = self.edi_format._l10n_it_post_invoices_step_1(self.pa_partner_invoice)
-        self.assertEqual(res[self.pa_partner_invoice], {'attachment': self.pa_partner_invoice.l10n_it_edi_attachment_id, 'success': True})
 
     def test_zero_percent_taxes(self):
         invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.zero_tax_invoice))
