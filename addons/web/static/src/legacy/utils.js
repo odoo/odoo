@@ -170,6 +170,8 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
     };
 
     legacyEnv.services.dialog = wowlEnv.services.dialog;
+    legacyEnv.services.ui = wowlEnv.services.ui;
+
     // map WebClientReady
     wowlEnv.bus.addEventListener("WEB_CLIENT_READY", () => {
         legacyEnv.bus.trigger("web_client_ready");

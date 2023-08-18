@@ -59,7 +59,7 @@
             }
             else {
                 this._enableButton();
-                $('body').unblock();
+                this.call("ui", "unblock");
             }
         },
 
@@ -95,7 +95,7 @@
             }).then(paymentResponse => {
                 if (paymentResponse.action) { // Additional action required from the shopper
                     this._hideInputs(); // Only the inputs of the inline form should be used
-                    $('body').unblock(); // The page is blocked at this point, unblock it
+                    this.call("ui", "unblock"); // The page is blocked at this point, unblock it
                     dropin.handleAction(paymentResponse.action);
                 } else { // The payment reached a final state, redirect to the status page
                     window.location = '/payment/status';
