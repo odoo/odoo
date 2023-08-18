@@ -56,9 +56,13 @@ export class BlockUI extends Component {
         }
     }
 
-    block() {
+    block(ev) {
         this.state.blockUI = true;
-        this.replaceMessage(0);
+        if (ev.detail?.message) {
+            this.state.line1 = ev.detail.message;
+        } else {
+            this.replaceMessage(0);
+        }
     }
 
     unblock() {
