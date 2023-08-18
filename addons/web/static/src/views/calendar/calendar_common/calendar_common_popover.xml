@@ -49,7 +49,7 @@
                     <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
                     <t t-if="!isInvisible(fieldInfo, slot.record)">
                         <li class="list-group-item flex-shrink-0 d-flex align-items-start" t-att-class="fieldInfo.attrs.class">
-                            <strong class="me-2">
+                            <strong class="me-2" t-if="!fieldInfo.options.noLabel">
                                 <t t-if="fieldInfo.options.icon">
                                     <b>
                                         <i t-att-class="fieldInfo.options.icon" />
