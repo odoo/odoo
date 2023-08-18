@@ -169,6 +169,13 @@ export class Message extends Component {
         };
     }
 
+    get authorAvatarAttClass() {
+        return {
+            o_object_fit_contain: this.props.message.author?.is_company,
+            o_object_fit_cover: !this.props.message.author?.is_company,
+        };
+    }
+
     get authorAvatarUrl() {
         if (
             this.message.type === "email" &&
