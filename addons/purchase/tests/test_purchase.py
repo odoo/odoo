@@ -418,3 +418,44 @@ class TestPurchase(AccountTestInvoicingCommon):
         product._invalidate_cache()
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+    def test_discount_po_line_vendorpricelist(self):
+        """ Set a discount in VendorPriceList and check if that discount comes in po line and if vendor select
+            a product which is not present in vendorPriceList then it should be created.
+        """
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        with po.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1
+            po_line.price_unit = 100
+            po_line.discount = 20
+        po = po.save()
+        po.button_confirm()
+
+        supplierinfo_id = self.env['product.supplierinfo'].search([
+            ('partner_id', '=', self.partner_a.id),
+            ('product_tmpl_id', '=', self.product_a.product_tmpl_id.id),
+        ], limit=1)
+
+        self.assertTrue(supplierinfo_id)
+        self.assertEqual(supplierinfo_id.discount, 20)
+
+        # checking the same discount
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_b.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 100,
+            'discount': 30,
+        })
+
+        po1 = Form(self.env['purchase.order'])
+        po1.partner_id = self.partner_b
+        with po1.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1
+        po1 = po1.save()
+
+        self.assertEqual(po1.order_line[0].price_unit, 100)
+        self.assertEqual(po1.order_line[0].discount, 30)
