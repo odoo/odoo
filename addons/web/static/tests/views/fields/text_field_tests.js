@@ -22,7 +22,6 @@ let target;
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
-
         serverData = {
             models: {
                 partner: {
@@ -57,6 +56,17 @@ QUnit.module("Fields", (hooks) => {
                             txt: "some text",
                         },
                     ],
+                },
+                partner_list: {
+                    fields: {
+                        partner_ids: {
+                            string: "Partners",
+                            type: "one2many",
+                            relation: "partner",
+                            relation_field: "id",
+                        },
+                    },
+                    records: [{ id: 1, partner_ids: [1] }],
                 },
             },
         };
@@ -632,5 +642,37 @@ QUnit.module("Fields", (hooks) => {
         triggerHotkey("#");
         await nextTick();
         assert.containsOnce(document.body, ".o_popover .o_model_field_selector_popover");
+    });
+
+    QUnit.test("text field should vertical autoresize when saving", async function (assert) {
+        serverData.models.partner.fields.foo.type = "text";
+        serverData.models.partner.records[0].foo = "1";
+        await makeView({
+            type: "form",
+            resModel: "partner_list",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="partner_ids" widget="one2many">
+                        <tree editable="bottom">
+                            <field name="foo" widget="text"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        await click(target, "[name=foo] div");
+        let textarea = target.querySelector(".o_field_widget[name='foo'] textarea");
+        const initialHeight = textarea.offsetHeight;
+
+        await editInput(textarea, null, "1\n2\n3\n4\n5\n6\n7\n8");
+        await clickSave(target);
+
+        await click(target, "[name=foo] div");
+        textarea = target.querySelector(".o_field_widget[name='foo'] textarea");
+        const afterHeight = textarea.offsetHeight;
+
+        assert.ok(afterHeight > initialHeight, "Should be taller than one character");
     });
 });
