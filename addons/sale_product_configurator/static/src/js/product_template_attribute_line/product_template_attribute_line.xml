@@ -48,15 +48,15 @@
                             t-if="ptav.price_extra"
                             price="ptav.price_extra"
                             currencyId="this.env.currencyId"/>
+                        <input
+                            type="radio"
+                            class="form-check-input"
+                            t-att-id="ptav.id"
+                            t-att-value="ptav.id"
+                            t-att-checked="ptav.id === this.props.selected_attribute_value_id"
+                            t-att-name="'ptal-' + this.props.id"
+                            t-on-change="updateSelectedPTAV"/>
                     </label>
-                    <input
-                        type="radio"
-                        class="form-check-input"
-                        t-att-id="ptav.id"
-                        t-att-value="ptav.id"
-                        t-att-checked="ptav.id === this.props.selected_attribute_value_id"
-                        t-att-name="'ptal-' + this.props.id"
-                        t-on-change="updateSelectedPTAV"/>
                 </div>
             </li>
         </ul>
