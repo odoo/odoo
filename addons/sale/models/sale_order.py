@@ -1658,3 +1658,17 @@ class SaleOrder(models.Model):
         # Override for correct taxcloud computation
         # when using coupon and delivery
         return True
+
+    #=== TOOLING ===#
+
+    def _is_readonly(self):
+        """ Return Whether the sale order is read-only or not based on the state or the lock status.
+
+        A sale order is considered read-only if its state is 'cancel' or if the sale order is
+        locked.
+
+        :return: Whether the sale order is read-only or not.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.state == 'cancel' or self.locked
