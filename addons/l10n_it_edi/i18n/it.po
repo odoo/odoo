@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.4alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-09 15:24+0000\n"
-"PO-Revision-Date: 2023-06-09 15:24+0000\n"
+"POT-Creation-Date: 2023-09-05 09:58+0000\n"
+"PO-Revision-Date: 2023-09-05 09:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -104,17 +103,6 @@ msgstr ""
 "(Italia)\"/><span class=\"mx-1\">Fatturazione Elettronica (Italia)</span>"
 
 #. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_move_send_inherit_l10n_it_edi
-msgid ""
-"<span attrs=\"{'invisible': [('l10n_it_edi_warning_message', '=', False)]}\">\n"
-"                        <b>Tax Agency (Italy)</b>\n"
-"                    </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('l10n_it_edi_warning_message', '=', False)]}\">\n"
-"                        <b>Agenzia delle Entrate (IT)</b>\n"
-"                    </span>"
-
-#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">\n"
@@ -125,14 +113,24 @@ msgstr ""
 "<span class=\"o_form_label\">\n"
 "                                Modalità fattura elettronica\n"
 "                            </span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title="
-"\"I valori indicati di seguito sono specifici per l'azienda.\"/>"
+"                            <span class=\"fa fa-lg fa-building-o\" title=\"I valori indicati di seguito sono specifici per l'azienda.\"/>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Allow Odoo to process invoices</span>"
 msgstr ""
 "<span class=\"o_form_label\">Permetti ad Odoo di inviare le fatture</span>"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_move_send_inherit_l10n_it_edi
+msgid ""
+"<span invisible=\"not l10n_it_edi_warning_message\">\n"
+"                        <b>Tax Agency (Italy)</b>\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"not l10n_it_edi_warning_message\">\n"
+"                        <b>Agenzia delle Entrate (IT)</b>\n"
+"                    </span>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
@@ -171,8 +169,8 @@ msgstr "É giá stato registrato un servizio Ufficiale o di Test."
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid ""
 "An error occurred while downloading updates from the Proxy Server: (%s) %s"
@@ -180,7 +178,7 @@ msgstr "Errore durante l'aggiornamento dal Server Proxy: (%s) %s"
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid "Attached file is empty"
 msgstr "Il file allegato è vuoto"
@@ -236,7 +234,7 @@ msgstr "Controlla invio"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_codice_fiscale
 msgid "Codice Fiscale"
-msgstr "Codice Fiscale"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.constraint,message:l10n_it_edi.constraint_res_partner_l10n_it_codice_fiscale
@@ -564,13 +562,6 @@ msgid "L10N It Edi Register"
 msgstr "Registra L10n It EDI Sdicoop"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_state
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_state
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_edi_state
-msgid "L10N It Edi State"
-msgstr "Stato Invio EDI (Italia)"
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_warning_message
 msgid "L10N It Edi Warning Message"
 msgstr "Avviso EDI (Italia)"
@@ -701,13 +692,20 @@ msgstr "Provincia dell'ufficio del Registro delle Imprese"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__proxy_type
-msgid "Proxy type"
+msgid "Proxy Type"
 msgstr "Tipo Proxy"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__requires_user_signature
 msgid "Requires user signature"
 msgstr "Richiede Firma Utente"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_state
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_state
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_edi_state
+msgid "SDI State"
+msgstr "Stato SDI"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_FatturaPA_export
@@ -783,7 +781,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid "Service momentarily unavailable"
 msgstr "Servizio momentaneamente non disponibile"
@@ -1179,14 +1177,14 @@ msgstr "Informazioni di Trasporto dal file XML:"
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid "Unauthorized user"
 msgstr "Utente non autorizzato"
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid "Unknown error"
 msgstr "Errore sconosciuto"
@@ -1290,7 +1288,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n2_2
-msgid "[N2.2] Non soggette – altri casi"
+msgid "[N2.2] Non soggette - altri casi"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1300,34 +1298,34 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_1
-msgid "[N3.1] Non imponibili – esportazioni"
+msgid "[N3.1] Non imponibili - esportazioni"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_2
-msgid "[N3.2] Non imponibili – cessioni intracomunitarie"
+msgid "[N3.2] Non imponibili - cessioni intracomunitarie"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_3
-msgid "[N3.3] Non imponibili – cessioni verso San Marino"
+msgid "[N3.3] Non imponibili - cessioni verso San Marino"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_4
 msgid ""
-"[N3.4] Non imponibili – operazioni assimilate alle cessioni all’esportazione"
+"[N3.4] Non imponibili - operazioni assimilate alle cessioni all'esportazione"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_5
-msgid "[N3.5] Non imponibili – a seguito di dichiarazioni d’intento"
+msgid "[N3.5] Non imponibili - a seguito di dichiarazioni d'intento"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_6
 msgid ""
-"[N3.6] Non imponibili – altre operazioni che non concorrono alla formazione "
+"[N3.6] Non imponibili - altre operazioni che non concorrono alla formazione "
 "del plafond"
 msgstr ""
 
@@ -1349,49 +1347,49 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_1
 msgid ""
-"[N6.1] Inversione contabile – cessione di rottami e altri materiali di "
+"[N6.1] Inversione contabile - cessione di rottami e altri materiali di "
 "recupero"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_2
-msgid "[N6.2] Inversione contabile – cessione di oro e argento puro"
+msgid "[N6.2] Inversione contabile - cessione di oro e argento puro"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_3
-msgid "[N6.3] Inversione contabile – subappalto nel settore edile"
+msgid "[N6.3] Inversione contabile - subappalto nel settore edile"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_4
-msgid "[N6.4] Inversione contabile – cessione di fabbricati"
+msgid "[N6.4] Inversione contabile - cessione di fabbricati"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_5
-msgid "[N6.5] Inversione contabile – cessione di telefoni cellulari"
+msgid "[N6.5] Inversione contabile - cessione di telefoni cellulari"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_6
-msgid "[N6.6] Inversione contabile – cessione di prodotti elettronici"
+msgid "[N6.6] Inversione contabile - cessione di prodotti elettronici"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_7
 msgid ""
-"[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"
+"[N6.7] Inversione contabile - prestazioni comparto edile esettori connessi"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_8
-msgid "[N6.8] Inversione contabile – operazioni settore energetico"
+msgid "[N6.8] Inversione contabile - operazioni settore energetico"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_9
-msgid "[N6.9] Inversione contabile – altri casi"
+msgid "[N6.9] Inversione contabile - altri casi"
 msgstr ""
 
 #. module: l10n_it_edi
