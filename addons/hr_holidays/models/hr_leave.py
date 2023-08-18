@@ -1136,6 +1136,18 @@ class HolidaysRequest(models.Model):
     def _get_leaves_on_public_holiday(self):
         return self.filtered(lambda l: l.employee_id and not l.number_of_days)
 
+    def _get_employees_from_holiday_type(self):
+        self.ensure_one()
+        if self.holiday_type == 'employee':
+            employees = self.employee_ids
+        elif self.holiday_type == 'category':
+            employees = self.category_id.employee_ids
+        elif self.holiday_type == 'company':
+            employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
+        else:
+            employees = self.department_id.member_ids
+        return employees
+
     def action_validate(self):
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
@@ -1158,14 +1170,7 @@ class HolidaysRequest(models.Model):
 
             if leave.holiday_type != 'employee' or\
                 (leave.holiday_type == 'employee' and len(leave.employee_ids) > 1):
-                if leave.holiday_type == 'employee':
-                    employees = leave.employee_ids
-                elif leave.holiday_type == 'category':
-                    employees = leave.category_id.employee_ids
-                elif leave.holiday_type == 'company':
-                    employees = self.env['hr.employee'].search([('company_id', '=', leave.mode_company_id.id)])
-                else:
-                    employees = leave.department_id.member_ids
+                employees = leave._get_employees_from_holiday_type()
 
                 conflicting_leaves = self.env['hr.leave'].with_context(
                     tracking_disable=True,
