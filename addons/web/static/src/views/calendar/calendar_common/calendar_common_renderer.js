@@ -8,8 +8,9 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
+import { browser } from "@web/core/browser/browser";
 
-import { Component, useEffect } from "@odoo/owl";
+import { Component, onMounted, useEffect } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -46,6 +47,15 @@ export class CalendarCommonRenderer extends Component {
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
+
+        onMounted(() => {
+            if (this.props.model.scale === "day" || this.props.model.scale === "week") {
+                //Need to wait React
+                browser.setTimeout(() => {
+                    this.fc.api.scrollToTime("06:00:00");
+                }, 0);
+            }
+        });
 
         useEffect(() => {
             this.updateSize();
