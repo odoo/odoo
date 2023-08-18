@@ -984,3 +984,45 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour6",
             login="accountman",
         )
+
+    def test_coupon_program_without_rules(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.env["product.product"].create(
+            {
+                "name": "Test Product",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+
+        # creating a coupon program without any rule
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Coupon Program without rules',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'rule_ids': [],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": loyalty_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 1}).generate_coupons()
+        self.coupon1 = loyalty_program.coupon_ids
+        self.coupon1.write({"code": "abcda"})
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour7",
+            login="accountman",
+        )
