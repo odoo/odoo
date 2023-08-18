@@ -30,27 +30,22 @@ class CatalogController(Controller):
         ):
             if(product.id not in product_ids):
                 continue
-            if (len(lines) > 1) or lines[0].product_uom != product.uom_id:
-                price_unit = order.pricelist_id._get_product_price(
-                    product=product,
-                    quantity=1.0,
-                    currency=order.currency_id,
-                    date=order.date_order,
-                )
-                sale_order_line_info[product.id] = dict(
-                    readOnly=True,
-                    price=price_unit,
-                )
-            else:
-                line = lines[0]
-                sale_order_line_info[product.id] = dict(
-                    quantity=line.product_uom_qty,
-                    price=line.price_unit,
-                )
+
+            sale_order_line_info[product.id] = request.env['sale.order.line'].browse(
+                line.id for line in lines # groupby gives a list and not a recordset
+            )._get_catalog_info()
+
             product_ids.remove(product.id)
 
+        default_data = request.env['sale.order.line']._get_catalog_info()
+        default_data['readOnly'] = order._is_readonly()
+
         sale_order_line_info.update({
-            id: dict(price=price) for id, price in order.pricelist_id._get_products_price(
+            id: {
+                **default_data,
+                'price': price,
+            }
+            for id, price in order.pricelist_id._get_products_price(
                 quantity=1.0,
                 products=request.env['product.product'].browse(product_ids),
                 currency=order.currency_id,

@@ -331,7 +331,32 @@ class SaleOrderLine(models.Model):
             raise UserError(_('The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
 
+    #=== HOOKS ===#
+
     def _get_action_add_from_catalog_extra_context(self, order):
         extra_context = super()._get_action_add_from_catalog_extra_context(order)
         extra_context.update(warehouse=order.warehouse_id.id)
         return extra_context
+
+    def _get_catalog_info(self):
+        """ Override of `sale` to add the delivered quantity.
+
+        :rtype: dict
+        :return: A dict with the following structure:
+            {
+                'deliveredQty': float,
+                'quantity': float,
+                'price': float,
+                'readOnly': bool,
+            }
+        """
+        res = super()._get_catalog_info()
+        res['deliveredQty'] = sum(
+            self.mapped(
+                lambda line: line.product_uom._compute_quantity(
+                    qty=line.qty_delivered,
+                    to_unit=line.product_id.uom_id,
+                )
+            )
+        )
+        return res
