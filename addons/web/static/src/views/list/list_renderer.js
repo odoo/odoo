@@ -288,8 +288,8 @@ export class ListRenderer extends Component {
             .filter(
                 (field) =>
                     field.relatedPropertyField &&
-                    field.relatedPropertyField.fieldName === column.name
-                    && field.type !== 'separator'
+                    field.relatedPropertyField.fieldName === column.name &&
+                    field.type !== "separator"
             )
             .map((propertyField) => {
                 return {
@@ -692,6 +692,11 @@ export class ListRenderer extends Component {
                 continue;
             }
             const { attrs, widget } = column;
+            const func =
+                (attrs.sum && "sum") ||
+                (attrs.avg && "avg") ||
+                (attrs.max && "max") ||
+                (attrs.min && "min");
             let currencyId;
             if (type === "monetary" || widget === "monetary") {
                 const currencyField =
@@ -706,7 +711,7 @@ export class ListRenderer extends Component {
                     continue;
                 }
                 currencyId = values[0][currencyField] && values[0][currencyField][0];
-                if (currencyId) {
+                if (currencyId && func) {
                     const sameCurrency = values.every(
                         (value) => currencyId === value[currencyField][0]
                     );
@@ -719,11 +724,6 @@ export class ListRenderer extends Component {
                     }
                 }
             }
-            const func =
-                (attrs.sum && "sum") ||
-                (attrs.avg && "avg") ||
-                (attrs.max && "max") ||
-                (attrs.min && "min");
             if (func) {
                 let aggregateValue = 0;
                 if (func === "max") {
@@ -2169,7 +2169,15 @@ ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
 ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
 ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
 
-ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown: OptionalFieldsDropdown, Pager, Widget };
+ListRenderer.components = {
+    DropdownItem,
+    Field,
+    ViewButton,
+    CheckBox,
+    Dropdown: OptionalFieldsDropdown,
+    Pager,
+    Widget,
+};
 ListRenderer.props = [
     "activeActions?",
     "list",
