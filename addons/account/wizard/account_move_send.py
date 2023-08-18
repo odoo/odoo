@@ -556,9 +556,20 @@ class AccountMoveSend(models.Model):
             if form._need_invoice_document(invoice):
                 form._prepare_invoice_pdf_report(invoice, invoice_data)
                 form._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
-                form._link_invoice_documents(invoice, invoice_data)
 
-        # check for errors again
+        # Cleanup the error if we don't want to block the regular pdf generation.
+        if allow_fallback_pdf:
+            invoices_data_pdf_error = {
+                invoice: invoice_data
+                for invoice, invoice_data in invoices_data.items()
+                if invoice_data.get('pdf_attachment_values') and invoice_data.get('error')
+            }
+            if invoices_data_pdf_error:
+                self._hook_if_errors(invoices_data_pdf_error, allow_fallback_pdf=allow_fallback_pdf)
+            for invoice_data in invoices_data_pdf_error.values():
+                invoice_data.pop('error')
+
+        # Web-service after the PDF generation.
         invoices_data_web_service = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data.items()
@@ -566,6 +577,12 @@ class AccountMoveSend(models.Model):
         }
         if invoices_data_web_service:
             self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
+
+        # Create and link the generated documents to the invoice if the web-service didn't failed.
+        for invoice, invoice_data in invoices_data_pdf.items():
+            form = invoice_data['_form']
+            if not invoice_data.get('error') and form._need_invoice_document(invoice):
+                form._link_invoice_documents(invoice, invoice_data)
 
     def _generate_invoice_fallback_documents(self, invoices_data):
         """ Generate the invoice PDF and electronic documents.
@@ -617,11 +634,6 @@ class AccountMoveSend(models.Model):
             errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
             if errors:
                 self._hook_if_errors(errors, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
-
-            # Cleanup the error if we don't want to block the regular pdf generation.
-            for move_data in errors.values():
-                if move_data.get('pdf_attachment_values'):
-                    move_data.pop('error')
 
             # Fallback in case of error.
             errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
