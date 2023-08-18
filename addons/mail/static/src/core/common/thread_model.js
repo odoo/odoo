@@ -3,6 +3,7 @@
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
 import { createLocalId } from "@mail/utils/common/misc";
 
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { sprintf } from "@web/core/utils/strings";
@@ -431,7 +432,7 @@ export class Thread {
         if (!this.last_interest_dt) {
             return undefined;
         }
-        return luxon.DateTime.fromISO(new Date(this.last_interest_dt).toISOString());
+        return deserializeDateTime(this.last_interest_dt);
     }
 
     /**
