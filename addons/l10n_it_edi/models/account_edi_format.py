@@ -148,8 +148,10 @@ class AccountEdiFormat(models.Model):
         """
         errors = []
         for invoice_line in invoice.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            if len(invoice_line.tax_ids) != 1:
-                errors.append(_("In line %s, you must select one and only one tax.", invoice_line.name))
+            all_taxes = invoice_line.tax_ids.flatten_taxes_hierarchy()
+            vat_taxes = all_taxes.filtered(lambda t: t.amount_type == 'percent' and t.amount >= 0)
+            if len(vat_taxes) != 1:
+                errors.append(_("In line %s, you must select one and only one VAT tax.", invoice_line.name))
         return errors
 
     def _l10n_it_edi_is_simplified(self, invoice):

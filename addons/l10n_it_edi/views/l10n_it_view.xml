@@ -10,7 +10,7 @@
             <xpath expr="//page[@name='advanced_options']" position="inside">
                 <group attrs="{'invisible': [('country_code', '!=', 'IT')]}">
                     <group>
-                        <field name="l10n_it_vat_due_date"/>
+                        <field name="l10n_it_vat_due_date" invisible="1"/>
                         <field name="l10n_it_has_exoneration"/>
                         <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
                         <field name="l10n_it_law_reference"/>
@@ -126,8 +126,8 @@
         <field name="inherit_id" ref="account_edi.view_out_invoice_tree_inherit" />
         <field name="arch" type="xml">
             <field name="state" position="before">
-                <field name="l10n_it_edi_transaction" optional="hide"/>
-                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+                <field name="l10n_it_edi_transaction" optional="hide" invisible="1"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide" invisible="1"/>
             </field>
         </field>
     </record>
@@ -138,8 +138,8 @@
         <field name="inherit_id" ref="account_edi.view_account_invoice_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='journal_id']" position="after">
-                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
-                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one" invisible="1"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" invisible="1"/>
             </xpath>
         </field>
     </record>
