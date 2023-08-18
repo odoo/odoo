@@ -22,6 +22,9 @@ This module allows to generate a project/task from sales orders.
         'views/project_sharing_views.xml',
         'views/project_views.xml',
     ],
+    'demo': [
+        'data/sale_project_demo.xml',
+    ],
     'assets': {
         'web.assets_backend': [
             'sale_project/static/src/components/project_right_side_panel/**/*',

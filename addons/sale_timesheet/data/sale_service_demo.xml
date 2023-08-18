@@ -11,14 +11,6 @@
             <field name="product_uom_qty">5.0</field>
         </record>
 
-        <!-- Project Template -->
-        <record id="so_template_project" model="project.project">
-            <field name="name">Sales Order</field>
-            <field name="active">False</field>
-            <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('project.project_stage_1')), Command.link(ref('project.project_stage_2'))]"/>
-            <field name="description">This project is used as a template for projects created from sales orders.</field>
-        </record>
-
         <!-- Projects and Analytic Account -->
         <record id="account_analytic_account_project_support" model="account.analytic.account">
             <field name="name">After-Sales Services</field>
@@ -87,7 +79,7 @@
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_in_project</field>
-            <field name="project_template_id" ref="so_template_project"/>
+            <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
         <record id="product_service_deliver_timesheet_2" model="product.product">
@@ -100,7 +92,7 @@
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_in_project</field>
-            <field name="project_template_id" ref="so_template_project"/>
+            <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
         <record id="product_service_deliver_milestones" model="product.product">
@@ -113,7 +105,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
             <field name="service_tracking">task_in_project</field>
-            <field name="project_template_id" ref="so_template_project"/>
+            <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
         <record id="product_service_deliver_manual" model="product.product">
@@ -126,7 +118,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_policy">delivered_manual</field>
             <field name="service_tracking">task_in_project</field>
-            <field name="project_template_id" ref="so_template_project"/>
+            <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
         <!-- Sales order 'sale_order_1' (AGR) -->
