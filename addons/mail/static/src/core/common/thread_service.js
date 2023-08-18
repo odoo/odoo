@@ -50,6 +50,7 @@ export class ThreadService {
         this.router = services.router;
         this.ui = services.ui;
         this.messageService = services["mail.message"];
+        this.personaService = services["mail.persona"];
     }
 
     /**
@@ -1085,6 +1086,9 @@ export class ThreadService {
         if (!persona) {
             return DEFAULT_AVATAR;
         }
+        if (persona.is_company === undefined) {
+            this.personaService.fetchIsCompany(persona);
+        }
         if (thread?.model === "discuss.channel") {
             if (persona.type === "partner") {
                 return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
@@ -1148,7 +1152,16 @@ export class ThreadService {
 }
 
 export const threadService = {
-    dependencies: ["mail.store", "orm", "rpc", "notification", "router", "mail.message", "ui"],
+    dependencies: [
+        "mail.store",
+        "orm",
+        "rpc",
+        "notification",
+        "router",
+        "mail.message",
+        "mail.persona",
+        "ui",
+    ],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
