@@ -130,7 +130,7 @@
                     <button name="action_assign" invisible="not show_check_availability" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user" data-hotkey="w"/>
                     <button name="button_validate" invisible="state in ('waiting', 'confirmed', 'draft', 'done', 'cancel') or not show_validate" string="Validate" type="object" class="oe_highlight" groups="stock.group_stock_user" data-hotkey="v"/>
                     <button name="button_validate" invisible="state in ('draft', 'assigned', 'done', 'cancel') or not show_validate" string="Validate" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="v"/>
-                    <button name="action_reset_draft" invisible="state in ('draft', 'done', 'cancel')" string="Set Draft" type="object" groups="stock.group_stock_user" class="o_highlight" data-hotkey="d"/>
+                    <button name="action_reset_draft" invisible="state in ('draft', 'done', 'cancel') or not immediate_transfer" string="Plan" type="object" groups="stock.group_stock_user" class="o_highlight" data-hotkey="d"/>
                     <button name="action_set_quantities_to_reservation" invisible="not show_set_qty_button" string="Set quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <button name="action_clear_quantities_to_zero" invisible="not show_clear_qty_button" string="Clear quantities" type="object" groups="stock.group_stock_user" class="o_btn_validate" data-hotkey="g"/>
                     <widget name="signature" string="Sign" highlight="1"

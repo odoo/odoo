@@ -22,3 +22,14 @@ class TestPicking(common.TransactionCase):
             })
         self.assertEqual(
             er.exception.args[0], f'Sequences {operation_type_1.sequence_id.name} already exist.')
+
+    def test_empty_picking_draft(self):
+        """ test an empty still can be reset to draft """
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+        })
+        self.assertFalse(picking.move_ids)
+        picking.action_reset_draft()
+        self.assertEqual(picking.state, 'draft')
