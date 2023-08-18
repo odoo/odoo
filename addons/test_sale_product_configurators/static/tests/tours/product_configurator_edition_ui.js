@@ -40,13 +40,13 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 }, {
     trigger: '.fa-pencil',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk"))>td:nth-child(2)>ul:nth-child(3)>li:nth-child(2)>div label:contains("Aluminium") ~ input:checked',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk"))>td:nth-child(2)>ul:nth-child(3)>li:nth-child(2)>div label:contains("Aluminium") > input:checked',
     isCheck: true, // check updated legs
 }, {
     trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk"))>td:nth-child(4) span:contains("800.40")',
     isCheck: true, // check updated price
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) label:contains("Custom") ~ input',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) label:contains("Custom") > input',
 }, {
     trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk"))>td:nth-child(2)>input',
     run: 'text nice custom value'
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
 }, {
     trigger: '.fa-pencil',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) label:contains("Steel") ~ input',
+    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) label:contains("Steel") > input',
 },  {
     trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk (TEST) (Steel, Black)"))',
     isCheck: true,
