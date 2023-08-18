@@ -17,13 +17,14 @@
                 <filter string="My Maintenances" name="my_maintenances" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="To Do" name="todo" domain="[('stage_id.done', '=', False)]"/>
+                <filter string="Done" name="done" domain="[('stage_id.done', '=', True)]"/>
                 <separator/>
-                <filter string="Blocked" name="kanban_state_block" domain="[('kanban_state', '=', 'blocked')]"/>
-                <filter string="Ready" name="done" domain="[('kanban_state', '=', 'done')]"/>
+                <filter string="Blocked" name="kanban_state_block" domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'blocked')]"/>
+                <filter string="Ready" name="done" domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'done')]"/>
                 <separator/>
-                <filter string="High-priority" name="high_priority" domain="[('priority', '=', '3')]"/>
+                <filter string="High-priority" name="high_priority" domain="[('stage_id.done', '=', False), ('priority', '=', '3')]"/>
                 <separator/>
-                <filter string="Unscheduled" name="unscheduled" domain="[('schedule_date', '=', False)]"/>
+                <filter string="Unscheduled" name="unscheduled" domain="[('stage_id.done', '=', False), ('schedule_date', '=', False)]"/>
                 <separator/>
                 <filter name="filter_request_date" date="request_date"/>
                 <filter name="filter_schedule_date" date="schedule_date"/>
@@ -39,7 +40,8 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('archive', '=', True)]"/>
+                <filter string="Active" name="active" domain="[('archive', '=', False)]"/>
+                <filter string="Cancelled" name="inactive" domain="[('archive', '=', True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Assigned to' name="assigned" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
@@ -94,6 +96,17 @@
                                        widget="float_time"
                                        class="oe_inline"/> <span class="ml8">hours</span>
                             </div>
+                            <label for="recurring_maintenance" invisible="maintenance_type == 'corrective'"/>
+                            <div class="d-inline-flex" invisible="maintenance_type == 'corrective'">
+                                <field name="recurring_maintenance" nolabel="1" class="ms-0" style="width: fit-content;"/>
+                            </div>
+                            <label for="repeat_interval" invisible="not recurring_maintenance"/>
+                            <div class="d-flex" invisible="not recurring_maintenance">
+                                <field name="repeat_interval" required="True" class="me-2" style="max-width: 2rem !important;" />
+                                <field name="repeat_unit" required="True" class="me-2" style="max-width: 4rem !important;" />
+                                <field name="repeat_type" required="True" class="me-2" style="max-width: 15rem !important;" />
+                                <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'" class="me-2" />
+                            </div>
                             <field name="priority" widget="priority"/>
                             <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -137,6 +150,7 @@
                 <field name="kanban_state"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <field name="archive" />
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -158,8 +172,8 @@
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/><br/></span>
-                                    <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
-                                    <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
+                                    <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span><br/></span>
+                                    <span name="schedule_date" t-if="record.schedule_date.raw_value"><field name="schedule_date"/><br/></span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -169,6 +183,9 @@
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
+                                        <div invisible="not archive">
+                                            <span class="badge text-bg-warning float-end">Cancelled</span>
+                                        </div>
                                         <field name="kanban_state" widget="state_selection"/>
                                         <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
@@ -228,10 +245,17 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" date_delay="duration" color="user_id" event_limit="5">
+            <calendar date_start="schedule_date" date_delay="duration" color="user_id" event_limit="5" js_class="calendar_with_recurrence">
                 <field name="user_id" filters="1"/>
                 <field name="priority"/>
                 <field name="maintenance_type"/>
+                <field name="recurring_maintenance" invisible="1"/>
+                <field name="repeat_interval" invisible="1"/>
+                <field name="repeat_unit" invisible="1"/>
+                <field name="repeat_type" invisible="1"/>
+                <field name="repeat_until" invisible="1"/>
+                <field name="done" invisible="1"/>
+                <field name="archive" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -242,7 +266,10 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
-        <field name="context">{'default_user_id': uid}</field>
+        <field name="context">{
+            'search_default_active': True,
+            'default_user_id': uid
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -260,6 +287,7 @@
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
             'search_default_category_id': [active_id],
+            'search_default_active': True,
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
@@ -277,6 +305,7 @@
         <field name="binding_model_id" ref="maintenance.model_maintenance_equipment"/>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="context">{
+            'search_default_active': True,
             'default_equipment_id': active_id,
         }</field>
         <field name="domain">[('equipment_id', '=', active_id)]</field>
@@ -294,6 +323,8 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="context">{
+            'search_default_active': True,
+            'search_default_maintenance_team_id': active_id,
             'default_maintenance_team_id': active_id,
         }</field>
         <field name="domain">[('maintenance_team_id', '=', active_id), ('maintenance_type', 'in', context.get('maintenance_type', ['preventive', 'corrective']))]</field>
@@ -311,6 +342,10 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">calendar,kanban,tree,form,pivot,graph</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
+        <field name="context">{
+            'search_default_active': True,
+            'search_default_todo': True,
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -324,6 +359,9 @@
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
+        <field name="context">{
+            'search_default_active': True,
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance request
@@ -345,9 +383,9 @@
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
                             class="oe_stat_button"
-                            context="{'default_company_id': company_id}"
+                            context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
                             icon="fa-wrench">
-                            <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
+                            <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -363,7 +401,7 @@
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id" required="period != 0" context="{'default_company_id':company_id}"/>
+                            <field name="maintenance_team_id" context="{'default_company_id':company_id}"/>
                             <field name="technician_user_id" domain="[('share', '=', False)]"/>
                             <field name="assign_date" groups="base.group_no_one"/>
                             <field name="scrap_date" groups="base.group_no_one"/>
@@ -390,15 +428,23 @@
                         </page>
                         <page string="Maintenance" name="maintenance">
                             <group>
-                                <group name="maintenance">
-                                    <field name="next_action_date" string="Next Preventive Maintenance"/>
-                                    <label for="period" string="Preventive Maintenance Frequency"/>
+                                <group name="statistics">
+                                    <label for="expected_mtbf" string="Expected Mean Time Between Failure"/>
                                     <div class="o_row">
-                                        <field name="period"/> days
+                                        <field name="expected_mtbf"/> days
                                     </div>
-                                    <label for="maintenance_duration" string="Maintenance Duration"/>
+                                    <label for="mtbf" string="Mean Time Between Failure"/>
                                     <div class="o_row">
-                                        <field name="maintenance_duration"/> hours
+                                        <field name="mtbf" /> days
+                                    </div>
+                                    <label for="estimated_next_failure" string="Estimated Next Failure"/>
+                                    <div class="o_row">
+                                        <field name="estimated_next_failure" />
+                                    </div>
+                                    <field name="latest_failure_date" string="Latest Failure" />
+                                    <label for="mttr" string="Mean Time To Repair"/>
+                                    <div class="o_row">
+                                        <field name="mttr" /> days
                                     </div>
                                 </group>
                             </group>
@@ -428,7 +474,6 @@
                 <field name="model"/>
                 <field name="maintenance_ids"/>
                 <field name="maintenance_open_count"/>
-                <field name="next_action_date"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -459,9 +504,6 @@
                                     <div class="oe_kanban_bottom_left">
                                         <div class="badge text-bg-danger" t-if="!selection_mode and record.maintenance_open_count.raw_value" >
                                             <t t-out="record.maintenance_open_count.raw_value"/> Request
-                                        </div>
-                                        <div class="badge text-bg-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
-                                            <t t-esc="luxon.DateTime.fromISO(record.next_action_date.raw_value).toFormat('d MMMM')"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -591,7 +633,7 @@
                         type="action"
                         class="oe_stat_button"
                         icon="fa-wrench">
-                        <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
+                        <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
                     </button>
                 </div>
                 <div class="oe_title">
@@ -671,7 +713,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     <span class="badge rounded-pill">
-                                        <strong>Maintenance:</strong> <field name="maintenance_count"/>
+                                        <strong>Maintenance:</strong> <field name="maintenance_open_count"/>
                                     </span>
                                     <field name="technician_user_id" widget="many2one_avatar_user"/>
                                 </div>
@@ -889,7 +931,7 @@
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
                                         <div t-if="record.todo_request_count_date.raw_value > 0">
-                                            <a name="%(hr_equipment_request_action_cal)d" type="action">
+                                            <a name="%(hr_equipment_request_action_cal)d" type="action" context="{'search_default_todo': 1, 'search_default_maintenance_team_id': id}">
                                                 <t t-esc="record.todo_request_count_date.value"/>
                                                 Scheduled
                                             </a>
@@ -907,7 +949,7 @@
                                             </a>
                                         </div>
                                         <div t-if="record.todo_request_count_unscheduled.raw_value > 0">
-                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1, 'search_default_unscheduled': 1}">
                                                 <t t-esc="record.todo_request_count_unscheduled.value"/>
                                                 Unscheduled
                                             </a>
