@@ -91,9 +91,20 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # lazy reproduction of clicking on "New Quotation" act_window button
         po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
         po = po_form.save()
-        po.button_confirm()
+
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
         self.assertEqual(po.partner_id, bo.vendor_id, 'The blanket order vendor should have been copied to purchase order')
+
+        po_form = Form(po)
+        po_form.order_line.remove(0)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should still be copied to purchase order')
+        self.assertEqual(po.state, "purchase")
 
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
