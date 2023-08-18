@@ -90,8 +90,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 );
                 if (indexOfSelectedPartner !== -1) {
                     res.splice(indexOfSelectedPartner, 1);
-                    res.unshift(this.state.selectedPartner);
                 }
+                res.unshift(this.state.selectedPartner);
             }
             return res
         }
