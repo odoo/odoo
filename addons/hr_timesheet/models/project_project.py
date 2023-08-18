@@ -133,7 +133,14 @@ class Project(models.Model):
         )
         timesheet_time_dict = defaultdict(list)
         for project, product_uom, unit_amount_sum in timesheets_read_group:
-            timesheet_time_dict[project.id].append((product_uom, unit_amount_sum))
+            # Adding timesheet of subtasks linked to other projects
+            subtasks = project.task_ids._get_all_subtasks().filtered(lambda subtask: subtask.project_id != project)
+            subtasks_timesheets_read_group = self.env['account.analytic.line']._read_group(
+                [('task_id', 'in', subtasks.ids), ('product_uom_id', '=', product_uom.id)],
+                [],
+                ['unit_amount:sum'],
+            )
+            timesheet_time_dict[project.id].append((product_uom, unit_amount_sum + subtasks_timesheets_read_group[0][0]))
 
         for project in self:
             # Timesheets may be stored in a different unit of measure, so first
