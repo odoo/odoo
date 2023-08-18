@@ -4456,6 +4456,7 @@ registry.sizing = SnippetOptionWidget.extend({
             const cursor = $handle.css('cursor') + '-important';
             const $body = $(this.ownerDocument.body);
             $body.addClass(cursor);
+            self.$overlay.removeClass('o_handlers_idle');
 
             const bodyMouseMove = function (ev) {
                 ev.preventDefault();
@@ -4503,6 +4504,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 $body.off('mousemove', bodyMouseMove);
                 $body.off('mouseup', bodyMouseUp);
                 $body.removeClass(cursor);
+                self.$overlay.addClass('o_handlers_idle');
                 $handle.removeClass('o_active');
 
                 // If we are in grid mode, removes the background grid.
@@ -4519,12 +4521,6 @@ registry.sizing = SnippetOptionWidget.extend({
                     self.$target[0].classList.remove(colClass);
                     self.$target[0].classList.add(gColClass.substring(2));
                 }
-
-                // Highlights the previews for a while
-                const $handlers = self.$overlay.find('.o_handle');
-                $handlers.addClass('o_active').delay(300).queue(function () {
-                    $handlers.removeClass('o_active').dequeue();
-                });
 
                 if (directions.every(dir => dir.begin === dir.current)) {
                     return;
@@ -4671,16 +4667,8 @@ registry.sizing = SnippetOptionWidget.extend({
             $handle.toggleClass('o_handle_end', current === classes.length - 1);
         }
 
-        // Adapt the handles to fit the left, top and bottom sizes
-        var ml = this.$target.css('margin-left');
-        this.$overlay.find('.o_handle.w').css({
-            width: ml,
-            left: '-' + ml,
-        });
-        this.$overlay.find('.o_handle.e').css({
-            width: 0,
-        });
-        this.$overlay.find(".o_handle.n, .o_handle.s").toArray().forEach((handle) => {
+        // Adapt the handles to fit top and bottom sizes
+        this.$overlay.find('.o_handle:not(.o_grid_handle)').filter(".n, .s").toArray().forEach(handle => {
             var $handle = $(handle);
             var direction = $handle.hasClass('n') ? 'top' : 'bottom';
             $handle.height(self.$target.css('padding-' + direction));

@@ -2118,218 +2118,156 @@ we-select.o_we_border_preview_aligned_select {
             border-color: inherit;
             pointer-events: auto;
 
-            &:hover > .o_handle {
-                background-color: rgba($o-we-handles-accent-color, 0.05);
-            }
             > .o_handle {
-                position: relative;
-                border: 0 solid transparent;
-                border-color: inherit;
-                transition: background 300ms ease 0s;
+                position: absolute;
 
-                &.w {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
+                &.o_side_y {
+                    height: $o-we-handle-edge-size;
+                }
+                &.o_side_x {
                     width: $o-we-handle-edge-size;
-                    border-width: $o-we-handle-border-width;
-                    border-right-width: 0;
-                    cursor: e-resize;
-
-                    &.o_grid_handle {
-                        cursor: ew-resize;
-                    }
-
-                    &:after {
-                        @include o-position-absolute($top: 50%, $left: 40%);
-                        margin-top: -$o-we-handles-btn-size/2;
-                    }
-
-                    &.o_grid_handle:after {
-                        display: none;
-                    }
+                }
+                &.w {
+                    inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 0;
+                    transform: translateX(-50%);
+                    cursor: ew-resize;
                 }
                 &.e {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
-                    width: $o-we-handle-edge-size;
-                    border-right-width: $o-we-handle-border-width;
-                    cursor: w-resize;
-
-                    &.o_grid_handle {
-                        cursor: ew-resize;
-                    }
-
-                    &:after {
-                        @include o-position-absolute($top: 50%, $right: 40%);
-                        margin-top: -$o-we-handles-btn-size/2;
-                    }
-
-                    &.o_grid_handle:after{
-                        display: none;
-                    }
+                    inset: $o-we-handles-offset-to-hide 0 $o-we-handles-offset-to-hide * -1 auto;
+                    transform: translateX(50%);
+                    cursor: ew-resize;
                 }
                 &.n {
-                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
-                    height: $o-we-handle-edge-size;
-                    border-top-width: $o-we-handle-border-width;
+                    inset: $o-we-handles-offset-to-hide 0 auto 0;
                     cursor: ns-resize;
 
-                    &:after {
-                        @include o-position-absolute($left: 50%, $top: 40%);
-                        margin-left: -$o-we-handles-btn-size/2;
-                    }
-
-                    &.o_grid_handle:after{
-                        display: none;
+                    &.o_grid_handle {
+                        transform: translateY(-50%);
                     }
                 }
                 &.s {
-                    @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
-                    height: $o-we-handle-edge-size;
-                    border-bottom-width: $o-we-handle-border-width;
+                    inset: auto 0 $o-we-handles-offset-to-hide * -1 0;
                     cursor: ns-resize;
 
-                    &:after {
-                        @include o-position-absolute($left: 50%, $bottom: 40%);
-                        margin-left: -$o-we-handles-btn-size/2;
-                    }
-
-                    &.o_grid_handle:after {
-                        display: none;
+                    &.o_grid_handle {
+                        transform: translateY(50%);
                     }
                 }
                 &.ne {
-                    @include o-position-absolute($o-we-handles-offset-to-hide + $o-we-handle-border-width, $o-we-handle-border-width, auto, auto);
-                    height: $o-we-handle-edge-size;
+                    inset: $o-we-handles-offset-to-hide 0 auto auto;
+                    transform: translate(50%, -50%);
                     cursor: nesw-resize;
                 }
                 &.se {
-                    @include o-position-absolute(auto, $o-we-handle-border-width, -$o-we-handles-offset-to-hide - $o-we-handle-border-width, auto);
-                    height: $o-we-handle-edge-size;
+                    inset: auto 0 $o-we-handles-offset-to-hide * -1 auto;
+                    transform: translate(50%, 50%);
                     cursor: nwse-resize;
-
-                    &:after {
-                        @include o-position-absolute($top: 50%, $right: 40%);
-                    }
                 }
                 &.sw {
-                    @include o-position-absolute(auto, auto, -$o-we-handles-offset-to-hide - $o-we-handle-border-width/2, $o-we-handle-border-width);
-                    height: $o-we-handle-edge-size;
+                    inset: auto auto $o-we-handles-offset-to-hide * -1 0;
+                    transform: translate(-50%, 50%);
                     cursor: nesw-resize;
-
-                    &:after {
-                        @include o-position-absolute($left: 40%, $bottom: 40%);
-                    }
                 }
                 &.nw {
-                    @include o-position-absolute($o-we-handles-offset-to-hide - $o-we-handle-border-width, auto, auto, $o-we-handle-border-width + 1);
-                    height: $o-we-handle-edge-size;
+                    inset: $o-we-handles-offset-to-hide auto auto 0;
+                    transform: translate(-50%, -50%);
                     cursor: nwse-resize;
-
-                    &:after {
-                        @include o-position-absolute($left: 50%, $bottom: 40%);
-                    }
                 }
-
-                &.ne,
-                &.sw {
-                    content: "\f065";
-                }
-
-                &.nw,
-                &.se {
-                    content: "\f065";
-                    transform: rotate(90deg);
-                }
-
-                &::after {
-                    z-index: 1;
+                .o_handle_indicator {
+                    position: absolute;
+                    inset: $o-we-handles-btn-size * -0.5;
                     display: block;
                     width: $o-we-handles-btn-size;
                     height: $o-we-handles-btn-size;
-                    border: solid 1px darken($o-we-handles-accent-color, 20%);
-                    line-height: $o-we-handles-btn-size - 2;
-                    font-size: 14px;
-                    font-family: FontAwesome;
-                    background-color: darken($o-we-handles-accent-color, 10%);
-                    color: white;
+                    margin: auto;
+                    border: solid $o-we-handle-border-width $o-we-handles-accent-color;
+                    border-radius: $o-we-handles-btn-size;
+                    background: $o-we-fg-lighter;
+                    outline: $o-we-handle-inside-line-width solid $o-we-fg-lighter;
+                    outline-offset: -($o-we-handles-btn-size * 0.5);
+                    transition: $transition-base;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        inset: -$o-we-handles-btn-size;
+                        display: block;
+                        border-radius: inherit;
+                    }
                 }
 
-                &.o_handle_start:after {
-                    background-color: rgba($o-we-sidebar-content-field-clickable-bg, .6);
-                }
-
-                &:hover,
-                &.o_active {
-                    background-color: rgba($o-we-handles-accent-color, 0.2);
+                &.o_column_handle.o_side_y {
+                    background-color: rgba($o-we-handles-accent-color, .1);
 
                     &::after {
-                        border-color: darken($o-we-handles-accent-color, 10%);
-                        background-color: darken($o-we-handles-accent-color, 20%);
+                        content: '';
+                        position: absolute;
+                        height: $o-we-handles-btn-size;
+                    }
+                    &.n {
+                        border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+
+                        &::after {
+                            inset: 0 0 auto 0;
+                            transform: translateY(-50%);
+                        }
+                    }
+                    &.s {
+                        border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-handles-accent-color, 0.5);
+
+                        &::after {
+                            inset: auto 0 0 0;
+                            transform: translateY(50%);
+                        }
                     }
                 }
-
-                &.w:after,
-                &.e:after {
-                    content: "\f07e";
-                }
-
-                &.s:after,
-                &.n:after {
-                    content: "\f07d";
-                }
-
-                &.ne:after,
-                &.sw:after {
-                    content: "\f065";
-                }
-
-                &.nw:after,
-                &.se:after {
-                    content: "\f065";
-                    transform: rotate(180deg);
-                }
-
-                &.o_handle_start {
-
-                    &.w:after,
-                    &.e:after {
-                        content: '\f061';
+                &.o_side {
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        background: $o-we-handles-accent-color;
                     }
+                    &.o_side_x {
 
-                    &.n:after,
-                    &.s:after {
-                        content: '\f063';
+                        &::before {
+                            width: $o-we-handle-border-width;
+                            margin: 0 auto;
+                        }
                     }
-                }
+                    &.o_side_y {
 
-                &.o_handle_end {
-
-                    &.w:after,
-                    &.e:after {
-                        content: '\f060';
+                        &::before {
+                            height: $o-we-handle-border-width;
+                            margin: auto 0;
+                        }
                     }
+                    &.o_column_handle {
 
-                    &.n:after,
-                    &.s:after {
-                        content: '\f062';
+                        &::before {
+                            inset: 0 $o-we-handle-border-width * -0.5;
+                        }
+
+                        &.n::before {
+                            margin: 0 auto auto;
+                            transform: translateY(-50%);
+                        }
+
+                        &.s::before {
+                            margin: auto auto 0;
+                            transform: translateY(50%);
+                        }
                     }
                 }
 
                 &.readonly {
-                    cursor: auto !important;
-
-                    &:after {
-                        display: none !important;
-                    }
-
-                    &:hover {
-                        opacity: 0.5;
-                    }
+                    display: none;
                 }
             }
 
             > .o_overlay_options_wrap {
                 @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
-                transform: translate(-50%, -110%);
+                transform: translate(-50%, -150%);
 
                 &.o_we_hidden_overlay_options {
                     display: none;
@@ -2427,6 +2365,53 @@ we-select.o_we_border_preview_aligned_select {
                 max-height: unset !important;
             }
         }
+
+        // HANDLES - ACTIVE AND HOVER STATES
+        // By using `o_handlers_idle` class, we can avoid hovering another
+        // handle when we're already dragging another one.
+        &.o_handlers_idle .o_handle:hover, .o_handle:active {
+
+            .o_handle_indicator {
+                outline-color: $o-we-handles-accent-color;
+            }
+        }
+
+        &.o_handlers_idle .o_corner_handle:hover, .o_corner_handle:active {
+
+            .o_handle_indicator {
+                transform: scale(1.25);
+            }
+        }
+
+        &.o_handlers_idle .o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
+            background: repeating-linear-gradient(
+                            45deg,
+                            rgba($o-we-handles-accent-color, .1),
+                            rgba($o-we-handles-accent-color, .1) 5px,
+                            darken(rgba($o-we-handles-accent-color, .25), 5%) 5px,
+                            darken(rgba($o-we-handles-accent-color, .25), 5%) 10px
+                        );
+        }
+
+        &.o_handlers_idle .o_side_x:hover, .o_side_x:active {
+
+            &::before {
+                width: $o-we-handle-border-width * 2;
+            }
+            .o_handle_indicator {
+                height: $o-we-handles-btn-size * 2;
+            }
+        }
+
+        &.o_handlers_idle .o_side_y:hover, .o_side_y:active {
+
+            &::before {
+                height: $o-we-handle-border-width * 2;
+            }
+            .o_handle_indicator {
+                width: $o-we-handles-btn-size * 2;
+            }
+        }
     }
 
     .o_edit_menu_popover {
@@ -2437,24 +2422,10 @@ we-select.o_we_border_preview_aligned_select {
     display: none;
 }
 
-.s-resize-important * {
-    cursor: s-resize !important;
-}
-
-.n-resize-important * {
-    cursor: n-resize !important;
-}
-
-.e-resize-important * {
-    cursor: e-resize !important;
-}
-
-.w-resize-important * {
-    cursor: w-resize !important;
-}
-
-.move-important * {
-    cursor: move !important;
+@each $cursor in (nesw-resize, nwse-resize, ns-resize, ew-resize, move) {
+    .#{$cursor}-important * {
+        cursor: $cursor !important;
+    }
 }
 
 .dropdown-menu label .o_switch {
@@ -2624,7 +2595,6 @@ we-button-group.o_grid we-selection-items {
         stroke: $o-we-bg-darkest;
         stroke-opacity: .2;
         stroke-width: 1px;
-        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.6));
     }
 }
 
