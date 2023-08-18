@@ -3760,7 +3760,7 @@ test(`currency_field is taken into account when formatting monetary values`, asy
             <tree>
                 <field name="company_currency_id" column_invisible="1"/>
                 <field name="currency_id" column_invisible="1"/>
-                <field name="amount"/>
+                <field name="amount" sum="Sum"/>
                 <field name="amount_currency"/>
             </tree>
         `,
@@ -3773,6 +3773,10 @@ test(`currency_field is taken into account when formatting monetary values`, asy
     });
     expect(`tfoot td:eq(1)`).toHaveText("—", {
         message: "aggregates monetary should never work if different currencies are used",
+    });
+    expect(`tfoot td:eq(2)`).toHaveText("", {
+        message:
+            "monetary aggregation should only be attempted with an active aggregation function when using different currencies",
     });
 });
 
