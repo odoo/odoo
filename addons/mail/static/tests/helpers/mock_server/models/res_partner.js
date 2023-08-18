@@ -273,6 +273,7 @@ patch(MockServer.prototype, {
                         email: partner.email,
                         id: partner.id,
                         im_status: partner.im_status,
+                        is_company: partner.is_company,
                         name: partner.name,
                         user: mainUser
                             ? {

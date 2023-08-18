@@ -56,6 +56,7 @@ class TestImLivechatMessage(HttpCase):
             'attachment_ids': [],
             'author': {
                 'id': self.users[1].partner_id.id,
+                'is_company': self.users[1].partner_id.is_company,
                 'name': "test1",
             },
             'body': message.body,

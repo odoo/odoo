@@ -23,6 +23,12 @@ patch(Message.prototype, {
         this.userService = useService("user");
         this.messaging = useState(useService("mail.messaging"));
     },
+    get authorAvatarAttClass() {
+        return {
+            ...super.authorAvatarAttClass,
+            "o_redirect cursor-pointer": this.hasAuthorClickable,
+        };
+    },
     getAuthorText() {
         return this.hasAuthorClickable() ? _t("Open profile") : undefined;
     },

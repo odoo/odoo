@@ -878,6 +878,7 @@ class Message(models.Model):
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             author = {
                 'id': message_sudo.author_id.id,
+                'is_company': message_sudo.author_id.is_company,
                 'name': message_sudo.author_id.name,
             } if message_sudo.author_id else [('clear',)]
             guestAuthor = {

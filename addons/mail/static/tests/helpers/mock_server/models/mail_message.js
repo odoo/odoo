@@ -202,6 +202,7 @@ patch(MockServer.prototype, {
                 });
                 formattedAuthor = {
                     id: author.id,
+                    is_company: author.is_company,
                     name: author.name,
                 };
             } else {
