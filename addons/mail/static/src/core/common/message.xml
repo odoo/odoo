@@ -16,7 +16,7 @@
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight and !props.squashed, 'align-items-center justify-content-center': props.squashed }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view">
-                            <img class="o-mail-Message-avatar w-100 h-100 rounded o_object_fit_cover" t-att-src="authorAvatarUrl"/>
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="!message.isTransient">
                             <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
