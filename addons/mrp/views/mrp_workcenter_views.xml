@@ -63,8 +63,8 @@
                                     <div class="col-12">
                                         <strong><field name="name"/></strong>
                                     </div>
-                                    <div class="col-12">
-                                        <span>Code <field name="code"/></span>
+                                    <div class="col-12" t-if="record.code.raw_value">
+                                        <span><field name="code"/></span>
                                     </div>
                                 </div>
                             </div>
