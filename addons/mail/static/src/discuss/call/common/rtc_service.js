@@ -100,6 +100,7 @@ export class Rtc {
         this.store = services["mail.store"];
         this.notification = services.notification;
         this.rpc = services.rpc;
+        this.rtcServer = services["discuss.rtc_server"];
         this.channelMemberService = services["discuss.channel.member"];
         this.soundEffectsService = services["mail.sound_effects"];
         this.userSettingsService = services["mail.user_settings"];
@@ -634,11 +635,11 @@ export class Rtc {
     }
 
     async call() {
-        if (this.state.serverInfo) {
-            if (!(this.state.rtcServer?.connectionState === "connected")) {
-                this.disconnectFromServer();
+        if (this.rtcServer.canConnect) {
+            if (!this.state.isConnected) {
+                await this.rtcServer.disconnect();
                 this.state.connectionType = CONNECTION_TYPES.SERVER;
-                await this.connectToServer();
+                this.rtcServer.connect();
             }
             return;
         }
@@ -654,14 +655,6 @@ export class Rtc {
             this.connect(session);
         }
         return;
-    }
-
-    async connectToServer() {
-        return true;
-    }
-
-    disconnectFromServer() {
-        return true;
     }
 
     createConnection(session) {
@@ -822,6 +815,7 @@ export class Rtc {
             },
             { silent: true }
         );
+        await this.rtcServer.load(serverInfo);
         // Initializing a new session implies closing the current session.
         this.clear();
         this.state.logs.clear();
@@ -832,7 +826,6 @@ export class Rtc {
                 invitedMembers,
             },
         });
-        this.state.serverInfo = serverInfo;
         this.state.selfSession = this.store.rtcSessions[sessionId];
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
         this.state.logs.set("channelId", this.state.channel?.id);
@@ -1092,7 +1085,6 @@ export class Rtc {
             selfSession: undefined,
             sendCamera: false,
             sendScreen: false,
-            serverInfo: undefined,
             channel: undefined,
             rtcServer: undefined,
         });
@@ -1624,6 +1616,7 @@ export const rtcService = {
     dependencies: [
         "bus_service",
         "discuss.channel.member",
+        "discuss.rtc_server",
         "mail.persona",
         "mail.sound_effects",
         "mail.store",
