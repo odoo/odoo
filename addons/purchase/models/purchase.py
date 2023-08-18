@@ -509,6 +509,7 @@ class PurchaseOrder(models.Model):
             'min_qty': 1.0,
             'price': price,
             'currency_id': currency.id,
+            'discount': line.discount,
             'delay': 0,
         }
 
@@ -926,6 +927,11 @@ class PurchaseOrderLine(models.Model):
         string='Expected Arrival', index=True,
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
+    discount = fields.Float(
+        string="Discount (%)",
+        compute='_compute_price_unit_and_date_planned_and_name',
+        digits='Discount',
+        store=True, readonly=False)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
@@ -981,7 +987,7 @@ class PurchaseOrderLine(models.Model):
             "Forbidden values on non-accountable purchase order line"),
     ]
 
-    @api.depends('product_qty', 'price_unit', 'taxes_id')
+    @api.depends('product_qty', 'price_unit', 'taxes_id', 'discount')
     def _compute_amount(self):
         for line in self:
             tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
@@ -1010,6 +1016,7 @@ class PurchaseOrderLine(models.Model):
             taxes=self.taxes_id,
             price_unit=self.price_unit,
             quantity=self.product_qty,
+            discount=self.discount,
             price_subtotal=self.price_subtotal,
         )
 
@@ -1249,6 +1256,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
             price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
             line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
+            line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
             default_names = []
@@ -1319,6 +1327,8 @@ class PurchaseOrderLine(models.Model):
     def _get_gross_price_unit(self):
         self.ensure_one()
         price_unit = self.price_unit
+        if self.discount:
+            price_unit = price_unit * (1 - self.discount / 100)
         if self.taxes_id:
             qty = self.product_qty or 1
             price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
@@ -1372,6 +1382,7 @@ class PurchaseOrderLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
+            'discount': self.discount,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],
             'purchase_line_id': self.id,

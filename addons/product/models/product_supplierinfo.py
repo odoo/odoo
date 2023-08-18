@@ -62,6 +62,10 @@ class SupplierInfo(models.Model):
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
+    discount = fields.Float(
+        string="Discount (%)",
+        digits='Discount',
+        readonly=False)
 
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):

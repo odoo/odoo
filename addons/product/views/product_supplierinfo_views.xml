@@ -32,6 +32,7 @@
                             </div>
                             <label for="date_start" string="Validity"/>
                             <div class="o_row"><field name="date_start" class="oe_inline"/> to <field name="date_end" class="oe_inline"/></div>
+                            <field name="discount"/>
                             <field name="company_id" options="{'no_create': True}"/>
                         </group>
                     </group>
@@ -117,6 +118,7 @@
                 <field name="min_qty" optional="hide"/>
                 <field name="product_uom" groups="uom.group_uom" optional="hide"/>
                 <field name="price" string="Price"/>
+                <field name="discount" optional="hide"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="delay" optional="hide"/>
             </tree>
