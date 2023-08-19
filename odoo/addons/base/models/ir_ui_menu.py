@@ -77,41 +77,32 @@ class IrUiMenu(models.Model):
 
     @api.model
     @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
-    def _visible_menu_ids(self, debug=False):
+     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
-        menus = self.with_context(context).search([]).sudo()
-
         groups = self.env.user.groups_id
         if not debug:
             groups = groups - self.env.ref('base.group_no_one')
-        # first discard all menus with groups the user does not have
+        models_check=self.sudo().env['ir.model.access'].search([('group_id', 'in', groups.ids), ('perm_read', '=', True),('active', '=', True)]).mapped('model_id.model') + self.sudo().env['ir.model.access'].search([('group_id', '=', None), ('active', '=', True)]).mapped('model_id.model')
+        act_windows=list(map(lambda x: f'ir.actions.act_window,{x}',self.sudo().env['ir.actions.act_window'].search([('res_model','in',models_check)]).ids))
+        act_ref=list(map(lambda x: f'ir.actions.report,{x}',self.sudo().env['ir.actions.report'].search([('model','in',models_check)])))
+        act_server=list(map(lambda x: f'ir.actions.server,{x}',self.sudo().env['ir.actions.server'].search([('model_id.model','in',models_check)])))
+        action_menus = self.sudo().with_context(context).search([('action','!=',False),('action','not like','ir.actions.act_window'),('action','not like','ir.actions.server'),('action','not like','ir.actions.report')]) + self.sudo().with_context(context).search([('action', 'in', act_windows+act_ref+act_server)])
+        action_menus=action_menus.filtered(lambda menu: not menu.groups_id or menu.groups_id & groups)
+        menus = self.with_context(context).search([]).sudo()
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
-
+        
         # take apart menus that have an action
-        action_menus = menus.filtered(lambda m: m.action and m.action.exists())
         folder_menus = menus - action_menus
         visible = self.browse()
-
-        # process action menus, check whether their action is allowed
-        access = self.env['ir.model.access']
-        MODEL_GETTER = {
-            'ir.actions.act_window': lambda action: action.res_model,
-            'ir.actions.report': lambda action: action.model,
-            'ir.actions.server': lambda action: action.model_id.model,
-        }
         for menu in action_menus:
-            get_model = MODEL_GETTER.get(menu.action._name)
-            if not get_model or not get_model(menu.action) or \
-                    access.check(get_model(menu.action), 'read', False):
-                # make menu visible, and its folder ancestors, too
+            visible += menu
+            menu = menu.parent_id
+            while menu and menu in folder_menus and menu not in visible:
                 visible += menu
                 menu = menu.parent_id
-                while menu and menu in folder_menus and menu not in visible:
-                    visible += menu
-                    menu = menu.parent_id
 
         return set(visible.ids)
 
