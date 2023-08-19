@@ -18,7 +18,7 @@ NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
 class IrUiMenu(models.Model):
     _name = 'ir.ui.menu'
     _description = 'Menu'
-    _order = "sequence, id"
+    _order = "sequence,id"
     _parent_store = True
 
     def __init__(self, *args, **kwargs):
@@ -62,7 +62,7 @@ class IrUiMenu(models.Model):
     def read_image(self, path):
         if not path:
             return False
-        path_info = path.split(', ')
+        path_info = path.split(',')
         icon_path = get_module_resource(path_info[0], path_info[1])
         icon_image = False
         if icon_path:
@@ -199,11 +199,11 @@ class IrUiMenu(models.Model):
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
 
         menu_root = {
-            'id': False, 
+            'id': False,
             'name': 'root',
-            'parent_id': [-1, ''], 
-            'children': menu_roots_data, 
-            'all_menu_ids': menu_roots.ids, 
+            'parent_id': [-1, ''],
+            'children': menu_roots_data,
+            'all_menu_ids': menu_roots.ids,
         }
 
         xmlids = menu_roots._get_menuitems_xmlids()
@@ -224,10 +224,10 @@ class IrUiMenu(models.Model):
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
-            'id': False, 
+            'id': False,
             'name': 'root',
-            'parent_id': [-1, ''], 
-            'children': [menu['id'] for menu in menu_roots_data], 
+            'parent_id': [-1, ''],
+            'children': [menu['id'] for menu in menu_roots_data],
         }
 
         all_menus = {'root': menu_root}
