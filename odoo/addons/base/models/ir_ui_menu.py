@@ -91,8 +91,7 @@ class IrUiMenu(models.Model):
         action_menus = self.sudo().with_context(context).search([('action', '!=', False), ('action', 'not like', 'ir.actions.act_window'), ('action', 'not like', 'ir.actions.server'), ('action', 'not like', 'ir.actions.report')]) + self.sudo().with_context(context).search([('action', 'in', act_windows+act_ref+act_server)])
         action_menus = action_menus.filtered(lambda menu: not menu.groups_id or menu.groups_id & groups)
         menus = self.with_context(context).search([]).sudo()
-        menus = menus.filtered(
-            lambda menu: not menu.groups_id or menu.groups_id & groups)        
+        menus = menus.filtered(lambda menu: not menu.groups_id or menu.groups_id & groups)        
         # take apart menus that have an action
         folder_menus = menus - action_menus
         visible = self.browse()
