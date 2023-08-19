@@ -435,7 +435,7 @@ msgstr "Erstattungen"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr "Anzahl Erstattungen"
+msgstr "Anzahl Rückerstattungen"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -577,6 +577,17 @@ msgid ""
 msgstr ""
 "Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im aktivierten oder Teststatus verknüpft ist.\n"
 "Verknüpfte(r) Anbieter: %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payment method transactions already "
+"exist."
+msgstr ""
+"Sie können dieses Modul nicht deinstallieren, da bereits Transaktionen "
+"dieser Zahlungsmethode existieren."
 
 #. module: account_payment
 #. odoo-python
