@@ -587,7 +587,7 @@ class expression(object):
             return stack.pop()
 
         def push(leaf, model, alias, internal=False):
-            """ Push a leaf to be processed right after. ""HIERARCHY_FUNCS"
+            """ Push a leaf to be processed right after. """
             leaf = normalize_leaf(leaf)
             check_leaf(leaf, internal)
             stack.append((leaf, model, alias))
