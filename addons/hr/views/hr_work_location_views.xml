@@ -24,11 +24,13 @@
                             <group>
                                 <field name="active" invisible="1" />
                                 <field name="name" />
+                                <field name="address_id" />
                                 <field class="o_homework_icon_types d-flex flex-wrap" name="location_type"
                                        widget="hr_homeworking_radio_image" options="{'horizontal': true}"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" />
+                                <field name="company_id" groups="!base.group_multi_company" invisible="1" />
                             </group>
                         </group>
                     </sheet>
