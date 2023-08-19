@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -29,22 +29,22 @@ class PosPayment(models.Model):
         for pm_id, oaps_id in online_account_payments_by_pm.items():
             if pm_id in opms_id:
                 if None in oaps_id:
-                    raise UserError("Cannot create a POS online payment without an accounting payment.")
+                    raise UserError(_("Cannot create a POS online payment without an accounting payment."))
                 else:
                     online_account_payments_to_check_id.update(oaps_id)
             elif any(oaps_id):
-                raise UserError("Cannot create a POS payment with a not online payment method and an online accounting payment.")
+                raise UserError(_("Cannot create a POS payment with a not online payment method and an online accounting payment."))
 
         if online_account_payments_to_check_id:
             valid_oap_amount = self.env['account.payment'].search_count([('id', 'in', list(online_account_payments_to_check_id))])
             if valid_oap_amount != len(online_account_payments_to_check_id):
-                raise UserError("Cannot create a POS online payment without an accounting payment.")
+                raise UserError(_("Cannot create a POS online payment without an accounting payment."))
 
         return super().create(vals_list)
 
     def write(self, vals):
         if vals.keys() & ('amount', 'payment_date', 'payment_method_id', 'online_account_payment_id', 'pos_order_id') and any(payment.online_account_payment_id or payment.payment_method_id.is_online_payment for payment in self):
-            raise UserError("Cannot edit a POS online payment essential data.")
+            raise UserError(_("Cannot edit a POS online payment essential data."))
         return super().write(vals)
 
     @api.constrains('payment_method_id')
