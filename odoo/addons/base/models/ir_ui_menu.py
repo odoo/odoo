@@ -18,7 +18,7 @@ NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
 class IrUiMenu(models.Model):
     _name = 'ir.ui.menu'
     _description = 'Menu'
-    _order = "sequence,id"
+    _order = "sequence, id"
     _parent_store = True
 
     def __init__(self, *args, **kwargs):
@@ -31,16 +31,16 @@ class IrUiMenu(models.Model):
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
     parent_path = fields.Char(index=True)
-    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
-                                 'menu_id', 'gid', string='Groups',
+    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel', 
+                                 'menu_id', 'gid', string='Groups', 
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
     complete_name = fields.Char(string='Full Path', compute='_compute_complete_name', recursive=True)
     web_icon = fields.Char(string='Web Icon File')
-    action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
-                                         ('ir.actions.act_window', 'ir.actions.act_window'),
-                                         ('ir.actions.act_url', 'ir.actions.act_url'),
-                                         ('ir.actions.server', 'ir.actions.server'),
+    action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'), 
+                                         ('ir.actions.act_window', 'ir.actions.act_window'), 
+                                         ('ir.actions.act_url', 'ir.actions.act_url'), 
+                                         ('ir.actions.server', 'ir.actions.server'), 
                                          ('ir.actions.client', 'ir.actions.client')])
 
     web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
@@ -62,7 +62,7 @@ class IrUiMenu(models.Model):
     def read_image(self, path):
         if not path:
             return False
-        path_info = path.split(',')
+        path_info = path.split(', ')
         icon_path = get_module_resource(path_info[0], path_info[1])
         icon_image = False
         if icon_path:
@@ -84,12 +84,12 @@ class IrUiMenu(models.Model):
         groups = self.env.user.groups_id
         if not debug:
             groups = groups - self.env.ref('base.group_no_one')
-        models_check=self.sudo().env['ir.model.access'].search([('group_id', 'in', groups.ids), ('perm_read', '=', True),('active', '=', True)]).mapped('model_id.model') + self.sudo().env['ir.model.access'].search([('group_id', '=', None), ('active', '=', True)]).mapped('model_id.model')
-        act_windows=list(map(lambda x: f'ir.actions.act_window,{x}',self.sudo().env['ir.actions.act_window'].search([('res_model','in',models_check)]).ids))
-        act_ref=list(map(lambda x: f'ir.actions.report,{x}',self.sudo().env['ir.actions.report'].search([('model','in',models_check)])))
-        act_server=list(map(lambda x: f'ir.actions.server,{x}',self.sudo().env['ir.actions.server'].search([('model_id.model','in',models_check)])))
-        action_menus = self.sudo().with_context(context).search([('action','!=',False),('action','not like','ir.actions.act_window'),('action','not like','ir.actions.server'),('action','not like','ir.actions.report')]) + self.sudo().with_context(context).search([('action', 'in', act_windows+act_ref+act_server)])
-        action_menus=action_menus.filtered(lambda menu: not menu.groups_id or menu.groups_id & groups)
+        models_check= self.sudo().env['ir.model.access'].search([('group_id', 'in', groups.ids), ('perm_read', '=', True), ('active', '=', True)]).mapped('model_id.model') + self.sudo().env['ir.model.access'].search([('group_id', '=', None), ('active', '=', True)]).mapped('model_id.model')
+        act_windows = list(map(lambda x: f'ir.actions.act_window, {x}', self.sudo().env['ir.actions.act_window'].search([('res_model', 'in', models_check)]).ids))
+        act_ref = list(map(lambda x: f'ir.actions.report, {x}', self.sudo().env['ir.actions.report'].search([('model', 'in', models_check)])))
+        act_server = list(map(lambda x: f'ir.actions.server, {x}', self.sudo().env['ir.actions.server'].search([('model_id.model', 'in', models_check)])))
+        action_menus = self.sudo().with_context(context).search([('action', '!=', False), ('action', 'not like', 'ir.actions.act_window'), ('action', 'not like', 'ir.actions.server'), ('action', 'not like', 'ir.actions.report')]) + self.sudo().with_context(context).search([('action', 'in', act_windows+act_ref+act_server)])
+        action_menus = action_menus.filtered(lambda menu: not menu.groups_id or menu.groups_id & groups)
         menus = self.with_context(context).search([]).sudo()
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
@@ -153,7 +153,7 @@ class IrUiMenu(models.Model):
               - a built icon [icon_class, icon_color, background_color]
             and it only has to call `read_image` if it's an image.
         """
-        if web_icon and len(web_icon.split(',')) == 2:
+        if web_icon and len(web_icon.split(', ')) == 2:
             return self.read_image(web_icon)
 
     def unlink(self):
@@ -161,7 +161,7 @@ class IrUiMenu(models.Model):
         # cascade-delete submenus blindly. We also can't use ondelete=set null because
         # that is not supported when _parent_store is used (would silently corrupt it).
         # TODO: ideally we should move them under a generic "Orphans" menu somewhere?
-        extra = {'ir.ui.menu.full_list': True,
+        extra = {'ir.ui.menu.full_list': True, 
                  'active_test': False}
         direct_children = self.with_context(**extra).search([('parent_id', 'in', self.ids)])
         direct_children.write({'parent_id': False})
@@ -193,18 +193,18 @@ class IrUiMenu(models.Model):
         return []
 
     @api.model
-    @tools.ormcache_context('self._uid', keys=('lang',))
+    @tools.ormcache_context('self._uid', keys=('lang', ))
     def load_menus_root(self):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
 
         menu_root = {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots_data,
-            'all_menu_ids': menu_roots.ids,
+            'id': False, 
+            'name': 'root', 
+            'parent_id': [-1, ''], 
+            'children': menu_roots_data, 
+            'all_menu_ids': menu_roots.ids, 
         }
 
         xmlids = menu_roots._get_menuitems_xmlids()
@@ -214,7 +214,7 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
+    @tools.ormcache_context('self._uid', 'debug', keys=('lang', ))
     def load_menus(self, debug):
         """ Loads all menu items (all applications and their sub-menus).
 
@@ -225,10 +225,10 @@ class IrUiMenu(models.Model):
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': [menu['id'] for menu in menu_roots_data],
+            'id': False, 
+            'name': 'root', 
+            'parent_id': [-1, ''], 
+            'children': [menu['id'] for menu in menu_roots_data], 
         }
 
         all_menus = {'root': menu_root}
@@ -284,7 +284,7 @@ class IrUiMenu(models.Model):
 
     def _get_menuitems_xmlids(self):
         menuitems = self.env['ir.model.data'].sudo().search([
-                ('res_id', 'in', self.ids),
+                ('res_id', 'in', self.ids), 
                 ('model', '=', 'ir.ui.menu')
             ])
 

@@ -587,7 +587,7 @@ class expression(object):
             return stack.pop()
 
         def push(leaf, model, alias, internal=False):
-            """ Push a leaf to be processed right after. """
+            """ Push a leaf to be processed right after. ""HIERARCHY_FUNCS"
             leaf = normalize_leaf(leaf)
             check_leaf(leaf, internal)
             stack.append((leaf, model, alias))
@@ -719,17 +719,17 @@ class expression(object):
                     domain = []
                 else:
                     # Do an innner join if this field show up.
-                    if field.name == "message_partner_ids":
-                        if operator=='in':
-                            if len(right)==1:
+                    if field.name == "message_partner_ids" and operator not in HIERARCHY_FUNCS:
+                        if operator == 'in':
+                            if len(right) == 1:
                                 operator = '='
                                 right = right[0]
                             else:
-                                right=str(tuple(right))
+                                right = str(tuple(right))
 
-                        domain=[]
+                        domain = []
                         self.query.left_join(model._table,'id','mail_followers','res_id','mail_followers',f""" "{model._table}__mail_followers"."partner_id"  {operator} {right} and "{model._table}__mail_followers"."res_model" = '{model._name}'""")
-                        expr, params = self.__leaf_to_sql(('res_id','!=', False ),model.env['mail.followers'], f"{model._table}__mail_followers")
+                        expr, params = self.__leaf_to_sql(('res_id','!=', False), model.env['mail.followers'], f"{model._table}__mail_followers")
                         push_result(expr, params)
                     else:
                         if len(path) > 1:
@@ -1056,7 +1056,7 @@ class expression(object):
             query = '%s."%s" IS NULL ' % (table_alias, left)
             params = []
 
-        elif left in model and model._fields[left].type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
+        elif left in model and model._fields[left].type == "boolean" and ((operator == '!=' and right is False) or (operator == ' == ' and right is True)):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
             params = []
 
