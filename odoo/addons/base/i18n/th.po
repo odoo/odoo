@@ -10,6 +10,7 @@
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Wichanon Jamwutthipreecha, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7481,6 +7482,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"ข้อความด้านล่างทำหน้าที่เป็นการแนะนำและไม่เกี่ยวข้องกับความรับผิดชอบของ Odoo"
+" S.A."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -8562,6 +8565,13 @@ msgstr "ชื่อเต็ม"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "คำนวน"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -10748,6 +10758,16 @@ msgstr "ผิดพลาด"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -13503,7 +13523,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "จัดกลุ่มตาม..."
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -21171,7 +21196,6 @@ msgstr "เริ่มการตั้งค่า"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -21214,6 +21238,7 @@ msgstr "รัฐ"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "สถานะ"
@@ -23252,6 +23277,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -24624,6 +24656,15 @@ msgid "You can not create recursive tags."
 msgstr "You cannot create recursive Partner hierarchies."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "You can not have two users with the same login !"
@@ -24734,6 +24775,12 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -24753,6 +24800,13 @@ msgid ""
 "You should rather archive them after archiving their associated user.\n"
 "\n"
 "Linked active users : %(names)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
 msgstr ""
 
 #. module: base
@@ -24785,6 +24839,13 @@ msgstr ""
 msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
 msgstr ""
 
 #. module: base

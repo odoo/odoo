@@ -45,6 +45,8 @@ msgstr "%(empl_name)s da %(check_in)s a %(check_out)s"
 #, python-format
 msgid ": Your user should be linked to an employee to use attendance."
 msgstr ""
+": l'utente dovrebbe essere collegato ad un dipendente per utilizzare "
+"Presenze."
 
 #. module: hr_attendance
 #. openerp-web
@@ -209,13 +211,13 @@ msgstr "Analisi partecipazione"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr ""
+msgstr "Tempo di risposta in modalità tutto schermo"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
 msgid "Attendance Mode"
-msgstr ""
+msgstr "Modalità presenza"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
@@ -259,7 +261,7 @@ msgstr "Disponibile"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
 msgid "Back Camera"
-msgstr ""
+msgstr "Fotocamera posteriore"
 
 #. module: hr_attendance
 #. openerp-web
@@ -271,18 +273,18 @@ msgstr "Codice a barre"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
-msgstr ""
+msgstr "Codice a barre/sensore RFID"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode_manual
 msgid "Barcode / RFID and Manual Selection"
-msgstr ""
+msgstr "Codice a barre/RFID e selezione manuale"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
 msgid "Barcode Source"
-msgstr ""
+msgstr "Sorgente codice a barre"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -322,7 +324,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check IN"
-msgstr ""
+msgstr "Check IN"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -344,7 +346,7 @@ msgstr "Ingresso / Uscita"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Check OUT"
-msgstr ""
+msgstr "Check OUT"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -357,7 +359,7 @@ msgstr "Uscita"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out in Kiosk Mode"
-msgstr ""
+msgstr "Check-in/out in modalità tutto schermo"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -386,7 +388,7 @@ msgstr "Uscita il"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Choose how long the greeting message will be displayed."
-msgstr ""
+msgstr "Scegli per quanto tempo verrà visualizzato il messaggio di benvenuto."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_company
@@ -466,12 +468,12 @@ msgstr "Giorno"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the camera used for the barcode scan."
-msgstr ""
+msgstr "Indica la fotocamera utilizzata per la scansione di codici a barre."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the way the user will be identified by the application."
-msgstr ""
+msgstr "Indica il mod in cui l'utente verrà autenticato dall'applicazione."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -489,7 +491,7 @@ msgstr "Nome visualizzato"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Time"
-msgstr ""
+msgstr "Tempo di visualizzazione"
 
 #. module: hr_attendance
 #. odoo-python
@@ -498,6 +500,8 @@ msgstr ""
 msgid ""
 "Do not have access, user cannot edit the attendances that are not his own."
 msgstr ""
+"Non avendo accesso, l'utente non può modificare le presenze che non sono le "
+"proprie."
 
 #. module: hr_attendance
 #. openerp-web
@@ -576,7 +580,7 @@ msgstr "Ore extra data di inizio"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Extra hours today:"
-msgstr ""
+msgstr "Ore aggiuntive di oggi:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
@@ -593,7 +597,7 @@ msgstr "Chi prima arriva, meglio alloggia"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
 msgid "Front Camera"
-msgstr ""
+msgstr "Fotocamera anteriore"
 
 #. module: hr_attendance
 #. openerp-web
@@ -749,12 +753,12 @@ msgstr "Se un lavoro va fatto, meglio farlo bene!"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Invalid request"
-msgstr ""
+msgstr "Richiesta non valida"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
-msgstr "Kiosk Mode"
+msgstr "Modalità tutto schermo"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
@@ -784,7 +788,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
 msgid "Manual Selection"
-msgstr ""
+msgstr "Selezione manuale"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_ui_menu
@@ -833,7 +837,7 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer : Manage all attendances"
-msgstr ""
+msgstr "Responsabile: gestisce tutte le presenze"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
@@ -845,7 +849,7 @@ msgstr "Straordinari"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Per favore, contatta l'amministratore."
 
 #. module: hr_attendance
 #. openerp-web
@@ -933,7 +937,7 @@ msgstr "Il mattino ha l'oro in bocca"
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
 msgstr ""
-"L'utente potrà aprire la modalità chiosco e convalidare il PIN del "
+"L'utente potrà aprire la modalità tutto schermo e convalidare il PIN del "
 "dipendente."
 
 #. module: hr_attendance
@@ -959,6 +963,9 @@ msgid ""
 "To activate Kiosk mode without pin code, you must have access right as an "
 "Officer or above in the Attendance app. Please contact your administrator."
 msgstr ""
+"Per attivare la modalità tutto schermo, senza codice pin, devi disporre dei "
+"diritti di accesso all'app Presenze, pari a quelli di un responsabile o "
+"superiore. Contatta l'amministratore."
 
 #. module: hr_attendance
 #. openerp-web
@@ -1000,6 +1007,8 @@ msgstr "Ore extra totali:"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
 msgstr ""
+"Usa codici pin (definiti sui profili dei dipendenti) per effettuare il "
+"check-in."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -1010,7 +1019,7 @@ msgstr "Utente"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
 msgid "User : Only kiosk mode"
-msgstr ""
+msgstr "Utente: solo modalità tutto schermo"
 
 #. module: hr_attendance
 #. openerp-web
@@ -1101,7 +1110,7 @@ msgstr "uscire"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "o_barcode_main pt-5"
-msgstr ""
+msgstr "o_barcode_main pt-5"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form

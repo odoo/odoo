@@ -7,16 +7,16 @@
 # Pierre Delacroix <pde@odoo.com>, 2022
 # Logan Gônet <logan.gonet.perso@outlook.com>, 2022
 # Martin Trigaux, 2023
-# Jolien De Paepe, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-11 09:17+0000\n"
+"POT-Creation-Date: 2023-08-18 13:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - closing"
-msgstr ""
+msgstr " - fermeture"
 
 #. module: point_of_sale
 #. odoo-python
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - opening"
-msgstr ""
+msgstr " - ouverture"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1054,7 +1054,7 @@ msgstr "Impossible de fermer la session sans connexion."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "Impossible de modifier un pourboire "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1819,7 +1819,9 @@ msgstr "Avertissement écran client"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "Le client est requis pour le mode de paiement %s."
@@ -1829,7 +1831,7 @@ msgstr "Le client est requis pour le mode de paiement %s."
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "Les pourboires des clients ne peuvent pas être modifiés directement"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2156,6 +2158,13 @@ msgstr ""
 #, python-format
 msgid "Do you want to open the customer list to select customer?"
 msgstr "Voulez-vous ouvrir la liste des clients pour en sélectionner un ?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3509,11 +3518,6 @@ msgid "Newspaper Rack"
 msgstr "Porte-journaux"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Activité suivante de l'événement du calendrier"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité à venir"
@@ -3795,6 +3799,8 @@ msgstr "N'appliquer l'arrondi que sur les paiements en espèces"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"Seuls les journaux de type 'Espèces' ou 'Banque' peuvent être utilisés avec "
+"des modes de paiement."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4026,8 +4032,8 @@ msgstr ""
 "ligne de commande."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4183,8 +4189,8 @@ msgid "Pay Order"
 msgstr "Payer la commande"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0

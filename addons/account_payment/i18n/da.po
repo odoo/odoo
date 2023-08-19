@@ -5,7 +5,7 @@
 # Translators:
 # Mads Søndergaard, 2022
 # Jesper Carstensen <info@danodoo.dk>, 2022
-# Lærke Hedegaard Mathiasen <lhm@flexerp.dk>, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2022
 # Martin Trigaux, 2022
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
 # 
@@ -564,6 +564,15 @@ msgstr "Ugyldig transaktion"
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payment method transactions already "
+"exist."
 msgstr ""
 
 #. module: account_payment
