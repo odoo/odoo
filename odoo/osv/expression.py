@@ -729,7 +729,7 @@ class expression(object):
 
                         domain = []
                         self.query.left_join(model._table, 'id', 'mail_followers', 'res_id', 'mail_followers', f""" "{model._table}__mail_followers"."partner_id"  {operator} {right} and "{model._table}__mail_followers"."res_model" = '{model._name}'""")
-                        expr, params = self.__leaf_to_sql(('res_id','!=', False), model.env['mail.followers'], f"{model._table}__mail_followers")
+                        expr, params = self.__leaf_to_sql(('res_id', '!=', False), model.env['mail.followers'], f"{model._table}__mail_followers")
                         push_result(expr, params)
                     else:
                         if len(path) > 1:
