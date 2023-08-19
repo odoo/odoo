@@ -1056,7 +1056,7 @@ class expression(object):
             query = '%s."%s" IS NULL ' % (table_alias, left)
             params = []
 
-        elif left in model and model._fields[left].type == "boolean" and ((operator == '!=' and right is False) or (operator == ' == ' and right is True)):
+        elif left in model and model._fields[left].type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
             params = []
 
