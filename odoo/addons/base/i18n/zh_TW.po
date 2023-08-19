@@ -3137,30 +3137,6 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
-"\n"
-"Australian Accounting Module\n"
-"============================\n"
-"\n"
-"Taxable Payments Annual Reports (TPAR) for Australia\n"
-"\n"
-"The Taxable payments annual report (TPAR) allows:\n"
-"\n"
-"    • Payments made to contractors (or subcontractors) for services, or\n"
-"    • Grants paid by government entities to ABN holders\n"
-"\n"
-"to be reported where required under the Taxable Payments Reporting System (TPRS) and the Taxable Government Grants and Payments reporting measure.\n"
-"\n"
-"The TPAR is due by 28th August each year.\n"
-"\n"
-"Penalties may apply if you don’t lodge your TPAR on time.\n"
-"\n"
-"For further information on who is required to lodge a Taxable payments annual report refer to\n"
-"https://softwaredevelopers.ato.gov.au/tprs\n"
-"\n"
-"The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
-"\n"
-"The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -3742,7 +3718,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"使用 稅務雲 和美國客戶的位址自動計算增值稅.\n"
+"使用 TaxCloud 和美國客戶的位址自動計算增值稅.\n"
 " "
 
 #. module: base
@@ -4686,73 +4662,6 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
-"\n"
-"功能性\n"
-"----------\n"
-"\n"
-"能夠在 Odoo 中建立日記帳以建立電子客戶憑單，然後向 AFIP(通過 Web 服務)報告.\n"
-"可用的選項有:\n"
-"\n"
-"    * 電子發票 - 網路服務\n"
-"    * 出口憑證 - 網路服務\n"
-"    * 電子財政債券 - 網路服務\n"
-"\n"
-"在電子日記帳中，如果您驗證發票，則該發票將在 Odoo 和 AFIP 中進行驗證. 這個驗證是\n"
-"即時製作，我們收到來自 AFIP 的\"已批准/已通過觀察/已拒絕\"狀態. 如果發票有\n"
-"被 AFIP 拒絕將不會在系統中過帳，並且會顯示一條帶有錯誤詳細信息的彈出消息(拒絕原因)\n"
-"我們收到並提示問題可能是什麼.\n"
-"\n"
-"出於審計和故障排除的目的，我們還增加了一個功能表\"在 AFIP 中諮詢發票\"，讓我們可以以前查閱發票\n"
-"發送到 AFIP，最後一個號碼用作支持 Odoo 和 AFIP 之間序列同步的任何可能問題.\n"
-"\n"
-"    注意：從 日記帳 的表單檢視中，我們能夠強制 odoo 序列與\n"
-"    在 AFIP 中註冊的最後一個號碼.\n"
-"\n"
-"從供應商賬單中，我們增加了一個可以在會計設定中設定的功能，以便能夠驗證\n"
-"AFIP 中的供應商賬單以檢查供應商賬單是否真實(更多信息請檢視設定說明).\n"
-"\n"
-"設定:\n"
-"\n"
-"1. 轉到會計設定 > 阿根廷本地化部分\n"
-"\n"
-"    1.1.設定 AFIP Web 服務模式:\n"
-"\n"
-"    * 測試環境，以便使用將用於測試實例的範例證書並進行 NOT\n"
-"      給 AFIP 的真實發票. 只是為了測試. 對於示範實例已經預定義，您無需設定\n"
-"      它(在 AFIP 中通常稱為 Homologation 環境).\n"
-"    * 生產環境，以便為 AFIP 生成真實的證書和合法發票，\n"
-"\n"
-"    1.2.設定您的 AFIP 證書: 如果您在示範實例中，則預設情況下已設定此證書. 如果你\n"
-"         在生產實例中只需要上傳您的 AFIP 證書\n"
-"\n"
-"    1.3.或者，您可以定義是否希望能夠在 AFIP 中驗證供應商賬單.\n"
-"\n"
-"2. 建立銷售日記帳，代表您想在 Odoo 中使用的每一個 AFIP POS(在 AFIP 入口網站中可用).\n"
-"\n"
-"    2.1. 使用文件欄位預設設定請不要更改\n"
-"    2.2.為其中一個電子系統設定 AFIP POS 系統.\n"
-"\n"
-"        * 電子發票 - 網路服務'\n"
-"        * 電子財政債券 - 網路服務'\n"
-"        * 出口憑證 - 網路服務'\n"
-"\n"
-"    2.3.考慮到您在 AFIP 入口網站中設定的內容，設定 AFIP POS 編號和 AFIP POS 地址.\n"
-"\n"
-"    注意：您可以使用日記帳表單中的\"檢查可用 AFIP POS\"按鈕來確認用於建立日記帳.\n"
-"\n"
-"有關阿根廷電子發票的更多信息，請訪問 http://www.afip.gob.ar/fe/ayuda.asp\n"
-"\n"
-"技術的\n"
-"---------\n"
-"\n"
-"實現的 Web 服務是最常見的：\n"
-"\n"
-"* wsfev1 - \"Factura Electrónica\"(電子發票)\n"
-"* wsbfev1 - \"Bono Fiscal Electrónico\"(電子財政債券)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\"(電子出口發票 - 與出口憑證相同)\n"
-"* wscdc - \"Constatación de Comprobantes\"(發票驗證)\n"
-"\n"
-"有關開發信息，請訪問 http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -7884,34 +7793,33 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"This is the base module to manage the accounting chart for Belgium in Odoo.\n"
+"這是管理 Odoo 中比利時會計圖表的基本模組。\n"
 "==============================================================================\n"
 "\n"
-"After installing this module, the Configuration wizard for accounting is launched.\n"
-"    * We have the account templates which can be helpful to generate Charts of Accounts.\n"
-"    * On that particular wizard, you will be asked to pass the name of the company,\n"
-"      the chart template to follow, the no. of digits to generate, the code for your\n"
-"      account and bank account, currency to create journals.\n"
+"安裝此模組後，將啟用用於記帳的設定精靈。\n"
+"    * 我們有帳戶範本，可以説明產生帳戶圖表。\n"
+"    • 在該特定向導上，您將被要求傳遞公司名稱，\n"
+"      要遵循的圖表範本，否。要產生的數位，您的代碼\n"
+"      帳戶和銀行帳戶，用於建立日誌的貨幣。\n"
 "\n"
-"Thus, the pure copy of Chart Template is generated.\n"
+"因此，將產生圖表範本的純備份。\n"
 "\n"
-"Wizards provided by this module:\n"
+"此模組提供的引導:\n"
 "--------------------------------\n"
-"    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced\n"
-"      amounts. Prepares an XML file format.\n"
+"    • 合作夥伴加值稅內部:向合作夥伴登記其相關加值稅並開具發票\n"
+"      金額。準備 XML 檔案格式。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra\n"
-"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of\n"
-"      the Main company of the User currently Logged in.\n"
+"[存取:*的路徑] 開票/報告/法律報告/比利時報表/合作夥伴加值稅內部\n"
+"    • 定期加值稅聲明:準備用於加值稅申報的 XML 檔\n"
+"      使用者當前登錄的主要公司。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration\n"
-"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat\n"
-"      Declaration of the Main company of the User currently Logged in Based on\n"
-"      Fiscal year.\n"
+"[存取:*的途徑] 開票/報告/法律報告/比利時報表/定期加值稅申報\n"
+"    • 加值稅客戶年度清單:為 加值稅 準備 XML 檔\n"
+"      當前登錄的使用者的主要公司的聲明基於\n"
+"      財年。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
-"\n"
-"    "
+"[存取:*的途徑] 開票/報告/法律報告/比利時報表/加值稅客戶年度清單\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9849,7 +9757,7 @@ msgid ""
 msgstr ""
 "%(previous_message)s\n"
 "\n"
-"Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
+"透過「%(document_kind)s」（%(document_model)s）隱含存取。"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -10467,7 +10375,7 @@ msgstr "<strong>依賴:</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Email:</strong>"
-msgstr "<strong>電子郵件地址:</strong>"
+msgstr "<strong>電郵：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10513,7 +10421,7 @@ msgstr "<strong>姓名</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr "<strong>電話:</strong>"
+msgstr "<strong>電話：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -11160,12 +11068,12 @@ msgstr "科目 TaxCloud - 銷售"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud
 msgid "Account Taxcloud - Sale (coupon)"
-msgstr "會計科目稅務雲 - 銷售(優惠券)"
+msgstr "會計科目TaxCloud - 銷售(優惠券)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_taxcloud_delivery
 msgid "Account Taxcloud - Sale (coupon) - Delivery"
-msgstr "會計科目稅務雲 - 銷售(優惠券) - 交貨"
+msgstr "會計科目TaxCloud - 銷售(優惠券) - 交貨"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
@@ -12104,7 +12012,7 @@ msgstr "亞馬遜聯接器"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
 msgid "Amazon/TaxCloud Bridge"
-msgstr "亞馬遜/稅務雲 橋接模組"
+msgstr "亞馬遜/TaxCloud 橋接模組"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -14442,7 +14350,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
-msgstr "自動建立應收憑單後使用稅務雲(TaxCloud)計算稅費."
+msgstr "自動建立應收憑單後使用TaxCloud計算稅費."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
@@ -17243,7 +17151,7 @@ msgstr "Export payments as NACHA files"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
 msgid "Export payments as SEPA Credit Transfer files"
-msgstr "匯出用SEPA信用轉帳的付款"
+msgstr "將付款匯出為 SEPA 轉賬付款文件"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
@@ -18138,7 +18046,7 @@ msgstr "星期五"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr "來自"
+msgstr "由"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__from_filter
@@ -21720,7 +21628,7 @@ msgstr "通過交付管理 taxclouds 計算中的折扣."
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr "在稅務雲計算中管理折扣."
+msgstr "在TaxCloud計算中管理折扣."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -22223,74 +22131,6 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
-"Minimal set of accounts to start to work in Perú.\n"
-"=================================================\n"
-"\n"
-"The usage of this CoA must refer to the official documentation on MEF.\n"
-"\n"
-"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
-"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
-"\n"
-"All the legal references can be found here.\n"
-"\n"
-"http://www.sunat.gob.pe/legislacion/general/index.html\n"
-"\n"
-"Considerations.\n"
-"===============\n"
-"\n"
-"Chart of account:\n"
-"-----------------\n"
-"\n"
-"The tree of the CoA is done using account groups, all the accounts with move\n"
-"are available as groups but only the more common ones are available as actual\n"
-"accounts, if you want to create a new one use the group of accounts as\n"
-"reference.\n"
-"\n"
-"# TODO: Image showing what I am talking about.\n"
-"\n"
-"Taxes:\n"
-"------\n"
-"\n"
-"'IGV': {'name': 'VAT', 'code': 'S'},\n"
-"'IVAP': {'name': 'VAT', 'code': ''},\n"
-"'ISC': {'name': 'EXC', 'code': 'S'},\n"
-"'ICBPER': {'name': 'OTH', 'code': ''},\n"
-"'EXP': {'name': 'FRE', 'code': 'G'},\n"
-"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
-"'EXO': {'name': 'VAT', 'code': 'E'},\n"
-"'INA': {'name': 'FRE', 'code': 'O'},\n"
-"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
-"\n"
-"We added on this module the 3 concepts in taxes (necessary for the EDI\n"
-"signature)\n"
-"\n"
-"# TODO: Describe new fields.\n"
-"\n"
-"Products:\n"
-"---------\n"
-"\n"
-"Code for products to be used in the EDI are availables here, in order to decide\n"
-"which tax use due to which code following this reference and python code:\n"
-"\n"
-"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
-"\n"
-"**Nota:**\n"
-"---------\n"
-"\n"
-"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
-"\n"
-"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
-"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
-"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
-"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
-"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
-"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
-"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
-"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
-"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
-"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
-"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
-"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -28441,12 +28281,12 @@ msgstr "SEPA 國家"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
 msgid "SEPA Credit Transfer"
-msgstr "SEPA 信用轉帳"
+msgstr "SEPA 轉賬付款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA 直接借記"
+msgstr "SEPA 直接扣賬"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa
@@ -29181,7 +29021,7 @@ msgstr "塞內加爾"
 #: model:ir.module.module,description:base.module_payment_sepa_direct_debit
 #: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Sepa Direct Debit Payment Acquirer"
-msgstr "Sepa 直接借記收款方"
+msgstr "SEPA 直接扣賬付款服務商"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__grouping
@@ -30326,17 +30166,17 @@ msgstr "稅務編號"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr "交付和稅務雲 - 電子商務"
+msgstr "交付和TaxCloud - 電子商務"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_taxcloud
 msgid "TaxCloud and Subscriptions"
-msgstr "稅務雲和訂閱"
+msgstr "TaxCloud和訂閱"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
 msgid "TaxCloud make it easy for business to comply with sales tax law"
-msgstr "稅務雲 使企業輕鬆遵守營業稅法"
+msgstr "TaxCloud 使企業輕鬆遵守營業稅法"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -32735,7 +32575,7 @@ msgstr "烏茲別克斯坦"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "增值稅"
+msgstr "統一編號"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat

@@ -11,9 +11,9 @@
 # Thinh Doan <thinh.t.doan@gmail.com>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-# Thi Huong Nguyen, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14119,6 +14119,13 @@ msgstr ""
 "hay không."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr "Không thể vào sổ dịch chuyển vì lý do sau: %(error_message)s"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
 msgid "The move of this entry line."
 msgstr "Phát sinh của chi tiết bút toán."
@@ -15753,7 +15760,7 @@ msgstr "Cảnh báo cho %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Cảnh báo về phương pháp làm tròn tiền mặt: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16578,7 +16585,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Bạn phải xác định Tài khoản ghi lãi (phụ thuộc vào công ty)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
