@@ -718,16 +718,28 @@ class expression(object):
                     # Ignore it: generate a dummy leaf.
                     domain = []
                 else:
-                    # Let the field generate a domain.
-                    if len(path) > 1:
-                        right = comodel._search([(path[1], operator, right)], order='id')
-                        operator = 'in'
-                    domain = field.determine_domain(model, operator, right)
-                    model._flush_search(domain, order='id')
+                    # Do an innner join if this field show up.
+                    if field.name == "message_partner_ids":
+                        if operator=='in':
+                            if len(right)==1:
+                                operator = '='
+                                right = right[0]
+                            else:
+                                right=str(tuple(right))
 
-                for elem in normalize_domain(domain):
-                    push(elem, model, alias, internal=True)
-
+                        domain=[]
+                        self.query.left_join(model._table,'id','mail_followers','res_id','mail_followers',f""" "{model._table}__mail_followers"."partner_id"  {operator} {right} and "{model._table}__mail_followers"."res_model" = '{model._name}'""")
+                        expr, params = self.__leaf_to_sql(('res_id','!=', False ),model.env['mail.followers'], f"{model._table}__mail_followers")
+                        push_result(expr, params)
+                    else:
+                        if len(path) > 1:
+                            right = comodel._search([(path[1], operator, right)], order='id')
+                            operator = 'in'
+                        domain = field.determine_domain(model, operator, right)
+                        model._flush_search(domain, order='id')
+                if domain:
+                    for elem in normalize_domain(domain):
+                        push(elem, model, alias, internal=True)
             # -------------------------------------------------
             # RELATIONAL FIELDS
             # -------------------------------------------------
