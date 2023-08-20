@@ -63,7 +63,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(employee_name)s - From %(date_from)s To %(date_to)s - %(state)s"
-msgstr ""
+msgstr "%(employee_name)s - Dal %(date_from)s al %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -920,7 +920,7 @@ msgstr "Tutte le allocazioni"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__all_employee_ids
 msgid "All Employee"
-msgstr ""
+msgstr "Tutti i dipendenti"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
@@ -1028,7 +1028,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
 msgid "Allocation on"
-msgstr ""
+msgstr "Attribuzione il"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -1344,7 +1344,7 @@ msgstr "Può approvare"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "Può eliminare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -1366,14 +1366,14 @@ msgstr "Annulla permessi futuri"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Leave Wizard"
-msgstr ""
+msgstr "Procedura guidata annulla ferie"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 #, python-format
 msgid "Cancel Time Off"
-msgstr ""
+msgstr "Annulla ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
@@ -1500,7 +1500,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count of plans linked to this time off type."
-msgstr ""
+msgstr "Numero di piani collegati al tipo di ferie."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1649,7 +1649,7 @@ msgstr "Elimina conferma"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Delete Time Off"
-msgstr ""
+msgstr "Elimina ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1956,7 +1956,7 @@ msgstr "Da"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "From %(date_from)s To %(date_to)s - %(state)s"
-msgstr ""
+msgstr "Dal %(date_from)s al %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
@@ -2197,7 +2197,7 @@ msgstr "Sta seguendo"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
 msgid "Is Officer"
-msgstr ""
+msgstr "È responsabile"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
@@ -2979,6 +2979,7 @@ msgstr "Stampa"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason for cancellation of an approved time off"
 msgstr ""
+"Fornisci una ragione per l'eliminazione di un giorno di ferie approvato"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
@@ -3186,7 +3187,7 @@ msgstr "Secondo giorno"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day_display
 msgid "Second Day Display"
-msgstr ""
+msgstr "Visualizza secondo giorno"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month
@@ -3394,6 +3395,9 @@ msgid ""
 "This field defines the number of days, months or years after which accrual "
 "is used."
 msgstr ""
+"La maturazione inizia dopo un determinato periodo di tempo dalla data di "
+"inizio dell'assegnazione. Questo campo indica il numero di giorni, mesi o "
+"anni dopo i quali viene usato l'accumulo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3504,7 +3508,7 @@ msgstr "Le ferie sono state approvate in modo automatico"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "The time off has been canceled: %s"
-msgstr ""
+msgstr "Il giorno di ferie è stato eliminato: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3522,6 +3526,10 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, cancel and create a new one."
 msgstr ""
+"Questa assegnazione è stata già eseguita una volta, ogni modifica non sarà "
+"effettiva per i giorni attribuiti al dipendente. Se hai bisogno di "
+"modificare la configurazione dell'assegnazione, eliminala e creane una "
+"nuova."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3875,7 +3883,7 @@ msgstr "Da approvare"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr ""
+msgstr "Assegnazioni da approvare o approvate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4203,6 +4211,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
 msgstr ""
+"Non è possibile eliminare un giorno di ferie assegnato a più dipendenti"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4264,7 +4273,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You must be %s's Manager to approve this leave"
-msgstr ""
+msgstr "Devi essere il manager di %s per approvare il congedo"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4291,6 +4300,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
+"Devi essere un responsabile o un manager delle ferie per approvare il "
+"congedo"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4324,7 +4335,7 @@ msgstr "%(leave_type)s in programma il %(date)s respinte/i"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr ""
+msgstr "Il giorno di ferie è stato eliminato."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4334,7 +4345,7 @@ msgstr "dopo la data di assegnazione"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "after allocation start date"
-msgstr ""
+msgstr "dopo la data di inizio dell'assegnazione"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
