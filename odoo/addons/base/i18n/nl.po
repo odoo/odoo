@@ -1867,7 +1867,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Deze module maakt het mogelijk om de vaardigheden van werknemers te managen tijdens een beoordelingsproces.\n"
+"        Deze module maakt het mogelijk om de vaardigheden van werknemers te managen tijdens een evaluatieproces.\n"
 "    "
 
 #. module: base
@@ -6291,7 +6291,7 @@ msgstr ""
 "\n"
 "Belangrijkste kenmerken\n"
 "------------\n"
-"* Importeer bestellingen van meerdere accounts en marktplaatsen.\n"
+"* Importeer bestellingen van meerdere accounts en marketplaces.\n"
 "* Bestellingen worden vergeleken met Odoo-producten op basis van hun interne referentie (SKU in Amazon).\n"
 "* Leveringen bevestigd in Odoo worden gesynchroniseerd in Amazon.\n"
 "* Ondersteuning voor zowel Fulfilment by Amazon (FBA) als Fulfillment by Merchant (FBM):\n"
@@ -7895,21 +7895,21 @@ msgid ""
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
 "\n"
-"Periodieke werknemers beoordeling\n"
+"Periodieke werknemers evaluatie\n"
 "==============================================\n"
 "\n"
-"Door deze applicatie te gebruiken kun je het motivatieproces beheren door periodieke beoordelingen te doen van je werknemers hun prestaties. De regelmatige beoordeling van personeelsbeheer kan beide je mensen en je organisatie ten goede komen.\n"
+"Door deze applicatie te gebruiken kun je het motivatieproces beheren door periodieke evaluaties te doen van je werknemers hun prestaties. De regelmatige evaluatie van personeelsbeheer kan beide je mensen en je organisatie ten goede komen.\n"
 "\n"
-"Een beoordelingsplan kan worden toegewezen aan elke werknemer. Deze plannen geven de frequentie aan en de manier waarop je je periodieke persoonlijke beoordeling wilt beheren.\n"
+"Een evaluatieplan kan worden toegewezen aan elke werknemer. Deze plannen geven de frequentie aan en de manier waarop je je periodieke persoonlijke evaluatie wilt beheren.\n"
 "\n"
 "Belangrijkste kenmerken:\n"
 "------------\n"
 "* Mogelijkheid om personeelsbeoordeling(en) te maken.\n"
-"* Een beoordeling kan aangemaakt worden door een werknemer zijn manager of automatisch gebaseerd op een schema dat is opgegeven op de werknemer zijn formulier.\n"
-"* De beoordeling wordt gedaan via een plan in welke verschillende enquêtes kunnen aangemaakt worden. Elke enquête kan beantwoord worden door een bepaald niveau in de werknemers hiërarchie. De uiteindelijke controle en beoordeling wordt gedaan door de manager.\n"
-"* Manager, collega, samenwerker en de werknemer zelf ontvangen een e-mail om een periodieke beoordeling te doen.\n"
+"* Een evaluatie kan aangemaakt worden door een werknemer zijn manager of automatisch gebaseerd op een schema dat is opgegeven op de werknemer zijn formulier.\n"
+"* De evaluatie wordt gedaan via een plan in welke verschillende enquêtes kunnen aangemaakt worden. Elke enquête kan beantwoord worden door een bepaald niveau in de werknemers hiërarchie. De uiteindelijke controle en evaluatie wordt gedaan door de manager.\n"
+"* Manager, collega, samenwerker en de werknemer zelf ontvangen een e-mail om een periodieke evaluatie te doen.\n"
 "* Elk beoordelingsformulier wordt ingevuld door werknemers, collega's, samenwerkenden en kan in PDF vorm bekeken worden.\n"
-"* Afspraak verzoeken worden automatisch aangemaakt volgens de werknemer zijn beoordelingen.\n"
+"* Afspraak verzoeken worden automatisch aangemaakt volgens de werknemer zijn evaluaties.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_phone_validation
@@ -12778,7 +12778,7 @@ msgid ""
 " create and manage appraisals for himself and the people he's manager of."
 msgstr ""
 "Een gebruiker zonder enige rechten op Taxaties kan de applicatie zien, "
-"beoordelingen maken en beheren voor zichzelf en de mensen van wie hij de "
+"evaluaties maken en beheren voor zichzelf en de mensen van wie hij de "
 "manager is."
 
 #. module: base
@@ -14357,12 +14357,12 @@ msgstr "Afspraken"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
 msgid "Appraisal - Skills"
-msgstr "Beoordeling - Vaardigheden"
+msgstr "Evaluatie - Vaardigheden"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
 msgid "Appraisal - Survey"
-msgstr "Beoordeling - Enquête"
+msgstr "Evaluatie - Enquête"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_contract
@@ -14373,7 +14373,7 @@ msgstr "Taxatiecontract"
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal
 msgid "Appraisals"
-msgstr "Beoordelingen"
+msgstr "Evaluaties"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_approvals
@@ -19408,6 +19408,19 @@ msgstr "Fout"
 msgid "Error message returned when the constraint is violated."
 msgstr ""
 "Foutmelding die teruggestuurd wordt nadat de beperking niet voldaan is."
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Fout bij het parseren van de weergave: \n"
+"\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -24555,8 +24568,7 @@ msgstr "Beheer de vaardigheden van je werknemers"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_skills
 msgid "Manage skills of your employees during an appraisal process"
-msgstr ""
-"Beheer de vaardigheden van je werknemers tijdens een beoordelingsproces"
+msgstr "Beheer de vaardigheden van je werknemers tijdens een evaluatieproces"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
@@ -26621,7 +26633,7 @@ msgstr ""
 "Beheer met Odoo <a href=\"https://www.odoo.com/app/employees\">Personeelszaken</a>, het belangrijkste kapitaal in je bedrijf: mensen\n"
 "\n"
 "Beheer al je HR-activiteiten eenvoudig: kennisdeling, werving & selectie,\n"
-"beoordelingen, urenstaten, contracten, aanwezigheden, loonadministratie, enz.\n"
+"evaluaties, urenstaten, contracten, aanwezigheden, loonadministratie, enz.\n"
 "\n"
 "Elke behoefte wordt geleverd door een specifieke app die je op aanvraag activeert.\n"
 "\n"
@@ -26679,10 +26691,10 @@ msgstr ""
 "Volg periodieke evaluaties\n"
 "--------------------------\n"
 "\n"
-"Stel beoordelingsplannen en/of enquêtes op voor je werknemers en bekijk hun\n"
+"Stel evaluatieplannen en/of enquêtes op voor je werknemers en bekijk hun\n"
 "evolutie. Definieer stappen voor interviews en Odoo zal managers of ondergeschikten\n"
 "automatische op de hoogte stellen\n"
-"om beoordelingen voor te bereiden. Blijf periodiek op de hoogte van de voortgang van\n"
+"om evaluaties voor te bereiden. Blijf periodiek op de hoogte van de voortgang van\n"
 "je personeel.\n"
 "\n"
 "Betrokkenheid vergroten met gamificatie\n"

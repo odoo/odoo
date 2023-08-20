@@ -11,6 +11,7 @@
 # Martin Trigaux, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 12:35+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1000,6 +1001,9 @@ msgid ""
 "        Base module for Mozambican reports\n"
 "    "
 msgstr ""
+"\n"
+"        莫桑比克报告基本模块\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -1163,6 +1167,16 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        拉脱维亚会计科目表 (COA) 模板。\n"
+"        该模块还包括：\n"
+"        * 税务组块\n"
+"        * 最常见的拉脱维亚税种\n"
+"        * 财务状况\n"
+"        * 拉脱维亚银行列表\n"
+"\n"
+"        作者为 Allegro IT（如欲了解更多信息，请访问 https://www.allegro.lv）\n"
+"         合著者为 Chick.Farm（如欲了解更多信息，请访问 https://www.myacc.cloud）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1825,6 +1839,9 @@ msgid ""
 "        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.\n"
 "    "
 msgstr ""
+"\n"
+"        该模块支持 Cloudflare Turnstile，因此可以防止表单上出现僵尸垃圾邮件。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -3017,6 +3034,12 @@ msgid ""
 "* Adds Profit and Loss report adapted for Ecuador\n"
 "    "
 msgstr ""
+"\n"
+"厄瓜多尔会计报告\n"
+"==============================\n"
+"* 增加适用于厄瓜多尔的资产负债表报告\n"
+"* 增加了适用于厄瓜多尔的损益报告\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -5187,6 +5210,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"EDI 厄瓜多尔本地化\n"
+"===========================\n"
+"添加XML、RIDE格式的电子文档，带有电子签名，并直接连接到税务机构SRI， \n"
+"\n"
+"支持的文件包括发票、贷方票据、借方票据、采购清算和预扣税款\n"
+"\n"
+"包括自动化功能，可轻松预测适用于每张采购发票的预扣税款\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5998,6 +6029,8 @@ msgid ""
 "GSTR-1 return data set as per point of sale orders\n"
 "    "
 msgstr ""
+"\n"
+"根据销售点订单生成的 GSTR-1 返回数据集    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6620,6 +6653,11 @@ msgid ""
 "This module is only temporary for its purpose is to add new fields in a stable version (16.0, 16.1).\n"
 "    "
 msgstr ""
+"\n"
+"肯尼亚薪资单规则\n"
+"========================================\n"
+"该模块只是临时模块，目的是在稳定版本（16.0、16.1）中添加新字段。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
@@ -9076,6 +9114,8 @@ msgid ""
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"管理爱沙尼亚会计图表的 Odoo 基础模块。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -10601,6 +10641,16 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Transifex 整合\n"
+"=====================\n"
+"本模块在翻译视图中添加 Transifex 项目链接。\n"
+"本模块的目的是提高主要模块的翻译速度。\n"
+"\n"
+"Odoo 使用 Transifex 配置文件 `.tx/config` 来检测项目源。不会翻译自定义模块（因为没有发布在\n"
+"主 Transifex 项目）。\n"
+"用户要翻译的语言必须在 Transifex 项目中激活。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -11905,20 +11955,20 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>命令</code>：x2many 命令名称空间域"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
-msgstr ""
+msgstr "<code>用户异常（UserError）</code>：用于发出面向用户的警告信息"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
-msgstr ""
+msgstr "<code>_logger.info(message)</code>：在服务器日志中发布消息的日志程序"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -11935,14 +11985,14 @@ msgstr "<code>dateutil</code> (Python模块)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>：触发行动的环境"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
-msgstr ""
+msgstr "<code>float_compare()</code>：实用函数，根据特定精度比较浮点数"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11958,7 +12008,7 @@ msgstr ""
 msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
-msgstr ""
+msgstr "<code>model</code>：触发操作的 Odoo 模型记录；是无效记录集"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12014,7 +12064,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -16526,6 +16576,13 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "自动创建应收结算单后使用税务云(TaxCloud)计算税费."
@@ -17387,12 +17444,12 @@ msgstr "克罗地亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (Euro)"
-msgstr ""
+msgstr "克罗地亚 - 会计（欧元）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_kuna
 msgid "Croatia - Accounting (Kuna)"
-msgstr ""
+msgstr "克罗地亚 - 会计（库纳）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
@@ -18741,7 +18798,7 @@ msgstr "厄瓜多尔 会计 EDI"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports
 msgid "Ecuadorian Accounting Reports"
-msgstr ""
+msgstr "厄瓜多尔会计报告"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -19170,6 +19227,16 @@ msgstr "错误"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误消息."
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -22504,7 +22571,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "无效的「分组」参数"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -22931,12 +23003,12 @@ msgstr "哈萨克"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kz
 msgid "Kazakhstan - Accounting"
-msgstr ""
+msgstr "哈萨克斯坦 - 会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kz_reports
 msgid "Kazakhstan - Accounting Reports"
-msgstr ""
+msgstr "哈萨克斯坦 - 会计报告"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -23347,7 +23419,7 @@ msgstr "拉脱维亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr ""
+msgstr "拉脱维亚 - 会计"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -23762,7 +23834,7 @@ msgstr "MRP 项目"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "MRP Subcontracting"
-msgstr ""
+msgstr "MRP 外包"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_enterprise
@@ -31295,7 +31367,7 @@ msgstr "销售 - 项目"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
 msgid "Sales - Service"
-msgstr ""
+msgstr "销售 - 服务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -32227,7 +32299,7 @@ msgstr "一般邮寄"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "Snail Mail - Account"
-msgstr ""
+msgstr "蜗牛邮件 - 账户"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
@@ -32681,7 +32753,6 @@ msgstr "开始设置"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -32724,6 +32795,7 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "状态"
@@ -34389,7 +34461,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_base_import
 msgid "This module contains tests related to base import."
-msgstr ""
+msgstr "本模块包含与基础导入有关的测试。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -35214,6 +35286,13 @@ msgstr "不能删除该单据，因为它被用作默认属性"
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "未找到 WKhtmltopdf 系统，不能创建 PDF."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -36748,6 +36827,15 @@ msgid "You can not create recursive tags."
 msgstr "您不能创建递归的标签."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "用户名称必须唯一!"
@@ -36869,6 +36957,12 @@ msgstr "您不能停用您当前登录的用户."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -36901,6 +36995,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -36930,6 +37031,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr "您不能减少已在会计分录中使用的货币的小数位数."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python
