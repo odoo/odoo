@@ -57,6 +57,32 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".o_field_html").textContent, "some text");
     });
 
+    QUnit.test("html field with required attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `<form><field name="txt" required="1"/></form>`,
+        });
+
+        const textarea = target.querySelector(".o_field_html textarea");
+        assert.ok(textarea, "should have a text area");
+
+        await editInput(textarea, null, "");
+        assert.strictEqual(textarea.value, "");
+
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_notification_title").textContent,
+            "Invalid fields: "
+        );
+        assert.strictEqual(
+            target.querySelector(".o_notification_content").innerHTML,
+            "<ul><li>txt</li></ul>"
+        );
+    });
+
     QUnit.test("html fields are correctly rendered (edit)", async (assert) => {
         await makeView({
             type: "form",
