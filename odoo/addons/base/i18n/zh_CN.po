@@ -11,6 +11,7 @@
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 07:04+0000\n"
 "PO-Revision-Date: 2023-05-02 09:42+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -989,6 +990,9 @@ msgid ""
 "        Base module for Mozambican reports\n"
 "    "
 msgstr ""
+"\n"
+"        莫桑比克报告基本模块\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -1152,6 +1156,16 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        拉脱维亚会计科目表 (COA) 模板。\n"
+"        该模块还包括：\n"
+"        * 税务组块\n"
+"        * 最常见的拉脱维亚税种\n"
+"        * 财务状况\n"
+"        * 拉脱维亚银行列表\n"
+"\n"
+"        作者为 Allegro IT（如欲了解更多信息，请访问 https://www.allegro.lv）\n"
+"         合著者为 Chick.Farm（如欲了解更多信息，请访问 https://www.myacc.cloud）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1814,6 +1828,9 @@ msgid ""
 "        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.\n"
 "    "
 msgstr ""
+"\n"
+"        该模块支持 Cloudflare Turnstile，因此可以防止表单上出现僵尸垃圾邮件。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1877,6 +1894,21 @@ msgid ""
 "        You need to configure your certificate and the tax agency.\n"
 "    "
 msgstr ""
+"\n"
+"        该模块向 SII 发送供应商账单和客户发票的税务信息（主要是增值税）。\n"
+"        该模块名为 \n"
+"        Procedimiento G417 - IVA。Llevanza de libros registro。It is\n"
+"         每家营业额超过 600 万欧元的公司都必须使用该程序，\n"
+"        其他公司也可以使用。发票在验证后自动发送。\n"
+"\n"
+"        如何将信息发送到 SII 取决于税项的配置。\n"
+"        图表模板（l10n_es）中的税种\n"
+"        会被自动配置为正确的类型。\n"
+"        但是，\n"
+"        可能由于免税/无税的原因，\n"
+"\n"
+"        需要创建额外的税种。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -2380,6 +2412,20 @@ msgid ""
 "    valid ones.\n"
 "    "
 msgstr ""
+"\n"
+"该模块测试 \"account_edi_ubl_cii \"模块，由于需要依赖某些本地化，\n"
+"    因此将其分离。其名称以 \"l10n \"开头，以免 runbot 负载过重。\n"
+"\n"
+"    测试文件按来源进行了分离，它们来自以下几个地方：\n"
+"\n"
+"    * the factur-x 文档 （ FNFE 格式）\n"
+"    * the peppol-bis-invoice-3 文档（ github 存储库：https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples 包含示例)\n"
+"    * Odoo，这些文件通过了所有验证测试（使用 ecosio 或 FNFE 验证器）\n"
+"\n"
+"    我们测试外部示例是否正确导入（货币、总金额和总税额是否匹配）。\n"
+"    我们还测试了用给定的参数从 odoo 生成的 xml 与预期的有效 xml \n"
+"    完全相同。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -2848,6 +2894,10 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"立陶宛薪资规则的会计数据\n"
+"============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll_account
@@ -2870,6 +2920,10 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"墨西哥薪资规则的会计数据\n"
+"============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_hr_payroll_account
@@ -2879,6 +2933,10 @@ msgid ""
 "=================================================\n"
 "    "
 msgstr ""
+"\n"
+"摩洛哥薪资规则的会计数据\n"
+"=================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_hr_payroll_account
@@ -2888,6 +2946,10 @@ msgid ""
 "=============================================\n"
 "    "
 msgstr ""
+"\n"
+"荷兰薪资规则的会计数据\n"
+"=============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_hr_payroll_account
@@ -2897,6 +2959,10 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"波兰薪资规则的会计数据\n"
+"============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_hr_payroll_account
@@ -2906,6 +2972,10 @@ msgid ""
 "=========================================\n"
 "    "
 msgstr ""
+"\n"
+"罗马尼亚薪资规则的会计数据\n"
+"=========================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk_hr_payroll_account
@@ -2915,6 +2985,10 @@ msgid ""
 "============================================\n"
 "    "
 msgstr ""
+"\n"
+"斯洛伐克薪资规则的会计数据\n"
+"============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -3021,6 +3095,12 @@ msgid ""
 "* Adds Profit and Loss report adapted for Ecuador\n"
 "    "
 msgstr ""
+"\n"
+"厄瓜多尔会计报告\n"
+"==============================\n"
+"* 增加适用于厄瓜多尔的资产负债表报告\n"
+"* 增加了适用于厄瓜多尔的损益报告\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -3181,6 +3261,11 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"\n"
+"突尼斯会计报告\n"
+"================================\n"
+"\n"
+"     "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -3755,6 +3840,11 @@ msgid ""
 "\n"
 "When creating invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"允许在拣货中增加送货方式。\n"
+"===============================================\n"
+"\n"
+"通过分拣创建发票时，系统能够添加和计算运输线路。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -3765,6 +3855,11 @@ msgid ""
 "You can define your own carrier for prices.\n"
 "The system is able to add and compute the shipping line.\n"
 msgstr ""
+"\n"
+"允许在销售订单中添加送货方式。\n"
+"==================================================\n"
+"您可以定义自己的承运商价格。\n"
+"系统能够添加和计算运输线路。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account_enterprise
@@ -5123,6 +5218,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
+"\n"
+"荷兰薪资规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详细信息\n"
+"    * 员工合约\n"
+"    * 基于护照的合约\n"
+"    * 津贴/扣减\n"
+"    * 允许配置基本工资/毛工资/净工资\n"
+"    * 员工薪资单\n"
+"    * 与休假管理整合\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -5209,6 +5316,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"EDI 厄瓜多尔本地化\n"
+"===========================\n"
+"添加XML、RIDE格式的电子文档，带有电子签名，并直接连接到税务机构SRI， \n"
+"\n"
+"支持的文件包括发票、贷方票据、借方票据、采购清算和预扣税款\n"
+"\n"
+"包括自动化功能，可轻松预测适用于每张采购发票的预扣税款\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5398,6 +5513,21 @@ msgid ""
 "Pro rules and show the errors.\n"
 "    "
 msgstr ""
+"\n"
+"电子发票模块\n"
+"===========================\n"
+"\n"
+"允许导出和导入格式：E-FFF、UBL Bis 3、EHF3、NLCIUS、Factur-X (CII)、XRechnung (UBL)。\n"
+"在发票上生成 PDF 时，PDF 将嵌入所有 UBL 格式的 xml 中。这使得接收方仅需 xml 文件即可检索 PDF。**EHF3 由 UBL Bis 3** 完全执行（参见\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"可从与发票关联的日记账（日记账 > 高级设置）中选择格式。\n"
+"\n"
+"请注意，E-FFF、NLCIUS 和 XRechnung (UBL) 仅适用于比利时、荷兰和德国公司。\n"
+"UBL Bis 3 仅适用于国家在\"EAS 列表\"中的公司。 \n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"另请注意，为了使 Chorus Pro 自动检测到 \"PDF/A-3 (Factur-X) \"格式，您需要激活日记账上的 \"Factur-X PDF/A-3 \"选项。该选项还将根据 Factur-X 和 Chorus Pro 规则验证 xml 并显示错误。    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -5971,6 +6101,8 @@ msgid ""
 "GSTR-1 return data set as per point of sale orders\n"
 "    "
 msgstr ""
+"\n"
+"根据销售点订单生成的 GSTR-1 返回数据集    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6309,6 +6441,27 @@ msgid ""
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 "    "
 msgstr ""
+"\n"
+"包括以下中文本地化数据\n"
+"========================================================\n"
+"\n"
+"账户类型/科目类型\n"
+"\n"
+"州数据/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"我们添加了打印凭单的选项，当安装了 cn2an 库时，凭单也会正确地以文字（数字为特殊汉字）\n"
+"打印金额。(例如，使用 pip3 安装 cn2an）\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -6571,6 +6724,11 @@ msgid ""
 "This module is only temporary for its purpose is to add new fields in a stable version (16.0, 16.1).\n"
 "    "
 msgstr ""
+"\n"
+"肯尼亚薪资单规则\n"
+"========================================\n"
+"该模块只是临时模块，目的是在稳定版本（16.0、16.1）中添加新字段。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
@@ -6662,6 +6820,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
+"\n"
+"立陶宛薪资单规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详细信息\n"
+"    * 员工合同\n"
+"    * 基于护照的合同\n"
+"    * 津贴/扣减\n"
+"    * 允许设置基本工资/毛工资/净工资\n"
+"    * 员工薪资单\n"
+"    * 与休假管理整合\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -7178,6 +7348,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
+"\n"
+"墨西哥薪资规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详情\n"
+"    * 员工合约\n"
+"    * 基于护照的合约\n"
+"    * 津贴/扣款\n"
+"    * 允许设置基本工资/毛工资/净工资\n"
+"    * 员工薪资单\n"
+"    * 与休假管理整合\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -7556,6 +7738,13 @@ msgid ""
 "    * Employee Contracts\n"
 "    "
 msgstr ""
+"\n"
+"摩洛哥薪资规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详细信息\n"
+"    * 员工合约\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -8019,6 +8208,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
+"\n"
+"波兰薪资规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详细信息\n"
+"    * 员工合约\n"
+"    * 基于护照的合约\n"
+"    * 津贴/扣款\n"
+"    * 允许设置基本工资/毛工资/净工资\n"
+"    * 员工薪资单\n"
+"    * 与休假管理整合\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -8474,6 +8675,18 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    "
 msgstr ""
+"\n"
+"斯洛伐克薪资单规则。\n"
+"=========================\n"
+"\n"
+"    * 员工详细信息\n"
+"    * 员工合约\n"
+"    * 基于护照的合约\n"
+"    * 津贴/扣款\n"
+"    * 允许设置基本工资/毛工资/净工资\n"
+"    * 员工薪资单\n"
+"    * 与休假管理整合\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk
@@ -9057,6 +9270,8 @@ msgid ""
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"管理爱沙尼亚会计图表的 Odoo 基础模块。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9460,6 +9675,9 @@ msgid ""
 "This is the module to manage the accounting chart for Tunisia in Odoo.\n"
 "=======================================================================\n"
 msgstr ""
+"\n"
+"管理突尼斯会计图表的 Odoo 基础模块。\n"
+"=======================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -10573,6 +10791,16 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Transifex 整合\n"
+"=====================\n"
+"本模块在翻译视图中添加 Transifex 项目链接。\n"
+"本模块的目的是提高主要模块的翻译速度。\n"
+"\n"
+"Odoo 使用 Transifex 配置文件 `.tx/config` 来检测项目源。不会翻译自定义模块（因为没有发布在\n"
+"主 Transifex 项目）。\n"
+"用户要翻译的语言必须在 Transifex 项目中激活。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -11865,20 +12093,20 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>命令</code>：x2many 命令名称空间域"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
-msgstr ""
+msgstr "<code>用户异常（UserError）</code>：用于发出面向用户的警告信息"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
-msgstr ""
+msgstr "<code>_logger.info(message)</code>：在服务器日志中发布消息的日志程序"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -11895,14 +12123,14 @@ msgstr "<code>dateutil</code> (Python模块)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>：触发行动的环境"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
-msgstr ""
+msgstr "<code>float_compare()</code>：实用函数，根据特定精度比较浮点数"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11918,7 +12146,7 @@ msgstr ""
 msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
-msgstr ""
+msgstr "<code>model</code>：触发操作的 Odoo 模型记录；是无效记录集"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11962,6 +12190,10 @@ msgid ""
 "                the company.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                描述一件让你感到自豪的事情，一项\n"
+"                对公司积极有益的工作。\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11971,6 +12203,10 @@ msgid ""
 "                obstacles?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                是否遇到新困难？面临新\n"
+"                障碍？\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11980,6 +12216,10 @@ msgid ""
 "                you enjoy the most/the least?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                每份工作都有其优势，在您看来，\n"
+"                最喜欢/最不喜欢做的任务是？\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -11989,6 +12229,10 @@ msgid ""
 "                overcome their weaknesses?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                如果您是管理者，您会如何帮助员工\n"
+"                克服弱点？\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11998,6 +12242,10 @@ msgid ""
 "                for you to reach your goals and look for the best collaboration.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                公司如何配合您的需要，\n"
+"                以便您实现目标并寻求最佳合作？\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12007,6 +12255,10 @@ msgid ""
 "                employee's desire?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                您对未来的员工有何期待，\n"
+"                您的愿景是否符合员工的愿望？\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12016,11 +12268,15 @@ msgid ""
 "                issues.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                在工作中取得的成就，增强您的能力去面对职业\n"
+"                问题。\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Autonomy</em>"
-msgstr ""
+msgstr "<em>自主性</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12030,21 +12286,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>文化/行为：</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Do you need rapid answer to the current situation?</em>"
-msgstr ""
+msgstr "<em>您是否需要快速了解当前形势？</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
-msgstr ""
+msgstr "<em>举例说明长期目标（大于 6 个月）</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
-msgstr ""
+msgstr "<em>举例说明长期目标（小于 6 个月）</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12054,6 +12314,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>内部交流：</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12063,11 +12327,15 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>工作内容：</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Pro-activity</em>"
-msgstr ""
+msgstr "<em>积极行动</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12077,21 +12345,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>薪酬：</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Stress Resistance</em>"
-msgstr ""
+msgstr "<em>抗压力</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Teamwork</em>"
-msgstr ""
+msgstr "<em>团队合作</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Time Management</em>"
-msgstr ""
+msgstr "<em>时间管理</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12101,6 +12373,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>工作组织：</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12122,7 +12398,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -12175,7 +12451,7 @@ msgstr "<span class=\"o_form_label\" colspan=\"2\">点击以下更新开始.....
 msgid ""
 "<span class=\"o_form_label\">The selected modules have been "
 "updated/installed!</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">选定模块已更新/安装！</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -12233,6 +12509,9 @@ msgid ""
 "                Evaluation\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                评估\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12241,6 +12520,9 @@ msgid ""
 "                Feedback\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                反馈\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12249,6 +12531,9 @@ msgid ""
 "                Improvements\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                改善\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -14498,12 +14783,12 @@ msgstr "已存档"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts?"
-msgstr ""
+msgstr "您确定要执行联系人自动合并吗？"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the list of automatic merges of your contacts?"
-msgstr ""
+msgstr "您确定要执行联系人自动合并列表吗？"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -16667,6 +16952,13 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "自动创建应收结算单后使用税务云(TaxCloud)计算税费."
@@ -17521,12 +17813,12 @@ msgstr "克罗地亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (Euro)"
-msgstr ""
+msgstr "克罗地亚 - 会计（欧元）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_kuna
 msgid "Croatia - Accounting (Kuna)"
-msgstr ""
+msgstr "克罗地亚 - 会计（库纳）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
@@ -18574,7 +18866,7 @@ msgstr "文档 - 合同"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_expense
 msgid "Documents - Expense"
-msgstr ""
+msgstr "文件 - 开支"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_fsm
@@ -18877,7 +19169,7 @@ msgstr "厄瓜多尔 会计 EDI"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports
 msgid "Ecuadorian Accounting Reports"
-msgstr ""
+msgstr "厄瓜多尔会计报告"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -19306,6 +19598,16 @@ msgstr "错误"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误消息."
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -22645,7 +22947,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "无效的「分组」参数"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -22758,6 +23065,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"服务器名称无效！\n"
+" %s"
 
 #. module: base
 #. odoo-python
@@ -23074,12 +23383,12 @@ msgstr "哈萨克"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kz
 msgid "Kazakhstan - Accounting"
-msgstr ""
+msgstr "哈萨克斯坦 - 会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kz_reports
 msgid "Kazakhstan - Accounting Reports"
-msgstr ""
+msgstr "哈萨克斯坦 - 会计报告"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -23490,7 +23799,7 @@ msgstr "拉脱维亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr ""
+msgstr "拉脱维亚 - 会计"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -23755,7 +24064,7 @@ msgstr "Lithuania - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_hr_payroll
 msgid "Lithuania - Payroll"
-msgstr ""
+msgstr "立陶宛 - 薪资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_hr_payroll_account
@@ -23852,6 +24161,8 @@ msgid ""
 "Long term (&gt; 6 months) career discussion, where does the employee\n"
 "            wants to go, how to help them reach this path?"
 msgstr ""
+"长期（大于 6 个月）职业生涯规划，员工的目标是什么？ \n"
+"            如何帮助他们实现这一目标？"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_lunch
@@ -23917,7 +24228,7 @@ msgstr "MRP 项目"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "MRP Subcontracting"
-msgstr ""
+msgstr "MRP 外包"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_enterprise
@@ -24675,12 +24986,12 @@ msgstr "Mexican Localization for EDI documents"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_website_sale
 msgid "Mexican Localization for eCommerce"
-msgstr ""
+msgstr "墨西哥电子商务本地化"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_pos
 msgid "Mexican Localization for the Point of Sale"
-msgstr ""
+msgstr "墨西哥POS本地化"
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -24715,7 +25026,7 @@ msgstr "墨西哥 - 第13月试算平衡表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
-msgstr ""
+msgstr "墨西哥 - 薪资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -25204,7 +25515,7 @@ msgstr "摩洛哥-会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_hr_payroll
 msgid "Morocco - Payroll"
-msgstr ""
+msgstr "摩洛哥 - 薪资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma_hr_payroll_account
@@ -31495,7 +31806,7 @@ msgstr "销售 - 项目"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_service
 msgid "Sales - Service"
-msgstr ""
+msgstr "销售 - 服务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -32256,7 +32567,7 @@ msgstr "短"
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "Short term (6-months) actions / decisions / objectives"
-msgstr ""
+msgstr "短期（6 个月）行动/决定/目标"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_show
@@ -32420,7 +32731,7 @@ msgstr "斯洛伐克"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sk_hr_payroll
 msgid "Slovakia - Payroll"
-msgstr ""
+msgstr "斯洛伐克 - 薪资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sk_hr_payroll_account
@@ -32450,7 +32761,7 @@ msgstr "一般邮寄"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "Snail Mail - Account"
-msgstr ""
+msgstr "蜗牛邮件 - 账户"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
@@ -32905,7 +33216,6 @@ msgstr "开始设置"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -32948,6 +33258,7 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "状态"
@@ -34041,7 +34352,7 @@ msgstr "在一个应用中用户组的名称必须唯一!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_name_uniq
 msgid "The name of the language must be unique!"
-msgstr ""
+msgstr "语言名称必须独一无二！"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_module_module_name_uniq
@@ -34063,6 +34374,8 @@ msgid ""
 "The new rate is quite far from the previous rate.\n"
 "Incorrect currency rates may cause critical problems, make sure the rate is correct!"
 msgstr ""
+"新费率与旧费率相差甚远。\n"
+"错误费率可能会导致严重问题，请确保汇率正确！"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_increment
@@ -34578,7 +34891,7 @@ msgstr ""
 msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the Sendcloud connector."
-msgstr ""
+msgstr "通过该模块，电子商务用户可以选择向 Sendcloud 连接器的取货点送货。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -34613,7 +34926,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_base_import
 msgid "This module contains tests related to base import."
-msgstr ""
+msgstr "本模块包含与基础导入有关的测试。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -35430,6 +35743,13 @@ msgstr "不能删除该单据，因为它被用作默认属性"
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "未找到 WKhtmltopdf 系统，不能创建 PDF."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -36998,6 +37318,15 @@ msgid "You can not create recursive tags."
 msgstr "您不能创建递归的标签."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
 msgstr "您不能有两个用户使用相同的登录信息！"
@@ -37119,6 +37448,12 @@ msgstr "您不能停用您当前登录的用户."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -37151,6 +37486,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -37180,6 +37522,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr "您不能减少已在会计分录中使用的货币的小数位数."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

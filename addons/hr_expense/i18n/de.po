@@ -58,7 +58,7 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
-"'Auslagen - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"'Spesen - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 
 #. module: hr_expense
@@ -205,7 +205,7 @@ msgstr "Alle Spesenabrechnungen"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 msgid "All Reports"
-msgstr "Alle Berichte"
+msgstr "Alle Abrechnungen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -486,8 +486,8 @@ msgstr "Neue Spesenabrechnung erstellen"
 #, python-format
 msgid "Create a report to submit one or more expenses to your manager."
 msgstr ""
-"Erstellen Sie einen Bericht, um eine oder mehrere Spesen an Ihren Manager zu"
-" übermitteln."
+"Erstellen Sie eine Abrechnung, um eine oder mehrere Spesen an Ihren Manager "
+"zu übermitteln."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -926,7 +926,7 @@ msgstr "Spesen müssen denselben „Zu erstatten“-Status haben."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr "Speseb Ihres Teammitglieds"
+msgstr "Spesen Ihres Teammitglieds"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
@@ -2413,3 +2413,14 @@ msgstr "wird validiert"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "OCR zum Ausfüllen von Daten aus einem Foto der Rechnung verwenden"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Die Privatadresse des Mitarbeiters ist erforderlich, um die Spesenabrechnung"
+" zu buchen. Bitte geben Sie sie auf dem Mitarbeiterformular an."
