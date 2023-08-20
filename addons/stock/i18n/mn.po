@@ -6,7 +6,7 @@
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2020
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
 # baaska sh <sh.baaskash@gmail.com>, 2020
-# BATKHUYAG Ganbold <gbatkhuyag@gmail.com>, 2020
+# BATKHUYAG Ganbold, 2020
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2020
 # Ubuntu Erka <erdenebold10@gmail.com>, 2020
 # Suren Ch <oyunsuren.ch@gmail.com>, 2020
@@ -3294,6 +3294,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Боловсруулсан тоог өөрчилж болох эсэх"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8026,8 +8034,8 @@ msgstr "Ноорог хөдөлгөөнийг хуваах боломжгүй. �
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "'Дууссан' төлөвтэй барааны хөдөлгөөний хуваах боломжгүй."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8291,12 +8299,4 @@ msgstr "Агуулахын үлдэгдлийн тайлан график"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""

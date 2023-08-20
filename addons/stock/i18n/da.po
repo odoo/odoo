@@ -3347,6 +3347,14 @@ msgid "Is quantity done editable"
 msgstr "Mængde fuldført kan redigeres"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7038,6 +7046,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8160,9 +8176,8 @@ msgstr "Du kan ikke splitte en kladdeoverførsel. Den skal først bekræftes. "
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Du kan ikke dele en lager bevægelse der er angivet som 'Færdigbehandlet'."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8446,11 +8461,3 @@ msgstr "report_stock_quantity_graph"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "by genopfyldes for at opnå det maksimale af"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
