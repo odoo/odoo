@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,7 +182,7 @@ msgid ""
 "notation (FALSE)."
 msgstr ""
 "Een boolean dat bepaalt of het verwijzingstype A1 (WAAR) of het "
-"verwijzingstype R1C1 (FOUT) gebruikt wordt."
+"verwijzingstype R1C1 (ONWAAR) gebruikt wordt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -202,6 +203,8 @@ msgid ""
 "A column or row containing true or false values corresponding to the first "
 "column or row of range."
 msgstr ""
+"Een kolom of rij met waarden waar of onwaar die overeenkomen met de eerste "
+"kolom of rij van een bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -495,7 +498,7 @@ msgstr "Bereik toevoegen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional column or row containing true or false values."
-msgstr ""
+msgstr "Extra kolom of rij die waar of onwaar waarden bevat."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -557,7 +560,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional ranges to add to range1."
-msgstr ""
+msgstr "Extra bereiken om toe te voegen aan range1."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -571,7 +574,7 @@ msgstr "Extra bereiken om te controleren."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional ranges to flatten."
-msgstr ""
+msgstr "Extra bereiken om af te vlakken."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -740,7 +743,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "All the ranges must have the same dimensions."
-msgstr ""
+msgstr "Alle bereiken moeten dezelfde dimensies hebben."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -878,6 +881,8 @@ msgid ""
 "An integer specifying the dimension size of the unit matrix. It must be "
 "positive."
 msgstr ""
+"Een geheel getal dat de dimensiegrootte van de eenheidsmatrix preciseert. "
+"Het moet positief zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -897,6 +902,8 @@ msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose determinant will be calculated."
 msgstr ""
+"Een bereik met een gelijk aantal rijen en kolommen dat een matrix voorstelt "
+"waarvan de determinant zal worden berekend."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -906,6 +913,8 @@ msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose multiplicative inverse will be calculated."
 msgstr ""
+"Een bereik met een gelijk aantal rijen en kolommen dat een matrix voorstelt "
+"waarvan de vermenigvuldigde inverse zal worden berekend."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1041,6 +1050,8 @@ msgstr ""
 #, python-format
 msgid "Appends ranges horizontally and in sequence to return a larger array."
 msgstr ""
+"Voegt bereiken horizontaal en op volgorde toe om een grotere matrix te "
+"retourneren."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1048,6 +1059,8 @@ msgstr ""
 #, python-format
 msgid "Appends ranges vertically and in sequence to return a larger array."
 msgstr ""
+"Voegt bereiken verticaal en op volgorde toe om een grotere matrix te "
+"retourneren."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1090,7 +1103,7 @@ msgstr "April"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Are you sure you want to delete this sheet?"
-msgstr ""
+msgstr "Weet je zeker dat je dit blad wilt verwijderen?"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1098,7 +1111,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument ignore must be between 0 and 3"
-msgstr ""
+msgstr "Argument negeren moet tussen 0 en 3 liggen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1113,14 +1126,14 @@ msgstr "Argument moet een verwijzing naar een cel of bereik zijn."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument range must be a single row or column."
-msgstr ""
+msgstr "Argument bereik moet een enkele rij of kolom zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Array"
-msgstr ""
+msgstr "Matrix"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1136,6 +1149,8 @@ msgstr ""
 #, python-format
 msgid "Array result was not expanded because it would overwrite data in %s."
 msgstr ""
+"Het resultaat van de matrix werd niet uitgebreid omdat het de gegevens in %s"
+" zou overschrijven."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1307,14 +1322,14 @@ msgstr "Berekent de effectieve rente."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates the frequency distribution of a range."
-msgstr ""
+msgstr "Berekent de frequentieverdeling van een bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates the matrix product of two matrices."
-msgstr ""
+msgstr "Berekent het matrixproduct van twee matrices."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1341,6 +1356,8 @@ msgstr ""
 msgid ""
 "Calculates the sum of squares of the differences of values in two array."
 msgstr ""
+"Berekent de som van de kwadraten van de verschillen van waarden in twee "
+"matrices."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1350,6 +1367,8 @@ msgid ""
 "Calculates the sum of the difference of the squares of the values in two "
 "array."
 msgstr ""
+"Berekent de som van het verschil van de kwadraten van de waarden in twee "
+"matrices."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1359,6 +1378,8 @@ msgid ""
 "Calculates the sum of the products of corresponding entries in equal-sized "
 "ranges."
 msgstr ""
+"Berekent de som van de producten van de corresponderende gegevens in "
+"bereiken van gelijke grootte."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1367,6 +1388,7 @@ msgstr ""
 msgid ""
 "Calculates the sum of the sum of the squares of the values in two array."
 msgstr ""
+"Berekent de som van de som van de kwadraten van de waarden in twee matrices."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1397,6 +1419,7 @@ msgstr "Kan het bestand met werkmaprelaties niet vinden"
 #, python-format
 msgid "Cannot multiply matrices : incompatible matrices size."
 msgstr ""
+"Kan de matrices niet vermenigvuldigen: grootte van matrices is incompatibel."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1884,6 +1907,8 @@ msgstr "Maakt een hyperlink in een cel aan."
 #, python-format
 msgid "Creates a new array from the selected columns in the existing range."
 msgstr ""
+"Creëert een nieuwe matrix van de geselecteerde kolommen in het bestaande "
+"bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1891,6 +1916,8 @@ msgstr ""
 #, python-format
 msgid "Creates a new array from the selected rows in the existing range."
 msgstr ""
+"Creëert een nieuwe matrix van de geselecteerde rijen in het bestaande "
+"bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2078,14 +2105,14 @@ msgstr "Datum van de rentevoet."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Date time"
-msgstr "Datum Tijd"
+msgstr "Datetime"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Date time:"
-msgstr ""
+msgstr "Datetime:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2421,13 +2448,15 @@ msgstr "Exact aantal jaren tussen twee datums."
 #, python-format
 msgid "Expands or pads an array to specified row and column dimensions."
 msgstr ""
+"Breidt een matrix uit of vult deze op tot de opgegeven rij- en "
+"kolomdimensies."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "FILTER has mismatched sizes on the range and conditions."
-msgstr ""
+msgstr "FILTER heeft onjuiste afmetingen voor het bereik en de voorwaarden."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2573,6 +2602,7 @@ msgstr "Vast aantal"
 #, python-format
 msgid "Flattens all the values from one or more ranges into a single column."
 msgstr ""
+"Vlakt alle waarden af van een of meerdere bereiken in een enkele kolom."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3095,6 +3125,8 @@ msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be equal to the \n"
 "        number of rows of the second matrix (%s)."
 msgstr ""
+"In [[FUNCTION_NAME]], het aantal kolommen van de eerste matrix (%s) moet gelijk zijn aan het \n"
+"        aantal rijen van de tweede matrix (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3796,7 +3828,7 @@ msgstr "Laden..."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Locale"
-msgstr ""
+msgstr "Regionale instelling"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3831,14 +3863,14 @@ msgstr "Logische `xor`-operator."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical value `false`."
-msgstr ""
+msgstr "Logische waarde `onwaar`."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Logical value `true`."
-msgstr ""
+msgstr "Logische waarde `waar`."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4202,6 +4234,8 @@ msgstr "Ga naar rechts"
 #, python-format
 msgid "Name not found. You may not have the required access rights."
 msgstr ""
+"Naam niet gevonden. Mogelijk beschik je niet over de vereiste "
+"toegangsrechten."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4270,7 +4304,7 @@ msgstr "Volgende datum kortingsbon na de datum van afrekening."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "No Color"
-msgstr ""
+msgstr "Geen kleur"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4284,7 +4318,7 @@ msgstr "Geen kolommen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No match found in FILTER evaluation"
-msgstr ""
+msgstr "Geen match gevonden in de FILTER-evaluatie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4305,14 +4339,14 @@ msgstr "Geen resultaten"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No results for the given arguments of TOCOL."
-msgstr ""
+msgstr "Geen resultaten voor de opgegeven argumenten van TOCOL."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No results for the given arguments of TOROW."
-msgstr ""
+msgstr "Geen resultaten voor de opgegeven argumenten van TOROW."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4326,7 +4360,7 @@ msgstr "Geen rijen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "No unique values found"
-msgstr ""
+msgstr "Geen unieke waarden gevonden"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4452,7 +4486,7 @@ msgstr "Aantal rijen in een opgegeven matrix of bereik."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Number:"
-msgstr ""
+msgstr "Aantal:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4874,6 +4908,8 @@ msgid ""
 "Result couldn't be automatically expanded. Please insert more columns and "
 "rows."
 msgstr ""
+"Het resultaat kon niet automatisch worden uitgebreid. Voeg meer kolommen en "
+"rijen toe."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4881,6 +4917,8 @@ msgstr ""
 #, python-format
 msgid "Result couldn't be automatically expanded. Please insert more columns."
 msgstr ""
+"Het resultaat kon niet automatisch worden uitgebreid. Voeg meer kolommen "
+"toe."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4888,6 +4926,7 @@ msgstr ""
 #, python-format
 msgid "Result couldn't be automatically expanded. Please insert more rows."
 msgstr ""
+"Het resultaat kon niet automatisch worden uitgebreid. Voeg meer rijen toe."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4901,21 +4940,21 @@ msgstr "Resultaat van het vermenigvuldigen van een reeks getallen met elkaar."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Return a whole number or a decimal value."
-msgstr ""
+msgstr "Geeft als resultaat een geheel getal of een decimale waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "Return the current value of a spreadsheet filter."
-msgstr "Retourneert de huidige waarde van een spreadsheetfilter."
+msgstr "Geeft als resultaat de huidige waarde van een spreadsheetfilter."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns a cell reference as a string. "
-msgstr "Retourneert een celverwijzing als een tekenreeks."
+msgstr "Geeft als resultaat een celverwijzing als een tekenreeks."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4925,6 +4964,8 @@ msgid ""
 "Returns a filtered version of the source range, returning only rows or "
 "columns that meet the specified conditions."
 msgstr ""
+"Geeft als resultaat een gefilterde versie van het bronbereik en enkel rijen "
+"of kolommen die aan de opgegeven voorwaarden voldoen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4932,6 +4973,8 @@ msgstr ""
 #, python-format
 msgid "Returns a grid of random numbers between 0 inclusive and 1 exclusive."
 msgstr ""
+"Geeft als resultaat een rooster van willekeurige getallen tussen 0 inclusief"
+" en 1 exclusief."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4939,6 +4982,8 @@ msgstr ""
 #, python-format
 msgid "Returns a n x n unit matrix, where n is the input dimension."
 msgstr ""
+"Geeft als resultaat een n x n eenheidsmatrix, waarbij n de ingevoerde "
+"dimensie is."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4946,6 +4991,8 @@ msgstr ""
 #, python-format
 msgid "Returns a result array constrained to a specific width and height."
 msgstr ""
+"Geeft als resultaat een resultatenmatrix die beperkt is tot een specifieke "
+"breedte en hoogte."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4953,21 +5000,23 @@ msgstr ""
 #, python-format
 msgid "Returns a value depending on multiple logical expressions."
 msgstr ""
-"Retourneert een waarde die afhankelijk is van meerdere logische expressies."
+"Geeft als resultaat een waarde die afhankelijk is van meerdere logische "
+"expressies."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns opposite of provided logical value."
-msgstr "Retourneert het tegenovergestelde van de opgegeven logische waarde."
+msgstr ""
+"Geeft als resultaat het tegenovergestelde van de opgegeven logische waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the error value #N/A."
-msgstr "Retourneert de foutwaarde #N/A."
+msgstr "Geeft als resultaat de foutwaarde #N/B."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4975,15 +5024,15 @@ msgstr "Retourneert de foutwaarde #N/A."
 #, python-format
 msgid "Returns the interest paid at a particular period of an investment."
 msgstr ""
-"Geeft de rente weer die in een bepaalde periode van een investering wordt "
-"betaald."
+"Geeft als resultaat de te betalen rente voor een investering over een "
+"bepaalde termijn."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns the matrix determinant of a square matrix."
-msgstr ""
+msgstr "Geeft als resultaat de determinant van een vierkante matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4993,7 +5042,7 @@ msgid ""
 "Returns the maximum value in a range of cells, filtered by a set of "
 "criteria."
 msgstr ""
-"Retourneert de maximale waarde in een celbereik, gefilterd op een set "
+"Geeft als resultaat de maximumwaarde in een celbereik, gefilterd op een set "
 "criteria."
 
 #. module: spreadsheet
@@ -5004,8 +5053,8 @@ msgid ""
 "Returns the minimum value in a range of cells, filtered by a set of "
 "criteria."
 msgstr ""
-"Retourneert de minimumwaarde in een celbereik, gefilterd op een reeks "
-"criteria."
+"Geeft als resultaat de minimumwaarde in een celbereik, gefilterd op een "
+"reeks criteria."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5013,13 +5062,14 @@ msgstr ""
 #, python-format
 msgid "Returns the multiplicative inverse of a square matrix."
 msgstr ""
+"Geeft als resultaat de vermenigvuldigde inverse van een vierkante matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Returns value depending on logical expression."
-msgstr "Retourneert waarde afhankelijk van logische expressie."
+msgstr "Geeft als resultaat de waarde afhankelijk van logische expressie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5156,8 +5206,8 @@ msgid ""
 "Search a range for a match and return the corresponding item from a second "
 "range."
 msgstr ""
-"Zoeken naar een match in een beriek en het overeenkomstig item retourneren "
-"van een tweede bereik."
+"Zoeken naar een match in een beriek en het overeenkomstig item van een "
+"tweede bereik als resultaat geven."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5415,7 +5465,7 @@ msgstr "Spatie"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Split text by specific character delimiter(s)."
-msgstr ""
+msgstr "Splits tekst per specifieke scheidingstekens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5465,7 +5515,7 @@ msgstr "Gepubliceerde spreadsheet"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Spreadsheet settings"
-msgstr ""
+msgstr "Instelling spreadsheet"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5665,7 +5715,7 @@ msgstr "Tekstkleur"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The _delimiter (%s) must be not be empty."
-msgstr ""
+msgstr "De _delimiter (%s) kan niet leeg zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5806,7 +5856,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The argument dimension must be positive"
-msgstr ""
+msgstr "Het argument dimensie moet positief zijn"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5821,7 +5871,7 @@ msgstr "Het argument ontbreekt. Geef een waarde op"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The argument square_matrix must be a matrix of numbers."
-msgstr ""
+msgstr "Het argument square_matrix moet een getallenmatrix zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5831,34 +5881,35 @@ msgstr ""
 msgid ""
 "The argument square_matrix must have the same number of columns and rows."
 msgstr ""
+"Het argument square_matrix moet hetzelfde aantal kolommen en rijen hebben."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The arguments condition must be a single column or row."
-msgstr ""
+msgstr "De argumentenvoorwaarde moet een enkele kolom of rij zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The arguments conditions must have the same dimensions."
-msgstr ""
+msgstr "De argumentenvoorwaarden moeten dezelfde dimensies hebben."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The arguments matrix1 and matrix2 must be matrices of numbers."
-msgstr ""
+msgstr "De argumenten matrix1 en matrix2 moeten getallenmatrices zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array of ranges containing the values to be counted."
-msgstr ""
+msgstr "De matrix of bereiken die de te tellen waarden bevatten."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5895,6 +5946,8 @@ msgid ""
 "The array or range of values that will be reduced by corresponding entries "
 "in array_y, squared, and added together."
 msgstr ""
+"De matrix of het bereik van waarden die zullen worden verminderd met "
+"corresponderende gegevens in array_y, in het kwadraat, en opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5904,6 +5957,9 @@ msgid ""
 "The array or range of values that will be subtracted from corresponding "
 "entries in array_x, the result squared, and all such results added together."
 msgstr ""
+"De matrix of het bereik van waarden die worden afgetrokken van de "
+"corresponderende gegevens in array_x, het resultaat in het kwadraat en alle "
+"resultaten opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5913,6 +5969,9 @@ msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_x and added together."
 msgstr ""
+"De matrix of het bereik van waarden waarvan de kwadraten worden opgeteld bij"
+" de kwadraten van corresponderende gegevens in array_x en bij elkaar "
+"opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5922,6 +5981,9 @@ msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_y and added together."
 msgstr ""
+"De matrix of het bereik van waarden waarvan de kwadraten worden opgeteld bij"
+" de kwadraten van corresponderende gegevens in array_y en bij elkaar "
+"opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5931,6 +5993,9 @@ msgid ""
 "The array or range of values whose squares will be reduced by the squares of"
 " corresponding entries in array_y and added together."
 msgstr ""
+"De matrix of het bereik van waarden waarvan de kwadraten worden verminderd "
+"met de kwadraten van corresponderende gegevens in array_y en bij elkaar "
+"opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5940,34 +6005,37 @@ msgid ""
 "The array or range of values whose squares will be subtracted from the "
 "squares of corresponding entries in array_x and added together."
 msgstr ""
+"De matrix of het bereik van waarden waarvan de kwadraten worden afgetrokken "
+"van de kwadraten van corresponderende gegevens in array_x en bij elkaar "
+"opgeteld."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array that contains the columns to be returned."
-msgstr ""
+msgstr "De matrix die de te retourneren kolommen bevat."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array that contains the rows to be returned."
-msgstr ""
+msgstr "De matrix die de te retourneren rijen bevat."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array to expand."
-msgstr ""
+msgstr "De uit te breiden matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The array which will be transformed."
-msgstr ""
+msgstr "De matrix die zal worden getransformeerd."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6042,6 +6110,8 @@ msgstr "De cel die je probeert te bewerken, is verwijderd."
 #, python-format
 msgid "The character or characters to use to split text."
 msgstr ""
+"Het karakter of de karakter die gebruikt zullen worden om de tekst te "
+"splitsen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6092,7 +6162,7 @@ msgstr "De kolomnummer (niet naam) van de celverwijzing. A is kolom nummer 1."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The columns argument (%s) must be strictly positive."
-msgstr ""
+msgstr "Het argument kolommen (%s) moet strikt positief zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6102,20 +6172,22 @@ msgid ""
 "The columns arguments (%s) must be greater or equal than the number of "
 "columns of the array."
 msgstr ""
+"De argumenten kolommen (%s) moeten groter of gelijk zijn aan het aantal "
+"kolommen van de matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The columns arguments must be between 1 and %s (got %s)."
-msgstr ""
+msgstr "De argumenten kolommen moeten tussen 1 en %s liggen (thans %s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The columns indexes of the columns to be returned."
-msgstr ""
+msgstr "De kolomindexen van de te retourneren kolommen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6126,6 +6198,9 @@ msgid ""
 "1 is to ignore blanks, 2 is to ignore errors, and 3 is to ignore blanks and "
 "errors."
 msgstr ""
+"De controle om spaties en fouten te negeren. 0 (standaard) laat toe om alle "
+"waarden te behouden, 1 laat toe om spaties te negeren, 2 laat toe om fouten "
+"te negeren en 3 laat toe om spaties en fouten te negeren."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6195,14 +6270,14 @@ msgstr "Het gegevensbereik is ongeldig"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data to be filtered."
-msgstr ""
+msgstr "De te filteren gegevens."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The data to filter by unique entries."
-msgstr ""
+msgstr "De gegevens om te filteren op unieke gegevens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6631,7 +6706,7 @@ msgstr "Het eerste opteltal."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first column index of the columns to be returned."
-msgstr ""
+msgstr "De eerste kolomindex van de te retourneren kolommen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6656,7 +6731,7 @@ msgstr "De eerste toekomstige kasstroom."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first matrix in the matrix multiplication operation."
-msgstr ""
+msgstr "De eerste matrix in de matrixvermenigvuldiging."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6692,14 +6767,14 @@ msgstr "Het eerste getal om te vergelijken."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first range to be appended."
-msgstr ""
+msgstr "Het eerste toe te voegen bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first range to flatten."
-msgstr ""
+msgstr "Het eerste af te vlakken bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6709,13 +6784,15 @@ msgid ""
 "The first range whose entries will be multiplied with corresponding entries "
 "in the other ranges."
 msgstr ""
+"Het eerste bereik waarvan de gegevens worden vermenigvuldigd met "
+"corresponderende gegevens in de andere bereiken."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The first row index of the rows to be returned."
-msgstr ""
+msgstr "De eerste rij-index van de te retourneren rijen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7159,7 +7236,7 @@ msgstr "De onderste buigpuntwaarde moet een getal zijn"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The matrix is not invertible."
-msgstr ""
+msgstr "De matrix is niet inverteerbaar."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7208,13 +7285,15 @@ msgid ""
 "The maximum (%s) and minimum (%s) must be integers when whole_number is "
 "TRUE."
 msgstr ""
+"Het maximum (%s) en het minimum (%s) moeten gehele getallen zijn als "
+"whole_number WAAR is."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maximum (%s) must be greater than or equal to the minimum (%s)."
-msgstr ""
+msgstr "Het maximum (%s) moet groter of gelijk zijn aan het minimum (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7224,6 +7303,8 @@ msgid ""
 "The maximum number of cells for each column, rounded down to the nearest "
 "whole number."
 msgstr ""
+"Het maximum aantal cellen voor elke kolom, naar beneden afgerond op het "
+"dichtstbijzijnde gehele getal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7233,13 +7314,15 @@ msgid ""
 "The maximum number of cells for each row, rounded down to the nearest whole "
 "number."
 msgstr ""
+"Het maximum aantal cellen voor elke rij, naar beneden afgerond op het "
+"dichtstbijzijnde gehele getal."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The maximum number you would like returned."
-msgstr ""
+msgstr "Het maximum aantal dat je wenst te retourneren."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7267,7 +7350,7 @@ msgstr "Het middelpunt moet een getal zijn"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The minimum number you would like returned."
-msgstr ""
+msgstr "Het minimum aantal dat je wenst te retourneren."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7341,7 +7424,7 @@ msgstr "De nominale rente (%s) moet strikt groter zijn dan 0."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number columns (%s) must be positive."
-msgstr ""
+msgstr "Het aantal kolommen (%s) moet positief zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7378,7 +7461,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of columns in the constrained array."
-msgstr ""
+msgstr "Het aantal kolommen in de beperkte matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7388,13 +7471,15 @@ msgid ""
 "The number of columns in the expanded array. If missing, columns will not be"
 " expanded."
 msgstr ""
+"Het aantal kolommen in het uitgebreide bereik. Indien dit ontbreekt, worden "
+"de kolommen niet uitgebreid."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of columns to be returned."
-msgstr ""
+msgstr "Het aantal te retourneren kolommen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7514,7 +7599,7 @@ msgstr "Het aantal perioden."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of rows in the constrained array."
-msgstr ""
+msgstr "Het aantal rijen in de beperkte matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7524,13 +7609,15 @@ msgid ""
 "The number of rows in the expanded array. If missing, rows will not be "
 "expanded."
 msgstr ""
+"Het aantal rijen in het uitgebreide bereik. Indien dit ontbreekt, worden de "
+"rijen niet uitgebreid."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of rows to be returned."
-msgstr ""
+msgstr "Het aantal te retourneren rijen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7611,7 +7698,7 @@ msgstr "Het nummer pi."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number rows (%s) must be positive."
-msgstr ""
+msgstr "Het aantal rijen (%s) moet positief zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7666,7 +7753,7 @@ msgstr "Het getal dat moet worden verhoogd tot de macht van de exponent."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to return."
-msgstr "Het nummer om terug te keren."
+msgstr "Het te retourneren aantal."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7748,6 +7835,8 @@ msgid ""
 "The other range whose entries will be multiplied with corresponding entries "
 "in the other ranges."
 msgstr ""
+"Het andere bereik waarvan de gegevens worden vermenigvuldigd met "
+"corresponderende gegevens in de andere bereiken."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7975,7 +8064,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range containing the set of classes."
-msgstr ""
+msgstr "Het bereik dat de set klassen bevat."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8092,7 +8181,7 @@ msgstr "Het op te tellen bereik, indien verschillend van bereik."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to be transposed."
-msgstr ""
+msgstr "Het te transponeren bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8150,7 +8239,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to constrain."
-msgstr ""
+msgstr "Het te beperken bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8165,7 +8254,7 @@ msgstr "Het op te tellen bereik."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The range to wrap."
-msgstr ""
+msgstr "Het bereik om te laten teruglopen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8301,7 +8390,7 @@ msgstr "De rijnummer van de celverwijzing"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rows argument (%s) must be strictly positive."
-msgstr ""
+msgstr "Het argument rijen (%s) moet strikt positief zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8311,20 +8400,22 @@ msgid ""
 "The rows arguments (%s) must be greater or equal than the number of rows of "
 "the array."
 msgstr ""
+"De argumenten rijen (%s) moeten groter of gelijk zijn aan het aantal rijen "
+"van de matrix."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rows arguments must be between 1 and %s (got %s)."
-msgstr ""
+msgstr "De argumenten rijen moeten tussen 1 en %s liggen (thans %s)."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rows indexes of the rows to be returned."
-msgstr ""
+msgstr "De rij-indexen van de te retourneren rijen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8397,7 +8488,7 @@ msgstr "De tweede component van de tijd."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The second matrix in the matrix multiplication operation."
-msgstr ""
+msgstr "De tweede matrix in de matrixvermenigvuldiging."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8712,7 +8803,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text to divide."
-msgstr ""
+msgstr "De te splitsen tekst."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9255,14 +9346,14 @@ msgstr "De waarde waaraan waarde2 wordt toegevoegd."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value with which to fill the extra cells in the range."
-msgstr ""
+msgstr "De waarde waarmee de extra cellen in het bereik moeten worden gevuld."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value with which to pad."
-msgstr ""
+msgstr "De waarde waarmee opgevuld wordt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9447,7 +9538,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "This range is invalid"
-msgstr ""
+msgstr "Dit bereik is ongeldig"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9517,21 +9608,21 @@ msgstr "Totaal"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Transforms a range of cells into a single column."
-msgstr ""
+msgstr "Transformeert een celbereik in een enkele kolom."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Transforms a range of cells into a single row."
-msgstr ""
+msgstr "Transformeert een celbereik in een enkele rij."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Transposes the rows and columns of a range."
-msgstr ""
+msgstr "Transposeert de rijen en kolommen van een bereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9632,7 +9723,7 @@ msgstr "Rijen zichtbaar maken"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unique rows in the provided source range."
-msgstr ""
+msgstr "Unieke rijen in het opgegeven bronbereik."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9968,6 +10059,7 @@ msgstr "Of een waarde de fout #N/A is."
 msgid ""
 "Whether or not to divide text around each character contained in delimiter."
 msgstr ""
+"Het al dan niet opdelen van tekst rond elk karakter in het scheidingsteken."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9977,6 +10069,8 @@ msgid ""
 "Whether or not to remove empty text messages from the split results. The default behavior is to treat \n"
 "        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
+"Of lege tekstberichten wel of niet uit de splitsingsresultaten moeten worden verwijderd. Het standaardgedrag is om \n"
+"        opeenvolgende scheidingstekens als één (indien WAAR). Indien ONWAAR, worden lege celwaarden toegevoegd tussen opeenvolgende scheidingstekens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10004,6 +10098,8 @@ msgid ""
 "Whether the array should be scanned by column. True scans the array by column and false (default) \n"
 "      scans the array by row."
 msgstr ""
+"Of de matrix per kolom moet worden gescand. Waar scant de matrix per kolom en onwaar (standaard)\n"
+"scant de matrix per rij."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10025,14 +10121,14 @@ msgstr "Of de cel waarnaar wordt verwezen leeg is"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether to filter the data by columns or by rows."
-msgstr ""
+msgstr "Of de gegevens moeten worden gefilterd op kolommen of rijen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Whether to return only entries with no duplicates."
-msgstr ""
+msgstr "Of alleen gegevens zonder duplicaten moeten worden geretourneerd."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10084,6 +10180,8 @@ msgid ""
 "Wraps the provided row or column of cells by columns after a specified "
 "number of elements to form a new array."
 msgstr ""
+"Laat de opgegeven rij of kolom cellen per kolommen teruglopen na een "
+"opgegeven aantal elementen om een nieuwe matrix de vormen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10093,6 +10191,8 @@ msgid ""
 "Wraps the provided row or column of cells by rows after a specified number "
 "of elements to form a new array."
 msgstr ""
+"Laat de opgegeven rij of kolom cellen per rijen teruglopen na een opgegeven "
+"aantal elementen om een nieuwe matrix te vorden."
 
 #. module: spreadsheet
 #. odoo-javascript

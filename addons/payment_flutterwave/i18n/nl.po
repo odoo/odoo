@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
+"Er is een fout opgetreden tijdens het verwerken van je betaling (status %s)."
+" Probeer het opnieuw."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -49,22 +52,22 @@ msgstr "Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "E-mail klant Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Publieke sleutel Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Geheime sleutel Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Webhook geheim Flutterwave"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -98,7 +101,7 @@ msgstr "Publieke sleutel"
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Gegevens ontvangen met ontbrekende referentie."
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -113,16 +116,20 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"De communicatie met de API is mislukt. Flutterwave gaf ons de volgende "
+"informatie: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "De e-mail van de klant toen de token werd aangemaakt."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
 msgstr ""
+"De sleutel die uitsluitend gebruikt wordt om het account by Flutterwave te "
+"identificeren."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
@@ -141,9 +148,9 @@ msgstr "De transactie is niet gekoppeld aan een token."
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown payment status: %s"
-msgstr ""
+msgstr "Onbekende betalingsstatus: %s"
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Webhook geheim"

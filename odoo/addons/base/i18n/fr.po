@@ -8963,6 +8963,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Localisation suisse\n"
+"==================\n"
+"Ce module définit un plan comptable pour la Suisse (Swiss PME/KMU 2015), ainsi que des taxes et active la génération d'une QR-facture lorsque vous imprimez une facture ou l'envoyez par email.\n"
+"La QR-facture est jointe à la facture et facilite son paiement.\n"
+"\n"
+"Une QR-facture sera générée si :\n"
+"    - Le partenaire défini sur votre facture a une adresse complète (rue, ville, code postal et pays) en Suisse\n"
+"    - L'option de générer le code QR suisse est activée sur la facture (elle est activée par défaut)\n"
+"    - Un numéro de compte/QR-IBAN correct est défini sur votre journal de banque\n"
+"    - (en utilisant un QR-IBAN) : la référence de paiement de la facture est une référence QR\n"
+"\n"
+"La génération de la QR-facture est automatique si vous réunissez les critères susmentionnés. La QR-facture sera jointe à la facture lors de l'impression ou de l'envoi par email. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -9019,6 +9034,17 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"L'objectif est de disposer d'un module complet pour gérer  toutes les réparations de produits.\n"
+"====================================================================\n"
+"\n"
+"Les points suivants sont couverts par ce module :\n"
+"------------------------------------------------------\n"
+"    * Ajouter/supprimer des produits dans la réparation\n"
+"    * Impact sur les stocks\n"
+"    * Concept de garantie\n"
+"    * Rapport de devis de réparation\n"
+"    * Notes pour le technicien et pour le client final\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -9762,6 +9788,21 @@ msgid ""
 "    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) for VietQR.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce module permet de gérer le plan comptable, les informations bancaires pour le Vietnam dans Odoo.\n"
+"========================================================================================\n"
+"\n"
+"- Ce module s'applique aux entreprises basées sur le  Système comptable vietnamien (VAS)\n"
+"  avec un plan comptable conformément à la Circulaire n° 200/2014/TT-BTC\n"
+"- Ajouter les informations bancaires vietnamiennes (comme le nom, le BIC,...) comme annoncé et mis à jour annuellement par la Banque d'État\n"
+"  du Viêt Nam (https://sbv.gov.vn/webcenter/portal/en/home/sbv/paytreasury/bankidno).\n"
+"- Ajouter la fonctionnalité VietQR pour les factures\n"
+"\n"
+"**Crédits :**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
+"    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) for VietQR.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_restaurant
@@ -10392,6 +10433,10 @@ msgid ""
 "Install this if you are using the Point of Sale app in Chile.    \n"
 "\n"
 msgstr ""
+"\n"
+"Ce module contient les exigences techniques pour la réglementation chilienne. \n"
+"Installez-le si vous utilisez l'application Point de Vente au Chili.    \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_cert
@@ -11997,6 +12042,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contact : utilisez-le pour organiser les coordonnées des employés d'une entreprise donnée (par exemple, CEO, CFO, ...).\n"
+"- Adresse de facturation : Adresse préférée pour toutes les factures. Sélectionnée par défaut lorsque vous facturez une commande qui appartient à cette société.\n"
+"- Adresse de livraison : Adresse préférée pour toutes les livraisons. Sélectionnée par défaut lorsque vous livrez une commande appartenant à cette société.\n"
+"- Privé : Les adresses privées ne sont visibles que par les utilisateurs autorisés et contiennent des données sensibles (adresses personnelles des employés, ...).\n"
+"- Autre : Autre adresse de l'entreprise (ex. filiale, ...)"
 
 #. module: base
 #. odoo-python
@@ -12005,6 +12055,8 @@ msgstr ""
 msgid ""
 "- Only a root company can be set on %(record)r. Currently set to %(company)r"
 msgstr ""
+"- Seule une entreprise racine peut être définie sur %(record)r. Actuellement"
+" défini sur %(company)r"
 
 #. module: base
 #. odoo-python
@@ -14845,7 +14897,7 @@ msgstr "Pièce jointe"
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Attachment is not encoded in base64."
-msgstr ""
+msgstr "La pièce jointe n'est pas encodée en base64."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -15073,7 +15125,7 @@ msgstr "Avatax"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
 msgid "Avatax for Inventory"
-msgstr ""
+msgstr "Avatax pour l'Inventaire"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_sale
@@ -15286,7 +15338,7 @@ msgstr "Expiration du code-barres"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_mrp
 msgid "Barcode Quality MRP module"
-msgstr ""
+msgstr "Module Code-barres Qualité MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
@@ -15707,7 +15759,7 @@ msgstr "Brésil - Rapports comptables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_sales
 msgid "Brazil - Sale"
-msgstr ""
+msgstr "Brésil - Ventes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -15892,7 +15944,7 @@ msgstr "Module passerelle pour project_enterprise et hr_contract"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_contract_gantt
 msgid "Bridge module linking Holidays Gantt and Contracts modules"
-msgstr ""
+msgstr "Module passerelle entre les modules Congés Gantt et Contrats"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_twitter_wall
@@ -16475,7 +16527,7 @@ msgstr "eCommerce chilien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_pos
 msgid "Chilean module for Point of Sale"
-msgstr ""
+msgstr "Module chilien pour le Point de Vente"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -16548,7 +16600,7 @@ msgstr "Action client"
 #: model:ir.ui.menu,name:base.menu_ir_client_actions_report
 #: model_terms:ir.ui.view,arch_db:base.view_client_action_tree
 msgid "Client Actions"
-msgstr ""
+msgstr "Actions client"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
@@ -16690,6 +16742,8 @@ msgid ""
 "Comma-separated list of addresses or domains for which this server can be used.\n"
 "e.g.: \"notification@odoo.com\" or \"odoo.com\""
 msgstr ""
+"Liste d'adresses ou de domaines séparés par des virgules pour lesquels ce serveur peut être utilisé.\n"
+"par ex. \"notification@odoo.com\" ou \"odoo.com\""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__view_mode
@@ -17862,14 +17916,14 @@ msgstr "Unité monétaire"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__currency_field
 msgid "Currency field"
-msgstr ""
+msgstr "Champ devise"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Currency field does not have type many2one"
-msgstr ""
+msgstr "Le champ devise n'a pas de type many2one"
 
 #. module: base
 #. odoo-python
@@ -17877,13 +17931,14 @@ msgstr ""
 #, python-format
 msgid "Currency field is empty and there is no fallback field in the model"
 msgstr ""
+"Le champ devise est vide et il n'y a aucun champ de rempli dans le modèle"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Currency field should have a res.currency relation"
-msgstr ""
+msgstr "Le champ devise doit avoir une relation res.currency"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
@@ -19067,7 +19122,7 @@ msgstr "Durée"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nl_reports_sbr
 msgid "Dutch Localization for SBR documents"
-msgstr ""
+msgstr "Localisation néerlandaises pour les documents SBR"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -19584,6 +19639,19 @@ msgstr "Erreur"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Message d'erreur renvoyé quand la contrainte n'est pas respectée. "
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"Erreur lors de l'analyse de la vue :\n"
+"\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -20460,6 +20528,10 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
+"Le fichier %r n'a pas été importé en raison d'une incompatibilité de format ou d'un fichier mal formé. (Les formats valides sont .csv, .po)\n"
+"\n"
+"Détails techniques :\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -21277,7 +21349,7 @@ msgstr "Grèce - Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_reports
 msgid "Greece - Accounting Reports"
-msgstr ""
+msgstr "Grèce - Rapports comptables"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -21435,7 +21507,7 @@ msgstr "H - TRANSPORT ET STOCKAGE"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_livechat
 msgid "HR - Livechat"
-msgstr ""
+msgstr "RH - Live Chat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
@@ -23091,7 +23163,7 @@ msgstr "Irlande - Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ie_reports
 msgid "Ireland - Accounting Reports"
-msgstr ""
+msgstr "Irlande - Rapports comptables"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
@@ -23862,6 +23934,7 @@ msgstr "Lien entre PdV et Location de stock."
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order_preparation_display
 msgid "Link between self orders paid online and the preparation display"
 msgstr ""
+"Lien entre les commandes autonomes payées en ligne et l'écran de préparation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
@@ -23881,7 +23954,7 @@ msgstr "Module de liaison entre Point de Vente et Ressources Humaines"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mrp
 msgid "Link module between Point of Sale and Mrp"
-msgstr ""
+msgstr "Module de liaison entre Point de Vente et MRP"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
@@ -24428,7 +24501,7 @@ msgstr "Gérez un forum avec FAQ et Q&R"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_fleet
 msgid "Manage accounting with fleet features"
-msgstr ""
+msgstr "Gérer la comptabilité avec des fonctionnalités de parc automobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
@@ -25638,7 +25711,7 @@ msgstr "Nom"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__currency_field
 msgid "Name of the Many2one field holding the res.currency"
-msgstr ""
+msgstr "Nom du champ Many2one contenant res.currency"
 
 #. module: base
 #. odoo-python
@@ -25710,7 +25783,7 @@ msgstr "Pays-Bas - Paie avec Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr
 msgid "Netherlands - SBR"
-msgstr ""
+msgstr "Pays-Bas - SBR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -28092,6 +28165,7 @@ msgstr ""
 #: model:ir.model.constraint,message:base.constraint_res_users_settings_unique_user_id
 msgid "One user should only have one user settings."
 msgstr ""
+"Un utilisateur ne devrait avoir qu'une seule configuration d'utilisateur."
 
 #. module: base
 #. odoo-python
@@ -28877,12 +28951,12 @@ msgstr "PdV Commande autonome"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment_self_order
 msgid "POS Self-Order / Online Payment"
-msgstr ""
+msgstr "Commande autonome PDV / Paiement en ligne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment_self_order_preparation_display
 msgid "POS Self-Order / Online Payment / Preparation Display"
-msgstr ""
+msgstr "Commande autonome PDV / Paiement en ligne / Écran de préparation"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
@@ -29531,7 +29605,7 @@ msgstr "Location stock point de vente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_appointment
 msgid "Point of Sale Restaurant Appointment"
-msgstr ""
+msgstr "Point de Vente Restaurant Rendez-vous"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -29546,7 +29620,7 @@ msgstr "Point de vente enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "Point de Vente paiement en ligne"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -29760,6 +29834,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
 msgid "Process Manufacturing Orders from the barcode application"
 msgstr ""
+"Traiter des ordres de fabrication à partir de l'application Code-barres"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -31274,7 +31349,7 @@ msgstr "S - AUTRES ACTIVITÉS DE SERVICE"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
 msgid "SBR"
-msgstr ""
+msgstr "SBR"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -31587,7 +31662,7 @@ msgstr "Vente basée sur un service de sous traitance."
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_sales
 msgid "Sale modifications for Brazil"
-msgstr ""
+msgstr "Modifications de vente pour le Brésil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
@@ -31699,7 +31774,7 @@ msgstr "Arabie saoudite - Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_edi
 msgid "Saudi Arabia - E-invoicing"
-msgstr ""
+msgstr "Arabie saoudite - Facturation électronique"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -32755,7 +32830,7 @@ msgstr "Espagne - SII EDI Suministro de Libros"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai
 msgid "Spain - TicketBAI"
-msgstr ""
+msgstr "Espagne - TicketBAI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
@@ -32903,12 +32978,13 @@ msgstr "Feuille de calcul Documents"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_spreadsheet
 msgid "Spreadsheet Test"
-msgstr ""
+msgstr "Test de feuille de calcul"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_spreadsheet
 msgid "Spreadsheet Test, mainly to test the mixin behavior"
 msgstr ""
+"Test de feuille de calcul, principalement pour tester le comportement mixin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard
@@ -33297,7 +33373,7 @@ msgstr "Prise en charge du contrôle qualité dans les transferts par lot"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order
 msgid "Support online payment in self-order"
-msgstr ""
+msgstr "Prise en charge du paiement en ligne pour la commande autonome"
 
 #. module: base
 #: model:res.country,name:base.sr
@@ -33819,7 +33895,7 @@ msgstr ""
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
-msgstr ""
+msgstr "Le %s d'une filiale doit être la même que celui de sa société racine."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -33933,7 +34009,7 @@ msgstr ""
 #: code:addons/base/models/res_company.py:0
 #, python-format
 msgid "The company hierarchy cannot be changed."
-msgstr ""
+msgstr "Il n'est pas possible de modifier la hiérarchie de la société."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -34703,7 +34779,7 @@ msgstr "Ce fichier n'a pas pu être décodé en tant que fichier image."
 #: code:addons/image.py:0
 #, python-format
 msgid "This file is not a webp file."
-msgstr ""
+msgstr "Ce fichier n'est pas un fichier webp."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -34896,6 +34972,12 @@ msgid ""
 "    hence the need for this test module.\n"
 "    "
 msgstr ""
+"Ce module contient des tests relatifs aux feuilles de calcul.\n"
+"    Le module expose certains mixins qui ne sont implémentés que dans d'autres modules fonctionnels.\n"
+"    Lorsque vous essayez de tester de comportement global du mixin, il n'est pas judicieux de le tester dans\n"
+"    chaque module implémentant le mixin, mais plutôt de tester une implémentation factice de ce dernier,\n"
+"    d'où la nécessité de ce module de test.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_gantt
@@ -35025,7 +35107,7 @@ msgstr "Ce module est obsolète."
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment
 msgid "This module lets you manage online reservations for restaurant tables"
-msgstr ""
+msgstr "Ce module vous permet de gérer les réservations en ligne de tables."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_survey
@@ -35126,7 +35208,7 @@ msgstr "Congés dans Fiches de paie Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_contract_gantt
 msgid "Time off - Contract Gantt"
-msgstr ""
+msgstr "Congés - Contrat Gantt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -35899,7 +35981,7 @@ msgstr "Champ %r inconnu pour la dépendance %r  "
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field name '%s' in currency_field"
-msgstr ""
+msgstr "Nom de champ inconnu '%s' dans currency_field"
 
 #. module: base
 #. odoo-python
@@ -37221,6 +37303,8 @@ msgid ""
 "You are about to log out from all devices that currently have access to your account.<br/><br/>\n"
 "                        <strong>Type in your password to confirm :</strong>"
 msgstr ""
+"Vous êtes sur le point de vous déconnecter de tous les appareils qui ont actuellement accès à votre compte.<br/><br/>\n"
+"                        <strong>Saisissez votre mot de passe pour confirmer :</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -37847,7 +37931,7 @@ msgstr "par ex. Mettre à jour la quantité de la commande"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "e.g. email@domain.com, domain.com"
-msgstr ""
+msgstr "par ex. email@domain.com, domain.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -38115,7 +38199,7 @@ msgstr "pos_account_reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mrp
 msgid "pos_mrp"
-msgstr ""
+msgstr "pos_mrp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:21+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,7 +140,7 @@ msgid ""
 "Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
-"Code gebruikt om het endpoint van Peppol BIS Billing 3.0 en afgeleiden te identificeren. \n"
+"Code gebruikt om het eindpunt van Peppol BIS Billing 3.0 en afgeleiden te identificeren. \n"
 "Lijst beschikbaar op https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
@@ -230,7 +231,7 @@ msgstr "Het importeren van een Peppol document is mislukt."
 #, python-format
 msgid "Failed to import a Peppol document. Sender endpoint: %s"
 msgstr ""
-"Het importeren van een Peppol document is mislukt. Endpoint verzender: %s"
+"Het importeren van een Peppol document is mislukt. Eindpunt verzender: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -251,7 +252,7 @@ msgstr "Boeking"
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_validity_last_check
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_validity_last_check
 msgid "Last Peppol endpoint verification"
-msgstr "Laatste Peppol endpoint verificatie"
+msgstr "Laatste Peppol eindpuntverificatie"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -327,7 +328,7 @@ msgstr "Geschikt voor PEPPOL"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "PEPPOL endpoint validity"
-msgstr "Geldigheid PEPPOL endpoint"
+msgstr "Geldigheid PEPPOL eindpunt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -381,7 +382,7 @@ msgstr "EAS Peppol"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Endpoint"
-msgstr "Endpoint Peppol"
+msgstr "Eindpunt Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_attachment_ids
@@ -401,7 +402,7 @@ msgstr "Het Peppol document werd succesvol ontvangen."
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr "Het Peppol document werd succesvol ontvangen. Endpoint verzender: %s"
+msgstr "Het Peppol document werd succesvol ontvangen. Eindpunt verzender: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -413,7 +414,7 @@ msgstr "Peppol e-address (EAS)"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 msgid "Peppol endpoint validity"
-msgstr "Geldigheid Peppol endpoint"
+msgstr "Geldigheid Peppol eindpunt"
 
 #. module: account_peppol
 #. odoo-python
@@ -545,7 +546,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr ""
+msgstr "Het identificatienummer van het Peppol eindpunt is niet correct."
 
 #. module: account_peppol
 #. odoo-python
@@ -563,6 +564,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
+"Het eindpuntnummer is mogelijk niet correct. Controleer of je het juiste "
+"identificatienummer hebt ingevoerd."
 
 #. module: account_peppol
 #. odoo-python
@@ -574,7 +577,7 @@ msgid ""
 "Invoicing format: %s"
 msgstr ""
 "De volgende relaties zijn niet correct geconfigureerd om Peppol documenten "
-"te ontvangen. Controleer hun Peppok endpoint en het formaat van de "
+"te ontvangen. Controleer hun Peppol eindpunt en het formaat van de "
 "elektronische facturatie: %s"
 
 #. module: account_peppol
@@ -582,14 +585,13 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
-"Er ontbreekt een Peppol EAS en/of Endpoint identifier voor de relatie."
+msgstr "Er ontbreekt een Peppol EAS en/of Endpoint-ID voor de relatie."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
 #: model:ir.model.fields,help:account_peppol.field_res_users__account_peppol_is_endpoint_valid
 msgid "The partner's EAS code and PEPPOL endpoint are valid"
-msgstr "De EAS code en het PEPPOL endpoint van de relatie zijn geldig"
+msgstr "De EAS code en het PEPPOL eindpunt van de relatie zijn geldig"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -621,7 +623,7 @@ msgid ""
 "also known as 'Endpoint ID'."
 msgstr ""
 "Unieke identificatiecode gebruikt door Peppol BIS Billing 3.0 en afgeleiden,"
-" ook bekend als 'Endpoint ID'."
+" ook bekend als 'Eindpunt-ID'."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -665,7 +667,7 @@ msgstr "Controleer"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr "Controleer het PEPPOL endpoint van de relatie"
+msgstr "Controleer het PEPPOL eindpunt van de relatie"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

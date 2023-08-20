@@ -6,6 +6,7 @@
 # Linkup <link-up@naver.com>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
@@ -257,6 +258,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* 신규: 재고 이동이 생성되었으나 승인되지 않았습니다.\n"
+"* 다른 이동 대기 중: 이 이동 전에 연결된 재고 이동이 먼저 완료되어야 합니다.\n"
+"* 예약 대기 중: 재고 이동이 확인되었으나 품목을 예약할 수 없습니다.\n"
+"* 사용 가능: 재고 이동 품목이 예약되었습니다.\n"
+"* 완료: 품목 이전 후 승인되었습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -589,7 +595,7 @@ msgstr "<span><strong>창고 주소 : </strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>O-BTN.return</span>"
-msgstr ""
+msgstr "<span>O-BTN.return</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -640,7 +646,7 @@ msgstr "<strong>배송 완료</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
+msgstr "<strong>배송 주소</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -730,7 +736,7 @@ msgstr "<strong>수량</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Recipient address</strong>"
-msgstr ""
+msgstr "<strong>수신인 주소</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -770,7 +776,7 @@ msgstr "<strong>확인된 품목:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse address</strong>"
-msgstr ""
+msgstr "<strong>창고 주소</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -929,7 +935,7 @@ msgstr ""
 #: code:addons/stock/static/src/fields/stock_move_line_x2_many_field.js:0
 #, python-format
 msgid "Add line: %s"
-msgstr ""
+msgstr "항목 추가: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1116,7 +1122,7 @@ msgstr "전체 적용"
 msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
-msgstr ""
+msgstr "품목의 기본 경로 대신 특정 작업 경로를 적용합니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1626,7 +1632,7 @@ msgstr "마감"
 #. module: stock
 #: model:product.removal,name:stock.removal_closest
 msgid "Closest Location"
-msgstr ""
+msgstr "가까운 위치"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
@@ -2167,7 +2173,7 @@ msgstr "DHL 익스프레스 배송업체"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Date"
-msgstr "일자"
+msgstr "날짜"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -2298,7 +2304,7 @@ msgstr "팔로우 할 기본 출고 경로"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
 msgid "Default returns location"
-msgstr ""
+msgstr "기본 반품 위치"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__forecast_uom_id
@@ -2564,7 +2570,7 @@ msgstr "인수시 설명"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr ""
+msgstr "이전에 관한 설명"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
@@ -2782,7 +2788,7 @@ msgstr "폐기를 승인하시겠습니까?"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Do you want to validate all <b>reserved</b> quantities?"
-msgstr ""
+msgstr "모든 <b>예약</b> 수량을 확인하시겠습니까?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -3057,7 +3063,7 @@ msgstr "멋진 아이콘 폰트 예 : fa-tasks"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "For partial quantities fill in the done column"
-msgstr ""
+msgstr "부분 수량의 경우 완료 열을 입력합니다"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3594,6 +3600,8 @@ msgid ""
 "numbers. For moves that are returns, the detailed operations will always be "
 "prefilled, regardless of this option."
 msgstr ""
+"선택 시, Odoo가 해당 품목의 위치 및 Lot/일련번호를 확인하여 자동으로 세부 작업을 채워넣습니다. 반품인 경우 이 옵션에 관계없이"
+" 항상 세부 작업을 미리 채웁니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -3643,7 +3651,7 @@ msgstr ""
 msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
-msgstr ""
+msgstr "이 피킹이 다른 피킹의 반환으로 생성된 경우 이 필드는 기존의 피킹과 연결됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -4115,7 +4123,7 @@ msgstr "1월"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
@@ -4205,7 +4213,7 @@ msgstr "최근 유효 재고"
 #. module: stock
 #: model:product.removal,name:stock.removal_lifo
 msgid "Last In First Out (LIFO)"
-msgstr ""
+msgstr "후입선출 (LIFO)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -4359,7 +4367,7 @@ msgstr "리드타임"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr ""
+msgstr "최소 패키지"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -4493,7 +4501,7 @@ msgstr "위치"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "잠금/잠금 해제"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -4510,7 +4518,7 @@ msgstr "LOT"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
-msgstr ""
+msgstr "Lot 속성"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -4687,7 +4695,7 @@ msgstr "3월"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Mark All Done"
-msgstr ""
+msgstr "모두 완료 표시"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5618,7 +5626,7 @@ msgstr "패키지"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr ""
+msgstr "패키지 A"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -5775,7 +5783,7 @@ msgstr "포장 구역"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Pallet"
-msgstr ""
+msgstr "팔레트"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -5923,6 +5931,8 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"이 문서를 반품 택배 안에 동봉하여 주십시오.<br/>\n"
+"                                반품 주소:"
 
 #. module: stock
 #. odoo-python
@@ -5947,7 +5957,7 @@ msgstr "선행 작업"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
 msgid "Preferred Route"
-msgstr ""
+msgstr "선호하는 경로"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -5957,7 +5967,7 @@ msgstr "선호 경로"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "참석은 작업 유형에 따라 다릅니다."
 
 #. module: stock
 #. odoo-python
@@ -6659,7 +6669,7 @@ msgstr "소비재 또는 서비스에 대해 퀀트를 생성할 수 없습니�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "RETURN OF"
-msgstr ""
+msgstr "반품"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
@@ -6901,7 +6911,7 @@ msgstr "보충 위치"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Scrapped Quantities"
-msgstr ""
+msgstr "폐기된 수량 보충"
 
 #. module: stock
 #. odoo-python
@@ -7100,7 +7110,7 @@ msgstr "반품 선별 내역"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
 msgid "Return of"
-msgstr ""
+msgstr "반품"
 
 #. module: stock
 #. odoo-python
@@ -7112,7 +7122,7 @@ msgstr "%s의 반품"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "반품 명세서"
 
 #. module: stock
 #. odoo-python
@@ -7350,7 +7360,7 @@ msgstr "폐기 지시서"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
 msgid "Scrap operation"
-msgstr ""
+msgstr "폐기 작업"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -7611,12 +7621,12 @@ msgstr "수량 설정"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
 msgid "Set to 0"
-msgstr ""
+msgstr "0으로 설정"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "보유 수량을 설정"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -7634,7 +7644,7 @@ msgstr "설정"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Shelf 1"
-msgstr ""
+msgstr "선반 1"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -7748,7 +7758,7 @@ msgstr "승인 시 수취 보고서 표시"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "예약 보기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
@@ -8571,7 +8581,7 @@ msgstr ""
 msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
-msgstr ""
+msgstr "피킹에서 해당 작업 유형으로 생성된 반품의 기본 위치로 사용됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9395,12 +9405,12 @@ msgstr "WH/OUT/0001"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Outgoing"
-msgstr ""
+msgstr "WH/출고"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
-msgstr ""
+msgstr "WH/재고"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -9902,7 +9912,7 @@ msgstr "수량은 양수만 입력할 수 있습니다."
 msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
-msgstr ""
+msgstr "lot/일련번호가 단일 위치에 있는 경우에만 새로운 위치로 이동할 수 있습니다."
 
 #. module: stock
 #. odoo-python
@@ -10280,7 +10290,7 @@ msgstr "bpost 연결기"
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
 msgid "closest"
-msgstr ""
+msgstr "가장 가까운"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -10346,7 +10356,7 @@ msgstr "예: 2단계 수취"
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
-msgstr ""
+msgstr "선입선출"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -10368,12 +10378,12 @@ msgstr "같음"
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages
 msgid "least_packages"
-msgstr ""
+msgstr "least_packages"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
 msgid "lifo"
-msgstr ""
+msgstr "후입선출"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form

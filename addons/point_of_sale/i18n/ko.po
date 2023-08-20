@@ -5,13 +5,14 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Wil Odoo, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.4\n"
+"Project-Id-Version: Odoo Server saas~16.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:22+0000\n"
+"POT-Creation-Date: 2023-08-17 10:18+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -259,7 +260,7 @@ msgstr "<strong>세션 시작 메모:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice:</strong>"
-msgstr ""
+msgstr "<strong>원본 청구서:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -336,7 +337,7 @@ msgstr "인쇄된 영수증에 머리말로 삽입되는 짧은글."
 msgid ""
 "A valid product already exists for Point of Sale. Therefore, demonstration "
 "products cannot be loaded."
-msgstr ""
+msgstr "POS에 유효한 품목이 이미 존재하여 데모 품목을 불러올 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1108,14 +1109,14 @@ msgstr "현금 올림"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 #, python-format
 msgid "Cash control - closing"
-msgstr ""
+msgstr "현금 관리 - 마감"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/cash_opening_popup/cash_opening_popup.js:0
 #, python-format
 msgid "Cash control - opening"
-msgstr ""
+msgstr "현금 관리 - 오픈"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1136,7 +1137,7 @@ msgstr "계산 중 발견된 현금 차이(이익)"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 #, python-format
 msgid "Cash in / out"
-msgstr ""
+msgstr "현금 입/출금"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1548,7 +1549,7 @@ msgstr "판매 계속하기"
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "Continue with limited functionalities"
-msgstr ""
+msgstr "제한된 기능으로 계속 사용"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1775,6 +1776,7 @@ msgstr "고객 화면이 지원되지 않습니다. IoT 박스를 업그레이�
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "고객에게 %s 결제 방법이 필수입니다."
@@ -1801,7 +1803,7 @@ msgstr "일일 판매"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Daily Sales Report"
-msgstr ""
+msgstr "일일 판매 보고서"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session_filtered
@@ -1822,7 +1824,7 @@ msgstr "현황판"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 #, python-format
 msgid "Date"
-msgstr "일자"
+msgstr "날짜"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1976,7 +1978,7 @@ msgstr "결제가 완료되지 않은 주문을 삭제하시겠습니까?"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.js:0
 #, python-format
 msgid "Demo products are no longer available"
-msgstr ""
+msgstr "데모 상품을 더 이상 사용할 수 없습니다."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
@@ -2993,7 +2995,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "It is not allowed to mix refunds and sales"
-msgstr ""
+msgstr "환불과 판매는 혼합할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3312,6 +3314,7 @@ msgid ""
 "Meanwhile connection is back, Odoo Point of Sale will operate limited "
 "operations. Check your connection or continue with limited functionalities"
 msgstr ""
+"연결이 복구되는 동안 Odoo POS는 제한적으로 운영됩니다. 연결 상태를 확인하거나 제한된 기능을 계속 사용할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3472,17 +3475,12 @@ msgstr "신규 세션 생성"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 #, python-format
 msgid "New amount"
-msgstr ""
+msgstr "신규 금액"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "신문 걸이대"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "다음 활동 캘린더 행사"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3594,14 +3592,14 @@ msgstr "주문이 없습니다"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products found for"
-msgstr ""
+msgstr "다음에 대한 품목을 찾을 수 없습니다"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "No products here, but don't worry, we've got your back."
-msgstr ""
+msgstr "여기에는 제품이 없지만 걱정하지 마세요, 도와드리겠습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -3672,7 +3670,7 @@ msgstr "이 주문 내역에서 환불된 항목의 수입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: point_of_sale
@@ -3741,6 +3739,14 @@ msgstr "이 환불 내역의 수량에는 음수만 입력할 수 있습니다. 
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "현금에만 반올림 적용"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only journals of type 'Cash' or 'Bank' could be used with payment methods."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3984,8 +3990,8 @@ msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr "이 필드의 주문 내역은 해당 주문을 환불한 내용입니다."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4147,8 +4153,8 @@ msgid "Pay Order"
 msgstr "지불 주문"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4362,7 +4368,7 @@ msgstr "플라스틱"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "Play with"
-msgstr ""
+msgstr "결제 방법"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4743,7 +4749,7 @@ msgstr "점포판매시스템 제품 분류"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr ""
+msgstr "Pos 환불 청구서"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
@@ -4817,6 +4823,7 @@ msgstr "저작권자"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "준비 표시"
@@ -5191,11 +5198,6 @@ msgid "REFUNDED:"
 msgstr "환불 완료:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "평가"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
@@ -5302,7 +5304,7 @@ msgstr "환불 주문"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Refund and Sales not allowed"
-msgstr ""
+msgstr "환불 및 판매 불가"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6200,7 +6202,7 @@ msgstr "마감 시 재고 내용을 업데이트해야 합니다."
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "Street"
-msgstr "도로명"
+msgstr "도로명 주소"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6262,7 +6264,7 @@ msgstr "요약"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #, python-format
 msgid "Switch Product View"
-msgstr ""
+msgstr "품목 보기 전환"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6392,7 +6394,7 @@ msgstr "전화 :"
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 #, python-format
 msgid "Thank you for your purchase!"
-msgstr ""
+msgstr "구매해 주셔서 감사합니다!"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7509,7 +7511,7 @@ msgstr "다음으로 이동할 수 있습니다."
 msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
-msgstr ""
+msgstr "신규 또는 취소 상태의 주문과 관련된 PoS 주문 항목의 연결만 해제할 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7672,7 +7674,7 @@ msgstr "세션에 점포판매시스템을 할당해야 합니다."
 #: code:addons/point_of_sale/static/src/app/errors/popups/offline_error_popup.js:0
 #, python-format
 msgid "You're offline"
-msgstr ""
+msgstr "오프라인 상태입니다"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7737,7 +7739,7 @@ msgstr "다른 세션에 속합니다 :"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "create your own products"
-msgstr ""
+msgstr "새로운 품목 생성하기"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7840,7 +7842,7 @@ msgstr "주문:"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/product_list.xml:0
 #, python-format
 msgid "our demo products"
-msgstr ""
+msgstr "데모 제품"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7871,14 +7873,14 @@ msgstr "돌아가기"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the invoice"
-msgstr ""
+msgstr "청구서"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "the receipt"
-msgstr ""
+msgstr "영수증"
 
 #. module: point_of_sale
 #. odoo-javascript

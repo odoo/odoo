@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Sarah Park, 2023
 # Daye Jeong, 2023
 # 
 msgid ""
@@ -486,12 +487,12 @@ msgstr "<span class=\"o_stat_text\">최근 평가</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">상위 작업</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted o_row ps-1 pb-3\">평가 요청 보내기:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -512,6 +513,11 @@ msgid ""
 "                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','periodic')]}\">평가 요청은 작업이 환경 설정 내용에 따라 정의된 단계에 도달하는 즉시 이메일을 통해 전송됩니다.</span>\n"
+"                                                    <span attrs=\"{'invisible': [('rating_status','=','stage')]}\">평가 요청은 작업의 환경 설정 내용에 따라 정의된 단계에 있는 동안 이메일을 통해 전송됩니다.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -599,7 +605,7 @@ msgstr "개인 단계는 해당 사용자에게만 표시되기 때문에 프로
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "비공개 작업에는 상위 항목을 설정할 수 없습니다."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
@@ -1020,7 +1026,7 @@ msgstr "리스크"
 msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
-msgstr ""
+msgstr "문서나 링크를 작업에 직접 첨부하여 모든 조사 자료를 중앙 집중화하십시오."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1143,7 +1149,7 @@ msgstr "차단"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocking Tasks"
-msgstr ""
+msgstr "작업 차단"
 
 #. module: project
 #. odoo-javascript
@@ -1302,6 +1308,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"이메일 게이트웨이를 사용하여 작업에 대해 고객과 소통합니다. 작업에 로고 디자인을 첨부하여\n"
+"      디자이너로부터 티셔츠 프린트 담당자에게 정보가 전달될 수 있도록 합니다."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1576,6 +1584,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"고객이 이메일로 피드백을 제안하면 Odoo는 자동으로 작업을 생성하여\n"
+"      고객이 작업에 대해 직접 소통할 수 있도록 합니다."
 
 #. module: project
 #. odoo-python
@@ -1600,7 +1610,7 @@ msgstr "일별"
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #, python-format
 msgid "Date"
-msgstr "일자"
+msgstr "날짜"
 
 #. module: project
 #. odoo-javascript
@@ -1847,7 +1857,7 @@ msgstr "접근 모드 표시"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_in_project
 msgid "Display In Project"
-msgstr ""
+msgstr "프로젝트에 표시"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2111,7 +2121,7 @@ msgstr "프로젝트 상태에 대한 정보를 확인하며 진행 상황을 �
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "고객 피드백을 받고 직원의 성과를 평가하세요."
 
 #. module: project
 #. odoo-python
@@ -2151,7 +2161,7 @@ msgstr "그룹별"
 msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
-msgstr ""
+msgstr "새로운 프로젝트의 작업에서 수집한 아이디어를 처리하고 작업 메시지창에서 이에 대해 논의합니다."
 
 #. module: project
 #. odoo-javascript
@@ -2396,7 +2406,7 @@ msgstr "잘못된 값: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Invite Collaborators"
-msgstr ""
+msgstr "공동 작업자 초대"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2637,7 +2647,7 @@ msgstr "로고 디자인"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Look for the"
-msgstr ""
+msgstr "검색"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3165,7 +3175,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "주문 간의 우선 순위를 정리하려면"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3359,7 +3369,7 @@ msgstr "이전"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "중요한 작업을 표시하여 작업의 우선순위를 정하세요"
 
 #. module: project
 #. odoo-python
@@ -3396,7 +3406,7 @@ msgstr "비공개"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "비공개 작업"
 
 #. module: project
 #. odoo-javascript
@@ -3678,6 +3688,7 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"승인 또는 변경 요청에 대한 작업 상태와 종속성 관련 문제로 보류 중인 작업은 모래시계 아이콘으로 빠르게 확인할 수 있습니다."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4239,7 +4250,7 @@ msgstr "단계 변경됨"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Stage: %s"
-msgstr ""
+msgstr "단계: %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stages_active
@@ -4668,7 +4679,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "프로젝트와 관련된 협력사는 동일한 회사에 연결되어 있어야 합니다."
 
 #. module: project
 #. odoo-python
@@ -4689,7 +4700,7 @@ msgstr ""
 msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
-msgstr ""
+msgstr "분석 계정에 분석 항목이 있거나 둘 이상의 프로젝트가 연결되어 있는 경우 프로젝트 회사를 변경할 수 없습니다."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4709,7 +4720,7 @@ msgstr "검색에서는 %s 연산자나 %s 값이 지원되지 않습니다."
 #, python-format
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "작업과 관련된 협력사는 동일한 회사에 연결되어 있어야 합니다."
 
 #. module: project
 #. odoo-python
@@ -4823,7 +4834,7 @@ msgstr "도움말: 수신한 이메일에서 작업을 생성합니다"
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "팁: 작업 상태를 사용하여 작업 진행 상황 추적하기"
 
 #. module: project
 #. odoo-python
@@ -4916,7 +4927,7 @@ msgstr "성공하기 위해서 반드시 도달해야 하는 주요 진행 사�
 msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
-msgstr ""
+msgstr "분석 회계로 프로젝트의 수익성을 추적하세요. 새 프로젝트에 대한 분석 계획을 선택합니다:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5394,7 +5405,7 @@ msgstr "개인 단계가 최소한 하나는 있어야 합니다. 이 항목을 
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "관리자가 어떤 피드백을 받아들일지 결정합니다."
 
 #. module: project
 #. odoo-javascript
@@ -5432,7 +5443,7 @@ msgstr "아바타"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "button."
-msgstr ""
+msgstr "버튼."
 
 #. module: project
 #. odoo-javascript
@@ -5500,7 +5511,7 @@ msgstr "일별 활동을 아이콘을 활용하여 정리하세요."
 msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or canceled, all of its dependencies will be unblocked."
-msgstr ""
+msgstr "아이콘을 클릭하면 대기 중인 다른 작업을 볼 수 있습니다. 작업이 완료 또는 취소로 표시되면 모든 종속성은 해제됩니다."
 
 #. module: project
 #. odoo-javascript
@@ -5524,7 +5535,7 @@ msgstr "메뉴 보기 나의 작업"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "주기적으로"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5543,7 +5554,7 @@ msgstr "도달 완료로 표시할 준비됨"
 #, python-format
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "작업에 대한 변경 요청이나 논의할 점을 표시합니다."
 
 #. module: project
 #. odoo-javascript
@@ -5552,21 +5563,21 @@ msgstr ""
 #, python-format
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
-msgstr ""
+msgstr "동료에게 작업이 다음 단계로 진행할 준비가 되었음을 알립니다."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as canceled."
-msgstr ""
+msgstr "작업이 취소되었음을 표시합니다."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "작업을 완료로 표시합니다."
 
 #. module: project
 #. odoo-javascript
@@ -5620,7 +5631,7 @@ msgstr "현재 아이디어가 어떤 상태인지 알려줍니다."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "특정 단계에 도달했을 때"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

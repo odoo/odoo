@@ -46,12 +46,12 @@ msgstr "API 연결을 설정할 수 없습니다."
 #. module: payment_ogone
 #: model:payment.provider,display_as:payment_ogone.payment_provider_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "신용 카드 (Ogone 제공)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "해시 기능"
 
 #. module: payment_ogone
 #. odoo-python
@@ -86,7 +86,7 @@ msgstr "지불 거래"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "잘못된 결제 상태의 데이터가 수신되었습니다: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
@@ -118,17 +118,17 @@ msgstr "SHA512"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
-msgstr ""
+msgstr "나중을 위해 결제 세부 정보를 저장하세요."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "Ogone에서 API 사용자를 식별하는 데 사용되는 ID입니다"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "Ogone에서 계정을 식별하는 데 사용되는 ID입니다"
 
 #. module: payment_ogone
 #. odoo-python
@@ -142,7 +142,7 @@ msgstr "API와의 통신에 실패했습니다."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "결제가 승인되지 않았습니다: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
@@ -162,6 +162,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Stripe</strong>."
 msgstr ""
+"이 공급업체는 더 이상 사용되지 않습니다.\n"
+"                    해당 공급업체를 비활성화하고 <strong>Stripe</strong>으로 이동하십시오."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone

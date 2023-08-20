@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Fernanda Alvarez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "Ajustes de configuración"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Online payment method"
-msgstr ""
+msgstr "Método de pago en línea"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -51,7 +52,7 @@ msgstr "Pagar"
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Pagar al cajero"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -71,7 +72,7 @@ msgstr "Órdenes del punto de venta"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Select a payment method"
-msgstr ""
+msgstr "Seleccione un método de pago."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -81,20 +82,21 @@ msgid ""
 "The POS self-order mode with payment after each order requires an online "
 "payment method to be configured."
 msgstr ""
+"El modo de autocompra del PdV requiere que se configure un método de pago."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "No se puede pagar la orden actual (puede que ya esté pagada)."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order is invalid."
-msgstr ""
+msgstr "La orden actual no es válida."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -102,6 +104,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"El método de pago en línea a usar cuando el cliente realice una compra en "
+"línea."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -112,15 +116,18 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"El método de pago en línea utilizado para autocompras en una configuración "
+"de PdV debe tener al menos un proveedor de pagos publicado que admita la "
+"divisa de esa configuración de PdV."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The order could not be saved, therefore its payment is unavailable."
-msgstr ""
+msgstr "No se pudo guardar la orden, por lo que el pago no está disponible."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Usar la compra en línea"

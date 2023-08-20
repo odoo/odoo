@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,14 +29,14 @@ msgstr "Configuratie instellingen"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Online payment method"
-msgstr ""
+msgstr "Online betaalmethode"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Order"
-msgstr "Order"
+msgstr "Bestelling"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -43,19 +44,19 @@ msgstr "Order"
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay"
-msgstr "Betaal"
+msgstr "Betalen"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Betalen aan de kassa"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
-msgstr "Betaalwijzes"
+msgstr "Betaalmethodes"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -65,12 +66,12 @@ msgstr "Kassa-instellingen"
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Kassaorders"
+msgstr "Bestellingen kassa"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Select a payment method"
-msgstr ""
+msgstr "Selecteer een betaalmethode"
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -80,20 +81,22 @@ msgid ""
 "The POS self-order mode with payment after each order requires an online "
 "payment method to be configured."
 msgstr ""
+"Voor de self-ordermodus van het kassasysteem met betaling na elke bestelling"
+" moet een online betaalmethode worden geconfigureerd."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Deze order kan niet worden betaald (het is misschien al betaald)."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/order_cart/order_cart.js:0
 #, python-format
 msgid "The current order is invalid."
-msgstr ""
+msgstr "De huidigebestelling is ongeldig."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -101,6 +104,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"De online betaalmethode die moet gebruikt worden als een klant een self-"
+"order online betaalt."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -111,6 +116,9 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"De online betaalmethode gebruikt voor self-orders in een kassasysteem moet "
+"minstens een gepubliceerde betaalprovider hebben die de valuta van dat "
+"kassasysteem ondersteunt."
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -118,8 +126,10 @@ msgstr ""
 #, python-format
 msgid "The order could not be saved, therefore its payment is unavailable."
 msgstr ""
+"De bestelling kon niet worden opgeslaan, de betaling kan dus niet worden "
+"uitgevoerd."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Gebruik online betaling voor self-order"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,21 +38,35 @@ msgid ""
 "                        </option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                        <option value=\"done\" title=\"Successful payment\">\n"
+"                            Succesvol\n"
+"                        </option>\n"
+"                        <option value=\"pending\" title=\"Payment processing\">\n"
+"                            In afwachting\n"
+"                        </option>\n"
+"                        <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                            Geannuleerd\n"
+"                        </option>\n"
+"                        <option value=\"error\" title=\"Processing error\">\n"
+"                            Fout\n"
+"                        </option>\n"
+"                    </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Details (test data)</b></small>"
-msgstr ""
+msgstr "<small><b>Betalingsdetails (testgegevens)</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "<small><b>Payment Status</b></small>"
-msgstr ""
+msgstr "<small><b>Status betaling</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr ""
+msgstr "Goedkeuren"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -104,7 +119,7 @@ msgstr "Demo"
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "Demoproviders moet nooit ingeschakeld zijn."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -136,7 +151,7 @@ msgstr "Betalingstransactie"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "Betalingen met deze betaalmethode zullen <b>succesvol</b> zijn."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -144,11 +159,12 @@ msgid ""
 "Payments made with this payment method will be automatically "
 "<b>canceled</b>."
 msgstr ""
+"Betalingen met deze betaalmethode worden automatisch <b>geannuleerd</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
-msgstr ""
+msgstr "Betalingen met deze betaalmethode blijven <b>in afwachting</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -156,6 +172,8 @@ msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
 msgstr ""
+"Betalingen met deze betaalmethode zullen een verwerkings<b>fout</b> "
+"simuleren."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -165,17 +183,19 @@ msgstr "In afwachting"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "Zet op Fout"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "Gesimuleerde status"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
 msgstr ""
+"De status waarin de transacties die met dit token zijn aangemaakt moeten "
+"worden gezet."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -192,11 +212,11 @@ msgstr "De transactie is niet gekoppeld aan een token."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.inline_form
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Je hebt de volgende demobetalingsstatus geselecteerd: %s"

@@ -5,8 +5,8 @@
 # Translators:
 # Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
@@ -53,7 +53,7 @@ msgstr "Tarjeta de crédito (con tecnología de Ogone)"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
 msgid "Hash function"
-msgstr ""
+msgstr "Función Hash"
 
 #. module: payment_ogone
 #. odoo-python
@@ -71,7 +71,7 @@ msgstr "Ogone"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
-msgstr "PSPID"
+msgstr "Identificador del proveedor de servicios de pago"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_provider
@@ -120,7 +120,7 @@ msgstr "SHA512"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
-msgstr "Es necesario guardar sus detalles de pago para futuros usos."
+msgstr "Es necesario guardar sus detalles de pago para usos futuros."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
@@ -167,6 +167,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Stripe</strong>."
 msgstr ""
+"Este es un proveedor obsoleto.\n"
+"                    Considere desactivarlo y cambiarse a <strong>Stripe</strong>."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
@@ -183,7 +185,7 @@ msgstr "Se ha cancelado su pago."
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
 msgstr ""
-"Se ha procesado su pago con éxito pero está en espera de su aprobación."
+"Se ha procesado su pago con éxito pero se está esperando la aprobación."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
