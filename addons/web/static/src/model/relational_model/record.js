@@ -335,6 +335,11 @@ export class Record extends DataPoint {
                 case "integer":
                 case "monetary":
                     continue;
+                case "html":
+                    if (this._isRequired(fieldName) && this.data[fieldName].length === 0) {
+                        unsetRequiredFields.push(fieldName);
+                    }
+                    break;
                 case "one2many":
                 case "many2many": {
                     const list = this.data[fieldName];
