@@ -13,20 +13,20 @@
 # Morten Schou <ms@msteknik.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2021
 # Sanne Kristensen <sanne@vkdata.dk>, 2021
 # Mads Søndergaard, 2021
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
 # Mads Søndergaard, 2021
 # Martin Trigaux, 2022
+# lhmflexerp <lhm@flexerp.dk>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 16:49+0000\n"
+"POT-Creation-Date: 2023-08-06 08:36+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1747,6 +1747,13 @@ msgstr ""
 "Har ikke adgang, spring over disse data til brugerens opsamlings e-mail"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Dokumentation"
@@ -1982,6 +1989,7 @@ msgstr "Bogføringsgrupper"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3432,6 +3440,7 @@ msgstr "Pluk POS"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Plukninger"
 
@@ -4943,6 +4952,16 @@ msgid "The default pricelist must be included in the available pricelists."
 msgstr "Standardprislisten skal være inkluderet i de tilgængelige prislister."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"The default pricelist must belong to no company or the company of the point "
+"of sale."
+msgstr ""
+"Standard prislisten skal enten ikke tilhøre nogen virksomhed eller skal "
+"tilhøre POS'ens virksomhed."
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
@@ -5320,6 +5339,15 @@ msgid "This order is empty"
 msgstr "Denne ordre er tom"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -5542,15 +5570,6 @@ msgid "Type of the exception activity on record."
 msgstr "Type af undtagelsesaktivitet registreret "
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5674,6 +5693,13 @@ msgid "Unsupported File Format"
 msgstr "Ikke-understøttet fil format"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "Enhed"
@@ -5731,13 +5757,6 @@ msgstr "Brugermærke"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Unsynced order"
-msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5901,6 +5920,15 @@ msgid ""
 msgstr ""
 "Du kan ikke bekræfte et kontoudtog, som anvendes i en åben session for et "
 "Point of Sale."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

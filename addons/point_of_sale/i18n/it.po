@@ -15,14 +15,15 @@
 # Martin Trigaux, 2023
 # Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 16:49+0000\n"
+"POT-Creation-Date: 2023-08-06 08:36+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1749,6 +1750,13 @@ msgstr ""
 "dell'utente"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentazione"
@@ -1985,6 +1993,7 @@ msgstr "Posizioni fiscali"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3437,6 +3446,7 @@ msgstr "- Prelievo POS"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Prelievi"
 
@@ -4951,6 +4961,16 @@ msgstr ""
 "Il listino prezzi predefinito deve essere incluso nei listini disponibili."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"The default pricelist must belong to no company or the company of the point "
+"of sale."
+msgstr ""
+"Il listino prezzi predefinito deve o appartenere a nessuna azienda o "
+"all'azienda del punto vendita."
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
@@ -5343,6 +5363,17 @@ msgid "This order is empty"
 msgstr "Questo ordine è vuoto"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Questo ordine non è ancora sincronizzato con il server. Riprovare dopo aver "
+"controllato che sia sincronizzato."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -5566,17 +5597,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo di attività eccezione sul record."
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-"Questo ordine non è ancora sincronizzato con il server. Riprovare dopo aver "
-"controllato che sia sincronizzato."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5700,6 +5720,13 @@ msgid "Unsupported File Format"
 msgstr "Formato file non supportato"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Ordine non sincronizzato"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "UdM"
@@ -5757,13 +5784,6 @@ msgstr "Etichette utente"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "UUID"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Unsynced order"
-msgstr "Ordine non sincronizzato"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5929,6 +5949,15 @@ msgid ""
 msgstr ""
 "Impossibile convalidare un estratto conto utilizzato in una sessione aperta "
 "di un punto vendita."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

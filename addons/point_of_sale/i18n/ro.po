@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-09 16:49+0000\n"
+"POT-Creation-Date: 2023-08-06 08:36+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -1741,6 +1741,13 @@ msgstr ""
 "utilizatorului"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentație"
@@ -1977,6 +1984,7 @@ msgstr "Poziții fiscale"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3432,6 +3440,7 @@ msgstr "Ridicare POS"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Ridicări"
 
@@ -4940,6 +4949,16 @@ msgstr ""
 "Lista de prețuri implicită trebuie inclusă în lista de liste disponibile"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"The default pricelist must belong to no company or the company of the point "
+"of sale."
+msgstr ""
+"Lista de prețuri implicită trebuie să aparțină niciunei companii sau "
+"companiei PoS-ului"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
@@ -5321,6 +5340,15 @@ msgid "This order is empty"
 msgstr "Această comandă este goală"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -5544,15 +5572,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -5676,6 +5695,13 @@ msgid "Unsupported File Format"
 msgstr "Format fișier neacceptat"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "UM"
@@ -5734,13 +5760,6 @@ msgstr "Etichete utilizator"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
 msgstr "Uuid"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid "Unsynced order"
-msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -5906,6 +5925,19 @@ msgid ""
 msgstr ""
 "Nu puteți valida un extras bancar folosit într-o sesiune deschisă a unui "
 "punct de vânzare."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
+"Nu puteți: crea o comandă de poziție din interfața de backend, sau anulați "
+"lista de prețuri, sau creați o comandă de poziție într-un test python cu "
+"Formularul de instrumente, sau editați vizualizarea formularului în studio "
+"dacă nu există nicio comandă de poziție"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
