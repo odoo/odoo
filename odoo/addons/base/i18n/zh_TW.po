@@ -590,17 +590,6 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
-"\n"
-"        Chart of Accounts (COA) Template for Latvia's Accounting.\n"
-"        This module also includes:\n"
-"        * Tax groups,\n"
-"        * Most common Latvian Taxes,\n"
-"        * Fiscal positions,\n"
-"        * Latvian bank list.\n"
-"\n"
-"        author is Allegro IT (visit for more information https://www.allegro.lv)\n"
-"        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -4398,34 +4387,33 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"This is the base module to manage the accounting chart for Belgium in Odoo.\n"
+"這是管理 Odoo 中比利時會計圖表的基本模組。\n"
 "==============================================================================\n"
 "\n"
-"After installing this module, the Configuration wizard for accounting is launched.\n"
-"    * We have the account templates which can be helpful to generate Charts of Accounts.\n"
-"    * On that particular wizard, you will be asked to pass the name of the company,\n"
-"      the chart template to follow, the no. of digits to generate, the code for your\n"
-"      account and bank account, currency to create journals.\n"
+"安裝此模組後，將啟用用於記帳的設定精靈。\n"
+"    * 我們有帳戶範本，可以説明產生帳戶圖表。\n"
+"    • 在該特定向導上，您將被要求傳遞公司名稱，\n"
+"      要遵循的圖表範本，否。要產生的數位，您的代碼\n"
+"      帳戶和銀行帳戶，用於建立日誌的貨幣。\n"
 "\n"
-"Thus, the pure copy of Chart Template is generated.\n"
+"因此，將產生圖表範本的純備份。\n"
 "\n"
-"Wizards provided by this module:\n"
+"此模組提供的引導:\n"
 "--------------------------------\n"
-"    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced\n"
-"      amounts. Prepares an XML file format.\n"
+"    • 合作夥伴加值稅內部:向合作夥伴登記其相關加值稅並開具發票\n"
+"      金額。準備 XML 檔案格式。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra\n"
-"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of\n"
-"      the Main company of the User currently Logged in.\n"
+"[存取:*的路徑] 開票/報告/法律報告/比利時報表/合作夥伴加值稅內部\n"
+"    • 定期加值稅聲明:準備用於加值稅申報的 XML 檔\n"
+"      使用者當前登錄的主要公司。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration\n"
-"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat\n"
-"      Declaration of the Main company of the User currently Logged in Based on\n"
-"      Fiscal year.\n"
+"[存取:*的途徑] 開票/報告/法律報告/比利時報表/定期加值稅申報\n"
+"    • 加值稅客戶年度清單:為 加值稅 準備 XML 檔\n"
+"      當前登錄的使用者的主要公司的聲明基於\n"
+"      財年。\n"
 "\n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
-"\n"
-"    "
+"[存取:*的途徑] 開票/報告/法律報告/比利時報表/加值稅客戶年度清單\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -6226,7 +6214,7 @@ msgid ""
 msgstr ""
 "%(previous_message)s\n"
 "\n"
-"Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
+"透過「%(document_kind)s」（%(document_model)s）隱含存取。"
 
 #. module: base
 #. odoo-python
@@ -6883,7 +6871,7 @@ msgstr "<strong>依賴:</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Email:</strong>"
-msgstr "<strong>電子郵件地址:</strong>"
+msgstr "<strong>電郵：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6929,7 +6917,7 @@ msgstr "<strong>姓名</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr "<strong>電話:</strong>"
+msgstr "<strong>電話：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12498,6 +12486,16 @@ msgstr "違反約束時返回的錯誤消息."
 
 #. module: base
 #. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
@@ -13593,7 +13591,7 @@ msgstr "星期五"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
 msgid "From"
-msgstr "來自"
+msgstr "由"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -23952,6 +23950,8 @@ msgid ""
 "Since %(user)s is a/an \"%(category)s: %(group)s\", they will at least "
 "obtain the right %(missing_group_message)s"
 msgstr ""
+"因為 %(user)s "
+"屬於「%(category)s：%(group)s」組別，所以至少會有以下權限：%(missing_group_message)s"
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -24247,7 +24247,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_account
 msgid "Spreadsheet dashboard for accounting"
-msgstr ""
+msgstr "會計試算表概覽畫面"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_website_sale_slides
@@ -27081,7 +27081,7 @@ msgstr "烏茲別克斯坦"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "增值稅"
+msgstr "統一編號"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat

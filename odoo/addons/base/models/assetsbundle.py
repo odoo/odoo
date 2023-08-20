@@ -321,6 +321,16 @@ class AssetsBundle(object):
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
+    def add_post_rollback(self):
+        """
+        In some rare cases it is possible that an attachment is created
+        during a transaction, added to the ormcache but the transaction
+        is rolled back, leading to 404 when getting the attachments.
+        This postrollback hook will help fix this issue by clearing the
+        cache if it is not committed.
+        """
+        self.env.cr.postrollback.add(self.env.registry._Registry__cache.clear)
+
     def save_attachment(self, extension, content):
         """Record the given bundle in an ir.attachment and delete
         all other ir.attachments referring to this bundle (with the same name and extension).
@@ -353,6 +363,7 @@ class AssetsBundle(object):
             'public': True,
             'raw': content.encode('utf8'),
         }
+        self.add_post_rollback()
         attachment = ira.with_user(SUPERUSER_ID).create(values)
         url = self.get_asset_url(
             id=attachment.id,

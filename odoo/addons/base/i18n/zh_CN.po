@@ -12,6 +12,7 @@
 # 徐 文郁, 2023
 # Martin Trigaux, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -747,6 +748,16 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        拉脱维亚会计科目表 (COA) 模板。\n"
+"        该模块还包括：\n"
+"        * 税务组块\n"
+"        * 最常见的拉脱维亚税种\n"
+"        * 财务状况\n"
+"        * 拉脱维亚银行列表\n"
+"\n"
+"        作者为 Allegro IT（如欲了解更多信息，请访问 https://www.allegro.lv）\n"
+"         合著者为 Chick.Farm（如欲了解更多信息，请访问 https://www.myacc.cloud）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -4816,6 +4827,8 @@ msgid ""
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"管理爱沙尼亚会计图表的 Odoo 基础模块。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -5962,6 +5975,16 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Transifex 整合\n"
+"=====================\n"
+"本模块在翻译视图中添加 Transifex 项目链接。\n"
+"本模块的目的是提高主要模块的翻译速度。\n"
+"\n"
+"Odoo 使用 Transifex 配置文件 `.tx/config` 来检测项目源。不会翻译自定义模块（因为没有发布在\n"
+"主 Transifex 项目）。\n"
+"用户要翻译的语言必须在 Transifex 项目中激活。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -10800,6 +10823,13 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -12992,6 +13022,16 @@ msgstr "错误"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误消息."
+
+#. module: base
+#. odoo-python
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -15774,7 +15814,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "无效的「分组」参数"
 
 #. module: base
-#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -16650,7 +16695,7 @@ msgstr "拉脱维亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lv
 msgid "Latvia - Accounting"
-msgstr ""
+msgstr "拉脱维亚 - 会计"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -24836,7 +24881,6 @@ msgstr "开始设置"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_form
 #: model_terms:ir.ui.view,arch_db:base.view_country_state_tree
-#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
@@ -24879,6 +24923,7 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:base.field_ir_module_module__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__state
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
+#: model_terms:ir.ui.view,arch_db:base.view_module_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Status"
 msgstr "状态"
@@ -26992,6 +27037,13 @@ msgstr "未找到 WKhtmltopdf 系统，不能创建 PDF."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_fields.py:0
+#, python-format
+msgid "Unable to import field type '%s'  "
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28345,6 +28397,15 @@ msgid "You can not create recursive tags."
 msgstr "您不能创建递归的标签."
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the template users is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
 msgstr "用户名称必须唯一!"
@@ -28466,6 +28527,12 @@ msgstr "您不能停用您当前登录的用户."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -28498,6 +28565,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -28527,6 +28601,13 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr "您不能减少已在会计分录中使用的货币的小数位数."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #. odoo-python

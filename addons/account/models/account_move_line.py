@@ -1721,7 +1721,6 @@ class AccountMoveLine(models.Model):
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
                 debit_rate = 1
-                credit_rate = None
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
 
@@ -1742,7 +1741,6 @@ class AccountMoveLine(models.Model):
             # try to fallback on the company currency instead.
             if recon_currency.is_zero(recon_debit_amount) or recon_currency.is_zero(recon_credit_amount):
                 recon_currency = company_currency
-                debit_rate = None
                 credit_rate = 1
                 recon_debit_amount = remaining_debit_amount
                 recon_credit_amount = -remaining_credit_amount
@@ -2406,7 +2404,7 @@ class AccountMoveLine(models.Model):
         # ==== Create entries for cash basis taxes ====
 
         is_cash_basis_needed = account.company_id.tax_exigibility and account.account_type in ('asset_receivable', 'liability_payable')
-        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
             results['tax_cash_basis_moves'] = tax_cash_basis_moves
 
