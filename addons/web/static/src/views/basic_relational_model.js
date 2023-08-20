@@ -243,6 +243,11 @@ export class Record extends DataPoint {
                 case "integer":
                 case "monetary":
                     continue;
+                case "html":
+                    if (this.isRequired(fieldName) && !this.checkHtmlValidity(fieldName)) {
+                        this._setInvalidField(fieldName);
+                    }
+                    break;
                 case "properties":
                     if (!this.checkPropertiesValidity(fieldName)) {
                         this._setInvalidField(fieldName);
@@ -357,6 +362,11 @@ export class Record extends DataPoint {
                 !propertyDefinition.id ||
                 (propertyDefinition.string && propertyDefinition.string.length)
         );
+    }
+
+    checkHtmlValidity(fieldName) {
+        const value = this.data[fieldName];
+        return value.length;
     }
 
     _setInvalidField(fieldName) {
