@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { intersection } from "@web/core/utils/arrays";
-import { csrf_token, _t } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
 
@@ -290,8 +290,8 @@ function sendRequest(route, params) {
         form.setAttribute('target', '_top');
     }
 
-    if (csrf_token) {
-        _addInput(form, 'csrf_token', csrf_token);
+    if (odoo.csrf_token) {
+        _addInput(form, 'csrf_token', odoo.csrf_token);
     }
 
     for (const key in params) {

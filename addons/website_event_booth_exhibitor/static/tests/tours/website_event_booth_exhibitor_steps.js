@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-    import core from "@web/legacy/js/services/core";
+    import Class from "@web/legacy/js/core/class";
 
-    var FinalSteps = core.Class.extend({
+    var FinalSteps = Class.extend({
 
         _getSteps: function () {
             return [{

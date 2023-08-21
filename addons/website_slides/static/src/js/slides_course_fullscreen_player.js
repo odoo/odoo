@@ -3,7 +3,7 @@
 /* global YT, Vimeo */
 
     import publicWidget from '@web/legacy/js/public/public_widget';
-    import  { _t } from "@web/legacy/js/services/core";
+    import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
     import { Markup } from "@web/legacy/js/core/utils";
 

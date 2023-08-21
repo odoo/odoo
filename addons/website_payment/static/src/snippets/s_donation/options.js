@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { _t } from "@web/legacy/js/services/core";
 import { renderToElement } from "@web/core/utils/render";
 import options from '@web_editor/js/editor/snippets.options';
+import { _t } from "@web/core/l10n/translation";
 
 options.registry.Donation = options.Class.extend({
     /**

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import Class from "@web/legacy/js/core/class";
 
-var PurchaseAdditionalTourSteps = core.Class.extend({
+var PurchaseAdditionalTourSteps = Class.extend({
     _get_purchase_stock_steps: function () {
         return [
             {
