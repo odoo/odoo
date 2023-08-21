@@ -8,7 +8,7 @@ import { PropertyDefinition } from "./property_definition";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { PropertyValue } from "./property_value";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from "@web/core/position_hook";
@@ -30,7 +30,7 @@ export class PropertiesField extends Component {
         ...standardFieldProps,
         context: { type: Object, optional: true },
         columns: { type: Number, optional: true },
-        hideAddButton: { type: Boolean, optional: true },
+        showAddButton: { type: Boolean, optional: true },
         hideKanbanOption: { type: Boolean, optional: true },
     };
 
@@ -56,9 +56,16 @@ export class PropertiesField extends Component {
         this.state = useState({
             canChangeDefinition: true,
             movedPropertyName: null,
-            hideAddButton: this.props.hideAddButton,
+            showAddButton: this.props.showAddButton,
             unfoldedSeparators: this._getUnfoldedSeparators(),
         });
+
+        // Properties can be added from the cogmenu of the form controller
+        if (this.env.config?.viewType === "form") {
+            useBus(this.env.model.bus, "PROPERTY_FIELD:ADD_PROPERTY_VALUE", () => {
+                this.onPropertyCreate();
+            });
+        }
 
         onWillStart(async () => {
             await this._checkDefinitionAccess();
@@ -609,7 +616,7 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.openPropertyDefinition = newName;
-        this.state.hideAddButton = false;
+        this.state.showAddButton = true;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
@@ -939,29 +946,10 @@ export const propertiesField = {
         return {
             context: dynamicInfo.context,
             columns: parseInt(attrs.columns || "1"),
-            hideAddButton: archParseBoolean(attrs.hideAddButton),
+            showAddButton: archParseBoolean(attrs.showAddButton),
             hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
         };
     },
 };
 
 registry.category("fields").add("properties", propertiesField);
-
-/**
- * This action is meant to be called from a form client action
- * and will let the user create properties, typically used along
- * with the "hideAddButton" option of the properties field.
- *
- * @param {object} env
- */
-async function actionAddProperty(env) {
-    const addProperty = document.querySelector(".o_field_property_add button");
-    if (addProperty) {
-        addProperty.click();
-    } else {
-        const message = _t("You can not create a new property.");
-        env.services.notification.add(message, { type: "danger" });
-    }
-}
-
-registry.category("actions").add("action_configure_properties_field", actionAddProperty);
