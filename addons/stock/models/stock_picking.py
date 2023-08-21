@@ -105,6 +105,8 @@ class PickingType(models.Model):
              " * Never: remaining products are cancelled")
     show_picking_type = fields.Boolean(compute='_compute_show_picking_type')
 
+    picking_properties_definition = fields.PropertiesDefinition("Picking Properties")
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -485,6 +487,11 @@ class Picking(models.Model):
         ('late', 'Late')], compute='_compute_products_availability')
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+
+    picking_properties = fields.Properties(
+        'Properties',
+        definition='picking_type_id.picking_properties_definition',
+        copy=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
