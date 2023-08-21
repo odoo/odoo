@@ -70,7 +70,7 @@
 
                         <div class="col-auto division ms-auto"></div>
 
-                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto'" togglerClass="'btn btn-link fa fa-font'">
+                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto'" showCaret="true" togglerClass="'btn btn-link fa fa-font'">
                             <t t-foreach="fonts" t-as="font" t-key="font_index">
                                 <DropdownItem onSelected="() => this.onSelectFont(font_index)">
                                     <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
