@@ -99,6 +99,7 @@
                                 <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
                         </group>
+                        <field name="employee_properties" columns="2"/>
                         <notebook>
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
@@ -274,6 +275,7 @@
                     <field name="hr_icon_display"/>
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
+                    <field name="company_id"/>
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
@@ -300,6 +302,9 @@
                                     <li t-if="record.work_phone.raw_value" class="o_force_ltr">
                                         <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                         <field name="work_phone" />
+                                    </li>
+                                    <li>
+                                        <field name="employee_properties" widget="properties"/>
                                     </li>
                                 </ul>
                             </div>
