@@ -141,10 +141,10 @@ Featuring
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
+            'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
-            'web/static/src/legacy/scss/translation_dialog.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
 
