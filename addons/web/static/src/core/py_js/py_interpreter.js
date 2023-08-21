@@ -382,6 +382,9 @@ export function evaluate(ast, context = {}) {
                 if (ast.key == "get" && typeof left === "object") {
                     return DICT[ast.key](toPyDict(left));
                 }
+                /* if (!(ast.key in left)) {
+                    throw new EvaluationError(`Object key '${ast.key}' is not defined`);
+                } */
                 const result = left[ast.key];
                 if (typeof result === "function" && !isConstructor(result)) {
                     return result.bind(left);

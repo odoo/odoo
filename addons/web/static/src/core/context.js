@@ -17,14 +17,12 @@ import { evaluate } from "./py_js/py_interpreter";
  * @returns {Context}
  */
 export function makeContext(contexts, initialEvaluationContext) {
-    const evaluationContext = Object.assign({}, initialEvaluationContext);
-    const context = {};
+    const context = Object.assign({}, initialEvaluationContext);
     for (let ctx of contexts) {
         if (ctx !== "") {
-            ctx = typeof ctx === "string" ? evaluateExpr(ctx, evaluationContext) : ctx;
-            Object.assign(context, ctx);
-            Object.assign(evaluationContext, context); // is this behavior really wanted ?
+            ctx = typeof ctx === "string" ? evaluateExpr(ctx, context) : ctx;
         }
+        Object.assign(context, ctx);
     }
     return context;
 }

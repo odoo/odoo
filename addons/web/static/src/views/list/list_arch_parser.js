@@ -3,7 +3,7 @@
 import { Field } from "@web/views/fields/field";
 import { XMLParser } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
-import { archParseBoolean, getActiveActions, getDecoration, processButton } from "@web/views/utils";
+import { archParseBoolean, getActiveActions, getDecoration, processButton, addArchMissingFields } from "@web/views/utils";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
 import { combineModifiers } from "@web/model/relational_model/utils";
 import { Widget } from "@web/views/widgets/widget";
@@ -69,7 +69,8 @@ export class ListArchParser extends XMLParser {
         const treeAttr = {};
         let nextId = 0;
         const fieldNextIds = {};
-        this.visitXML(arch, (node) => {
+        addArchMissingFields(xmlDoc);
+        this.visitXML(xmlDoc, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
             }

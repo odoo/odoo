@@ -3,7 +3,7 @@
 import { XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
-import { archParseBoolean, getActiveActions } from "@web/views/utils";
+import { archParseBoolean, getActiveActions, addArchMissingFields } from "@web/views/utils";
 
 export class FormArchParser extends XMLParser {
     parse(arch, models, modelName) {
@@ -16,6 +16,7 @@ export class FormArchParser extends XMLParser {
         let widgetNextId = 0;
         const fieldNextIds = {};
         let autofocusFieldId = null;
+        addArchMissingFields(xmlDoc);
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr, getExpressionFieldNames } from "@web/core/py_js/py";
 
 QUnit.module("py", {}, () => {
     QUnit.module("interpreter", () => {
@@ -406,6 +406,25 @@ QUnit.module("py", {}, () => {
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a", {b: 1}));
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a - 2", {b: 1}));
             assert.throws(() => evaluateBooleanExpr("0 + 3 - a - b", {b: 2}));
+        });
+
+        QUnit.module("extrat field name from expression");
+
+        QUnit.test("simple expression", (assert) => {
+            assert.deepEqual(getExpressionFieldNames("1"), []);
+        });
+
+        QUnit.test("use contextual values", (assert) => {
+            assert.deepEqual(getExpressionFieldNames("a"), ['a']);
+            assert.deepEqual(getExpressionFieldNames("a + b"), ['a', 'b']);
+        });
+
+        QUnit.test("use parent values", (assert) => {
+            assert.deepEqual(getExpressionFieldNames("a + parent.b - (parent.parent.c / e)"), ['a', 'parent.b', 'parent.parent.c', 'e']);
+        });
+
+        QUnit.test("remove filtered values", (assert) => {
+            assert.deepEqual(getExpressionFieldNames("a + context.get(b) - parent"), ['a', 'b']);
         });
     });
 });
