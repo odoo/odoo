@@ -34,7 +34,7 @@
                         </span>
                       </t>
                       <t t-set-slot="focusMessage">
-                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd>⏎</kbd> to open, <kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd> to open in new tab</small>
+                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd><span class="ms-1">new tab</span></small>
                       </t>
                     </t>
                   </a>
