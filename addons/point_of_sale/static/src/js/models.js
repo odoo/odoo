@@ -2973,7 +2973,7 @@ exports.Paymentline = Backbone.Model.extend({
             payment_method_id: this.payment_method.id,
             amount: this.get_amount(),
             payment_status: this.payment_status,
-            can_be_reversed: this.can_be_resersed,
+            can_be_reversed: this.can_be_reversed,
             ticket: this.ticket,
             card_type: this.card_type,
             cardholder_name: this.cardholder_name,
