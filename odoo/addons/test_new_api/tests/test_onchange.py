@@ -901,8 +901,8 @@ class TestComputeOnchange(common.TransactionCase):
         expected = {'value': {
             'line_ids': [
                 Command.clear(),
-                Command.update(line.id, {'value': 8, 'edit': 9, 'count': 8}),
-                Command.create({'value': 8, 'edit': 9, 'count': 8}),
+                Command.update(line.id, {'value': 8, 'edit': 9, 'count': 8, 'one_compute': 100.0}),
+                Command.create({'value': 8, 'edit': 9, 'count': 8, 'one_compute': 100.0}),
             ],
         }}
         self.assertEqual(result, expected)
@@ -958,3 +958,14 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},
         ])
+
+    def test_one2many_compute(self):
+        """ Test a computed, editable one2many field with a domain. """
+        record = self.env['test_new_api.compute_editable'].create(
+            {'line_ids': [Command.create({})]},
+        )
+        # Will generate AssertionError: precision_rounding must be positive, got 0.0
+        # because during the onchange `precision_rounding` is force to False before compute the
+        # initial snapshot
+        with Form(record) as form:
+            form.precision_rounding = 0.0001
