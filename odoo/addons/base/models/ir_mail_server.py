@@ -200,31 +200,33 @@ class IrMailServer(models.Model):
         """
         return dict()
 
-    def _get_test_email_addresses(self):
+    def _get_test_email_from(self):
         self.ensure_one()
-        email_to = "noreply@odoo.com"
         if self.from_filter:
             from_filter_parts = [part.strip() for part in self.from_filter.split(",")]
             if mail_from := next((email for email in from_filter_parts if "@" in email), None):
                 # All emails will be sent from the same address
-                return mail_from, email_to
+                return mail_from
             # All emails will be sent from any address in the same domain
             default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
             if "@" not in default_from:
-                return f"{default_from}@{from_filter_parts[0]}", email_to
+                return f"{default_from}@{from_filter_parts[0]}"
             elif self._match_from_filter(default_from, self.from_filter):
                 # the mail server is configured for a domain
                 # that match the default email address
-                return default_from, email_to
+                return default_from
             # the from_filter is configured for a domain different that the one
             # of the full email configured in mail.default.from
-            return f"noreply@{from_filter_parts[0]}", email_to
+            return f"noreply@{from_filter_parts[0]}"
         # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
                               'sending an email message via this outgoing server'))
-        return email_from, email_to
+        return email_from
+
+    def _get_test_email_to(self):
+        return "noreply@odoo.com"
 
     def test_smtp_connection(self):
         for server in self:
@@ -232,7 +234,8 @@ class IrMailServer(models.Model):
             try:
                 smtp = self.connect(mail_server_id=server.id, allow_archived=True)
                 # simulate sending an email from current user's address - without sending it!
-                email_from, email_to = server._get_test_email_addresses()
+                email_from = server._get_test_email_from()
+                email_to = server._get_test_email_to()
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
