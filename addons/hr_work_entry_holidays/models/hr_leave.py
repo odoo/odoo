@@ -25,58 +25,6 @@ class HrLeave(models.Model):
         vals['work_entry_type_id'] = self.holiday_status_id.work_entry_type_id.id
         return vals
 
-    def _get_overlapping_contracts(self, contract_states=None):
-        self.ensure_one()
-        if contract_states is None:
-            contract_states = [
-                '|',
-                ('state', 'not in', ['draft', 'cancel']),
-                '&',
-                ('state', '=', 'draft'),
-                ('kanban_state', '=', 'done')
-            ]
-        domain = AND([contract_states, [
-            ('employee_id', '=', self.employee_id.id),
-            ('date_start', '<=', self.date_to),
-            '|',
-                ('date_end', '>=', self.date_from),
-                '&',
-                    ('date_end', '=', False),
-                    ('state', '!=', 'close')
-        ]])
-        return self.env['hr.contract'].sudo().search(domain)
-
-    @api.constrains('date_from', 'date_to')
-    def _check_contracts(self):
-        """
-            A leave cannot be set across multiple contracts.
-            Note: a leave can be across multiple contracts despite this constraint.
-            It happens if a leave is correctly created (not across multiple contracts) but
-            contracts are later modifed/created in the middle of the leave.
-        """
-        for holiday in self.filtered('employee_id'):
-            contracts = holiday._get_overlapping_contracts()
-            if len(contracts.resource_calendar_id) > 1:
-                state_labels = {e[0]: e[1] for e in contracts._fields['state']._description_selection(self.env)}
-                raise ValidationError(
-                    _("""A leave cannot be set across multiple contracts with different working schedules.
-
-Please create one time off for each contract.
-
-Time off:
-%s
-
-Contracts:
-%s""",
-                      holiday.display_name,
-                      '\n'.join(_(
-                          "Contract %s from %s to %s, status: %s",
-                          contract.name,
-                          format_date(self.env, contract.date_start),
-                          format_date(self.env, contract.date_start) if contract.date_end else _("undefined"),
-                          state_labels[contract.state]
-                      ) for contract in contracts)))
-
     def _cancel_work_entry_conflict(self):
         """
         Creates a leave work entry for each hr.leave in self.
