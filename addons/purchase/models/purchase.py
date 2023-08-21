@@ -270,18 +270,6 @@ class PurchaseOrder(models.Model):
         # To be overridden
         return field_name == 'order_line'
 
-    def onchange(self, values, field_name, field_onchange):
-        """Override onchange to NOT to update all date_planned on PO lines when
-        date_planned on PO is updated by the change of date_planned on PO lines.
-        """
-        result = super(PurchaseOrder, self).onchange(values, field_name, field_onchange)
-        if self._must_delete_date_planned(field_name) and 'value' in result:
-            already_exist = [ol[1] for ol in values.get('order_line', []) if ol[1]]
-            for line in result['value'].get('order_line', []):
-                if line[0] < 2 and 'date_planned' in line[2] and line[1] in already_exist:
-                    del line[2]['date_planned']
-        return result
-
     def _get_report_base_filename(self):
         self.ensure_one()
         return 'Purchase Order-%s' % (self.name)
