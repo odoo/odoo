@@ -499,7 +499,7 @@ class AccountTestInvoicingCommon(TransactionCase):
     # Xml Comparison
     ####################################################
 
-    def _turn_node_as_dict_hierarchy(self, node, path=None):
+    def _turn_node_as_dict_hierarchy(self, node, path=''):
         ''' Turn the node as a python dictionary to be compared later with another one.
         Allow to ignore the management of namespaces.
         :param node:    A node inside an xml tree.
@@ -509,8 +509,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         tag_split = node.tag.split('}')
         tag_wo_ns = tag_split[-1]
         attrib_wo_ns = {k: v for k, v in node.attrib.items() if '}' not in k}
-        path = (path or []) + [tag_wo_ns]
-        full_path = '/'.join(path)
+        full_path = f'{path}/{tag_wo_ns}'
         return {
             'tag': tag_wo_ns,
             'full_path': full_path,
