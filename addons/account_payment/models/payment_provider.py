@@ -85,6 +85,9 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _remove_provider(self, code):
-        """ Override of `payment` to delete the payment method of the provider. """
+        """ Override of `payment` to delete the payment method and line(s) of the provider. """
         super()._remove_provider(code)
-        self._get_provider_payment_method(code).unlink()
+        payment_method_obj = self._get_provider_payment_method(code)
+        if payment_method_obj:
+            self.env.cr.execute('delete from account_payment_method_line where payment_method_id in %s', (tuple(payment_method_obj.ids),))
+        payment_method_obj.unlink()
