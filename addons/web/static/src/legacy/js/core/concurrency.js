@@ -77,64 +77,6 @@ const concurrency = {
         },
     }),
     /**
-     * The DropPrevious abstraction is useful when you have a sequence of
-     * operations that you want to execute, but you only care of the result of
-     * the last operation.
-     *
-     * For example, let us say that we have a _fetch method on a widget which
-     * fetches data.  We want to rerender the widget after.  We could do this::
-     *
-     *      this._fetch().then(function (result) {
-     *          self.state = result;
-     *          self.render();
-     *      });
-     *
-     * Now, we have at least two problems:
-     *
-     * - if this code is called twice and the second _fetch completes before the
-     *   first, the end state will be the result of the first _fetch, which is
-     *   not what we expect
-     * - in any cases, the user interface will rerender twice, which is bad.
-     *
-     * Now, if we have a DropPrevious::
-     *
-     *      this.dropPrevious = new DropPrevious();
-     *
-     * Then we can wrap the _fetch in a DropPrevious and have the expected
-     * result::
-     *
-     *      this.dropPrevious
-     *          .add(this._fetch())
-     *          .then(function (result) {
-     *              self.state = result;
-     *              self.render();
-     *          });
-     */
-    DropPrevious: Class.extend({
-        /**
-         * Registers a new promise and rejects the previous one
-         *
-         * @param {Promise} promise the new promise
-         * @returns {Promise}
-         */
-        add: function (promise) {
-            if (this.currentDef) {
-                this.currentDef.reject();
-            }
-            var rejection;
-            var res = new Promise(function (resolve, reject) {
-                rejection = reject;
-                promise.then(resolve).catch(function (reason) {
-                    reject(reason);
-                });
-            });
-
-            this.currentDef = res;
-            this.currentDef.reject = rejection;
-            return res;
-        }
-    }),
-    /**
      * A MutexedDropPrevious is a primitive for serializing computations while
      * skipping the ones that where executed between a current one and before
      * the execution of a new one. This is useful to avoid useless RPCs.
@@ -238,5 +180,4 @@ const concurrency = {
 };
 
 export const delay = concurrency.delay
-export const DropPrevious = concurrency.DropPrevious
 export default concurrency;
