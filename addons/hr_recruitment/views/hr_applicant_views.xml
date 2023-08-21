@@ -62,6 +62,7 @@
             <field name="emp_id" invisible="1"/>
             <field name="meeting_ids" invisible="1"/>
             <field name="refuse_reason_id" invisible="1"/>
+            <field name="emp_is_active" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
                         class="o_create_employee" attrs="{'invisible': ['|', '|', ('emp_id', '!=', False), ('active', '=', False), ('date_closed', '=', False)]}"/>
@@ -76,7 +77,8 @@
                             class="oe_stat_button"
                             icon="fa-id-card-o"
                             groups="hr.group_hr_user"
-                            attrs="{'invisible': [('emp_id', '=', False)]}">
+                            attrs="{'invisible': ['|', ('emp_id', '=', False),
+                                                  ('emp_is_active', '=', False)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>
                             <span class="o_stat_text">Employee</span>
