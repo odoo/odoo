@@ -14,89 +14,25 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12" id="hash_config_review">
-                                    <br/>
-                                    <h3>Configuration review</h3>
-                                    <br/>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-12">
-                                    <table class="table table-bordered" style="table-layout: fixed" id="hash_config_table">
-                                        <thead style="display: table-row-group">
-                                            <tr>
-                                                <th class="text-center" style="width: 30%" scope="col">Journal</th>
-                                                <th class="text-center" style="width: 20%" scope="col">Inalterability check</th>
-                                                <th class="text-center" style="width: 50%" scope="col">Coverage</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-foreach="data['results']" t-as="result">
-                                                <tr>
-                                                    <td>
-                                                        [<span t-out="result['journal_code']"/>] <span t-out="result['journal_name']"/>
-                                                    </td>
-                                                    <td class="text-center"><span t-out="result['restricted_by_hash_table']"/></td>
-                                                    <td><span t-out="result['msg_cover']"/></td>
-                                                </tr>
-                                            </t>
-                                        </tbody>
-                                    </table>
+                                    <t t-if="not data['results']">
+                                        <h4>There is no journal which is strict mode</h4>
+                                    </t>
+                                    <t t-foreach="data['results']" t-as="result">
+                                        <h4><span t-out="result['name']"/></h4>
+                                        <t t-if="result['status'] != 'verified'">
+                                            <div><span t-out="result['msg']"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div>
+                                                <span t-out="result['msg']"/> from <span t-out="result['from_name']"/> (<span t-out="result['from_date']"/>) to <span t-out="result['to_name']"/> (<span t-out="result['to_date']"/>)<br/>
+                                                First hash: <span t-out="result['from_hash']"/><br/>
+                                                Last hash: <span t-out="result['to_hash']"/><br/>
+                                            </div>
+                                        </t>
+                                    </t>
                                 </div>
                             </div>
-                            <t t-if="any(result['first_hash'] != 'None' for result in data['results'])">
-                                <div class="row" style="page-break-before:always;">
-                                    <div class="col-12" id="hash_data_consistency">
-                                        <br/>
-                                        <h3>Data consistency check</h3>
-                                        <br/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12" id="hash_data_consistency_table">
-                                        <table class="table table-bordered" style="table-layout: fixed">
-                                            <thead style="display: table-row-group">
-                                                <tr>
-                                                    <th class="text-center" style="width: 20%" scope="col">Journal</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">First Hash</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">First Entry</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">Last Hash</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">Last Entry</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <t t-foreach="data['results']" t-as="result">
-                                                    <t t-if="result['first_hash'] != 'None'">
-                                                        <tr>
-                                                            <td><span t-out="result['journal_code']"/></td>
-                                                            <td><span t-out="result['first_hash']"/></td>
-                                                            <td>
-                                                                <span t-out="result['first_move_name']"/> <br/>
-                                                                <span t-out="result['first_move_date']"/>
-                                                            </td>
-                                                            <td><span t-out="result['last_hash']"/></td>
-                                                            <td>
-                                                                <span t-out="result['last_move_name']"/> <br/>
-                                                                <span t-out="result['last_move_date']"/>
-                                                            </td>
-                                                        </tr>
-                                                    </t>
-                                                </t>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row" id="hash_last_div">
-                                    <div class="col-12" id="hash_chain_compliant">
-                                        <br/>
-                                        <h6>
-                                            The hash chain is compliant: it is not possible to alter the
-                                            data without breaking the hash chain for subsequent parts.
-                                        </h6>
-                                        <br/>
-                                    </div>
-                                </div>
-                            </t>
                         </div>
                     </t>
                 </t>

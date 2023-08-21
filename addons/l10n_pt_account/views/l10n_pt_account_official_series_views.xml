@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_l10n_pt_official_series_series_form" model="ir.ui.view">
+        <field name="name">official.series.form</field>
+        <field name="model">l10n_pt_account.official.series</field>
+        <field name="arch" type="xml">
+            <form string="Official Series">
+                <sheet>
+                    <group>
+                        <field name='code'/>
+                        <field name='end_date'/>
+                        <field name='active'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_pt_official_series_series_tree" model="ir.ui.view">
+        <field name="name">official.series.tree</field>
+        <field name="model">l10n_pt_account.official.series</field>
+        <field name="arch" type="xml">
+            <tree string="Official Series" editable="bottom">
+                <field name='code'/>
+                <field name='end_date'/>
+                <field name='active'/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

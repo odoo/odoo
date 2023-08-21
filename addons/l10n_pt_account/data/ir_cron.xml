@@ -1,0 +1,12 @@
+<odoo>
+    <record model="ir.cron" id="l10n_pt_account_cron_missing_hashes">
+        <field name="name">[l10n_pt_account] Generate the missing hashes of account moves</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._l10n_pt_account_cron_compute_missing_hashes()</field>
+    </record>
+</odoo>

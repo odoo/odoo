@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_invoice_series" model="l10n_pt_account.official.series">
+        <field name="code">DEMO_INVOICE_SERIES</field>
+    </record>
+    <record id="demo_refund_series" model="l10n_pt_account.official.series">
+        <field name="code">DEMO_REFUND_SERIES</field>
+    </record>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_pt.demo_company_pt'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>pt_account</value>
+        <value model="res.company" eval="obj().env.ref('l10n_pt.demo_company_pt')"/>
+    </function>
+</odoo>

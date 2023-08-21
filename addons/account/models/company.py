@@ -532,91 +532,95 @@ class ResCompany(models.Model):
     def _action_check_hash_integrity(self):
         return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
 
-    def _check_hash_integrity(self):
+    def _check_accounting_hash_integrity(self):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
-        if not self.env.user.has_group('account.group_account_user'):
-            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
-
-        def build_move_info(move):
-            return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
-
         journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(self))
-        results_by_journal = {
-            'results': [],
-            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.context_today(self)))
-        }
+        results = []
 
         for journal in journals:
-            rslt = {
-                'journal_name': journal.name,
-                'journal_code': journal.code,
-                'restricted_by_hash_table': journal.restrict_mode_hash_table and 'V' or 'X',
-                'msg_cover': '',
-                'first_hash': 'None',
-                'first_move_name': 'None',
-                'first_move_date': 'None',
-                'last_hash': 'None',
-                'last_move_name': 'None',
-                'last_move_date': 'None',
-            }
             if not journal.restrict_mode_hash_table:
-                rslt.update({'msg_cover': _('This journal is not in strict mode.')})
-                results_by_journal['results'].append(rslt)
                 continue
 
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
-            # This is required in order to generate consistent hashs.
+            # This is required in order to generate consistent hashes.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
-            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
-                                            ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
-            if not moves:
-                rslt.update({
-                    'msg_cover': _('There isn\'t any journal entry flagged for data inalterability yet for this journal.'),
+            all_moves = self.env['account.move'].sudo().search([
+                ('company_id', '=', self.id),
+                ('journal_id', '=', journal.id),
+                ('inalterable_hash', '!=', False),
+            ])
+            if not all_moves:
+                results.append({
+                    'name': f"{journal.name} [{journal.code}]",
+                    'status': 'no_data',
+                    'msg': _('There is no journal entry flagged for data inalterability yet.'),
                 })
-                results_by_journal['results'].append(rslt)
                 continue
 
-            previous_hash = u''
-            start_move_info = []
-            hash_corrupted = False
-            current_hash_version = 1
-            for move in moves:
-                computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
-                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
-                    current_hash_version += 1
-                    computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
-                if move.inalterable_hash != computed_hash:
-                    rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
-                    results_by_journal['results'].append(rslt)
-                    hash_corrupted = True
-                    break
-                if not previous_hash:
-                    #save the date and sequence number of the first move hashed
-                    start_move_info = build_move_info(move)
-                previous_hash = move.inalterable_hash
-            end_move_info = build_move_info(move)
+            def is_chain_correct(moves):
+                """
+                :return: the first move in the chain that is incorrect, or None if the chain is correct
+                """
+                previous_hash = ''
+                current_hash_version = 1
+                for move in moves:
+                    computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move.id]
+                    while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                        current_hash_version += 1
+                        computed_hash = move.with_context(hash_version=current_hash_version)._hash_compute(previous_hash)[move.id]
+                    if move.inalterable_hash != computed_hash:
+                        return move
+                    previous_hash = move.inalterable_hash
+                return None
 
-            if hash_corrupted:
-                continue
+            def verify_chain_pre_16_4(moves):
+                corrupted_move = is_chain_correct(moves)
+                append_result(moves, corrupted_move)
+                return corrupted_move is None
 
-            rslt.update({
-                        'first_move_name': start_move_info[0],
-                        'first_hash': start_move_info[1],
-                        'first_move_date': format_date(self.env, start_move_info[2]),
-                        'last_move_name': end_move_info[0],
-                        'last_hash': end_move_info[1],
-                        'last_move_date': format_date(self.env, end_move_info[2]),
+            def verify_chain_post_16_4(moves):
+                chains = moves.grouped(key=lambda m: (m.move_type, m.sequence_prefix))
+                for chain_prefix in chains.keys():
+                    chain = chains[chain_prefix].sorted('sequence_number')
+                    corrupted_move = is_chain_correct(chain)
+                    append_result(chain, corrupted_move, prefix=chain_prefix[1])
+
+            def append_result(moves, corrupted_move, prefix=None):
+                name = f"{journal.name} [{prefix}]" if prefix else journal.name
+                if corrupted_move is None:
+                    results.append({
+                        'name': name,
+                        'status': 'verified',
+                        'move_type': moves[0].move_type,
+                        'msg': _("Entries are correctly hashed"),
+                        'from_name': moves[0].name,
+                        'from_hash': moves[0].inalterable_hash,
+                        'from_date': fields.Date.to_string(moves[0].date),
+                        'to_name': moves[-1].name,
+                        'to_hash': moves[-1].inalterable_hash,
+                        'to_date': fields.Date.to_string(moves[-1].date),
                     })
-            if len(moves) == all_moves_count:
-                rslt.update({'msg_cover': _('All entries are hashed.')})
-            else:
-                rslt.update({'msg_cover': _('Entries are hashed from %s (%s)') % (start_move_info[0], format_date(self.env, start_move_info[2]))})
-            results_by_journal['results'].append(rslt)
+                else:
+                    results.append({
+                        'name': name,
+                        'status': 'corrupted',
+                        'msg': _("Corrupted data on journal entry with id %s.", corrupted_move.id),
+                    })
 
-        return results_by_journal
+            moves_prior_16_4 = all_moves.filtered(lambda m: m.secure_sequence_number).sorted(key=lambda m: m.secure_sequence_number)
+            moves_post_16_4 = all_moves - moves_prior_16_4
+            corrupted = False
+            if moves_prior_16_4:
+                corrupted = verify_chain_pre_16_4(moves_prior_16_4)
+            if not corrupted and moves_post_16_4:
+                verify_chain_post_16_4(moves_post_16_4)
+
+        return {
+            'results': results,
+            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.context_today(self)))
+        }
 
     def compute_fiscalyear_dates(self, current_date):
         """

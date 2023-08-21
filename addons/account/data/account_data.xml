@@ -160,5 +160,11 @@
             <field name="code">action = records.action_share()</field>
         </record>
 
+        <!-- Display name in footer -->
+        <record forcecreate="True" id="account.display_name_in_footer_param" model="ir.config_parameter">
+            <field name="key">account.display_name_in_footer</field>
+            <field name="value">False</field>
+        </record>
+
     </data>
 </odoo>

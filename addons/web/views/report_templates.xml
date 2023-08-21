@@ -357,13 +357,10 @@
                     <div t-field="company.report_footer"/>
                 </ul>
                 <div t-if="report_type == 'pdf'" class="text-muted">
-                    Page:
-                    <span class="page"/>
-                    of
-                    <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
+                    <span t-if="display_name_in_footer">
+                        <span t-out="o.name">(document name)</span> -
+                    </span>
+                    Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
         </div>
@@ -417,11 +414,11 @@
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
             <div class="text-center">
                 <div t-field="company.report_footer">Company Report Footer</div>
-                <div t-if="report_type == 'pdf'">
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    <span t-if="display_name_in_footer">
+                        <span t-out="o.name">(document name)</span> -
+                    </span>
                     Page: <span class="page"/> / <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
                 </div>
             </div>
         </div>
@@ -540,12 +537,11 @@
                 <ul class="list-inline mb4">
                     <div t-field="company.report_footer"/>
                 </ul>
-
                 <div t-if="report_type == 'pdf'" class="text-muted">
+                    <span t-if="display_name_in_footer">
+                        <span t-out="o.name">(document name)</span> -
+                    </span>
                     Page: <span class="page"/> / <span class="topage"/>
-                </div>
-                <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
-                    <span t-out="o.name">(document name)</span>
                 </div>
             </div>
         </div>
