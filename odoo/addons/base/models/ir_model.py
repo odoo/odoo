@@ -1037,6 +1037,14 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
+        if self.compute:
+            sample_data = self.env[self.model_id.model].search([], limit=1)
+            if sample_data:
+                try:
+                    sample_data._fields[self.name].compute_value(sample_data)
+                except (ValueError, SyntaxError) as e:
+                    raise ValidationError(e)
+
         return res
 
     def update_field_translations(self, field_name, translations):
