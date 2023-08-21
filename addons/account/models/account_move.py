@@ -1564,7 +1564,7 @@ class AccountMove(models.Model):
                AND move.ref = duplicate_move.ref
                AND move.move_type = duplicate_move.move_type
                AND move.id != duplicate_move.id
-               AND (move.invoice_date = duplicate_move.invoice_date OR NOT %(only_posted)s)
+             {"AND move.invoice_date = duplicate_move.invoice_date" if self.company_id.uniq_bill else ''}
                AND duplicate_move.state != 'cancel'
                AND (duplicate_move.state = 'posted' OR NOT %(only_posted)s)
              WHERE move.id IN %(moves)s

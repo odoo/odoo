@@ -189,6 +189,9 @@ class ResCompany(models.Model):
     account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
     account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
 
+    # Unique bill accounting
+    uniq_bill = fields.Boolean(string="Ref unique with date", default=True, store=True)
+
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',
