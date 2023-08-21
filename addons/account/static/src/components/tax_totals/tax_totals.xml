@@ -7,7 +7,7 @@
                 <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
             </td>
 
-            <td>
+            <td  class="o_tax_group">
                 <t t-if="!props.isReadonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
                         <span class="o_tax_group_edit_input">
@@ -24,14 +24,14 @@
                     <t t-else="">
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
                             <i class="fa fa-pencil me-2"/>
-                            <span class="o_tax_group_amount_value">
+                            <span class="o_tax_group_amount_value o_list_monetary">
                                 <t t-out="props.taxGroup.formatted_tax_group_amount"/>
                             </span>
                         </span>
                     </t>
                 </t>
                 <t t-else="">
-                    <span class="o_tax_group_amount_value">
+                    <span class="o_tax_group_amount_value o_list_monetary">
                         <t t-out="props.taxGroup.formatted_tax_group_amount" style="white-space: nowrap;"/>
                     </span>
                 </t>
@@ -48,7 +48,7 @@
                             <label class="o_form_label o_tax_total_label" t-esc="subtotal['name']"/>
                         </td>
 
-                        <td>
+                        <td class="o_list_monetary">
                             <span t-att-name="subtotal['name']" style="white-space: nowrap; font-weight: bold;" t-out="subtotal['formatted_amount']"/>
                         </td>
                     </tr>
@@ -68,7 +68,7 @@
                     <td class="o_td_label">
                         <label class="o_form_label o_tax_total_label">Rounding</label>
                     </td>
-                    <td>
+                    <td class="o_list_monetary">
                         <span
                             t-out="totals.formatted_rounding_amount"
                         />
@@ -81,7 +81,7 @@
                         <label class="o_form_label o_tax_total_label">Total</label>
                     </td>
 
-                    <td>
+                    <td class="o_list_monetary">
                         <span
                             name="amount_total"
                             t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
