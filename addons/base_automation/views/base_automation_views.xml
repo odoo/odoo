@@ -192,7 +192,7 @@
                                     <div class="d-flex align-items-center o_automation_base_info">
                                         <div class="d-flex flex-column">
                                             <field name="name" class="fs-2 fw-bold"/>
-                                            <field name="model_id"/>
+                                            <field name="model_id" invisible="context.get('default_model_id')"/>
                                             <div class="d-flex align-items-center gap-1" invisible="trigger in ['on_time', 'on_time_created', 'on_time_updated']">
                                                 <field name="trigger" />
                                                 <field name="on_change_field_ids" invisible="trigger != 'on_change'" class="my-1" />
@@ -250,7 +250,7 @@
             <field name="context">{'active_test': False}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Setup a new automation rule
+                Automate <em>everything</em> with Automation Rules
               </p><p>
                 Send an email when an object changes state, archive records
                 after a month of inactivity or remind yourself to follow-up on
