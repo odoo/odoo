@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
+from odoo.tools.float_utils import float_round
 _logger = logging.getLogger('precompute_setter')
 
 from odoo import models, fields, api, _, Command
@@ -1417,6 +1419,7 @@ class Group(models.Model):
 class ComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 
+    precision_rounding = fields.Float(default=0.01, digits=(1, 10))
     line_ids = fields.One2many('test_new_api.compute_editable.line', 'parent_id')
 
     @api.onchange('line_ids')
@@ -1434,6 +1437,7 @@ class ComputeEditableLine(models.Model):
     same = fields.Integer(compute='_compute_same', store=True)
     edit = fields.Integer(compute='_compute_edit', store=True, readonly=False)
     count = fields.Integer()
+    one_compute = fields.Float(compute='_compute_one_compute')
 
     @api.depends('value')
     def _compute_same(self):
@@ -1445,6 +1449,10 @@ class ComputeEditableLine(models.Model):
         for line in self:
             line.edit = line.value
 
+    @api.depends('parent_id.precision_rounding')
+    def _compute_one_compute(self):
+        for rec in self:
+            rec.one_compute = float_round(99.9999999, precision_rounding=rec.parent_id.precision_rounding)
 
 class ConstrainedUnlinks(models.Model):
     _name = 'test_new_api.model_constrained_unlinks'
