@@ -9,8 +9,8 @@
         </xpath>
     </t>
 
-    <t t-name="l10n_fr_pos_cert.OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension">
-        <xpath expr="//div[@t-foreach='receipt.orderlines']" position="inside">
+    <t t-name="l10n_fr_pos_cert.ReceiptOrderline" t-inherit="point_of_sale.ReceiptOrderline" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='line.pack_lot_lines']" position="after">
             <t t-if="receipt.l10n_fr_hash !== false and line.price_type === 'manual'">
                 <div class="pos-receipt-right-padding">
                     Old unit price:

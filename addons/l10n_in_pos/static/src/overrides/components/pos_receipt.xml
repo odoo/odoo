@@ -17,8 +17,8 @@
         </xpath>
     </t>
 
-    <t t-name="l10n_in_pos.OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension">
-        <xpath expr="//div[@t-foreach='receipt.orderlines']" position="inside">
+    <t t-name="l10n_in_pos.ReceiptOrderline" t-inherit="point_of_sale.ReceiptOrderline" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='line.pack_lot_lines']" position="after">
             <t t-if="line.l10n_in_hsn_code and pos.company.country and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>

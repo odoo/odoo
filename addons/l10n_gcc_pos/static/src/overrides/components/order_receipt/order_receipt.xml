@@ -90,7 +90,7 @@
         </xpath>
     </t>
 
-    <t t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension">
+    <t t-inherit="point_of_sale.ReceiptOrderline" t-inherit-mode="extension">
         <xpath expr="//t[@t-esc='line.unit_name']/.." position="attributes">
             <attribute name="t-if">!receipt.is_gcc_country</attribute>
         </xpath>
