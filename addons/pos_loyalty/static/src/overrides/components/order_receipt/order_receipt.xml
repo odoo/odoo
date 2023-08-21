@@ -3,15 +3,15 @@
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
-            <t t-if='receipt.loyaltyStats'>
-                <t t-foreach="receipt.loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+            <t t-if='receiptData.receipt.loyaltyStats'>
+                <t t-foreach="receiptData.receipt.loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                     <!-- Show only if portal_visible. -->
                     <div t-if="_loyaltyStat.program.portal_visible" class='loyalty'>
                         <span class="pos-receipt-center-align">
                             <div>--------------------------------</div>
                             <br/>
                             <div t-esc='_loyaltyStat.program.name' class="pos-receipt-title" />
-                            <div t-esc='receipt.partner.name' />
+                            <div t-esc='receiptData.receipt.partner.name' />
                             <br />
                         </span>
                         <t t-if='_loyaltyStat.points.won'>
@@ -29,14 +29,14 @@
                     </div>
                 </t>
             </t>
-            <t t-if="receipt.new_coupon_info and receipt.new_coupon_info.length !== 0">
+            <t t-if="receiptData.receipt.new_coupon_info and receiptData.receipt.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards">
                     <div>------------------------</div>
                     <br/>
                     <div>
                         Coupon Codes
                     </div>
-                    <t t-foreach="receipt.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
+                    <t t-foreach="receiptData.receipt.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div style="font-size: 110%;">
                                 <t t-esc="coupon_info['program_name']"/>

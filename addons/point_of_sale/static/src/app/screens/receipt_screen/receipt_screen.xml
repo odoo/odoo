@@ -34,7 +34,9 @@
                         </div>
                     </div>
                     <div class="pos-receipt-container bg-200 text-center overflow-auto" t-ref="order-receipt">
-                        <OrderReceipt order="currentOrder"/>
+                        <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
+                            <t t-call="point_of_sale.OrderReceipt" />
+                        </div>
                     </div>
                 </div>
                 <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>

@@ -20,7 +20,9 @@
                         <span>Print</span>
                     </div>
                     <div class="pos-receipt-container text-center" t-ref="order-receipt">
-                        <OrderReceipt order="currentOrder" isBill="true"/>
+                        <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
+                            <t t-call="point_of_sale.OrderReceipt" />
+                        </div>
                     </div>
                 </div>
             </div>

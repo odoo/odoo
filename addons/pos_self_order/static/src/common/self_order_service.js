@@ -9,7 +9,7 @@ import { getColor } from "@web/core/colors/colors";
 import { categorySorter } from "@pos_self_order/common/utils";
 
 export class selfOrderCommon extends Reactive {
-    async setup(env, rpc, notification, router, bus_service, cookie) {
+    async setup(env, { rpc, notification, router, bus_service, cookie, multi_tab }) {
         // services
         this.env = env;
         this.router = router;
@@ -17,6 +17,7 @@ export class selfOrderCommon extends Reactive {
         this.notification = notification;
         this.bus_service = bus_service;
         this.cookie = cookie;
+        this.multi_tab = multi_tab;
 
         // data
         Object.assign(this, {

@@ -208,7 +208,7 @@ export class SelfOrder extends selfOrderCommon {
 export const selfOrderService = {
     dependencies: ["rpc", "notification", "router"],
     async start(env, { rpc, notification, router }) {
-        return new SelfOrder(env, rpc, notification, router).ready;
+        return new SelfOrder(env, { rpc, notification, router }).ready;
     },
 };
 
