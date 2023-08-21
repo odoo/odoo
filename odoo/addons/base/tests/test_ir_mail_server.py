@@ -162,6 +162,46 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                     body_alternative = body_alternative.strip('\n')
             self.assertEqual(body_alternative, expected)
 
+    @users('admin')
+    def test_mail_server_get_test_email_from(self):
+        """ Test the email used to test the mail server connection. """
+        test_server = self.env['ir.mail_server'].create({
+            'from_filter': 'example_2.com, example_3.com',
+            'name': 'Test Server',
+            'smtp_host': 'smtp_host',
+            'smtp_encryption': 'none',
+        })
+
+        # check default.from / filter matching
+        for (default_from, from_filter), expected_test_email in zip(
+            [
+                ('notifications@example.com', 'example_2.com, example_3.com'),
+                ('notifications', 'example_2.com, example_3.com'),
+                ('notifications@example.com', 'dummy.com, full_email@example_2.com, dummy2.com'),
+                ('notifications', 'dummy.com, full_email@example_2.com, dummy2.com'),
+                ('notifications@example.com', 'example.com'),
+                # default relies on "odoo"
+                (False, 'example.com'),
+                # fallback on user email
+                ('example_2.com', False),
+                (False, False),
+            ], [
+                'noreply@example_2.com',
+                'notifications@example_2.com',
+                'full_email@example_2.com',
+                'full_email@example_2.com',
+                'notifications@example.com',
+                'odoo@example.com',
+                self.env.user.email,
+                self.env.user.email,
+            ],
+        ):
+            with self.subTest(default_from=default_from, from_filter=from_filter):
+                self.env['ir.config_parameter'].set_param('mail.default.from', default_from)
+                test_server.from_filter = from_filter
+                email_from = test_server._get_test_email_from()
+                self.assertEqual(email_from, expected_test_email)
+
     def test_mail_server_match_from_filter(self):
         """ Test the from_filter field on the "ir.mail_server". """
         # Should match
@@ -476,46 +516,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             message_from='specific_user@icp.example.com',
             from_filter='icp.example.com',
         )
-
-    @users('admin')
-    def test_mail_server_get_test_email_addresses(self):
-        """Test the email used to test the mail server connection."""
-        test_server = self.env['ir.mail_server'].create({
-            'from_filter': 'example_2.com, example_3.com',
-            'name': 'Test Server',
-            'smtp_host': 'smtp_host',
-            'smtp_encryption': 'none',
-        })
-
-        # check default.from / filter matching
-        for (default_from, from_filter), expected_test_email in zip(
-            [
-                ('notifications@example.com', 'example_2.com, example_3.com'),
-                ('notifications', 'example_2.com, example_3.com'),
-                ('notifications@example.com', 'dummy.com, full_email@example_2.com, dummy2.com'),
-                ('notifications', 'dummy.com, full_email@example_2.com, dummy2.com'),
-                ('notifications@example.com', 'example.com'),
-                # default relies on "odoo"
-                (False, 'example.com'),
-                # fallback on user email
-                ('example_2.com', False),
-                (False, False),
-            ], [
-                'noreply@example_2.com',
-                'notifications@example_2.com',
-                'full_email@example_2.com',
-                'full_email@example_2.com',
-                'notifications@example.com',
-                'odoo@example.com',
-                self.env.user.email,
-                self.env.user.email,
-            ],
-        ):
-            with self.subTest(default_from=default_from, from_filter=from_filter):
-                self.env['ir.config_parameter'].set_param('mail.default.from', default_from)
-                test_server.from_filter = from_filter
-                email_from = test_server._get_test_email_addresses()[0]
-                self.assertEqual(email_from, expected_test_email)
 
     @mute_logger('odoo.models.unlink')
     @patch.dict(config.options, {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
