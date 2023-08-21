@@ -226,14 +226,44 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
+<<<<<<< HEAD
 "                    <span style=\"font-weight:bold;\">Payment Method:</span>\n"
 "                    <t t-if=\"tx_sudo.token_id\">\n"
 "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"></t>\n"
+||||||| parent of 0d2623481f2 (temp)
+"                    <span style=\"font-weight:bold;\">Payment Method:</"
+"span>\n"
+"                    <t t-if=\"transaction.token_id\">\n"
+"                        <t t-out=\"transaction.token_id.display_name or ''\"/"
+">\n"
+=======
+"                    <span style=\"font-weight:bold;\">Payment Method:</"
+"span>\n"
+"                    <t t-if=\"tx_sudo.token_id\">\n"
+"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/"
+">\n"
+>>>>>>> 0d2623481f2 (temp)
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
+<<<<<<< HEAD
 "                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"></t>\n"
+||||||| parent of 0d2623481f2 (temp)
+"                        <t t-out=\"transaction.provider_id.sudo().name or "
+"''\"/>\n"
+=======
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or "
+"''\"/>\n"
+>>>>>>> 0d2623481f2 (temp)
 "                    </t>\n"
+<<<<<<< HEAD
 "                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
+||||||| parent of 0d2623481f2 (temp)
+"                    (<t t-out=\"format_amount(transaction.amount, object."
+"currency_id) or ''\">$ 10.00</t>)\n"
+=======
+"                    (<t t-out=\"format_amount(tx_sudo.amount, object."
+"currency_id) or ''\">$ 10.00</t>)\n"
+>>>>>>> 0d2623481f2 (temp)
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
