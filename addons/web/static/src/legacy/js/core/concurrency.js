@@ -18,17 +18,6 @@ import Class from "@web/legacy/js/core/class";
 
 const concurrency = {
     /**
-     * Returns a promise resolved after 'wait' milliseconds
-     *
-     * @param {int} [wait=0] the delay in ms
-     * @return {Promise}
-     */
-    delay: function (wait) {
-        return new Promise(function (resolve) {
-            setTimeout(resolve, wait);
-        });
-    },
-    /**
      * The DropMisordered abstraction is useful for situations where you have
      * a sequence of operations that you want to do, but if one of them
      * completes after a subsequent operation, then its result is obsolete and
@@ -179,5 +168,4 @@ const concurrency = {
     }
 };
 
-export const delay = concurrency.delay
 export default concurrency;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from '@web/legacy/js/core/concurrency';
+import { delay } from "@web/core/utils/concurrency";
 import utils from '@web/legacy/js/core/utils';
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
@@ -332,7 +332,7 @@ class ApplyConfiguratorScreen extends Component {
                 );
             } catch (error) {
                 // Wait a bit before retrying or allowing manual retry.
-                await concurrency.delay(5000);
+                await delay(5000);
                 if (retryCount < 3) {
                     return attemptConfiguratorApply(data, retryCount + 1);
                 }

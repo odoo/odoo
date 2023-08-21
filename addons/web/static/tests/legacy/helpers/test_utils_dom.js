@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from "@web/legacy/js/core/concurrency";
+import { delay } from "@web/core/utils/concurrency";
 
     /**
      * DOM Test Utils
@@ -305,7 +305,7 @@ import concurrency from "@web/legacy/js/core/concurrency";
      * @returns {Promise}
      */
     async function returnAfterNextAnimationFrame() {
-        await concurrency.delay(0);
+        await delay(0);
         await new Promise(resolve => {
             window.requestAnimationFrame(resolve);
         });

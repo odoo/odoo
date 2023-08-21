@@ -10,7 +10,7 @@
  */
 
 import { uniqueId } from "@web/core/utils/functions";
-import concurrency from "@web/legacy/js/core/concurrency";
+import { delay } from "@web/core/utils/concurrency";
 import core from "@web/legacy/js/services/core";
 import { localization } from "@web/core/l10n/localization";
 
@@ -347,7 +347,7 @@ var dom = {
             // a 'real' debounce creation useless. Also, during the debouncing
             // part, the button is disabled without any visual effect.
             $button.addClass('pe-none');
-            Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
+            Promise.resolve(dom.DEBOUNCE && delay(dom.DEBOUNCE)).then(function () {
                 $button.removeClass('pe-none');
                 const restore = dom.addButtonLoadingEffect($button[0]);
                 return Promise.resolve(result).then(restore).guardedCatch(restore);
