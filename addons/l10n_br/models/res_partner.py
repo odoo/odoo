@@ -16,5 +16,5 @@ class ResPartner(models.Model):
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_cpf(self):
         for partner in self.filtered(lambda partner: partner.l10n_latam_identification_type_id == self.env.ref('l10n_br.cpf')):
-            if partner.vat and not stdnum.br.cpf.is_valid(partner.vat):
-                raise ValidationError(_('CPF number %s for %s is not valid.') % (partner.vat, partner.display_name))
+            if partner.vat and not stdnum.br.cpf.is_valid(partner.vat) and not stdnum.br.cnpj.is_valid(partner.vat):
+                raise ValidationError(_('CPF/CNPJ number %s for %s is not valid.') % (partner.vat, partner.display_name))
