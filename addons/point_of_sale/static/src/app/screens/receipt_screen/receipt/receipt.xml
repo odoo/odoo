@@ -44,7 +44,9 @@
             <!-- Orderlines -->
 
             <div class="orderlines">
-                <t t-call="point_of_sale.OrderLinesReceipt"/>
+                <div t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
+                    <t t-call="point_of_sale.ReceiptOrderline"/>
+                </div>
             </div>
 
             <!-- Subtotal -->
@@ -185,59 +187,57 @@
             </div>
         </div>
     </t>
-    <t t-name="point_of_sale.OrderLinesReceipt">
-        <div t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
-            <div t-esc="line.product_name_wrapped[0]" />
-            <WrappedProductNameLines line="line" />
-            <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
-                <div class="pos-receipt-left-padding">
-                    <t t-esc="env.utils.formatCurrency(line.price_lst, false)" />
-                    ->
-                    <t t-esc="env.utils.formatCurrency(line.price, false)" />
-                </div>
-            </t>
-            <t t-elif="line.discount !== 0">
-                <div class="pos-receipt-left-padding">
-                    <t t-if="pos.config.iface_tax_included === 'total'">
-                        <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
-                    </t>
-                    <t t-else="">
-                        <t t-esc="env.utils.formatCurrency(line.price, false)"/>
-                    </t>
-                </div>
-            </t>
-            <t t-if="line.discount !== 0">
-                <div class="pos-receipt-left-padding">
-                    Discount: <t t-esc="line.discount" />%
-                </div>
-            </t>
+    <t t-name="point_of_sale.ReceiptOrderline">
+        <div t-esc="line.product_name_wrapped[0]" />
+        <WrappedProductNameLines line="line" />
+        <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
             <div class="pos-receipt-left-padding">
-                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
-                <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
-                x
-                <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
-                <div class="price_display pos-receipt-right-align">
-                    <span t-esc="env.utils.formatCurrency(line.price_display, false)" />
-                    <span t-esc="getTaxLetter(...getOrderlineTaxes(line))" class="tax-letter" /> 
-                </div>
+                <t t-esc="env.utils.formatCurrency(line.price_lst, false)" />
+                ->
+                <t t-esc="env.utils.formatCurrency(line.price, false)" />
             </div>
-            <t t-if="line.customer_note">
-                <div class="pos-receipt-left-padding pos-receipt-customer-note">
-                    <t t-esc="line.customer_note"/>
-                </div>
-            </t>
-            <t t-if="line.pack_lot_lines">
-                <div class="pos-receipt-left-padding">
-                    <ul>
-                        <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
-                            <li>
-                                SN <t t-esc="lot.lot_name"/>
-                            </li>
-                        </t>
-                    </ul>
-                </div>
-            </t>
+        </t>
+        <t t-elif="line.discount !== 0">
+            <div class="pos-receipt-left-padding">
+                <t t-if="pos.config.iface_tax_included === 'total'">
+                    <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="env.utils.formatCurrency(line.price, false)"/>
+                </t>
+            </div>
+        </t>
+        <t t-if="line.discount !== 0">
+            <div class="pos-receipt-left-padding">
+                Discount: <t t-esc="line.discount" />%
+            </div>
+        </t>
+        <div class="pos-receipt-left-padding">
+            <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
+            <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
+            x
+            <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
+            <div class="price_display pos-receipt-right-align">
+                <span t-esc="env.utils.formatCurrency(line.price_display, false)" />
+                <span t-esc="getTaxLetter(...getOrderlineTaxes(line))" class="tax-letter" />
+            </div>
         </div>
+        <t t-if="line.customer_note">
+            <div class="pos-receipt-left-padding pos-receipt-customer-note">
+                <t t-esc="line.customer_note"/>
+            </div>
+        </t>
+        <t t-if="line.pack_lot_lines">
+            <div class="pos-receipt-left-padding">
+                <ul>
+                    <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
+                        <li>
+                            SN <t t-esc="lot.lot_name"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </t>
     </t>
 
 </templates>
