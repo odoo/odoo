@@ -3989,5 +3989,9 @@ class TestStockValuation(TransactionCase):
         self.product1.categ_id.property_cost_method = 'average'
         self._make_in_move(self.product1, 5, unit_cost=5)
         self._make_in_move(self.product1, 2, unit_cost=6)
+
+        res = self.env['stock.quant'].read_group([('product_id', '=', self.product1.id)], ['value'], ['product_id'])
+        self.assertEqual(res[0]['value'], 5 * 5 + 2 * 6)
+
         self.product1.write({'standard_price': 7})
         self.assertEqual(self.product1.value_svl, 49)

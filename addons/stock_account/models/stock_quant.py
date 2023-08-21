@@ -61,6 +61,12 @@ class StockQuant(models.Model):
 
         return result
 
+    @api.model
+    def read_group(self, domain, fields, *args, **kwargs):
+        if 'value' in fields:
+            fields = ['value:sum' if f == 'value' else f for f in fields]
+        return super().read_group(domain, fields, *args, **kwargs)
+
     def _apply_inventory(self):
         for accounting_date, inventory_ids in groupby(self, key=lambda q: q.accounting_date):
             inventories = self.env['stock.quant'].concat(*inventory_ids)
