@@ -65,6 +65,7 @@
             <field name="email_normalized" invisible="1"/>
             <field name="partner_phone_sanitized" invisible="1"/>
             <field name="partner_mobile_sanitized" invisible="1"/>
+            <field name="emp_is_active" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
                         class="o_create_employee" invisible="emp_id or not active or not date_closed"/>
@@ -79,7 +80,7 @@
                             class="oe_stat_button"
                             icon="fa-id-card-o"
                             groups="hr.group_hr_user"
-                            invisible="not emp_id">
+                            invisible="not (emp_id or emp_is_active)">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>
                             <span class="o_stat_text">Employee</span>
