@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from '@web/legacy/js/core/concurrency';
+import { KeepLast } from "@web/core/utils/concurrency";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
@@ -23,7 +23,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this._dp = new concurrency.DropPrevious();
+        this.keepLast = new KeepLast();
 
         this._onInput = debounce(this._onInput, 400);
         this._onFocusOut = debounce(this._onFocusOut, 100);
@@ -224,7 +224,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         if (this.searchType === 'all' && !this.$input.val().trim().length) {
             this._render();
         } else {
-            this._dp.add(this._fetch()).then(this._render.bind(this));
+            this.keepLast.add(this._fetch()).then(this._render.bind(this));
         }
     },
     /**
