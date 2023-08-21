@@ -640,6 +640,25 @@ class AccountChartTemplate(models.AbstractModel):
             if company[fname]:
                 del accounts_data[fname]
 
+        self = self.with_context(lang='en_US')
+        langs = langs or [code for code, _name in self.env['res.lang'].get_installed()]
+
+        #get translations for accounts_data
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+        for mname, data in accounts_data.items():
+            for _xml_id, record in data.items():
+                fnames = {fname.split('@')[0] for fname in record}
+                for lang in langs:
+                    for fname in fnames:
+                        value = record.get(f"{fname}@{lang}")
+                        if not value:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+                            value = record.get(f"{fname}@{lang.split('_')[0]}")
+                        if value:
+                            xml_id = f"account.{company.id}_{_xml_id}"
+                            translation_importer.model_translations[mname][fname][xml_id][lang] = value
+        translation_importer.save(overwrite=False)
+
+
         accounts = self.env['account.account'].create(accounts_data.values())
         for company_attr_name, account in zip(accounts_data.keys(), accounts):
             company[company_attr_name] = account
