@@ -2940,7 +2940,9 @@ class TestMrpOrder(TestMrpCommon):
             mo_01 = mo_01_form.save()
 
         self.assertEqual(op_1.date_start, datetime(2022, 10, 18, 12))
-        self.assertEqual(op_1.date_finished, op_2.date_start)
+        # no auto replan
+        self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
+        self.assertNotEqual(op_1.date_finished, op_2.date_start)
 
         #Second MO
         with Form(mo_02) as mo_02_form:
