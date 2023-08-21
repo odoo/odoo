@@ -28,6 +28,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { useTypingService } from "@mail/discuss/typing/common/typing_service";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -98,6 +99,7 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         this.personaService = useState(useService("mail.persona"));
         this.threadService = useService("mail.thread");
+        this.typingService = useTypingService();
         this.ui = useState(useService("ui"));
         this.rpc = useService("rpc");
         this.ref = useRef("textarea");

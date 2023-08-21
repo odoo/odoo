@@ -1,5 +1,6 @@
 .o-mail-Composer {
     grid-template-areas:
+        "core-header-typing core-header-typing"
         "sidebar-header core-header"
         "sidebar-main core-main"
         "sidebar-footer core-footer";
@@ -13,6 +14,14 @@
     .o-mail-Composer-sidebarMain {
         width: 48px;
         justify-self: center;
+    }
+
+    .o-mail-Composer-coreHeader-typing {
+        grid-area: core-header-typing;
+
+        &.size {
+            height: 21px;
+        }
     }
 
     .o-mail-Composer-coreHeader {

@@ -6,6 +6,13 @@
                 <Typing channel="thread" size="'medium'"/>
             </div>
         </xpath>
+        <xpath expr="//div[hasclass('o-mail-Composer-coreHeader')]" position="before">
+            <div t-if="thread and thread.type !== 'chatter' and env.inChatWindow" class="o-mail-Composer-coreHeader-typing" t-att-class="{'size border-top': typingService.hasTypingMembers(thread)}">
+                <div t-if="typingService.hasTypingMembers(thread)" class="d-flex top-0 left-0 px-2">
+                    <Typing channel="thread" size="'medium'"/>
+                </div>
+            </div>
+        </xpath>
         <xpath expr="//*[hasclass('o-mail-Composer-input')]" position="attributes">
             <attribute name="t-on-input">onInput</attribute>
         </xpath>
