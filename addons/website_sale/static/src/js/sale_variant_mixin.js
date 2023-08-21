@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from "@web/legacy/js/core/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 import core from "@web/legacy/js/services/core";
 import utils from "@web/legacy/js/core/utils";
 import ajax from "@web/legacy/js/core/ajax";
@@ -640,17 +640,17 @@ var VariantMixin = {
      * information about the last selected combination is useful. All
      * intermediary rpc can be ignored and are therefore best not done at all.
      *
-     * The DropMisordered is to make sure slower rpc are ignored if the result
-     * of a newer rpc has already been received.
+     * The keepLast is to make sure we only consider the result of the last call, when several
+     * (asynchronous) calls are done in parallel.
      *
      * @private
      * @param {string} uniqueId
      * @returns {function}
      */
     _throttledGetCombinationInfo: memoize(function (self, uniqueId) {
-        var dropMisordered = new concurrency.DropMisordered();
+        const keepLast = new KeepLast();
         var _getCombinationInfo = throttleForAnimation(self._getCombinationInfo.bind(self));
-        return (ev, params) => dropMisordered.add(_getCombinationInfo(ev, params));
+        return (ev, params) => keepLast.add(_getCombinationInfo(ev, params));
     }),
     /**
      * Toggles the disabled class depending on the $parent element

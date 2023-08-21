@@ -18,54 +18,6 @@ import Class from "@web/legacy/js/core/class";
 
 const concurrency = {
     /**
-     * The DropMisordered abstraction is useful for situations where you have
-     * a sequence of operations that you want to do, but if one of them
-     * completes after a subsequent operation, then its result is obsolete and
-     * should be ignored.
-     *
-     * Note that is is kind of similar to the DropPrevious abstraction, but
-     * subtly different.  The DropMisordered operations will all resolves if
-     * they complete in the correct order.
-     */
-    DropMisordered: Class.extend({
-        /**
-         * @constructor
-         *
-         * @param {boolean} [failMisordered=false] whether mis-ordered responses
-         *   should be failed or just ignored
-         */
-        init: function (failMisordered) {
-            // local sequence number, for requests sent
-            this.lsn = 0;
-            // remote sequence number, seqnum of last received request
-            this.rsn = -1;
-            this.failMisordered = failMisordered || false;
-        },
-        /**
-         * Adds a promise (usually an async request) to the sequencer
-         *
-         * @param {Promise} promise to ensure add
-         * @returns {Promise}
-         */
-        add: function (promise) {
-            var self = this;
-            var seq = this.lsn++;
-            var res = new Promise(function (resolve, reject) {
-                promise.then(function (result) {
-                    if (seq > self.rsn) {
-                        self.rsn = seq;
-                        resolve(result);
-                    } else if (self.failMisordered) {
-                        reject();
-                    }
-                }).guardedCatch(function (result) {
-                    reject(result);
-                });
-            });
-            return res;
-        },
-    }),
-    /**
      * A MutexedDropPrevious is a primitive for serializing computations while
      * skipping the ones that where executed between a current one and before
      * the execution of a new one. This is useful to avoid useless RPCs.
