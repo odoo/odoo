@@ -108,7 +108,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/translation.js',
             'web/static/src/legacy/js/core/utils.js',
             'web/static/src/legacy/js/core/widget.js',
-            'web/static/src/legacy/js/services/config.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',

@@ -36,11 +36,7 @@
                 fetch: (window.fetch || (() => { })).bind(window),
             }, env.browser),
             bus: env.bus || new Bus(),
-            device: Object.assign({
-                isMobile: false,
-                SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
-            }, env.device),
-            isDebug: env.isDebug || (() => false),
+            debug: env.debug || false,
             services: makeTestEnvServices(env),
             session: Object.assign({
                 rpc(route, params, options) {
