@@ -403,6 +403,13 @@ export class FormController extends Component {
                 callback: () => this.deleteRecord(),
                 skipSave: true,
             },
+            addPropertyFieldValue: {
+                isAvailable: () => activeActions.addPropertyFieldValue,
+                sequence: 50,
+                icon: "fa fa-cogs",
+                description: _t("Add Properties"),
+                callback: () => this.model.bus.trigger("PROPERTY_FIELD:ADD_PROPERTY_VALUE"),
+            },
         };
     }
 

@@ -27,6 +27,9 @@ export class FormArchParser {
                 if (archParseBoolean(node.getAttribute("default_focus") || "")) {
                     autofocusFieldId = fieldId;
                 }
+                if (fieldInfo.type === "properties") {
+                    activeActions.addPropertyFieldValue = true;
+                }
                 return false;
             } else if (node.tagName === "div" && node.classList.contains("oe_chatter")) {
                 // remove this when chatter fields are declared as attributes on the root node
