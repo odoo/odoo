@@ -4,10 +4,10 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { formatDateTime, parseDate, parseDateTime} from "@web/legacy/js/core/dates";
 import time from "@web/legacy/js/core/time";
-import config from "@web/legacy/js/services/config";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_utils";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
@@ -1035,7 +1035,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                               .find("input[type='text'],input[type='number'],textarea")  // get 'text' inputs
                               .filter('.form-control')  // needed for the auto-resize
                               .not('.o_survey_comment');  // remove inputs for comments that does not count as answers
-        if ($firstTextInput.length > 0 && !config.device.isMobile) {
+        if ($firstTextInput.length > 0 && !uiUtils.isSmall()) {
             $firstTextInput.focus();
         }
     },

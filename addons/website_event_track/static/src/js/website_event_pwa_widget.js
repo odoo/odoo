@@ -15,8 +15,8 @@
         });
     });
 
-    import config from "@web/legacy/js/services/config";
     import publicWidget from "@web/legacy/js/public/public_widget";
+    import { utils as uiUtils } from "@web/core/ui/ui_service";
 
     var PWAInstallBanner = publicWidget.Widget.extend({
         template: "pwa_install_banner",
@@ -158,7 +158,7 @@
          * @private
          */
         _showInstallBanner: function () {
-            if (!config.device.isMobile) {
+            if (!uiUtils.isSmall()) {
                 return;
             }
             var self = this;

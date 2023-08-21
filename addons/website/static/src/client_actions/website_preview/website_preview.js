@@ -13,8 +13,8 @@ import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
-import config from "@web/legacy/js/services/config";
 import { renderToElement } from "@web/core/utils/render";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -89,7 +89,7 @@ export class WebsitePreview extends Component {
             }
 
             const isScreenLargeEnoughForEdit =
-                config.device.size_class >= config.device.SIZES.MD;
+                uiUtils.getSize() >= SIZES.MD;
             if (!isScreenLargeEnoughForEdit && this.props.action.context.params) {
                 this.props.action.context.params.enable_editor = false;
                 this.props.action.context.params.with_loader = false;

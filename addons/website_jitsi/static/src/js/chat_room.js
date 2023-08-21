@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     selector: '.o_wjitsi_room_widget',
@@ -227,7 +227,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * @returns {boolean} true is we were redirected to the mobile application
       */
     _openMobileApplication: async function (roomName) {
-        if (config.device.isMobile) {
+        if (uiUtils.isSmall()) {
             // we are on mobile, open the room in the application
             window.location = `intent://${this.jitsiServer}/${encodeURIComponent(roomName)}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
             return true;

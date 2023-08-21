@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { SERVICES_METADATA } from "@web/env";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
 
@@ -45,7 +46,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
         return ref;
     }
     // LEGACY
-    if (comp.env.device && comp.env.device.isMobileDevice) {
+    if (isMobileOS()) {
         return ref;
     }
     // LEGACY

@@ -9,12 +9,13 @@ import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
-import config from "@web/legacy/js/services/config";
 import dom from "@web/legacy/js/core/dom";
 import mixins from "@web/legacy/js/core/mixins";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import wUtils from "@website/js/utils";
 import { renderToElement } from "@web/core/utils/render";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -648,7 +649,7 @@ const MobileYoutubeAutoplayMixin = {
         let promise = Promise.resolve();
 
         this.isYoutubeVideo = src.indexOf('youtube') >= 0;
-        this.isMobileEnv = config.device.size_class <= config.device.SIZES.LG && config.device.touch;
+        this.isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
         if (this.isYoutubeVideo && this.isMobileEnv && !window.YT) {
             const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;

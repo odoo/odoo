@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import { Mutex } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
@@ -836,8 +835,8 @@ var ViewEditor = Widget.extend({
         Object.entries(this.$lists).forEach(([_type, $list]) => { $list.toggleClass('d-none', type !== _type); });
         this.$lists[type].change();
 
-        this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !config.isDebug());
-        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType !== 'scss' || !config.isDebug());
+        this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !odoo.debug);
+        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType !== 'scss' || !odoo.debug);
         this.$includeAllSCSSArea.find('[data-value="restricted"]').toggleClass('d-none', this.options.defaultBundlesRestriction.length === 0);
         this.$formatButton.toggleClass('d-none', this.currentType !== 'xml');
     },
@@ -944,7 +943,7 @@ var ViewEditor = Widget.extend({
                 }));
             }
 
-            if (!isSelected && config.isDebug() && $elem.data('debug')) {
+            if (!isSelected && odoo.debug && $elem.data('debug')) {
                 $div.append($('<span/>', {
                     text: ' (' + $elem.data('debug') + ')',
                     class: 'ml4 small text-muted',

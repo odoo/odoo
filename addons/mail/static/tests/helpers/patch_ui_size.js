@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { MEDIAS_BREAKPOINTS, SIZES, utils } from "@web/core/ui/ui_service";
-import config from "@web/legacy/js/services/config";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 /**
@@ -40,13 +39,12 @@ function getSizeFromWidth(width) {
 /**
  * Patch legacy objects referring to the ui size. This function must be removed
  * when the wowl env will be available in the form_renderer (currently the form
- * renderer relies on config). This will impact env.browser.innerWidth,
- * env.device.isMobile and config.device.{size_class/isMobile}.
+ * renderer relies on config). This will impact env.browser.innerWidth.
  *
  * @param {number} size
  * @param {number} width
  */
-function legacyPatchUiSize(height, size, width) {
+function legacyPatchUiSize(height, width) {
     const legacyEnv = owl.Component.env;
     patchWithCleanup(legacyEnv, {
         browser: {
@@ -54,25 +52,13 @@ function legacyPatchUiSize(height, size, width) {
             innerWidth: width,
             innerHeight: height || browser.innerHeight,
         },
-        device: {
-            ...legacyEnv.device,
-            isMobile: size <= SIZES.SM,
-        },
-    });
-    patchWithCleanup(config, {
-        device: {
-            ...config.device,
-            size_class: size,
-            isMobile: size <= SIZES.SM,
-        },
     });
 }
 
 /**
  * Adjust ui size either from given size (mapped to window breakpoints) or
- * width. This will impact not only config.device.{size_class/isMobile} but
- * uiService.{isSmall/size}, (wowl/legacy) browser.innerWidth, (wowl)
- * env.isSmall and (legacy) env.device.isMobile. When a size is given, the browser
+ * width. This will impact uiService.{isSmall/size}, (wowl/legacy)
+ * browser.innerWidth, (wowl) env.isSmall and. When a size is given, the browser
  * width is set according to the breakpoints that are used by the webClient.
  *
  * @param {Object} params parameters to configure the ui size.
@@ -96,7 +82,7 @@ function patchUiSize({ height, size, width }) {
             return size;
         },
     });
-    legacyPatchUiSize(height, size, width);
+    legacyPatchUiSize(height, width);
 }
 
 export { patchUiSize, SIZES };

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 import dom from "@web/legacy/js/core/dom";
 import {throttleForAnimation} from "@web/core/utils/timing";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 // TODO In master, export this class too or merge it with PopupWidget
 const SharedPopupWidget = publicWidget.Widget.extend({
@@ -126,7 +126,7 @@ const PopupWidget = publicWidget.Widget.extend({
         let display = $main.data('display');
         let delay = $main.data('showAfter');
 
-        if (config.device.isMobile) {
+        if (uiUtils.isSmall()) {
             if (display === 'mouseExit') {
                 display = 'afterDelay';
                 delay = 5000;

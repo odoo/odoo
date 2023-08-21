@@ -6,7 +6,6 @@
     import  { _t } from "@web/legacy/js/services/core";
     import { renderToElement } from "@web/core/utils/render";
     import { Markup } from "@web/legacy/js/core/utils";
-    import config from '@web/legacy/js/services/config';
 
     import session from 'web.session';
     import { Quiz } from '@website_slides/js/slides_course_quiz';
@@ -14,6 +13,7 @@
     import { unhideConditionalElements } from '@website/js/content/inject_dom';
     import Dialog from '@web/legacy/js/core/dialog';
     import '@website_slides/js/slides_course_join';
+    import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
     /**
      * Helper: Get the slide dict matching the given criteria
@@ -711,7 +711,7 @@
             return this._fetchSlideContent().then(function() { // render content
                 var websiteName = document.title.split(" | ")[1]; // get the website name from title
                 document.title =  (websiteName) ? slide.name + ' | ' + websiteName : slide.name;
-                if  (config.device.size_class < config.device.SIZES.MD) {
+                if  (uiUtils.getSize() < SIZES.MD) {
                     self._toggleSidebar(); // hide sidebar when small device screen
                 }
                 return self._renderSlide();
