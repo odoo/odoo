@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import config from '@web/legacy/js/services/config';
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * Until we have our own implementation of the /web/static/lib/pdfjs/web/viewer.{html,js,css}
@@ -21,7 +21,7 @@ export function hidePDFJSButtons(rootElement) {
 a#secondaryViewBookmark.secondaryToolbarButton, a#viewBookmark.toolbarButton {
 display: none !important;
 }`;
-    if (config.device.isMobileDevice) {
+    if (isMobileOS()) {
         cssStyle.innerHTML = `${cssStyle.innerHTML}
 button#secondaryDownload.secondaryToolbarButton, button#download.toolbarButton,
 button#secondaryPrint.secondaryToolbarButton, button#print.toolbarButton{

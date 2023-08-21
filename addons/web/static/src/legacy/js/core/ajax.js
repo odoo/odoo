@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import core from "@web/legacy/js/services/core";
 import { Markup } from "@web/legacy/js/core/utils";
 import time from "@web/legacy/js/core/time";
@@ -167,8 +166,8 @@ function get_file(options) {
             data.append(k, v);
         }
     }
-    if (core.csrf_token) {
-        data.append('csrf_token', core.csrf_token);
+    if (odoo.csrf_token) {
+        data.append('csrf_token', odoo.csrf_token);
     }
     // IE11 wants this after xhr.open or it throws
     xhr.responseType = 'blob';
@@ -239,8 +238,8 @@ function post (controller_url, data) {
     $.each(data, function(i,val) {
         postData.append(i, val);
     });
-    if (core.csrf_token) {
-        postData.append('csrf_token', core.csrf_token);
+    if (odoo.csrf_token) {
+        postData.append('csrf_token', odoo.csrf_token);
     }
 
     return new Promise(function (resolve, reject) {
@@ -277,7 +276,7 @@ var loadAsset = (function () {
         context = Object.assign({}, session.user_context, context);
         const params = {
             args: [xmlId, {
-                debug: config.isDebug()
+                debug: !!odoo.debug
             }],
             kwargs: {
                 context: context,

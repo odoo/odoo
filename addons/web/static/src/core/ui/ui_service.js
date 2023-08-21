@@ -128,10 +128,16 @@ export const utils = {
     },
 };
 
+const bus = new EventBus();
+
+export function listenSizeChange(callback) {
+    bus.addEventListener("resize", callback);
+    return () => bus.removeEventListener("resize", callback);
+}
+
 export const uiService = {
     start(env) {
         // block/unblock code
-        const bus = new EventBus();
         registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
 
         let blockCount = 0;

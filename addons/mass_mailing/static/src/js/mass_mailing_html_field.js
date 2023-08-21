@@ -10,12 +10,11 @@ import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "@web/legacy/js/core/rpc";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
-import config from '@web/legacy/js/services/config';
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 
-const { device } = config
 const {
     useSubEnv,
     onWillUpdateProps,
@@ -290,7 +289,7 @@ export class MassMailingHtmlField extends HtmlField {
             // Initialize theme parameters.
             this._themeClassNames = "";
             const displayableThemes =
-                device.isMobile ?
+                uiUtils.isSmall() ?
                 $themes.filter(theme => !$(theme).data("hideFromMobile")) :
                 $themes;
             this._themeParams = Array.from(displayableThemes).map((theme) => {
@@ -380,7 +379,7 @@ export class MassMailingHtmlField extends HtmlField {
 
             $themeSelectorNew.remove();
 
-            this.wysiwyg.setSnippetsMenuFolded(device.isMobile || themeName === 'basic');
+            this.wysiwyg.setSnippetsMenuFolded(uiUtils.isSmall() || themeName === 'basic');
 
             this._switchImages(themeParams, $snippets);
 
@@ -450,7 +449,7 @@ export class MassMailingHtmlField extends HtmlField {
             selectedTheme = this._getSelectedTheme(themesParams);
         }
 
-        this.wysiwyg.setSnippetsMenuFolded(device.isMobile || (selectedTheme && selectedTheme.name === 'basic'));
+        this.wysiwyg.setSnippetsMenuFolded(uiUtils.isSmall() || (selectedTheme && selectedTheme.name === 'basic'));
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
         if (this.env.mailingFilterTemplates && this.wysiwyg) {
