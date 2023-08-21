@@ -446,7 +446,7 @@ var FileWidget = SearchableMediaWidget.extend({
             return this.media;
         }
 
-        if (!img.public && !img.access_token) {
+        if (!img.public && !img.access_token && !img.url) {
             await this._rpc({
                 model: 'ir.attachment',
                 method: 'generate_access_token',
