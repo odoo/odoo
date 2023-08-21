@@ -82,7 +82,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         }
         handleInputChange(paymentId) {
             let expectedAmount;
-            if (paymentId === this.defaultCashDetails.id) {
+            if (paymentId === this.defaultCashDetails?.id) {
                 this.manualInputCashCount = true;
                 this.state.notes = '';
                 expectedAmount = this.defaultCashDetails.amount;
