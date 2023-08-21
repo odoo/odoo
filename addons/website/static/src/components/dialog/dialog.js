@@ -5,7 +5,6 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { Switch } from '@website/components/switch/switch';
 import {unslugHtmlDataObject} from '../../services/website_service';
-import { csrf_token } from "@web/legacy/js/services/core";
 
 const { xml, useState, Component, onWillStart } = owl;
 
@@ -108,7 +107,7 @@ export class AddPageDialog extends Component {
     }
 
     async addPage() {
-        const params = {'add_menu': this.state.addMenu || '', csrf_token};
+        const params = {'add_menu': this.state.addMenu || '', csrf_token: odoo.csrf_token};
         // Remove any leading slash.
         const pageName = this.state.name.replace(/^\/*/, "");
         const url = `/website/add/${encodeURIComponent(pageName)}`;

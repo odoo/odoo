@@ -3,9 +3,9 @@
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { renderToMarkup } from "@web/core/utils/render";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { _t } from "@web/legacy/js/services/core";
 import session from "web.session";
 import { InputConfirmationDialog } from './components/input_confirmation_dialog/input_confirmation_dialog';
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
     selector: '.o_portal_new_api_key',

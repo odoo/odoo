@@ -5,7 +5,6 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockServer } from "@web/../tests/helpers/mock_server";
-import core from "@web/legacy/js/services/core";
 import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
@@ -29,7 +28,7 @@ async function getModelDefinitions() {
 
     // fetch the model definitions.
     const formData = new FormData();
-    formData.append("csrf_token", core.csrf_token);
+    formData.append("csrf_token", odoo.csrf_token);
     formData.append("model_names_to_fetch", JSON.stringify(modelNamesToFetch));
     const response = await window.fetch("/bus/get_model_definitions", {
         body: formData,

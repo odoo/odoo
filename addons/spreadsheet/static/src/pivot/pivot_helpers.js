@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "@web/legacy/js/services/core";
+import { _t } from "@web/core/l10n/translation";
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 
 export const pivotFormulaRegex = /^=.*PIVOT/;
