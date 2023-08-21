@@ -14,10 +14,12 @@ patch(ReceiptScreen.prototype, "l10n_pt_pos.ReceiptScreen", {
                 this.currentOrder.set_l10n_pt_pos_atcud(values.atcud);
                 this.currentOrder.set_l10n_pt_pos_qr_code_str(values.qr_code_str);
             }
+            // We need to re-render the screen to display the QR code after the RPC call
             await this.render(true);
+            // We need to wait for the next tick before printing
+            await new Promise((resolve) => window.requestAnimationFrame(resolve));
+            await new Promise((resolve) => setTimeout(resolve));
         }
-        setTimeout(() => {
-          _super(...arguments);
-        }, 500);  // Wait for the receipt to be rendered since await doesn't
+        return _super(...arguments);
     },
 });
