@@ -13,7 +13,7 @@ QUnit.module("chat window manager");
 
 QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
+    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
                 Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
@@ -28,6 +28,26 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
             channel_member_ids: [
                 Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            body: "Orange",
+            res_id: channeId1,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "Apple",
+            res_id: channelId2,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "Banana",
+            res_id: channelId3,
+            message_type: "comment",
+            model: "discuss.channel",
         },
     ]);
     patchUiSize({ width: 900 });
@@ -45,14 +65,17 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
             }
         },
     });
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-Message:contains(Orange)");
+    await contains(".o-mail-Message:contains(Apple)", 0);
+    await contains(".o-mail-Message:contains(Banana)");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
 QUnit.test("click on hidden chat window should fetch its messages", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
+    const [channeId1, channelId2, channelId3] = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
                 Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
@@ -67,6 +90,26 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
             channel_member_ids: [
                 Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            body: "Orange",
+            res_id: channeId1,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "Apple",
+            res_id: channelId2,
+            message_type: "comment",
+            model: "discuss.channel",
+        },
+        {
+            body: "Banana",
+            res_id: channelId3,
+            message_type: "comment",
+            model: "discuss.channel",
         },
     ]);
     patchUiSize({ width: 900 });
@@ -84,11 +127,17 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
             }
         },
     });
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-Message:contains(Orange)");
+    await contains(".o-mail-Message:contains(Apple)", 0);
+    await contains(".o-mail-Message:contains(Banana)");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");
     await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-command[title='Open']");
+    await contains(".o-mail-Message:contains(Orange)");
+    await contains(".o-mail-Message:contains(Apple)");
+    await contains(".o-mail-Message:contains(Banana)", 0);
     assert.verifySteps(["fetch_messages"]);
 });
 
@@ -125,14 +174,14 @@ QUnit.test(
         await contains(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
-        assert.containsN($, ".o-mail-ChatWindow", 2);
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-D)");
-        assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler:contains(2)");
+        await contains(".o-mail-ChatWindow", 2);
+        await contains(".o-mail-ChatWindow:eq(0):contains(channel-A)");
+        await contains(".o-mail-ChatWindow:eq(1):contains(channel-D)");
+        await contains(".o-mail-ChatWindowHiddenToggler:contains(2)");
         await click(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-C)");
+        await contains(".o-mail-ChatWindow:eq(0):contains(channel-A)");
+        await contains(".o-mail-ChatWindow:eq(1):contains(channel-C)");
     }
 );

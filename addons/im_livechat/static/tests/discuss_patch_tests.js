@@ -4,6 +4,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     insertText,
     start,
     startServer,
@@ -128,7 +129,7 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     const { insertText, openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:not(:disabled)");
     await click(".o-mail-Message");
     assert.containsNone($, "[title='Add a Reaction']");
 });
@@ -189,14 +190,14 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(0)").text(), "Visitor 12");
-        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(1)").text(), "Visitor 11");
+        await contains(".o-mail-DiscussSidebarChannel:eq(0):contains(Visitor 12)");
+        await contains(".o-mail-DiscussSidebarChannel:eq(1):contains(Visitor 11)");
         // post a new message on the last channel
         await click(".o-mail-DiscussSidebarChannel:eq(1)");
         await insertText(".o-mail-Composer-input", "Blabla");
-        await click(".o-mail-Composer-send");
-        assert.containsN($, ".o-mail-DiscussSidebarChannel", 2);
-        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(0)").text(), "Visitor 11");
-        assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(1)").text(), "Visitor 12");
+        await click(".o-mail-Composer-send:not(:disabled)");
+        await contains(".o-mail-DiscussSidebarChannel", 2);
+        await contains(".o-mail-DiscussSidebarChannel:eq(0):contains(Visitor 11)");
+        await contains(".o-mail-DiscussSidebarChannel:eq(1):contains(Visitor 12)");
     }
 );

@@ -1,12 +1,12 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("message reply");
 
-QUnit.test("click on message in reply to highlight the parent message", async (assert) => {
+QUnit.test("click on message in reply to highlight the parent message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -23,9 +23,9 @@ QUnit.test("click on message in reply to highlight the parent message", async (a
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-Message:contains(Reply to Hey) .o-mail-MessageInReply-message");
-    assert.containsOnce($, ".o-mail-Message:contains(Hey lol).o-highlighted");
+    await contains(".o-mail-Message:contains(Hey lol).o-highlighted");
 });
 
 QUnit.test("click on message in reply to scroll to the parent message", async (assert) => {
@@ -55,7 +55,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(
         ".o-mail-Message:contains(Response to first message) .o-mail-MessageInReply-message"
     );

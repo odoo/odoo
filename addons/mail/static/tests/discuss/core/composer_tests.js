@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Composer } from "@mail/core/common/composer";
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
@@ -26,7 +26,7 @@ QUnit.test('do not send typing notification on typing "/" command', async (asser
             }
         },
     });
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
     assert.verifySteps([], "No rpc done");
 });
@@ -43,9 +43,10 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss(channelId);
+        openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
-        await click(".o-mail-Composer-suggestion");
+        await click(".o-mail-Composer-suggestion:eq(0)");
+        await contains(".o-mail-Composer-suggestion", 0);
         await insertText(".o-mail-Composer-input", " is user?");
         assert.verifySteps([], "No rpc done");
     }
@@ -58,11 +59,11 @@ QUnit.test("add an emoji after a command", async (assert) => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    openDiscuss(channelId);
+    assert.strictEqual((await contains(".o-mail-Composer-input")).val(), "");
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion:eq(0)");
+    await contains(".o-mail-Composer-suggestion", 0);
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "/who ",
@@ -71,5 +72,6 @@ QUnit.test("add an emoji after a command", async (assert) => {
 
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😊)");
+    await contains(".o-Emoji", 0);
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "/who 😊");
 });

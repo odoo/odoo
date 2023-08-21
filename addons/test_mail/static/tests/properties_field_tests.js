@@ -1,6 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("properties field");
 
@@ -63,7 +63,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
     );
     assert.verifySteps(["read res.users"]);
 
-    const chatter = document.querySelectorAll(".o-mail-ChatWindow-name");
+    const chatter = await contains(".o-mail-ChatWindow-name");
     assert.strictEqual(chatter.length, 1);
     assert.strictEqual(chatter[0].innerText, "Partner Test");
 }

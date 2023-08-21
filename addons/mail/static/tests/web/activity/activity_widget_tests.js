@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
 import { ListController } from "@web/views/list/list_controller";
@@ -41,7 +41,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         views: [[false, "list"]],
     });
     assert.containsOnce($, ".o-mail-ActivityButton i.text-muted");
-    assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "");
+    await contains(".o-mail-ListActivity-summary:eq(0):contains()");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
 
@@ -141,7 +141,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
         views: [[false, "list"]],
     });
     assert.containsOnce($, ".o-mail-ActivityButton i.text-warning.fa-warning");
-    assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Warning");
+    await contains(".o-mail-ListActivity-summary:eq(0):contains(Warning)");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
 
@@ -220,12 +220,12 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Call with Al");
+    await contains(".o-mail-ListActivity-summary:eq(0):contains(Call with Al)");
 
     await click(".o-mail-ActivityButton"); // open the popover
-    await click(".o-mail-ActivityListPopoverItem-markAsDone"); // mark the first activity as done
+    await click(".o-mail-ActivityListPopoverItem-markAsDone:eq(0)"); // mark the first activity as done
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']"); // confirm
-    assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Meet FP");
+    await contains(".o-mail-ListActivity-summary:eq(0):contains(Meet FP)");
     assert.verifySteps(["unity_web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 

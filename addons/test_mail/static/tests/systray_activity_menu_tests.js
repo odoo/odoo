@@ -1,14 +1,14 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { session } from "@web/session";
 import { date_to_str } from "@web/legacy/js/core/time";
+import { session } from "@web/session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("activity menu");
 
-QUnit.test("menu with no records", async (assert) => {
+QUnit.test("menu with no records", async () => {
     await start({
         async mockRPC(route, args) {
             if (args.method === "systray_get_activities") {
@@ -17,13 +17,12 @@ QUnit.test("menu with no records", async (assert) => {
         },
     });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    assert.containsOnce(
-        $,
+    await contains(
         ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)"
     );
 });
 
-QUnit.test("do not show empty text when at least some future activities", async (assert) => {
+QUnit.test("do not show empty text when at least some future activities", async () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const pyEnv = await startServer();
@@ -37,9 +36,9 @@ QUnit.test("do not show empty text when at least some future activities", async 
     ]);
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    assert.containsNone(
-        $,
-        ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)"
+    await contains(
+        ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)",
+        0
     );
 });
 
@@ -71,9 +70,9 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         },
     ]);
     const { env } = await start();
-    assert.containsOnce($, ".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu-counter");
-    assert.containsOnce($, ".o-mail-ActivityMenu-counter:contains(5)");
+    await contains(".o_menu_systray i[aria-label='Activities']");
+    await contains(".o-mail-ActivityMenu-counter");
+    await contains(".o-mail-ActivityMenu-counter:contains(5)");
     let context = {};
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -85,22 +84,24 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_overdue: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu");
-    assert.containsN($, ".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
+    await contains(".o-mail-ActivityMenu");
+    await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Late')");
-    assert.containsNone($, ".o-mail-ActivityMenu");
+    await contains(".o-mail-ActivityMenu", 0);
     context = {
         force_search_count: 1,
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Today')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Today'):eq(0)");
+    await contains(".o-mail-ActivityMenu", 0);
     context = {
         force_search_count: 1,
         search_default_activities_upcoming_all: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Future')");
+    await contains(".o-mail-ActivityMenu", 0);
     context = {
         force_search_count: 1,
         search_default_activities_overdue: 1,
@@ -108,6 +109,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     };
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup:contains('mail.test.activity')");
+    await contains(".o-mail-ActivityMenu", 0);
 });
 
 QUnit.test("activity menu widget: activity view icon", async (assert) => {
@@ -139,7 +141,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
     ]);
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsN($, "button[title='Summary']", 2);
+    await contains("button[title='Summary']", 2);
     const first = $(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     const second = $(
         ".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
@@ -161,7 +163,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
         },
     });
     await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
-    assert.containsNone($, ".o-dropdown-menu");
+    await contains(".o-dropdown-menu", 0);
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
@@ -170,7 +172,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
 QUnit.test("activity menu widget: close on messaging menu click", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu");
+    await contains(".o-mail-ActivityMenu");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone($, ".o-mail-ActivityMenu");
+    await contains(".o-mail-ActivityMenu", 0);
 });

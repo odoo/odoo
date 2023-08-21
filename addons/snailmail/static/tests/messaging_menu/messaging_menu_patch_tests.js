@@ -1,11 +1,12 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu (patch)");
 
-QUnit.test("mark as read", async (assert) => {
+QUnit.test("mark as read", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create([
         {
@@ -22,15 +23,14 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
-    assert.containsOnce($, ".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsOnce(
-        $,
+    await contains(".o-mail-NotificationItem [title='Mark As Read']");
+    await contains(
         ".o-mail-NotificationItem:contains(An error occurred when sending a letter with Snailmail.)"
     );
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsNone($, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", 0);
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -74,7 +74,7 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
+    await contains(".o-mail-NotificationItem", 2);
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("Partner"));
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("2")); // counter
     assert.ok(
@@ -144,9 +144,9 @@ QUnit.test("grouped notifications by document model", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner)");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(2)"); // counter
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:contains(Partner)");
+    await contains(".o-mail-NotificationItem:contains(2)"); // counter
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

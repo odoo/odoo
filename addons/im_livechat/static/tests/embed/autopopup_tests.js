@@ -7,11 +7,9 @@ import { start, setCookie, loadDefaultConfig } from "@im_livechat/../tests/embed
 import { Command } from "@mail/../tests/helpers/command";
 import { contains } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick } from "@web/../tests/helpers/utils";
-
 QUnit.module("autopopup");
 
-QUnit.test("persisted session", async (assert) => {
+QUnit.test("persisted session", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
@@ -29,10 +27,10 @@ QUnit.test("persisted session", async (assert) => {
     await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("rule received in init", async (assert) => {
+QUnit.test("rule received in init", async () => {
     await startServer();
     await loadDefaultConfig();
-    await start({
+    start({
         mockRPC(route) {
             if (route === "/im_livechat/init") {
                 return {
@@ -42,6 +40,5 @@ QUnit.test("rule received in init", async (assert) => {
             }
         },
     });
-    await nextTick();
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });

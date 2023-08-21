@@ -1,12 +1,12 @@
 /* @odoo-module */
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("activity mark as done popover");
 
-QUnit.test("activity mark done popover simplest layout", async (assert) => {
+QUnit.test("activity mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -16,23 +16,20 @@ QUnit.test("activity mark done popover simplest layout", async (assert) => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    await openView({
+    openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    assert.containsOnce(
-        $,
-        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
-    );
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
+    await contains(".o-mail-ActivityMarkAsDone");
+    await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    await contains(".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
-QUnit.test("activity with force next mark done popover simplest layout", async (assert) => {
+QUnit.test("activity with force next mark done popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -43,20 +40,17 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
         res_model: "res.partner",
     });
     const { openView } = await start();
-    await openView({
+    openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    assert.containsOnce(
-        $,
-        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
-    );
-    assert.containsNone($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
+    await contains(".o-mail-ActivityMarkAsDone");
+    await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']", 0);
+    await contains(".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
 QUnit.test("activity mark done popover mark done without feedback", async (assert) => {
@@ -127,17 +121,16 @@ QUnit.test("activity mark done popover mark done with feedback", async (assert) 
             }
         },
     });
-    await openView({
+    openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    insertText(
+    await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
-    ).catch(() => {}); // no render
-    await nextTick();
+    );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     assert.verifySteps(["action_feedback"]);
 });
@@ -169,7 +162,7 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
             }
         },
     });
-    await openView({
+    openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -183,11 +176,10 @@ QUnit.test("activity mark done popover mark done and schedule next", async (asse
         },
     });
     await click(".btn:contains('Mark Done')");
-    insertText(
+    await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
-    ).catch(() => {}); // no render
-    await nextTick();
+    );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     assert.verifySteps(["action_feedback_schedule_next"]);
 });
@@ -208,13 +200,15 @@ QUnit.test("[technical] activity mark done & schedule next with new action", asy
             }
         },
     });
-    await openView({
+    openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
     });
+    const def = makeDeferred();
     patchWithCleanup(env.services.action, {
         doAction(action) {
+            def.resolve();
             assert.step("activity_action");
             assert.deepEqual(
                 action,
@@ -225,5 +219,6 @@ QUnit.test("[technical] activity mark done & schedule next with new action", asy
     });
     await click(".btn:contains('Mark Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await def;
     assert.verifySteps(["activity_action"]);
 });

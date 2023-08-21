@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("notification");
@@ -30,14 +30,13 @@ QUnit.test("basic layout", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem-name:contains(Channel)");
-    assert.containsOnce($, ".o-mail-NotificationItem-counter:contains(2)");
+    await contains(".o-mail-NotificationItem-name:contains(Channel)");
+    await contains(".o-mail-NotificationItem-counter:contains(2)");
     assert.containsOnce(
         $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
         ".o-mail-NotificationItem-date:contains(now)"
     );
-    assert.containsOnce(
-        $,
+    await contains(
         ".o-mail-NotificationItem-text:contains(An error occurred when sending an email)"
     );
 });
@@ -59,7 +58,9 @@ QUnit.test("mark as read", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvent(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem")[0],
+        (
+            await contains(".o-mail-NotificationItem-name:contains(Channel)")
+        ).closest(".o-mail-NotificationItem")[0],
         null,
         "mouseenter"
     );
@@ -179,14 +180,10 @@ QUnit.test("different discuss.channel are not grouped", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN(
-        $,
-        ".o-mail-NotificationItem:contains(An error occurred when sending an email)",
-        2
-    );
+    await contains(".o-mail-NotificationItem:contains(An error occurred when sending an email)", 2);
 });
 
-QUnit.test("multiple grouped notifications by model", async (assert) => {
+QUnit.test("multiple grouped notifications by model", async () => {
     const pyEnv = await startServer();
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -226,11 +223,11 @@ QUnit.test("multiple grouped notifications by model", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
-    assert.containsN($, ".o-mail-NotificationItem-counter:contains(2)", 2);
+    await contains(".o-mail-NotificationItem", 2);
+    await contains(".o-mail-NotificationItem-counter:contains(2)", 2);
 });
 
-QUnit.test("non-failure notifications are ignored", async (assert) => {
+QUnit.test("non-failure notifications are ignored", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -245,7 +242,7 @@ QUnit.test("non-failure notifications are ignored", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone($, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", 0);
 });
 
 QUnit.test(
@@ -270,13 +267,13 @@ QUnit.test(
         ]);
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsN($, ".o-mail-NotificationItem-name", 2);
+        await contains(".o-mail-NotificationItem-name", 2);
         assert.strictEqual($(".o-mail-NotificationItem-name:eq(0)").text(), "Channel 2020");
         assert.strictEqual($(".o-mail-NotificationItem-name:eq(1)").text(), "Channel 2019");
     }
 );
 
-QUnit.test("thread notifications are re-ordered on receiving a new message", async (assert) => {
+QUnit.test("thread notifications are re-ordered on receiving a new message", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel 2019" },
@@ -296,45 +293,56 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
+    await contains(".o-mail-NotificationItem", 2);
 
     const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
-            id: channelId_1,
-            message: {
-                author: { id: 7, name: "Demo User" },
-                body: "<p>New message !</p>",
-                date: "2020-03-23 10:00:00",
-                id: 44,
-                message_type: "comment",
-                model: "discuss.channel",
-                record_name: "Channel 2019",
-                res_id: channelId_1,
-            },
-        });
+    pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
+        id: channelId_1,
+        message: {
+            author: { id: 7, name: "Demo User" },
+            body: "<p>New message !</p>",
+            date: "2020-03-23 10:00:00",
+            id: 44,
+            message_type: "comment",
+            model: "discuss.channel",
+            record_name: "Channel 2019",
+            res_id: channelId_1,
+        },
     });
-    assert.containsN($, ".o-mail-NotificationItem", 2);
-    assert.containsOnce(
-        $(".o-mail-NotificationItem:eq(0)"),
-        ".o-mail-NotificationItem-name:contains(Channel 2019)"
+    await contains(".o-mail-NotificationItem", 2);
+    await contains(
+        ".o-mail-NotificationItem:eq(0) .o-mail-NotificationItem-name:contains(Channel 2019)"
     );
-    assert.containsOnce(
-        $(".o-mail-NotificationItem:eq(1)"),
-        ".o-mail-NotificationItem-name:contains(Channel 2020)"
+    await contains(
+        ".o-mail-NotificationItem:eq(1) .o-mail-NotificationItem-name:contains(Channel 2020)"
     );
 });
 
 QUnit.test(
     "messaging menu counter should ignore unread messages in channels that are unpinned",
-    async (assert) => {
-        patchWithCleanup(browser, {
-            Notification: {
-                ...browser.Notification,
-                permission: "denied",
-            },
+    async () => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({
+                    is_pinned: false,
+                    message_unread_counter: 1,
+                    partner_id: pyEnv.currentPartnerId,
+                }),
+                Command.create({ partner_id: partnerId }),
+            ],
         });
+        pyEnv["mail.message"].create([
+            {
+                model: "discuss.channel",
+                res_id: channelId,
+                author_id: partnerId,
+                message_type: "email",
+            },
+        ]);
         await start();
-        assert.containsNone($, ".o-mail-MessagingMenu-counter-badge");
+        await contains(".o_menu_systray i[aria-label='Messages']");
+        await contains(".o-mail-MessagingMenu-counter", 0);
     }
 );
