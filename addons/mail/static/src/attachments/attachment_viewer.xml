@@ -3,7 +3,7 @@
 
     <t t-name="mail.AttachmentViewer" owl="1">
         <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
-            <div class="o-mail-AttachmentViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0">
+            <div class="o-mail-AttachmentViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
                 <div class="o-mail-AttachmentViewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400">
                     <div t-if="isViewable" class="d-flex align-items-center ms-4 me-2">
                         <i t-if="state.attachment.isImage" class="fa fa-picture-o" role="img" title="Image"/>

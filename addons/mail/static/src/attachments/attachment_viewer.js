@@ -1,6 +1,7 @@
 /* @odoo-module */
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -16,6 +17,7 @@ export class AttachmentViewer extends Component {
     };
 
     setup() {
+        useAutofocus();
         this.imageRef = useRef("image");
         this.zoomerRef = useRef("zoomer");
 
@@ -33,7 +35,6 @@ export class AttachmentViewer extends Component {
             y: 0,
         };
 
-        useExternalListener(document, "keydown", this.onKeydown);
         this.state = useState({
             index: this.props.startIndex,
             attachment: this.props.attachments[this.props.startIndex],
@@ -80,20 +81,22 @@ export class AttachmentViewer extends Component {
             case "q":
                 this.close();
                 break;
-            case "r":
-                this.rotate();
-                break;
-            case "+":
-                this.zoomIn();
-                break;
-            case "-":
-                this.zoomOut();
-                break;
-            case "0":
-                this.resetZoom();
-                break;
-            default:
-                return;
+        }
+        if (this.state.attachment.isImage) {
+            switch (ev.key) {
+                case "r":
+                    this.rotate();
+                    break;
+                case "+":
+                    this.zoomIn();
+                    break;
+                case "-":
+                    this.zoomOut();
+                    break;
+                case "0":
+                    this.resetZoom();
+                    break;
+            }
         }
     }
 
