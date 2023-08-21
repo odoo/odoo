@@ -65,7 +65,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/translation_dialog.scss',
-            'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
 
             'web/static/src/legacy/js/promise_extension.js',
@@ -251,7 +250,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/translation_dialog.scss',
-            'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
 
             'web/static/src/legacy/scss/lazyloader.scss',
