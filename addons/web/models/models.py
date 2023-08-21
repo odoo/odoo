@@ -920,6 +920,7 @@ class Base(models.AbstractModel):
         self.env.flush_all()
 
         env = self.env
+        cache = env.cache
         first_call = not field_names
 
         if any(fname not in self._fields for fname in field_names):
@@ -945,7 +946,7 @@ class Base(models.AbstractModel):
             sub_fields_spec = field_spec.get('fields') or {}
             if sub_fields_spec and values.get(field_name):
                 # retrieve all line ids in commands
-                line_ids = set(self[field_name].ids)
+                line_ids = OrderedSet(self[field_name].ids)
                 for cmd in values[field_name]:
                     if cmd[0] in (Command.UPDATE, Command.LINK):
                         line_ids.add(cmd[1])
@@ -957,17 +958,13 @@ class Base(models.AbstractModel):
                 # copy the cache of lines to their corresponding new records;
                 # this avoids computing computed stored fields on new_lines
                 new_lines = lines.browse(map(NewId, line_ids))
-                cache = self.env.cache
                 for field_name in sub_fields_spec:
                     field = lines._fields[field_name]
-                    if field.type in ('one2many', 'many2many'):
-                        line_values = [
-                            tuple(NewId(id_) for id_ in ids)
-                            for ids in cache.get_values(lines, field)
-                        ]
-                    else:
-                        line_values = map(copy.copy, cache.get_values(lines, field))
-                    cache.update_raw(new_lines, field, line_values)
+                    line_values = [
+                        field.convert_to_cache(line[field_name], new_line, validate=False)
+                        for new_line, line in zip(new_lines, lines)
+                    ]
+                    cache.update(new_lines, field, line_values)
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that

@@ -1228,3 +1228,11 @@ class TestComputeOnchange2(common.TransactionCase):
             {'name': 'foo', 'count': 1},
             {'name': 'bar', 'count': 1},
         ])
+
+    def test_one2many_compute(self):
+        """ Test a computed, editable one2many field with a domain. """
+        record = self.env['test_new_api.compute_editable'].create(
+            {'line_ids': [Command.create({})]},
+        )
+        with Form(record) as form:
+            form.precision_rounding = 0.0001
