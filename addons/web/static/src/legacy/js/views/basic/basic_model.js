@@ -4357,10 +4357,11 @@ var BasicModel = AbstractModel.extend({
         });
 
         await this.generateDefaultValues(record.id, {}, { fieldNames });
+        let onChange;
         try {
-            await this._performOnChange(record, [], { firstOnChange: true });
+            onChange = await this._performOnChange(record, [], { firstOnChange: true });
         } finally {
-            if (record._warning && params.allowWarning) {
+            if (record._warning && (params.allowWarning || onChange.warning.allowWarning)) {
                 delete record._warning;
             }
         }

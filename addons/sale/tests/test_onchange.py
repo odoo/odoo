@@ -20,6 +20,7 @@ class TestSaleOnchanges(TransactionCase):
             'warning': {
                 'title': "Warning for Test",
                 'message': partner_with_warning.sale_warn_msg,
+                'allowWarning': True,
             },
         })
 
@@ -29,6 +30,7 @@ class TestSaleOnchanges(TransactionCase):
             'warning': {
                 'title': "Warning for Test2",
                 'message': partner_with_block_warning.sale_warn_msg,
+                'allowWarning': True,
             },
         })
 
@@ -54,6 +56,7 @@ class TestSaleOnchanges(TransactionCase):
             'warning': {
                 'title': "Warning for Test Product",
                 'message': product_with_warning.sale_line_warn_msg,
+                'allowWarning': True,
             },
         })
 
@@ -64,6 +67,7 @@ class TestSaleOnchanges(TransactionCase):
             'warning': {
                 'title': "Warning for Test Product (2)",
                 'message': product_with_block_warning.sale_line_warn_msg,
+                'allowWarning': True,
             },
         })
 

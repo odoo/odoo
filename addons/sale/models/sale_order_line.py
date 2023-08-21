@@ -936,6 +936,7 @@ class SaleOrderLine(models.Model):
                 'warning': {
                     'title': _("Warning for %s", product.name),
                     'message': product.sale_line_warn_msg,
+                    'allowWarning': True,
                 }
             }
 

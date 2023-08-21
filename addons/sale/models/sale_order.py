@@ -671,6 +671,7 @@ class SaleOrder(models.Model):
                 'warning': {
                     'title': _("Warning for %s", partner.name),
                     'message': partner.sale_warn_msg,
+                    'allowWarning': True,
                 }
             }
 
