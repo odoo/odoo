@@ -152,20 +152,6 @@ const concurrency = {
             }
         }
     }),
-    /**
-     * Rejects a promise as soon as a reference promise is either resolved or
-     * rejected
-     *
-     * @param {Promise} [target_def] the promise to potentially reject
-     * @param {Promise} [reference_def] the reference target
-     * @returns {Promise}
-     */
-    rejectAfter: function (target_def, reference_def) {
-        return new Promise(function (resolve, reject) {
-            target_def.then(resolve).guardedCatch(reject);
-            reference_def.then(reject).guardedCatch(reject);
-        });
-    }
 };
 
 export default concurrency;
