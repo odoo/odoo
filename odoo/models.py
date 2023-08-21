@@ -3081,8 +3081,9 @@ class BaseModel(metaclass=MetaModel):
             if not old_translations:
                 return False
             new_translations = old_translations
+            old_value_en = old_translations.get('en_US')
             for lang, translation in translations.items():
-                old_value = new_translations.get(lang) or new_translations.get('en_US')
+                old_value = new_translations.get(lang, old_value_en)
                 if digest:
                     old_terms = field.get_trans_terms(old_value)
                     old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
