@@ -4,7 +4,7 @@ import core from "@web/legacy/js/services/core";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import concurrency from "@web/legacy/js/core/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
@@ -22,7 +22,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     start: async function () {
         this.carriers = Array.from(document.querySelectorAll('input[name="delivery_type"]'));
-        this.dp = new concurrency.DropPrevious();
+        this.keepLast = new KeepLast();
         // Workaround to:
         // - update the amount/error on the label at first rendering
         // - prevent clicking on 'Pay Now' if the shipper rating fails
@@ -201,7 +201,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
 
     _checkCarrier: async function (ev, carrier_id) {
         ev.stopPropagation();
-        await this.dp.add(this._rpc({
+        await this.keepLast.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 carrier_id: carrier_id,

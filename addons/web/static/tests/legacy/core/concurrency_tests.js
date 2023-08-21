@@ -140,51 +140,6 @@ QUnit.module('core', {}, function () {
         assert.verifySteps(['mutex unlocked']);
     });
 
-    QUnit.test('DropPrevious: basic usecase', async function (assert) {
-        assert.expect(4);
-
-        var dp = new concurrency.DropPrevious();
-
-        var prom1 = makeTestPromise(assert, 'prom1');
-        var prom2 = makeTestPromise(assert, 'prom2');
-
-        dp.add(prom1).then(() => assert.step('should not go here'))
-                     .catch(()=> assert.step("rejected dp1"));
-        dp.add(prom2).then(() => assert.step("ok dp2"));
-
-        await testUtils.nextMicrotaskTick();
-        assert.verifySteps(['rejected dp1']);
-
-        prom2.resolve();
-        await testUtils.nextMicrotaskTick();
-
-        assert.verifySteps(['ok dp2']);
-    });
-
-    QUnit.test('DropPrevious: resolve first before last', async function (assert) {
-        assert.expect(4);
-
-        var dp = new concurrency.DropPrevious();
-
-        var prom1 = makeTestPromise(assert, 'prom1');
-        var prom2 = makeTestPromise(assert, 'prom2');
-
-        dp.add(prom1).then(() => assert.step('should not go here'))
-                     .catch(()=> assert.step("rejected dp1"));
-        dp.add(prom2).then(() => assert.step("ok dp2"));
-
-
-        await testUtils.nextMicrotaskTick();
-
-        assert.verifySteps(['rejected dp1']);
-
-        prom1.resolve();
-        prom2.resolve();
-        await testUtils.nextMicrotaskTick();
-
-        assert.verifySteps(['ok dp2']);
-    });
-
     QUnit.test('DropMisordered: resolve all correctly ordered, sync', async function (assert) {
         assert.expect(1);
 

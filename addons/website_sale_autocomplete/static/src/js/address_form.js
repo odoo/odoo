@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { DropPrevious } from '@web/legacy/js/core/concurrency';
+import { KeepLast } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -17,7 +17,7 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         this.zipInput = document.querySelector('input[name="zip"]');
         this.countrySelect = document.querySelector('select[name="country_id"]');
         this.stateSelect = document.querySelector('select[name="state_id"]');
-        this.dp = new DropPrevious();
+        this.keepLast = new KeepLast();
         this.sessionId = this._generateUUID();
 
         this._onChangeStreet = debounce(this._onChangeStreet, 200);
@@ -46,7 +46,7 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
     _onChangeStreet: async function (ev) {
         const inputContainer = ev.currentTarget.parentNode;
         if (ev.currentTarget.value.length >= 5) {
-            this.dp.add(
+            this.keepLast.add(
                 this._rpc({
                     route: '/autocomplete/address',
                     params: {
