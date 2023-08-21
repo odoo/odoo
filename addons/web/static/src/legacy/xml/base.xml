@@ -11,21 +11,6 @@
     </div>
 </t>
 
-<t t-name="Popover">
-    <div t-att-class="{ 'o_is_open': state.displayed }" t-attf-class="{{ props.class }}" t-att-title="props.titleAttribute" t-on-click="_onClick" t-on-o-popover-compute="_onPopoverCompute" t-on-o-popover-close="_onPopoverClose">
-        <t t-slot="default"/>
-        <t t-portal="'body'" t-if="state.displayed">
-            <div role="tooltip" class="o_popover" t-att-class="props.popoverClass" t-ref="popover">
-                <div class="arrow"/>
-                <h3 t-if="props.title" class="o_popover_header"><t t-esc="props.title"/></h3>
-                <div class="popover-body" t-on-o-popover-close="_onPopoverClose">
-                    <t t-slot="opened"/>
-                </div>
-            </div>
-        </t>
-    </div>
-</t>
-
 <t t-name="web.legacy.Pager">
     <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
         <span class="o_pager_counter" t-on-click.stop="">

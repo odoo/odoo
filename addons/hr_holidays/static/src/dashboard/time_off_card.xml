@@ -22,11 +22,9 @@
                 taken
             </t>
             <t t-if="show_popover">
-                <TimeOffCardPopover
-                    allocated="data.max_leaves"
-                    approved="data.leaves_approved"
-                    planned="data.leaves_requested"
-                    left="data.virtual_remaining_leaves" />
+                <div class="o_timeoff_info">
+                    <span class="fa fa-question-circle-o" t-on-click.stop="onClickInfo"/>
+                </div>
             </t>
         </div>
         <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
@@ -55,18 +53,11 @@
     </t>
 
     <t t-name="hr_holidays.TimeOffCardPopover">
-        <div class="o_timeoff_info">
-            <Popover position="'right'" popoverClass="'o_timeoff_popover'">
-                <span class="fa fa-question-circle-o"/>
-                <t t-set-slot="opened">
-                    <ul>
-                        <li>Allocated: <span t-esc="props.allocated"/></li>
-                        <li>Approved: <span t-esc="props.approved"/></li>
-                        <li style="border-bottom: 1px solid gray;">Planned: <span t-esc="props.planned"/></li>
-                        <li>Available: <span t-esc="props.left"/></li>
-                    </ul>
-                </t>
-            </Popover>
-        </div>
+        <ul class="list-unstyled p-3 mb-0">
+            <li class="d-flex justify-content-between">Allocated: <span class="ps-1" t-esc="props.allocated"/></li>
+            <li class="d-flex justify-content-between">Approved: <span class="ps-1" t-esc="props.approved"/></li>
+            <li class="d-flex justify-content-between border-bottom">Planned: <span class="ps-1" t-esc="props.planned"/></li>
+            <li class="d-flex justify-content-between">Available: <span class="ps-1" t-esc="props.left"/></li>
+        </ul>
     </t>
 </templates>
