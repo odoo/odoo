@@ -17,13 +17,10 @@
      */
 
     import { jsonRpc } from "@web/legacy/js/core/ajax";
-    import config from "@web/legacy/js/services/config";
     import { bus } from "@web/legacy/js/services/core";
     import rpc from "@web/legacy/js/core/rpc";
     import session from "web.session";
     import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
-
-    const { device, isDebug } = config
     const browser = {
         clearInterval: window.clearInterval.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -45,8 +42,7 @@
     const env = {
         browser,
         bus,
-        device,
-        isDebug,
+        debug: odoo.debug,
         services: {
             ajax: {
                 rpc(route, args, options, target) {

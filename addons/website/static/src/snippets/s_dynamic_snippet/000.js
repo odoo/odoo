@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from "@web/legacy/js/core/utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
+import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
@@ -30,7 +30,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
          */
         this.data = [];
         this.renderedContent = '';
-        this.isDesplayedAsMobile = config.device.isMobile;
+        this.isDesplayedAsMobile = uiUtils.isSmall();
         this.unique_id = uniqueId("s_dynamic_snippet_");
         this.template_key = 'website.s_dynamic_snippet.grid';
     },
@@ -150,7 +150,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         const dataset = this.el.dataset;
         const numberOfRecords = parseInt(dataset.numberOfRecords);
         let numberOfElements;
-        if (config.device.isMobile) {
+        if (uiUtils.isSmall()) {
             numberOfElements = parseInt(dataset.numberOfElementsSmallDevices) || DEFAULT_NUMBER_OF_ELEMENTS_SM;
         } else {
             numberOfElements = parseInt(dataset.numberOfElements) || DEFAULT_NUMBER_OF_ELEMENTS;
@@ -206,9 +206,10 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _setupSizeChangedManagement: function (enable) {
         if (enable === true) {
-            config.device.bus.on('size_changed', this, this._onSizeChanged);
+            this.removeSizeListener = listenSizeChange(this._onSizeChanged.bind(this));
         } else {
-            config.device.bus.off('size_changed', this, this._onSizeChanged);
+            this.removeSizeListener();
+            delete this.removeSizeListener;
         }
     },
     /**
@@ -235,11 +236,10 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * Called when the size has reached a new bootstrap breakpoint.
      *
      * @private
-     * @param {number} size as Integer @see @web/legacy/js/services/config.device.SIZES
      */
-    _onSizeChanged: function (size) {
-        if (this.isDesplayedAsMobile !== config.device.isMobile) {
-            this.isDesplayedAsMobile = config.device.isMobile;
+    _onSizeChanged: function () {
+        if (this.isDesplayedAsMobile !== uiUtils.isSmall()) {
+            this.isDesplayedAsMobile = uiUtils.isSmall();
             this._render();
         }
     },

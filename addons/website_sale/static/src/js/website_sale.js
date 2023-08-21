@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import core from "@web/legacy/js/services/core";
-import config from "@web/legacy/js/services/config";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
@@ -12,6 +11,7 @@ import dom from "@web/legacy/js/core/dom";
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { ProductImageViewerWrapper } from "@website_sale/js/components/website_sale_image_viewer";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -81,11 +81,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this.$('select[name="country_id"]').change();
 
-        core.bus.on('resize', this, function () {
-            if (config.device.size_class === config.device.SIZES.XL) {
+        listenSizeChange(() => {
+            if (uiUtils.getSize() === SIZES.XL) {
                 $('.toggle_summary_div').addClass('d-none d-xl-block');
             }
-        });
+        })
 
         this._startZoom();
 
@@ -338,7 +338,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     _startZoom: function () {
         // Do not activate image zoom on hover for mobile devices
         const salePage = document.querySelector(".o_wsale_product_page");
-        if (!salePage || config.device.mobile || this._getProductImageWidth() === "none") {
+        if (!salePage || uiUtils.isSmall() || this._getProductImageWidth() === "none") {
             return;
         }
         this._cleanupZoom();
@@ -933,7 +933,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      _updateJustifyContent: function () {
         const $indicatorsDiv = this.$el.find('.carousel-indicators');
         $indicatorsDiv.css('justify-content', 'start');
-        if (config.device.size_class <= config.device.SIZES.MD) {
+        if (uiUtils.getSize() <= SIZES.MD) {
             if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
                 $indicatorsDiv.css('justify-content', 'center');
             }

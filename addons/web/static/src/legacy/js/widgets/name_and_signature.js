@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import config from "@web/legacy/js/services/config";
 import utils from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import { debounce } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
 import { renderToElement } from "@web/core/utils/render";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 /**
  * This widget allows the user to input his name and to draw his signature.
@@ -176,7 +176,7 @@ export var NameAndSignature = Widget.extend({
      */
     focusName: function () {
         // Don't focus on mobile
-        if (!config.device.isMobile) {
+        if (!uiUtils.isSmall()) {
             this.$nameInput.focus();
         }
     },
