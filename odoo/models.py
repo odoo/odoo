@@ -6462,20 +6462,17 @@ class BaseModel(metaclass=MetaModel):
                         line_ids.update(cmd[2])
                 # prefetch stored fields on lines
                 lines = self[name].browse(line_ids)
-                fnames = [subname
-                          for subname in subnames
-                          if lines._fields[subname].base_field.store]
-                lines.fetch(fnames)
+                lines.fetch(subnames)
                 # copy the cache of lines to their corresponding new records;
                 # this avoids computing computed stored fields on new_lines
                 new_lines = lines.browse(map(NewId, line_ids))
                 cache = self.env.cache
-                for fname in fnames:
+                for fname in subnames:
                     field = lines._fields[fname]
                     if not field.translate:
                         cache.update(new_lines, field, [
-                            field.convert_to_cache(value, new_line, validate=False)
-                            for value, new_line in zip(cache.get_values(lines, field), new_lines)
+                            field.convert_to_cache(line[fname], new_line, validate=False)
+                            for line, new_line in zip(lines, new_lines)
                         ])
                     else:
                         cache.update_raw(
