@@ -115,6 +115,8 @@ export class Thread {
     scrollPosition = new ScrollPosition();
     showOnlyVideo = false;
     transientMessages = [];
+    /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
+    type;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     /** @type {string} */
