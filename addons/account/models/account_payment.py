@@ -170,6 +170,10 @@ class AccountPayment(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_valid_payment_account_types(self):
+        return ['asset_receivable', 'liability_payable']
+
     def _seek_for_lines(self):
         ''' Helper used to dispatch the journal items between:
         - The lines using the temporary liquidity account.
@@ -183,10 +187,11 @@ class AccountPayment(models.Model):
         counterpart_lines = self.env['account.move.line']
         writeoff_lines = self.env['account.move.line']
 
+        valid_account_types = self._get_valid_payment_account_types()
         for line in self.move_id.line_ids:
             if line.account_id in self._get_valid_liquidity_accounts():
                 liquidity_lines += line
-            elif line.account_id.account_type in ('asset_receivable', 'liability_payable') or line.account_id == self.company_id.transfer_account_id:
+            elif line.account_id.account_type in valid_account_types or line.account_id == self.company_id.transfer_account_id:
                 counterpart_lines += line
             else:
                 writeoff_lines += line
