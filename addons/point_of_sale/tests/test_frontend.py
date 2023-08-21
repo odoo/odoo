@@ -75,63 +75,20 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs')
 
         # test an extra price on an attribute
-        cls.whiteboard_pen = env['product.product'].create({
-            'name': 'Whiteboard Pen',
-            'available_in_pos': True,
-            'list_price': 1.20,
-            'taxes_id': False,
-            'weight': 0.01,
-            'to_weight': True,
-            'pos_categ_id': pos_categ_misc.id,
-        })
-        cls.wall_shelf = env['product.product'].create({
-            'name': 'Wall Shelf Unit',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-            'barcode': '2100002000003',
-        })
-        cls.small_shelf = env['product.product'].create({
-            'name': 'Small Shelf',
-            'available_in_pos': True,
-            'list_price': 2.83,
-            'taxes_id': False,
-        })
-        cls.magnetic_board = env['product.product'].create({
-            'name': 'Magnetic Board',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-            'barcode': '2301000000006',
-        })
-        cls.monitor_stand = env['product.product'].create({
-            'name': 'Monitor Stand',
-            'available_in_pos': True,
-            'list_price': 3.19,
-            'taxes_id': False,
+        cls.whiteboard_pen = env.ref('point_of_sale.whiteboard_pen')
+        cls.wall_shelf = env.ref('point_of_sale.wall_shelf')
+        cls.small_shelf = env.ref('point_of_sale.small_shelf')
+        cls.magnetic_board = env.ref('point_of_sale.magnetic_board')
+        cls.monitor_stand = env.ref('point_of_sale.monitor_stand')
+        cls.monitor_stand.write({
             'barcode': '0123456789',  # No pattern in barcode nomenclature
         })
-        cls.desk_pad = env['product.product'].create({
-            'name': 'Desk Pad',
-            'available_in_pos': True,
-            'list_price': 1.98,
-            'taxes_id': False,
-            'pos_categ_id': pos_categ_desks.id,
-        })
-        cls.letter_tray = env['product.product'].create({
-            'name': 'Letter Tray',
-            'available_in_pos': True,
-            'list_price': 4.80,
-            'taxes_id': False,
+        cls.desk_pad = env.ref('point_of_sale.desk_pad')
+        cls.letter_tray = env.ref('point_of_sale.desk_pad')
+        cls.letter_tray.write({
             'pos_categ_id': pos_categ_chairs.id,
         })
-        cls.desk_organizer = env['product.product'].create({
-            'name': 'Desk Organizer',
-            'available_in_pos': True,
-            'list_price': 5.10,
-            'taxes_id': False,
-            'barcode': '2300001000008',
-        })
+        cls.desk_organizer = env.ref('point_of_sale.desk_organizer')
         configurable_chair = env['product.product'].create({
             'name': 'Configurable Chair',
             'available_in_pos': True,
