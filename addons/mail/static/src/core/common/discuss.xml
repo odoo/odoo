@@ -39,7 +39,7 @@
                         />
                     </t>
                 </div>
-                <div class="o-mail-Discuss-header flex-shrink-0 d-flex align-items-center ms-1">
+                <div class="flex-shrink-0 d-flex align-items-center ms-1">
                     <t t-foreach="threadActions.actions" t-as="action" t-key="action.id">
                         <button class="btn px-2" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
                             <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>

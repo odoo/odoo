@@ -1,12 +1,12 @@
 /* @odoo-module */
 
-import { click, nextAnimationFrame, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { editInput, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("follower");
 
-QUnit.test("base rendering not editable", async (assert) => {
+QUnit.test("base rendering not editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -25,19 +25,19 @@ QUnit.test("base rendering not editable", async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, ".o-mail-Follower-details");
-    assert.containsOnce($, ".o-mail-Follower-avatar");
-    assert.containsNone($, ".o-mail-Follower-action");
+    await contains(".o-mail-Follower");
+    await contains(".o-mail-Follower-details");
+    await contains(".o-mail-Follower-avatar");
+    await contains(".o-mail-Follower-action", 0);
 });
 
-QUnit.test("base rendering editable", async (assert) => {
+QUnit.test("base rendering editable", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -47,18 +47,18 @@ QUnit.test("base rendering editable", async (assert) => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, ".o-mail-Follower-details");
-    assert.containsOnce($, ".o-mail-Follower-avatar");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, "button[title='Edit subscription']");
-    assert.containsOnce($, "button[title='Remove this follower']");
+    await contains(".o-mail-Follower");
+    await contains(".o-mail-Follower-details");
+    await contains(".o-mail-Follower-avatar");
+    await contains(".o-mail-Follower");
+    await contains("button[title='Edit subscription']");
+    await contains("button[title='Remove this follower']");
 });
 
 QUnit.test("click on partner follower details", async (assert) => {
@@ -72,7 +72,7 @@ QUnit.test("click on partner follower details", async (assert) => {
     });
     const openFormDef = makeDeferred();
     const { env, openView } = await start();
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -87,8 +87,8 @@ QUnit.test("click on partner follower details", async (assert) => {
         },
     });
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, ".o-mail-Follower-details");
+    await contains(".o-mail-Follower");
+    await contains(".o-mail-Follower-details");
 
     $(".o-mail-Follower-details")[0].click();
     await openFormDef;
@@ -111,19 +111,19 @@ QUnit.test("click on edit follower", async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, "button[title='Edit subscription']");
+    await contains(".o-mail-Follower");
+    await contains("button[title='Edit subscription']");
 
     await click("button[title='Edit subscription']");
-    assert.containsNone($, ".o-mail-Follower");
+    await contains(".o-mail-Follower", 0);
     assert.verifySteps(["fetch_subtypes"]);
-    assert.containsOnce($, ".o-mail-FollowerSubtypeDialog");
+    await contains(".o-mail-FollowerSubtypeDialog");
 });
 
 QUnit.test("edit follower and close subtype dialog", async (assert) => {
@@ -142,21 +142,21 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, "button[title='Edit subscription']");
+    await contains(".o-mail-Follower");
+    await contains("button[title='Edit subscription']");
 
     await click("button[title='Edit subscription']");
+    await contains(".o-mail-FollowerSubtypeDialog");
     assert.verifySteps(["fetch_subtypes"]);
-    assert.containsOnce($, ".o-mail-FollowerSubtypeDialog");
 
     await click(".o-mail-FollowerSubtypeDialog button:contains(Cancel)");
-    assert.containsNone($, ".o-mail-FollowerSubtypeDialog");
+    await contains(".o-mail-FollowerSubtypeDialog", 0);
 });
 
 QUnit.test("remove a follower in a dirty form view", async (assert) => {
@@ -181,19 +181,17 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.partner", threadId);
-    click(".o_field_many2many_tags[name='channel_ids'] input").catch(() => {});
-    await nextAnimationFrame();
-    click(".dropdown-item:contains(General)").catch(() => {});
-    await nextAnimationFrame();
-    assert.containsOnce($, ".o_tag:contains(General)");
-    assert.strictEqual($(".o-mail-Followers-counter")[0].innerText, "1");
+    openFormView("res.partner", threadId);
+    await click(".o_field_many2many_tags[name='channel_ids'] input");
+    await click(".dropdown-item:contains(General)");
+    await contains(".o_tag:contains(General)");
+    await contains(".o-mail-Followers-counter:contains(1)");
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
-    assert.strictEqual($(".o-mail-Followers-counter")[0].innerText, "0");
+    await contains(".o-mail-Followers-counter:contains(0)");
     assert.strictEqual($(".o_field_char[name=name] input").val(), "some value");
-    assert.containsOnce($, ".o_tag:contains(General)");
+    await contains(".o_tag:contains(General)");
 });
 
 QUnit.test("removing a follower should reload form view", async function (assert) {
@@ -212,9 +210,11 @@ QUnit.test("removing a follower should reload form view", async function (assert
             }
         },
     });
-    await openFormView("res.partner", threadId);
+    openFormView("res.partner", threadId);
+    await contains(".o-mail-Followers-button");
     assert.verifySteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
+    await contains(".o-mail-Followers-counter:contains(0)");
     assert.verifySteps([`read ${threadId}`]);
 });

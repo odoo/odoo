@@ -8,9 +8,9 @@ patch(Composer.prototype, {
     get placeholder() {
         if (this.thread && this.thread.model !== "discuss.channel") {
             if (this.props.type === "message") {
-                return _t("Send a message to followers...");
+                return _t("Send a message to followers…");
             } else {
-                return _t("Log an internal note...");
+                return _t("Log an internal note…");
             }
         }
         return super.placeholder;

@@ -1,19 +1,11 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-
-import { makeDeferred } from "@web/../tests/helpers/utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("discuss sidebar");
 
-QUnit.test("sidebar find shows channels matching search term", async (assert) => {
+QUnit.test("sidebar find shows channels matching search term", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [],
@@ -21,29 +13,20 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
         group_public_id: false,
         name: "test",
     });
-    const def = makeDeferred();
-    const { openDiscuss } = await start({
-        async mockRPC(route, args) {
-            if (args.method === "search_read") {
-                def.resolve();
-            }
-        },
-    });
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-add");
+    const { openDiscuss } = await start();
+    openDiscuss();
+    await click(".o-mail-DiscussSidebarCategory-add:eq(0)");
     await insertText(".o-discuss-ChannelSelector input", "test");
-    await def;
-    await nextAnimationFrame(); // ensures search_read rpc is rendered.
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel with the search term
-    assert.containsN($, ".o-mail-NavigableList-item", 2);
-    assert.containsN($, ".o-mail-NavigableList-item:contains(test)", 2);
+    await contains(".o-mail-NavigableList-item", 2);
+    await contains(".o-mail-NavigableList-item:contains(test)", 2);
 });
 
 QUnit.test(
     "sidebar find shows channels matching search term even when user is member",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
@@ -51,23 +34,14 @@ QUnit.test(
             group_public_id: false,
             name: "test",
         });
-        const def = makeDeferred();
-        const { openDiscuss } = await start({
-            async mockRPC(route, args) {
-                if (args.method === "search_read") {
-                    def.resolve();
-                }
-            },
-        });
-        await openDiscuss();
-        await click(".o-mail-DiscussSidebarCategory-add");
+        const { openDiscuss } = await start();
+        openDiscuss();
+        await click(".o-mail-DiscussSidebarCategory-add:eq(0)");
         await insertText(".o-discuss-ChannelSelector input", "test");
-        await def;
-        await nextAnimationFrame(); // ensures search_read rpc is rendered.
         // When searching for a single existing channel, the results list will have at least 2 lines:
         // One for the existing channel itself
         // One for creating a channel with the search term
-        assert.containsN($, ".o-mail-NavigableList-item", 2);
-        assert.containsN($, ".o-mail-NavigableList-item:contains(test)", 2);
+        await contains(".o-mail-NavigableList-item", 2);
+        await contains(".o-mail-NavigableList-item:contains(test)", 2);
     }
 );

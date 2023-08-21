@@ -69,7 +69,7 @@ export const feedback = [
     },
     {
         content: "Send the feedback",
-        trigger: "button:contains(Send)",
+        trigger: "button:contains(Send):not(:disabled)",
     },
     {
         content: "Check if feedback has been sent",

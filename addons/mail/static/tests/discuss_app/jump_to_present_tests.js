@@ -2,8 +2,8 @@
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
 import {
-    afterNextRender,
     click,
+    contains,
     nextAnimationFrame,
     start,
     startServer,
@@ -36,16 +36,21 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
         });
     }
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     assert.ok(
-        $(".o-mail-Thread")[0].scrollHeight > PRESENT_THRESHOLD,
+        (await contains(".o-mail-Thread"))[0].scrollHeight > PRESENT_THRESHOLD,
         "should have enough scroll height to trigger jump to present"
     );
-    await afterNextRender(() => $(".o-mail-Thread").scrollTop(0));
-    assert.containsOnce($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    /**
+     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
+     * set the scroll to bottom after the manually set value from this test.
+     */
+    await nextAnimationFrame();
+    $(".o-mail-Thread").scrollTop(0);
+    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
     await click(".o-mail-Thread-jumpPresent");
     await nextTick();
-    assert.containsNone($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
     assert.ok(
         $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
             $(".o-mail-Thread")[0].clientHeight
@@ -88,18 +93,18 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
         parent_id: oldestMessageId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-MessageInReply .cursor-pointer");
-    assert.isVisible($(".o-mail-Message:contains(Hello world!):eq(0)")[0]);
+    await nextAnimationFrame(); // wait for scroll into view
+    assert.isVisible((await contains(".o-mail-Message:contains(Hello world!):eq(0)"))[0]);
     assert.strictEqual(
         $(".o-mail-Message-body:contains(Hello world!):eq(0)").text(),
         "Hello world!",
         "should correctly execute HTML tags in parent message when using 'load around' feature"
     );
-    assert.containsOnce($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
     await click(".o-mail-Thread-jumpPresent");
-    await nextAnimationFrame();
-    assert.containsNone($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
     assert.ok(
         $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
             $(".o-mail-Thread")[0].clientHeight

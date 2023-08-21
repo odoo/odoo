@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("activity menu");
 
@@ -14,5 +14,6 @@ QUnit.test("should update activities when opening the activity menu", async (ass
         res_model: "res.partner",
     });
     await click(".o_menu_systray i[aria-label='Activities']");
+    await contains(".o-mail-ActivityMenu-counter:contains(1)");
     assert.strictEqual($(".o-mail-ActivityMenu-counter").text(), "1");
 });

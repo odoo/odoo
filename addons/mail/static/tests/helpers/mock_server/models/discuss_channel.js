@@ -199,7 +199,7 @@ patch(MockServer.prototype, {
         );
         const otherMembers = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel.id],
-            ["id", "!=", memberOfCurrentUser?.id],
+            ["id", "!=", memberOfCurrentUser?.id || false],
         ]);
         for (const member of otherMembers) {
             this.pyEnv["discuss.channel.member"].write([member.id], {
@@ -666,7 +666,7 @@ patch(MockServer.prototype, {
             let is_editable;
             switch (channel.channel_type) {
                 case "channel":
-                    is_editable = channel.create_uid === this.pyEnv.currentPartnerId;
+                    is_editable = channel.create_uid === this.pyEnv.currentUserId;
                     break;
                 case "group":
                     is_editable = memberOfCurrentUser;

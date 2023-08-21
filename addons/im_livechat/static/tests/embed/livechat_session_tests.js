@@ -6,13 +6,13 @@ import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { afterNextRender, click, insertText } from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText } from "@mail/../tests/helpers/test_utils";
 
 import { mockTimeout, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("livechat session");
 
-QUnit.test("Unsuccessful message post shows session expired", async (assert) => {
+QUnit.test("Unsuccessful message post shows session expired", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
@@ -26,7 +26,7 @@ QUnit.test("Unsuccessful message post shows session expired", async (assert) => 
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
-    await start({
+    start({
         mockRPC(route) {
             if (route === "/im_livechat/chat_post") {
                 return false;
@@ -34,16 +34,16 @@ QUnit.test("Unsuccessful message post shows session expired", async (assert) => 
         },
     });
     await insertText(".o-mail-Composer-input", "Hello World!");
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce($, ".o_notification:contains(Session expired)");
-    assert.containsNone($, ".o-mail-ChatWindow");
+    triggerHotkey("Enter");
+    await contains(".o_notification:contains(Session expired)");
+    await contains(".o-mail-ChatWindow", 0);
 });
 
 QUnit.test("Session is reset after failing to persist the channel", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     const { advanceTime } = mockTimeout();
-    await start({
+    start({
         mockRPC(route, args) {
             if (route === "/im_livechat/get_session" && args.persisted) {
                 return false;
@@ -52,15 +52,12 @@ QUnit.test("Session is reset after failing to persist the channel", async (asser
     });
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(
-        $,
-        ".o_notification:contains(No available collaborator, please try again later.)"
-    );
-    assert.containsOnce($, ".o-livechat-LivechatButton");
+    triggerHotkey("Enter");
+    await contains(".o_notification:contains(No available collaborator, please try again later.)");
+    await contains(".o-livechat-LivechatButton");
     await advanceTime(LivechatButton.DEBOUNCE_DELAY + 10);
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });
 
 QUnit.test("Thread state is saved on the session", async (assert) => {
@@ -68,10 +65,13 @@ QUnit.test("Thread state is saved on the session", async (assert) => {
     await loadDefaultConfig();
     const env = await start();
     await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow-content");
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
     await click(".o-mail-ChatWindow-header");
+    await contains(".o-mail-ChatWindow-content", 0);
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
     await click(".o-mail-ChatWindow-header");
+    await contains(".o-mail-ChatWindow-content");
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
 });
 
@@ -82,7 +82,8 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     await click(".o-livechat-LivechatButton");
     assert.notOk(env.services["im_livechat.livechat"].sessionCookie.seen_message_id);
     await insertText(".o-mail-Composer-input", "Hello World!");
-    await afterNextRender(() => triggerHotkey("Enter"));
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message", 2);
     assert.strictEqual(
         env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
         env.services["im_livechat.livechat"].thread.newestMessage.id

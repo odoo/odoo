@@ -1,20 +1,20 @@
 /* @odoo-module */
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("follow button");
 
-QUnit.test("base rendering not editable", async (assert) => {
+QUnit.test("base rendering not editable", async () => {
     const { openView, pyEnv } = await start();
-    await openView({
+    openView({
         res_id: pyEnv.currentPartnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter-follow");
+    await contains(".o-mail-Chatter-follow");
 });
 
-QUnit.test("hover following button", async (assert) => {
+QUnit.test("hover following button", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
@@ -24,37 +24,35 @@ QUnit.test("hover following button", async (assert) => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Following)");
-    assert.containsNone($, ".fa-times + span:contains(Following)");
-    assert.containsOnce($, ".fa-check + span:contains(Following)");
+    await contains("button:contains(Following)");
+    await contains(".fa-times + span:contains(Following)", 0);
+    await contains(".fa-check + span:contains(Following)");
 
-    await afterNextRender(() => {
-        $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
-    });
-    assert.containsOnce($, "button:contains(Unfollow)");
-    assert.containsOnce($, ".fa-times + span:contains(Unfollow)");
-    assert.containsNone($, ".fa-check + span:contains(Unfollow)");
+    $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
+    await contains("button:contains(Unfollow)");
+    await contains(".fa-times + span:contains(Unfollow)");
+    await contains(".fa-check + span:contains(Unfollow)", 0);
 });
 
-QUnit.test('click on "follow" button', async (assert) => {
+QUnit.test('click on "follow" button', async () => {
     const { openView, pyEnv } = await start();
-    await openView({
+    openView({
         res_id: pyEnv.currentPartnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Follow)");
+    await contains("button:contains(Follow)");
 
     await click("button:contains(Follow)");
-    assert.containsOnce($, "button:contains(Following)");
+    await contains("button:contains(Following)");
 });
 
-QUnit.test('Click on "follow" button should save draft record', async (assert) => {
+QUnit.test('Click on "follow" button should save draft record', async () => {
     const views = {
         "res.partner,false,form": `
             <form string="Partners">
@@ -67,15 +65,14 @@ QUnit.test('Click on "follow" button should save draft record', async (assert) =
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.partner");
-    assert.containsOnce($, "button:contains(Follow)");
-    assert.containsOnce($, "div.o_field_char");
-
+    openFormView("res.partner");
+    await contains("button:contains(Follow)");
+    await contains("div.o_field_char");
     await click("button:contains(Follow)");
-    assert.containsOnce($, "div.o_field_invalid");
+    await contains("div.o_field_invalid");
 });
 
-QUnit.test('click on "unfollow" button', async (assert) => {
+QUnit.test('click on "unfollow" button', async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
     pyEnv["mail.followers"].create({
@@ -85,13 +82,11 @@ QUnit.test('click on "unfollow" button', async (assert) => {
         res_model: "res.partner",
     });
     const { openView } = await start();
-    await openView({
+    openView({
         res_id: threadId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Following)");
-
     await click("button:contains(Following)");
-    assert.containsOnce($, "button:contains(Follow)");
+    await contains("button:contains(Follow)");
 });

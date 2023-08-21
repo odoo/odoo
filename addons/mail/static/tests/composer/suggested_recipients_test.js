@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const views = {
     "res.fake,false,form": `
@@ -16,7 +16,7 @@ const views = {
 
 QUnit.module("suggested_recipients");
 
-QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (assert) => {
+QUnit.test("with 3 or less suggested recipients: no 'show more' button", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -27,9 +27,10 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
         partner_ids: [partnerId],
     });
     const { openFormView } = await start();
-    await openFormView("res.fake", fakeId);
+    openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    assert.containsNone($, "button:contains(Show more)");
+    await contains(".o-mail-SuggestedRecipient", 2);
+    await contains("button:contains(Show more)", 0);
 });
 
 QUnit.test(
@@ -45,7 +46,8 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { env, openFormView } = await start();
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
+        const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
                 assert.step("do-action");
@@ -59,12 +61,13 @@ QUnit.test(
                     johnTestPartnerId,
                     partnerId,
                 ]);
+                def.resolve();
                 return Promise.resolve();
             },
         });
         await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        await contains(".o-mail-SuggestedRecipient:contains(john@test.be)");
+        await contains(".o-mail-SuggestedRecipient:contains(John Jane)");
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -72,6 +75,7 @@ QUnit.test(
             $(".o-mail-SuggestedRecipient:contains(John Jane) input[type=checkbox]")[0].checked
         );
         await click("button[title='Full composer']");
+        await def;
         assert.verifySteps(["do-action"]);
     }
 );
@@ -89,19 +93,21 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { env, openFormView } = await start();
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
+        const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
                 assert.step("do-action");
                 assert.strictEqual(action.name, "Log note");
                 assert.strictEqual(action.context.default_subtype_xmlid, "mail.mt_note");
                 assert.deepEqual(action.context.default_partner_ids, []);
+                def.resolve();
                 return Promise.resolve();
             },
         });
         await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        await contains(".o-mail-SuggestedRecipient:contains(john@test.be)");
+        await contains(".o-mail-SuggestedRecipient:contains(John Jane)");
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -110,33 +116,31 @@ QUnit.test(
         );
         await click("button:contains(Log note)");
         await click("button[title='Full composer']");
+        await def;
         assert.verifySteps(["do-action"]);
     }
 );
 
-QUnit.test(
-    "more than 3 suggested recipients: display only 3 and 'show more' button",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
-            { display_name: "John Jane", email: "john@jane.be" },
-            { display_name: "Jack Jone", email: "jack@jone.be" },
-            { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
-            { display_name: "jolly Roger", email: "Roger@skullflag.com" },
-        ]);
-        const fakeId = pyEnv["res.fake"].create({
-            partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
-        });
-        const { openFormView } = await start({ serverData: { views } });
-        await openFormView("res.fake", fakeId);
-        await click("button:contains(Send message)");
-        assert.containsOnce($, "button:contains(Show more)");
-    }
-);
+QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' button", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
+        { display_name: "John Jane", email: "john@jane.be" },
+        { display_name: "Jack Jone", email: "jack@jone.be" },
+        { display_name: "jack sparrow", email: "jsparrow@blackpearl.bb" },
+        { display_name: "jolly Roger", email: "Roger@skullflag.com" },
+    ]);
+    const fakeId = pyEnv["res.fake"].create({
+        partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
+    });
+    const { openFormView } = await start({ serverData: { views } });
+    openFormView("res.fake", fakeId);
+    await click("button:contains(Send message)");
+    await contains("button:contains(Show more)");
+});
 
 QUnit.test(
     "more than 3 suggested recipients: show all of them on click 'show more' button",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -148,16 +152,16 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsN($, ".o-mail-SuggestedRecipient", 4);
+        await contains(".o-mail-SuggestedRecipient", 4);
     }
 );
 
 QUnit.test(
     "more than 3 suggested recipients -> click 'show more' -> 'show less' button",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -169,16 +173,16 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsOnce($, "button:contains(Show less)");
+        await contains("button:contains(Show less)");
     }
 );
 
 QUnit.test(
     "suggested recipients list display 3 suggested recipient and 'show more' button when 'show less' button is clicked",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { display_name: "John Jane", email: "john@jane.be" },
@@ -190,12 +194,12 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
         await click("button:contains(Show less)");
-        assert.containsN($, ".o-mail-SuggestedRecipient", 3);
-        assert.containsOnce($, "button:contains(Show more)");
+        await contains(".o-mail-SuggestedRecipient", 3);
+        await contains("button:contains(Show more)");
     }
 );
 
@@ -212,9 +216,9 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { openFormView } = await start({ serverData: { views } });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
-        assert.containsN($, ".o-mail-SuggestedRecipient input:checked", 2);
+        await contains(".o-mail-SuggestedRecipient input:checked", 2);
         assert.ok(
             $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
         );
@@ -233,10 +237,10 @@ QUnit.test("display reason for suggested recipient on mouse over", async (assert
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
     const { openFormView } = await start({ serverData: { views } });
-    await openFormView("res.fake", fakeId);
+    openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    const partnerTitle = $(
-        `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"]`
+    const partnerTitle = (
+        await contains(`.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"]`)
     )[0].getAttribute("title");
     assert.strictEqual(partnerTitle, "Add as recipient and follower (reason: Email partner)");
 });
@@ -258,10 +262,11 @@ QUnit.test(
                 }
             },
         });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Log note)");
         await insertText(".o-mail-Composer-input", "Dummy Message");
-        await click(".o-mail-Composer-send");
+        await click(".o-mail-Composer-send:not(:disabled)");
+        await contains(".o-mail-Message");
     }
 );
 
@@ -277,10 +282,11 @@ QUnit.test(
         const { openFormView } = await start({
             serverData: { views },
         });
-        await openFormView("res.fake", fakeId);
+        openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await insertText(".o-mail-Composer-input", "Dummy Message");
-        await click(".o-mail-Composer-send");
+        await click(".o-mail-Composer-send:not(:disabled)");
+        await contains(".o-mail-Message");
         assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
     }
 );
