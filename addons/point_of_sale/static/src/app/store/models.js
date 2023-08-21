@@ -819,6 +819,7 @@ export class Orderline extends PosModel {
             pack_lot_lines: this.get_lot_lines(),
             customer_note: this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
+            isPartOfCombo: this.isPartOfCombo(),
             unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
         };
     }
@@ -2666,9 +2667,15 @@ export class Order extends PosModel {
      */
     getOrderReceiptEnv() {
         // Formerly get_receipt_render_env defined in ScreenWidget.
+        const receipt = this.export_for_printing();
+        const isTaxIncluded = Math.abs(receipt.subtotal - receipt.total_with_tax) <= 0.000001;
+        const getOrderlineTaxes = (line) =>
+            Object.keys(line.tax_details).map((taxId) => this.pos.taxes_by_id[taxId]);
         return {
+            getOrderlineTaxes: getOrderlineTaxes,
+            isTaxIncluded: isTaxIncluded,
             order: this,
-            receipt: this.export_for_printing(),
+            receipt: receipt,
             orderlines: this.get_orderlines(),
             paymentlines: this.get_paymentlines(),
             shippingDate: this.shippingDate ? this._exportShippingDateForPrinting() : false,
