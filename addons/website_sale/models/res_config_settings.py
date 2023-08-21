@@ -16,7 +16,6 @@ class ResConfigSettings(models.TransientModel):
         implied_group="website_sale.group_product_price_comparison",
         group='base.group_portal,base.group_user,base.group_public')
 
-    module_website_sale_digital = fields.Boolean("Digital Content")
     module_website_sale_wishlist = fields.Boolean("Wishlists")
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
     module_website_sale_autocomplete = fields.Boolean('Address Autocomplete')
