@@ -440,6 +440,8 @@
                     <field name="expected_revenue"/>
                     <field name="partner_id" avatar_field="avatar_128"/>
                     <field name="user_id" filters="1" invisible="1"/>
+                    <field name="team_id" invisible="1"/>
+                    <field name="lead_properties"/>
                 </calendar>
             </field>
         </record>
@@ -545,6 +547,7 @@
                     <field name="activity_state" />
                     <field name="activity_ids" />
                     <field name="recurring_revenue_monthly"/>
+                    <field name="team_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'
                         sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
@@ -581,6 +584,9 @@
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </div>
+                                    <div>
+                                        <field name="lead_properties" widget="properties"/>
                                     </div>
                                 </div>
                                 <div class="oe_kanban_footer">

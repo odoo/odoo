@@ -10,6 +10,7 @@
                     <field name="origin"/>
                     <field name="picking_type_id"/>
                     <field name="state"/>
+                    <field name="picking_properties"/>
                 </calendar>
             </field>
         </record>
@@ -25,6 +26,7 @@
                     <field name="state"/>
                     <field name="scheduled_date"/>
                     <field name="activity_state"/>
+                    <field name="picking_type_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
@@ -37,6 +39,9 @@
                                     <strong>
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
                                     </strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="picking_properties" widget="properties"/>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -242,6 +247,7 @@
                                    readonly="state in ['cancel', 'done']"/>
                         </group>
                     </group>
+                    <field name="picking_properties" columns="2"/>
                     <notebook>
                         <page string="Detailed Operations"
                             name="detailed_operations"
