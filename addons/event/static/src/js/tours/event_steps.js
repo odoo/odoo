@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import Class from "@web/legacy/js/core/class";
 
-var EventAdditionalTourSteps = core.Class.extend({
+var EventAdditionalTourSteps = Class.extend({
 
     _get_website_event_steps: function () {
         return [false];

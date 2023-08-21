@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
     import publicWidget from "@web/legacy/js/public/public_widget";
-    import core from "@web/legacy/js/services/core";
     import { renderToElement } from "@web/core/utils/render";
     import { Markup } from "@web/legacy/js/core/utils";
     import { _t } from "@web/core/l10n/translation";
@@ -35,7 +34,7 @@
             this._rpc({
                 route: '/payment/status/poll',
                 params: {
-                    'csrf_token': core.csrf_token,
+                    'csrf_token': odoo.csrf_token,
                 }
             }).then(function(data) {
                 if(data.success === true) {

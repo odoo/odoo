@@ -73,7 +73,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
             'tokenization_requested': false,
             'landing_route': this.txContext.landingRoute,
             'access_token': this.txContext.accessToken,
-            'csrf_token': core.csrf_token,
+            'csrf_token': odoo.csrf_token,
         };
     },
 

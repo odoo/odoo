@@ -2,6 +2,9 @@
 
 import utils from "@web/legacy/js/core/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
+import { localization } from "@web/core/l10n/localization";
+import { defaultLocalization } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module('core', {}, function () {
 
@@ -145,6 +148,7 @@ QUnit.module('core', {}, function () {
     QUnit.test('human_number', function (assert) {
         assert.expect(26);
 
+        patchWithCleanup(localization, { ...defaultLocalization });
         var human_number = utils.human_number;
 
         assert.strictEqual(human_number(1020, 2, 1), '1.02k');

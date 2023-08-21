@@ -27,7 +27,7 @@ export const localizationService = {
     start: async (env, { user }) => {
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
-        const lang = user.lang || null;
+        const lang = user.lang || document.documentElement.getAttribute("lang")?.replace(/-/g, "_");
         const translationURL = session.translationURL || "/web/webclient/translations";
         let url = `${translationURL}/${translationsHash}`;
         if (lang) {
