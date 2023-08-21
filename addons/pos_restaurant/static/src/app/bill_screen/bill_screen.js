@@ -9,15 +9,20 @@ export class BillScreen extends ReceiptScreen {
         this.props.resolve({ confirmed: true, payload: null });
         this.pos.closeTempScreen();
     }
-    whenClosing() {
-        this.confirm();
-    }
     /**
      * @override
      */
     async printReceipt() {
         await super.printReceipt();
         this.currentOrder._printed = false;
+    }
+
+    get isBill() {
+        return true;
+    }
+
+    get receiptData() {
+        return this.pos.get_order().getOrderReceiptEnv();
     }
 }
 

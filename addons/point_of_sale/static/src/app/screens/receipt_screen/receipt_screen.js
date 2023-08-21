@@ -5,15 +5,13 @@ import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
 import { AbstractReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/abstract_receipt_screen";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { registry } from "@web/core/registry";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
-import { onMounted, useRef, status, useState, onWillStart } from "@odoo/owl";
+import { useRef, useState, onWillStart } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 
 export class ReceiptScreen extends AbstractReceiptScreen {
     static template = "point_of_sale.ReceiptScreen";
-    static components = { OrderReceipt };
 
     setup() {
         super.setup();
@@ -30,23 +28,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.orderUiState.inputEmail =
             this.orderUiState.inputEmail || (partner && partner.email) || "";
 
-        onMounted(() => {
-            // Here, we send a task to the event loop that handles
-            // the printing of the receipt when the component is mounted.
-            // We are doing this because we want the receipt screen to be
-            // displayed regardless of what happen to the handleAutoPrint
-            // call.
-            setTimeout(async () => {
-                if (status(this) === "mounted") {
-                    const images = this.orderReceipt.el.getElementsByTagName("img");
-                    for (const image of images) {
-                        await image.decode();
-                    }
-                    await this.handleAutoPrint();
-                }
-            }, 0);
-        });
-
         onWillStart(async () => {
             // When the order is paid, if there is still a part of the order
             // to send in preparation it is automatically sent
@@ -55,7 +36,9 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             }
         });
     }
-
+    get receiptData() {
+        return this.pos.get_order().getOrderReceiptEnv();
+    }
     _addNewOrder() {
         this.pos.add_new_order();
     }
@@ -113,28 +96,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     get ticketScreen() {
         return { name: "TicketScreen" };
     }
-    whenClosing() {
-        this.orderDone();
-    }
-    /**
-     * This function is called outside the rendering call stack. This way,
-     * we don't block the displaying of ReceiptScreen when it is mounted; additionally,
-     * any error that can happen during the printing does not affect the rendering.
-     */
-    async handleAutoPrint() {
-        if (this._shouldAutoPrint()) {
-            const currentOrder = this.currentOrder;
-            await this.printReceipt();
-            if (
-                this.currentOrder &&
-                this.currentOrder === currentOrder &&
-                currentOrder._printed &&
-                this._shouldCloseImmediately()
-            ) {
-                this.whenClosing();
-            }
-        }
-    }
     orderDone() {
         this.pos.removeOrder(this.currentOrder);
         this._addNewOrder();
@@ -167,19 +128,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         if (this.buttonPrintReceipt.el) {
             this.buttonPrintReceipt.el.className = "fa fa-print";
         }
-    }
-    _shouldAutoPrint() {
-        return this.pos.config.iface_print_auto && !this.currentOrder._printed;
-    }
-    _shouldCloseImmediately() {
-        var invoiced_finalized = this.currentOrder.is_to_invoice()
-            ? this.currentOrder.finalized
-            : true;
-        return (
-            this.hardwareProxy.printer &&
-            this.pos.config.iface_print_skip_screen &&
-            invoiced_finalized
-        );
     }
     async _sendReceiptToCustomer() {
         const printer = new BasePrinter();

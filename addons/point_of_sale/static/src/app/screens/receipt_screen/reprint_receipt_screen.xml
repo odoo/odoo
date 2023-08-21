@@ -16,7 +16,9 @@
                         <i class="fa fa-print ms-2"></i> Print Receipt
                     </button>
                     <div class="pos-receipt-container mt-2 bg-200 text-center overflow-y-auto" t-ref="order-receipt">
-                        <OrderReceipt order="props.order"/>
+                        <div class="d-inline-block m-3 p-3 border rounded bg-view text-start overflow-hidden">
+                            <t t-call="point_of_sale.OrderReceipt" />
+                        </div>
                     </div>
                 </div>
             </div>
