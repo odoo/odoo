@@ -17,19 +17,7 @@ const terms = { Hello: "Bonjour" };
 const serviceRegistry = registry.category("services");
 class TestComponent extends Component {}
 
-/**
- * Patches the 'lang' of the user session and context.
- *
- * @param {string} lang
- * @returns {Promise<void>}
- */
-async function patchLang(lang) {
-    const { defaultLocale, defaultNumberingSystem } = Settings;
-    registerCleanup(() => {
-        Settings.defaultLocale = defaultLocale;
-        Settings.defaultNumberingSystem = defaultNumberingSystem;
-    });
-    patchWithCleanup(session.user_context, { lang });
+function patchFetch() {
     patchWithCleanup(browser, {
         fetch: async () => ({
             ok: true,
@@ -47,11 +35,79 @@ async function patchLang(lang) {
             }),
         }),
     });
+}
+
+/**
+ * Patches the 'lang' of the user session and context.
+ *
+ * @param {string} lang
+ * @returns {Promise<void>}
+ */
+async function patchLang(lang) {
+    const { defaultLocale, defaultNumberingSystem } = Settings;
+    registerCleanup(() => {
+        Settings.defaultLocale = defaultLocale;
+        Settings.defaultNumberingSystem = defaultNumberingSystem;
+    });
+    patchWithCleanup(session.user_context, { lang });
+    patchFetch();
     serviceRegistry.add("localization", localizationService);
     await makeTestEnv();
 }
 
 QUnit.module("Translations");
+
+QUnit.test("lang is given by the user context", async (assert) => {
+    patchWithCleanup(session.user_context, { lang: "fr_FR" });
+    patchWithCleanup(session, {
+        cache_hashes: { translations: 1 },
+    })
+    patchFetch();
+    patchWithCleanup(browser, {
+        fetch(url) {
+            assert.strictEqual(url, "/web/webclient/translations/1?lang=fr_FR");
+            return super.fetch(...arguments);
+        },
+    });
+    serviceRegistry.add("localization", localizationService);
+    await makeTestEnv();
+});
+
+QUnit.test("lang is given by an attribute on the DOM root node", async (assert) => {
+    patchWithCleanup(session.user_context, { lang: null });
+    document.documentElement.setAttribute("lang", "fr-FR");
+    registerCleanup(() => {
+        document.documentElement.removeAttribute("lang");
+    });
+    patchWithCleanup(session, {
+        cache_hashes: { translations: 1 },
+    })
+    patchFetch();
+    patchWithCleanup(browser, {
+        fetch(url) {
+            assert.strictEqual(url, "/web/webclient/translations/1?lang=fr_FR");
+            return super.fetch(...arguments);
+        },
+    });
+    serviceRegistry.add("localization", localizationService);
+    await makeTestEnv();
+});
+
+QUnit.test("url is given by the session", async (assert) => {
+    patchWithCleanup(session, {
+        translationURL: "/get_translations",
+        cache_hashes: { translations: 1 },
+    })
+    patchFetch();
+    patchWithCleanup(browser, {
+        fetch(url) {
+            assert.strictEqual(url, "/get_translations/1?lang=en");
+            return super.fetch(...arguments);
+        },
+    });
+    serviceRegistry.add("localization", localizationService);
+    await makeTestEnv();
+});
 
 QUnit.test("can translate a text node", async (assert) => {
     assert.expect(1);

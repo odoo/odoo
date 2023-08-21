@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
 import { uniqueId } from '@web/core/utils/functions';
-import { _t } from "@web/legacy/js/services/core";
 import { renderToElement } from "@web/core/utils/render";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
 import utils from '@web/legacy/js/core/utils';
 import wUtils from '@website/js/utils';
+import { _t } from "@web/core/l10n/translation";
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
