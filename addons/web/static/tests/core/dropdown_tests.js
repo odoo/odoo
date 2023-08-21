@@ -1079,6 +1079,46 @@ QUnit.module("Components", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("caret should be repositioned to default direction when closed", async (assert) => {
+        class Parent extends Component {
+            static components = { Dropdown };
+            static template = xml`
+                <div style="height: 384px;"/> <!-- filler: takes half the runbot's browser_size -->
+                <Dropdown showCaret="true">
+                    <t t-set-slot="toggler">🍋</t>
+                    <div style="height: 400px; width: 50px;"/> <!-- menu filler -->
+                </Dropdown>
+            `;
+        }
+        // The fixture should be shown for this test, as the positioning container is the html node
+        target.style.position = "fixed";
+        target.style.top = "0";
+        target.style.left = "0";
+
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        const dropdown = target.querySelector(".o-dropdown");
+        assert.doesNotHaveClass(dropdown, "show");
+        assert.hasClass(dropdown, "dropdown");
+
+        // open
+        await click(target, ".dropdown-toggle");
+        await nextTick(); // awaits for the caret to get patched
+        assert.hasClass(dropdown, "show");
+        assert.hasClass(dropdown, "dropend");
+
+        // close
+        await click(target, ".dropdown-toggle");
+        assert.doesNotHaveClass(dropdown, "show");
+        assert.hasClass(dropdown, "dropdown");
+
+        // open
+        await click(target, ".dropdown-toggle");
+        await nextTick(); // awaits for the caret to get patched
+        assert.hasClass(dropdown, "show");
+        assert.hasClass(dropdown, "dropend");
+    });
+
     QUnit.test(
         "multi-level dropdown: mouseentering a dropdown item should close any subdropdown",
         async (assert) => {

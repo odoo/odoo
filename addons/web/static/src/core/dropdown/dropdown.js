@@ -100,6 +100,7 @@ export class Dropdown extends Component {
         if (["left", "right"].includes(direction) && localization.direction === "rtl") {
             direction = direction === "left" ? "right" : "left";
         }
+        this.defaultDirection = direction;
         const positioningOptions = {
             popper: "menuRef",
             position,
@@ -186,6 +187,11 @@ export class Dropdown extends Component {
                 return;
             }
         }
+
+        if (!stateSlice.open) {
+            this.state.directionCaretClass = DIRECTION_CARET_CLASS[this.defaultDirection];
+        }
+
         // Update the state
         Object.assign(this.state, stateSlice);
         // Notify over the bus
