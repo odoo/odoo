@@ -45,7 +45,7 @@ class TestL10nPtPos(TestPoSCommon):
         with self.assertRaisesRegex(UserError, f"{expected_error_msg}"):
             order.create_date = fields.Datetime.now()
         with self.assertRaisesRegex(UserError, f"{expected_error_msg}Order Ref"):
-            order.name = "New name"  # Name is used by _get_l10n_pt_pos_document_number so it cannot be modified either
+            order.name = "New name"  # Name is used by l10n_pt_pos_document_number so it cannot be modified either
 
         # The following field is not part of the hash so it can be modified
         order.note = 'new note'
@@ -56,7 +56,7 @@ class TestL10nPtPos(TestPoSCommon):
         """
         for expected in ['pos_order PoS_Shop_Test/0001', 'pos_order PoS_Shop_Test/0002', 'pos_order PoS_Shop_Test/0003']:
             order = self._create_pos_order()
-            self.assertEqual(order._get_l10n_pt_pos_document_number(), expected)
+            self.assertEqual(order.l10n_pt_pos_document_number, expected)
 
     def test_l10n_pt_pos_hash_integrity_report(self):
         """Test the hash integrity report"""

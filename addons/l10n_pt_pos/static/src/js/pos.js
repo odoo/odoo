@@ -23,7 +23,7 @@ patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
         } catch {
             this.env.services.popup.add(ErrorPopup, {
                 title: this.env._t("Receipt creation failed"),
-                body: this.env._t("The receipt could not be created. Please check your internet connection."),
+                body: this.env._t("The receipt QR code couldn't be generated. Please check your internet connection. A temporary ticket will be printed instead."),
             });
         }
     }

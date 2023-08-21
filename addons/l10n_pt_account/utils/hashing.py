@@ -17,6 +17,19 @@ class L10nPtHashingUtils:
     L10N_PT_SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/iap/l10n_pt'
 
     @staticmethod
+    def _l10n_pt_error(error_code):
+        return {
+            'error_db_unknown': _("Your database uuid does not exist. Please contact Odoo support."),
+            'error_db_subscription_verification': _("An error has occurred when trying to verify your subscription. Please contact Odoo support."),
+            'error_db_no_subscription': _("You do not have an Odoo enterprise subscription."),
+            'error_db_not_production': _("Your database is not used for a production environment."),
+            'error_db_not_activated': _("Your database is not yet activated."),
+            'error_contact_support': _("An error has occurred. Please contact Odoo support."),
+            'error_documents_not_provided': _("No documents to sign."),
+            'error_documents_wrong_format': _("The submitted documents are not in the correct format."),
+        }.get(error_code, _("An error has occurred. Please contact Odoo support."))
+
+    @staticmethod
     def _l10n_pt_get_public_keys(env):
         endpoint = env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         res = {}
@@ -27,7 +40,7 @@ class L10nPtHashingUtils:
                 raise ConnectionError
             result = response.json().get('result')
             if result.get('error'):
-                raise Exception(result['error'])
+                raise Exception(L10nPtHashingUtils._l10n_pt_error(result['error']))
             for public_key_version, public_key_str in result.items():
                 res[int(public_key_version)] = public_key_str
         except ConnectionError as e:
@@ -86,7 +99,7 @@ class L10nPtHashingUtils:
                 raise ConnectionError
             result = response.json().get('result')
             if result.get('error'):
-                raise Exception(result['error'])
+                raise Exception(L10nPtHashingUtils._l10n_pt_error(result['error']))
             for record_id, record_info in result.items():
                 res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
         except ConnectionError as e:

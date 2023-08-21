@@ -237,7 +237,7 @@ class AccountMove(models.Model):
             'sorting_key': move.sequence_number,
             'date': move.date.isoformat(),
             'system_entry_date': move.create_date.isoformat(timespec='seconds'),
-            'l10n_pt_document_number': move._get_l10n_pt_account_document_number(),
+            'l10n_pt_document_number': move.l10n_pt_account_document_number,
             'gross_total': float_repr(move.amount_total, 2),
             'previous_signature': previous_hash
         } for move in self]

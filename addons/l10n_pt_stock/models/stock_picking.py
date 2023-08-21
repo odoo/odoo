@@ -60,7 +60,7 @@ class StockPicking(models.Model):
             and p.l10n_pt_stock_secure_sequence_number
             and not p.l10n_pt_stock_document_number
         )):
-            sequence_prefix, sequence_number = self._get_l10n_pt_stock_sequence_info()
+            sequence_prefix, sequence_number = picking._get_l10n_pt_stock_sequence_info()
             picking.l10n_pt_stock_document_number = f"stock_picking {sequence_prefix}/{sequence_number}"
 
     @api.depends('l10n_pt_stock_inalterable_hash')
