@@ -31,7 +31,6 @@ export class PropertiesField extends Component {
         context: { type: Object, optional: true },
         columns: { type: Number, optional: true },
         showAddButton: { type: Boolean, optional: true },
-        hideKanbanOption: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -898,7 +897,6 @@ export class PropertiesField extends Component {
             isNewlyCreated: isNewlyCreated,
             propertyIndex: propertyIndex,
             propertiesSize: propertiesList.length,
-            hideKanbanOption: this.props.hideKanbanOption,
         });
     }
 
@@ -943,7 +941,6 @@ export const propertiesField = {
             context: dynamicInfo.context,
             columns: parseInt(attrs.columns || "1"),
             showAddButton: archParseBoolean(attrs.showAddButton),
-            hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
         };
     },
 };
