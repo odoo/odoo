@@ -27,6 +27,14 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         cls.company_data['default_journal_sale'].l10n_pt_account_invoice_official_series_id = cls.env['l10n_pt_account.official.series'].create({'code': 'INV_SERIES'})
         cls.company_data['default_journal_sale'].l10n_pt_account_refund_official_series_id = cls.env['l10n_pt_account.official.series'].create({'code': 'REF_SERIES'})
 
+    @staticmethod
+    def post_moves(moves, l10n_pt_force_compute_signature=False):
+        def _l10n_pt_check_taxes_patched(self):
+            pass
+        with patch('odoo.addons.l10n_pt_account.models.account_move.AccountMove._l10n_pt_check_taxes', _l10n_pt_check_taxes_patched):
+            moves.with_context(l10n_pt_force_compute_signature=l10n_pt_force_compute_signature).action_post()
+        return moves
+
     @classmethod
     def create_invoice(cls, move_type, invoice_date="2022-01-01", create_date=None, amount=1000.0, post=False):
         move = cls.env['account.move'].create({
@@ -38,7 +46,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
                     'name': 'Product A',
                     'quantity': 1,
                     'price_unit': amount,
-                    'tax_ids': [Command.set(cls.company_data['default_tax_sale'].ids)],
+                    'tax_ids': [],
                 }),
             ],
         })
@@ -50,7 +58,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         ''', (datetime.datetime.strptime(create_date, '%Y-%m-%dT%H:%M:%S') if create_date else invoice_date, move.id))
         move.invalidate_model(['create_date'])
         if post:
-            move.with_context(l10n_pt_force_compute_signature=True).action_post()
+            cls.post_moves(move, l10n_pt_force_compute_signature=True)
         return move
 
     def test_l10n_pt_account_hash_sequence(self):
@@ -95,7 +103,7 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
                 move = self.create_invoice(move_type, invoice_date, create_date, amount, post=False)
                 move.name = l10n_pt_account_document_number.split()[1]
                 moves += move
-            moves.with_context(l10n_pt_force_compute_signature=True).action_post()
+            self.post_moves(moves, l10n_pt_force_compute_signature=True)
             for move, expected_hash in zip(moves, move_vals.values()):
                 self.assertEqual(move.inalterable_hash.split("$")[2], expected_hash)
 
@@ -176,12 +184,12 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         out_invoices = self.env['account.move']
         for _ in range(3):
             out_invoices |= self.create_invoice('out_invoice', '2022-01-01')
-            out_invoices[-1].action_post()
+            self.post_moves(out_invoices[-1])
             self.assertEqual(out_invoices[-1].inalterable_hash, False)
 
         for method in ['preview_invoice', 'action_send_and_print']:
             out_invoices |= self.create_invoice('out_invoice', '2022-01-01')
-            out_invoices[-1].action_post()
+            self.post_moves(out_invoices[-1])
             self.assertEqual(out_invoices[-1].inalterable_hash, False)
             getattr(out_invoices[-1], method)()  # Should trigger the compute of the hash
             self.assertNotEqual(out_invoices[-1].inalterable_hash, False)
