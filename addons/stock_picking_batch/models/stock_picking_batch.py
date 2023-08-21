@@ -182,17 +182,6 @@ class StockPickingBatch(models.Model):
         if any(batch.state == 'done' for batch in self):
             raise UserError(_("You cannot delete Done batch transfers."))
 
-    def onchange(self, values, field_name, field_onchange):
-        """Override onchange to NOT to update all scheduled_date on pickings when
-        scheduled_date on batch is updated by the change of scheduled_date on pickings.
-        """
-        result = super().onchange(values, field_name, field_onchange)
-        if field_name == 'picking_ids' and 'value' in result:
-            for line in result['value'].get('picking_ids', []):
-                if line[0] < 2 and 'scheduled_date' in line[2]:
-                    del line[2]['scheduled_date']
-        return result
-
     # -------------------------------------------------------------------------
     # Action methods
     # -------------------------------------------------------------------------
