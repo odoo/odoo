@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { onChange } from "@mail/utils/common/misc";
+import { modelRegistry } from "@mail/core/common/record";
 
 import { reactive } from "@odoo/owl";
 
@@ -9,6 +10,41 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
 export class Store {
+    /** @type {typeof import("@mail/core/web/activity_model").Activity} */
+    Activity;
+    /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
+    Attachment;
+    /** @type {typeof import("@mail/core/common/channel_member_model").ChannelMember} */
+    ChannelMember;
+    /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
+    CannedResponse;
+    /** @type {typeof import("@im_livechat/embed/chatbot/chatbot_model").Chatbot} */
+    Chatbot;
+    /** @type {typeof import("@im_livechat/embed/chatbot/chatbot_step_model").ChatbotStep} */
+    ChatbotStep;
+    /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
+    ChatWindow;
+    /** @type {typeof import("@mail/core/common/composer_model").Composer} */
+    Composer;
+    /** @type {typeof import("@mail/core/common/follower_model").Follower} */
+    Follower;
+    /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
+    LinkPreview;
+    /** @type {typeof import("@mail/core/common/message_model").Message} */
+    Message;
+    /** @type {typeof import("@mail/core/common/message_reactions_model").MessageReactions} */
+    MessageReactions;
+    /** @type {typeof import("@mail/core/common/notification_model").Notification} */
+    Notification;
+    /** @type {typeof import("@mail/core/common/notification_group_model").NotificationGroup} */
+    NotificationGroup;
+    /** @type {typeof import("@mail/core/common/persona_model").Persona} */
+    Persona;
+    /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
+    RtcSession;
+    /** @type {typeof import("@mail/core/common/thread_model").Thread} */
+    Thread;
+
     /**
      * @param {import("@web/env").OdooEnv} env
      */
@@ -77,25 +113,36 @@ export class Store {
      */
     inPublicPage = false;
 
-    /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
-    channelMembers = {};
+    get channelMembers() {
+        return this.ChannelMember.records;
+    }
+
     companyName = "";
 
-    /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
-    notifications = {};
-    notificationGroups = [];
+    get notifications() {
+        return this.Notification.records;
+    }
 
-    /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
-    followers = {};
+    get notificationGroups() {
+        return this.NotificationGroup.records;
+    }
+
+    get followers() {
+        return this.Follower.records;
+    }
 
     /** @type {import("@mail/core/common/persona_model").Persona} */
     odoobot = null;
     odoobotOnboarding;
-    /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
-    personas = {};
 
-    /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
-    rtcSessions = {};
+    get personas() {
+        return this.Persona.records;
+    }
+
+    get rtcSessions() {
+        return this.RtcSession.records;
+    }
+
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
@@ -145,22 +192,32 @@ export class Store {
         /** @type {import("@mail/core/common/thread_model").Thread} */
         history: null,
     };
-    cannedResponses = [];
 
-    /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
-    activities = {};
+    get cannedResponses() {
+        return this.CannedResponse.records;
+    }
+
+    get activities() {
+        return this.Activity.records;
+    }
+
+    get attachments() {
+        return this.Attachment.records;
+    }
+
+    get chatWindows() {
+        return this.ChatWindow.records;
+    }
+
+    get messages() {
+        return this.Message.records;
+    }
+
+    get threads() {
+        return this.Thread.records;
+    }
+
     activityCounter = 0;
-    /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
-    attachments = {};
-
-    /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
-    chatWindows = [];
-
-    /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
-    messages = {};
-
-    /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
-    threads = {};
 
     isMessagingReady = false;
 }
@@ -173,7 +230,23 @@ export const storeService = {
      */
     start(env, services) {
         const res = reactive(new Store(env, services));
-        onChange(res, "threads", () => res.updateBusSubscription());
+        for (const Model of modelRegistry.getAll()) {
+            if (res[Model.name]) {
+                throw new Error(
+                    `There must be no duplicated Model Names (duplicate found: ${Model.name})`
+                );
+            }
+            res[Model.name] = {
+                // Make copy of class so static fields are contextual to store at hand.
+                // This is useful for no side-effect in tests, including multi-tab tests.
+                [Model.name]: class extends Model {
+                    static records = JSON.parse(JSON.stringify(Model.records));
+                    static env = env;
+                    static store = res;
+                },
+            }[Model.name];
+        }
+        onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";

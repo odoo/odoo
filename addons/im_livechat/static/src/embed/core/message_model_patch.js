@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { ChatbotStep } from "../chatbot/chatbot_step_model";
+
 import { Message } from "@mail/core/common/message_model";
 
 import { patch } from "@web/core/utils/patch";
@@ -11,5 +13,15 @@ patch(Message.prototype, {
             return super.isSelfAuthored;
         }
         return !this.author || this.author?.id === session.livechatData.options.current_partner_id;
+    },
+});
+
+patch(Message, {
+    insert(data) {
+        const message = super.insert(data);
+        if (data.chatbotStep) {
+            message.chatbotStep = new ChatbotStep(data.chatbotStep);
+        }
+        return message;
     },
 });

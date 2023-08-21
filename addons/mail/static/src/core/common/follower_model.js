@@ -1,16 +1,40 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 /**
  * @typedef Data
  * @property {import("@mail/core/common/thread_model").Thread} followedThread
  * @property {number} id
  * @property {Boolean} is_active
- * @property {import("@mail/core/common/partner_model").Data} partner
+ * @property {import("@mail/core/common/persona_model").Persona} partner
  */
 
 export class Follower extends Record {
+    static ids = ["id"];
+    /** @type {Object.<number, Follower>} */
+    static records = {};
+
+    /**
+     * @param {Data} data
+     * @returns {Follower}
+     */
+    static insert(data) {
+        let follower = this.records[data.id];
+        if (!follower) {
+            this.records[data.id] = new Follower();
+            follower = this.records[data.id];
+        }
+        Object.assign(follower, {
+            followedThread: data.followedThread,
+            id: data.id,
+            isActive: data.is_active,
+            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
+            _store: this.store,
+        });
+        return follower;
+    }
+
     /** @type {import("@mail/core/common/thread_model").Thread} */
     followedThread;
     /** @type {number} */
@@ -19,7 +43,7 @@ export class Follower extends Record {
     isActive;
     /** @type {import("@mail/core/common/persona_model").Persona} */
     partner;
-    /** @type {import("@mail/core/common/store_service").Store} */
+    /** @type {import("@mail/core/common/store_service").Store */
     _store;
 
     /**
@@ -32,3 +56,5 @@ export class Follower extends Record {
             : hasWriteAccess;
     }
 }
+
+modelRegistry.add(Follower.name, Follower);

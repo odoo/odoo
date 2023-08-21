@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
- * @property {import('@mail/core/common/thread_model').Thread} thread
+ * @property {import("@mail/core/common/thread_model").Thread} thread
  * @property {function} [close]
  * @extends {Component<Props, Env>}
  */

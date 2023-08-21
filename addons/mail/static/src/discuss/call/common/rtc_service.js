@@ -2,9 +2,8 @@
 
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { closeStream, createLocalId, onChange } from "@mail/utils/common/misc";
+import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -1405,35 +1404,11 @@ export class Rtc {
      * @returns {RtcSession}
      */
     insertSession(data) {
-        let session;
-        if (this.store.rtcSessions[data.id]) {
-            session = this.store.rtcSessions[data.id];
-        } else {
-            session = new RtcSession();
-            session._store = this.store;
-        }
-        const { channelMember, ...remainingData } = data;
-        for (const key in remainingData) {
-            session[key] = remainingData[key];
-        }
-        if (channelMember?.channel) {
-            session.channelId = channelMember.channel.id;
-        }
-        if (channelMember) {
-            const channelMemberRecord = this.channelMemberService.insert(channelMember);
-            channelMemberRecord.rtcSessionId = session.id;
-            session.channelMemberId = channelMemberRecord.id;
-            if (channelMemberRecord.thread) {
-                channelMemberRecord.thread.rtcSessions[session.id] = session;
-            }
-        }
-        this.store.rtcSessions[session.id] = session;
-        // return reactive version
-        return this.store.rtcSessions[session.id];
+        return this.store.RtcSession.insert(data);
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_session_model").id} id
+     * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession).id} id
      */
     deleteSession(id) {
         const session = this.store.rtcSessions[id];
@@ -1441,11 +1416,11 @@ export class Rtc {
             if (this.state.selfSession && session.eq(this.state.selfSession)) {
                 this.endCall();
             }
-            delete this.store.threads[createLocalId("discuss.channel", session.channelId)]
+            delete this.store.Thread.findById({ model: "discuss.channel", id: session.channelId })
                 ?.rtcSessions[id];
             this.disconnect(session);
         }
-        delete this.store.rtcSessions[id];
+        delete this.store.RtcSession.records[id];
     }
 
     /**
@@ -1507,7 +1482,7 @@ export class Rtc {
     }
 
     updateRtcSessions(channelId, sessionsData, command) {
-        const channel = this.store.threads[createLocalId("discuss.channel", channelId)];
+        const channel = this.store.Thread.findById({ model: "discuss.channel", id: channelId });
         if (!channel) {
             return;
         }

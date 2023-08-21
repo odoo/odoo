@@ -1,9 +1,7 @@
 /* @odoo-module */
 
-import { Follower } from "@mail/core/common/follower_model";
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -66,7 +64,7 @@ patch(ThreadService.prototype, {
             }
         }
         if ("attachments" in result) {
-            this.update(thread, {
+            this.store.Thread.update(thread, {
                 areAttachmentsLoaded: true,
                 attachments: result.attachments,
                 isLoadingAttachments: false,
@@ -104,21 +102,21 @@ patch(ThreadService.prototype, {
         return result;
     },
     getThread(resModel, resId) {
-        const localId = createLocalId(resModel, resId);
-        if (localId in this.store.threads) {
+        let thread = this.store.Thread.findById({ model: resModel, id: resId });
+        if (thread) {
             if (resId === false) {
-                return this.store.threads[localId];
+                return thread;
             }
             // to force a reload
-            this.store.threads[localId].status = "new";
+            thread.status = "new";
         }
-        const thread = this.insert({
+        thread = this.insert({
             id: resId,
             model: resModel,
             type: "chatter",
         });
         if (resId === false) {
-            const tmpId = this.messageService.getNextTemporaryId();
+            const tmpId = this.store.Message.getNextTemporaryId();
             const tmpData = {
                 id: tmpId,
                 author: { id: this.store.self.id },
@@ -138,19 +136,7 @@ patch(ThreadService.prototype, {
      * @returns {import("@mail/core/common/follower_model").Follower}
      */
     insertFollower(data) {
-        let follower = this.store.followers[data.id];
-        if (!follower) {
-            this.store.followers[data.id] = new Follower();
-            follower = this.store.followers[data.id];
-        }
-        Object.assign(follower, {
-            followedThread: data.followedThread,
-            id: data.id,
-            isActive: data.is_active,
-            partner: this.personaService.insert({ ...data.partner, type: "partner" }),
-            _store: this.store,
-        });
-        return follower;
+        return this.store.Follower.insert(data);
     },
     /**
      * @param {import("@mail/core/common/thread_model").Thread} thread

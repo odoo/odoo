@@ -16,7 +16,7 @@ export class Typing {
     memberIdsByChannelId = new Map();
     /** @type {Map<number, number>} */
     timerByMemberId = new Map();
-    /** @type {import("@mail/core/common/store_service").Store} */
+    /** @type {import("@mail/core/common/store_service").Store */
     storeService;
 
     /**

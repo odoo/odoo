@@ -1,8 +1,14 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
-import { createLocalId } from "@mail/utils/common/misc";
+import { replaceArrayWithCompare } from "@mail/utils/common/arrays";
+import {
+    assignDefined,
+    createLocalId,
+    nullifyClearCommands,
+    onChange,
+} from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -22,6 +28,194 @@ import { Deferred } from "@web/core/utils/concurrency";
  */
 
 export class Thread extends Record {
+    static ids = ["id", "model"];
+    static records = {};
+    /**
+     * @param {Object} data
+     * @returns {Thread}
+     */
+    static insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert thread: id is missing in data");
+        }
+        if (!("model" in data)) {
+            throw new Error("Cannot insert thread: model is missing in data");
+        }
+        let thread = this.findById(data);
+        if (thread) {
+            this.update(thread, data);
+            return thread;
+        }
+        thread = new Thread(this.store, data);
+        this.records[thread.localId] = thread;
+        onChange(thread, "message_unread_counter", () => {
+            if (thread.channel) {
+                thread.channel.message_unread_counter = thread.message_unread_counter;
+            }
+        });
+        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
+        onChange(thread, "is_pinned", () => {
+            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
+                this.store.discuss.threadLocalId = null;
+            }
+        });
+        this.update(thread, data);
+        this.store.Composer.insert({ thread });
+        // return reactive version.
+        return this.records[thread.localId];
+    }
+
+    static findById(data) {
+        return this.records[this.toId(data)];
+    }
+
+    static sortChannels() {
+        this.store.discuss.channels.threads.sort((id1, id2) => {
+            const thread1 = this.records[id1];
+            const thread2 = this.records[id2];
+            return String.prototype.localeCompare.call(thread1.name, thread2.name);
+        });
+        this.store.discuss.chats.threads.sort((localId_1, localId_2) => {
+            const thread1 = this.records[localId_1];
+            const thread2 = this.records[localId_2];
+            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
+        });
+    }
+
+    static toId(data) {
+        return createLocalId(data.model, data.id);
+    }
+
+    /**
+     * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {Object} data
+     */
+    static update(thread, data) {
+        const { id, name, attachments: attachmentsData, description, ...serverData } = data;
+        assignDefined(thread, { id, name, description });
+        if (attachmentsData) {
+            replaceArrayWithCompare(
+                thread.attachments,
+                attachmentsData.map((attachmentData) =>
+                    this.store.Attachment.insert(attachmentData)
+                )
+            );
+        }
+        if (serverData) {
+            assignDefined(thread, serverData, [
+                "uuid",
+                "authorizedGroupFullName",
+                "description",
+                "hasWriteAccess",
+                "is_pinned",
+                "isLoaded",
+                "isLoadingAttachments",
+                "mainAttachment",
+                "message_unread_counter",
+                "message_needaction_counter",
+                "name",
+                "seen_message_id",
+                "state",
+                "type",
+                "status",
+                "group_based_subscription",
+                "last_interest_dt",
+                "is_editable",
+                "defaultDisplayMode",
+            ]);
+            if (serverData.channel && "message_unread_counter" in serverData.channel) {
+                thread.message_unread_counter = serverData.channel.message_unread_counter;
+            }
+            thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
+            if (thread.model === "discuss.channel" && serverData.channel) {
+                nullifyClearCommands(serverData.channel);
+                thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
+            }
+
+            thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
+            if (thread.type === "chat" && serverData.channel) {
+                thread.customName = serverData.channel.custom_channel_name;
+            }
+            if (serverData.channel?.channelMembers) {
+                for (const [command, membersData] of serverData.channel.channelMembers) {
+                    const members = Array.isArray(membersData) ? membersData : [membersData];
+                    for (const memberData of members) {
+                        const member = this.store.ChannelMember.insert([command, memberData]);
+                        if (thread.type !== "chat") {
+                            continue;
+                        }
+                        if (
+                            member.persona.notEq(thread._store.user) ||
+                            (serverData.channel.channelMembers[0][1].length === 1 &&
+                                member.persona.eq(thread._store.user))
+                        ) {
+                            thread.chatPartnerId = member.persona.id;
+                        }
+                    }
+                }
+            }
+            if ("invitedMembers" in serverData) {
+                if (!serverData.invitedMembers) {
+                    thread.invitedMemberIds.clear();
+                    return;
+                }
+                const command = serverData.invitedMembers[0][0];
+                const members = serverData.invitedMembers[0][1];
+                switch (command) {
+                    case "insert":
+                        if (members) {
+                            for (const member of members) {
+                                const record = this.store.ChannelMember.insert(member);
+                                thread.invitedMemberIds.add(record.id);
+                            }
+                        }
+                        break;
+                    case "unlink":
+                    case "insert-and-unlink":
+                        // eslint-disable-next-line no-case-declarations
+                        for (const member of members) {
+                            thread.invitedMemberIds.delete(member.id);
+                        }
+                        break;
+                }
+            }
+            if ("seen_partners_info" in serverData) {
+                thread.seenInfos = serverData.seen_partners_info.map(
+                    ({ fetched_message_id, partner_id, seen_message_id }) => {
+                        return {
+                            lastFetchedMessage: fetched_message_id
+                                ? this.store.Message.insert({ id: fetched_message_id })
+                                : undefined,
+                            lastSeenMessage: seen_message_id
+                                ? this.store.Message.insert({ id: seen_message_id })
+                                : undefined,
+                            partner: this.store.Persona.insert({
+                                id: partner_id,
+                                type: "partner",
+                            }),
+                        };
+                    }
+                );
+            }
+        }
+        if (
+            thread.type === "channel" &&
+            !this.store.discuss.channels.threads.includes(thread.localId)
+        ) {
+            this.store.discuss.channels.threads.push(thread.localId);
+        } else if (
+            (thread.type === "chat" || thread.type === "group") &&
+            !this.store.discuss.chats.threads.includes(thread.localId)
+        ) {
+            this.store.discuss.chats.threads.push(thread.localId);
+        }
+        if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
+            thread.type = "chatter";
+        }
+        this.env.bus.trigger("mail.thread/onUpdate", { thread, data });
+    }
+
     /** @type {number} */
     id;
     /** @type {string} */
@@ -118,7 +312,6 @@ export class Thread extends Record {
     transientMessages = [];
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
     type;
-    /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     /** @type {string} */
     defaultDisplayMode;
@@ -136,15 +329,13 @@ export class Thread extends Record {
     is_editable;
 
     constructor(store, data) {
-        super();
+        super(store, data);
         Object.assign(this, {
             id: data.id,
             model: data.model,
             type: data.type,
             _store: store,
         });
-        store.threads[this.localId] = this;
-        return store.threads[this.localId];
     }
 
     get accessRestrictedToGroupText() {
@@ -157,7 +348,7 @@ export class Thread extends Record {
     }
 
     get activeRtcSession() {
-        return this._store.rtcSessions[this.activeRtcSessionId];
+        return this._store.RtcSession.records[this.activeRtcSessionId];
     }
 
     set activeRtcSession(session) {
@@ -224,7 +415,8 @@ export class Thread extends Record {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.personas[createLocalId("partner", this.chatPartnerId)].nameOrDisplayName
+                this._store.Persona.findById({ type: "partner", id: this.chatPartnerId })
+                    .nameOrDisplayName
             );
         }
         if (this.type === "group" && !this.name) {
@@ -290,7 +482,7 @@ export class Thread extends Record {
     }
 
     get localId() {
-        return createLocalId(this.model, this.id);
+        return this._store.Thread.toId({ model: this.model, id: this.id });
     }
 
     get needactionCounter() {
@@ -420,7 +612,7 @@ export class Thread extends Record {
     }
 
     get rtcInvitingSession() {
-        return this._store.rtcSessions[this.invitingRtcSessionId];
+        return this._store.RtcSession.records[this.invitingRtcSessionId];
     }
 
     get hasNeedactionMessages() {
@@ -451,6 +643,8 @@ export class Thread extends Record {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.messages[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
     }
 }
+
+modelRegistry.add(Thread.name, Thread);

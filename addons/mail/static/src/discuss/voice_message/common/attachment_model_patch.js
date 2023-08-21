@@ -8,3 +8,12 @@ patch(Attachment.prototype, {
         return !this.isVoice && super.isViewable;
     },
 });
+
+patch(Attachment, {
+    update(attachment, data) {
+        super.update(...arguments);
+        if (data["voice"]) {
+            attachment.isVoice = true;
+        }
+    },
+});

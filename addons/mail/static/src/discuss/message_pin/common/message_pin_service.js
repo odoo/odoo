@@ -23,8 +23,8 @@ export class MessagePin {
     channelIdByMessageId = new Map();
     /** @type {Map<number, string>} */
     pinnedAtByMessageId = new Map();
-    /** @type {import("@mail/core/common/store_service").Store} */
-    storeService;
+    /** @type {import("@mail/core/common/store_service").Store */
+    store;
 
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -37,7 +37,7 @@ export class MessagePin {
         this.messageService = services["mail.message"];
         this.ormService = services.orm;
         this.rpcService = services.rpc;
-        this.storeService = services["mail.store"];
+        this.store = services["mail.store"];
     }
 
     setup() {

@@ -1,12 +1,64 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { url } from "@web/core/utils/urls";
 
 export class Attachment extends Record {
-    /** @type {import("@mail/core/common/store_service").Store} */
+    static ids = ["id"];
+    /** @type {Object.<number, Attachment>} */
+    static records = {};
+
+    static insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert attachment: id is missing in data");
+        }
+        let attachment = this.records[data.id];
+        if (!attachment) {
+            this.records[data.id] = new Attachment();
+            attachment = this.records[data.id];
+            Object.assign(attachment, { _store: this.store, id: data.id });
+        }
+        this.update(attachment, data);
+        return attachment;
+    }
+
+    static update(attachment, data) {
+        assignDefined(attachment, data, [
+            "checksum",
+            "filename",
+            "mimetype",
+            "name",
+            "type",
+            "url",
+            "uploading",
+            "extension",
+            "accessToken",
+            "tmpUrl",
+            "message",
+        ]);
+        if (!("extension" in data) && data["name"]) {
+            attachment.extension = attachment.name.split(".").pop();
+        }
+        if (data.originThread !== undefined) {
+            const threadData = Array.isArray(data.originThread)
+                ? data.originThread[0][1]
+                : data.originThread;
+            this.store.Thread.insert({
+                model: threadData.model,
+                id: threadData.id,
+            });
+            attachment.originThreadLocalId = this.store.Thread.toId(threadData);
+            const thread = attachment.originThread;
+            if (attachment.notIn(thread.attachments)) {
+                thread.attachments.push(attachment);
+                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
+            }
+        }
+    }
+
+    /** @type {import("@mail/core/common/store_service").Store */
     _store;
     accessToken;
     checksum;
@@ -28,7 +80,7 @@ export class Attachment extends Record {
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
-        return this._store.threads[this.originThreadLocalId];
+        return this._store.Thread.records[this.originThreadLocalId];
     }
 
     get isDeletable() {
@@ -140,3 +192,5 @@ export class Attachment extends Record {
         );
     }
 }
+
+modelRegistry.add(Attachment.name, Attachment);

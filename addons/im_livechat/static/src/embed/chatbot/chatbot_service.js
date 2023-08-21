@@ -197,7 +197,7 @@ export class ChatBotService {
                 step: new ChatbotStep(welcomeStep),
                 stepMessage: {
                     chatbotStep: welcomeStep,
-                    id: this.messageService.getNextTemporaryId(),
+                    id: this.store.Message.getNextTemporaryId(),
                     body: welcomeStep.message,
                     res_id: this.livechatService.thread.id,
                     model: this.livechatService.thread.model,
@@ -224,14 +224,14 @@ export class ChatBotService {
     async _processUserAnswer(message) {
         if (
             !this.active ||
-            message.originThread.localId !== this.livechatService.thread?.localId ||
+            !message.originThread?.eq(this.livechatService.thread) ||
             !this.currentStep?.expectAnswer
         ) {
             return;
         }
         const answer = this.currentStep.answers.find(({ label }) => message.body.includes(label));
-        const stepMessage = message.originThread.messages.findLast(
-            ({ chatbotStep }) => chatbotStep?.id === this.currentStep.id
+        const stepMessage = message.originThread.messages.findLast(({ chatbotStep }) =>
+            chatbotStep?.eq(this.currentStep)
         );
         if (stepMessage) {
             stepMessage.chatbotStep.hasAnswer = true;

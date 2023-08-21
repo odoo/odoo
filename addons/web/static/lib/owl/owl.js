@@ -1853,7 +1853,7 @@
     };
     const objectToString = Object.prototype.toString;
     const objectHasOwnProperty = Object.prototype.hasOwnProperty;
-    const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap"]);
+    const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap", "Function"]);
     const COLLECTION_RAWTYPES = new Set(["Set", "Map", "WeakMap"]);
     /**
      * extract "RawType" from strings like "[object RawType]" => this lets us ignore
@@ -1874,7 +1874,7 @@
      * @returns whether the value can be made reactive
      */
     function canBeMadeReactive(value) {
-        if (typeof value !== "object") {
+        if (!["object", "function"].includes(typeof value)) {
             return false;
         }
         return SUPPORTED_RAW_TYPES.has(rawType(value));

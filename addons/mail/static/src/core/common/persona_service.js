@@ -1,8 +1,5 @@
 /* @odoo-module */
 
-import { Persona } from "@mail/core/common/persona_model";
-import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
-
 import { registry } from "@web/core/registry";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
@@ -19,7 +16,7 @@ export class PersonaService {
     setup(env, services) {
         this.env = env;
         this.rpc = services.rpc;
-        /** @type {import("@mail/core/common/store_service").Store} */
+        /** @type {import("@mail/core/common/store_service").Store */
         this.store = services["mail.store"];
     }
 
@@ -35,30 +32,11 @@ export class PersonaService {
      * @returns {import("@mail/core/common/persona_model").Persona}
      */
     insert(data) {
-        const localId = createLocalId(data.type, data.id);
-        let persona = this.store.personas[localId];
-        if (!persona) {
-            persona = new Persona();
-            persona._store = this.store;
-            persona.localId = localId;
-            this.store.personas[localId] = persona;
-        }
-        this.update(persona, data);
-        // return reactive version
-        return this.store.personas[localId];
+        return this.store.Persona.insert(data);
     }
 
     update(persona, data) {
-        nullifyClearCommands(data);
-        assignDefined(persona, { ...data });
-        if (
-            persona.type === "partner" &&
-            persona.im_status !== "im_partner" &&
-            !persona.is_public &&
-            !this.store.registeredImStatusPartners?.includes(persona.id)
-        ) {
-            this.store.registeredImStatusPartners?.push(persona.id);
-        }
+        return this.store.Persona.update(persona, data);
     }
 
     /**

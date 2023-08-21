@@ -11,7 +11,7 @@ import { session } from "@web/session";
  * @typedef {Object} Props
  * @property {Function} [onClickClose]
  * @property {Function} [sendFeedback]
- * @property {import("@mail/core/common/thread_model").Thread}
+ * @property {import("@mail/core/common/thread_model").Thread} thread
  * @extends {Component<Props, Env>}
  */
 export class FeedbackPanel extends Component {

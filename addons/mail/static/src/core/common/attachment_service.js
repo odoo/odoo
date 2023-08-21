@@ -1,8 +1,7 @@
 /* @odoo-module */
 
-import { Attachment } from "@mail/core/common/attachment_model";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 
@@ -22,52 +21,11 @@ export class AttachmentService {
     }
 
     insert(data) {
-        if (!("id" in data)) {
-            throw new Error("Cannot insert attachment: id is missing in data");
-        }
-        let attachment = this.store.attachments[data.id];
-        if (!attachment) {
-            this.store.attachments[data.id] = new Attachment();
-            attachment = this.store.attachments[data.id];
-            Object.assign(attachment, { _store: this.store, id: data.id });
-        }
-        this.update(attachment, data);
-        return attachment;
+        return this.store.Attachment.insert(data);
     }
 
     update(attachment, data) {
-        assignDefined(attachment, data, [
-            "checksum",
-            "filename",
-            "mimetype",
-            "name",
-            "type",
-            "url",
-            "uploading",
-            "extension",
-            "accessToken",
-            "tmpUrl",
-            "message",
-        ]);
-        if (!("extension" in data) && data["name"]) {
-            attachment.extension = attachment.name.split(".").pop();
-        }
-        if (data.originThread !== undefined) {
-            const threadData = Array.isArray(data.originThread)
-                ? data.originThread[0][1]
-                : data.originThread;
-            // this prevents cyclic dependencies between mail.thread and mail.attachment
-            this.env.bus.trigger("mail.thread/insert", {
-                model: threadData.model,
-                id: threadData.id,
-            });
-            attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
-            const thread = attachment.originThread;
-            if (attachment.notIn(thread.attachments)) {
-                thread.attachments.push(attachment);
-                thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
-            }
-        }
+        return this.store.Attachment.update(attachment, data);
     }
 
     /**
@@ -79,7 +37,7 @@ export class AttachmentService {
         if (attachment.tmpUrl) {
             URL.revokeObjectURL(attachment.tmpUrl);
         }
-        delete this.store.attachments[attachment.id];
+        delete this.store.Attachment.records[attachment.id];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
                 att.eq(attachment)

@@ -1,6 +1,7 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef Data
@@ -33,6 +34,37 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Activity extends Record {
+    static ids = ["id"];
+    /** @type {Object.<number, Activity>} */
+    static records = {};
+
+    /**
+     * @param {import("@mail/core/web/activity_model").Data} data
+     * @param {Object} [param1]
+     * @param {boolean} param1.broadcast
+     * @returns {import("@mail/core/web/activity_model").Activity}
+     */
+    static insert(data, { broadcast = true } = {}) {
+        const activity = this.records[data.id] ?? new Activity(this.store, data.id);
+        if (data.request_partner_id) {
+            data.request_partner_id = data.request_partner_id[0];
+        }
+        assignDefined(activity, data);
+        if (broadcast) {
+            this.broadcastChannel?.postMessage({
+                type: "insert",
+                payload: this._serialize(activity),
+            });
+        }
+        return activity;
+    }
+
+    static _serialize(activity) {
+        const data = { ...activity };
+        delete data._store;
+        return JSON.parse(JSON.stringify(data));
+    }
+
     /** @type {string} */
     activity_category;
     /** @type {[number, string]} */
@@ -96,12 +128,14 @@ export class Activity extends Record {
      * @returns {Activity}
      */
     constructor(store, id) {
-        super();
+        super(store, id);
         Object.assign(this, {
             id,
             _store: store,
         });
-        store.activities[id] = this;
-        return store.activities[id];
+        store.Activity.records[id] = this;
+        return store.Activity.records[id];
     }
 }
+
+modelRegistry.add(Activity.name, Activity);

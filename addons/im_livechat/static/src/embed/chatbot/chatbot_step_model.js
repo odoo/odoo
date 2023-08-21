@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 /**
@@ -26,7 +27,10 @@ import { assignDefined } from "@mail/utils/common/misc";
  * @property {boolean} [hasAnswer]
  */
 
-export class ChatbotStep {
+export class ChatbotStep extends Record {
+    /** @type {Object.<number, ChatbotStep>} */
+    static records = {};
+
     /** @type {number} */
     id;
     /** @type {StepAnswer[]} */
@@ -44,6 +48,7 @@ export class ChatbotStep {
      * @param {IChatbotStep} data
      */
     constructor(data) {
+        super(data);
         assignDefined(this, data, [
             "answers",
             "id",
@@ -75,3 +80,5 @@ export class ChatbotStep {
         );
     }
 }
+
+modelRegistry.add(ChatbotStep.name, ChatbotStep);

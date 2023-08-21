@@ -1,21 +1,9 @@
 /* @odoo-module */
 
-import { Composer } from "@mail/core/common/composer_model";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import { Thread } from "@mail/core/common/thread_model";
-import {
-    removeFromArray,
-    removeFromArrayWithPredicate,
-    replaceArrayWithCompare,
-} from "@mail/utils/common/arrays";
+import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import {
-    assignDefined,
-    createLocalId,
-    onChange,
-    nullifyClearCommands,
-} from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -139,7 +127,7 @@ export class ThreadService {
                 newUnreadCounter++;
             }
         }
-        this.update(thread, {
+        this.store.Thread.update(thread, {
             seen_message_id: lastSeenId,
             message_needaction_counter: newNeedactionCounter,
             message_unread_counter: newUnreadCounter,
@@ -222,7 +210,7 @@ export class ThreadService {
                     Object.assign(data, { body: data.body ? markup(data.body) : data.body })
                 );
             });
-            this.update(thread, { isLoaded: true });
+            this.store.Thread.update(thread, { isLoaded: true });
             return messages;
         } catch (e) {
             thread.hasLoadingFailed = true;
@@ -356,7 +344,10 @@ export class ThreadService {
         if (ids.length) {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
-                const thread = this.store.threads[createLocalId("discuss.channel", preview.id)];
+                const thread = this.store.Thread.findById({
+                    model: "discuss.channel",
+                    id: preview.id,
+                });
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
@@ -455,16 +446,7 @@ export class ThreadService {
     }
 
     sortChannels() {
-        this.store.discuss.channels.threads.sort((id1, id2) => {
-            const thread1 = this.store.threads[id1];
-            const thread2 = this.store.threads[id2];
-            return String.prototype.localeCompare.call(thread1.name, thread2.name);
-        });
-        this.store.discuss.chats.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.threads[localId_1];
-            const thread2 = this.store.threads[localId_2];
-            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
-        });
+        this.store.Thread.sortChannels();
     }
 
     /**
@@ -487,7 +469,7 @@ export class ThreadService {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import { Persona } from "@mail/core/common/persona_model";> | undefined}
+     * @returns {Promise<import("@mail/core/common/persona_model").Persona> | undefined}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {
@@ -540,7 +522,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import { Persona } from "@mail/core/common/persona_model";} partner
+     * @param {import("@mail/core/common/persona_model").Persona} partner
      * @returns {Thread | undefined}
      */
     searchChat(partner) {
@@ -586,7 +568,7 @@ export class ThreadService {
             type: "channel",
             channel: { avatarCacheKey: "hello" },
         });
-        this.sortChannels();
+        this.store.Thread.sortChannels();
         this.open(thread);
         return thread;
     }
@@ -687,128 +669,7 @@ export class ThreadService {
      * @param {Object} data
      */
     update(thread, data) {
-        const { id, name, attachments: attachmentsData, description, ...serverData } = data;
-        assignDefined(thread, { id, name, description });
-        if (attachmentsData) {
-            replaceArrayWithCompare(
-                thread.attachments,
-                attachmentsData.map((attachmentData) =>
-                    this.attachmentsService.insert(attachmentData)
-                )
-            );
-        }
-        if (serverData) {
-            assignDefined(thread, serverData, [
-                "uuid",
-                "authorizedGroupFullName",
-                "description",
-                "hasWriteAccess",
-                "is_pinned",
-                "isLoaded",
-                "isLoadingAttachments",
-                "mainAttachment",
-                "message_unread_counter",
-                "message_needaction_counter",
-                "name",
-                "seen_message_id",
-                "state",
-                "type",
-                "status",
-                "group_based_subscription",
-                "last_interest_dt",
-                "is_editable",
-                "defaultDisplayMode",
-            ]);
-            if (serverData.channel && "message_unread_counter" in serverData.channel) {
-                thread.message_unread_counter = serverData.channel.message_unread_counter;
-            }
-            thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
-            if (thread.model === "discuss.channel" && serverData.channel) {
-                nullifyClearCommands(serverData.channel);
-                thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
-            }
-
-            thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
-            if (thread.type === "chat" && serverData.channel) {
-                thread.customName = serverData.channel.custom_channel_name;
-            }
-            if (serverData.channel?.channelMembers) {
-                for (const [command, membersData] of serverData.channel.channelMembers) {
-                    const members = Array.isArray(membersData) ? membersData : [membersData];
-                    for (const memberData of members) {
-                        const member = this.channelMemberService.insert([command, memberData]);
-                        if (thread.type !== "chat") {
-                            continue;
-                        }
-                        if (
-                            member.persona.notEq(thread._store.user) ||
-                            (serverData.channel.channelMembers[0][1].length === 1 &&
-                                member.persona?.eq(thread._store.user))
-                        ) {
-                            thread.chatPartnerId = member.persona.id;
-                        }
-                    }
-                }
-            }
-            if ("invitedMembers" in serverData) {
-                if (!serverData.invitedMembers) {
-                    thread.invitedMemberIds.clear();
-                    return;
-                }
-                const command = serverData.invitedMembers[0][0];
-                const members = serverData.invitedMembers[0][1];
-                switch (command) {
-                    case "insert":
-                        if (members) {
-                            for (const member of members) {
-                                const record = this.channelMemberService.insert(member);
-                                thread.invitedMemberIds.add(record.id);
-                            }
-                        }
-                        break;
-                    case "unlink":
-                    case "insert-and-unlink":
-                        // eslint-disable-next-line no-case-declarations
-                        for (const member of members) {
-                            thread.invitedMemberIds.delete(member.id);
-                        }
-                        break;
-                }
-            }
-            if ("seen_partners_info" in serverData) {
-                thread.seenInfos = serverData.seen_partners_info.map(
-                    ({ fetched_message_id, partner_id, seen_message_id }) => {
-                        return {
-                            lastFetchedMessage: fetched_message_id
-                                ? this.messageService.insert({ id: fetched_message_id })
-                                : undefined,
-                            lastSeenMessage: seen_message_id
-                                ? this.messageService.insert({ id: seen_message_id })
-                                : undefined,
-                            partner: this.personaService.insert({
-                                id: partner_id,
-                                type: "partner",
-                            }),
-                        };
-                    }
-                );
-            }
-        }
-        if (
-            thread.type === "channel" &&
-            !this.store.discuss.channels.threads.includes(thread.localId)
-        ) {
-            this.store.discuss.channels.threads.push(thread.localId);
-        } else if (
-            (thread.type === "chat" || thread.type === "group") &&
-            !this.store.discuss.chats.threads.includes(thread.localId)
-        ) {
-            this.store.discuss.chats.threads.push(thread.localId);
-        }
-        if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
-            thread.type = "chatter";
-        }
-        this.env.bus.trigger("mail.thread/onUpdate", { thread, data });
+        return this.store.Thread.update(thread, data);
     }
 
     /**
@@ -816,35 +677,7 @@ export class ThreadService {
      * @returns {Thread}
      */
     insert(data) {
-        if (!("id" in data)) {
-            throw new Error("Cannot insert thread: id is missing in data");
-        }
-        if (!("model" in data)) {
-            throw new Error("Cannot insert thread: model is missing in data");
-        }
-        const localId = createLocalId(data.model, data.id);
-        if (localId in this.store.threads) {
-            const thread = this.store.threads[localId];
-            this.update(thread, data);
-            return thread;
-        }
-        const thread = new Thread(this.store, data);
-        onChange(thread, "message_unread_counter", () => {
-            if (thread.channel) {
-                thread.channel.message_unread_counter = thread.message_unread_counter;
-            }
-        });
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
-                this.store.discuss.threadLocalId = null;
-            }
-        });
-        this.update(thread, data);
-        this.insertComposer({ thread });
-        // return reactive version.
-        return this.store.threads[thread.localId];
+        return this.store.Thread.insert(data);
     }
 
     /**
@@ -852,28 +685,7 @@ export class ThreadService {
      * @returns {Composer}
      */
     insertComposer(data) {
-        const { message, thread } = data;
-        if (Boolean(message) === Boolean(thread)) {
-            throw new Error("Composer shall have a thread xor a message.");
-        }
-        let composer = (thread ?? message)?.composer;
-        if (!composer) {
-            composer = new Composer(this.store, data);
-        }
-        if ("textInputContent" in data) {
-            composer.textInputContent = data.textInputContent;
-        }
-        if ("selection" in data) {
-            Object.assign(composer.selection, data.selection);
-        }
-        if ("mentions" in data) {
-            for (const mention of data.mentions) {
-                if (mention.type === "partner") {
-                    composer.rawMentions.partnerIds.add(mention.id);
-                }
-            }
-        }
-        return composer;
+        return this.store.Composer.insert(data);
     }
 
     /**
@@ -894,7 +706,7 @@ export class ThreadService {
             rawMentions,
             thread,
         });
-        const tmpId = this.messageService.getNextTemporaryId();
+        const tmpId = this.store.Message.getNextTemporaryId();
         params.context = { ...params.context, temporary_id: tmpId };
         if (parentId) {
             params.post_data.parent_id = parentId;

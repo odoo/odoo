@@ -11,7 +11,7 @@ import { useVisible } from "@mail/utils/common/hooks";
  * @typedef {Object} Props
  * @property {function} [onAddFollowers]
  * @property {function} [onFollowerChanged]
- * @property {import('@mail/core/common/thread_model').Thread} thread
+ * @property {import("@mail/core/common/thread_model").Thread} thread
  * @extends {Component<Props, Env>}
  */
 export class FollowerList extends Component {

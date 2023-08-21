@@ -8,7 +8,7 @@ import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_ser
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/composer/composer_model").Composer} composer
+ * @property {import("@mail/core/common/composer_model").Composer} composer
  * @property {function} [attachmentUploader]
  * @property {function} [onchangeRecording]
  * @extends {Component<Props, Env>}

@@ -1,8 +1,26 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 export class CannedResponse extends Record {
+    static ids = ["id"];
+    /** @type {Object.<number, CannedResponse>} */
+    static records = {};
+
+    static insert(data) {
+        let cannedResponse = this.records[data.id];
+        if (!cannedResponse) {
+            this.records[data.id] = new CannedResponse();
+            cannedResponse = this.records[data.id];
+        }
+        Object.assign(cannedResponse, {
+            id: data.id,
+            name: data.source,
+            substitution: data.substitution,
+        });
+        return cannedResponse;
+    }
+
     /** @type {number} */
     id;
     /** @type {string} */
@@ -10,3 +28,5 @@ export class CannedResponse extends Record {
     /** @type {string} */
     substitution;
 }
+
+modelRegistry.add(CannedResponse.name, CannedResponse);

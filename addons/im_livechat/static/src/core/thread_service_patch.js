@@ -2,32 +2,10 @@
 
 import { ThreadService } from "@mail/core/common/thread_service";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
-    insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
-        const thread = super.insert(data);
-        if (thread.type === "livechat") {
-            if (data?.channel) {
-                assignDefined(thread, data.channel, ["anonymous_name"]);
-            }
-            if (data?.operator_pid) {
-                thread.operator = this.personaService.insert({
-                    type: "partner",
-                    id: data.operator_pid[0],
-                    displayName: data.operator_pid[1],
-                });
-            }
-            if (isUnknown) {
-                this.store.discuss.livechat.threads.push(thread.localId);
-                this.sortChannels();
-            }
-        }
-        return thread;
-    },
     /**
      * @override
      * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -62,16 +40,6 @@ patch(ThreadService.prototype, {
             return thread.message_unread_counter;
         }
         return super.getCounter(thread);
-    },
-
-    sortChannels() {
-        super.sortChannels();
-        // Live chats are sorted by most recent interest date time in the sidebar.
-        this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.threads[localId_1];
-            const thread2 = this.store.threads[localId_2];
-            return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
-        });
     },
 
     /**

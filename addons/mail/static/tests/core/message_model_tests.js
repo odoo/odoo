@@ -35,10 +35,7 @@ QUnit.test("Message model properties", async (assert) => {
     assert.ok(message);
     assert.ok(message.isNeedaction);
     assert.strictEqual(message.body, "<p>Test</p>");
-    assert.strictEqual(
-        serializeDateTime(message.date),
-        "2019-05-05 10:00:00"
-    );
+    assert.strictEqual(serializeDateTime(message.date), "2019-05-05 10:00:00");
     assert.strictEqual(message.id, 4000);
 
     assert.ok(message.attachments);

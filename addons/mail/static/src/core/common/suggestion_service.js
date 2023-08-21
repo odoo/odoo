@@ -160,10 +160,10 @@ export class SuggestionService {
     }
 
     /**
-     * @param {[import("@mail/core/common/persona_model").Persona]} [partners]
+     * @param {import("@mail/core/common/persona_model").Persona[]} [partners]
      * @param {String} [searchTerm]
      * @param {import("@mail/core/common/thread_model").Thread} thread
-     * @returns {[import("@mail/core/common/persona_model").Persona]}
+     * @returns {import("@mail/core/common/persona_model").Persona[]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);

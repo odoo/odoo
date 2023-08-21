@@ -4,7 +4,6 @@ import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { createLocalId, onChange } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -57,13 +56,13 @@ patch(ThreadService.prototype, {
     },
 
     /**
-     * @returns {Promise<import("@mail/core/common/message_model").Message}
+     * @returns {Promise<import("@mail/core/common/message_model").Message>}
      */
     async post(thread, body, params) {
         const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
         if (
             this.livechatService.state !== SESSION_STATE.PERSISTED &&
-            thread.localId === this.livechatService.thread?.localId
+            thread.eq(this.livechatService.thread)
         ) {
             // replace temporary thread by the persisted one.
             const temporaryThread = thread;
@@ -105,67 +104,6 @@ patch(ThreadService.prototype, {
         chatWindow.autofocus++;
         if (this.chatbotService.active) {
             this.chatbotService.start();
-        }
-    },
-
-    insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
-        const thread = super.insert(...arguments);
-        if (thread.type === "livechat" && isUnknown) {
-            if (
-                this.livechatService.displayWelcomeMessage &&
-                !this.chatbotService.isChatbotThread(thread)
-            ) {
-                this.livechatService.welcomeMessage = this.messageService.insert({
-                    id: this.messageService.getNextTemporaryId(),
-                    body: this.livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
-            if (this.chatbotService.isChatbotThread(thread)) {
-                this.chatbotService.typingMessage = this.messageService.insert({
-                    id: this.messageService.getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                });
-            }
-            onChange(thread, "state", () => {
-                if (
-                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
-                ) {
-                    this.livechatService.updateSession({ state: thread.state });
-                }
-            });
-            onChange(thread, "seen_message_id", () => {
-                if (
-                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
-                ) {
-                    this.livechatService.updateSession({ seen_message_id: thread.seen_message_id });
-                }
-            });
-            onChange(thread, "message_unread_counter", () => {
-                if (
-                    ![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(this.livechatService.state)
-                ) {
-                    this.livechatService.updateSession({ channel: thread.channel });
-                }
-            });
-            this.store.livechatThread = thread;
-        }
-        return thread;
-    },
-
-    async update(thread, data) {
-        super.update(...arguments);
-        if (data.operator_pid) {
-            thread.operator = this.personaService.insert({
-                type: "partner",
-                id: data.operator_pid[0],
-                name: data.operator_pid[1],
-            });
         }
     },
 

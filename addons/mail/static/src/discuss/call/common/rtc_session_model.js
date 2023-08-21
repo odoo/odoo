@@ -1,9 +1,44 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
-import { createLocalId } from "@mail/utils/common/misc";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 export class RtcSession extends Record {
+    static ids = ["id"];
+    /** @type {Object.<number, RtcSession>} */
+    static records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {RtcSession}
+     */
+    static insert(data) {
+        let session;
+        if (this.records[data.id]) {
+            session = this.records[data.id];
+        } else {
+            session = new RtcSession();
+            session._store = this.store;
+        }
+        const { channelMember, ...remainingData } = data;
+        for (const key in remainingData) {
+            session[key] = remainingData[key];
+        }
+        if (channelMember?.channel) {
+            session.channelId = channelMember.channel.id;
+        }
+        if (channelMember) {
+            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
+            channelMemberRecord.rtcSessionId = session.id;
+            session.channelMemberId = channelMemberRecord.id;
+            if (channelMemberRecord.thread) {
+                channelMemberRecord.thread.rtcSessions[session.id] = session;
+            }
+        }
+        this.records[session.id] = session;
+        // return reactive version
+        return this.records[session.id];
+    }
+
     // Server data
     channelId;
     channelMemberId;
@@ -45,11 +80,11 @@ export class RtcSession extends Record {
     logStep;
 
     get channelMember() {
-        return this._store.channelMembers[this.channelMemberId];
+        return this._store.ChannelMember.records[this.channelMemberId];
     }
 
     get channel() {
-        return this._store.threads[createLocalId("discuss.channel", this.channelId)];
+        return this._store.Thread.findById({ model: "discuss.channel", id: this.channelId });
     }
 
     get isMute() {
@@ -141,3 +176,5 @@ export class RtcSession extends Record {
         }
     }
 }
+
+modelRegistry.add(RtcSession.name, RtcSession);

@@ -1,10 +1,58 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
+    static ids = ["id"];
+    /** @type {Object.<number, Notification>} */
+    static records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Notification}
+     */
+    static insert(data) {
+        let notification = this.records[data.id];
+        if (!notification) {
+            this.records[data.id] = new Notification(this.store, data);
+            notification = this.records[data.id];
+        }
+        this.update(notification, data);
+        return notification;
+    }
+
+    static update(notification, data) {
+        Object.assign(notification, {
+            messageId: data.messageId,
+            notification_status: data.notification_status,
+            notification_type: data.notification_type,
+            failure_type: data.failure_type,
+            persona: data.res_partner_id
+                ? this.store.Persona.insert({
+                      id: data.res_partner_id[0],
+                      displayName: data.res_partner_id[1],
+                      type: "partner",
+                  })
+                : undefined,
+        });
+        if (!notification.message.author.eq(this.store.self)) {
+            return;
+        }
+        const thread = notification.message.originThread;
+        this.store.NotificationGroup.insert({
+            modelName: thread?.modelName,
+            resId: thread?.id,
+            resModel: thread?.model,
+            status: notification.notification_status,
+            type: notification.notification_type,
+            notifications: [
+                [notification.isFailure ? "insert" : "insert-and-unlink", notification],
+            ],
+        });
+    }
+
     /** @type {number} */
     id;
     /** @type {number} */
@@ -17,11 +65,11 @@ export class Notification extends Record {
     failure_type;
     /** @type {import("@mail/core/common/persona_model").Persona} */
     persona;
-    /** @type {import("@mail/core/common/store_service").Store} */
+    /** @type {import("@mail/core/common/store_service").Store */
     _store;
 
     constructor(store, data) {
-        super();
+        super(store, data);
         Object.assign(this, {
             id: data.id,
             _store: store,
@@ -29,7 +77,7 @@ export class Notification extends Record {
     }
 
     get message() {
-        return this._store.messages[this.messageId];
+        return this._store.Message.records[this.messageId];
     }
 
     get isFailure() {
@@ -79,3 +127,5 @@ export class Notification extends Record {
         return "";
     }
 }
+
+modelRegistry.add(Notification.name, Notification);

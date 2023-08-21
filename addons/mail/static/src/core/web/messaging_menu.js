@@ -4,7 +4,6 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -64,10 +63,6 @@ export class MessagingMenu extends Component {
         if (thread.model === "discuss.channel") {
             this.threadService.markAsRead(thread);
         }
-    }
-
-    createLocalId(...args) {
-        return createLocalId(...args);
     }
 
     /**
@@ -213,7 +208,6 @@ export class MessagingMenu extends Component {
     }
 
     /**
-     *
      * @param {import("@mail/core/common/notification_group_model").NotificationGroup} failure
      */
     onClickFailure(failure) {

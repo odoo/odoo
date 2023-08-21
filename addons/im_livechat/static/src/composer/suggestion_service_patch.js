@@ -31,7 +31,7 @@ patch(SuggestionService.prototype, {
     },
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
-        const cannedResponses = this.store.cannedResponses
+        const cannedResponses = Object.values(this.store.cannedResponses)
             .filter((cannedResponse) => {
                 return cleanTerm(cannedResponse.name).includes(cleanedSearchTerm);
             })

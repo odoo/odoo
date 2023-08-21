@@ -4,7 +4,7 @@ import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
-} from "@mail/core/common/chat_window_service";
+} from "@mail/core/common/chat_window_model";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {

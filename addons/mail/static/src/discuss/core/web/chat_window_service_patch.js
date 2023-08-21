@@ -9,10 +9,6 @@ patch(ChatWindowService.prototype, {
         super.close(...arguments);
         this.notifyState(chatWindow);
     },
-    hide(chatWindow) {
-        super.hide(...arguments);
-        this.notifyState(chatWindow);
-    },
     notifyState(chatWindow) {
         if (this.ui.isSmall) {
             return;
@@ -30,10 +26,6 @@ patch(ChatWindowService.prototype, {
     },
     open() {
         const chatWindow = super.open(...arguments);
-        this.notifyState(chatWindow);
-    },
-    show(chatWindow) {
-        super.show(...arguments);
         this.notifyState(chatWindow);
     },
     toggleFold(chatWindow) {
