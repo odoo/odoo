@@ -1299,6 +1299,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                     points_cost: pointCost,
                     reward_identifier_code: rewardCode,
                     merge: false,
+                    tax_ids: [],
                 },
             ];
         }
