@@ -1,20 +1,16 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import testUtils from '@web/../tests/legacy/helpers/test_utils';
-import { registry } from "@web/core/registry";
-import {
-    getFixture,
-    nextTick,
-} from '@web/../tests/helpers/utils';
-import { setupViewRegistries } from "@web/../tests/views/helpers";
-import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
+
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
+import { registry } from "@web/core/registry";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { setupViewRegistries } from "@web/../tests/views/helpers";
 
-import { addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
-addModelNamesToFetch([
-    'mrp.document',
-]);
+addModelNamesToFetch(["mrp.document"]);
 
 const serviceRegistry = registry.category("services");
 
@@ -223,9 +219,9 @@ QUnit.module('MrpDocumentsKanbanView', {
             res_model: "mrp.document",
             views: [[false, "kanban"]],
         });
-        (await contains(".o_kanban_previewer")).click();
+        await click(".o_kanban_previewer");
         await contains(".o-FileViewer");
-        (await contains(".o-FileViewer-headerButton .fa-times")).click();
+        await click(".o-FileViewer-headerButton .fa-times");
         await contains(".o-FileViewer", 0);
     });
 });

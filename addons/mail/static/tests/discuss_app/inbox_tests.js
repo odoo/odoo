@@ -3,12 +3,18 @@
 import {
     afterNextRender,
     click,
+    contains,
     insertText,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { patchWithCleanup, triggerHotkey, mockTimeout } from "@web/../tests/helpers/utils";
+import {
+    patchWithCleanup,
+    triggerHotkey,
+    mockTimeout,
+    makeDeferred,
+} from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss inbox");
 
@@ -29,13 +35,13 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
+    openDiscuss();
+    await contains(".o-mail-Message");
 
     await click("[title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer");
+    await contains(".o-mail-Composer");
     await click("[title='Reply']");
-    assert.containsNone($, ".o-mail-Composer");
+    await contains(".o-mail-Composer", 0);
 });
 
 QUnit.test("reply: discard on pressing escape", async (assert) => {
@@ -58,29 +64,29 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
+    openDiscuss();
+    await contains(".o-mail-Message");
 
     await click(".o-mail-Message [title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer");
+    await contains(".o-mail-Composer");
 
     // Escape on emoji picker does not stop replying
     await click(".o-mail-Composer button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-EmojiPicker");
-    await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-EmojiPicker");
-    assert.containsOnce($, ".o-mail-Composer");
+    await contains(".o-EmojiPicker");
+    triggerHotkey("Escape");
+    await contains(".o-EmojiPicker", 0);
+    await contains(".o-mail-Composer");
 
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
-    await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.containsOnce($, ".o-mail-Composer");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer-suggestionList .o-open", 0);
+    await contains(".o-mail-Composer");
 
     click(".o-mail-Composer-input").catch(() => {});
-    await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-Composer");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer", 0);
 });
 
 QUnit.test(
@@ -111,13 +117,13 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss();
-        assert.containsOnce($, ".o-mail-Message");
-
+        openDiscuss();
+        await contains(".o-mail-Message");
         await click("[title='Reply']");
-        assert.containsOnce($, ".o-mail-Composer [placeholder='Log an internal note...']");
+        await contains(".o-mail-Composer [placeholder='Log an internal note…']");
         await insertText(".o-mail-Composer-input", "Test");
-        await click(".o-mail-Composer-send");
+        await click(".o-mail-Composer-send:not(:disabled):contains(Log)");
+        await contains(".o-mail-Composer", 0);
         assert.verifySteps(["/mail/message/post"]);
     }
 );
@@ -150,19 +156,18 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss();
-        assert.containsOnce($, ".o-mail-Message");
-
+        openDiscuss();
+        await contains(".o-mail-Message");
         await click("[title='Reply']");
-        assert.strictEqual($(".o-mail-Composer-send").text().trim(), "Send");
-
+        await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
         await insertText(".o-mail-Composer-input", "Test");
-        await click(".o-mail-Composer-send");
+        await click(".o-mail-Composer-send:not(:disabled):contains(Send)");
+        await contains(".o-mail-Composer-send", 0);
         assert.verifySteps(["/mail/message/post"]);
     }
 );
 
-QUnit.test("show subject of message in Inbox", async (assert) => {
+QUnit.test("show subject of message in Inbox", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
@@ -178,12 +183,12 @@ QUnit.test("show subject of message in Inbox", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(Subject: Salutations, voyageur)");
+    openDiscuss();
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageur)");
 });
 
-QUnit.test("show subject of message in history", async (assert) => {
+QUnit.test("show subject of message in history", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
@@ -199,38 +204,36 @@ QUnit.test("show subject of message in history", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss("mail.box_history");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(Subject: Salutations, voyageur)");
+    openDiscuss("mail.box_history");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message:contains(Subject: Salutations, voyageur)");
+});
+
+QUnit.test("subject should not be shown when subject is the same as the thread name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+        needaction: true,
+        subject: "Salutations, voyageur",
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message-content");
+    await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
 });
 
 QUnit.test(
-    "subject should not be shown when subject is the same as the thread name",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
-        const messageId = pyEnv["mail.message"].create({
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-            needaction: true,
-            subject: "Salutations, voyageur",
-        });
-        pyEnv["mail.notification"].create({
-            mail_message_id: messageId,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
-        });
-        const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
-    }
-);
-
-QUnit.test(
     "subject should not be shown when subject is the same as the thread name and both have the same prefix",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -247,14 +250,15 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
 QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Re:" prefix',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -271,14 +275,15 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
 QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -295,14 +300,15 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-contente:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
 QUnit.test(
     "subject should be shown when the thread name has an extra prefix compared to subject",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -319,14 +325,15 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
 QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -343,14 +350,15 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
 QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
@@ -367,8 +375,9 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { openDiscuss } = await start();
-        await openDiscuss("mail.box_inbox");
-        assert.containsNone($, ".o-mail-Message-content:contains(Salutations, voyageur)");
+        openDiscuss("mail.box_inbox");
+        await contains(".o-mail-Message-content");
+        await contains(".o-mail-Message-content:contains(Salutations, voyageur)", 0);
     }
 );
 
@@ -402,16 +411,16 @@ QUnit.test("inbox: mark all messages as read", async (assert) => {
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox) .badge:contains(2)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General) .badge:contains(2)");
-    assert.containsN($, ".o-mail-Discuss-content .o-mail-Message", 2);
+    openDiscuss();
+    await contains("button:contains(Inbox) .badge:contains(2)");
+    await contains(".o-mail-DiscussSidebarChannel:contains(General) .badge:contains(2)");
+    await contains(".o-mail-Discuss-content .o-mail-Message", 2);
     assert.notOk($("button:contains(Mark all read)")[0].disabled);
 
     await click(".o-mail-Discuss-header button:contains(Mark all read)");
-    assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General) .badge");
-    assert.containsNone($, ".o-mail-Message");
+    await contains("button:contains(Inbox) .badge", 0);
+    await contains(".o-mail-DiscussSidebarChannel:contains(General) .badge", 0);
+    await contains(".o-mail-Message", 0);
     assert.ok($("button:contains(Mark all read)")[0].disabled);
 });
 
@@ -434,7 +443,8 @@ QUnit.test(
             res_partner_id: pyEnv.currentPartnerId,
         });
         const { env, openDiscuss } = await start();
-        await openDiscuss();
+        openDiscuss();
+        const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
                 // Callback of doing an action (action manager).
@@ -445,18 +455,18 @@ QUnit.test(
                 assert.deepEqual(action.views, [[false, "form"]]);
                 assert.strictEqual(action.res_model, "res.fake");
                 assert.strictEqual(action.res_id, fakeId);
+                def.resolve();
                 return Promise.resolve();
             },
         });
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-Message-header a:contains(Some record)");
-
-        click(".o-mail-Message-header a:contains(Some record)").catch(() => {});
+        await contains(".o-mail-Message");
+        await click(".o-mail-Message-header a:contains(Some record)");
+        await def;
         assert.verifySteps(["do-action"]);
     }
 );
 
-QUnit.test("inbox messages are never squashed", async (assert) => {
+QUnit.test("inbox messages are never squashed", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
@@ -497,15 +507,15 @@ QUnit.test("inbox messages are never squashed", async (assert) => {
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsN($, ".o-mail-Message", 2);
-    assert.doesNotHaveClass($(".o-mail-Message:contains(body1)"), "o-squashed");
-    assert.doesNotHaveClass($(".o-mail-Message:contains(body2)"), "o-squashed");
+    openDiscuss();
+    await contains(".o-mail-Message", 2);
+    await contains(".o-mail-Message:contains(body1):not(.o-squashed)");
+    await contains(".o-mail-Message:contains(body2):not(.o-squashed)");
     await click(".o-mail-DiscussSidebarChannel:contains(test)");
-    assert.hasClass($(".o-mail-Message:contains(body2)"), "o-squashed");
+    await contains(".o-mail-Message:contains(body2).o-squashed");
 });
 
-QUnit.test("reply: stop replying button click", async (assert) => {
+QUnit.test("reply: stop replying button click", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -522,18 +532,18 @@ QUnit.test("reply: stop replying button click", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
+    openDiscuss();
+    await contains(".o-mail-Message");
 
     await click("[title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer");
-    assert.containsOnce($, "i[title='Stop replying']");
+    await contains(".o-mail-Composer");
+    await contains("i[title='Stop replying']");
 
     await click("i[title='Stop replying']");
-    assert.containsNone($, ".o-mail-Composer");
+    await contains(".o-mail-Composer", 0);
 });
 
-QUnit.test("error notifications should not be shown in Inbox", async (assert) => {
+QUnit.test("error notifications should not be shown in Inbox", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     const messageId = pyEnv["mail.message"].create({
@@ -550,17 +560,16 @@ QUnit.test("error notifications should not be shown in Inbox", async (assert) =>
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-header:contains(on Demo User)");
-    assert.containsOnce(
-        $,
+    openDiscuss();
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message-header:contains(on Demo User)");
+    await contains(
         `.o-mail-Message-header a:contains(Demo User)[href*='/web#model=res.partner&id=${partnerId}']`
     );
-    assert.containsNone($, ".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification", 0);
 });
 
-QUnit.test("emptying inbox displays rainbow man in inbox", async (assert) => {
+QUnit.test("emptying inbox displays rainbow man in inbox", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId1 = pyEnv["mail.message"].create([
@@ -579,12 +588,12 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async (assert) => {
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss();
+    openDiscuss();
     await click("button:contains(Mark all read)");
-    assert.containsOnce($, ".o_reward_rainbow");
+    await contains(".o_reward_rainbow");
 });
 
-QUnit.test("emptying inbox doesn't display rainbow man in another thread", async (assert) => {
+QUnit.test("emptying inbox doesn't display rainbow man in another thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({});
@@ -603,13 +612,13 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
         },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsOnce($, "button:contains(Inbox) .badge:contains(1)");
+    openDiscuss(channelId);
+    await contains("button:contains(Inbox) .badge:contains(1)");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
     await afterNextRender(() => mockTimeout().execRegisteredTimeouts);
-    assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, ".o_reward_rainbow");
+    await contains("button:contains(Inbox) .badge", 0);
+    await contains(".o_reward_rainbow", 0);
 });

@@ -3,11 +3,11 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { click, start } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Thread model");
 
-QUnit.test("Thread name unchanged when inviting new users", async (assert) => {
+QUnit.test("Thread name unchanged when inviting new users", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
@@ -25,11 +25,12 @@ QUnit.test("Thread name unchanged when inviting new users", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
-    await click("button:contains(Invite)");
+    await click("button:contains(Invite):not(:disabled)");
+    await contains(".o-discuss-ChannelInvitation", 0);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(James)");
-    assert.containsOnce($, ".o-mail-Discuss-threadName[title='Visitor #20']");
+    await contains(".o-discuss-ChannelMember:contains(James)");
+    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
 });

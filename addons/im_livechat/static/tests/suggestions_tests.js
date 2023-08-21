@@ -1,11 +1,11 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import { insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("suggestion");
 
-QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (assert) => {
+QUnit.test("Suggestions are shown after delimiter was used in text (:)", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.shortcode"].create({
         source: "hello",
@@ -22,10 +22,10 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", ")");
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-suggestion", 0);
     await insertText(".o-mail-Composer-input", " ");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(hello)");
+    await contains(".o-mail-Composer-suggestion:contains(hello)");
 });

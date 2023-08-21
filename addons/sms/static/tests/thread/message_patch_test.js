@@ -1,6 +1,7 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { startServer, start, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, startServer, start } from "@mail/../tests/helpers/test_utils";
+
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("message (patch)");
@@ -21,17 +22,17 @@ QUnit.test("Notification Sent", async (assert) => {
         res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-Message-notification i");
+    openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification i");
     assert.hasClass($(".o-mail-Message-notification i"), "fa-mobile");
 
     await click(".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover i");
+    await contains(".o-mail-MessageNotificationPopover");
+    await contains(".o-mail-MessageNotificationPopover i");
     assert.hasClass($(".o-mail-MessageNotificationPopover i"), "fa-check");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(Someone)");
+    await contains(".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async (assert) => {
@@ -51,7 +52,7 @@ QUnit.test("Notification Error", async (assert) => {
         res_partner_id: partnerId,
     });
     const { env, openFormView } = await start();
-    await openFormView("res.partner", partnerId);
+    openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
@@ -61,11 +62,11 @@ QUnit.test("Notification Error", async (assert) => {
         },
     });
 
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-Message-notification i");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification i");
     assert.hasClass($(".o-mail-Message-notification i"), "fa-mobile");
-    click(".o-mail-Message-notification").catch(() => {});
+    await click(".o-mail-Message-notification");
     await openResendActionDef;
     assert.verifySteps(["do_action"]);
 });

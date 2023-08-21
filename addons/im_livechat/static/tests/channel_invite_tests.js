@@ -3,11 +3,11 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { click, start } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Channel invite");
 
-QUnit.test("Can invite a partner to a livechat channel", async (assert) => {
+QUnit.test("Can invite a partner to a livechat channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
@@ -25,12 +25,13 @@ QUnit.test("Can invite a partner to a livechat channel", async (assert) => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
-    await click("button:contains(Invite)");
+    await click("button:contains(Invite):not(:disabled)");
+    await contains(".o-discuss-ChannelInvitation", 0);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(James)");
+    await contains(".o-discuss-ChannelMember:contains(James)");
 });
 
 QUnit.test("Available operators come first", async (assert) => {
@@ -60,7 +61,7 @@ QUnit.test("Available operators come first", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
-    const partnerSuggestions = document.querySelectorAll(".o-discuss-ChannelInvitation-selectable");
+    const partnerSuggestions = await contains(".o-discuss-ChannelInvitation-selectable", 2);
     assert.ok(partnerSuggestions[0].textContent.includes("Ron"));
     assert.ok(partnerSuggestions[1].textContent.includes("Harry"));
 });
@@ -101,10 +102,10 @@ QUnit.test("Partners invited most frequently by the current user come first", as
     await click(".o-mail-DiscussSidebarChannel:contains(Visitor #1)");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
-    await click("button:contains(Invite)");
+    await click("button:contains(Invite):not(:disabled)");
     await click(".o-mail-DiscussSidebarChannel:contains(Visitor #2)");
     await click("button[title='Add Users']");
-    const partnerSuggestions = document.querySelectorAll(".o-discuss-ChannelInvitation-selectable");
+    const partnerSuggestions = await contains(".o-discuss-ChannelInvitation-selectable", 2);
     assert.ok(partnerSuggestions[0].textContent.includes("John"));
     assert.ok(partnerSuggestions[1].textContent.includes("Albert"));
 });

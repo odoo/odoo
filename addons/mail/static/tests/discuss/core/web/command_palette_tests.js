@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
@@ -22,18 +22,18 @@ QUnit.module("command palette", {
     },
 });
 
-QUnit.test("open the chatWindow of a user from the command palette", async (assert) => {
+QUnit.test("open the chatWindow of a user from the command palette", async () => {
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
     await nextTick();
     // Switch to partners
     await editSearchBar("@");
-    await afterNextRender(() => advanceTime(commandSetupRegistry.get("@").debounceDelay));
+    advanceTime(commandSetupRegistry.get("@").debounceDelay);
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("open the chatWindow of a channel from the command palette", async (assert) => {
+QUnit.test("open the chatWindow of a channel from the command palette", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["discuss.channel"].create({ name: "project" });
@@ -42,16 +42,16 @@ QUnit.test("open the chatWindow of a channel from the command palette", async (a
     await nextTick();
     // Switch to channels
     await editSearchBar("#");
-    await afterNextRender(() => advanceTime(commandSetupRegistry.get("#").debounceDelay));
-    assert.containsOnce($, ".o_command:contains(general)");
-    assert.containsOnce($, ".o_command:contains(project)");
+    advanceTime(commandSetupRegistry.get("#").debounceDelay);
+    await contains(".o_command:contains(general)");
+    await contains(".o_command:contains(project)");
 
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(general)");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-name:contains(general)");
 });
 
-QUnit.test("Channel mentions in the command palette of Discuss app with @", async (assert) => {
+QUnit.test("Channel mentions in the command palette of Discuss app with @", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -77,40 +77,33 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     triggerHotkey("control+k");
     await nextTick();
     await editSearchBar("@");
-    await afterNextRender(() => advanceTime(commandSetupRegistry.get("@").debounceDelay));
-    assert.containsOnce($, ".o_command_palette:contains('Mentions')");
-    assert.containsOnce(
-        $(".o_command_category:contains('Mentions')"),
-        ".o_command:contains('Mitchell Admin and Mario')"
+    advanceTime(commandSetupRegistry.get("@").debounceDelay);
+    await contains(".o_command_palette:contains('Mentions')");
+    await contains(
+        ".o_command_category:contains('Mentions') .o_command:contains('Mitchell Admin and Mario')"
     );
-    assert.containsOnce(
-        $(".o_command_category:not(:contains('Mentions'))"),
-        ".o_command:contains('Mario')"
+    await contains(
+        $(".o_command_category:not(:contains('Mentions')) .o_command:contains('Mario')")
     );
-    assert.containsOnce(
-        $(".o_command_category:not(:contains('Mentions'))"),
-        ".o_command:contains('Mitchell Admin')"
+    await contains(
+        $(".o_command_category:not(:contains('Mentions')) .o_command:contains('Mitchell Admin')")
     );
-    assert.containsOnce($, ".o_command.focused:contains('Mitchell Admin and Mario')");
-
+    await contains(".o_command.focused:contains('Mitchell Admin and Mario')");
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow:contains('Mitchell Admin and Mario')");
+    await contains(".o-mail-ChatWindow:contains('Mitchell Admin and Mario')");
 });
 
-QUnit.test(
-    "Max 3 most recent channels in command palette of Discuss app with #",
-    async (assert) => {
-        const pyEnv = await startServer();
-        pyEnv["discuss.channel"].create({ name: "channel_1" });
-        pyEnv["discuss.channel"].create({ name: "channel_2" });
-        pyEnv["discuss.channel"].create({ name: "channel_3" });
-        pyEnv["discuss.channel"].create({ name: "channel_4" });
-        const { advanceTime } = await start({ hasTimeControl: true });
-        triggerHotkey("control+k");
-        await nextTick();
-        await editSearchBar("#");
-        await afterNextRender(() => advanceTime(commandSetupRegistry.get("#").debounceDelay));
-        assert.containsOnce($, ".o_command_palette:contains('Recent')");
-        assert.containsN($(".o_command_category:contains('Recent')"), ".o_command", 3);
-    }
-);
+QUnit.test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "channel_1" });
+    pyEnv["discuss.channel"].create({ name: "channel_2" });
+    pyEnv["discuss.channel"].create({ name: "channel_3" });
+    pyEnv["discuss.channel"].create({ name: "channel_4" });
+    const { advanceTime } = await start({ hasTimeControl: true });
+    triggerHotkey("control+k");
+    await nextTick();
+    await editSearchBar("#");
+    advanceTime(commandSetupRegistry.get("#").debounceDelay);
+    await contains(".o_command_palette:contains('Recent')");
+    await contains(".o_command_category:contains('Recent') .o_command", 3);
+});
