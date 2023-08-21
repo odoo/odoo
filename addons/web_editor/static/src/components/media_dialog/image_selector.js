@@ -293,7 +293,7 @@ export class ImageSelector extends FileSelector {
         return Promise.all(selected.map(async (attachment) => {
             const imageEl = document.createElement('img');
             let src = attachment.image_src;
-            if (!attachment.public) {
+            if (!attachment.public && !attachment.url) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {
                     [accessToken] = await orm.call(
