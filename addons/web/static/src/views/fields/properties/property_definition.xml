@@ -156,7 +156,7 @@
                         onChange.bind="onDefaultChange"
                     />
                 </div>
-                <div t-if="!props.hideKanbanOption and state.propertyDefinition.type !== 'separator'"
+                <div t-if="state.propertyDefinition.type !== 'separator'"
                     class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
                         Display in Cards
