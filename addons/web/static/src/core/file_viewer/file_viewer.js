@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useRef, useState } from "@odoo/owl";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} File
@@ -31,6 +31,7 @@ export class FileViewer extends Component {
     };
 
     setup() {
+        useAutofocus();
         this.imageRef = useRef("image");
         this.zoomerRef = useRef("zoomer");
 
@@ -48,7 +49,6 @@ export class FileViewer extends Component {
             y: 0,
         };
 
-        useExternalListener(document, "keydown", this.onKeydown);
         this.state = useState({
             index: this.props.startIndex,
             file: this.props.files[this.props.startIndex],
@@ -96,20 +96,22 @@ export class FileViewer extends Component {
             case "q":
                 this.close();
                 break;
-            case "r":
-                this.rotate();
-                break;
-            case "+":
-                this.zoomIn();
-                break;
-            case "-":
-                this.zoomOut();
-                break;
-            case "0":
-                this.resetZoom();
-                break;
-            default:
-                return;
+        }
+        if (this.state.file.isImage) {
+            switch (ev.key) {
+                case "r":
+                    this.rotate();
+                    break;
+                case "+":
+                    this.zoomIn();
+                    break;
+                case "-":
+                    this.zoomOut();
+                    break;
+                case "0":
+                    this.resetZoom();
+                    break;
+            }
         }
     }
 
