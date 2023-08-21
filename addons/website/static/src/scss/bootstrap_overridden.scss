@@ -44,6 +44,14 @@ $color-contrast-light: o-color('white') !default;
 // You can add more entries to the $spacers map, should you need more variation.
 
 $spacer: 1rem !default; // Need to predefine as used below
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 3,
+) !default; // BS default
 
 // Body
 //
@@ -280,3 +288,36 @@ $modal-footer-border-width: 0 !default;
 
 // HR Separator
 $hr-color: $border-color !default;
+
+// Pagination
+
+// Arbitrary values to get a circle for 1 digit numbers
+$pagination-padding-y: 0.4ch !default;
+$pagination-padding-x: 1.2ch !default;
+
+$pagination-border-radius: $border-radius-pill !default;
+$pagination-margin-start: map-get($map: $spacers, $key: 1) !default;
+$pagination-border-color: transparent !default;
+$pagination-bg: $body-bg !default;
+$pagination-color: color-contrast($pagination-bg) !default;
+$pagination-transition: none !default;
+
+$pagination-focus-bg: $light !default;
+$pagination-focus-color: color-contrast($light) !default;
+$pagination-focus-box-shadow: 0 0 0 1px $pagination-focus-bg !default;
+
+$pagination-hover-bg: $light !default;
+$pagination-hover-color: color-contrast($light) !default;
+$pagination-hover-border-color: $light !default;
+
+$pagination-disabled-color: rgba(color-contrast($pagination-bg), 0.5) !default;
+$pagination-disabled-border-color: transparent !default;
+$pagination-disabled-bg: $pagination-bg !default;
+
+$pagination-padding-y-sm: $pagination-padding-y !default;
+$pagination-padding-x-sm: $pagination-padding-x !default;
+$pagination-padding-y-lg: $pagination-padding-y !default;
+$pagination-padding-x-lg: $pagination-padding-x !default;
+
+$pagination-border-radius-lg: $pagination-border-radius !default;
+$pagination-border-radius-sm: $pagination-border-radius !default;
