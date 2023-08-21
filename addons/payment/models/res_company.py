@@ -55,7 +55,14 @@ class ResCompany(models.Model):
             [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
         )
 
-        stripe_acquirer = new_env.ref('payment.payment_acquirer_stripe')
+        stripe_acquirer = new_env['payment.acquirer'].search(
+            [('company_id', '=', self.env.company.id), ('name', '=', 'Stripe')], limit=1
+        )
+        if not stripe_acquirer:
+            base_acquirer = self.env.ref('payment.payment_acquirer_stripe')
+            # Use sudo to access payment acquirer record that can be in different company.
+            stripe_acquirer = base_acquirer.sudo().copy(default={'company_id': self.env.company.id})
+            stripe_acquirer.company_id = self.env.company.id
         stripe_acquirer.journal_id = stripe_acquirer.journal_id or default_journal
 
         return stripe_acquirer.action_stripe_connect_account(menu_id=menu_id)

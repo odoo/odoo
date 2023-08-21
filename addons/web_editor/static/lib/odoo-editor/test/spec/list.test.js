@@ -57,6 +57,43 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -135,6 +172,43 @@ describe('List', () => {
                                 </ul>`),
                         });
                     });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Transform', () => {
                     it('should turn an empty ordered list into an unordered list', async () => {
@@ -192,6 +266,43 @@ describe('List', () => {
                                 '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -229,6 +340,43 @@ describe('List', () => {
                             stepFunction: toggleOrderedList,
                             contentAfter:
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                        });
+                    });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
                         });
                     });
                 });
@@ -376,6 +524,44 @@ describe('List', () => {
                             </ul>`),
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleCheckList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 it('should add a unique id on a new checklist', async () => {
                     await testEditor(BasicEditor, {
@@ -468,6 +654,43 @@ describe('List', () => {
                                         </ul>
                                     </li>
                                 </ul>`),
+                        });
+                    });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleCheckList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
                         });
                     });
                 });
@@ -857,6 +1080,146 @@ describe('List', () => {
                             </ol>`),
                     });
                 });
+                it("should turn unordered list into ordered list with block style applied to it", async () => {
+                    await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                                        <ul>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2>a[bc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ul>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><h2>abc</h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2>abc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ul>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><h2>a]bc</h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                        </ul>
+                                    `),
+                    stepFunction: toggleOrderedList,
+                    contentAfter: unformat(`
+                                        <ol>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2>a[bc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ol>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ol>
+                                                    </li>
+                                                    <li><h2>abc</h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2>abc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ol>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ol>
+                                                    </li>
+                                                    <li><h2>a]bc</h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                        </ol>`),
+                    });
+                });
+          it("should turn unordered list into ordered list with block and inline style applied to it", async () => {
+            await testEditor(BasicEditor, {
+              contentBefore: unformat(`
+                                <ul>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li><h3><strong>a[bc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1><strong>abc</strong></h1></li>
+                                        </ul>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li><h3><strong>abc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1><strong>a]bc</strong></h1></li>
+                                        </ul>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                </ul>
+                              `),
+              stepFunction: toggleOrderedList,
+              contentAfter: unformat(`
+                                <ol>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ol>
+                                            <li><h3><strong>a[bc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1><strong>abc</strong></h1></li>
+                                        </ol>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ol>
+                                            <li><h3><strong>abc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1><strong>a]bc</strong></h1></li>
+                                        </ol>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                </ol>`),
+            });
+          });
                 it('should turn an unordered list item and a paragraph into two list items within an ordered list', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>ab</li><li>c[d</li></ul><p>e]f</p>',
@@ -4097,6 +4460,15 @@ describe('List', () => {
                                 stepFunction: deleteBackward,
                                 contentAfter:
                                     '<p>abc</p><ul class="o_checklist"><li class="o_checked">[]def</li></ul>',
+                            });
+                        });
+                        it('should outdent the list item without removing the header tag', async () => {
+                            await testEditor(BasicEditor, {
+                                contentBefore:
+                                    '<ul><li>abc</li><li class="oe-nested"><ul><li><h1>[]def</h1></li></ul></li></ul>',
+                                stepFunction: deleteBackward,
+                                contentAfter:
+                                    '<ul><li>abc</li><li><h1>[]def</h1></li></ul>',
                             });
                         });
                         it.skip('should outdent while nested within a list item', async () => {

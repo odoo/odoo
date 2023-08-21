@@ -34,8 +34,12 @@
                     <strong>Your Order Reference:</strong>
                     <p t-field="o.partner_ref" class="m-0"/>
                 </div>
-                <div t-if="o.date_order" class="col-3 bm-2">
+                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col-3 bm-2">
                     <strong>Order Date:</strong>
+                    <p t-field="o.date_approve" class="m-0"/>
+                </div>
+                <div t-elif="o.date_order" class="col-3 bm-2">
+                    <strong >Order Deadline:</strong>
                     <p t-field="o.date_order" class="m-0"/>
                 </div>
             </div>

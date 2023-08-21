@@ -1,22 +1,76 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from ast import literal_eval
 from datetime import datetime
+from unittest.mock import patch
 
 from freezegun import freeze_time
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import users, Form
+from odoo.tests.common import users, Form, tagged
 from odoo.tools import formataddr, mute_logger
 
+BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
+
+
+@tagged('mass_mailing')
 class TestMassMailValues(MassMailCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestMassMailValues, cls).setUpClass()
         cls._create_mailing_list()
+
+    @users('user_marketing')
+    def test_mailing_body_inline_image(self):
+        """ Testing mail mailing base64 image conversion to attachment.
+        This test ensures that the base64 images are correctly converted to
+        attachments.
+        """
+        attachments = []
+        original_images_to_urls = self.env['mailing.mailing']._image_to_url
+        def patched_images_to_urls(self, b64image):
+            url = original_images_to_urls(b64image)
+            (attachment_id, attachment_token) = re.search(r'/web/image/(?P<id>[0-9]+)\?access_token=(?P<token>.*)', url).groups()
+            attachments.append({
+                'id': attachment_id,
+                'token': attachment_token,
+            })
+            return url
+        with patch("odoo.addons.mass_mailing.models.mailing.MassMailing._image_to_url",
+                   new=patched_images_to_urls):
+            mailing = self.env['mailing.mailing'].create({
+                    'name': 'Test',
+                    'subject': 'Test',
+                    'state': 'draft',
+                    'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+                    'body_html': f"""
+                        <html><body>
+                            <img src="data:image/png;base64,{BASE_64_STRING}">
+                            <div style='color: red; background-image:url("data:image/jpg;base64,{BASE_64_STRING}"); display: block;'/>
+                            <div style="color: red; background-image:url('data:image/jpg;base64,{BASE_64_STRING}'); display: block;"/>
+                            <div style="color: red; background-image:url(&quot;data:image/jpg;base64,{BASE_64_STRING}&quot;); display: block;"/>
+                            <div style="color: red; background-image:url(&#34;data:image/jpg;base64,{BASE_64_STRING}&#34;); display: block;"/>
+                            <div style="color: red; background-image:url(data:image/jpg;base64,{BASE_64_STRING}); display: block;"/>
+                            <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}); background: url('data:image/jpg;base64,{BASE_64_STRING}'); display: block;"/>
+                        </body></html>
+                    """,
+                })
+        self.assertEqual(len(attachments), 8)
+        self.assertEqual(str(mailing.body_html).strip(), f"""
+                        <html><body>
+                            <img src="/web/image/{attachments[0]['id']}?access_token={attachments[0]['token']}">
+                            <div style='color: red; background-image:url("/web/image/{attachments[1]['id']}?access_token={attachments[1]['token']}"); display: block;'/>
+                            <div style="color: red; background-image:url('/web/image/{attachments[2]['id']}?access_token={attachments[2]['token']}'); display: block;"/>
+                            <div style="color: red; background-image:url(&quot;/web/image/{attachments[3]['id']}?access_token={attachments[3]['token']}&quot;); display: block;"/>
+                            <div style="color: red; background-image:url(&#34;/web/image/{attachments[4]['id']}?access_token={attachments[4]['token']}&#34;); display: block;"/>
+                            <div style="color: red; background-image:url(/web/image/{attachments[5]['id']}?access_token={attachments[5]['token']}); display: block;"/>
+                            <div style="color: red; background-image: url(/web/image/{attachments[7]['id']}?access_token={attachments[7]['token']}); background: url('/web/image/{attachments[6]['id']}?access_token={attachments[6]['token']}'); display: block;"/>
+                        </body></html>
+        """.strip())
 
     @users('user_marketing')
     def test_mailing_body_responsive(self):
@@ -133,6 +187,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
 
+@tagged('mass_mailing')
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
     @classmethod

@@ -19,7 +19,6 @@
 # Naglis Jonaitis, 2022
 # Paulius Sladkevičius <paulius@versada.eu>, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2022
 # Rolandas <panauto1@gmail.com>, 2022
 # Vytautas Stanaitis <vytautas@basas.lt>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
@@ -28,10 +27,11 @@
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # Ramunas Kembre, 2022
 # Darius Ribinskas <dahius@gmail.com>, 2022
 # Donatas <donatasvaliulis16@gmail.com>, 2022
+# Arunas V. <arunas@devoro.com>, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # 
 msgid ""
@@ -41,7 +41,7 @@ msgstr ""
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
-"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -7312,6 +7312,8 @@ msgstr "<strong>Telefonas</strong>"
 msgid ""
 "<strong>Please enter your password to confirm you own this account</strong>"
 msgstr ""
+"<strong>Įveskite savo slaptažodį, kad patvirtintumėte, jog ši paskyra "
+"priklauso Jums</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7674,12 +7676,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 msgid "API Keys"
-msgstr ""
+msgstr "Taikomųjų Programų Sąsajos (angl. API) Raktai"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr ""
+msgstr "Taikomųjų Programų Sąsajos (angl. API) Raktų Sąrašas"
 
 #. module: base
 #: code:addons/fields.py:0
@@ -9081,7 +9083,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Džiaugiamės galėdami prisidėti prie šio renginio kaip komanda."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -11052,6 +11054,12 @@ msgid "Compute"
 msgstr "Skaičiuoti"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
@@ -11472,6 +11480,12 @@ msgstr "Šalių grupės"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "Valstybės pavadinimas"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -12902,7 +12916,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr
 msgid "Documents - HR"
-msgstr ""
+msgstr "Dokumentai - Personalas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
@@ -12932,7 +12946,7 @@ msgstr "Dokumentai - Parašai"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
 msgid "Documents - Time Off"
-msgstr ""
+msgstr "Dokumentai - Atostogos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
@@ -13298,7 +13312,7 @@ msgstr "El. pašto rinkodara"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr ""
+msgstr "El. Pašto Parašas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -15262,7 +15276,7 @@ msgstr "Tvarkykite savo darbuotojų pietų užsakymus"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Džiaugiasi būdamas rėmėju"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -16637,6 +16651,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Negalimas 'grupuoti pagal' parametras"
 
 #. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -17125,7 +17145,7 @@ msgstr "LGPL Versija 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
 msgstr ""
 
 #. module: base
@@ -17532,7 +17552,7 @@ msgstr "Iniciatyvų praturtinimas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_mine
 msgid "Lead Generation"
-msgstr ""
+msgstr "Iniciatyvų Kūrimas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_iap_reveal
@@ -19248,7 +19268,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr ""
+msgstr "Naujas API Raktas"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -25689,6 +25709,12 @@ msgstr "Tailandas - apskaita"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 "Veiksmas \"Aplikacijų jungiklis\" negali būti nustatytas kaip pradžios "
@@ -25761,8 +25787,8 @@ msgstr " `%s` modulis šiuo metu nepasiekiamas, prašome bandyti vėliau."
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "`Bazė` modulis negali būti išdiegtas"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -25776,6 +25802,14 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
 msgstr ""
 
 #. module: base
@@ -25821,7 +25855,6 @@ msgstr "Valiutos kodas turi būti unikalus!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr ""
 
@@ -26079,8 +26112,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Valiutos kursas proporcingas valiutai, kurios koeficientas 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -28699,6 +28733,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "Negalite deaktyvuoti vartotojo, su kuriuo dabar esate prisijungęs."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -28717,6 +28757,12 @@ msgid ""
 "You should rather archive them after archiving their associated user.\n"
 "\n"
 "Linked active users : %(names)s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
 msgstr ""
 
 #. module: base
@@ -28746,6 +28792,12 @@ msgstr "Jūs negalite sujungti kontakto su vienu iš jo aukštesnių."
 msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
 msgstr ""
 
 #. module: base
@@ -29517,3 +29569,9 @@ msgstr ""
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Alandai"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

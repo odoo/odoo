@@ -29,7 +29,23 @@ tour.register('course_member', {
 // eLearning: follow course by cliking on first lesson and going to fullscreen player
 {
     trigger: '.o_wslides_fs_sidebar_list_item div:contains("Home Gardening")'
+},
+// eLearning: share the first slide
+{
+    trigger: '.o_wslides_fs_share'
 }, {
+    trigger: '.o_wslides_js_share_email input[type="email"]',
+    run: 'text friend@example.com'
+}, {
+    trigger: '.o_wslides_js_share_email button',
+}, {
+    trigger: '.o_wslides_js_share_email:contains("Thank you")',
+    run: function () {}  // check email has been sent
+}, {
+    trigger: '.modal-footer button:contains("Cancel")',
+},
+// eLeaning: course completion
+{
     trigger: '.o_wslides_fs_sidebar_header',
     run: function () {
         // check navigation with arrow keys

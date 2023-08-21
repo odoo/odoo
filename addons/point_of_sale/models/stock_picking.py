@@ -11,8 +11,8 @@ from collections import defaultdict
 class StockPicking(models.Model):
     _inherit='stock.picking'
 
-    pos_session_id = fields.Many2one('pos.session')
-    pos_order_id = fields.Many2one('pos.order')
+    pos_session_id = fields.Many2one('pos.session', index=True)
+    pos_order_id = fields.Many2one('pos.order', index=True)
 
     def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
         return {
@@ -43,6 +43,7 @@ class StockPicking(models.Model):
             )
 
             positive_picking._create_move_from_pos_order_lines(positive_lines)
+            self.env['base'].flush()
             try:
                 with self.env.cr.savepoint():
                     positive_picking._action_done()
@@ -62,6 +63,7 @@ class StockPicking(models.Model):
                 self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
             )
             negative_picking._create_move_from_pos_order_lines(negative_lines)
+            self.env['base'].flush()
             try:
                 with self.env.cr.savepoint():
                     negative_picking._action_done()
@@ -94,11 +96,65 @@ class StockPicking(models.Model):
         moves = self.env['stock.move'].create(move_vals)
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+        self._link_owner_on_return_picking(lines)
+
+    def _link_owner_on_return_picking(self, lines):
+        """This method tries to retrieve the owner of the returned product"""
+        if lines[0].order_id.refunded_order_ids.picking_ids:
+            returned_lines_picking = lines[0].order_id.refunded_order_ids.picking_ids
+            returnable_qty_by_product = {}
+            for move_line in returned_lines_picking.move_line_ids:
+                returnable_qty_by_product[(move_line.product_id.id, move_line.owner_id.id or 0)] = move_line.qty_done
+            for move in self.move_line_ids:
+                for keys in returnable_qty_by_product:
+                    if move.product_id.id == keys[0] and keys[1] and returnable_qty_by_product[keys] > 0:
+                        move.write({'owner_id': keys[1]})
+                        returnable_qty_by_product[keys] -= move.product_uom_qty
+
 
     def _send_confirmation_email(self):
         # Avoid sending Mail/SMS for POS deliveries
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
+
+    def _action_done(self):
+        res = super()._action_done()
+        for rec in self:
+            if rec.picking_type_id.code != 'outgoing':
+                continue
+            if rec.pos_order_id.to_ship and not rec.pos_order_id.to_invoice:
+                cost_per_account = defaultdict(lambda: 0.0)
+                for line in rec.pos_order_id.lines:
+                    if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
+                        continue
+                    out = line.product_id.categ_id.property_stock_account_output_categ_id
+                    exp = line.product_id._get_product_accounts()['expense']
+                    cost_per_account[(out, exp)] += line.total_cost
+                move_vals = []
+                for (out_acc, exp_acc), cost in cost_per_account.items():
+                    move_vals.append({
+                        'journal_id': rec.pos_order_id.sale_journal.id,
+                        'date': rec.pos_order_id.date_order,
+                        'ref': rec.pos_order_id.name,
+                        'line_ids': [
+                            (0, 0, {
+                                'name': rec.pos_order_id.name,
+                                'account_id': exp_acc.id,
+                                'debit': cost,
+                                'credit': 0.0,
+                            }),
+                            (0, 0, {
+                                'name': rec.pos_order_id.name,
+                                'account_id': out_acc.id,
+                                'debit': 0.0,
+                                'credit': cost,
+                            }),
+                        ],
+                    })
+                move = self.env['account.move'].create(move_vals)
+                rec.pos_order_id.write({'account_move': move.id})
+                move.action_post()
+        return res
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -208,7 +264,8 @@ class StockMove(models.Model):
                                 )
                             ml_vals.update({
                                 'lot_id': existing_lot.id,
-                                'location_id': quant.location_id.id or move.location_id.id
+                                'location_id': quant.location_id.id or move.location_id.id,
+                                'owner_id': quant.owner_id.id or False,
                             })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

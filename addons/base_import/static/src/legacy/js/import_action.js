@@ -208,7 +208,7 @@ var DataImport = AbstractAction.extend({
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
             width: '50%',
-            data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koir8_r').split(/\s+/), _make_option),
+            data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koi8_r').split(/\s+/), _make_option),
             query: dataFilteredQuery,
             minimumResultsForSearch: -1,
             initSelection: function ($e, c) {
@@ -267,6 +267,8 @@ var DataImport = AbstractAction.extend({
             'DD-MM-YYYY',
             'DD-MMM-YY',
             'DD-MMM-YYYY',
+            'DD.MM.YY',
+            'DD.MM.YYYY',
             'MM/DD/YY',
             'MM/DD/YYYY',
             'MM-DD-YY',

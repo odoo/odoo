@@ -903,3 +903,36 @@ class TestSaleOrder(TestSaleCommon):
         })
         so_no_analytic_account.action_confirm()
         self.assertFalse(sol_no_analytic_account.analytic_tag_ids.id, "The compute should not overwrite what the user has set.")
+
+    def test_cannot_assign_tax_of_mismatch_company(self):
+        """ Test that sol cannot have assigned tax belonging to a different company from that of the sale order. """
+        company_a = self.env['res.company'].create({'name': 'A'})
+        company_b = self.env['res.company'].create({'name': 'B'})
+
+        tax_a = self.env['account.tax'].create({
+            'name': 'A',
+            'amount': 10,
+            'company_id': company_a.id,
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'B',
+            'amount': 10,
+            'company_id': company_b.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_a.id
+        })
+        product = self.env['product.product'].create({'name': 'Product'})
+
+        # In sudo to simulate an user that have access to both companies.
+        sol = self.env['sale.order.line'].sudo().create({
+            'name': product.name,
+            'product_id': product.id,
+            'order_id': sale_order.id,
+            'tax_id': tax_a,
+        })
+
+        with self.assertRaises(UserError):
+            sol.tax_id = tax_b

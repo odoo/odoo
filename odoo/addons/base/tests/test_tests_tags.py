@@ -89,19 +89,19 @@ class TestSetTags(TransactionCase):
         self.assertEqual(fc.test_tags, {'at_install'})
         self.assertEqual(fc.test_module, 'base')
 
-        @tagged('-standard', '-base', '-at_install')
+        @tagged('-standard', '-base', '-at_install', 'post_install')
         class FakeClassB(TransactionCase):
             pass
 
         fc = FakeClassB()
-        self.assertEqual(fc.test_tags, set())
+        self.assertEqual(fc.test_tags, {'post_install'})
 
-        @tagged('-standard', '-base', '-at_install', 'fast')
+        @tagged('-standard', '-base', 'fast')
         class FakeClassC(TransactionCase):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'fast', })
+        self.assertEqual(fc.test_tags, {'fast', 'at_install'})
 
 
 @tagged('nodatabase')

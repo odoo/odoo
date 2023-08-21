@@ -295,21 +295,6 @@
         <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_liquido_producto_1')])]).ids"/>
     </function>
 
-    <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        <value model="account.move.line" search="[('move_id', '=', ref('demo_sup_invoice_8')), ('product_id', '=', ref('product.product_product_27'))]"/>
-        <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'purchase'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '06')], limit=1).id)]}"/>
-    </function>
-
-    <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        <value model="account.move.line" search="[('move_id', '=', ref('demo_sup_invoice_8')), ('product_id', '=', ref('product_product_telefonia'))]"/>
-        <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'purchase'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '07')], limit=1).id)]}"/>
-    </function>
-
-    <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
-        <value model="account.move.line" search="[('move_id', '=', ref('demo_sup_invoice_8')), ('product_id', '=', ref('product.product_product_25'))]"/>
-        <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'purchase'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '99')], limit=1).id)]}"/>
-    </function>
-
     <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
         <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1'), ref('demo_liquido_producto_1')]"/>
         <value eval="True"/>

@@ -16,6 +16,14 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
         this.modelNameFilter = 'blog.post';
         this.blogs = {};
     },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._super.apply(this, arguments);
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_blog_posts';
+    },
 
     //--------------------------------------------------------------------------
     // Private

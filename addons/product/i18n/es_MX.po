@@ -6,6 +6,9 @@
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Iron Graterol, 2023
+# Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -718,7 +721,7 @@ msgstr "Coste"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "Moneda del costo"
+msgstr "Divisa del costo"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1558,8 +1561,8 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
-"¿Está buscando una mancha de bamboo para ir con los muebles que ya tiene? "
-"Contáctenos para una cotización."
+"¿Está buscando bambú barnizado que combine con sus muebles? Contáctenos para"
+" una cotización."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
@@ -1667,7 +1670,7 @@ msgstr "Nunca (opción)"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de avtividades."
+msgstr "Siguiente evento en el calendario de actividades"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
@@ -1753,7 +1756,7 @@ msgstr "Número de reglas de precios"
 #: model:ir.model.fields,help:product.field_product_product__message_unread_counter
 #: model:ir.model.fields,help:product.field_product_template__message_unread_counter
 msgid "Number of unread messages"
-msgstr "Número de mensajes no leídos"
+msgstr "Número de mensajes sin leer"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_01
@@ -2499,10 +2502,10 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Especifica el importe fijo a añadir o a quitar (si es negativo) al importe "
+"Especifique el importe fijo a agregar o quitar (si es negativo) al importe "
 "calculado con el descuento."
 
 #. module: product
@@ -2712,6 +2715,12 @@ msgstr ""
 "La cantidad a comprar de este proveedor para beneficiarse del precio, "
 "expresado en la unidad de medida del producto del proveedor, si no existe, "
 "en la unidad de medida por defecto del producto."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "La precisión de redondeo debe ser estrictamente positiva."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3313,10 +3322,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"No puede eliminar el valor %s porque se usa en los siguientes productos:\n"
-"%s"
+"No puede eliminar el valor %s porque se utiliza en los siguientes productos:\n"
+"%s\n"
+"No podrá eliminar el valor si se ha asociado a un producto en el pasado."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3344,9 +3355,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "No puede mover el atributo %s del producto %s al producto %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr "No puede eliminar el valor %s porque se usó en algunos productos."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3356,6 +3366,13 @@ msgid ""
 "pricelist instead."
 msgstr ""
 "No puede desactivar la regla de lista de precios, bórrela o archívela."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "No puede mover el atributo %s del producto %s al producto %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

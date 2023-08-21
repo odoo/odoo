@@ -18,7 +18,7 @@
                             <label for="max_weight"/>
                             <div class="o_row">
                                 <field name="max_weight"/>
-                                <span>kg</span>
+                                <span><field name="weight_uom_name"/></span>
                             </div>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <tree string="Storage Categories" multi_edit="1">
                 <field name="name"/>
-                <field name="max_weight" string="Max Weight (kg)"/>
+                <field name="max_weight" string="Max Weight"/>
                 <field name="allow_new_product"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

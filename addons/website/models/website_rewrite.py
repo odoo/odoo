@@ -82,10 +82,14 @@ class WebsiteRewrite(models.Model):
     @api.constrains('url_to', 'url_from', 'redirect_type')
     def _check_url_to(self):
         for rewrite in self:
-            if rewrite.redirect_type == '308':
+            if rewrite.redirect_type in ['301', '302', '308']:
                 if not rewrite.url_to:
                     raise ValidationError(_('"URL to" can not be empty.'))
-                elif not rewrite.url_to.startswith('/'):
+                if not rewrite.url_from:
+                    raise ValidationError(_('"URL from" can not be empty.'))
+
+            if rewrite.redirect_type == '308':
+                if not rewrite.url_to.startswith('/'):
                     raise ValidationError(_('"URL to" must start with a leading slash.'))
                 for param in re.findall('/<.*?>', rewrite.url_from):
                     if param not in rewrite.url_to:

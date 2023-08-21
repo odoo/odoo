@@ -11,6 +11,7 @@ from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
+from odoo import tools
 
 @tagged('odoo2google')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
@@ -31,6 +32,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'interval': 'minutes',
             'duration': 18,
         })
+        description = '<script>alert("boom")</script><p style="white-space: pre"><h1>HELLO</h1></p><ul><li>item 1</li><li>item 2</li></ul>'
         event = self.env['calendar.event'].create({
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),
@@ -39,6 +41,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'alarm_ids': [(4, alarm.id)],
             'privacy': 'private',
             'need_sync': False,
+            'description': description,
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
@@ -46,7 +49,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
-            'description': '',
+            'description': tools.html_sanitize(description),
             'location': '',
             'visibility': 'private',
             'guestsCanModify': True,

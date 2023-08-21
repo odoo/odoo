@@ -14,6 +14,20 @@
             <field name="model">account.payment</field>
             <field name="inherit_id" ref="account.view_account_payment_form" />
             <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <field name="edi_show_cancel_button" invisible="1"/>
+                    <field name="edi_show_abandon_cancel_button" invisible="1"/>
+                    <button name="button_cancel_posted_payments"
+                            string="Request EDI Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible' : [('edi_show_cancel_button', '=', False)]}"/>
+                    <button name="button_abandon_cancel_posted_payments"
+                            string="Call off EDI Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible' : [('edi_show_abandon_cancel_button', '=', False)]}"/>
+                </xpath>
                 <xpath expr="//header" position="after">
                     <field name="edi_blocking_level" invisible="1" />
                     <field name="edi_error_count" invisible="1" />

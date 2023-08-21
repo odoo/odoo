@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.l10n_sa_edi.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country_id']" position="after">
+                    <field name="l10n_sa_edi_building_number" placeholder="Building Number"
+                           attrs="{'invisible': [('country_code', '!=', 'SA')]}"
+                           class="o_address_building_number" options='{"no_open": True, "no_create": True}'/>
+                    <field name="l10n_sa_edi_plot_identification" placeholder="Plot Identification"
+                           attrs="{'invisible': [('country_code', '!=', 'SA')]}"
+                           class="o_address_plot_identification" options='{"no_open": True, "no_create": True}'/>
+                </xpath>
+                <xpath expr="//field[@name='vat']" position="before">
+                    <field name="l10n_sa_additional_identification_scheme" attrs="{'invisible': [('country_code', '!=', 'SA')]}"/>
+                    <field name="l10n_sa_additional_identification_number" attrs="{'invisible': ['|', ('country_code', '!=', 'SA'), ('l10n_sa_additional_identification_scheme', '=', 'TIN')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

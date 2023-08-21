@@ -233,7 +233,7 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="notification_type"/>
                                         <field name="template_model_id" invisible="1"/>
-                                        <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                                        <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
@@ -532,7 +532,7 @@
                                 <field name="mobile" class="o_force_ltr"/>
                             </group>
                             <group string="Event Information" name="event">
-                                <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
+                                <field class="text-break" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
                                 <field name="event_ticket_id"
                                     domain="[
                                         ('event_id', '=', event_id),
@@ -738,8 +738,7 @@
                             <group>
                                 <field name="event_id"/>
                                 <field name="notification_type"/>
-                                <field name="template_model_id" invisible="1"/>
-                                <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                                <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                                 <field name="mail_state"/>
                             </group>
                             <group>
@@ -775,8 +774,7 @@
                 <tree string="Event Mail Schedulers">
                     <field name="event_id"/>
                     <field name="notification_type"/>
-                    <field name="template_model_id" invisible="1"/>
-                    <field name="template_ref" options="{'model_field': 'template_model_id', 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
+                    <field name="template_ref" options="{'hide_model': True, 'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}"/>
                     <field name="scheduled_date"/>
                     <field name="mail_count_done"/>
                     <field name="mail_state" widget="icon_selection" string=" "

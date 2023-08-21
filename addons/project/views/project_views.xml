@@ -128,7 +128,7 @@
                             <group>
                                 <field name="fold"/>
                                 <field name="is_closed" groups="base.group_no_one"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="base.group_no_one"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" required="1"/>
                             </group>
                         </group>
                         <group string="Stage Description and Tooltips">
@@ -887,7 +887,7 @@
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}" />
+                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -1046,6 +1046,7 @@
                             widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
+                        <field name="description" invisible="1"/>
                     </group>
                 </form>
             </field>

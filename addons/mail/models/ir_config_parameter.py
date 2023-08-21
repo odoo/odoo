@@ -35,5 +35,8 @@ class IrConfigParameter(models.Model):
                 # admin will regain the right via implied_ids on group_system
                 group_mail_template_editor.with_context(active_test=False).users.write(
                     {'groups_id': [(3, group_mail_template_editor.id)]})
+        # sanitize and normalize allowed catchall domains
+        elif key == 'mail.catchall.domain.allowed' and value:
+            value = self.env['mail.alias']._clean_and_check_mail_catchall_allowed_domains(value)
 
         return super(IrConfigParameter, self).set_param(key, value)

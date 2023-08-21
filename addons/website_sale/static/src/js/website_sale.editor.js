@@ -318,15 +318,16 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @see this.selectClass for params
      */
     setPpg: function (previewMode, widgetValue, params) {
+        const PPG_LIMIT = 10000;
         const ppg = parseInt(widgetValue);
         if (!ppg || ppg < 1) {
             return false;
         }
-        this.ppg = ppg;
+        this.ppg = Math.min(ppg, PPG_LIMIT);
         return this._rpc({
             route: '/shop/change_ppg',
             params: {
-                'ppg': ppg,
+                'ppg': this.ppg,
             },
         }).then(() => reload());
     },

@@ -56,6 +56,8 @@ class StockRule(models.Model):
             supplier = False
             if procurement.values.get('supplierinfo_id'):
                 supplier = procurement.values['supplierinfo_id']
+            elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
+                supplier = procurement.values['orderpoint_id'].supplier_id
             else:
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
@@ -134,7 +136,7 @@ class StockRule(models.Model):
                     vals = self._update_purchase_order_line(procurement.product_id,
                         procurement.product_qty, procurement.product_uom, company_id,
                         procurement.values, po_line)
-                    po_line.write(vals)
+                    po_line.sudo().write(vals)
                 else:
                     if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
@@ -332,12 +334,3 @@ class StockRule(models.Model):
         res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
         return res
-
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
-        if values.get('supplierinfo_name'):
-            move_values['restrict_partner_id'] = values['supplierinfo_name'].id
-        elif values.get('supplierinfo_id'):
-            partner = values['supplierinfo_id'].name
-            move_values['restrict_partner_id'] = partner.id
-        return move_values

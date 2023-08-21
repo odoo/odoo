@@ -18,6 +18,8 @@ tour.register('time_off_request_calendar_view', {
         trigger: '.fc-day-top.fc-thu',
         run: () => {
             const el = document.querySelector('.fc-day-top.fc-thu').firstChild;
+            el.scrollIntoView();
+
             const fromPosition = el.getBoundingClientRect();
             fromPosition.x += el.offsetWidth / 2;
             fromPosition.y += el.offsetHeight / 2;

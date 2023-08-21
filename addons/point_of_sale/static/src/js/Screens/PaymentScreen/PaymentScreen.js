@@ -295,6 +295,18 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 return false;
             }
 
+            if (this.currentOrder.electronic_payment_in_progress()) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Pending Electronic Payments'),
+                    body: this.env._t(
+                        'There is at least one pending electronic payment.\n' +
+                        'Please finish the payment with the terminal or ' +
+                        'cancel it then remove the payment line.'
+                    ),
+                });
+                return false;
+            }
+
             const splitPayments = this.paymentLines.filter(payment => payment.payment_method.split_transactions)
             if (splitPayments.length && !this.currentOrder.get_client()) {
                 const paymentMethod = splitPayments[0].payment_method

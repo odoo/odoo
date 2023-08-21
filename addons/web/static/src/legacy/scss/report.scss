@@ -13,6 +13,14 @@ body {
     font-family: $o-default-report-font;
 }
 
+/* Customize and overwrite default settings in the bootstrap.scss
+    to avoid sporadic appearance of image opacity
+ *  See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2135
+ */
+hr {
+    border-top-color: rgb(229, 229, 229);
+}
+
 span.o_force_ltr {
     display: inline;
 }
@@ -144,4 +152,8 @@ ul {
 .col-auto{
     -webkit-box-flex: 1 !important;
     width: 100% !important;
+}
+
+li.oe-nested {
+    display: block;
 }

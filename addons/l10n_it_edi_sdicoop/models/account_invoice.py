@@ -14,7 +14,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
-    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment")
+    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment", ondelete="restrict")
 
     def send_pec_mail(self):
         self.ensure_one()

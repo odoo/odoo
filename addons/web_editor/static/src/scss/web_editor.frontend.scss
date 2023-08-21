@@ -35,14 +35,17 @@
     $url-params: '';
     @each $i in $colors {
         $mapped-color: map-get($color-to-cc-bg-map, $i);
-        // %23 is the url-encoded form of '#'
-        $color: str-replace("#{o-color($mapped-color)}", '#', '%23');
+        $color: encode-color(#{o-color($mapped-color)});
         $url-params: '#{$url-params}&c#{$i}=#{$color}';
     }
     @return $url-params;
 }
 .o_we_shape {
     @extend %o-we-background-layer;
+
+    &.o_we_animated {
+        will-change: transform;
+    }
 
     // Default map to use to map shape file colors to color combination
     // background colors.

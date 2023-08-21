@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -13,5 +13,6 @@ class ProductProduct(models.Model):
         if bom and bom.type == 'subcontract':
             seller = self._select_seller(quantity=bom.product_qty, uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
-                price += seller.product_uom._compute_price(seller.price, self.uom_id)
+                seller_price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
+                price += seller.product_uom._compute_price(seller_price, self.uom_id)
         return price

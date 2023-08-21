@@ -248,7 +248,7 @@
                 <t t-set="vals" t-value="vals.get('price_vals', {})"/>
                 <cbc:PriceAmount
                         t-att-currencyID="vals['currency'].name"
-                        t-out="format_float(vals.get('price_amount'), vals.get('currency_dp'))"/>
+                        t-out="format_float(vals.get('price_amount'), vals.get('product_price_dp'))"/>
                 <!-- nbr of item units to which the price applies), i.e.: 1 Dozen = 12 units, not mandatory -->
                 <cbc:BaseQuantity
                         t-att="vals.get('base_quantity_attrs', {})"
@@ -284,7 +284,8 @@
                 </cac:InvoicePeriod>
             </t>
             <cac:OrderReference>
-                <cbc:ID t-out="vals.get('order_reference')"/>
+                <cbc:ID t-esc="vals.get('order_reference')"/>
+                <cbc:SalesOrderID t-esc="vals.get('sales_order_id')"/>
             </cac:OrderReference>
             <cac:BillingReference t-if="vals.get('billing_reference_vals')">
                 <cac:InvoiceDocumentReference>

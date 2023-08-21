@@ -52,6 +52,16 @@ QUnit.module("domain", {}, () => {
         );
     });
 
+    QUnit.test("support of '=?' operator", function (assert) {
+        const record = { a: 3 };
+        assert.ok(new Domain([["a", "=?", null]]).contains(record));
+        assert.ok(new Domain([["a", "=?", false]]).contains(record));
+        assert.notOk(new Domain(["!", ["a", "=?", false]]).contains(record));
+        assert.notOk(new Domain([["a", "=?", 1]]).contains(record));
+        assert.ok(new Domain([["a", "=?", 3]]).contains(record));
+        assert.notOk(new Domain(["!", ["a", "=?", 3]]).contains(record));
+    });
+
     QUnit.test("or", function (assert) {
         const currentDomain = [
             "|",

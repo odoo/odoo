@@ -133,6 +133,7 @@
             'stock/static/tests/popover_widget_tests.js',
             'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
+            'stock/static/tests/stock_orderpoint_tests.js',
         ],
         'web.assets_qweb': [
             'stock/static/src/xml/inventory_report.xml',

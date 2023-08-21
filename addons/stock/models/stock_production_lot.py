@@ -30,7 +30,7 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
@@ -64,13 +64,28 @@ class ProductionLot(models.Model):
     @api.model
     def _get_next_serial(self, company, product):
         """Return the next serial number to be attributed to the product."""
-        if product.tracking == "serial":
+        if product.tracking != "none":
             last_serial = self.env['stock.production.lot'].search(
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
                 return self.env['stock.production.lot'].generate_lot_names(last_serial.name, 2)[1]
         return False
+
+    @api.model
+    def _get_new_serial(self, company, product):
+        if product.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.production.lot'].search([
+                ('product_id', '=', product.id),
+                ('company_id', '=', company.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                return self.env['stock.production.lot']._get_next_serial(company, product)
+            return name
+
+        return self.env['stock.production.lot']._get_next_serial(company, product) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):

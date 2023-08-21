@@ -8,6 +8,7 @@ var websiteNavbarData = require('website.navbar');
 var Dialog = require('web.Dialog');
 
 const { registry } = require("@web/core/registry");
+const { isMediaElement } = require('@web_editor/../lib/odoo-editor/src/utils/utils');
 
 var _t = core._t;
 
@@ -314,6 +315,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         this.classList.add('o_dirty');
                     }
                 });
+                if (this.options.processRecordsCallback) {
+                    for (const el of $savable) {
+                        this.options.processRecordsCallback(record, el);
+                    }
+                }
             }
         };
         this.observer = new MutationObserver(processRecords);
@@ -350,20 +356,24 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 return !$(el).closest('.o_not_editable').length;
             });
 
-        // TODO review in master. This stable fix restores the possibility to
+        // TODO migrate in master. This stable fix restores the possibility to
         // edit the company team snippet images on subsequent editions. Indeed
-        // this badly relies on the contenteditable="true" attribute being on
-        // those images but it is rightfully lost after the first save.
-        // grep: COMPANY_TEAM_CONTENTEDITABLE
-        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        // this badly relied on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save. Later,
+        // the o_editable_media class system was implemented and the class was
+        // added in the snippet template but this did not solve existing
+        // snippets in user databases.
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable *')
+            .filter((i, el) => isMediaElement(el) || el.tagName === 'IMG');
 
-        return $editableSavableZones.add($extraEditableZones).toArray().concat(
-            // To make sure the selection remains bounded to the active tab,
-            // each tab is made non editable while keeping its nested
-            // oe_structure editable. This avoids having a selection range span
-            // over all further inactive tabs when using Chrome.
-            ...document.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane > .oe_structure')
-        );
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
+
+        return $editableSavableZones.add($extraEditableZones).toArray();
     },
 
     _getReadOnlyAreas () {
@@ -371,7 +381,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span
         // over all further inactive tabs when using Chrome.
-        return document.querySelectorAll('#wrapwrap .s_tabs > div > .s_tabs_main > .s_tabs_content > .tab-pane');
+        // grep: .s_tabs
+        return [...document.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
     },
     _getUnremovableElements () {
         // TODO adapt in master: this was added as a fix to target some elements
@@ -396,7 +407,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _addEditorMessages: function () {
-        const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        const $editable = this._targetForEdition()
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .filter(':o_editable');
         this.$editorMessageElements = $editable
             .not('[data-editor-message]')
             .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));

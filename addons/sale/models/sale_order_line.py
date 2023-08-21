@@ -241,7 +241,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
     price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
+    tax_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False}, check_company=True)
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
@@ -316,7 +316,7 @@ class SaleOrderLine(models.Model):
     @api.depends('state')
     def _compute_product_uom_readonly(self):
         for line in self:
-            line.product_uom_readonly = line.state in ['sale', 'done', 'cancel']
+            line.product_uom_readonly = line.ids and line.state in ['sale', 'done', 'cancel']
 
     @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
@@ -615,6 +615,15 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
+        if not self.product_id:
+            return
+
+        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
+            self.update({
+                'product_uom': self.product_id.uom_id,
+                'product_uom_qty': self.product_uom_qty or 1.0
+            })
+
         self._update_description()
         self._update_taxes()
 
@@ -632,6 +641,7 @@ class SaleOrderLine(models.Model):
     def _update_description(self):
         if not self.product_id:
             return
+
         valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
         # remove the is_custom values that don't belong to this template
         for pacv in self.product_custom_attribute_value_ids:
@@ -643,49 +653,39 @@ class SaleOrderLine(models.Model):
             if ptav._origin not in valid_values:
                 self.product_no_variant_attribute_value_ids -= ptav
 
-        vals = {}
-        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
-            vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = self.product_uom_qty or 1.0
-
         lang = get_lang(self.env, self.order_id.partner_id.lang).code
         product = self.product_id.with_context(
             lang=lang,
         )
-
-        self.update({'name': self.with_context(lang=lang).get_sale_order_line_multiline_description_sale(product)})
+        self.update({
+            'name': self.with_context(lang=lang).get_sale_order_line_multiline_description_sale(product)
+        })
 
     def _update_taxes(self):
         if not self.product_id:
             return
 
-        vals = {}
-        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
-            vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = self.product_uom_qty or 1.0
-
-        product = self.product_id.with_context(
-            partner=self.order_id.partner_id,
-            quantity=vals.get('product_uom_qty') or self.product_uom_qty,
-            date=self.order_id.date_order,
-            pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
-        )
-
         self._compute_tax_id()
 
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = product._get_tax_included_unit_price(
-                self.company_id,
-                self.order_id.currency_id,
-                self.order_id.date_order,
-                'sale',
-                fiscal_position=self.order_id.fiscal_position_id,
-                product_price_unit=self._get_display_price(product),
-                product_currency=self.order_id.currency_id
+            product = self.product_id.with_context(
+                partner=self.order_id.partner_id,
+                quantity=self.product_uom_qty,
+                date=self.order_id.date_order,
+                pricelist=self.order_id.pricelist_id.id,
+                uom=self.product_uom.id
             )
-
-        self.update(vals)
+            self.update({
+                'price_unit': product._get_tax_included_unit_price(
+                    self.company_id,
+                    self.order_id.currency_id,
+                    self.order_id.date_order,
+                    'sale',
+                    fiscal_position=self.order_id.fiscal_position_id,
+                    product_price_unit=self._get_display_price(product),
+                    product_currency=self.order_id.currency_id
+                )
+            })
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):

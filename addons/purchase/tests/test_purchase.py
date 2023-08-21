@@ -297,3 +297,42 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_tax, 2.60)
         self.assertEqual(po.amount_total, 15.00)
         self.assertEqual(po.amount_untaxed, 12.40)
+
+    def test_purchase_not_creating_useless_product_vendor(self):
+        """ This test ensures that the product vendor is not created when the
+        product is not set on the purchase order line.
+        """
+
+        #create a contact of type contact
+        contact = self.env['res.partner'].create({
+            'name': 'Contact',
+            'type': 'contact',
+        })
+
+        #create a contact of type Delivery Address lnked to the contact
+        delivery_address = self.env['res.partner'].create({
+            'name': 'Delivery Address',
+            'type': 'delivery',
+            'parent_id': contact.id,
+        })
+
+        #create a product that use the delivery address as vendor
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'name': delivery_address.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })]
+        })
+
+        #create a purchase order with the delivery address as partner
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = delivery_address
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_id.seller_ids.mapped('name'), delivery_address)

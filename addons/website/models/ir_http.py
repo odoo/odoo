@@ -38,7 +38,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = list(FALSE_DOMAIN)
     return dom
 
 
@@ -451,6 +451,7 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
+            'lang_url_code': request.lang._get_cached('url_code'),
             'geoip_country_code': request.session.get('geoip', {}).get('country_code'),
         })
         if request.env.user.has_group('website.group_website_publisher'):

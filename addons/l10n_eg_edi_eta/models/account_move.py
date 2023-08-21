@@ -43,8 +43,8 @@ class AccountMove(models.Model):
         for move in self:
             if move.invoice_date and move.l10n_eg_uuid and move.l10n_eg_long_id:
                 is_prod = move.company_id.l10n_eg_production_env
-                base_url = self.env['account.edi.format']._l10n_eg_get_eta_api_domain(production_enviroment=is_prod)
-                qr_code_str = '%s/documents/search/%s/share/%s' % (base_url, move.l10n_eg_uuid, move.l10n_eg_long_id)
+                base_url = self.env['account.edi.format']._l10n_eg_get_eta_qr_domain(production_enviroment=is_prod)
+                qr_code_str = '%s/documents/%s/share/%s' % (base_url, move.l10n_eg_uuid, move.l10n_eg_long_id)
                 move.l10n_eg_qr_code = qr_code_str
             else:
                 move.l10n_eg_qr_code = ''

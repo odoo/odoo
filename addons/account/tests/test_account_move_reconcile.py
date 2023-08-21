@@ -2943,14 +2943,20 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
         self.assertEqual(len(caba_move.line_ids), 6, "All lines should be there")
+        tax_group_base_tags = (tax_a | tax_b).invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'base').tag_ids.ids
+        tax_a_tax_tag = tax_a.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids.ids
+        tax_b_tax_tag = tax_b.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids.ids
         self.assertRecordValues(caba_move.line_ids, [
-            {'balance':  3000.0, 'tax_line_id':    False},
-            {'balance': -3000.0, 'tax_line_id':    False},
-            {'balance':  1000.0, 'tax_line_id':    False},
-            {'balance': -1000.0, 'tax_line_id': tax_a.id},
-            {'balance':     1.0, 'tax_line_id':    False},
-            {'balance':    -1.0, 'tax_line_id': tax_b.id},
+            {'balance':  3000.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance': -3000.0, 'tax_line_id':    False, 'tax_tag_ids': tax_group_base_tags, 'tax_ids': (tax_a | tax_b).ids},
+            {'balance':  1000.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance': -1000.0, 'tax_line_id': tax_a.id, 'tax_tag_ids':       tax_a_tax_tag, 'tax_ids':                  []},
+            {'balance':     1.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance':    -1.0, 'tax_line_id': tax_b.id, 'tax_tag_ids':       tax_b_tax_tag, 'tax_ids':                  []},
         ])
+        # No exchange journal entry created for CABA.
+        exchange_difference_move = invoice.line_ids.filtered(lambda line: line.account_id.internal_type == 'receivable').full_reconcile_id.exchange_move_id
+        self.assertFalse(exchange_difference_move)
 
     def test_cash_basis_taxline_without_account(self):
         """
@@ -3051,3 +3057,42 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)
+
+    def test_cash_basis_full_refund(self):
+        """ Ensure the caba entry and the exchange difference journal entry for caba are not created in case of full
+        refund.
+        """
+        self.env.company.tax_exigibility = True
+
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 20%',
+            'type_tax_use': 'purchase',
+            'amount': 20,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+        })
+
+        invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=tax)
+
+        # Reverse completely the invoice.
+        credit_note_wizard = self.env['account.move.reversal']\
+            .with_context({'active_ids': invoice.ids, 'active_model': 'account.move'})\
+            .create({
+                'refund_method': 'cancel',
+                'reason': 'test_cash_basis_full_refund',
+                'journal_id': invoice.journal_id.id,
+        })
+        action_values = credit_note_wizard.reverse_moves()
+        self.assertRecordValues(invoice, [{'payment_state': 'reversed'}])
+
+        # Check no CABA move has been created.
+        cash_basis_moves = self.env['account.move']\
+            .search([('tax_cash_basis_origin_move_id', 'in', (invoice.id, action_values['res_id']))])
+        self.assertFalse(cash_basis_moves)
+
+        # No exchange journal entry created for CABA.
+        caba_transfer_amls = self.env['account.move.line'].search([
+            ('account_id', '=', self.cash_basis_transfer_account.id),
+            ('move_id', 'not in', (invoice.id, action_values['res_id'])),
+        ])
+        self.assertFalse(caba_transfer_amls.move_id)

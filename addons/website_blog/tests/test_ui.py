@@ -23,3 +23,8 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_blog_post_tags(self):
         self.start_tour("/blog", 'blog_tags', login='admin')
+
+    def test_autocomplete_with_date(self):
+        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
+        self.start_tour("/blog", 'blog_autocomplete_with_date')

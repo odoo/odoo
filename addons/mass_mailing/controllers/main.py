@@ -128,6 +128,9 @@ class MassMailController(http.Controller):
                 'class="o_snippet_view_in_browser" style="display: none;"'
             )
 
+            if res_id:
+                res[mailing_id] = mailing._render_field('body_html', [res_id], post_process=True)[res_id]
+
             return request.render('mass_mailing.view', {
                     'body': res[mailing_id],
                 })

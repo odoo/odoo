@@ -10810,6 +10810,41 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Auto save: click on save and save on closing tab/browser', async function (assert) {
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name" required="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            async mockRPC(route, { method, model }) {
+                if (method === "write" && model === "partner") {
+                    assert.step("write");
+                    await def;
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+
+        await testUtils.form.clickSave(form);
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+        def.resolve();
+        assert.verifySteps(['write']);
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: click on a quick editable field', async function (assert) {
         assert.expect(3);
 

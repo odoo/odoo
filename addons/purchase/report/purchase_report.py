@@ -62,7 +62,7 @@ class PurchaseReport(models.Model):
     @property
     def _table_query(self):
         ''' Report needs to be dynamic to take into account multi-company selected + multi-currency rates '''
-        return '%s %s %s' % (self._select(), self._from(), self._group_by())
+        return '%s %s %s %s' % (self._select(), self._from(), self._where(), self._group_by())
 
     def _select(self):
         select_str = """
@@ -80,7 +80,7 @@ class PurchaseReport(models.Model):
                     l.product_id,
                     p.product_tmpl_id,
                     t.categ_id as category_id,
-                    po.currency_id,
+                    c.currency_id,
                     t.uom_id as product_uom,
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
@@ -111,6 +111,7 @@ class PurchaseReport(models.Model):
                 join res_partner partner on po.partner_id = partner.id
                     left join product_product p on (l.product_id=p.id)
                         left join product_template t on (p.product_tmpl_id=t.id)
+                left join res_company C ON C.id = po.company_id
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
                 left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
@@ -120,6 +121,12 @@ class PurchaseReport(models.Model):
         )
         return from_str
 
+    def _where(self):
+        return """
+            WHERE
+                l.display_type IS NULL
+        """
+
     def _group_by(self):
         group_by_str = """
             GROUP BY
@@ -127,7 +134,7 @@ class PurchaseReport(models.Model):
                 po.user_id,
                 po.partner_id,
                 line_uom.factor,
-                po.currency_id,
+                c.currency_id,
                 l.price_unit,
                 po.date_approve,
                 l.date_planned,

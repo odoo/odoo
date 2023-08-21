@@ -293,7 +293,7 @@ class HrEmployeePrivate(models.Model):
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
             ])._subscribe_users_automatically()
-        employee.message_subscribe(employee.address_home_id.ids)
+        employee._message_subscribe(employee.address_home_id.ids)
         # Launch onboarding plans
         url = '/web#%s' % url_encode({
             'action': 'hr.plan_wizard_action',
@@ -306,15 +306,16 @@ class HrEmployeePrivate(models.Model):
 
     def write(self, vals):
         if 'address_home_id' in vals:
-            account_id = vals.get('bank_account_id') or self.bank_account_id.id
-            if account_id:
-                self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+            account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
+            if account_ids:
+                self.env['res.partner.bank'].browse(account_ids).partner_id = vals['address_home_id']
             self.message_unsubscribe(self.address_home_id.ids)
-            self.message_subscribe([vals['address_home_id']])
+            if vals['address_home_id']:
+                self._message_subscribe([vals['address_home_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
-                                        (bool(self.image_1920))))
+                                        (bool(all(emp.image_1920 for emp in self)))))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)

@@ -17,14 +17,15 @@ class ProductPricelistReport(models.AbstractModel):
         return self.env.ref('product.report_pricelist_page')._render(render_values)
 
     def _get_report_data(self, data, report_type='html'):
-        quantities = data['quantities'] or [1]
+        quantities = data.get('quantities', [1])
 
-        pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
+        data_pricelist_id = data.get('pricelist_id')
+        pricelist_id = data_pricelist_id and int(data_pricelist_id)
         pricelist = self.env['product.pricelist'].browse(pricelist_id).exists()
         if not pricelist:
             pricelist = self.env['product.pricelist'].search([], limit=1)
 
-        active_model = data['active_model']
+        active_model = data.get('active_model', 'product.template')
         active_ids = data.get('active_ids') or []
         is_product_tmpl = active_model == 'product.template'
         ProductClass = self.env[active_model]
@@ -38,7 +39,7 @@ class ProductPricelistReport(models.AbstractModel):
         return {
             'is_html_type': report_type == 'html',
             'is_product_tmpl': is_product_tmpl,
-            'is_visible_title': bool(data['is_visible_title']) or False,
+            'is_visible_title': data.get('is_visible_title', False) and bool(data['is_visible_title']),
             'pricelist': pricelist,
             'products': products_data,
             'quantities': quantities,

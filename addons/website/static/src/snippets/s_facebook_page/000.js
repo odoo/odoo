@@ -16,10 +16,14 @@ const FacebookPageWidget = publicWidget.Widget.extend({
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
 
-        var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
+        const params = _.pick(this.$el.data(), 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
         if (!params.href) {
             return def;
         }
+        if (params.id) {
+            params.href = `https://www.facebook.com/${params.id}`;
+        }
+        delete params.id;
         params.width = utils.confine(Math.floor(this.$el.width()), 180, 500);
 
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);

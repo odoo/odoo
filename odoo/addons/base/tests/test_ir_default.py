@@ -143,3 +143,13 @@ class TestIrDefault(TransactionCase):
             IrDefault.with_context(allowed_company_ids=company_b_a.ids).get_model_defaults('res.partner')['ref'],
             'CBDefault',
         )
+
+    def test_json_format_invalid(self):
+        """ check the _check_json_format constraint """
+        IrDefault = self.env['ir.default']
+        field_id = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'ref')])
+        with self.assertRaises(ValidationError):
+            IrDefault.create({
+                'field_id': field_id.id,
+                'json_value': '{"name":"John", }',
+            })

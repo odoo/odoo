@@ -14,8 +14,8 @@
                                 <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
                                     Cash Out
                                 </span>
-                                <div class="input-field">
-                                    <input type="text" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref"/>
+                                <div class="input-field" t-on-input="handleInputChange()">
+                                    <input type="text" name="amount" t-ref="input-amount-ref" />
                                     <span class="currency" t-esc="env.pos.currency.symbol" />
                                 </div>
                             </div>
@@ -26,8 +26,8 @@
                         </div>
                     </main>
                     <footer class="footer">
-                        <div class="button confirm disable" t-on-click="confirm">
-                            Confirm
+                        <div class="button confirm disable dynamic-size" t-on-click="confirm">
+                            Confirm <span t-esc="env.pos.format_currency(state.parsedAmount)"/>
                         </div>
                         <div class="button cancel" t-on-click="cancel">
                             <t t-esc="props.cancelText" />

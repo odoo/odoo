@@ -208,3 +208,32 @@ class TestMrpCommon(common2.TestStockCommon):
             'tracking': 'none',
             'categ_id': cls.env.ref('product.product_category_all').id,
         })
+
+    @classmethod
+    def make_prods(cls, n):
+        return [
+            cls.env["product.product"].create(
+                {"name": f"p{k + 1}", "type": "product"}
+            )
+            for k in range(n)
+        ]
+
+    @classmethod
+    def make_bom(cls, p, *cs):
+        return cls.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": p.product_tmpl_id.id,
+                "product_id": p.id,
+                "product_qty": 1,
+                "type": "phantom",
+                "product_uom_id": cls.uom_unit.id,
+                "bom_line_ids": [
+                    (0, 0, {
+                        "product_id": c.id,
+                        "product_qty": 1,
+                        "product_uom_id": cls.uom_unit.id
+                    })
+                    for c in cs
+                ],
+            }
+        )

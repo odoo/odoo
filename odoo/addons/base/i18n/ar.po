@@ -11,7 +11,8 @@
 # Hussain Hammad, 2021
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Niyas Raphy, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -10402,7 +10403,7 @@ msgstr "3. %y, %Y         ==&gt; 08, 2008"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr "360 ملاحظة "
+msgstr "ملاحظات شاملة "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -12598,7 +12599,7 @@ msgstr "إنشاء العملاء المهتمين "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment
 msgid "Appointments"
-msgstr "التعيينات "
+msgstr "المواعيد  "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_skills
@@ -13318,7 +13319,7 @@ msgstr "الكائن الأساسي"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr "الخصائص الأساسي "
+msgstr "الخصائص الأساسية "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
@@ -14773,6 +14774,12 @@ msgid "Compute"
 msgstr "احتساب "
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "لا يمكن أن تعتمد طريقة الاحتساب على حقل 'المعرف' "
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "احتساب الضرائب باستخدام TaxCloud بعد الإنشاء التلقائي للفاتورة. "
@@ -15200,6 +15207,12 @@ msgstr "مجموعات الدول "
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "اسم الدولة"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "لا يمكن أن يكون رمز الدولة فارغاً. "
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -16883,7 +16896,7 @@ msgstr "رقم هوية صاحب العمل (EIN) "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
-msgstr "ESC/POS Hardware Driver"
+msgstr "جهاز ESC/POS "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss
@@ -18120,7 +18133,7 @@ msgid ""
 "Technical Details:\n"
 "%s"
 msgstr ""
-"تعذر استيراد الملف %r لعدم تطابق الصيغة أو لأنه لم يتم تكوين الملف بشكل صحيح. (الصيغ الصالحة هي are .csv, .po, .pot)\n"
+"تعذر استيراد الملف %r لعدم تطابق الصيغة أو لأنه لم يتم تكوين الملف بشكل صحيح. (الصيغ الصالحة هي .csv, .po, .pot)\n"
 "\n"
 "التفاصيل التقنية:\n"
 "%s"
@@ -20592,15 +20605,20 @@ msgid ""
 "comma-separated list of valid field names (optionally followed by asc/desc "
 "for the direction)"
 msgstr ""
-"Invalid \"order\" specified (%s). A valid \"order\" specification is a "
-"comma-separated list of valid field names (optionally followed by asc/desc "
-"for the direction)"
+"\"الطلب\" المحدد غير صحيح (%s). مواصفات \"الطلب\" الصحيح هي قائمة مفصولة "
+"بفواصل لأسماء حقول صحيحة (يمكن أن تكون متبوعة بتصاعدي/تنازلي للاتجاه) "
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "معامل 'تجميع حسب' غير صالح"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "تنسيق JSON غير صالح في حقل القيمة الافتراضية. "
 
 #. module: base
 #: code:addons/models.py:0
@@ -21098,8 +21116,8 @@ msgstr "LGPL الإصدار 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Accounting Reports"
+msgid "Lithuania - Accounting Reports"
+msgstr "Lithuania - Accounting Reports"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -21661,7 +21679,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr "Link Field"
+msgstr "حقل الرابط "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -22606,7 +22624,7 @@ msgstr "مستخدمي Microsoft "
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__mimetype
 msgid "Mime Type"
-msgstr "نوع التنسيق الملف"
+msgstr "نوع تنسيق الملف"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
@@ -22803,7 +22821,7 @@ msgstr "قيمة مطلوبة مفقودة للحقل '%s' (%s)"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Missing view architecture."
-msgstr "Missing view architecture."
+msgstr "بنية واجهة العرض مفقودة "
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -23559,7 +23577,7 @@ msgstr "لم يتم العثور على أي إعداد "
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr "No spaces allowed in view_mode: %r"
+msgstr "لا يُسمح بالمسافات في view_mode: %r "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -23873,7 +23891,7 @@ msgstr ""
 "\n"
 "عبّر عن نفسك باستخدام منصة مدونة أودو للمؤسسات. اكتب\n"
 "منشورات مدونات وتفاعل مع الزائرين وترجمة المحتوى والإشراف على\n"
-"التيار الاجتماعي.\n"
+"الوسائط الاجتماعية.\n"
 "\n"
 "تمكن من الإشارة إلى منشورات مدونتك في Google بكل سهولة، وترجمتها بعدة\n"
 "لغات ببضع نقرات فقط.\n"
@@ -27158,7 +27176,7 @@ msgstr "رقم الهاتف"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_phone_validation
 msgid "Phone Numbers Validation"
-msgstr "اعتماد أرقام الهواتف"
+msgstr "التحقق من أرقام الهواتف "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -28443,7 +28461,7 @@ msgstr "قواعد السجلات"
 #. module: base
 #: model:ir.module.module,summary:base.module_timer
 msgid "Record time"
-msgstr "وقت السجل "
+msgstr "تسجيل الوقت "
 
 #. module: base
 #: code:addons/models.py:0 code:addons/models.py:0
@@ -29124,7 +29142,7 @@ msgstr "أداة تهيئة الرواتب - كشوف المرتبات "
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr "مُعد حزم الرواتب"
+msgstr "أداة تهيئة باقة الراتب "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_canteen
@@ -31060,6 +31078,12 @@ msgstr "تايلاند - المحاسبة"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "لا يمكن تحديد إجراء \"%s\" كإجراء الصفحة الرئيسية. "
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "لا يمكن تحديد إجراء \"تبديل التطبيقات\" كإجراء الصفحة الرئيسية. "
 
@@ -31142,8 +31166,8 @@ msgstr "التطبيق `%s` غير متوفر حالياً، يرجى المحا
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "لا يمكن إلغاء تثبيت تطبيق `الأساس` "
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "لا يمكن تثبيت تلك التطبيقات: %s "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31161,6 +31185,16 @@ msgstr ""
 "يتنازل العميل صراحةً عن شروطه وأحكامه القياسية، حتى وإن تم سحبها بعد هذه "
 "الشروط والأحكام القياسية للبيع. حتى تكون صالحة، يجب أن يُتّفق كتابةً على أي "
 "انتقاص مسبقاً. "
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"اسم السعر الحالي فارغ. \n"
+"يرجى تحديده. "
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31209,7 +31243,6 @@ msgstr "يجب أن يكون رمز العملة فريداً! "
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "عملة السعر 1 بالنسبة لسعر العملة."
 
@@ -31502,7 +31535,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
 msgstr "سعر العملة باستخدام العملة ذات السعر 1"
 
 #. module: base
@@ -33436,7 +33470,7 @@ msgstr "المورد"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "فاتورة المورد: الموافقة على السداد"
+msgstr "فاتورة المورد: الموافقة على الدفع "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -33488,7 +33522,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
-msgstr "View '%(name)s' is private"
+msgstr "عرض '%(name)s' خاص "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -34198,7 +34232,7 @@ msgstr "لا يمكن لمستخدمين استخدام نفس بيانات ال
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
-"لا يمكنك إزالة مفاتيح الواجهة البرمجية للتطبيق إلا إذا كانت تخصل أو إذا كنت "
+"لا يمكنك إزالة مفاتيح الواجهة البرمجية للتطبيق إلا إذا كانت تخصك أو إذا كنت "
 "مستخدماً للنظام "
 
 #. module: base
@@ -34208,8 +34242,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
 msgstr ""
-"لا يمكنك إزالة المستخدم المدير حيث أنه يُستخدم داخلياً للموارد بواسطة أودو "
-"(التحديثات، تثبيت التطبيقات، ...) "
+"لا يمكنك إزالة المستخدم المدير حيث أنه يُستخدم داخلياً للموارد المنشأة من "
+"قِبَل أودو (التحديثات، تثبيت التطبيقات، ...) "
 
 #. module: base
 #: code:addons/base/models/report_paperformat.py:0
@@ -34281,6 +34315,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "لا يمكنك تعطيل المستخدم المُسجل منه دخولك حاليًا."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "لا يمكنك حذف مجموعة مرتبطة بحقل إعدادات. "
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34312,6 +34352,12 @@ msgstr ""
 "%(names)s"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "لا يمكنك حذف سجل %s. "
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -34341,6 +34387,12 @@ msgid ""
 msgstr ""
 "لا يمكنك تقليل عدد الخانات العشرية لعملة قد تم استخدامها من قبل لإنشاء قيود "
 "محاسبية. "
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr "لا يمكنك إعادة تسمية معايير التهيئة مع المفاتيح %s "
 
 #. module: base
 #: code:addons/models.py:0
@@ -35117,3 +35169,9 @@ msgstr "سنة "
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "جزر آلاند"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr "هذه العملة معينة لشركة، ولذلك لا يمكن تعطيلها. "

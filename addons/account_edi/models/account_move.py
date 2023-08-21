@@ -5,6 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import frozendict
 
 
 class AccountMove(models.Model):
@@ -241,9 +242,6 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
 
-        def _serialize_python_dictionary(vals):
-            return '-'.join(str(vals[k]) for k in sorted(vals.keys()))
-
         def default_grouping_key_generator(tax_values):
             return {'tax': tax_values['tax_id']}
 
@@ -402,7 +400,7 @@ class AccountMove(models.Model):
 
             for tax_values in tax_values_list:
                 grouping_key = grouping_key_generator(tax_values)
-                serialized_grouping_key = _serialize_python_dictionary(grouping_key)
+                serialized_grouping_key = frozendict(grouping_key)
                 key_by_tax[tax_values['tax_id']] = serialized_grouping_key
 
                 # Add to invoice line global tax amounts.
@@ -555,6 +553,7 @@ class AccountMove(models.Model):
         res = super().button_draft()
 
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
+        self.edi_document_ids.filtered(lambda doc: doc.state == 'to_send').unlink()
 
         return res
 

@@ -9,6 +9,7 @@
 # Mariusz, 2021
 # Slawomir Adamus <melthalion@gmail.com>, 2021
 # Maksym <ms@myodoo.pl>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -85,7 +86,7 @@ msgstr "Data ważności"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "Separator FNC1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -169,7 +170,7 @@ msgstr "Ilość"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "Alternatywa separatora FNC1 nie jest prawidłowym regexem:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -180,12 +181,17 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Typ zawartości GS1 określa, jako jakiego rodzaju dane reguła przetworzy kod "
+"kreskowy: * Data: kod kreskowy zostanie przekonwertowany na Odoo datetime; *"
+" Miara: wartość kodu kreskowego jest związana z konkretnym UoM; * "
+"Identyfikator numeryczny: kod kreskowy o stałej długości po określonym "
+"kodowaniu; * Nazwa alfanumeryczna: kod kreskowy o zmiennej długości."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr ""
+msgstr "Wzorzec reguły \"%s\" nie jest prawidłowym regexem:"
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
@@ -195,6 +201,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"Wzorzec reguły \"%s\" nie jest prawidłowy, wymaga dwóch grup:\n"
+"- Pierwsza dla identyfikatora aplikacji (zwykle 2 do 4 cyfr);\n"
+"- Drugi, aby złapać wartość."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
@@ -204,6 +213,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"Coś jest nie tak z regułą kodu kreskowego \"%s\" .\n"
+"Jeśli reguła używa wartości dziesiętnych, sprawdź, czy nie może uzyskać czegoś innego niż cyfra jako ostatni znak dla identyfikatora aplikacji.\n"
+"Sprawdź również, czy możliwe dopasowane wartości mogą być tylko cyframi, w przeciwnym razie wartość nie może być rzutowana jako środek."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

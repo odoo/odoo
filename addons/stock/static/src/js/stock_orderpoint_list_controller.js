@@ -36,9 +36,9 @@ var StockOrderpointListController = ListController.extend({
     _onButtonClicked: function (ev) {
         if (ev.data.attrs.class && ev.data.attrs.class.split(' ').includes('o_replenish_buttons')) {
             ev.stopPropagation();
-            var self = this;
-            this._callButtonAction(ev.data.attrs, ev.data.record).then(function () {
-                self.reload();
+            this.trigger_up('save_line', {
+                recordID: ev.data.record.id,
+                onSuccess: () => this._callButtonAction(ev.data.attrs, ev.data.record).then(() => this.reload())
             });
         } else {
             this._super.apply(this, arguments);
@@ -46,8 +46,7 @@ var StockOrderpointListController = ListController.extend({
     },
 
     _onReplenish: function () {
-        var records = this.getSelectedRecords();
-        this.model.replenish(records);
+        this.getSelectedIdsWithDomain().then(ids => this.model.replenish((ids)));
     },
 
     _onSelectionChanged: function (ev) {
@@ -64,8 +63,7 @@ var StockOrderpointListController = ListController.extend({
     },
 
     _onSnooze: function () {
-        var records = this.getSelectedRecords();
-        this.model.snooze(records);
+        this.getSelectedIdsWithDomain().then(ids => this.model.snooze((ids)));
     },
 });
 

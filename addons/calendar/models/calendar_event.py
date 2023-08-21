@@ -110,9 +110,8 @@ class Meeting(models.Model):
          ('busy', 'Busy')], 'Show as', default='busy', required=True,
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
-        that you are unavailable during that period of time. \n If the time is shown as 'free', this event won't \
-        be visible to other people at all. Use this option to let other people know that you are available during \
-        that period of time.")
+        that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
+        that you are available during that period of time.")
     is_highlighted = fields.Boolean(
         compute='_compute_is_highlighted', string='Is the Event Highlighted')
     is_organizer_alone = fields.Boolean(compute='_compute_is_organizer_alone', string="Is the Organizer Alone",
@@ -566,7 +565,7 @@ class Meeting(models.Model):
         if not self.env.su and private_fields:
             # display public and confidential events
             domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.simple_notification', {
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                 'title': _('Private Event Excluded'),
                 'message': _('Grouping by %s is not allowed on private events.', ', '.join([self._fields[field_name].string for field_name in private_fields]))
             })
@@ -883,7 +882,7 @@ class Meeting(models.Model):
                 if not start_update:
                     # Apply the same shift for start
                     start = base_time_values['start'] + (stop_update - self.stop)
-                    start_date = base_time_values['start_date'] + (stop_update.date() - self.stop.date())
+                    start_date = base_time_values['start'].date() + (stop_update.date() - self.stop.date())
                     update_dict.update({'start': start, 'start_date': start_date})
                 stop = base_time_values['stop'] + (stop_update - self.stop)
                 stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())

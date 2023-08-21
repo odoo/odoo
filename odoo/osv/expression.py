@@ -539,11 +539,13 @@ class expression(object):
                 # filtering of forbidden records is done by the rest of the
                 # domain
                 parent_name = parent or left_model._parent_name
+                if (left_model._name != left_model._fields[parent_name].comodel_name):
+                    raise ValueError(f"Invalid parent field: {left_model._fields[parent_name]}")
                 child_ids = set()
                 records = left_model.sudo().browse(ids)
                 while records:
                     child_ids.update(records._ids)
-                    records = records.search([(parent_name, 'in', records.ids)], order='id')
+                    records = records.search([(parent_name, 'in', records.ids)], order='id') - records.browse(child_ids)
                 domain = [('id', 'in', list(child_ids))]
             if prefix:
                 return [(left, 'in', left_model._search(domain, order='id'))]
@@ -571,7 +573,7 @@ class expression(object):
                 records = left_model.sudo().browse(ids)
                 while records:
                     parent_ids.update(records._ids)
-                    records = records[parent_name]
+                    records = records[parent_name] - records.browse(parent_ids)
                 domain = [('id', 'in', list(parent_ids))]
             if prefix:
                 return [(left, 'in', left_model._search(domain, order='id'))]
@@ -710,7 +712,7 @@ class expression(object):
                 # Non-stored field should provide an implementation of search.
                 if not field.search:
                     # field does not support search!
-                    _logger.error("Non-stored field %s cannot be searched.", field)
+                    _logger.error("Non-stored field %s cannot be searched.", field, exc_info=True)
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                     # Ignore it: generate a dummy leaf.

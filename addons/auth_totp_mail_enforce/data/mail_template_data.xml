@@ -6,7 +6,7 @@
             <field name="model_id" ref="base.model_res_users" />
             <field name="subject">Your two-factor authentication code</field>
             <field name="email_to">{{ object.email_formatted }}</field>
-            <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html" type="html">

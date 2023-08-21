@@ -7,7 +7,7 @@ import json
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID, _
+from odoo import http, SUPERUSER_ID, _, _lt
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import ValidationError, UserError
@@ -84,7 +84,7 @@ class WebsiteForm(http.Controller):
 
     # Constants string to make metadata readable on a text field
 
-    _meta_label = "%s\n________\n\n" % _("Metadata")  # Title for meta data
+    _meta_label = _lt("Metadata")  # Title for meta data
 
     # Dict of dynamically called filters following type of field to be fault tolerent
 
@@ -214,7 +214,10 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
             values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
+            mail_create_nosubscribe=True,
+            commit_assetsbundle=False,
+        ).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
@@ -224,7 +227,7 @@ class WebsiteForm(http.Controller):
             default_field_data = values.get(default_field.name, '')
             custom_content = (default_field_data + "\n\n" if default_field_data else '') \
                            + (_custom_label + custom + "\n\n" if custom else '') \
-                           + (self._meta_label + meta if meta else '')
+                           + (self._meta_label + "\n________\n\n" + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead

@@ -8,7 +8,7 @@
 # Dedi Santoso <dedisantoso@yahoo.com>, 2022
 # Gusti Rini <gustirini@gmail.com>, 2022
 # Andhitia Rama <andhitia.r@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # pnyet <david@zeromail.us>, 2022
 # William Surya Permana <zarambie_game@yahoo.com>, 2022
 # Febrasari Almania <febrasari.almania@gmail.com>, 2022
@@ -27,7 +27,7 @@ msgstr ""
 "POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -172,6 +172,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Yth <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br/>\n"
+"    Terima kasih untuk pertanyaan Anda.<br/>\n"
+"    Berikut adalah lencana Anda untuk acara <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.<br/>\n"
+"    Bila Anda memiliki pertanyaan apapun, mohon beritahu kami.\n"
+"    <br/><br/>\n"
+"    Terima kasih,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -227,7 +239,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"Lokasi\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1190,7 +1202,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
@@ -1383,7 +1395,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Dibooking"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -1505,7 +1517,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Konferensi, workshop dan training akan diatur dalam 6 kamar:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1837,6 +1849,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Penjadwal Acara untuk:\n"
+"  - Acara: %(event_name)s (%(event_id)s)\n"
+"  - Dijadwalkan: %(date)s\n"
+"  - Templat: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Gagal karena error:\n"
+"  - %(error)s\n"
+"\n"
+"Anda menerima email ini karena Anda adalah:\n"
+"  - organizer acara ini,\n"
+"  - atau bertanggung jawab untuk acara,\n"
+"  - atau penulis terakhir templat.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2053,7 +2077,7 @@ msgstr ""
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Rasakan music live, makanan dan minuman lokal."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
@@ -2388,7 +2412,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "Tersedia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -2993,7 +3017,7 @@ msgstr "Siap untuk Tahap Berikutnya"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
+msgstr "Siap untuk <b>mengatur acara</b> dalam hitungan menit? Ayo mulai!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -3144,6 +3168,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Jadwal dan atur acara Anda: tangani pendaftaran, kirimkan email konfirmasi "
+"otomatis, jual tiket, dsb."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -3430,6 +3456,13 @@ msgid "The stop date cannot be earlier than the start date."
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "This event is also an opportunity to showcase our partners' case studies, "
@@ -3654,6 +3687,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"Gunakan Tag Kategori Acara untuk menggolongkan dan mengatur tag acara Anda."
 
 #. module: event
 #. openerp-web
@@ -3690,12 +3724,12 @@ msgstr "VIP"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr ""
+msgstr "Value harus True atau False (bukan %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "Venue"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0

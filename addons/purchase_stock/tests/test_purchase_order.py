@@ -524,6 +524,60 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po.picking_ids.move_lines.product_uom_qty, 8)
 
+    def test_packaging_propagation(self):
+        """
+        Editing the packaging on an purchase.order.line
+        should propagate to the delivery order, so that
+        when we are editing the packaging, the lines can be merged
+        with the new packaging and quantity.
+        """
+        # set the 3 step route
+        warehouse = self.company_data['default_warehouse']
+        warehouse.reception_steps = 'three_steps'
+        packOf10 = self.env['product.packaging'].create({
+            'name': 'PackOf10',
+            'product_id': self.product_a.id,
+            'qty': 10
+        })
+
+        packOf20 = self.env['product.packaging'].create({
+            'name': 'PackOf20',
+            'product_id': self.product_a.id,
+            'qty': 20
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'product_packaging_id': packOf10.id,
+                })],
+        })
+        po.button_confirm()
+        # the 3 moves for the 3 steps
+        step_1 = po.order_line.move_ids
+        step_2 = step_1.move_dest_ids
+        step_3 = step_2.move_dest_ids
+        self.assertEqual(step_1.product_packaging_id, packOf10)
+        self.assertEqual(step_2.product_packaging_id, packOf10)
+        self.assertEqual(step_3.product_packaging_id, packOf10)
+
+        po.order_line[0].write({
+            'product_packaging_id': packOf20.id,
+            'product_uom_qty': 20
+        })
+        self.assertEqual(step_1.product_packaging_id, packOf20)
+        self.assertEqual(step_2.product_packaging_id, packOf20)
+        self.assertEqual(step_3.product_packaging_id, packOf20)
+
+        po.order_line[0].write({'product_packaging_id': False})
+        self.assertFalse(step_1.product_packaging_id)
+        self.assertFalse(step_2.product_packaging_id)
+        self.assertFalse(step_3.product_packaging_id)
+
     def test_putaway_strategy_in_backorder(self):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
         sub_loc_01 = self.env['stock.location'].create([{
@@ -553,3 +607,33 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.env[res_dict['res_model']].with_context(res_dict['context']).process()
         backorder = picking.backorder_ids
         self.assertEqual(backorder.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
+
+    def test_inventory_adjustments_with_po(self):
+        """ check that the quant created by a PO can be applied in an inventory adjustment correctly """
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 5
+        po = po_form.save()
+        po.button_confirm()
+        po.picking_ids.move_lines.quantity_done = 5
+        po.picking_ids.button_validate()
+        self.assertEqual(po.picking_ids.state, 'done')
+        quant = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')])
+        wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quant})
+        wizard.action_apply()
+        self.assertEqual(quant.quantity, 5)
+
+    def test_po_edit_after_receive(self):
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.po.picking_ids.move_lines.quantity_done = 5
+        self.po.picking_ids.button_validate()
+        self.assertEqual(self.po.picking_ids.move_lines.mapped('product_uom_qty'), [5.0, 5.0])
+        self.po.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(self.po.picking_ids.move_lines.mapped('product_uom_qty'), [5.0, 5.0, 5.0])

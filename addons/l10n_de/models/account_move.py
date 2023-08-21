@@ -43,7 +43,9 @@ class AccountMove(models.Model):
     def _compute_l10n_de_addresses(self):
         for record in self:
             record.l10n_de_addresses = data = []
-            if record.partner_shipping_id == record.partner_id:
+            if 'partner_shipping_id' not in record._fields:
+                data.append((_("Invoicing Address:"), record.partner_id))
+            elif record.partner_shipping_id == record.partner_id:
                 data.append((_("Invoicing and Shipping Address:"), record.partner_shipping_id))
             elif record.move_type in ("in_invoice", "in_refund"):
                 data.append((_("Invoicing and Shipping Address:"), record.partner_id))

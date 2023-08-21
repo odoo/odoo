@@ -428,6 +428,11 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
+        if 'product_packaging_id' in values:
+            self.move_ids.filtered(
+                lambda m: m.state not in ['cancel', 'done']
+            ).product_packaging_id = values['product_packaging_id']
+
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
@@ -580,7 +585,10 @@ class SaleOrderLine(models.Model):
                 line.order_id.partner_shipping_id.property_stock_customer,
                 line.product_id.display_name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
-            self.env['procurement.group'].run(procurements)
+            procurement_group = self.env['procurement.group']
+            if self.env.context.get('import_file'):
+                procurement_group = procurement_group.with_context(import_file=False)
+            procurement_group.run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
         orders = self.mapped('order_id')

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests.common import TransactionCase, users
 
 
@@ -213,3 +214,44 @@ class TestSaleProject(TransactionCase):
         self.project_global.sale_line_id = sale_order_line
         sale_order.action_cancel()
         self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")
+
+    def test_create_task_from_template_line(self):
+        """
+        When we add an SOL from a template that is a service that has a service_policy that will generate a task,
+        even if default_task_id is present in the context, a new task should be created when confirming the SO.
+        """
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                     'name': self.product_order_service2.display_name,
+                     'sale_order_template_id': quotation_template.id,
+                     'product_id': self.product_order_service2.id,
+                     'product_uom_id': self.product_order_service2.uom_id.id,
+                    }, {
+                     'name': self.product_order_service3.display_name,
+                     'sale_order_template_id': quotation_template.id,
+                     'product_id': self.product_order_service3.id,
+                     'product_uom_id': self.product_order_service3.uom_id.id,
+                    }]).ids
+                )
+            ]
+        })
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id).onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because they are from services that generates a task")
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.tasks_count, 2, "SO should have 2 related tasks")
+        self.assertNotIn(default_task, sale_order.tasks_ids, "SO should link to the default task from the context")

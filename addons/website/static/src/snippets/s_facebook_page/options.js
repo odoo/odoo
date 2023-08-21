@@ -14,6 +14,7 @@ options.registry.facebookPage = options.Class.extend({
 
         var defaults = {
             href: '',
+            id: '',
             height: 215,
             width: 350,
             tabs: '',
@@ -148,18 +149,33 @@ options.registry.facebookPage = options.Class.extend({
      */
     _checkURL: function () {
         const defaultURL = 'https://www.facebook.com/Odoo';
-        const match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(?:([\w.]+)|[^/?#]+-([0-9]{15,16}))(?:$|[/?# ])/);
+        // Patterns matched by the regex (all relate to existing pages,
+        // in spite of the URLs containing "profile.php" or "people"):
+        // - https://www.facebook.com/<pagewithaname>
+        // - http://www.facebook.com/<page.with.a.name>
+        // - www.facebook.com/<fbid>
+        // - facebook.com/profile.php?id=<fbid>
+        // - www.facebook.com/<name>-<fbid>  - NB: the name doesn't matter
+        // - www.fb.com/people/<name>/<fbid>  - same
+        // - m.facebook.com/p/<name>-<fbid>  - same
+        // The regex is kept as a huge one-liner for performance as it is
+        // compiled once on script load. The only way to split it on several
+        // lines is with the RegExp constructor, which is compiled on runtime.
+        const match = this.fbData.href.match(/^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/[^/?#]+\/|(p\/)?[^/?#]+-)(?<id>[0-9]{15,16}))|(?<nameid>[\w.]+))($|[/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
-            return new Promise((resolve, reject) => $.ajax({
-                url: 'https://graph.facebook.com/' + (match[2] || match[1]) + '/picture',
-                success: () => resolve(),
-                error: () => {
+            const pageId = match.groups.nameid || match.groups.id;
+            return fetch(`https://graph.facebook.com/${pageId}/picture`)
+            .then((res) => {
+                if (res.ok) {
+                    this.fbData.id = pageId;
+                } else {
+                    this.fbData.id = "";
                     this.fbData.href = defaultURL;
-                    resolve();
-                },
-            }));
+                }
+            });
         }
+        this.fbData.id = "";
         this.fbData.href = defaultURL;
         return Promise.resolve();
     },

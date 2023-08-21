@@ -130,7 +130,7 @@ SELECT DISTINCT ON (pid) * FROM (
                           AND users.active
  LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
       JOIN sub_followers ON sub_followers.partner_id = partner.id
-                        AND NOT (sub_followers.internal AND partner.partner_share)
+                        AND (NOT sub_followers.internal OR partner.partner_share IS NOT TRUE)
         GROUP BY partner.id,
                  users.notification_type
 ) AS x

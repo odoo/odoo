@@ -260,10 +260,11 @@ class AccountEdiFormat(models.Model):
             if is_overseas is true then pin is 999999 and GSTIN(vat) is URP and Stcd is .
             if pos_state_id is passed then we use set POS
         """
+        zip_digits = self._l10n_in_edi_extract_digits(partner.zip)
         partner_details = {
             "Addr1": partner.street or "",
             "Loc": partner.city or "",
-            "Pin": int(self._l10n_in_edi_extract_digits(partner.zip)),
+            "Pin": zip_digits and int(zip_digits) or "",
             "Stcd": partner.state_id.l10n_in_tin or "",
         }
         if partner.street2:
@@ -281,7 +282,7 @@ class AccountEdiFormat(models.Model):
                 "GSTIN": partner.vat or "URP",
             })
         else:
-            partner_details.update({"Nm": partner.name})
+            partner_details.update({"Nm": partner.name or partner.commercial_partner_id.name})
         # For no country I would suppose it is India, so not sure this is super right
         if is_overseas and (not partner.country_id or partner.country_id.code != 'IN'):
             partner_details.update({

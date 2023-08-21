@@ -26,19 +26,23 @@
                                     </div>
                                 </div>
                                 <div class="col-5 offset-1" name="div_incoming_address">
+                                    <t t-set="show_partner" t-value="False" />
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
                                         <span><strong>Vendor Address:</strong></span>
+                                        <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
                                         <span><strong>Warehouse Address:</strong></span>
+                                        <t t-set="show_partner" t-value="True" />
                                     </div>
-                                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
+                                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id">
                                         <span><strong>Customer Address:</strong></span>
+                                        <t t-set="show_partner" t-value="True" />
                                     </div>
-                                    <div t-if="o.partner_id" name="partner_header">
-                                        <div t-field="o.partner_id"
+                                    <div t-if="show_partner" name="partner_header">
+                                        <div t-field="o.partner_id.commercial_partner_id"
                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                        <p t-if="o.sudo().partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.sudo().partner_id.vat"/></p>
+                                        <p t-if="o.sudo().partner_id.commercial_partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.sudo().partner_id.commercial_partner_id.vat"/></p>
                                     </div>
                                 </div>
                             </div>

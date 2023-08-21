@@ -510,7 +510,7 @@ class StockQuant(TransactionCase):
             })
         with self.assertRaises(AccessError):
             quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
@@ -796,3 +796,33 @@ class StockQuant(TransactionCase):
         # cache to ensure that the value will be the newest
         quant.invalidate_cache(fnames=['quantity'], ids=quant.ids)
         self.assertEqual(quant.quantity, 11)
+
+    def test_clean_quant_after_package_move(self):
+        """
+        A product is at WH/Stock in a package PK. We deliver PK. The user should
+        not find any quant at WH/Stock with PK anymore.
+        """
+        package = self.env['stock.quant.package'].create({})
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package)
+
+        move = self.env['stock.move'].create({
+            'name': 'OUT 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.move_line_ids.write({
+            'result_package_id': package.id,
+            'qty_done': 1,
+        })
+        move._action_done()
+
+        self.assertFalse(self.env['stock.quant'].search_count([
+            ('product_id', '=', self.product.id),
+            ('package_id', '=', package.id),
+            ('location_id', '=', self.stock_location.id),
+        ]))

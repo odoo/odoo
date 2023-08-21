@@ -30,6 +30,7 @@
 # Claes-Johan Dahlin, 2022
 # Robin Calvin, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -37,8 +38,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1541,7 +1542,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Den här modulen gör det möjligt att hantera de anställdas färdigheter under en bedömningsprocess.\n"
+"        Den här modulen gör det möjligt att hantera de anställdas kompetens under en bedömningsprocess.\n"
 "    "
 
 #. module: base
@@ -3710,7 +3711,7 @@ msgstr ""
 "Certifiering och kompetens för HR\n"
 "===============================\n"
 "\n"
-"Denna modul lägger till certifiering i anställdas CV.\n"
+"Denna modul lägger till Certifieringar och Kompetenser i anställdas Meritförteckning.\n"
 "        "
 
 #. module: base
@@ -4392,7 +4393,7 @@ msgstr ""
 "eLearning och kompetens för HR\n"
 "============================\n"
 "\n"
-"Denna modul lägger till avslutade kurser i anställdas CV.\n"
+"Denna modul lägger till avslutade kurser i anställdas Meritförteckning.\n"
 "        "
 
 #. module: base
@@ -7358,7 +7359,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Sök planeringstider efter färdighet\n"
+"Sök planeringstider efter kompetens\n"
 "    "
 
 #. module: base
@@ -7506,7 +7507,7 @@ msgstr ""
 "Kompetens och meritförteckning för HR\n"
 "========================\n"
 "\n"
-"I den här modulen introduceras färdigheter och CV-hantering för anställda.\n"
+"Denna modul lägger till Kompetenser och hantering av Meritförteckning för anställda.\n"
 "        "
 
 #. module: base
@@ -10063,7 +10064,7 @@ msgid ""
 " another model requires the record being deleted. If possible, archive it "
 "instead."
 msgstr ""
-" en annan modell kräver att posten raderas. Om det är möjligt, arkivera den "
+" en annan modell kräver posten som raderas. Om det är möjligt, arkivera den "
 "istället."
 
 #. module: base
@@ -11824,12 +11825,12 @@ msgstr "Lägg till certifieringsfunktioner i dina kurser"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_survey
 msgid "Add certification to resumé of your employees"
-msgstr "Lägg till certifiering i dina anställdas CV"
+msgstr "Lägg till certifiering i dina anställdas Meritförteckningar"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_slides
 msgid "Add completed courses to resumé of your employees"
-msgstr "Lägg till avslutade kurser i dina anställdas CV"
+msgstr "Lägg till avslutade kurser i dina anställdas Meritförteckning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
@@ -12827,7 +12828,7 @@ msgstr "Tillgångar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Kapitalförvaltning"
+msgstr "Anläggningsregister"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -14844,6 +14845,12 @@ msgid "Compute"
 msgstr "Beräkna"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Beräkningsmetoden kan inte bero på fältet \"id"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr "Beräkna skatter med TaxCloud efter automatiskt skapande av fakturor."
@@ -15273,6 +15280,12 @@ msgid "Country Name"
 msgstr "Land"
 
 #. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr "Landskod får inte vara tom"
+
+#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "Län/delstat"
@@ -15656,7 +15669,7 @@ msgstr "Skapad den"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
-msgstr "Skapa"
+msgstr "Skapa "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__create_date
@@ -20387,7 +20400,7 @@ msgstr "Branscher"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr "Industri"
+msgstr "Bransch"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -20695,6 +20708,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Felaktig 'Gruppera efter'-parameter"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -21194,8 +21213,8 @@ msgstr "LGPL version 3"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Redovisningsrapporter"
+msgid "Lithuania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -22316,12 +22335,12 @@ msgstr "Hantera hyreskontrakt, leveranser och returer"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_skills
 msgid "Manage skills of your employees during an appraisal process"
-msgstr "Hantera dina anställdas färdigheter under en bedömningsprocess"
+msgstr "Hantera dina anställdas kompetenser under en bedömningsprocess"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resumé of your employees"
-msgstr "Hantera dina anställdas färdigheter, kunskaper och meritförteckningar"
+msgstr "Hantera dina anställdas kompetens, kunskaper och meritförteckningar"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -27309,7 +27328,7 @@ msgstr "Planeringsavtal"
 #. module: base
 #: model:ir.module.module,summary:base.module_planning_hr_skills
 msgid "Planning Skills"
-msgstr "Planeringsfärdigheter"
+msgstr "Planering Kompetenser"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_holidays
@@ -30116,7 +30135,7 @@ msgstr "Fältets storlek kan inte vara negativ."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_survey
 msgid "Skills Certification"
-msgstr "Färdighetscertifiering"
+msgstr "Kompetenscertifiering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
@@ -30126,7 +30145,7 @@ msgstr "Kompetenshantering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
 msgid "Skills e-learning"
-msgstr "Färdigheter eLearning"
+msgstr "Kompetenser eLearning"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -31172,6 +31191,12 @@ msgstr "Thailand - Bokföring"
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr "Åtgärden \"%s\" kan inte väljas som hemåtgärd."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "Åtgärden \"App Switcher\" kan inte väljas som hemåtgärd."
 
@@ -31256,8 +31281,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_module.py:0
 #, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Modulen 'base' kan inte avinstalleras"
+msgid "Those modules cannot be uninstalled: %s"
+msgstr "Dessa moduler kan inte avinstalleras: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -31275,6 +31300,16 @@ msgstr ""
 "Kunden avstår uttryckligen från sina egna standardvillkor, även om dessa har"
 " utarbetats efter dessa standardförsäljningsvillkor. För att vara giltigt "
 "måste varje undantag uttryckligen överenskommas skriftligen i förväg."
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+"Namnet för den aktuella kursen är tomt.\n"
+"Vänligen ange det."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -31324,7 +31359,6 @@ msgstr "Valutakoden måste vara unik!"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__inverse_rate
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
-#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The currency of rate 1 to the rate of the currency."
 msgstr "Valutan med kurs 1 till valutakursen."
 
@@ -31621,8 +31655,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
-msgid "The rate of the currency to the currency of rate 1"
-msgstr "Valutans kurs i förhållande till valutan i kurs 1"
+#: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
+msgid "The rate of the currency to the currency of rate 1 "
+msgstr "Kursen för valutan till valutan för kurs 1 "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -34444,6 +34479,12 @@ msgstr ""
 "Du kan inte avaktivera den användare som du för närvarande är inloggad som."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "You cannot delete a group linked with a settings field."
+msgstr "Du kan inte radera en grupp som är kopplad till ett inställningsfält."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -34472,6 +34513,12 @@ msgstr ""
 "Du bör hellre arkivera dem efter att ha arkiverat den associerade användaren.\n"
 "\n"
 "Kopplade aktiva användare : %(names)s"
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -34503,6 +34550,12 @@ msgid ""
 msgstr ""
 "Du kan inte minska antalet decimaler i en valuta som redan används i en "
 "bokföringspost."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -35283,3 +35336,10 @@ msgstr "år"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Åland"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
+"Denna valuta är inställd på ett företag och kan därför inte avaktiveras."

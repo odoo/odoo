@@ -485,16 +485,6 @@ var DomainSelector = DomainTree.extend({
             }
         });
     },
-    /**
-     * If 'DomainSelector' is attached within modal, the modal should have
-     * visible overflow to allow user to see fields drop-down.
-     */
-    on_attach_callback() {
-        let $modalBodyEl = this.$el.closest('.modal-body');
-        if ($modalBodyEl.length !== 0) {
-            $modalBodyEl.css('overflow', 'visible');
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public

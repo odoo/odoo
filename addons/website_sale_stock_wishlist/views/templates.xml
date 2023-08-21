@@ -10,5 +10,8 @@
                 <small><i t-attf-class="fa #{'fa-check-square-o' if notify else 'fa-square-o'}"></i> Be notified when back in stock</small>
             </button>
         </xpath>
+        <xpath expr="//button[hasclass('o_wish_add')]" position="attributes">
+            <attribute name="t-att-disabled">not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()</attribute>
+        </xpath>
     </template>
 </odoo>

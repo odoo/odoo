@@ -113,6 +113,8 @@ class UoM(models.Model):
                 uom.ratio = uom.factor
 
     def _set_ratio(self):
+        if self.ratio == 0:
+            raise ValidationError(_("The value of ratio could not be Zero"))
         if self.uom_type == 'reference':
             self.factor = 1
         elif self.uom_type == 'bigger':

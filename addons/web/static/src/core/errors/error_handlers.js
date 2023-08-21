@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { browser } from "../browser/browser";
+import { isIOS } from "../browser/feature_detection";
+import { session } from "../../session";
 import { ConnectionLostError, RPCError } from "../network/rpc_service";
 import { registry } from "../registry";
 import {
@@ -31,6 +33,13 @@ const errorNotificationRegistry = registry.category("error_notifications");
  */
 function corsErrorHandler(env, error) {
     if (error instanceof UncaughtCorsError) {
+        // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
+        // when going back and forward through the browser when the
+        // cache is enabled. A feedback has been reported but in the
+        // meantime, hide any script error in these versions.
+        if (isIOS() && session.is_frontend && odoo.debug !== "assets") {
+            return true;
+        }
         env.services.dialog.add(NetworkErrorDialog, {
             traceback: error.traceback,
             message: error.message,

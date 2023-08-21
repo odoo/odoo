@@ -157,7 +157,7 @@ class StockMove(models.Model):
         res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
-        return res
+        return res.exists()
 
     def _action_record_components(self):
         self.ensure_one()

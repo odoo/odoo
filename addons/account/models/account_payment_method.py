@@ -23,7 +23,7 @@ class AccountPaymentMethod(models.Model):
         payment_methods = super().create(vals_list)
         methods_info = self._get_payment_method_information()
         for method in payment_methods:
-            information = methods_info.get(method.code)
+            information = methods_info.get(method.code, {})
 
             if information.get('mode') == 'multi':
                 method_domain = method._get_payment_method_domain()

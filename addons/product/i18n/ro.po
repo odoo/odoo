@@ -16,7 +16,7 @@ msgstr ""
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2505,11 +2505,9 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
+"Specify the fixed amount to add or subtract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Specificati valoarea fixa de adunat sau de scazut(daca este negativa) la "
-"valoarea calculata cu reducere."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3314,10 +3312,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Nu puteți șterge valoarea %s, deoarece este utilizată pe următoarele produse:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3345,9 +3342,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "Nu puteți muta atributul%s de la produsul%s la produsul %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3358,6 +3354,13 @@ msgid ""
 msgstr ""
 "Nu puteți dezactiva o regulă de listă de prețuri, vă rugăm să o ștergeți sau"
 " să arhivați lista de prețuri în schimb."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "Nu puteți muta atributul%s de la produsul%s la produsul %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

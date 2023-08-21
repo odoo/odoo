@@ -237,12 +237,26 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
+    def sitemap_website_info(env, rule, qs):
+        website = env['website'].get_current_website()
+        if not (
+            website.viewref('website.website_info', False).active
+            and website.viewref('website.show_website_info', False).active
+        ):
+            # avoid 404 or blank page in sitemap
+            return False
+
+        if not qs or qs.lower() in '/website/info':
+            yield {'loc': '/website/info'}
+
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info)
     def website_info(self, **kwargs):
-        try:
-            request.website.get_template('website.website_info').name
-        except Exception as e:
-            return request.env['ir.http']._handle_exception(e)
+        if not request.website.viewref('website.website_info', False).active:
+            # Deleted or archived view (through manual operation in backend).
+            # Don't check `show_website_info` view: still need to access if
+            # disabled to be able to enable it through the customize show.
+            raise request.not_found()
+
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
         l10n = Module.search([('state', '=', 'installed'), ('name', '=like', 'l10n_%')])

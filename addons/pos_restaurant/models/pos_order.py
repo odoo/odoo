@@ -54,6 +54,7 @@ class PosOrder(models.Model):
         fields.extend([
             'id',
             'discount',
+            'tax_ids',
             'product_id',
             'price_unit',
             'order_id',
@@ -81,6 +82,8 @@ class PosOrder(models.Model):
             order_line["pack_lot_ids"] = []
         else:
             order_line["pack_lot_ids"] = [[0, 0, lot] for lot in order_line["pack_lot_ids"]]
+
+        order_line["tax_ids"] = [(6, False, [tax for tax in order_line["tax_ids"]])]
         return order_line
 
     def _get_order_lines(self, orders):

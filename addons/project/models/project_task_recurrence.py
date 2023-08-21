@@ -247,7 +247,7 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_task(self):
         for recurrence in self:
-            task = recurrence.sudo().task_ids[-1]
+            task = max(recurrence.sudo().task_ids, key=lambda t: t.id)
             create_values = recurrence._new_task_values(task)
             new_task = self.env['project.task'].sudo().create(create_values)
             recurrence._create_subtasks(task, new_task, depth=3)

@@ -93,7 +93,6 @@
         <field name="domain">[('requisition_id','=',active_id)]</field>
         <field name="context">{
             "default_requisition_id":active_id,
-            "default_user_id": False,
             }
         </field>
     </record>
@@ -105,7 +104,6 @@
         <field name="domain">[('requisition_id','=',active_id)]</field>
         <field name="context">{
             "default_requisition_id":active_id,
-            "default_user_id": False,
             }
         </field>
     </record>
@@ -118,9 +116,11 @@
             <header>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"
+                    context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
                     attrs="{'invisible': [('state', '!=', 'open')]}"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
+                    context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
                     attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
                 <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
                 <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
@@ -133,7 +133,7 @@
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                        attrs="{'invisible': [('state', '=', 'draft')]}">
+                        attrs="{'invisible': [('state', '=', 'draft')]}" context="{'default_currency_id': currency_id}">
                         <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
                     </button>
                 </div>

@@ -14,11 +14,12 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2021
 # Karol Rybak <karolrybak85@gmail.com>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,6 +43,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"(ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -203,7 +206,7 @@ msgstr "Typ opóźnienia"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Wyłącz akcję"
 
 #. module: base_automation
 #. openerp-web
@@ -215,6 +218,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Wyłączenie tej automatycznej akcji pozwoli na kontynuowanie pracy\n"
+"ale wszelkie dane utworzone po tym mogą być potencjalnie uszkodzone,\n"
+"ponieważ efektywnie wyłączasz dostosowanie, które może ustawić\n"
+"ważne i/lub wymagane pola."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -236,7 +243,7 @@ msgstr "Rodzaj terminu"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Edytuj akcję"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -447,7 +454,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Skonfiguruj nową automatyzację"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -476,6 +483,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\"  %(trigger_label)s może być użyty tylko z typem akcji "
+"\"%(state_value)s\"."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -493,7 +502,7 @@ msgstr ""
 msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
-msgstr ""
+msgstr "Wystąpił błąd podczas wykonywania akcji automatycznej."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -564,6 +573,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Używaj automatycznych akcji do automatycznego wyzwalania akcji dla\n"
+"różnych ekranów. Przykład: sygnał utworzony przez określonego użytkownika może\n"
+"może zostać automatycznie przypisany do określonego zespołu sprzedaży, lub\n"
+"szansa, która nadal ma status oczekującej po 14 dniach, może\n"
+"wyzwolić automatyczną wiadomość e-mail z przypomnieniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -631,6 +645,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Możesz poprosić administratora o wyłączenie lub poprawienie tej "
+"automatycznej akcji."
 
 #. module: base_automation
 #. openerp-web
@@ -638,6 +654,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Możesz wyłączyć tę automatyczną akcję lub edytować ją, aby rozwiązać "
+"problem."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -646,3 +664,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Nie można wysłać wiadomości e-mail, dodać obserwujących ani stworzyć "
+"aktywności dla usuniętego rekordu. To po prostu nie działa."

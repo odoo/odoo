@@ -27,6 +27,7 @@
                                     </button>
                                 </span>
                                 <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" placeholder="Search users"/>
+                                <input type="hidden" name="group_by" t-att-value="group_by"/>
                             </div>
                         </form>
                     </div>
@@ -49,7 +50,7 @@
                                 <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
                                     <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="search" placeholder="Search courses"/>
+                                            <input type="text" class="form-control" name="search" placeholder="Search users"/>
                                             <span class="input-group-append">
                                                 <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
                                                     <i class="fa fa-search"/>
@@ -561,7 +562,7 @@
                 <span class="badge badge-danger font-weight-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
-                    <span class="badge badge-pill badge-success px-3 py-2" >+ <t t-esc="user['karma_gain']"/> XP</span>
+                    <span class="badge badge-pill badge-success px-3 py-2" ><t t-if="user['karma_gain'] > 0">+ </t> <t t-esc="user['karma_gain']"/> XP</span>
                 </div>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
@@ -584,7 +585,7 @@
         </td>
         <td class="align-middle text-nowrap">
             <t t-if="user['karma_gain']">
-                <span class="badge badge-pill badge-success d-inline">+ <t t-esc="user['karma_gain']"/> XP</span>
+                <span class="badge badge-pill badge-success d-inline"><t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP</span>
                 <span class="text-muted pl-2 pr-3">
                     <t t-if="group_by == 'week'">this week</t>
                     <t t-elif="group_by == 'month'">this month</t>

@@ -22,4 +22,4 @@ class AccountBankStatementLine(models.Model):
                 })
             return bank_account
         else:
-            super(AccountBankStatementLine, self)._find_or_create_bank_account()
+            return super()._find_or_create_bank_account()

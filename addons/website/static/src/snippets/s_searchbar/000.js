@@ -65,15 +65,16 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
             for (const keyValue of urlParams.split('&')) {
                 const [key, value] = keyValue.split('=');
                 if (value && key !== 'search') {
-                    this.options[key] = value;
+                    // Decode URI parameters: revert + to space then decodeURIComponent.
+                    this.options[decodeURIComponent(key.replace(/\+/g, '%20'))] = decodeURIComponent(value.replace(/\+/g, '%20'));
                 }
             }
         }
         const pathParts = urlPath.split('/');
         for (const index in pathParts) {
-            const value = pathParts[index];
+            const value = decodeURIComponent(pathParts[index]);
             if (index > 0 && /-[0-9]+$/.test(value)) { // is sluggish
-                this.options[pathParts[index - 1]] = value;
+                this.options[decodeURIComponent(pathParts[index - 1])] = value;
             }
         }
 

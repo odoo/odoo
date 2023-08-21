@@ -115,6 +115,30 @@ const FormEditor = options.Class.extend({
         return this.$target[0].dataset.mark;
     },
     /**
+     * Perform the opposite operation than the `_getQuotesEncodedName` method:
+     * replace all `&quot;` by the `"` character, `&apos;` by the `'` character
+     * and `&lsquo;` by the '`' character.
+     *
+     * @param {string} name
+     */
+    _getQuotesDecodedName(name) {
+        return name.replaceAll(/&quot;/g, character => `"`)
+                   .replaceAll(/&apos;/g, character => `'`)
+                   .replaceAll(/&lsquo;/g, character => '`');
+    },
+    /**
+     * Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
+     * all "`" character by `&lsquo;`. This is needed in order to be able to
+     * perform querySelector of this type: `querySelector(`[name="${name}"]`)`.
+     *
+     * @param {string} name
+     */
+    _getQuotesEncodedName(name) {
+        return name.replaceAll(/"/g, character => `&quot;`)
+                   .replaceAll(/'/g, character => `&apos;`)
+                   .replaceAll(/`/g, character => `&lsquo;`);
+    },
+    /**
      * @private
      * @returns {boolean}
      */
@@ -143,6 +167,12 @@ const FormEditor = options.Class.extend({
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
         template.content.querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
+        template.content.querySelectorAll("[name]").forEach(el => {
+            el.name = this._getQuotesEncodedName(el.name);
+        });
+        template.content.querySelectorAll("[data-name]").forEach(el => {
+            el.dataset.name = this._getQuotesEncodedName(el.dataset.name);
+        });
         return template.content.firstElementChild;
     },
 });
@@ -177,6 +207,7 @@ const FieldEditor = FormEditor.extend({
         } else {
             field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
+            field.type = this._getFieldType();
         }
         if (!noRecords) {
             field.records = this._getListItems();
@@ -783,7 +814,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {string} action
      */
     _redirectToAction: function (action) {
-        window.location.replace(`/web#action=${action}`);
+        window.location.replace(`/web#action=${encodeURIComponent(action)}`);
     },
 
     //--------------------------------------------------------------------------
@@ -962,8 +993,40 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * Set the name of the field on the label
      */
     setLabelText: function (previewMode, value, params) {
+        let updateDependencies = true;
+        if (!previewMode) {
+            // Find the other field input names of the form. In the case of
+            // "Custom fields", their input names is the same as their labels.
+            const otherFieldInputNames = [];
+            for (const fieldEl of this.formEl.querySelectorAll(".s_website_form_field")) {
+                if (fieldEl !== this.$target[0]) {
+                    otherFieldInputNames.push(this._getQuotesDecodedName(
+                            fieldEl.querySelector(".s_website_form_input").name));
+                }
+            }
+            if (otherFieldInputNames.includes(value)) {
+                // If it exists another field with the same input name on the
+                // form, modify the current field label to make it unique. Do
+                // not update the dependencies as it could lead to circular
+                // dependency: e.g make a field dependent of another (let's call
+                // it A) and change its field label so that it is the same than
+                // A -> the field label is the same than its dependency name.
+                // The circular dependency is broken by renaming the current
+                // field label but updating the dependencies would cause the
+                // circular dependency to reappear.
+                let i = 1;
+                let newFieldName = `${value} ${i}`;
+                while (otherFieldInputNames.includes(newFieldName)) {
+                    i++;
+                    newFieldName = `${value} ${i}`;
+                }
+                value = newFieldName;
+                updateDependencies = false;
+            }
+        }
         this.$target.find('.s_website_form_label_content').text(value);
         if (this._isFieldCustom()) {
+            value = this._getQuotesEncodedName(value);
             const multiple = this.$target[0].querySelector('.s_website_form_multiple');
             if (multiple) {
                 multiple.dataset.name = value;
@@ -972,10 +1035,12 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const previousInputName = inputEls[0].name;
             inputEls.forEach(el => el.name = value);
 
-            // Synchronize the fields whose visibility depends on this field
-            const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousInputName}"]`);
-            for (const dependentEl of dependentEls) {
-                dependentEl.dataset.visibilityDependency = value;
+            if (updateDependencies) {
+                // Synchronize the fields whose visibility depends on this field
+                const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousInputName}"]`);
+                for (const dependentEl of dependentEls) {
+                    dependentEl.dataset.visibilityDependency = value;
+                }
             }
         }
     },

@@ -37,6 +37,14 @@ const LinkPopoverWidget = Widget.extend({
         this.$copyLink = this.$('.o_we_copy_link');
         this.$fullUrl = this.$('.o_we_full_url');
 
+        // Use the right ClipboardJS with respect to the prototype of this.el
+        // since, starting with Firefox 109, a widget element prototype that is
+        // adopted by an iframe will not be instanceof its original constructor.
+        // See: https://github.com/webcompat/web-bugs/issues/118350
+        const ClipboardJS =
+            this.el instanceof HTMLElement
+                ? window.ClipboardJS
+                : this.el.ownerDocument.defaultView.ClipboardJS;
         // Copy onclick handler
         const clipboard = new ClipboardJS(
             this.$copyLink[0],
@@ -48,6 +56,7 @@ const LinkPopoverWidget = Widget.extend({
                 type: 'success',
                 message: _t("Link copied to clipboard."),
             });
+            this.popover.hide();
         });
 
         // init tooltips & popovers
@@ -118,9 +127,11 @@ const LinkPopoverWidget = Widget.extend({
                     !(
                         hierarchy.includes(this.$target[0]) ||
                         (hierarchy.includes(this.$el[0]) &&
-                            !hierarchy.some(x => x.tagName && x.tagName === 'A'))
+                            !hierarchy.some(x => x.tagName && x.tagName === 'A' && (x === this.$urlLink[0] || x === this.$fullUrl[0])))
                     )
                 ) {
+                    // Note: For buttons of the popover, their listeners should
+                    // handle the hide themselves to avoid race conditions.
                     this.popover.hide();
                 }
             }
@@ -197,7 +208,7 @@ const LinkPopoverWidget = Widget.extend({
             // would need to fetch the page through the server (s2s), involving
             // enduser fetching problematic pages such as illicit content.
             this.$previewFaviconImg.attr({
-                'src': `https://www.google.com/s2/favicons?sz=16&domain=${url}`
+                'src': `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`
             }).removeClass('d-none');
             this.$previewFaviconFa.addClass('d-none');
         } else {
@@ -256,6 +267,7 @@ const LinkPopoverWidget = Widget.extend({
             link: this.$target[0],
         });
         ev.stopImmediatePropagation();
+        this.popover.hide();
     },
     /**
      * Removes the link/anchor.
@@ -267,6 +279,7 @@ const LinkPopoverWidget = Widget.extend({
         ev.preventDefault();
         this.options.wysiwyg.removeLink();
         ev.stopImmediatePropagation();
+        this.popover.hide();
     },
 });
 

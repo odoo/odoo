@@ -2420,7 +2420,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 8
 
-        self.assertRecordValues(so.picking_ids.move_lines, [
+        self.assertRecordValues(so.picking_ids.sorted('id').move_lines, [
             {'product_id': self.component_f.id, 'location_dest_id': custo_location.id, 'quantity_done': 100, 'state': 'done'},
             {'product_id': self.component_g.id, 'location_dest_id': custo_location.id, 'quantity_done': 200, 'state': 'done'},
             {'product_id': self.component_f.id, 'location_dest_id': stock_location.id, 'quantity_done': 20, 'state': 'done'},
@@ -2513,3 +2513,236 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 line.product_uom_qty = 0
 
         self.assertEqual(so.picking_ids, delivery | return_picking)
+
+    def test_fifo_reverse_and_create_new_invoice(self):
+        """
+        FIFO automated
+        Kit with one component
+        Receive the component: 1@10, 1@50
+        Deliver 1 kit
+        Post the invoice, add a credit note with option 'new draft inv'
+        Post the second invoice
+        COGS should be based on the delivered kit
+        """
+        kit = self._create_product('Simple Kit', self.uom_unit)
+        categ_form = Form(self.env['product.category'])
+        categ_form.name = 'Super Fifo'
+        categ_form.property_cost_method = 'fifo'
+        categ_form.property_valuation = 'real_time'
+        categ = categ_form.save()
+        (kit + self.component_a).categ_id = categ
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': self.component_a.id, 'product_qty': 1.0})]
+        })
+
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.component_a.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.component_a.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 50]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_lines.quantity_done = 1.0
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'modify',
+            'journal_id': invoice01.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        invoice02 = self.env['account.move'].browse(reversal['res_id'])
+        invoice02.action_post()
+
+        amls = invoice02.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == categ.property_stock_account_output_categ_id)
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 10)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == categ.property_account_expense_categ_id)
+        self.assertEqual(cogs_aml.debit, 10)
+        self.assertEqual(cogs_aml.credit, 0)
+
+    def test_kit_avco_fully_owned_and_delivered_invoice_post_delivery(self):
+        self.stock_account_product_categ.property_cost_method = 'average'
+
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'standard_price': price,
+            'categ_id': self.stock_account_product_categ.id,
+            'invoice_policy': 'delivery',
+        } for name, price in [
+            ('Compo 01', 10),
+            ('Compo 02', 20),
+            ('Kit', 0),
+        ]])
+
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_lines.quantity_done = 1
+        so.picking_ids.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # COGS should not exist because the products are owned by an external partner
+        amls = invoice.line_ids
+        self.assertRecordValues(amls, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 5},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 5,     'credit': 0},
+        ])
+
+    def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
+        self.stock_account_product_categ.property_cost_method = 'average'
+
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'standard_price': price,
+            'categ_id': self.stock_account_product_categ.id,
+            'invoice_policy': 'delivery',
+        } for name, price in [
+            ('Compo 01', 10),
+            ('Compo 02', 20),
+            ('Kit', 0),
+        ]])
+
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1)
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_line_ids.qty_done = 1
+        so.picking_ids.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # COGS should not exist because the products are owned by an external partner
+        amls = invoice.line_ids
+        self.assertRecordValues(amls, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 10},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 10,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 30},
+            {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
+        ])
+
+    def test_avoid_removing_kit_bom_in_use(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit_1.name,
+                    'product_id': self.kit_1.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.kit_1.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+
+        so.action_confirm()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.toggle_active()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.unlink()
+
+        for move in so.order_line.move_ids:
+            move.quantity_done = move.product_uom_qty
+        so.picking_ids.button_validate()
+
+        self.assertEqual(so.picking_ids.state, 'done')
+        with self.assertRaises(UserError):
+            self.bom_kit_1.toggle_active()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.unlink()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, 'posted')
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.unlink()

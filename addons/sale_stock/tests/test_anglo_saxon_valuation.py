@@ -632,6 +632,74 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
+    def test_avco_partially_owned_and_delivered_invoice_post_delivery(self):
+        """
+        Standard price set to 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice after full delivery.
+        """
+        self.product.categ_id.property_cost_method = 'average'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_and_confirm_two_units()
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.qty_done = 1
+        sale_order.picking_ids.button_validate()
+
+        # Invoice one by one
+        invoice01 = sale_order._create_invoices()
+        with Form(invoice01) as invoice_form:
+            with invoice_form.invoice_line_ids.edit(0) as line_form:
+                line_form.quantity = 1
+        invoice01.action_post()
+
+        invoice02 = sale_order._create_invoices()
+        invoice02.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 12},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 12,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 10},
+            {'account_id': self.company_data['default_account_expense'].id,     'debit': 10,    'credit': 0},
+        ])
+        self.assertRecordValues(invoice02.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 12},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 12,    'credit': 0},
+        ])
+
+    def test_avco_fully_owned_and_delivered_invoice_post_delivery(self):
+        """
+        Standard price set to 10. Sale order 2@12. The products are owned by an
+        external partner. Invoice after full delivery.
+        """
+        self.product.categ_id.property_cost_method = 'average'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product, self.company_data['default_warehouse'].lot_stock_id, 2, owner_id=self.partner_b)
+
+        sale_order = self._so_and_confirm_two_units()
+        sale_order.picking_ids.move_line_ids.qty_done = 2
+        sale_order.picking_ids.button_validate()
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        # COGS should not exist because the products are owned by an external partner
+        amls = invoice.line_ids
+        self.assertRecordValues(amls, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 24},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 24,    'credit': 0},
+        ])
+
     # -------------------------------------------------------------------------
     # FIFO Ordered
     # -------------------------------------------------------------------------
@@ -1558,3 +1626,64 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         (invoice01 | invoice03).action_post()
         cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
         self.assertEqual(sum(cogs.mapped('credit')), total_value)
+
+    def test_fifo_reverse_and_create_new_invoice(self):
+        """
+        FIFO automated
+        Receive 1@10, 1@50
+        Deliver 1
+        Post the invoice, add a credit note with option 'new draft inv'
+        Post the second invoice
+        COGS should be based on the delivered product
+        """
+        self.product.categ_id.property_cost_method = 'fifo'
+
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 50]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_lines.quantity_done = 1.0
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'modify',
+            'journal_id': invoice01.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        invoice02 = self.env['account.move'].browse(reversal['res_id'])
+        invoice02.action_post()
+
+        amls = invoice02.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 10)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml.debit, 10)
+        self.assertEqual(cogs_aml.credit, 0)

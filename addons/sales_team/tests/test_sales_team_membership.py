@@ -276,6 +276,24 @@ class TestMembership(TestSalesCommon):
             added.write({'crm_team_id': sales_team_1.id})
             self.new_team.flush()
 
+    def test_sales_team_member_search(self):
+        """ when a search is triggered on the member_ids field in crm.team
+        it is currently returning the archived records also. this test will
+        ensure that the search wont return archived record.
+
+        this is to fix unwanted ORM behavior
+        """
+        self.env['res.partner'].create({'name': 'Test Partner', 'team_id': self.new_team.id})
+        self.env['crm.team.member'].create({
+            'user_id': self.env.uid,
+            'crm_team_id': self.new_team.id,
+            'active': False,
+        })
+        partner_exists = self.env['res.partner'].search([
+            ('team_id.member_ids', 'in', [self.env.uid])
+        ])
+        self.assertFalse(partner_exists, msg="Partner should return empty as current user is removed from team")
+
     def test_users_sale_team_id(self):
         self.assertTrue(self.sales_team_1.sequence < self.new_team.sequence)
 

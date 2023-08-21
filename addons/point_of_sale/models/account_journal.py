@@ -14,3 +14,10 @@ class AccountJournal(models.Model):
         methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
         if methods:
             raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
+
+    def _get_journal_inbound_outstanding_payment_accounts(self):
+        res = super()._get_journal_inbound_outstanding_payment_accounts()
+        account_ids = set(res.ids)
+        for payment_method in self.sudo().pos_payment_method_ids:
+            account_ids.add(payment_method.outstanding_account_id.id or self.company_id.account_journal_payment_debit_account_id.id)
+        return self.env['account.account'].browse(account_ids)

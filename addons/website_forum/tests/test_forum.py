@@ -200,10 +200,46 @@ class TestForum(TestForumCommon):
             self.post.with_user(self.user_portal).vote(upvote=True)
 
     def test_vote(self):
+        def check_vote_records_count_and_integrity(expected_total_votes_count):
+            groups = self.env['forum.post.vote'].read_group([], fields=['__count'], groupby=['post_id', 'user_id'], lazy=False)
+            self.assertEqual(len(groups), expected_total_votes_count)
+            for post_user_group in groups:
+                self.assertEqual(post_user_group['__count'], 1)
+
+        check_vote_records_count_and_integrity(2)
         self.post.create_uid.karma = KARMA['ask']
-        self.user_portal.karma = KARMA['upv']
-        self.post.with_user(self.user_portal).vote(upvote=True)
+        self.user_portal.karma = KARMA['dwv']
+        initial_vote_count = self.post.vote_count
+        post_as_portal = self.post.with_user(self.user_portal)
+        res = post_as_portal.vote(upvote=True)
+
+        self.assertEqual(res['user_vote'], '1')
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(post_as_portal.user_vote, 1)
         self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
+
+        # On voting again with the same value, nothing changes
+        res = post_as_portal.vote(upvote=True)
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(res['user_vote'], '1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 1)
+
+        # On reverting vote, vote cancels
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count)
+        self.assertEqual(res['user_vote'], '0')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 0)
+
+        # Everything works from "0" too
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count - 1)
+        self.assertEqual(res['user_vote'], '-1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, -1)
+
+        check_vote_records_count_and_integrity(3)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):

@@ -42,7 +42,7 @@ class IapAutocompleteEnrichAPI(models.AbstractModel):
         except exceptions.ValidationError:
             return False, 'Insufficient Credit'
         except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
-            _logger.error('Autocomplete API error: %s', str(exception))
+            _logger.warning('Autocomplete API error: %s', str(exception))
             return False, str(exception)
         except iap_tools.InsufficientCreditError as exception:
             _logger.warning('Insufficient Credits for Autocomplete Service: %s', str(exception))

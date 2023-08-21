@@ -28,7 +28,7 @@ class CouponProgram(models.Model):
         "This is automatically generated when promo_code is changed.",
     )
     pos_order_ids = fields.Many2many(
-        "pos.order", help="The PoS orders where this program is applied.",
+        "pos.order", help="The PoS orders where this program is applied.", copy=False
     )
     pos_order_count = fields.Integer(
         "PoS Order Count", compute="_compute_pos_order_count"

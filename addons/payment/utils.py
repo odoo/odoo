@@ -57,6 +57,10 @@ def singularize_reference_prefix(prefix='tx', separator='-', max_length=None):
     If the `max_length` argument is passed, the end of the prefix can be stripped before
     singularizing to ensure that the result accounts for no more than `max_length` characters.
 
+    Warning: Generated prefixes are *not* uniques! This function should be used only for making
+    transaction reference prefixes more distinguishable and *not* for operations that require the
+    generated value to be unique.
+
     :param str prefix: The custom prefix to singularize
     :param str separator: The custom separator used to separate the prefix from the suffix
     :param int max_length: The maximum length of the singularized prefix

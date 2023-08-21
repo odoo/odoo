@@ -154,6 +154,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     }],
                     yAxes: [{
                         ticks: {
+                            beginAtZero: true,
                             precision: 0,
                         },
                     }],
@@ -206,7 +207,8 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     }],
                     yAxes: [{
                         ticks: {
-                                precision: 0,
+                            beginAtZero: true,
+                            precision: 0,
                         },
                     }],
                 },
@@ -348,6 +350,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                             display: false,
                         },
                         ticks: {
+                            beginAtZero: true,
                             precision: 0,
                             callback: function (label) {
                                 return label + '%';
@@ -355,7 +358,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                             suggestedMin: 0,
                             suggestedMax: 100,
                             maxTicksLimit: 5,
-                            stepSize: 25
+                            stepSize: 25,
                         },
                     }],
                 },

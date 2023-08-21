@@ -202,3 +202,86 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         lc.compute_landed_cost()
 
         self.assertEqual(sum(lc.valuation_adjustment_lines.mapped('additional_landed_cost')), 1000.0)
+
+    def test_stock_landed_costs_rounding_03(self):
+        """
+        Storable AVCO product
+        Receive:
+            5 @ 5
+            5 @ 8
+            5 @ 7
+            20 @ 7.33
+        Add landed cost of $5 to each receipt (except the first one)
+        Deliver:
+            23
+            2
+            10
+        At the end, the SVL value should be zero
+        """
+        self.product_a.type = 'product'
+        self.product_a.categ_id.property_cost_method = 'average'
+
+        stock_location = self.warehouse.lot_stock_id
+        supplier_location_id = self.ref('stock.stock_location_suppliers')
+        customer_location_id = self.ref('stock.stock_location_customers')
+
+        receipts = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location_id,
+            'location_dest_id': stock_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'price_unit': price,
+                'product_uom': self.product_a.uom_id.id,
+                'product_uom_qty': qty,
+                'location_id': supplier_location_id,
+                'location_dest_id': stock_location.id,
+            })]
+        } for qty, price in [
+            (5, 5.0),
+            (5, 8.0),
+            (5, 7.0),
+            (20, 7.33),
+        ]])
+
+        receipts.action_confirm()
+        for m in receipts.move_lines:
+            m.quantity_done = m.product_uom_qty
+        receipts.button_validate()
+
+        landed_costs = self.env['stock.landed.cost'].create([{
+            'picking_ids': [(6, 0, picking.ids)],
+            'account_journal_id': self.expenses_journal.id,
+            'cost_lines': [(0, 0, {
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 5.0,
+                'product_id': self.landed_cost.id
+            })],
+        } for picking in receipts[1:]])
+        landed_costs.compute_landed_cost()
+        landed_costs.button_validate()
+
+        self.assertEqual(self.product_a.standard_price, 7.47)
+
+        deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location_id,
+            'move_lines': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom': self.product_a.uom_id.id,
+                'product_uom_qty': qty,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location_id,
+            })]
+        } for qty in [23, 2, 10]])
+
+        deliveries.action_confirm()
+        for m in deliveries.move_lines:
+            m.quantity_done = m.product_uom_qty
+        deliveries.button_validate()
+
+        self.assertEqual(self.product_a.value_svl, 0)

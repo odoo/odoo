@@ -7,6 +7,8 @@
 # Éder Brito <britoederr@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Elio Viniski <elio@edoo.me>, 2022
+# Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +16,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Elio Viniski <elio@edoo.me>, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "(left:"
+msgstr "(esquerda:"
 
 #. module: pos_sale
 #. openerp-web
@@ -93,6 +102,13 @@ msgstr "Taxa de Câmbio"
 #, python-format
 msgid "Customer"
 msgstr "Cliente"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Customer loading error"
+msgstr "Erro de carregamento do cliente"
 
 #. module: pos_sale
 #. openerp-web
@@ -265,7 +281,7 @@ msgstr "Configuração do Ponto de Vendas"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Linhas de pedido de Ponto de Venda"
+msgstr "Linhas de pedido do ponto de venda"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -346,7 +362,7 @@ msgstr "PED"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr "Contagem Pedido de Venda"
+msgstr "Contagem do pedido de venda"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
@@ -425,6 +441,13 @@ msgstr "Definir pedido de venda"
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
+msgid "Settle the order"
+msgstr "Resolva o pedido"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
 msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
@@ -436,13 +459,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
 msgstr "Linha de ordem de venda de origem"
-
-#. module: pos_sale
-#. openerp-web
-#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
-#, python-format
-msgid "Settle the order"
-msgstr "Resolva o pedido"
 
 #. module: pos_sale
 #. openerp-web
@@ -465,6 +481,13 @@ msgid ""
 msgstr "A taxa da moeda para a moeda da taxa aplicável na data do pedido"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "There was a problem in loading the %s customer."
+msgstr "Houve um problema ao carregar o %s cliente."
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
@@ -480,7 +503,7 @@ msgstr "Este produto será aplicado quando o pagamento for feito"
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr "Este produto será usado como antecipação em um pedido de venda."
+msgstr "Este produto será utilizado como entrada em um pedido de venda."
 
 #. module: pos_sale
 #. openerp-web
@@ -535,3 +558,14 @@ msgstr "O que você quer fazer?"
 #, python-format
 msgid "Yes"
 msgstr "Sim"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"Você tentou cobrar um adiantamento de %s , mas só restam %s a serem pagos, "
+"%s serão aplicados à linha do pedido de compra."

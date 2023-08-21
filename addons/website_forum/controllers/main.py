@@ -567,7 +567,7 @@ class WebsiteForum(WebsiteProfile):
     # -----------------------------------
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
-    def view_user_forum_profile(self, forum, user_id, forum_origin, **post):
+    def view_user_forum_profile(self, forum, user_id, forum_origin='/forum', **post):
         return request.redirect('/profile/user/' + str(user_id) + '?forum_id=' + str(forum.id) + '&forum_origin=' + str(forum_origin))
 
     def _prepare_user_profile_values(self, user, **post):
@@ -638,7 +638,7 @@ class WebsiteForum(WebsiteProfile):
                 down_votes = rec['vote_count']
 
         # Votes which given by users on others questions and answers.
-        vote_ids = Vote.search([('user_id', '=', user.id)])
+        vote_ids = Vote.search([('user_id', '=', user.id), ('forum_id', 'in', forums.ids)])
 
         # activity by user.
         comment = Data._xmlid_lookup('mail.mt_comment')[2]

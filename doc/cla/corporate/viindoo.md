@@ -9,11 +9,11 @@ declaration.
 Signed,
 
 Leo Tran leo.tran@viindoo.com https://github.com/leotranviindoo
+Roy Le roy.le@viindoo.com https://github.com/royleviindoo
 
 List of contributors:
 
 David Tran david.tran@tvtmarine.com https://github.com/davidtranhp
-Roy Le roy.le@viindoo.com https://github.com/royleviindoo
 Nguyen Viet Phuong nguyenvietphuong1010@gmail.com https://github.com/vietphuong10
 La Van Thuat lathuat1997@gmail.com https://github.com/lathuat1997
 Trinh Viet Duc duc.trinh@viindoo.com https://github.com/vietduc1989
@@ -75,3 +75,7 @@ Ninh Van Chuong chuongnv.nd@gmail.com https://github.com/NinhVanChuong
 Dinh Cong Hieu dinhconghieu.hy@gmail.com https://github.com/DINHCONGHIEU
 Pham Thu Ha phamthuha0970@gmail.com  https://github.com/phamthuha0970
 Do Trung Duc dotrungduc.it@gmail.com https://github.com/dotrungduc201291
+Luu Quang Huy huylq25122000@gmail.com https://github.com/huylq2512
+Le Anh Dung anhdung288.viindoo@gmail.com https://github.com/LeDungViindoo
+Nguyen Duy Quyen duyquyencnt55@gmail.com https://github.com/duyquyen96 
+Do Anh Dai doanhdai1997@gmail.com https://github.com/AnhDai1997

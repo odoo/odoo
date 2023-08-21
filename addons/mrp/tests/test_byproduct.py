@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.tests import common
+from odoo.exceptions import ValidationError
 
 
 class TestMrpByProduct(common.TransactionCase):
@@ -205,3 +206,60 @@ class TestMrpByProduct(common.TransactionCase):
         finished_move_line = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_a).move_line_ids
         self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
         self.assertEqual(finished_move_line.location_dest_id, shelf2_location)
+
+    def test_check_byproducts_cost_share(self):
+        """
+        Test that byproducts with total cost_share > 100% or a cost_share < 0%
+        will throw a ValidationError
+        """
+        # Create new MO
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_a
+        mo_form.product_qty = 2.0
+        mo = mo_form.save()
+
+        # Create product
+        self.product_d = self.env['product.product'].create({
+                'name': 'Product D',
+                'type': 'product'})
+        self.product_e = self.env['product.product'].create({
+                'name': 'Product E',
+                'type': 'product'})
+
+        # Create byproduct
+        byproduct_1 = self.env['stock.move'].create({
+            'name': 'By Product 1',
+            'product_id': self.product_d.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'production_id': mo.id,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 0,
+            'quantity_done': 0
+            })
+        byproduct_2 = self.env['stock.move'].create({
+            'name': 'By Product 2',
+            'product_id': self.product_e.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'production_id': mo.id,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 0,
+            'quantity_done': 0
+            })
+
+        # Update byproduct has cost share > 100%
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            byproduct_1.cost_share = 120
+            mo.write({'move_byproduct_ids': [(4, byproduct_1.id)]})
+
+        # Update byproduct has cost share < 0%
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            byproduct_1.cost_share = -10
+            mo.write({'move_byproduct_ids': [(4, byproduct_1.id)]})
+
+        # Update byproducts have total cost share > 100%
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            byproduct_1.cost_share = 60
+            byproduct_2.cost_share = 70
+            mo.write({'move_byproduct_ids': [(6, 0, [byproduct_1.id, byproduct_2.id])]})

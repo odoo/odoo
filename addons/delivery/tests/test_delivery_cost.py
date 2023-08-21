@@ -17,7 +17,7 @@ class TestDeliveryCost(common.TransactionCase):
 
         self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
         self.pricelist = self.env.ref('product.list0')
-        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver'})
+        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
         self.product_uom_unit = self.env.ref('uom.product_uom_unit')
         self.product_delivery_normal = self.env['product.product'].create({
             'name': 'Normal Delivery Charges',
@@ -39,7 +39,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.product_uom_hour = self.env.ref('uom.product_uom_hour')
         self.account_data = self.env.ref('account.data_account_type_revenue')
         self.account_tag_operating = self.env.ref('account.account_tag_operating')
-        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct'})
+        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct', 'weight': 1.0})
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
@@ -381,3 +381,26 @@ class TestDeliveryCost(common.TransactionCase):
 
         self.assertEqual(len(sale_normal_delivery_charges.order_line), 3)
         self.assertEqual(sale_normal_delivery_charges.amount_untaxed, 80.0, "Delivery cost is not Added")
+
+    def test_estimated_weight(self):
+        """
+        Test that negative qty SO lines are not included in the estimated weight calculation
+        of delivery carriers (since it's used when calculating their rates).
+        """
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'name': 'SO - neg qty',
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_4.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_uom_qty': -1,
+                    'product_uom': self.product_uom_unit.id,
+                })],
+        })
+        shipping_weight = sale_order._get_estimated_weight()
+        self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")

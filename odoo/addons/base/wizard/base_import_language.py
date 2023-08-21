@@ -47,7 +47,7 @@ class BaseLanguageImport(models.TransientModel):
                     this._cr, buf, fileformat, this.code, overwrite=self.overwrite
                 )
             except ProgrammingError as e:
-                _logger.exception('File unsuccessfully imported, due to a malformed file.')
+                _logger.exception('Could not import the file due to a format mismatch or it being malformed.')
 
                 with closing(sql_db.db_connect(self._cr.dbname).cursor()) as cr:
                     raise UserError(_('File %r not imported due to a malformed file.\n\n'
@@ -55,7 +55,7 @@ class BaseLanguageImport(models.TransientModel):
                                       'Please check the content of the file you are trying to import.\n\n'
                                       'Technical Details:\n%s') % (self.filename, tools.ustr(e)))
             except Exception as e:
-                _logger.exception('File unsuccessfully imported, due to format mismatch.')
+                _logger.warning('Could not import the file due to a format mismatch or it being malformed.')
                 raise UserError(
                     _('File %r not imported due to format mismatch or a malformed file.'
                       ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
