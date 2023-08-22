@@ -297,6 +297,7 @@ class LoyaltyProgram(models.Model):
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_amount': '1',
                     'reward_point_mode': 'money',
+                    'reward_point_split': False,
                     'product_ids': self.env.ref('loyalty.ewallet_product_50', raise_if_not_found=False),
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
