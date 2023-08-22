@@ -1745,6 +1745,9 @@ class HttpCase(TransactionCase):
         if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
             timeout = timeout * 1.5
 
+        if watch:
+            _logger.warning('watch mode is only suitable for local testing')
+
         browser = ChromeBrowser(type(self), headless=not watch)
         try:
             self.authenticate(login, login, browser=browser)
