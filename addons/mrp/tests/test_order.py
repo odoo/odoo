@@ -1308,6 +1308,88 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
         mo2.button_mark_done()
 
+    def test_product_produce_duplicate_5(self):
+        """Produce a subassembly for the second time with the same serial
+        after having unbuilt both the subassembly and finished good it was part of"""
+        subassembly_product = self.env["product.product"].create(
+            {
+                "name": "Subassembly",
+                "type": "product",
+                "tracking": "serial",
+            }
+        )
+
+        subassembly_sn = self.env["stock.lot"].create(
+            {
+                "name": "SN",
+                "product_id": subassembly_product.id,
+                "company_id": self.env.company.id,
+            }
+        )
+
+        subassembly_mo1_form = Form(self.env["mrp.production"])
+        subassembly_mo1_form.product_id = subassembly_product
+        subassembly_mo1 = subassembly_mo1_form.save()
+        subassembly_mo1.action_confirm()
+        with Form(subassembly_mo1) as mo:
+            mo.qty_producing = 1
+        subassembly_mo1.lot_producing_id = subassembly_sn
+        subassembly_mo1.button_mark_done()
+
+        finished_good_product = self.env["product.product"].create(
+            {
+                "name": "Finished Good",
+                "type": "product",
+                "tracking": "serial",
+            }
+        )
+        finished_good_product_bom = self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": finished_good_product.product_tmpl_id.id,
+                "product_qty": 1,
+                "type": "normal",
+                "bom_line_ids": [
+                    (0, 0, {"product_id": subassembly_product.id, "product_qty": 1}),
+                ],
+            }
+        )
+        finished_good_mo_form = Form(self.env["mrp.production"])
+        finished_good_mo_form.product_id = finished_good_product
+        finished_good_mo_form.bom_id = finished_good_product_bom
+        finished_good_mo = finished_good_mo_form.save()
+        finished_good_mo.action_confirm()
+        with Form(finished_good_mo) as mo:
+            mo.qty_producing = 1
+        finished_good_mo.action_generate_serial()
+        finished_good_detailed_operations_form = Form(
+            finished_good_mo.move_raw_ids[0],
+            view=self.env.ref("stock.view_stock_move_operations"),
+        )
+        with finished_good_detailed_operations_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 1
+            ml.lot_id = subassembly_sn
+        finished_good_detailed_operations_form.save()
+        finished_good_mo.button_mark_done()
+
+        finished_good_ub_form = Form(self.env["mrp.unbuild"])
+        finished_good_ub_form.mo_id = finished_good_mo
+        finished_good_ub = finished_good_ub_form.save()
+        finished_good_ub.action_unbuild()
+
+        subassembly_ub_form = Form(self.env["mrp.unbuild"])
+        subassembly_ub_form.mo_id = subassembly_mo1
+        subassembly_ub = subassembly_ub_form.save()
+        subassembly_ub.action_unbuild()
+
+        subassembly_mo2_form = Form(self.env["mrp.production"])
+        subassembly_mo2_form.product_id = subassembly_product
+        subassembly_mo2 = subassembly_mo2_form.save()
+        subassembly_mo2.action_confirm()
+        with Form(subassembly_mo2) as mo:
+            mo.qty_producing = 1
+        subassembly_mo2.lot_producing_id = subassembly_sn
+        subassembly_mo2.button_mark_done()
+
     def test_product_produce_12(self):
         """ Checks that, the production is robust against deletion of finished move."""
 
