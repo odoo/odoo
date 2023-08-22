@@ -1482,7 +1482,7 @@ export class Wysiwyg extends Component {
                 },
             },
         });
-        this.odooEditor.document.getSelection()?.removeAllRanges();
+        this.odooEditor.document.getSelection()?.collapseToEnd();
         this.odooEditor.editable.blur();
     }
     /**
