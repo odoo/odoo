@@ -97,7 +97,6 @@
     'post_init_hook': '_assign_default_mail_template_picking_id',
     'assets': {
         'web.report_assets_common': [
-            'web/static/src/legacy/scss/views.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
         ],

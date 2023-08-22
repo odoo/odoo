@@ -77,7 +77,6 @@
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
 
             'web/static/src/legacy/scss/fields.scss',
-            'web/static/src/legacy/scss/views.scss',
             'web/static/src/legacy/scss/form_view.scss',
             'web/static/src/legacy/scss/list_view.scss',
 
