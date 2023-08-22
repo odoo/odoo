@@ -713,6 +713,9 @@ class HrExpense(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
+            'attachment_ids': [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in self.message_main_attachment_id]
         }
 
     def _prepare_move_lines_vals(self):
@@ -1507,7 +1510,11 @@ class HrExpenseSheet(models.Model):
             'move_type': 'in_invoice',
             'partner_id': self.employee_id.sudo().work_contact_id.id,
             'currency_id': self.currency_id.id,
-            'line_ids':[Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
+            'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
+            'attachment_ids': [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in self.expense_line_ids.message_main_attachment_id
+            ],
         }
 
     def _prepare_move_vals(self):
