@@ -110,6 +110,10 @@ class PosSession(models.Model):
                     product_id_to_program_ids[product['id']].append(program['id'])
 
         loaded_data['product_id_to_program_ids'] = product_id_to_program_ids
+        product_product_fields = self.env['product.product'].fields_get(self._loader_params_product_product()['search_params']['fields'])
+        loaded_data['field_types'] = {
+            'product.product': {f:v['type'] for f, v in product_product_fields.items()}
+        }
 
     def _loader_params_product_product(self):
         params = super()._loader_params_product_product()
