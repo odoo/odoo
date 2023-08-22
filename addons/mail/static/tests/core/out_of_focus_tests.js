@@ -2,17 +2,13 @@
 
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { nextTick } from "@web/../tests/helpers/utils";
+import { contains, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("out of focus");
 
-QUnit.test("Spaces in notifications are not encoded", async (assert) => {
+QUnit.test("Spaces in notifications are not encoded", async () => {
     const { openDiscuss, pyEnv } = await start({
         services: {
-            notification: makeFakeNotificationService((message) => assert.step(message)),
             presence: makeFakePresenceService({ isOdooFocused: () => false }),
         },
     });
@@ -28,6 +24,5 @@ QUnit.test("Spaces in notifications are not encoded", async (assert) => {
             res_id: channelId,
         },
     });
-    await nextTick();
-    assert.verifySteps(["Hello world!"]);
+    await contains(".o_notification.border-info:contains(Hello world!)");
 });

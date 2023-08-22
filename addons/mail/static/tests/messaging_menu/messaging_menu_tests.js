@@ -12,7 +12,6 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu");
@@ -94,35 +93,27 @@ QUnit.test("rendering without OdooBot has a request (accepted)", async () => {
     await contains(".o-mail-NotificationItem", 0);
 });
 
-QUnit.test("respond to notification prompt (denied)", async (assert) => {
+QUnit.test("respond to notification prompt (denied)", async () => {
     patchBrowserNotification("default", "denied");
-    await start({
-        services: {
-            notification: makeFakeNotificationService(() => {
-                assert.step("confirmation_denied_toast");
-            }),
-        },
-    });
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.verifySteps(["confirmation_denied_toast"]);
+    await contains(
+        ".o_notification.border-warning:contains(Odoo will not send notifications on this device.)"
+    );
     await contains(".o-mail-MessagingMenu-counter", 0);
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", 0);
 });
 
-QUnit.test("respond to notification prompt (granted)", async (assert) => {
+QUnit.test("respond to notification prompt (granted)", async () => {
     patchBrowserNotification("default", "granted");
-    await start({
-        services: {
-            notification: makeFakeNotificationService(() => {
-                assert.step("confirmation_granted_toast");
-            }),
-        },
-    });
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.verifySteps(["confirmation_granted_toast"]);
+    await contains(
+        ".o_notification.border-success:contains(Odoo will send notifications on this device!)"
+    );
 });
 
 QUnit.test("no 'OdooBot has a request' in mobile app", async () => {

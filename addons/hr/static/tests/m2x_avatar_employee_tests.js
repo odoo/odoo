@@ -1,8 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { afterNextRender, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
@@ -155,15 +153,6 @@ QUnit.test(
                 }
             },
             serverData: { views },
-            services: {
-                notification: makeFakeNotificationService((message) => {
-                    assert.step("notification");
-                    assert.strictEqual(
-                        message,
-                        "You can only chat with employees that have a dedicated user."
-                    );
-                }),
-            },
         });
         await openView({
             res_model: "m2x.avatar.employee",
@@ -176,7 +165,10 @@ QUnit.test(
         );
 
         await dom.click(document.querySelector(".o_m2o_avatar > img"));
-        assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`, "notification"]);
+        await contains(
+            ".o_notification.border-info:contains(You can only chat with employees that have a dedicated user.)"
+        );
+        assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
     }
 );
 
@@ -352,7 +344,7 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
         document
             .querySelector(".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar")
             .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_2}/avatar_128`,
+        `/web/image/hr.employee.public/${employeeId_2}/avatar_128`
     );
     assert.strictEqual(
         document
@@ -360,11 +352,11 @@ QUnit.test("many2many_avatar_employee widget in kanban view", async function (as
                 ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
             )[1]
             .getAttribute("data-src"),
-        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`,
+        `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
     );
 
-    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[1]);
-    await dom.click(document.querySelectorAll('.o_kanban_record img.o_m2m_avatar')[0]);
+    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[1]);
+    await dom.click(document.querySelectorAll(".o_kanban_record img.o_m2m_avatar")[0]);
     assert.verifySteps([
         `read hr.employee.public ${employeeId_1}`,
         `read hr.employee.public ${employeeId_2}`,
@@ -398,15 +390,6 @@ QUnit.test(
                 }
             },
             serverData: { views },
-            services: {
-                notification: makeFakeNotificationService((message) => {
-                    assert.step("notification");
-                    assert.strictEqual(
-                        message,
-                        "You can only chat with employees that have a dedicated user."
-                    );
-                }),
-            },
         });
         await openView({
             res_model: "m2x.avatar.employee",
@@ -420,20 +403,20 @@ QUnit.test(
                 .getAttribute("data-src"),
             `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
         );
-
         await dom.click(
             document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
         );
         await dom.click(
             document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
         );
+        await contains(
+            ".o_notification.border-info:contains(You can only chat with employees that have a dedicated user.)"
+        );
         assert.verifySteps([
             `web_read m2x.avatar.employee ${employeeId_1}`,
             `read hr.employee.public ${employeeId_1}`,
-            "notification",
             `read hr.employee.public ${employeeId_2}`,
         ]);
-
         assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     }
 );

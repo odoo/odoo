@@ -1,59 +1,43 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Open Chat test", {});
 
-QUnit.test("openChat: display notification for partner without user", async (assert) => {
+QUnit.test("openChat: display notification for partner without user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const { env } = await start({
-        services: {
-            notification: makeFakeNotificationService((message) => {
-                assert.step("notification");
-                assert.strictEqual(
-                    message,
-                    "You can only chat with partners that have a dedicated user."
-                );
-            }),
-        },
-    });
+    const { env } = await start();
     await env.services["mail.thread"].openChat({ partnerId });
-    assert.verifySteps(["notification"]);
+    await contains(
+        ".o_notification.border-info:contains(You can only chat with partners that have a dedicated user.)"
+    );
 });
 
-QUnit.test("openChat: display notification for wrong user", async (assert) => {
+QUnit.test("openChat: display notification for wrong user", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].create({});
-    const { env } = await start({
-        services: {
-            notification: makeFakeNotificationService((message) => {
-                assert.step("notification");
-                assert.strictEqual(message, "You can only chat with existing users.");
-            }),
-        },
-    });
+    const { env } = await start();
     // userId not in the server data
     await env.services["mail.thread"].openChat({ userId: 4242 });
-    assert.verifySteps(["notification"]);
+    await contains(
+        ".o_notification.border-warning:contains(You can only chat with existing users.)"
+    );
 });
 
-QUnit.test("openChat: open new chat for user", async (assert) => {
+QUnit.test("openChat: open new chat for user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { env } = await start();
-    assert.containsNone($, ".o-mail-ChatWindow");
-    await afterNextRender(() => {
-        env.services["mail.thread"].openChat({ partnerId });
-    });
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindowContainer");
+    await contains(".o-mail-ChatWindow", 0);
+    env.services["mail.thread"].openChat({ partnerId });
+    await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("openChat: open existing chat for user", async (assert) => {
+QUnit.test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -69,9 +53,7 @@ QUnit.test("openChat: open existing chat for user", async (assert) => {
         channel_type: "chat",
     });
     const { env } = await start();
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    await afterNextRender(() => {
-        env.services["mail.thread"].openChat({ partnerId });
-    });
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input:not(:focus)");
+    env.services["mail.thread"].openChat({ partnerId });
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
 });
