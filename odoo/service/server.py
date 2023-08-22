@@ -16,11 +16,9 @@ import sys
 import threading
 import time
 import unittest
-from itertools import chain
 
 import psutil
 import werkzeug.serving
-from werkzeug.debug import DebuggedApplication
 
 from ..tests import loader
 
@@ -123,7 +121,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         if config['test_enable'] or config['test_file']:
             self.timeout = 5
         # flag the current thread as handling a http request
-        super(RequestHandler, self).setup()
+        super().setup()
         me = threading.current_thread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
@@ -167,8 +165,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
                 # there are some exceptions where some controllers might allocate two or more cursors.
                 self.max_http_threads = config['db_maxconn'] // 2
             self.http_threads_sem = threading.Semaphore(self.max_http_threads)
-        super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
-                                                           handler=RequestHandler)
+        super().__init__(host, port, app, handler=RequestHandler)
 
         # See https://github.com/pallets/werkzeug/pull/770
         # This allow the request threads to not be set as daemon
@@ -183,12 +180,12 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             _logger.info('HTTP service (werkzeug) running through socket activation')
         else:
             self.reload_socket = False
-            super(ThreadedWSGIServerReloadable, self).server_bind()
+            super().server_bind()
             _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
 
     def server_activate(self):
         if not self.reload_socket:
-            super(ThreadedWSGIServerReloadable, self).server_activate()
+            super().server_activate()
 
     def process_request(self, request, client_address):
         """
@@ -226,7 +223,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             # penalty in such case in order to avoid cpu bound loop while waiting for the semaphore.
             return
         # upstream _handle_request_noblock will handle errors and call shutdown_request in any cases
-        super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
+        super()._handle_request_noblock()
 
     def shutdown_request(self, request):
         if self.max_http_threads:
@@ -364,7 +361,7 @@ class CommonServer(object):
     def stop(self):
         for func in type(self)._on_stop_funcs:
             try:
-                _logger.debug("on_close call %s", func)
+                _logger.debug("on_stop call %s", func)
                 func()
             except Exception:
                 _logger.warning("Exception in %s", func.__name__, exc_info=True)
@@ -372,7 +369,7 @@ class CommonServer(object):
 
 class ThreadedServer(CommonServer):
     def __init__(self, app):
-        super(ThreadedServer, self).__init__(app)
+        super().__init__(app)
         self.main_thread_id = threading.current_thread().ident
         # Variable keeping track of the number of calls to the signal handler defined
         # below. This variable is monitored by ``quit_on_signals()``.
@@ -631,7 +628,7 @@ class ThreadedServer(CommonServer):
 
 class GeventServer(CommonServer):
     def __init__(self, app):
-        super(GeventServer, self).__init__(app)
+        super().__init__(app)
         self.port = config['gevent_port']
         self.httpd = None
 
@@ -816,8 +813,8 @@ class PreforkServer(CommonServer):
             try:
                 self.workers_http.pop(pid, None)
                 self.workers_cron.pop(pid, None)
-                u = self.workers.pop(pid)
-                u.close()
+                worker = self.workers.pop(pid)
+                worker.close()
             except OSError:
                 return
 
@@ -988,12 +985,11 @@ class PreforkServer(CommonServer):
 
 class Worker(object):
     """ Workers """
-    def __init__(self, multi):
+    def __init__(self, multi: PreforkServer):
         self.multi = multi
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
-        self.eintr_pipe = multi.pipe_new()
-        self.wakeup_fd_r, self.wakeup_fd_w = self.eintr_pipe
+        self.wakeup_fd_r, self.wakeup_fd_w = multi.pipe_new()
         # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
@@ -1009,8 +1005,8 @@ class Worker(object):
     def close(self):
         os.close(self.watchdog_pipe[0])
         os.close(self.watchdog_pipe[1])
-        os.close(self.eintr_pipe[0])
-        os.close(self.eintr_pipe[1])
+        os.close(self.wakeup_fd_r)
+        os.close(self.wakeup_fd_w)
 
     def signal_handler(self, sig, frame):
         self.alive = False
@@ -1120,7 +1116,7 @@ class Worker(object):
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
     def __init__(self, multi):
-        super(WorkerHTTP, self).__init__(multi)
+        super().__init__(multi)
 
         # The ODOO_HTTP_SOCKET_TIMEOUT environment variable allows to control socket timeout for
         # extreme latency situations. It's generally better to use a good buffering reverse proxy
@@ -1129,6 +1125,7 @@ class WorkerHTTP(Worker):
         # DoS due to idle HTTP connections.
         sock_timeout = os.environ.get("ODOO_HTTP_SOCKET_TIMEOUT")
         self.sock_timeout = float(sock_timeout) if sock_timeout else 2
+        self.server = None
 
     def process_request(self, client, addr):
         client.setblocking(1)
@@ -1157,19 +1154,20 @@ class WorkerHTTP(Worker):
                 raise
 
     def start(self):
-        Worker.start(self)
+        super().start()
         self.server = BaseWSGIServerNoBind(self.multi.app)
 
 class WorkerCron(Worker):
     """ Cron workers """
 
     def __init__(self, multi):
-        super(WorkerCron, self).__init__(multi)
+        super().__init__(multi)
         # process_work() below process a single database per call.
         # The variable db_index is keeping track of the next database to
         # process.
         self.db_index = 0
         self.watchdog_timeout = multi.cron_timeout  # Use a distinct value for CRON Worker
+        self.dbcursor = None
 
     def sleep(self):
         # Really sleep once all the databases have been processed.
@@ -1219,7 +1217,7 @@ class WorkerCron(Worker):
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
-        Worker.start(self)
+        super().start()
         if self.multi.socket:
             self.multi.socket.close()
 
