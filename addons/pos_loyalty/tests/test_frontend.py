@@ -1026,3 +1026,83 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour7",
             login="accountman",
         )
+
+
+    def test_promotion_program_with_loyalty_program(self):
+        """
+        - Create a promotion with a discount of 10%
+        - Create a loyalty program with a fixed discount of 10€
+        - Apply both programs to the order
+        - Check that no "infinity" discount is applied
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.promo_program = self.env['loyalty.program'].create({
+            'name': 'Promo Program',
+            'program_type': 'promotion',
+            'pos_ok': True,
+            'rule_ids': [(0, 0, {
+                'minimum_amount': 0,
+                'minimum_qty': 0
+                })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.discount_product = self.env["product.product"].create(
+            {
+                "name": "Discount Product",
+                "type": "service",
+                "list_price": 0,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+
+        self.test_product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+
+        self.loyalty_program = self.env["loyalty.program"].create(
+            {
+                "name": "Loyalty Program",
+                "program_type": "loyalty",
+                "pos_ok": True,
+                "rule_ids": [(0, 0, {
+                    "minimum_amount": 1,
+                    "minimum_qty": 1,
+                    "reward_point_mode": "order",
+                    "reward_point_amount": 500,
+                })],
+                "reward_ids": [(0, 0, {
+                    "required_points": 500,
+                    "reward_type": "discount",
+                    "discount": "10",
+                    "discount_mode": "per_order",
+                })],
+            }
+        )
+
+        partner = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner.id,
+            'program_id': self.loyalty_program.id,
+            'points': 500,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPromotion",
+            login="accountman",
+        )
