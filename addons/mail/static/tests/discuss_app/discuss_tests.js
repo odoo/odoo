@@ -17,7 +17,6 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { editInput, makeDeferred, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
@@ -41,7 +40,7 @@ QUnit.test("sanity check", async (assert) => {
     ]);
 });
 
-QUnit.test("can change the thread name of #general", async (assert) => {
+QUnit.test("can change the thread name of #general [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -307,7 +306,7 @@ QUnit.test("sidebar: chat custom name", async () => {
     await contains(".o-mail-DiscussSidebarChannel span:contains(Marc)");
 });
 
-QUnit.test("reply to message from inbox (message linked to document)", async (assert) => {
+QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
     const messageId = pyEnv["mail.message"].create({
@@ -323,23 +322,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async (as
         notification_type: "inbox",
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { openDiscuss, openFormView } = await start({
-        async mockRPC(route, args) {
-            if (route === "/mail/message/post") {
-                assert.step("message_post");
-                assert.strictEqual(args.thread_model, "res.partner");
-                assert.strictEqual(args.thread_id, partnerId);
-                assert.strictEqual(args.post_data.body, "Hello");
-                assert.strictEqual(args.post_data.message_type, "comment");
-            }
-        },
-        services: {
-            notification: makeFakeNotificationService((notification) => {
-                assert.ok(true);
-                assert.strictEqual(notification, 'Message posted on "Refactoring"');
-            }),
-        },
-    });
+    const { openDiscuss, openFormView } = await start();
     openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header:contains(on Refactoring)");
@@ -351,9 +334,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async (as
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(".o-mail-Composer", 0);
     await contains(".o-mail-Message:not(.o-selected)");
-    await contains(".o-mail-Message:contains(Test)");
-    await contains(".o-mail-Message");
-    assert.verifySteps(["message_post"]);
+    await contains('.o_notification.border-info:contains(Message posted on "Refactoring")');
     openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", 2);
     await contains(".o-mail-Message:contains(Hello)");
@@ -1315,11 +1296,7 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
         name: "General",
         channel_member_ids: [Command.create({ partner_id: partnerId })],
     });
-    const { env, openDiscuss } = await start({
-        services: {
-            notification: makeFakeNotificationService((message) => assert.step(message)),
-        },
-    });
+    const { env, openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel");
     await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
@@ -1329,7 +1306,7 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
         })
     );
     await contains(".o-mail-DiscussSidebarChannel:contains(General)");
-    assert.verifySteps(["You have been invited to #General"]);
+    await contains(".o_notification.border-info:contains(You have been invited to #General)");
 });
 
 QUnit.test("select another mailbox", async (assert) => {
