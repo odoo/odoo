@@ -15,4 +15,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'it':
             company.account_sale_tax_id = self.ref('22v')
             company.account_purchase_tax_id = self.ref('22am')
+            self.ref('00eu').write({
+                'l10n_it_has_exoneration': True,
+                'l10n_it_kind_exoneration': 'N3.2',
+                'l10n_it_law_reference': 'Art. 41, DL n. 331/93',
+            })
         return result

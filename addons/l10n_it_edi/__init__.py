@@ -8,7 +8,7 @@ from . import wizard
 
 def _l10n_it_edi_update_export_tax(env):
     for company in env['res.company'].search([('chart_template', '=', 'it')]):
-        tax = env.ref(f'l10n_it.{company.id}_00eu', raise_if_not_found=False)
+        tax = env.ref(f'account.{company.id}_00eu', raise_if_not_found=False)
         if tax:
             tax.write({
                 'l10n_it_has_exoneration': True,
