@@ -43,6 +43,19 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="mail_message_subtype_view_search">
+            <field name="name">mail.message.subtype.view.search</field>
+            <field name="model">mail.message.subtype</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="res_model"/>
+                    <field name="description"/>
+                    <filter string="Default" name="filter_default" domain="[('default', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_message_subtype">
             <field name="name">Subtypes</field>
             <field name="res_model">mail.message.subtype</field>
