@@ -119,7 +119,10 @@ class SaleOrder(models.Model):
             action['views'] = [(form_view_id, 'form')]
             action['res_id'] = self.tasks_ids.id
         # set default project
-        default_line = next(sol for sol in self.order_line if sol.product_id.detailed_type == 'service')
+        if self.order_line.filtered(lambda line: line.product_id.detailed_type == 'service'):
+            default_line = next(sol for sol in self.order_line if sol.product_id.detailed_type == 'service')
+        else:
+            raise UserError(_("Order lines have at least one service type product"))
         default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
 
         action['context'] = {
