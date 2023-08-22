@@ -16,7 +16,6 @@ import {
     commonParentGet,
     containsUnremovable,
     DIRECTIONS,
-    endPos,
     ensureFocus,
     getCursorDirection,
     getFurthestUneditableParent,
@@ -28,7 +27,6 @@ import {
     preserveCursor,
     setCursorStart,
     setSelection,
-    startPos,
     toggleClass,
     closestElement,
     isVisible,
@@ -80,6 +78,7 @@ import {
     boundariesOut,
     getFontSizeDisplayValue,
     rightLeafOnlyNotBlockPath,
+    lastLeaf,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -5088,7 +5087,7 @@ export class OdooEditor extends EventTarget {
         const cursorDestination =
             tds[tds.findIndex(td => closestTd === td) + (direction === DIRECTIONS.LEFT ? -1 : 1)];
         if (cursorDestination) {
-            setSelection(...startPos(cursorDestination), ...endPos(cursorDestination), true);
+            setCursorEnd(lastLeaf(cursorDestination));
         } else if (direction === DIRECTIONS.RIGHT) {
             this.execCommand('addRow', 'after');
             this._onTabulationInTable(ev);
