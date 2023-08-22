@@ -44,6 +44,12 @@ class ProductAttributeValue(models.Model):
             " to display the color if the attribute type is 'Color'.")
     display_type = fields.Selection(related='attribute_id.display_type')
     color = fields.Integer(string="Color Index", default=_get_default_color)
+    image = fields.Image(
+        string="Image",
+        help="You can upload an image that will be used as the color of the attribute value.",
+        max_width=70,
+        max_height=70,
+    )
 
     _sql_constraints = [
         ('value_company_uniq',

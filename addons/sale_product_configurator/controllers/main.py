@@ -236,6 +236,7 @@ class ProductConfiguratorController(Controller):
                         'name': str,
                         'price_extra': float,
                         'html_color': str|False,
+                        'image': str|False,
                         'is_custom': bool
                     }],
                     'selected_attribute_id': int,
@@ -270,7 +271,7 @@ class ProductConfiguratorController(Controller):
                 attribute=dict(**ptal.attribute_id.read(['id', 'name', 'display_type'])[0]),
                 attribute_values=[
                     dict(
-                        **ptav.read(['name', 'html_color', 'is_custom'])[0],
+                        **ptav.read(['name', 'html_color', 'image', 'is_custom'])[0],
                         price_extra=ptav.currency_id._convert(
                             ptav.price_extra,
                             currency,
