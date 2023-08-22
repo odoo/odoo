@@ -165,7 +165,8 @@ class Meeting(models.Model):
 
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
-        if self._check_microsoft_sync_status() and any(self.microsoft_id):
+        self.ensure_one()
+        if self._check_microsoft_sync_status() and self.microsoft_id:
             self._forbid_recurrence_update()
         super().action_mass_archive(recurrence_update_setting)
 
