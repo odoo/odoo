@@ -3109,10 +3109,12 @@ class BaseModel(metaclass=MetaModel):
             conname = '%s_%s' % (self._table, key)
             if len(conname) > 63:
                 hashed_conname = tools.make_identifier(conname)
-                _logger.info("Constraint name %r has more than 63 characters, internal PG identifier is %r", conname, hashed_conname)
+                current_definition = tools.constraint_definition(cr, self._table, hashed_conname)
+                if not current_definition:
+                    _logger.info("Constraint name %r has more than 63 characters, internal PG identifier is %r", conname, hashed_conname)
                 conname = hashed_conname
-
-            current_definition = tools.constraint_definition(cr, self._table, conname)
+            else:
+                current_definition = tools.constraint_definition(cr, self._table, conname)
             if current_definition == definition:
                 continue
 
