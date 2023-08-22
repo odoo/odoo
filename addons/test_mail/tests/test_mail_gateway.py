@@ -10,6 +10,7 @@ from unittest.mock import DEFAULT
 from unittest.mock import patch
 
 from odoo import exceptions
+from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
@@ -349,7 +350,16 @@ class TestMailgateway(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
-        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_IMAGE, self.email_from, 'groups@test.com')
+        origin_message_parse_extract_payload = MailThread._message_parse_extract_payload
+
+        def _message_parse_extract_payload(this, *args, **kwargs):
+            res = origin_message_parse_extract_payload(this, *args, **kwargs)
+            self.assertTrue(isinstance(res['body'], str), 'Body from extracted payload should still be a string.')
+            return res
+
+        with patch.object(MailThread, '_message_parse_extract_payload', _message_parse_extract_payload):
+            record = self.format_and_process(test_mail_data.MAIL_MULTIPART_IMAGE, self.email_from, 'groups@test.com')
+
         message = record.message_ids[0]
         for attachment in message.attachment_ids:
             self.assertIn('/web/image/%s' % attachment.id, message.body)
