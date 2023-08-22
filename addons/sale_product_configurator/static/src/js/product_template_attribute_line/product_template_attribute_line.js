@@ -29,6 +29,7 @@ export class ProductTemplateAttributeLine extends Component {
                     id: Number,
                     name: String,
                     html_color: [Boolean, String], // backend sends 'false' when there is no color
+                    image: [Boolean, String], // backend sends 'false' when there is no image set
                     is_custom: Boolean,
                     price_extra: Number,
                     excluded: { type: Boolean, optional: true },

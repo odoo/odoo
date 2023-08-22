@@ -60,6 +60,7 @@ class ProductTemplateAttributeValue(models.Model):
     is_custom = fields.Boolean(related='product_attribute_value_id.is_custom')
     display_type = fields.Selection(related='product_attribute_value_id.display_type')
     color = fields.Integer(string="Color", default=_get_default_color)
+    image = fields.Image(related='product_attribute_value_id.image')
 
     _sql_constraints = [
         ('attribute_value_unique',
