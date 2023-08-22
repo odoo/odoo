@@ -433,7 +433,7 @@ export class Composer extends Component {
     async onClickFullComposer(ev) {
         if (this.props.type !== "note") {
             // auto-create partners of checked suggested partners
-            const emailsWithoutPartners = this.props.composer.thread.suggestedRecipients
+            const emailsWithoutPartners = this.thread.suggestedRecipients
                 .filter((recipient) => recipient.checked && !recipient.persona)
                 .map((recipient) => recipient.email);
             if (emailsWithoutPartners.length !== 0) {
@@ -444,7 +444,7 @@ export class Composer extends Component {
                     const partnerData = partners[index];
                     const persona = this.personaService.insert({ ...partnerData, type: "partner" });
                     const email = emailsWithoutPartners[index];
-                    const recipient = this.props.composer.thread.suggestedRecipients.find(
+                    const recipient = this.thread.suggestedRecipients.find(
                         (recipient) => recipient.email === email
                     );
                     Object.assign(recipient, { persona });
@@ -455,16 +455,16 @@ export class Composer extends Component {
         const context = {
             default_attachment_ids: attachmentIds,
             default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
-            default_model: this.props.composer.thread.model,
+            default_model: this.thread.model,
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : this.props.composer.thread.suggestedRecipients
+                    : this.thread.suggestedRecipients
                           .filter((recipient) => recipient.checked)
                           .map((recipient) => recipient.persona.id),
-            default_res_ids: [this.props.composer.thread.id],
+            default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
-            mail_post_autofollow: this.props.composer.thread.hasWriteAccess,
+            mail_post_autofollow: this.thread.hasWriteAccess,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
@@ -476,10 +476,18 @@ export class Composer extends Component {
             context: context,
         };
         const options = {
-            onClose: () => {
+            onClose: (...args) => {
+                // args === [] : click on 'X'
+                // args === { special: true } : click on 'discard'
+                const isDiscard = args.length === 0 || args[0]?.special;
+                // otherwise message is posted (args === [undefined])
+                if (!isDiscard && this.props.composer.thread.type === "mailbox") {
+                    this.notifySendFromMailbox();
+                }
                 this.clear();
-                if (this.props.composer.thread) {
-                    this.threadService.fetchNewMessages(this.props.composer.thread);
+                this.props.messageToReplyTo?.cancel();
+                if (this.thread) {
+                    this.threadService.fetchNewMessages(this.thread);
                 }
             },
         };
@@ -489,6 +497,13 @@ export class Composer extends Component {
     clear() {
         this.attachmentUploader?.clear();
         this.threadService.clearComposer(this.props.composer);
+    }
+
+    notifySendFromMailbox() {
+        this.env.services.notification.add(
+            sprintf(_t('Message posted on "%s"'), this.thread.displayName),
+            { type: "info" }
+        );
     }
 
     onClickAddEmoji(ev) {
@@ -555,12 +570,9 @@ export class Composer extends Component {
      * @param {postData} postData Message meta data info
      */
     async _sendMessage(value, postData) {
-        const message = await this.threadService.post(this.thread, value, postData);
+        await this.threadService.post(this.thread, value, postData);
         if (this.props.composer.thread.type === "mailbox") {
-            this.env.services.notification.add(
-                sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
-                { type: "info" }
-            );
+            this.notifySendFromMailbox();
         }
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedReponses();
