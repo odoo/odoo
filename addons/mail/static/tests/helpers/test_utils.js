@@ -680,7 +680,7 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  *
  * @param {string} selector
  * @param {number} [count=1]
- * @returns {JQuery<HTMLElement>}
+ * @returns {Promise<JQuery<HTMLElement>>}
  */
 export function contains(selector, count = 1, { target = document.body } = {}) {
     if (count) {
