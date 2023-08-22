@@ -77,54 +77,6 @@ async function nextTick() {
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function getAfterEvent({ messagingBus }) {
-    /**
-     * Returns a promise resolved after the expected event is received.
-     *
-     * @param {Object} param0
-     * @param {string} param0.eventName event to wait
-     * @param {function} param0.func function which, when called, is expected to
-     *  trigger the event
-     * @param {string} [param0.message] assertion message
-     * @param {function} [param0.predicate] predicate called with event data.
-     *  If not provided, only the event name has to match.
-     * @param {number} [param0.timeoutDelay=5000] how long to wait at most in ms
-     * @returns {Promise}
-     */
-    return async function afterEvent({ eventName, func, message, predicate, timeoutDelay = 5000 }) {
-        const error = new Error(message || `Timeout: the event ${eventName} was not triggered.`);
-        // Set up the timeout to reject if the event is not triggered.
-        let timeoutNoEvent;
-        const timeoutProm = new Promise((resolve, reject) => {
-            timeoutNoEvent = setTimeout(() => {
-                console.warn(error);
-                reject(error);
-            }, timeoutDelay);
-        });
-        // Set up the promise to resolve if the event is triggered.
-        const eventProm = makeDeferred();
-        const eventHandler = (ev) => {
-            if (!predicate || predicate(ev.detail)) {
-                eventProm.resolve();
-            }
-        };
-        messagingBus.addEventListener(eventName, eventHandler);
-        // Start the function expected to trigger the event after the
-        // promise has been registered to not miss any potential event.
-        const funcRes = func();
-        // Make them race (first to resolve/reject wins).
-        await Promise.race([eventProm, timeoutProm]).finally(() => {
-            // Execute clean up regardless of whether the promise is
-            // rejected or not.
-            clearTimeout(timeoutNoEvent);
-            messagingBus.removeEventListener(eventName, eventHandler);
-        });
-        // If the event is triggered before the end of the async function,
-        // ensure the function finishes its job before returning.
-        return await funcRes;
-    };
-}
-
 function getMouseenter({ afterNextRender }) {
     return async function mouseenter(selector) {
         await afterNextRender(() =>
@@ -382,7 +334,6 @@ async function start(param0 = {}) {
     });
     param0["target"] = target;
     const messagingBus = new EventBus();
-    const afterEvent = getAfterEvent({ messagingBus });
 
     const pyEnv = await getPyEnv();
     patchWithCleanup(sessionInfo, {
@@ -412,7 +363,6 @@ async function start(param0 = {}) {
     };
     return {
         advanceTime,
-        afterEvent,
         afterNextRender,
         env: webClient.env,
         insertText,
