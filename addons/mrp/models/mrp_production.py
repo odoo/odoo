@@ -2439,7 +2439,8 @@ class MrpProduction(models.Model):
         ]
         # Check presence of same sn in previous productions
         duplicates = self.env['stock.move.line'].search_count(domain + [
-            ('location_id.usage', '=', 'production')
+            ('location_id.usage', '=', 'production'),
+            ('move_id.unbuild_id', '=', False)
         ])
         if duplicates:
             # Maybe some move lines have been compensated by unbuild
