@@ -202,8 +202,7 @@ class IrMailServer(models.Model):
 
     def _get_test_email_from(self):
         self.ensure_one()
-        if self.from_filter:
-            from_filter_parts = [part.strip() for part in self.from_filter.split(",")]
+        if from_filter_parts := [part.strip() for part in (self.from_filter or '').split(",") if part.strip()]:
             if mail_from := next((email for email in from_filter_parts if "@" in email), None):
                 # All emails will be sent from the same address
                 return mail_from
@@ -797,8 +796,7 @@ class IrMailServer(models.Model):
         normalized_mail_from = email_normalize(email_from)
         normalized_domain = email_domain_extract(normalized_mail_from)
 
-        for email_filter in from_filter.split(','):
-            email_filter = email_filter.strip()
+        for email_filter in [part.strip() for part in (from_filter or '').split(',') if part.strip()]:
             if '@' in email_filter and email_normalize(email_filter) == normalized_mail_from:
                 return True
             if '@' not in email_filter and email_domain_normalize(email_filter) == normalized_domain:
