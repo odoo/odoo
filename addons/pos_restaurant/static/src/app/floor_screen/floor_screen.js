@@ -375,7 +375,7 @@ export class FloorScreen extends Component {
         }
     }
     async onSaveTable(table) {
-        if (this.pos.tables_by_id[table.id]) {
+        if (this.pos.tables_by_id[table.id] && this.pos.tables_by_id[table.id].active) {
             await this._save(table);
         }
     }
@@ -573,11 +573,11 @@ export class FloorScreen extends Component {
             return;
         }
         const originalSelectedTableIds = [...this.state.selectedTableIds];
-        originalSelectedTableIds.forEach(async (id) => {
-            const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
-                id,
-            ]);
-            if (!response) {
+        const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
+            originalSelectedTableIds,
+        ]);
+        if (!response) {
+            for (const id of originalSelectedTableIds) {
                 //remove order not send to server
                 for (const order of this.pos.get_order_list()) {
                     if (order.tableId == id) {
@@ -588,15 +588,13 @@ export class FloorScreen extends Component {
                 this.orm.write("restaurant.table", [id], { active: false });
                 this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
                 delete this.pos.tables_by_id[id];
-            } else {
-                await this.popup.add(ErrorPopup, {
-                    title: this.env._t("Delete Error"),
-                    body: this.env._t(
-                        "You cannot delete a table with orders still in draft for this table."
-                    ),
-                });
             }
-        });
+        } else {
+            await this.popup.add(ErrorPopup, {
+                title: this.env._t("Delete Error"),
+                body: this.env._t("You cannot delete a table with orders still in draft for this table."),
+            });
+        }
         // Value of an object can change inside async function call.
         //   Which means that in this code block, the value of `state.selectedTableId`
         //   before the await call can be different after the finishing the await call.
