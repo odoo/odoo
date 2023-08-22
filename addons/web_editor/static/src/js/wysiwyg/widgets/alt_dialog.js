@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, onMounted } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class AltDialog extends Component {
@@ -18,6 +18,9 @@ export class AltDialog extends Component {
 
     setup() {
         this.isConfirmedOrCancelled = false; // ensures we do not confirm and/or cancel twice
+        onMounted(() => {
+            this.altRef.el.focus();
+        });
     }
     async _cancel() {
         if (this.isConfirmedOrCancelled) {
