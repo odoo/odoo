@@ -5,7 +5,7 @@ import utils from "web.utils";
 import Dialog from "web.Dialog";
 import Widget from "web.Widget";
 import { uniqueId } from "@web/core/utils/functions";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 var _t = core._t;
 
@@ -59,14 +59,14 @@ var ColorpickerWidget = Widget.extend({
             this._onMouseMoveOpacitySlider(ev);
         });
         this.$documents.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
-        this.$documents.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
+        this.$documents.on(`mouseup.${this.uniqueId}`, () => {
             if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
                 this._colorSelected();
             }
             this.pickerFlag = false;
             this.sliderFlag = false;
             this.opacitySliderFlag = false;
-        }, 10));
+        });
 
         this.options = Object.assign({}, options);
     },
