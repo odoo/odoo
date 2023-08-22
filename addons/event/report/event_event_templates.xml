@@ -1,108 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- EVENT FOLDABLE BADGE -->
+<!-- EVENT A4 FOLDABLE BADGE (A4_french_fold) -->
 
 <template id="event_report_template_foldable_badge">
-    <div class="o_event_foldable_badge_container">
+    <div class="o_event_foldable_badge_container o_event_badge_report_page_break">
         <div class="row">
             <!-- Front -->
-            <div class="page p-1 col-6 o_event_foldable_badge_top">
+            <div class="page col-6 o_event_badge_height pt-2">
                 <div class="oe_structure"/>
+                <t t-call="event.event_report_template_badge_card"/>
             </div>
             <!-- Back -->
-            <div class="page col-6 o_event_foldable_badge_top o_event_foldable_badge_ticket pt-4">
+            <div class="page col-6 position-relative p-1">
                 <div class="oe_structure"/>
-                <div class="o_event_foldable_badge_ticket_wrapper p-2">
-                    <div class="o_event_foldable_badge_ticket_wrapper_top page">
-                        <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
-                        <div class="text-center o_event_foldable_badge_font_small">
-                            <span itemprop="startDate" t-field="event.date_begin"
-                                t-options='{"widget": "datetime", "date_only": True}'
-                                class="fw-bold"/>
-                            <span itemprop="startDateTime" t-field="event.date_begin"
-                                class="fw-bold"
-                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
-                            <span class="oi oi-arrow-right o_event_foldable_badge_font_faded"/>
-                            <span t-if="not event.is_one_day"
-                                itemprop="endDate" t-field="event.date_end"
-                                t-options='{"widget": "datetime", "date_only": True}'
-                                class="fw-bold"/>
-                            <span itemprop="endDateTime" t-field="event.date_end"
-                                class="fw-bold"
-                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
-                        </div>
-                        <div class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
-                            (<span itemprop="timezone" t-out="event.date_tz"/>)
-                        </div>
-                        <div t-if="event.address_id" class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
-                            <t t-set="use_map_marker" t-value="True"/>
-                            <t t-call="event.event_report_template_formatted_event_address"/>
-                        </div>
-                        <div class="text-center mt-5 pt-2">
-                            <h2 t-if="attendee" t-field="attendee.name"/>
-                            <h2 t-elif="not attendee"><span>John Doe</span></h2>
-                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
-                            <div t-if="attendee" class="o_event_foldable_badge_font_faded" t-field="attendee.event_ticket_id"/>
-                            <div t-elif="first_ticket" t-out="first_ticket.name"
-                                class="o_event_foldable_badge_font_faded"/>
-                        </div>
-                    </div>
-                    <div class="o_event_foldable_badge_barcode mt-2">
-                        <div class="o_event_foldable_badge_barcode_container">
-                        </div>
+                <div class="o_event_foldable_badge_back text-center">
+                    <div class="o_event_foldable_badge_barcode_container_top"></div>
+                    <div class="o_event_foldable_badge_barcode_id_top fs-4 mt-2">
+                        ID:  <span t-out="attendee.id if attendee else '0123456789'"/>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <!-- Inner left -->
-            <div class="page o_event_foldable_badge_bottom o_event_foldable_badge_left p-1 px-2 col-6 overflow-hidden">
+        <div class="row o_event_foldable_badge_bottom_row">
+            <!-- Reversed Back -->
+            <div class="o_event_foldable_badge_bottom_quarter page col-6 p-1">
                 <div class="oe_structure"/>
-                <div t-field="event.ticket_instructions" class="p-4"></div>
+                <div class="o_event_foldable_badge_back text-center">
+                    <div class="o_event_foldable_badge_barcode_container_bottom"></div>
+                    <div class="o_event_foldable_badge_barcode_id_bottom fs-4 mt-2">
+                        ID:  <span t-out="attendee.id if attendee else '0123456789'"/>
+                    </div>
+                </div>
             </div>
-            <!-- Inner right -->
-            <div class="page o_event_foldable_badge_bottom o_event_foldable_badge_right col-6 text-center">
+            <!-- Reversed Front -->
+            <div class="o_event_foldable_badge_bottom_quarter page col-6 pt-2">
                 <div class="oe_structure"/>
-                <div class="h-50 col-12 row m-0">
-                    <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step fw-bold">1</div>
-                        <img src="/event/static/src/img/how_to_fold_1.png" class="w-100 h-100" alt="How to Fold (1)"/>
-                    </div>
-                    <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step fw-bold">2</div>
-                        <img src="/event/static/src/img/how_to_fold_2.png" class="w-100 h-100" alt="How to Fold (2)"/>
-                    </div>
-                </div>
-                <div class="h-50 col-12 row m-0">
-                    <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step fw-bold">3</div>
-                        <img src="/event/static/src/img/how_to_fold_3.png" class="w-100 h-100" alt="How to Fold (3)"/>
-                    </div>
-                    <div class="col-6 h-100 p-0">
-                        <div class="o_event_foldable_badge_step fw-bold">4</div>
-                        <img src="/event/static/src/img/how_to_fold_4.png" class="w-100 h-100" alt="How to Fold (4)"/>
-                    </div>
-                </div>
+                <t t-call="event.event_report_template_badge_card"/>
             </div>
         </div>
     </div>
 </template>
 
-<template id="event_registration_report_template_foldable_badge">
+<!-- EVENT A6 BADGE -->
+
+<template id="event_report_template_a6_badge">
+    <div class="o_event_badge_report_page_break">
+        <div class="row">
+            <div class="o_event_badge_height page col-6 pt-2">
+                <div class="oe_structure"/>
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- EVENT A4 4 PER SHEET -->
+
+<template id="event_report_template_four_per_sheet_badge">
+    <t t-if="example_badge" t-foreach="[(0, 1), (2, 3)]" t-as="indices_pair">
+        <div t-att-class="'row' + (' o_event_badge_report_page_break' if indices_pair_index else '')">
+            <div t-foreach="indices_pair" t-as="attendee_number" class="col-6 o_event_badge_height pt-2">
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </t>
+    <t t-if="not example_badge" t-foreach="[attendees[n:n+2] for n in range(0, len(attendees), 2)] if attendees else []" t-as="attendee_pair">
+        <t t-set="do_page_break" t-value="attendee_pair_index > 0 and attendee_pair_index % 2 or (attendee_pair_index + 1) * 2 >= len(attendees)"/>
+        <div t-att-class="'row' + (' o_event_badge_report_page_break' if do_page_break else '')">
+            <div t-foreach="attendee_pair" t-as="attendee" class="col-6 o_event_badge_height pt-2">
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- EVENT REGISTRATION BADGE - REDIRECTING TO EVENT FORMAT BADGE ABOVE -->
+
+<template id="event_registration_report_template_badge">
     <t t-call="web.basic_layout">
-        <t t-foreach="docs" t-as="attendee">
-            <t t-set="event" t-value="attendee.event_id.with_context(tz=attendee.event_id.date_tz)"/>
-            <t t-call="event.event_report_template_foldable_badge"/>
+        <t t-foreach="docs.grouped('event_id').items()" t-as="attendees_per_event">
+            <t t-set="event" t-value="attendees_per_event[0]"/>
+            <t t-set="attendees" t-value="attendees_per_event[1]"/>
+            <t t-if="event.badge_format != 'four_per_sheet'" t-foreach="attendees" t-as="attendee">
+                <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
+                <t t-else="" t-call="event.event_report_template_a6_badge"/>
+            </t>
+            <t t-if="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
         </t>
     </t>
 </template>
 
-<template id="event_event_report_template_foldable_badge">
+<!-- EVENT EVENT BADGE - EXAMPLE BADGE - ATTENDEE NOT SET -->
+
+<template id="event_event_report_template_badge">
     <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="event">
-            <t t-set="event" t-value="event.with_context(tz=event.date_tz)"/>
-            <t t-call="event.event_report_template_foldable_badge"/>
+            <t t-set="example_badge" t-value="True"/>
+            <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
+            <t t-elif="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
+            <t t-else="" t-call="event.event_report_template_a6_badge"/>
         </t>
     </t>
 </template>
@@ -216,6 +213,32 @@
             </t>
         </t>
     </t>
+</template>
+
+<!-- EVENT BADGE CARD (tool template used in all badge templates)-->
+
+<template id="event_report_template_badge_card">
+    <t t-set="badge_image_url" t-value="image_data_uri(event.badge_image) if event.badge_image else ''"/>
+    <div class="o_event_badge_ticket_wrapper" t-attf-style="background-image: url({{badge_image_url}});">
+        <div class="position-relative h-100">
+            <h3 class="fw-bold text-center" t-field="event.name"/>
+            <div class="text-center mt-5 py-2">
+                <h2 class="mb-0" t-if="attendee" t-field="attendee.name"/>
+                <h2 class="mb-0" t-elif="not attendee"><span>John Doe</span> <span t-if="attendee_number" t-out="attendee_number + 1"/></h2>
+                <h4 t-if="attendee and attendee.company_id" class="o_event_badge_font_faded" t-field="attendee.company_id.name"/>
+                <h4 t-elif="not attendee"><span class="o_event_badge_font_faded">My Placeholder Company</span></h4>
+            </div>
+            <div class="position-absolute bottom-0 w-100 text-center">
+                <img t-if="event.organizer_id.image_256" class="o_event_badge_logo text-center mb-2" t-att-src="image_data_uri(event.organizer_id.image_256)"/>
+                <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2"></span>
+                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                <t t-set="ticket" t-value="attendee.event_ticket_id if attendee else first_ticket"/>
+                <div t-if="ticket" class="text-center w-100" t-attf-style="background-color: {{ticket.color or '#875A7B'}};">
+                    <div class="p-3 fs-3" t-out="ticket.name"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- MISC -->

@@ -65,7 +65,7 @@ class EventController(Controller):
             return request.make_response(html)
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf(
-            'event.action_report_event_registration_foldable_badge' if badge_mode else
+            'event.action_report_event_registration_badge' if badge_mode else
             'event.action_report_event_registration_full_page_ticket',
             event_registrations_sudo.ids,
         )[0]
