@@ -126,6 +126,7 @@ class TestDiscussFullPerformance(HttpCase):
             'hasLinkPreviewFeature': True,
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
+            'odoobotOnboarding': False,
             'channels': [
                 {
                     'authorizedGroupFullName': self.group_user.full_name,
