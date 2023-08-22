@@ -14,7 +14,6 @@ class TestMassMailingServer(TestMassMailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMassMailingServer, cls).setUpClass()
-        cls._init_mail_servers()
         cls.recipients = cls._create_mailing_test_records(model='mailing.test.optout', count=8)
 
     def test_mass_mailing_server_archived_usage_protection(self):
@@ -98,23 +97,23 @@ class TestMassMailingServer(TestMassMailCommon):
             'body_html': 'Body for <t t-out="object.name" />',
             'email_from': 'unknow_email@unknow_domain.com',
             'mailing_model_id': self.env['ir.model']._get_id('mailing.test.optout'),
-            'mail_server_id': self.server_notification.id,
+            'mail_server_id': self.mail_server_notification.id,
         }])
         with self.mock_smtplib_connection():
             mailings.action_send_mail()
         self.assertEqual(self.find_mail_server_mocked.call_count, 3, 'Must be called only once per mail from except when forced')
 
-        for (expected_smtp_from, expected_msg_from, expected_from_filter) in [
-            ('specific_user@test.mycompany.com', 'specific_user@test.mycompany.com', self.server_user.from_filter),
-            (f'{self.alias_bounce}@{self.alias_domain}', 'unknown_name@test.mycompany.com', self.server_domain.from_filter),
+        for (expected_smtp_from, expected_msg_from, expected_mail_server) in [
+            ('specific_user@test.mycompany.com', 'specific_user@test.mycompany.com', self.mail_server_user),
+            (f'{self.alias_bounce}@{self.alias_domain}', 'unknown_name@test.mycompany.com', self.mail_server_domain),
             # We do not have a mail server for this address email, so fall back to the "notifications@domain" email.
-            ('notifications@test.mycompany.com', '"Testing" <notifications@test.mycompany.com>', self.server_notification.from_filter),
+            (f'{self.default_from}@{self.alias_domain}', f'"Testing" <{self.default_from}@{self.alias_domain}>', self.mail_server_notification),
             # forced sever
-            ('unknow_email@unknow_domain.com', 'unknow_email@unknow_domain.com', self.server_notification.from_filter),
+            ('unknow_email@unknow_domain.com', 'unknow_email@unknow_domain.com', self.mail_server_notification),
         ]:
             self.assertSMTPEmailsSent(
             smtp_from=expected_smtp_from,
             message_from=expected_msg_from,
-            from_filter=expected_from_filter,
+            mail_server=expected_mail_server,
             emails_count=8,
         )
