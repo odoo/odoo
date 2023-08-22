@@ -15,15 +15,15 @@ odoo.define('point_of_sale.tour.BarcodeScanning', function (require) {
     ProductScreen.check.selectedOrderlineHas('Monitor Stand', 2);
 
     // Test "Prices product" EAN-13 `23.....{NNNDD}` barcode pattern
-    ProductScreen.do.scan_ean13_barcode("2301000000006");
+    ProductScreen.do.scan_ean13_barcode("2305000000004");
     ProductScreen.check.selectedOrderlineHas('Magnetic Board', 1, "0.00");
-    ProductScreen.do.scan_ean13_barcode("2301000123453");
+    ProductScreen.do.scan_ean13_barcode("2305000123451");
     ProductScreen.check.selectedOrderlineHas('Magnetic Board', 1, "123.45");
 
     // Test "Weighted product" EAN-13 `21.....{NNDDD}` barcode pattern
-    ProductScreen.do.scan_ean13_barcode("2100002000003");
+    ProductScreen.do.scan_ean13_barcode("2100005000000");
     ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', 0, "0.00");
-    ProductScreen.do.scan_ean13_barcode("2100002080003");
+    ProductScreen.do.scan_ean13_barcode("2100005080002");
     ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', 8);
 
 
