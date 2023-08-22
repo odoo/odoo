@@ -11,9 +11,16 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
         company = company or self.env.company
-        categ_values = {category.id: False for category in self.env['product.category'].search([])}
-        for fname in self.env['product.category']._get_stock_account_property_field_names():
-            self.env['ir.property'].with_company(company.id)._set_multi(fname, 'product.category', categ_values, True)
+        fields_name = self.env['product.category']._get_stock_account_property_field_names()
+        account_fields = self.env['ir.model.fields'].search([('model', '=', 'product.category'), ('name', 'in', fields_name)])
+        existing_props = self.env['ir.property'].sudo().search([
+            ('fields_id', 'in', account_fields.ids),
+            ('company_id', '=', company.id),
+            ('res_id', '!=', False),
+        ])
+        for fname in fields_name:
+            if fname in existing_props.mapped('fields_id.name'):
+                continue
             value = template_data.get(fname)
             if value:
                 self.env['ir.property']._set_default(fname, 'product.category', self.ref(value).id, company=company)

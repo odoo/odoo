@@ -855,8 +855,3 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves._post()
         return res
-
-    @api.onchange('property_valuation')
-    def onchange_property_valuation(self):
-        # Remove or set the account stock properties if necessary
-        self._check_valuation_accounts()
