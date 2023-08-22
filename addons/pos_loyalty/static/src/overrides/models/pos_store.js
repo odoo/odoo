@@ -207,6 +207,7 @@ patch(PosStore.prototype, {
             reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
         }
 
+        this.fieldTypes = loadedData['field_types'];
         await super._processData(loadedData);
         this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
         this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
@@ -234,6 +235,15 @@ patch(PosStore.prototype, {
 
         try {
             products
+                .map(product => {
+                    const modifiedProduct = { ...product };
+                    Object.keys(modifiedProduct).forEach(key => {
+                        if (this.fieldTypes['product.product'][key] === 'many2one') {
+                            modifiedProduct[key] = modifiedProduct[key][1];
+                        }
+                    });
+                    return modifiedProduct;
+                })
                 .filter((product) => domain.contains(product))
                 .forEach((product) => reward.all_discount_product_ids.add(product.id));
         } catch (error) {
