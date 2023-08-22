@@ -375,6 +375,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         // snippets in user databases.
         let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable *')
             .filter((i, el) => isMediaElement(el) || el.tagName === 'IMG');
+        // Same as above for social media icons.
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media a > i'));
 
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
