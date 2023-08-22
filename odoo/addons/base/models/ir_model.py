@@ -606,7 +606,12 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for field in self:
-            safe_eval(field.domain or '[]')
+            try:
+                safe_eval(field.domain or '[]')
+            except Exception as e:
+                raise ValidationError(
+                    _("Invalid Python code '%s' for the domain field: %s", field.domain, e)
+                ) from None
 
     @api.constrains('name')
     def _check_name(self):
