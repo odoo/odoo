@@ -604,8 +604,9 @@ class SaleOrder(models.Model):
 
             order.amount_to_invoice = order.amount_total
             for invoice in order.invoice_ids.filtered(lambda x: x.state == 'posted'):
+                prices = sum(invoice.line_ids.filtered(lambda x: x.sale_line_ids.order_id.id == order.id).mapped('price_total'))
                 invoice_amount_currency = invoice.currency_id._convert(
-                    invoice.tax_totals['amount_total'] * -invoice.direction_sign,
+                    prices * -invoice.direction_sign,
                     order.currency_id,
                     invoice.company_id,
                     invoice.date,
