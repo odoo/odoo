@@ -26,7 +26,6 @@ class TestMailMail(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
-        cls._init_mail_servers()
 
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
             'name': 'Test',
@@ -359,9 +358,6 @@ class TestMailMail(MailCommon):
         managed and stored at mail and notification level. """
         mail, notification = self.test_mail, self.test_notification
 
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
-        self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
-
         # MailServer.send_email(): _prepare_email_message: missing To
         for email_to in self.emails_falsy:
             self._reset_data()
@@ -660,9 +656,8 @@ class TestMailMailServer(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._init_mail_servers()
 
-        cls.server_domain_2 = cls.env['ir.mail_server'].create({
+        cls.mail_server_domain_2 = cls.env['ir.mail_server'].create({
             'from_filter': 'test_2.com',
             'name': 'Server 2',
             'smtp_host': 'test_2.com',
@@ -676,7 +671,7 @@ class TestMailMailServer(MailCommon):
         """
         self.assertEqual(
             self.env['ir.mail_server']._get_default_from_address(),
-            f'notifications@{self.alias_domain}'
+            f'{self.default_from}@{self.alias_domain}'
         )
 
         mail_values = {
@@ -696,19 +691,19 @@ class TestMailMailServer(MailCommon):
         # Should use the test_2 mail server
         # Once with "user_1@test_2.com" as login
         # Once with "user_2@test_2.com" as login
-        mails |= self.env['mail.mail'].create([{
+        mails += self.env['mail.mail'].create([{
             **mail_values,
             'email_from': 'user_1@test_2.com',
-        } for _ in range(5)]) | self.env['mail.mail'].create([{
+        } for _ in range(5)]) + self.env['mail.mail'].create([{
             **mail_values,
             'email_from': 'user_2@test_2.com',
         } for _ in range(5)])
 
         # Mail server is forced
-        mails |= self.env['mail.mail'].create([{
+        mails += self.env['mail.mail'].create([{
             **mail_values,
             'email_from': 'user_1@test_2.com',
-            'mail_server_id': self.server_domain.id,
+            'mail_server_id': self.mail_server_domain.id,
         } for _ in range(5)])
 
         with self.mock_smtplib_connection():
@@ -722,21 +717,21 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(self.connect_mocked.call_count, 4, 'Must be called once per batch which share the same mail server and the same smtp from')
         self.connect_mocked.assert_has_calls(
             calls=[
-                call(smtp_from=f'notifications@{self.alias_domain}', mail_server_id=self.server_notification.id),
-                call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain_2.id),
-                call(smtp_from='user_2@test_2.com', mail_server_id=self.server_domain_2.id),
-                call(smtp_from='user_1@test_2.com', mail_server_id=self.server_domain.id),
+                call(smtp_from=f'{self.default_from}@{self.alias_domain}', mail_server_id=self.mail_server_notification.id),
+                call(smtp_from='user_1@test_2.com', mail_server_id=self.mail_server_domain_2.id),
+                call(smtp_from='user_2@test_2.com', mail_server_id=self.mail_server_domain_2.id),
+                call(smtp_from='user_1@test_2.com', mail_server_id=self.mail_server_domain.id),
             ],
             any_order=True,
         )
 
-        self.assertSMTPEmailsSent(message_from=f'"test" <notifications@{self.alias_domain}>',
-                                  emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assertSMTPEmailsSent(message_from=f'"test_2" <notifications@{self.alias_domain}>',
-                                  emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
-        self.assertSMTPEmailsSent(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
-        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
+        self.assertSMTPEmailsSent(message_from=f'"test" <{self.default_from}@{self.alias_domain}>',
+                                  emails_count=5, from_filter=self.mail_server_notification.from_filter)
+        self.assertSMTPEmailsSent(message_from=f'"test_2" <{self.default_from}@{self.alias_domain}>',
+                                  emails_count=5, from_filter=self.mail_server_notification.from_filter)
+        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, mail_server=self.mail_server_domain_2)
+        self.assertSMTPEmailsSent(message_from='user_2@test_2.com', emails_count=5, mail_server=self.mail_server_domain_2)
+        self.assertSMTPEmailsSent(message_from='user_1@test_2.com', emails_count=5, mail_server=self.mail_server_domain)
 
 
 @tagged('mail_mail')

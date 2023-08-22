@@ -341,11 +341,11 @@ class MockSmtplibCase:
 
     def _build_email(self, mail_from, return_path=None, **kwargs):
         return self.env['ir.mail_server'].build_email(
-            body=kwargs.pop('body', 'body'),
-            email_from=mail_from,
-            email_to='dest@example-é.com',
+            mail_from,
+            kwargs.pop('email_to', 'dest@example-é.com'),
+            kwargs.pop('subject', 'subject'),
+            kwargs.pop('body', 'body'),
             headers={'Return-Path': return_path} if return_path else None,
-            subject='subject',
             **kwargs,
         )
 
@@ -354,19 +354,26 @@ class MockSmtplibCase:
             self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
         return smtp_session.messages.pop()
 
-    def assertSMTPEmailsSent(self, smtp_from=None, smtp_to_list=None, message_from=None, from_filter=None, emails_count=1):
-        """Check that the given email has been sent.
-
-        If one of the parameter is None, it's just ignored and not used to retrieve the email.
+    def assertSMTPEmailsSent(self, smtp_from=None, smtp_to_list=None, message_from=None,
+                             mail_server=None, from_filter=None,
+                             emails_count=1):
+        """Check that the given email has been sent. If one of the parameter is
+        None it is just ignored and not used to retrieve the email.
 
         :param smtp_from: FROM used for the authentication to the mail server
         :param smtp_to_list: List of destination email address
         :param message_from: FROM used in the SMTP headers
-        :param from_filter: from_filter of the <ir.mail_server> used to send the email
-            Can use a lambda to check the value
+        :arap mail_server: used to compare the 'from_filter' as an alternative
+          to using the from_filter parameter
+        :param from_filter: from_filter of the <ir.mail_server> used to send the
+          email. False means 'match everything';'
         :param emails_count: the number of emails which should match the condition
         :return: True if at least one email has been found with those parameters
         """
+        if from_filter is not None and mail_server:
+            raise ValueError('Invalid usage: use either from_filter either mail_server')
+        if from_filter is None and mail_server is not None:
+            from_filter = mail_server.from_filter
         matching_emails = filter(
             lambda email:
                 (smtp_from is None or smtp_from == email['smtp_from'])
@@ -391,14 +398,8 @@ class MockSmtplibCase:
         )
 
     @classmethod
-    def _init_mail_config(cls):
-        cls.alias_bounce = 'bounce.test'
-        cls.alias_domain = 'test.mycompany.com'
-        cls.default_from = 'notifications'
+    def _init_mail_gateway(cls):
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', cls.alias_domain)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', cls.default_from)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', cls.alias_bounce)
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
 
     @classmethod
@@ -409,12 +410,7 @@ class MockSmtplibCase:
             'smtp_host': 'smtp_host',
             'smtp_encryption': 'none',
         }
-        (
-            cls.server_domain,
-            cls.server_user,
-            cls.server_notification,
-            cls.server_default,
-        ) = cls.env['ir.mail_server'].create([
+        cls.mail_servers = cls.env['ir.mail_server'].create([
             {
                 'name': 'Domain based server',
                 'from_filter': 'test.mycompany.com',
@@ -425,7 +421,7 @@ class MockSmtplibCase:
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server Notifications',
-                'from_filter': 'notifications@test.mycompany.com',
+                'from_filter': 'notifications.test@test.mycompany.com',
                 ** ir_mail_server_values,
             }, {
                 'name': 'Server No From Filter',
@@ -433,3 +429,7 @@ class MockSmtplibCase:
                 ** ir_mail_server_values,
             },
         ])
+        (
+            cls.mail_server_domain, cls.mail_server_user,
+            cls.mail_server_notification, cls.mail_server_default
+        ) = cls.mail_servers
