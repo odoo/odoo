@@ -12,7 +12,11 @@ class TestUi(odoo.tests.HttpCase):
         super().setUpClass()
 
         all_moves = cls.env['account.move'].search([('move_type', '!=', 'entry')])
-        all_moves.button_draft()
+        # This field is only present in account_accountant
+        if 'deferred_move_ids' in all_moves._fields:
+            all_moves.filtered(lambda m: not m.inalterable_hash and not m.deferred_move_ids).button_draft()
+        else:
+            all_moves.filtered(lambda m: not m.inalterable_hash).button_draft()
         all_moves.with_context(force_delete=True).unlink()
 
         # In case of latam impacting multiple countries, disable the required fields manually.
