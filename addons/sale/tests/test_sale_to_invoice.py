@@ -952,3 +952,40 @@ class TestSaleToInvoice(TestSaleCommon):
         # check if the salesperson is in the followers list of invoice created from SO
         self.assertIn(salesperson.partner_id, invoice.message_partner_ids, 'Salesperson not in the followers list of '
                                                                            'invoice created from SO')
+    def test_amount_to_invoice_multiple_so(self):
+        """ Testing creating two SOs with the same customer and invoicing them together. We have to ensure
+            that the amount to invoice is correct for each SO.
+        """
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 10,
+                }),
+            ],
+        })
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 20,
+                }),
+            ],
+        })
+
+        sale_order_1.action_confirm()
+        sale_order_2.action_confirm()
+        sale_order_1.order_line.qty_delivered = 10
+        sale_order_2.order_line.qty_delivered = 20
+
+        self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'delivered',
+            'sale_order_ids': [Command.set((sale_order_1 + sale_order_2).ids)],
+        }).create_invoices()
+
+        sale_order_1.invoice_ids.action_post()
+
+        self.assertEqual(sale_order_1.amount_to_invoice, 0.0)
+        self.assertEqual(sale_order_2.amount_to_invoice, 0.0)
