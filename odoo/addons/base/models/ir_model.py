@@ -1434,7 +1434,7 @@ class IrModelSelection(models.Model):
             # the orphaned 'ir.model.fields' down the stack, and will log a
             # warning prompting the developer to write a migration script.
             field = Model._fields.get(selection.field_id.name)
-            if not field or not field.store or Model._abstract:
+            if not field or not field.store or not Model._auto:
                 continue
 
             ondelete = (field.ondelete or {}).get(selection.value)
