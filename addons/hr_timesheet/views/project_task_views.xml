@@ -14,12 +14,12 @@
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
-                <xpath expr="//label[@for='date_deadline']" position="before" groups="hr_timesheet.group_hr_timesheet_user">
+                <xpath expr="//label[@for='date_deadline']" position="before">
                     <field name="encode_uom_in_days" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
-                    <label for="planned_hours" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                    <label for="planned_hours" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
-                        <field name="planned_hours" class="oe_inline o_field_float_time" widget="timesheet_uom_no_toggle"/>
+                        <field name="planned_hours" class="oe_inline o_field_float_time" widget="timesheet_uom_no_toggle" groups="hr_timesheet.group_hr_timesheet_user"/>
                         <span attrs="{'invisible': [('subtask_count', '=', 0)]}">
                             (incl. <field name="subtask_planned_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
