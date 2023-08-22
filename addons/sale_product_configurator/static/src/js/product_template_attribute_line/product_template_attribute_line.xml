@@ -92,9 +92,11 @@
         <ul class="list-inline">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 class="list-inline-item me-1">
+                <t t-set="img_style" t-value="ptav.image ? 'background:url(/web/image/product.template.attribute.value/'+ptav.id+'/image); background-size:cover;' : ''"/>
+                <t t-set="color_style" t-value="ptav.is_custom ? '' : 'background-color:' + ptav.html_color"/>
                 <label
                     t-att-title="ptav.name"
-                    t-attf-style="background-color:#{ptav.is_custom ? '' : ptav.html_color}"
+                    t-attf-style="#{img_style or color_style}"
                     t-att-class="{'o_sale_product_configurator_ptav_color': true,
                                   'active': this.props.selected_attribute_value_ids.includes(ptav.id),
                                   'custom_value': ptav.is_custom,
