@@ -82,6 +82,17 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        // TODO Remove in master.
+        const themeBodyLineHeightEl = $html.find(
+            "[data-selector='theme-paragraph'] we-input[data-customize-website-variable][data-variable='body-line-height']"
+        )[0];
+        delete themeBodyLineHeightEl.dataset.unit;
+        delete themeBodyLineHeightEl.dataset.saveUnit;
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
