@@ -140,6 +140,14 @@ class TestAccountJournal(AccountTestInvoicingCommon):
 
         self.assertFalse(second_method.exists())
 
+    def test_account_journal_duplicates(self):
+        new_journals = self.env["account.journal"].with_context(import_file=True).create([
+            {"name": "OD_BLABLA"},
+            {"name": "OD_BLABLU"},
+        ])
+
+        self.assertEqual(sorted(new_journals.mapped("code")), ["GEN1", "OD_BL"], "The journals should be set correctly")
+
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
