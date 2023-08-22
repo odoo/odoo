@@ -19077,6 +19077,46 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "web_search_read"]);
     });
 
+    QUnit.test("Ignore properties created during onchange", async (assert) => {
+        const definition = {
+            type: "integer",
+            name: "property_integer",
+            string: "Property integer",
+        };
+        for (const record of serverData.models.foo.records) {
+            if (record.m2o === 1) {
+                record.properties = [{ ...definition, value: 123 }];
+            }
+        }
+        serverData.models.foo.onchanges = {
+            foo: function () {},
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="properties" invisible="1"/>
+                </tree>
+                `,
+            mockRPC(route, args) {
+                if (args.method === 'onchange') {
+                    assert.step("onchange");
+                    const changes_name = Object.keys(args.args[1])
+                    assert.ok(changes_name.includes('properties'))
+                    assert.notOk(changes_name.includes('properties.property_integer'))
+                }
+            }
+        });
+        await click(target.querySelector(".o_data_cell"));
+        assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
+        await editInput(target, ".o_field_widget[name=foo] input", "abc");
+        assert.verifySteps(["onchange"]);
+    });
+
     QUnit.test("header buttons in list view", async function (assert) {
         await makeView({
             type: "list",
