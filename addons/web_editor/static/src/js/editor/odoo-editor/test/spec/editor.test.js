@@ -2705,6 +2705,18 @@ X[]
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]<br></p>',
                     });
+                    // COMMIT A is trying to change the definition of
+                    // `isMediaElement`. One occurrence of a call to that
+                    // function seems weird: this test exposes it. It is the
+                    // same as the one just above from a functional point of
+                    // view: we delete "an image" and expect the paragraph
+                    // container to be filled with a `<br>`. This is currently
+                    // not the case.
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><i class="fa fa-bug" contenteditable="false"></i>[]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
                 });
                 it('should merge a paragraph with text into a paragraph with text removing spaces', async () => {
                     await testEditor(BasicEditor, {
