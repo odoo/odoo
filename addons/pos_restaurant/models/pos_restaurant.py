@@ -89,8 +89,8 @@ class RestaurantTable(models.Model):
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
 
     def are_orders_still_in_draft(self):
-        draft_orders = self.env['pos.order'].search([('table_id', '=', self.id), ('state', '=', 'draft')])
-        return len(draft_orders) > 0
+        draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])
+        return draft_orders_count > 0
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
