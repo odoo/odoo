@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
@@ -74,7 +75,7 @@ export class KanbanColumnQuickCreate extends Component {
         this.dialog.add(KanbanColumnExamplesDialog, {
             examples: this.props.exampleData.examples,
             applyExamplesText:
-                this.props.exampleData.applyExamplesText || this.env._t("Use This For My Kanban"),
+                this.props.exampleData.applyExamplesText || _t("Use This For My Kanban"),
             applyExamples: (index) => {
                 const { examples, foldField } = this.props.exampleData;
                 const { columns, foldedColumns = [] } = examples[index];

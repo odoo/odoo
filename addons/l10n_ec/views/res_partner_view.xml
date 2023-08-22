@@ -5,8 +5,8 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <div attrs="{'invisible': [('same_vat_partner_id', '=', False)]}" position="after">
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('l10n_ec_vat_validation', '=', False)]}">
+            <div name="warning_tax" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_ec_vat_validation">
                     <field name="l10n_ec_vat_validation"/>
                 </div>
             </div>

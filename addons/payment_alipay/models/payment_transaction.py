@@ -30,13 +30,6 @@ class PaymentTransaction(models.Model):
             return res
 
         base_url = self.provider_id.get_base_url()
-        if self.fees:
-            # Similarly to what is done in `payment::payment.transaction.create`, we need to round
-            # the sum of the amount and of the fees to avoid inconsistent string representations.
-            # E.g., str(1111.11 + 7.09) == '1118.1999999999998'
-            total_fee = self.currency_id.round(self.amount + self.fees)
-        else:
-            total_fee = self.amount
         rendering_values = {
             '_input_charset': 'utf-8',
             'notify_url': urls.url_join(base_url, AlipayController._webhook_url),
@@ -44,7 +37,7 @@ class PaymentTransaction(models.Model):
             'partner': self.provider_id.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': self.reference,
-            'total_fee': f'{total_fee:.2f}',
+            'total_fee': f'{self.amount:.2f}',
         }
         if self.provider_id.alipay_payment_method == 'standard_checkout':
             # https://global.alipay.com/docs/ac/global/create_forex_trade

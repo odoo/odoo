@@ -1,29 +1,31 @@
 /* @odoo-module */
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    contains,
+    nextAnimationFrame,
+    start,
+    startServer,
+} from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { nextTick } from "@web/../tests/legacy/helpers/test_utils";
 
 QUnit.module("follower list menu");
 
-QUnit.test("base rendering not editable", async (assert) => {
+QUnit.test("base rendering not editable", async () => {
     const { openView } = await start();
-    await openView(
+    openView(
         {
             res_model: "res.partner",
             views: [[false, "form"]],
         },
         { mode: "edit" }
     );
-    assert.containsOnce($, ".o-mail-Followers");
-    assert.containsOnce($, ".o-mail-Followers-button");
-    assert.ok($(".o-mail-Followers-button")[0].disabled);
-    assert.containsNone($, ".o-mail-Followers-dropdown");
-
-    $(".o-mail-Followers-button")[0].click();
-    await nextTick();
-    assert.containsNone($, ".o-mail-Followers-dropdown");
+    await contains(".o-mail-Followers");
+    await contains(".o-mail-Followers-button:disabled");
+    await contains(".o-mail-Followers-dropdown", 0);
+    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-dropdown", 0);
 });
 
 QUnit.test("base rendering editable", async (assert) => {
@@ -39,18 +41,18 @@ QUnit.test("base rendering editable", async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Followers");
-    assert.containsOnce($, ".o-mail-Followers-button");
+    await contains(".o-mail-Followers");
+    await contains(".o-mail-Followers-button");
     assert.notOk($(".o-mail-Followers-button")[0].disabled);
-    assert.containsNone($, ".o-mail-Followers-dropdown");
+    await contains(".o-mail-Followers-dropdown", 0);
 
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Followers-dropdown");
+    await contains(".o-mail-Followers-dropdown");
 });
 
 QUnit.test('click on "add followers" button', async (assert) => {
@@ -78,7 +80,7 @@ QUnit.test('click on "add followers" button', async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -102,21 +104,21 @@ QUnit.test('click on "add followers" button', async (assert) => {
         },
     });
 
-    assert.containsOnce($, ".o-mail-Followers");
-    assert.containsOnce($, ".o-mail-Followers-button");
+    await contains(".o-mail-Followers");
+    await contains(".o-mail-Followers-button");
     assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
 
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Followers-dropdown");
-    assert.containsOnce($, "a:contains(Add Followers)");
+    await contains(".o-mail-Followers-dropdown");
+    await contains("a:contains(Add Followers)");
 
     await click("a:contains(Add Followers)");
-    assert.containsNone($, ".o-mail-Followers-dropdown");
+    await contains(".o-mail-Followers-dropdown", 0);
     assert.verifySteps(["action:open_view"]);
     assert.strictEqual($(".o-mail-Followers-counter").text(), "2");
 
     await click(".o-mail-Followers-button");
-    assert.containsN($, ".o-mail-Follower", 2);
+    await contains(".o-mail-Follower", 2);
     assert.strictEqual($(".o-mail-Follower").text(), "François PerussePartner3");
 });
 
@@ -148,24 +150,24 @@ QUnit.test("click on remove follower", async (assert) => {
             }
         },
     });
-    await openView({
+    openView({
         res_id: partnerId_1,
         res_model: "res.partner",
         views: [[false, "form"]],
     });
 
     await click(".o-mail-Followers-button");
-    assert.containsOnce($, ".o-mail-Follower");
-    assert.containsOnce($, "button[title='Remove this follower']");
+    await contains(".o-mail-Follower");
+    await contains("button[title='Remove this follower']");
 
     await click("button[title='Remove this follower']");
     assert.verifySteps(["message_unsubscribe"]);
-    assert.containsNone($, ".o-mail-Follower");
+    await contains(".o-mail-Follower", 0);
 });
 
 QUnit.test(
     'Hide "Add follower" and subtypes edition/removal buttons except own user on read only record',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "Partner1" },
@@ -195,23 +197,22 @@ QUnit.test(
                 }
             },
         });
-        await openView({
+        openView({
             res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
 
         await click(".o-mail-Followers-button");
-        assert.containsNone($, "a:contains(Add Followers)");
-        const $followers = $(".o-mail-Follower");
-        assert.containsOnce($followers[0], "button[title='Edit subscription']");
-        assert.containsOnce($followers[0], "button[title='Remove this follower']");
-        assert.containsNone($followers[1], "button[title='Edit subscription']");
-        assert.containsNone($followers[1], "button[title='Remove this follower']");
+        await contains("a:contains(Add Followers)", 0);
+        await contains(".o-mail-Follower:eq(0) button[title='Edit subscription']");
+        await contains(".o-mail-Follower:eq(0) button[title='Remove this follower']");
+        await contains(".o-mail-Follower:eq(1):not(:has(button[title='Edit subscription']))");
+        await contains(".o-mail-Follower:eq(1):not(:has(button[title='Remove this follower']))");
     }
 );
 
-QUnit.test("Load 100 followers at once", async (assert) => {
+QUnit.test("Load 100 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
@@ -228,22 +229,17 @@ QUnit.test("Load 100 followers at once", async (assert) => {
     );
     const { openFormView } = await start();
     await openFormView("res.partner", partnerIds[0]);
-    assert.containsOnce($, "button[title='Show Followers']:contains(210)");
+    await contains("button[title='Show Followers']:contains(210)");
 
     await click("button[title='Show Followers']");
-    assert.containsOnce($, ".o-mail-Follower:contains(Mitchell Admin)");
-    assert.containsN($, ".o-mail-Follower", 100);
-    assert.containsOnce($, ".o-mail-Followers-dropdown span:contains(Load more)");
-    await afterNextRender(() =>
-        $(".o-mail-Followers-dropdown span:contains(Load more)")[0].scrollIntoView()
-    );
-    assert.containsN($, ".o-mail-Follower", 200);
-    assert.containsOnce($, ".o-mail-Followers-dropdown span:contains(Load more)");
-    await afterNextRender(() =>
-        $(".o-mail-Followers-dropdown span:contains(Load more)")[0].scrollIntoView()
-    );
-    assert.containsN($, ".o-mail-Follower", 210);
-    assert.containsNone($, ".o-mail-Followers-dropdown span:contains(Load more)");
+    await contains(".o-mail-Follower:contains(Mitchell Admin)");
+    await contains(".o-mail-Follower", 100);
+    $(".o-mail-Followers-dropdown span:contains(Load more)")[0].scrollIntoView();
+    await contains(".o-mail-Follower", 200);
+    await nextAnimationFrame(); // give enough time for the Load more button to scroll out of view
+    $(".o-mail-Followers-dropdown span:contains(Load more)")[0].scrollIntoView();
+    await contains(".o-mail-Follower", 210);
+    await contains(".o-mail-Followers-dropdown span:contains(Load more)", 0);
 });
 
 QUnit.test("Load 100 recipients at once", async (assert) => {
@@ -267,26 +263,18 @@ QUnit.test("Load 100 recipients at once", async (assert) => {
     );
     const { openFormView } = await start();
     await openFormView("res.partner", partnerIds[0]);
-    assert.containsOnce($, "button[title='Show Followers']:contains(210)");
+    await contains("button[title='Show Followers']:contains(210)");
     await click("button:contains(Send message)");
-    assert.containsOnce(
-        $,
-        ".o-mail-Chatter:contains('me, partner1, partner2, partner3, partner4, …')"
-    );
-    assert.containsOnce($, "button[title='Show all recipients']");
+    await contains(".o-mail-Chatter:contains('me, partner1, partner2, partner3, partner4, …')");
+    await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
-    assert.containsN($, ".o-mail-RecipientList li", 100);
-    assert.containsOnce($, ".o-mail-RecipientList span:contains(Load more)");
-    await afterNextRender(() =>
-        $(".o-mail-RecipientList span:contains(Load more)")[0].scrollIntoView()
-    );
-    assert.containsN($, ".o-mail-RecipientList li", 200);
-    assert.containsOnce($, ".o-mail-RecipientList span:contains(Load more)");
-    await afterNextRender(() =>
-        $(".o-mail-RecipientList span:contains(Load more)")[0].scrollIntoView()
-    );
-    assert.containsN($, ".o-mail-RecipientList li", 210);
-    assert.containsNone($, ".o-mail-RecipientList span:contains(Load more)");
+    await contains(".o-mail-RecipientList li", 100);
+    $(".o-mail-RecipientList span:contains(Load more)")[0].scrollIntoView();
+    await contains(".o-mail-RecipientList li", 200);
+    await nextAnimationFrame(); // give enough time for the Load more button to scroll out of view
+    $(".o-mail-RecipientList span:contains(Load more)")[0].scrollIntoView();
+    await contains(".o-mail-RecipientList li", 210);
+    await contains(".o-mail-RecipientList span:contains(Load more)", 0);
 });
 
 QUnit.test(
@@ -321,14 +309,14 @@ QUnit.test(
                 }
             },
         });
-        await openView({
+        openView({
             res_id: partnerId_1,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
 
         await click(".o-mail-Followers-button");
-        assert.containsOnce($, "a:contains(Add Followers)");
+        await contains("a:contains(Add Followers)");
         const $followers = $(".o-mail-Follower");
         assert.containsOnce($followers[0], "button[title='Edit subscription']");
         assert.containsOnce($followers[0], "button[title='Remove this follower']");
@@ -352,13 +340,13 @@ QUnit.test(
                 }
             },
         });
-        await openView({
+        openView({
             res_id: partnerId,
             res_model: "res.partner",
             views: [[false, "form"]],
         });
 
         await click(".o-mail-Followers-button");
-        assert.containsOnce($, "div:contains(No Followers).disabled");
+        await contains("div:contains(No Followers).disabled");
     }
 );

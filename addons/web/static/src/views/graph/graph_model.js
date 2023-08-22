@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { sortBy, groupBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
@@ -221,7 +222,7 @@ export class GraphModel extends Model {
         const labelMap = {};
         for (const dataPt of dataPoints) {
             const x = dataPt.labels.slice(0, mode === "pie" ? undefined : 1);
-            const trueLabel = x.length ? x.join(SEP) : this.env._t("Total");
+            const trueLabel = x.length ? x.join(SEP) : _t("Total");
             if (dateClasses) {
                 x[0] = dateClasses.classLabel(dataPt.originIndex, x[0]);
             }
@@ -235,7 +236,7 @@ export class GraphModel extends Model {
                         x[0] = dateClasses.representative(x[0]);
                     }
                 }
-                const label = x.length ? x.join(SEP) : this.env._t("Total");
+                const label = x.length ? x.join(SEP) : _t("Total");
                 labels.push(label);
             }
             dataPt.labelIndex = labelMap[key];
@@ -303,9 +304,9 @@ export class GraphModel extends Model {
 
     _getLabel(description) {
         if (!description) {
-            return this.env._t("Sum");
+            return _t("Sum");
         } else {
-            return this.env._t("Sum (%s)", description);
+            return _t("Sum (%s)", description);
         }
     }
 
@@ -378,7 +379,7 @@ export class GraphModel extends Model {
      * @returns {string}
      */
     _getDefaultFilterLabel(field) {
-        return this.env._t("Undefined");
+        return _t("Undefined");
     }
 
     /**

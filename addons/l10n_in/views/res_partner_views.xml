@@ -7,10 +7,11 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="attrs">{'required':[('l10n_in_gst_treatment', 'in', ['regular', 'composition', 'special_economic_zone', 'deemed_export'])], 'readonly': [('parent_id', '!=', False)]}</attribute>
+                <attribute name="readonly">parent_id</attribute>
+                <attribute name="required">l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']</attribute>
             </xpath>
             <xpath expr="//field[@name='vat']" position="before">
-                <field name="l10n_in_gst_treatment" attrs="{'readonly': [('parent_id', '!=', False)], 'invisible': [('fiscal_country_codes', 'not ilike', 'IN')]}"/>
+                <field name="l10n_in_gst_treatment" invisible="'IN'.lower() not in (fiscal_country_codes or '').lower()" readonly="parent_id"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" />

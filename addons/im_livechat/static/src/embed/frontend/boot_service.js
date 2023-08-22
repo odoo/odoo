@@ -3,7 +3,7 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/boot_helpers";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
 import { serverUrl, isAvailable } from "@im_livechat/embed/livechat_data";
-
+import { _t } from "@web/core/l10n/translation";
 import { App } from "@odoo/owl";
 
 import { templates } from "@web/core/assets";
@@ -34,7 +34,7 @@ export const livechatBootService = {
                 env,
                 templates,
                 translatableAttributes: ["data-tooltip"],
-                translateFn: env._t,
+                translateFn: _t,
                 dev: env.debug,
             }).mount(shadow);
         });

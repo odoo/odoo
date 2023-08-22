@@ -21,7 +21,6 @@
     import { bus } from "@web/legacy/js/services/core";
     import rpc from "@web/legacy/js/core/rpc";
     import session from "web.session";
-    import { _t } from "@web/legacy/js/core/translation";
     import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 
     const { device, isDebug } = config
@@ -44,7 +43,6 @@
 
     // Build the basic env
     const env = {
-        _t,
         browser,
         bus,
         device,

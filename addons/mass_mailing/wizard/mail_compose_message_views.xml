@@ -9,37 +9,21 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='auto_delete_keep_log']" position="after">
                     <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
-                        attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('model_is_thread', '!=', True)]}"/>
+                        invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
                     <field name="mass_mailing_name"
-                        attrs="{'invisible': ['|', ('composition_mode', '!=', 'mass_mail'), ('model_is_thread', '!=', True)]}"/>
+                        invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
                     <!-- 'Log' button -->
-                    <attribute name="attrs">
-                        {'invisible': [
-                            '|',
-                                ('subtype_is_log', '=', False),
-                                '&amp;',
-                                    ('mass_mailing_name', '!=', ''),
-                                    ('mass_mailing_name', '!=', False)
-                        ]}
-                    </attribute>
+                    <attribute name="invisible">not subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
                 </xpath>
                 <xpath expr="//button[hasclass('o_mail_send')]" position="attributes">
                     <!-- 'Send' button -->
-                    <attribute name="attrs">
-                        {'invisible': [
-                            '|',
-                                ('subtype_is_log', '=', True),
-                                '&amp;',
-                                    ('mass_mailing_name', '!=', ''),
-                                    ('mass_mailing_name', '!=', False)
-                        ]}
-                    </attribute>
+                    <attribute name="invisible">subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail']" position="after">
                     <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"
-                        attrs="{'invisible': ['|', ('mass_mailing_name', '==', ''), ('mass_mailing_name', '==', False)]}" data-hotkey="q"/>
+                        invisible="mass_mailing_name == '' or not mass_mailing_name" data-hotkey="q"/>
                 </xpath>
             </field>
         </record>

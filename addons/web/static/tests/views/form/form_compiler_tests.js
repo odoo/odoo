@@ -228,18 +228,18 @@ QUnit.module("Form Compiler", (hooks) => {
         // ```<form>
         //      <field name="display_name" invisible="1" />
         //      <div class="visible3" invisible="0"/>
-        //      <div modifiers="{'invisible': [['display_name', '=', 'take']]}"/>
+        //      <div invisible="display_name == 'take'"/>
         //    </form>````
         const arch = /*xml*/ `
             <form>
-                <field field_id="display_name" name="display_name" modifiers="{&quot;invisible&quot;: true}" />
-                <div class="visible3" modifiers="{&quot;invisible&quot;: false}"/>
-                <div modifiers="{&quot;invisible&quot;: [[&quot;display_name&quot;, &quot;=&quot;, &quot;take&quot;]]}"/>
+                <field field_id="display_name" name="display_name" invisible="True" />
+                <div class="visible3" invisible="False"/>
+                <div invisible="display_name == &quot;take&quot;"/>
             </form>`;
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!__comp__.evalDomainFromRecord(__comp__.props.record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])" />
+            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == \\&quot;take\\&quot;&quot;,__comp__.props.record.evalContext)" />
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -248,14 +248,14 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("compile invisible containing string as domain", async (assert) => {
         const arch = /*xml*/ `
             <form>
-                <field name="display_name" modifiers="{&quot;invisible&quot;: true}" />
-                <div class="visible3" modifiers="{&quot;invisible&quot;: false}"/>
-                <div modifiers="{&quot;invisible&quot;: &quot;[['display_name', '=', 'take']]&quot;}"/>
+                <field name="display_name" invisible="True" />
+                <div class="visible3" invisible="False"/>
+                <div invisible="display_name == 'take'"/>
             </form>`;
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!__comp__.evalDomainFromRecord(__comp__.props.record,&quot;[['display_name','=','take']]&quot;)" />
+            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == 'take'&quot;,__comp__.props.record.evalContext)" />
         `;
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -350,14 +350,14 @@ QUnit.module("Form Renderer", (hooks) => {
         };
     });
 
-    QUnit.test("compile form with modifiers and attrs - string as domain", async (assert) => {
+    QUnit.test("compile form with modifiers", async (assert) => {
         serverData.views = {
             "partner,1,form": /*xml*/ `
                 <form>
-                    <div modifiers="{&quot;invisible&quot;: &quot;[['display_name', '=', uid]]&quot;}">
+                    <div invisible="display_name == uid">
                         <field name="charfield"/>
                     </div>
-                    <field name="display_name" attrs="{'readonly': &quot;[['display_name', '=', uid]]&quot;}"/>
+                    <field name="display_name" readonly="display_name == uid"/>
                 </form>`,
         };
 
@@ -379,7 +379,7 @@ QUnit.module("Form Renderer", (hooks) => {
                 <form>
                     <sheet>
                         <notebook>
-                            <page name="p1" attrs="{'invisible': [['display_name', '=', 'lol']]}"><field name="charfield"/></page>
+                            <page name="p1" invisible="display_name == 'lol'"><field name="charfield"/></page>
                             <page name="p2"><field name="display_name"/></page>
                         </notebook>
                     </sheet>
@@ -482,9 +482,9 @@ QUnit.module("Form Renderer", (hooks) => {
             },
         });
 
-        const arch = `<myNode modifiers="{&quot;invisible&quot;: [[&quot;field&quot;, &quot;=&quot;, &quot;value&quot;]]}" />`;
+        const arch = `<myNode invisible="field == 'value'" />`;
 
-        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evalDomainFromRecord(__comp__.props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
+        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContext)" t-ref="compiled_view_root"/></t>`;
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 });

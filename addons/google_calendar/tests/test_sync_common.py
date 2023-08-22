@@ -23,6 +23,7 @@ class TestSyncGoogle(HttpCase):
     def setUp(self):
         super().setUp()
         self.google_service = GoogleCalendarService(self.env['google.service'])
+        self.env.user.sudo().unpause_google_synchronization()
 
     def assertGoogleEventDeleted(self, google_id):
         GoogleSync._google_delete.assert_called()

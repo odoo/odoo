@@ -3,9 +3,10 @@
 
 import collections
 import contextlib
-import json
 import itertools
+import json
 import operator
+from textwrap import shorten
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -132,27 +133,28 @@ class SurveyQuestion(models.Model):
         'survey.user_input.line', 'question_id', string='Answers',
         domain=[('skipped', '=', False)], groups='survey.group_survey_user')
 
-    # Conditional display
-    is_conditional = fields.Boolean(
-        string='Conditional Display', copy=False, help="""If checked, this question will be displayed only
-        if the specified conditional answer have been selected in a previous question""")
-    triggering_question_id = fields.Many2one(
-        'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
-        store=True, readonly=False, help="Question containing the triggering answer to display the current question.",
-        domain="[('survey_id', '=', survey_id), \
-                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']), \
-                 '|', \
-                     ('sequence', '<', sequence), \
-                     '&', ('sequence', '=', sequence), ('id', '<', id)]")
+    # Not stored, convenient for trigger display computation.
+    triggering_question_ids = fields.Many2many(
+        'survey.question', string="Triggering Questions", compute="_compute_triggering_question_ids",
+        store=False, help="Questions containing the triggering answer(s) to display the current question.")
+
     allowed_triggering_question_ids = fields.Many2many(
         'survey.question', string="Allowed Triggering Questions", copy=False, compute="_compute_allowed_triggering_question_ids")
     is_placed_before_trigger = fields.Boolean(
-        string='Is misplaced?', help="Is this question placed before its trigger question?",
+        string='Is misplaced?', help="Is this question placed before any of its trigger questions?",
         compute="_compute_allowed_triggering_question_ids")
-    triggering_answer_id = fields.Many2one(
-        'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
-        store=True, readonly=False, help="Answer that will trigger the display of the current question.",
-        domain="[('question_id', '=', triggering_question_id)]")
+    triggering_answer_ids = fields.Many2many(
+        'survey.question.answer', string="Triggering Answers", copy=False, store=True,
+        readonly=False, help="Picking any of these answers will trigger this question.\n"
+                             "Leave the field empty if the question should always be displayed.",
+        domain="""[
+            ('question_id.survey_id', '=', survey_id),
+            '&', ('question_id.question_type', 'in', ['simple_choice', 'multiple_choice']),
+                 '|',
+                     ('question_id.sequence', '<', sequence),
+                     '&', ('question_id.sequence', '=', sequence), ('question_id.id', '<', id)
+        ]"""
+    )
 
     _sql_constraints = [
         ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
@@ -166,12 +168,6 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
         ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
-        ('conditional_questions_have_triggering_question', 'CHECK (is_conditional != True OR triggering_question_id is not null)',
-            'All conditional display questions need a triggering question.\n'
-            'Please disable "Conditional Display" or specify a triggering question.'),
-        ('triggered_questions_have_triggering_answer', 'CHECK (triggering_question_id is null OR triggering_answer_id is not null)',
-            'All questions triggered by another need a triggering answer.\n'
-            'Please disable "Conditional Display" or specify a triggering answer.'),
     ]
 
     # -------------------------------------------------------------------------
@@ -280,19 +276,12 @@ class SurveyQuestion(models.Model):
             if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
                 question.validation_required = False
 
-    @api.depends('is_conditional', 'survey_id', 'survey_id.question_ids', 'triggering_question_id')
+    @api.depends('survey_id', 'survey_id.question_ids', 'triggering_answer_ids')
     def _compute_allowed_triggering_question_ids(self):
-        """ Although the question (and possible trigger questions) sequence
+        """Although the question (and possible trigger questions) sequence
         is used here, we do not add these fields to the dependency list to
         avoid cascading rpc calls when reordering questions via the webclient.
         """
-        conditional_questions = self.filtered(lambda q: q.is_conditional)
-        non_conditional_questions = self - conditional_questions
-        non_conditional_questions.allowed_triggering_question_ids = False
-        non_conditional_questions.is_placed_before_trigger = False
-        if not conditional_questions:
-            return
-
         possible_trigger_questions = self.search([
             ('is_page', '=', False),
             ('question_type', 'in', ['simple_choice', 'multiple_choice']),
@@ -301,14 +290,14 @@ class SurveyQuestion(models.Model):
         ])
         # Using the sequence stored in db is necessary for existing questions that are passed as
         # NewIds because the sequence provided by the JS client can be incorrect.
-        (conditional_questions | possible_trigger_questions).flush_recordset()
+        (self | possible_trigger_questions).flush_recordset()
         self.env.cr.execute(
             "SELECT id, sequence FROM survey_question WHERE id =ANY(%s)",
-            [conditional_questions.ids]
+            [self.ids]
         )
         conditional_questions_sequences = dict(self.env.cr.fetchall())  # id: sequence mapping
 
-        for question in conditional_questions:
+        for question in self:
             question_id = question._origin.id
             if not question_id:  # New question
                 question.allowed_triggering_question_ids = possible_trigger_questions.filtered(
@@ -322,28 +311,15 @@ class SurveyQuestion(models.Model):
                 lambda q: q.survey_id.id == question.survey_id._origin.id
                 and (q.sequence < question_sequence or q.sequence == question_sequence and q.id < question_id)
             )
-            question.is_placed_before_trigger = (
-                question.triggering_question_id
-                and question.triggering_question_id.id not in question.allowed_triggering_question_ids.ids)
+            question.is_placed_before_trigger = bool(
+                set(question.triggering_answer_ids.question_id.ids)
+                - set(question.allowed_triggering_question_ids.ids)  # .ids necessary to match ids with newIds
+            )
 
-    @api.depends('is_conditional')
-    def _compute_triggering_question_id(self):
-        """ Used as an 'onchange' : Reset the triggering question if user uncheck 'Conditional Display'
-            Avoid CacheMiss : set the value to False if the value is not set yet."""
+    @api.depends('triggering_answer_ids')
+    def _compute_triggering_question_ids(self):
         for question in self:
-            if not question.is_conditional or question.triggering_question_id is None:
-                question.triggering_question_id = False
-
-    @api.depends('triggering_question_id')
-    def _compute_triggering_answer_id(self):
-        """ Used as an 'onchange' : Reset the triggering answer if user unset or change the triggering question
-            or uncheck 'Conditional Display'.
-            Avoid CacheMiss : set the value to False if the value is not set yet."""
-        for question in self:
-            if not question.triggering_question_id \
-                    or question.triggering_question_id != question.triggering_answer_id.question_id\
-                    or question.triggering_answer_id is None:
-                question.triggering_answer_id = False
+            question.triggering_question_ids = question.triggering_answer_ids.question_id
 
     @api.depends('question_type', 'scoring_type', 'answer_date', 'answer_datetime', 'answer_numerical_box', 'suggested_answer_ids.is_correct')
     def _compute_is_scored_question(self):
@@ -391,21 +367,9 @@ class SurveyQuestion(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         clone = super().copy(default)
-        if self.is_conditional:
-            clone.is_conditional = True
-            clone.triggering_question_id = self.triggering_question_id.id
-            clone.triggering_answer_id = self.triggering_answer_id.id
+        if self.triggering_answer_ids:
+            clone.triggering_answer_ids = self.triggering_answer_ids
         return clone
-
-    def unlink(self):
-        """ Makes sure no question is left depending on the question we're deleting."""
-        depending_questions = self.env['survey.question'].search([('triggering_question_id', 'in', self.ids)])
-        depending_questions.write({
-            'is_conditional': False,
-            'triggering_question_id': False,
-            'triggering_answer_id': False,
-        })
-        return super().unlink()
 
     # ------------------------------------------------------------
     # CRUD
@@ -698,8 +662,11 @@ class SurveyQuestionAnswer(models.Model):
     """
     _name = 'survey.question.answer'
     _rec_name = 'value'
-    _order = 'sequence, id'
+    _rec_names_search = ['question_id.title', 'value']
+    _order = 'question_id, sequence, id'
     _description = 'Survey Label'
+
+    MAX_ANSWER_NAME_LENGTH = 90  # empirically tested in client dropdown
 
     # question and question related fields
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade')
@@ -713,6 +680,27 @@ class SurveyQuestionAnswer(models.Model):
     value_image_filename = fields.Char('Image Filename')
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+
+    @api.depends('value', 'question_id.title')
+    def _compute_display_name(self):
+        """Render an answer name as "Question title : Answer value" making sure it is not too long.
+
+        This implementation makes sure we have at least 30 characters for the question title,
+        then we elide it, leaving the rest of the space for the answer.
+        """
+        for answer in self:
+            # _origin (or fallback title) is (likely temporarily) needed to support survey snapshot
+            # during onchange for a deleted answer used as trigger in another question.
+            title = answer._origin.question_id.title
+            n_extra_characters = len(title) + len(answer.value) + 3 - self.MAX_ANSWER_NAME_LENGTH  # 3 for `" : "`
+            if n_extra_characters <= 0:
+                answer.display_name = f'{title} : {answer.value}'
+            else:
+                answer.display_name = shorten(
+                    f'{shorten(title, max(30, len(title) - n_extra_characters), placeholder="...")} : {answer.value}',
+                    self.MAX_ANSWER_NAME_LENGTH,
+                    placeholder="..."
+                )
 
     @api.constrains('question_id', 'matrix_question_id')
     def _check_question_not_empty(self):
@@ -728,13 +716,3 @@ class SurveyQuestionAnswer(models.Model):
         elif self.question_type in ('multiple_choice', 'simple_choice'):
             return ['&', ('question_id', '=', self.question_id.id), ('suggested_answer_id', '=', self.id)]
         return []
-
-    def unlink(self):
-        """ Makes sure no question is left depending on the answer we're deleting."""
-        depending_questions = self.env['survey.question'].search([('triggering_answer_id', 'in', self.ids)])
-        depending_questions.write({
-            'is_conditional': False,
-            'triggering_question_id': False,
-            'triggering_answer_id': False,
-        })
-        return super().unlink()

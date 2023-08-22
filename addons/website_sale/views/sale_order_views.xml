@@ -49,21 +49,19 @@
                 <field name="is_abandoned_cart" invisible="1"/>
                 <field name="cart_recovery_email_sent" invisible="1"/>
             </field>
-            <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="attributes">
-                <!-- The '| and the '&amp' opertors are necessary because draft state of the parent concatenate the domain -->
-                <attribute name="attrs">{'invisible': ['|','&amp;',('is_abandoned_cart', '=', True), ('cart_recovery_email_sent', '=', False)]}</attribute>
-            </xpath>
-            <button name="action_quotation_send" position="after">
-                <button name="action_recovery_email_send" data-hotkey="l"
-                    string="Send a Recovery Email"
-                    type="object"
-                    class="btn-primary"
-                    attrs="{'invisible': ['|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True)]}"/>
+            <button name="action_quotation_send" id="send_by_email_primary" position="attributes">
+                <attribute name="invisible">state != 'draft' or (is_abandoned_cart and not cart_recovery_email_sent)</attribute>
             </button>
-            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="after">
-                <button name="action_quotation_send" string="Send by Email" type="object"
-                    attrs="{'invisible': ['|', '|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True), ('state', '!=', 'draft')]}"/>
-            </xpath>
+            <button name="action_quotation_send" position="after">
+                <button name="action_recovery_email_send" type="object" id="send_recovery" data-hotkey="l"
+                    string="Send a Recovery Email"
+                    class="btn-primary"
+                    invisible="not is_abandoned_cart or cart_recovery_email_sent"/>
+            </button>
+            <button name="action_quotation_send" id="send_by_email" position="after">
+                <button name="action_quotation_send" id="send_by_email_bis" string="Send by Email" type="object"
+                    invisible="not is_abandoned_cart or cart_recovery_email_sent or state != 'draft'"/>
+            </button>
         </field>
     </record>
 
@@ -199,7 +197,7 @@
                 }</attribute>
             </field>
             <field name="team_id" position="after">
-                <field name="website_id" attrs="{'invisible': [('website_id', '=', False)]}" groups="website.group_multi_website"/>
+                <field name="website_id" invisible="not website_id" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

@@ -10,10 +10,8 @@
             <xpath expr='//field[@name="custom_quantity"]' position="before">
                 <field name="picking_quantity"/>
             </xpath>
-            <xpath expr='//field[@name="custom_quantity"]' position="attributes">
-                <attribute name="attrs">
-                    {'invisible': [('picking_quantity', '=', 'picking')]}
-                </attribute>
+            <xpath expr="//field[@name='custom_quantity']" position="attributes">
+                <attribute name="invisible">picking_quantity == 'picking'</attribute>
             </xpath>
         </field>
     </record>

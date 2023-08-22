@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
@@ -21,7 +23,7 @@ const DEFAULT_QUICK_CREATE_VIEW = {
     // note: the required modifier is written in the format returned by the server
     arch: /* xml */ `
         <form>
-            <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
+            <field name="display_name" placeholder="Title" required="True" />
         </form>`,
 };
 const DEFAULT_QUICK_CREATE_FIELDS = {
@@ -148,8 +150,8 @@ class KanbanQuickCreateController extends Component {
                     this.showFormDialogInError(e);
                 }
             } else {
-                this.model.notification.add(this.model.env._t("Display Name"), {
-                    title: this.model.env._t("Invalid fields: "),
+                this.model.notification.add(_t("Display Name"), {
+                    title: _t("Invalid fields: "),
                     type: "danger",
                 });
             }
@@ -193,7 +195,7 @@ class KanbanQuickCreateController extends Component {
         this.addDialog(FormViewDialog, {
             resModel: this.props.resModel,
             context,
-            title: this.env._t("Create"),
+            title: _t("Create"),
             onRecordSaved: async (record) => {
                 await this.props.onValidate(record.resId, "add");
                 await this.model.load();

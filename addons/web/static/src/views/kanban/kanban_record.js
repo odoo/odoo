@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ColorList } from "@web/core/colorlist/colorlist";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -179,6 +180,7 @@ export function isHtmlEmpty(innerHTML = "") {
 
 export class KanbanRecord extends Component {
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
@@ -243,10 +245,6 @@ export class KanbanRecord extends Component {
         };
     }
 
-    evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
-    }
-
     getRecordClasses() {
         const { archInfo, canResequence, forceGlobalClick, record, progressBarState } = this.props;
         const classes = ["o_kanban_record d-flex"];
@@ -307,7 +305,6 @@ export class KanbanRecord extends Component {
      * @param {Object} params
      */
     triggerAction(params) {
-        const env = this.env;
         const { archInfo, openRecord, deleteRecord, record } = this.props;
         const { type } = params;
         switch (type) {
@@ -333,7 +330,7 @@ export class KanbanRecord extends Component {
                 ) {
                     this.dialog.add(KanbanCoverImageDialog, { autoOpen, fieldName, record });
                 } else {
-                    const warning = env._t(
+                    const warning = _t(
                         `Could not set the cover image: incorrect field ("%s") is provided in the view.`,
                         fieldName
                     );
@@ -342,7 +339,7 @@ export class KanbanRecord extends Component {
                 break;
             }
             default: {
-                return this.notification.add(env._t("Kanban: no action for type: ") + type, {
+                return this.notification.add(_t("Kanban: no action for type: ") + type, {
                     type: "danger",
                 });
             }

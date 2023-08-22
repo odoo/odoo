@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
         <field name="arch" type="xml">
             <field name="mail_template_id" position="after">
-                <field name="pos_report_print_id" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}" />
+                <field name="pos_report_print_id" invisible="program_type != 'gift_card'" />
             </field>
             <xpath expr="//label[@for='available_on']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -22,7 +22,7 @@
                 </span>
             </xpath>
             <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
-                <field name="pos_config_ids" string="Point of Sale" widget="many2many_tags" attrs="{'invisible': [('pos_ok', '=', False)]}" options="{'create': False}" placeholder="All PoS"/>
+                <field name="pos_config_ids" string="Point of Sale" widget="many2many_tags" invisible="not pos_ok" options="{'create': False}" placeholder="All PoS"/>
             </xpath>
         </field>
     </record>

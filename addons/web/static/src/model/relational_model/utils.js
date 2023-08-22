@@ -3,7 +3,6 @@
 import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { Domain } from "@web/core/domain";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
@@ -22,9 +21,9 @@ export function makeActiveField({
 } = {}) {
     return {
         context: context || "{}",
-        invisible: invisible || false,
-        readonly: readonly || false,
-        required: required || false,
+        invisible: invisible || "False",
+        readonly: readonly || "False",
+        required: required || "False",
         onChange: onChange || false,
         forceSave: forceSave || false,
         isHandle: isHandle || false,
@@ -74,7 +73,7 @@ export function completeActiveFields(activeFields, extraActiveFields) {
     for (const fieldName in extraActiveFields) {
         const extraActiveField = {
             ...extraActiveFields[fieldName],
-            invisible: true,
+            invisible: 'True',
         };
         if (fieldName in activeFields) {
             completeActiveField(activeFields[fieldName], extraActiveField);
@@ -103,29 +102,29 @@ export function createPropertyActiveField(property) {
     return activeField;
 }
 
-function combineModifiers(mod1, mod2, operator) {
+export function combineModifiers(mod1, mod2, operator) {
     if (operator === "AND") {
-        if (mod1 === false || mod2 === false) {
-            return false;
+        if (!mod1 || mod1 === "False" || !mod2 || mod2 === "False") {
+            return "False";
         }
-        if (mod1 === true) {
+        if (mod1 === "True") {
             return mod2;
         }
-        if (mod2 === true) {
+        if (mod2 === "True") {
             return mod1;
         }
-        return Domain.and([mod1, mod2]).toString();
+        return "(" + mod1 + ") and (" + mod2 + ")";
     } else if (operator === "OR") {
-        if (mod1 === true || mod2 === true) {
-            return true;
+        if (mod1 === "True" || mod2 === "True") {
+            return "True";
         }
-        if (mod1 === false) {
+        if (!mod1 || mod1 === "False") {
             return mod2;
         }
-        if (mod2 === false) {
+        if (!mod2 || mod2 === "False") {
             return mod1;
         }
-        return Domain.or([mod1, mod2]).toString();
+        return "(" + mod1 + ") or (" + mod2 + ")";
     }
     throw new Error(
         `Operator provided to "combineModifiers" must be "AND" or "OR", received ${operator}`
@@ -166,12 +165,11 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
     const activeFields = {};
     for (const fieldNode of Object.values(fieldNodes)) {
         const fieldName = fieldNode.name;
-        const modifiers = fieldNode.modifiers || {};
         const activeField = makeActiveField({
             context: fieldNode.context,
-            invisible: modifiers.invisible || modifiers.column_invisible,
-            readonly: modifiers.readonly,
-            required: modifiers.required,
+            invisible: combineModifiers(fieldNode.invisible, fieldNode.column_invisible, "OR"),
+            readonly: fieldNode.readonly,
+            required: fieldNode.required,
             onChange: fieldNode.onChange,
             forceSave: fieldNode.forceSave,
             isHandle: fieldNode.isHandle,
@@ -205,7 +203,7 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 }
             }
             if (fieldNode.field?.useSubView) {
-                activeField.required = false;
+                activeField.required = 'False';
             }
         }
 
@@ -272,7 +270,7 @@ export function getFieldsSpec(
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
         fieldsSpec[fieldName] = {};
         // X2M
-        if (related && (invisible !== true || withInvisible)) {
+        if (related && ((invisible !== "True" && invisible !== "1") || withInvisible)) {
             fieldsSpec[fieldName].fields = getFieldsSpec(
                 related.activeFields,
                 related.fields,
@@ -291,7 +289,7 @@ export function getFieldsSpec(
         // M2O
         if (fields[fieldName].type === "many2one") {
             fieldsSpec[fieldName].fields = {};
-            if (invisible !== true) {
+            if (invisible !== "True" && invisible !== "1") {
                 fieldsSpec[fieldName].fields.display_name = {};
             }
         }

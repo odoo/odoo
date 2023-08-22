@@ -1,8 +1,7 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-const { useEnv } = owl;
 
 export function useMandatoryDays(props) {
     return (info) => {
@@ -24,11 +23,10 @@ export function useMandatoryDays(props) {
 
 export function useLeaveCancelWizard() {
     const action = useService('action');
-    const env = useEnv();
 
     return (leaveId, callback) => {
         action.doAction({
-            name: env._t('Delete Confirmation'),
+            name: _t('Delete Confirmation'),
             type: "ir.actions.act_window",
             res_model: "hr.holidays.cancel.leave",
             target: "new",

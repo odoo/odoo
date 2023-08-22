@@ -6,7 +6,13 @@
         </xpath>
         <xpath expr="//div[@id='microsoft_calendar_sync']" position="replace">
             <div id="microsoft_calendar_sync" class="o_calendar_sync">
-                <button t-if="!model.microsoftIsSync" type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary text-nowrap" t-on-click="onMicrosoftSyncCalendar">
+                <button t-if="!model.microsoftIsSync and model.microsoftIsPaused" type="button" id="microsoft_sync_paused" class="o_google_sync_button o_microsoft_sync_paused btn btn-warning" t-on-click="onMicrosoftSyncUnpause">
+                    <b>
+                        <i id="microsoft_paused" class='fa fa-pause'/>
+                        <span class="mx-1">Outlook</span>
+                    </b>
+                </button>
+                <button t-elif="!model.microsoftIsSync" type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary text-nowrap" t-on-click="onMicrosoftSyncCalendar">
                     <b><i class='fa fa-refresh'/> Outlook</b>
                 </button>
                 <!-- class change on hover -->

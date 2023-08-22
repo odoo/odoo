@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <setting id="eu_service" position="inside">
                 <field name="l10n_eu_oss_eu_country" invisible="1"/>
-                <div class="content-group" attrs="{'invisible': [('module_l10n_eu_oss', '=', False)]}">
-                    <div class="mt8" attrs="{'invisible': [('l10n_eu_oss_eu_country', '=', False)]}">
+                <div class="content-group" invisible="not module_l10n_eu_oss">
+                    <div class="mt8" invisible="not l10n_eu_oss_eu_country">
                         <button type="object" name="refresh_eu_tax_mapping" icon="fa-refresh" string="Refresh tax mapping" class="btn-link"/>
                     </div>
                 </div>

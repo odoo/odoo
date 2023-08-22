@@ -1,8 +1,9 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -307,14 +308,14 @@ export class ListController extends Component {
                 isAvailable: () => this.isExportEnable,
                 sequence: 10,
                 icon: "fa fa-upload",
-                description: this.env._t("Export"),
+                description: _t("Export"),
                 callback: () => this.onExportData(),
             },
             archive: {
                 isAvailable: () => this.archiveEnabled && !isM2MGrouped,
                 sequence: 20,
                 icon: "oi oi-archive",
-                description: this.env._t("Archive"),
+                description: _t("Archive"),
                 callback: () => {
                     this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
                 },
@@ -323,14 +324,14 @@ export class ListController extends Component {
                 isAvailable: () => this.archiveEnabled && !isM2MGrouped,
                 sequence: 30,
                 icon: "oi oi-unarchive",
-                description: this.env._t("Unarchive"),
+                description: _t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
             },
             delete: {
                 isAvailable: () => this.activeActions.delete && !isM2MGrouped,
                 sequence: 40,
                 icon: "fa fa-trash-o",
-                description: this.env._t("Delete"),
+                description: _t("Delete"),
                 callback: () => this.onDeleteSelectedRecords(),
             },
         };
@@ -338,8 +339,8 @@ export class ListController extends Component {
 
     get archiveDialogProps() {
         return {
-            body: this.env._t("Are you sure that you want to archive all the selected records?"),
-            confirmLabel: this.env._t("Archive"),
+            body: _t("Are you sure that you want to archive all the selected records?"),
+            confirmLabel: _t("Archive"),
             confirm: () => {
                 this.toggleArchiveState(true);
             },
@@ -378,6 +379,10 @@ export class ListController extends Component {
             record.toggleSelection(false);
         });
         this.model.root.selectDomain(false);
+    }
+
+    evalViewModifier(modifier) {
+        return evaluateBooleanExpr(modifier, this.model.root.evalContext);
     }
 
     get className() {
@@ -445,7 +450,7 @@ export class ListController extends Component {
         if (import_compat) {
             exportedFields.unshift({
                 name: "id",
-                label: this.env._t("External ID"),
+                label: _t("External ID"),
             });
         }
         await download({
@@ -513,11 +518,11 @@ export class ListController extends Component {
         const root = this.model.root;
         const body =
             root.isDomainSelected || root.selection.length > 1
-                ? this.env._t("Are you sure you want to delete these records?")
-                : this.env._t("Are you sure you want to delete this record?");
+                ? _t("Are you sure you want to delete these records?")
+                : _t("Are you sure you want to delete this record?");
         return {
             body,
-            confirmLabel: this.env._t("Delete"),
+            confirmLabel: _t("Delete"),
             confirm: () => this.model.root.deleteRecords(),
             cancel: () => {},
         };

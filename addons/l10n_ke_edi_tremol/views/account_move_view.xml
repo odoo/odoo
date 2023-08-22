@@ -12,13 +12,13 @@
                             class="oe_highlight"
                             groups="account.group_account_manager"
                             string="Send To Fiscal Device"
-                            attrs="{'invisible': ['|', '|', '|', ('country_code', '!=', 'KE'), ('l10n_ke_cu_qrcode', '!=', False), ('state', '!=', 'posted'), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}"/>
+                            invisible="country_code != 'KE' or l10n_ke_cu_qrcode or state != 'posted' or move_type not in ['out_invoice', 'out_refund']"/>
                 </xpath>
                 <xpath expr="//group[@id='header_right_group']" position="inside">
-                    <field name="l10n_ke_cu_invoice_number" attrs="{'invisible': [('country_code', '!=', 'KE')]}" readonly="1"/>
+                    <field name="l10n_ke_cu_invoice_number" readonly="1" invisible="country_code != 'KE'"/>
                 </xpath>
                 <notebook position="inside">
-                    <page string="Tremol GO3 Fiscal Device" attrs="{'invisible': [('country_code', '!=', 'KE')]}">
+                    <page string="Tremol GO3 Fiscal Device" invisible="country_code != 'KE'">
                         <group>
                             <group>
                                 <field name="l10n_ke_cu_qrcode" widget="url" readonly="1"/>

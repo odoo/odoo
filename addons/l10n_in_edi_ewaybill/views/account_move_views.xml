@@ -7,16 +7,16 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='button_set_checked']" position="after">
                 <field name="l10n_in_edi_ewaybill_show_send_button" invisible="1"/>
-                <button name="l10n_in_edi_ewaybill_send" string="Send E-waybill" class="oe_highlight" type="object" groups="account.group_account_invoice" attrs="{'invisible' : [('l10n_in_edi_ewaybill_show_send_button','!=',True)]}"/>
+                <button name="l10n_in_edi_ewaybill_send" string="Send E-waybill" class="oe_highlight" type="object" groups="account.group_account_invoice" invisible="not l10n_in_edi_ewaybill_show_send_button"/>
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
-                    attrs="{'invisible':['|', ('move_type', '=', 'entry'), ('country_code', '!=', 'IN')]}">
+                    invisible="move_type == 'entry' or country_code != 'IN'">
                     <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/>
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
-                            attrs="{'invisible': [('l10n_in_edi_ewaybill_direct_api', '!=', True)]}">
-                            <field name="l10n_in_type_id" domain="[('allowed_supply_type', 'in', ('in', 'both')) if move_type in ('in_invoice', 'in_refund', 'in_receipt') else ('allowed_supply_type', 'in', ('out', 'both'))]"/>
+                            invisible="not l10n_in_edi_ewaybill_direct_api">
+                            <field name="l10n_in_type_id" domain="[('allowed_supply_type', 'in', ('in', 'both'))] if move_type in ('in_invoice', 'in_refund', 'in_receipt') else [('allowed_supply_type', 'in', ('out', 'both'))]"/>
                         </group>
                         <group string="Transportation Details" name="transportation_group">
                             <field name="l10n_in_mode"/>
@@ -26,21 +26,23 @@
                                 <span>km</span>
                             </div>
                             <field name="l10n_in_vehicle_type" 
-                                attrs="{'invisible': [('l10n_in_mode','!=','1')], 'required': [('l10n_in_mode','=','1')]}"/>
+                                invisible="l10n_in_mode != '1'"
+                                required="l10n_in_mode == '1'"/>
                             <field name="l10n_in_vehicle_no" 
-                                attrs="{'invisible': [('l10n_in_mode','!=','1')], 'required': [('l10n_in_mode','=','1')]}"/>
+                                invisible="l10n_in_mode != '1'"
+                                required="l10n_in_mode == '1'"/>
                             <field name="l10n_in_transporter_id"
                                 domain="[('vat','not in', ['', False]), ('country_id.code','=','IN')]"
-                                attrs="{'invisible': [('l10n_in_mode','!=','0')], 'required': [('l10n_in_mode','=','0')]}"/>
+                                invisible="l10n_in_mode != '0'"
+                                required="l10n_in_mode == '0'"/>
                             <field name="l10n_in_transportation_doc_no" 
-                                attrs="{'invisible': [('l10n_in_mode','not in',('2','3','4'))], 'required': [('l10n_in_mode','in',('2','3','4'))]}"/>
+                                invisible="l10n_in_mode not in ('2', '3', '4')"
+                                required="l10n_in_mode in ('2', '3', '4')"/>
                             <field name="l10n_in_transportation_doc_date" 
-                                attrs="{'invisible': [('l10n_in_mode','not in',('2','3','4'))], 'required': [('l10n_in_mode','in',('2','3','4'))]}"/>
+                                invisible="l10n_in_mode not in ('2', '3', '4')"
+                                required="l10n_in_mode in ('2', '3', '4')"/>
                         </group>
-                        <group string="Cancel Reason" attrs="{'invisible': ['|', '|',
-                                ('country_code', '!=', 'IN'),
-                                ('state', '!=', 'posted'),
-                                ('l10n_in_edi_show_cancel', '!=', True)]}">
+                        <group string="Cancel Reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel">
                             <field name="l10n_in_edi_cancel_reason"/>
                             <field name="l10n_in_edi_cancel_remarks"/>
                         </group>

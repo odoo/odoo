@@ -10,9 +10,9 @@
                     <field name="perform_vies_validation" invisible="1"/>
                     <label for="vat" string="Tax ID"/>
                     <div>
-                        <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}" class="oe_inline"/>
-                        <label for="vies_valid" attrs="{'invisible': [('perform_vies_validation', '=', False)]}"/>
-                        <field name="vies_valid" attrs="{'invisible': [('perform_vies_validation', '=', False)]}"/>
+                        <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id" class="oe_inline"/>
+                        <label for="vies_valid" invisible="not perform_vies_validation"/>
+                        <field name="vies_valid" invisible="not perform_vies_validation"/>
                     </div>
                 </xpath>
             </field>

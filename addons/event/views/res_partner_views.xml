@@ -12,7 +12,7 @@
                         groups="event.group_event_user"
                         type="object"
                         icon="fa-ticket"
-                        name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
+                        name="action_event_view" invisible="event_count == 0">
                         <field string="Events" name="event_count" widget="statinfo"/>
                     </button>
                 </div>

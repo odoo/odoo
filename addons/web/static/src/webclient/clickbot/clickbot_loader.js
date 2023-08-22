@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
@@ -11,7 +12,7 @@ export async function startClickEverywhere(xmlId, appsMenusOnly) {
 export function runClickTestItem({ env }) {
     return {
         type: "item",
-        description: env._t("Run Click Everywhere Test"),
+        description: _t("Run Click Everywhere Test"),
         callback: () => {
             startClickEverywhere();
         },
@@ -21,7 +22,7 @@ export function runClickTestItem({ env }) {
 
 export default {
     startClickEverywhere,
-    runClickTestItem
-}
+    runClickTestItem,
+};
 
 registry.category("debug").category("default").add("runClickTestItem", runClickTestItem);

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { identifyError } from "@point_of_sale/app/errors/error_handlers";
@@ -80,14 +81,11 @@ export class ProductsWidget extends Component {
         const result = await this.loadProductFromDB();
         if (result.length > 0) {
             this.notification.add(
-                this.env._t('%s product(s) found for "%s".', result.length, searchProductWord),
+                _t('%s product(s) found for "%s".', result.length, searchProductWord),
                 3000
             );
         } else {
-            this.notification.add(
-                this.env._t('No more product found for "%s".', searchProductWord),
-                3000
-            );
+            this.notification.add(_t('No more product found for "%s".', searchProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
@@ -135,8 +133,8 @@ export class ProductsWidget extends Component {
                 identifiedError instanceof ConnectionAbortedError
             ) {
                 return this.popup.add(OfflineErrorPopup, {
-                    title: this.env._t("Network Error"),
-                    body: this.env._t(
+                    title: _t("Network Error"),
+                    body: _t(
                         "Product is not loaded. Tried loading the product from the server but there is a network error."
                     ),
                 });
@@ -153,8 +151,8 @@ export class ProductsWidget extends Component {
         );
         if (!successful) {
             this.popup.add(ErrorPopup, {
-                title: this.env._t("Demo products are no longer available"),
-                body: this.env._t(
+                title: _t("Demo products are no longer available"),
+                body: _t(
                     "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
                 ),
             });

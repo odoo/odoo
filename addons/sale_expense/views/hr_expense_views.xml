@@ -8,21 +8,23 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_distribution']" position="before">
                 <field name="sale_order_id" groups="!sales_team.group_sale_salesman,!account.group_account_manager"
-                    attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"
+                    invisible="not can_be_reinvoiced"
+                    readonly="not sheet_is_editable"
                     options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"
                     context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
                     widget="sale_order_many2one"/>
                 <field name="sale_order_id" groups="sales_team.group_sale_salesman,!account.group_account_manager"
-                    attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"
+                    invisible="not can_be_reinvoiced"
+                    readonly="not sheet_is_editable"
                     options="{'no_create_edit': True, 'no_create': True}"
                     context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
                     widget="many2one"/>
                 <field name="sale_order_id" groups="account.group_account_manager"
                     widget="many2one"
-                    attrs="{'invisible':[['can_be_reinvoiced','=',False]],'readonly':['|', ['state','in',['done']], ['sheet_is_editable', '=', False]]}"
+                    invisible="not can_be_reinvoiced"
+                    readonly="state == 'done' or not sheet_is_editable"
                     options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"
-                    context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
-                    />
+                    context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
                 <field name="can_be_reinvoiced" invisible="1"/>
             </xpath>
         </field>
@@ -33,8 +35,8 @@
         <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='reference']" position="after">
-                <field name="sale_order_id" optional="hide" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"  context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
-                <field name="can_be_reinvoiced" invisible="1" readonly="1"/>
+                <field name="sale_order_id" optional="hide" invisible="not can_be_reinvoiced" readonly="state in ['done', 'refused']" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"  context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
+                <field name="can_be_reinvoiced" readonly="1" column_invisible="True"/>
             </xpath>
         </field>
     </record>
@@ -45,8 +47,8 @@
         <field name="inherit_id" ref="hr_expense.hr_expense_split"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="after">
-                <field name="can_be_reinvoiced" invisible="1"/>
-                <field name="sale_order_id" force_save="1" attrs="{'readonly': [('can_be_reinvoiced', '=', False)]}"/>
+                <field name="can_be_reinvoiced" column_invisible="True"/>
+                <field name="sale_order_id" force_save="1" readonly="not can_be_reinvoiced"/>
             </xpath>
         </field>
     </record>
@@ -57,8 +59,8 @@
         <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='description']" position="after">
-                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" optional="show" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
-                <field name="can_be_reinvoiced" invisible="1"/>
+                <field name="sale_order_id" invisible="not can_be_reinvoiced" readonly="state in ['done', 'refused']" optional="show" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
+                <field name="can_be_reinvoiced" column_invisible="True"/>
             </xpath>
         </field>
     </record>

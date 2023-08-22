@@ -32,7 +32,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Work Center" multi_edit="1">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" column_invisible="True"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
@@ -46,7 +46,7 @@
                     <field name="time_start" optional="hide"/>
                     <field name="time_stop" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -272,15 +272,15 @@
                                             <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
                                                 title="No workorder currently in progress. Click to mark work center as blocked."
                                                 aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                                attrs="{'invisible': [('working_state','in',('blocked','done'))]}"/>
+                                                invisible="working_state in ('blocked', 'done')"/>
                                             <a name="unblock" type="object" class=" o_status o_status_red float-end"
                                                 title="Workcenter blocked, click to unblock."
                                                 aria-label="Workcenter blocked, click to unblock."
-                                                attrs="{'invisible': [('working_state','in',('normal','done'))]}"/>
+                                                invisible="working_state in ('normal', 'done')"/>
                                             <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
                                                 title="Work orders in progress. Click to block work center."
                                                 aria-label="Work orders in progress. Click to block work center."
-                                                attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
+                                                invisible="working_state in ('normal', 'blocked')"/>
                                         </div>
                                     </div>
                                 </div>
@@ -301,7 +301,7 @@
                             <field name="has_routing_lines" invisible="1"/>
                             <button type="object"
                                 name="action_show_operations"
-                                attrs="{'invisible': [('has_routing_lines', '=', False)]}"
+                                invisible="not has_routing_lines"
                                 context="{'default_workcenter_id': active_id}"
                                 class="oe_stat_button" icon="fa-cog">
                                 <div class="o_stat_info">
@@ -338,7 +338,7 @@
                                 </div>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>

@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <field name="include_reference" position="after">
-                <p attrs="{'invisible': [('country_code', '!=', 'VN')]}">
+                <p invisible="country_code != 'VN'">
                     <a href='https://www.odoo.com/documentation/saas-16.4/applications/finance/fiscal_localizations/vietnam.html' target='_blank'>Documentation</a>
                 </p>
             </field>

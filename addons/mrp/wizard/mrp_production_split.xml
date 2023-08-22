@@ -52,7 +52,7 @@
                             </div>
                         </group>
                     </group>
-                    <field name="production_detailed_vals_ids" attrs="{'invisible': [('counter', '=', 0)]}">
+                    <field name="production_detailed_vals_ids" invisible="counter == 0">
                         <tree editable="top">
                             <field name="date"/>
                             <field name="user_id"/>
@@ -62,9 +62,9 @@
                     <field name="production_split_multi_id" invisible="1"/>
                     <field name="valid_details" invisible="1"/>
                     <footer>
-                        <button string="Split" class="btn-primary" type="object" name="action_split" data-hotkey="q" attrs="{'invisible': [('valid_details', '=', False)]}"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" attrs="{'invisible': [('production_split_multi_id', '!=', False)]}"/>
-                        <button string="Discard" class="btn-secondary" type="object" name="action_return_to_list" data-hotkey="x" attrs="{'invisible': [('production_split_multi_id', '=', False)]}"/>
+                        <button string="Split" class="btn-primary" type="object" name="action_split" data-hotkey="q" invisible="not valid_details"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" invisible="production_split_multi_id"/>
+                        <button string="Discard" class="btn-secondary" type="object" name="action_return_to_list" data-hotkey="x" invisible="not production_split_multi_id"/>
                     </footer>
                 </form>
             </field>

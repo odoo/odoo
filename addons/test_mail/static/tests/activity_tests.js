@@ -77,6 +77,18 @@ QUnit.module("test_mail", {}, function () {
                         "</div>" +
                         "</templates>" +
                         "</activity>",
+                    "mail.test.activity,1,activity": `
+                        <activity string="MailTestActivity">
+                            <div t-name="activity-box">
+                                <span t-att-title="record.name.value">
+                                    <field name="name" display="full" class="w-100 text-truncate"/>
+                                </span>
+                                <span class="invisible_node" invisible="context.get('invisible', False)">
+                                    Test invisible
+                                </span>
+                            </div>
+                        </activity>
+                    `,
                 },
             };
         },
@@ -1031,6 +1043,40 @@ QUnit.module("test_mail", {}, function () {
                     "/web/image?model=partner&field=image&id=2&unique=1659688620000"
                 ),
             "image src is the preview image given in option"
+        );
+    });
+
+    QUnit.test("test node is visible with invisible attribute on node", async function (assert) {
+        const { target, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[1, "activity"]],
+        });
+
+        assert.containsN(
+            target,
+            ".invisible_node",
+            2,
+            "The node with the invisible attribute should be displayed since the context does not have `invisible` key or has falsy value"
+        );
+    });
+
+    QUnit.test("test node is not displayed with invisible attribute on node", async function (assert) {
+        const { target, openView } = await start({
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[1, "activity"]],
+            context: { invisible: true },
+        });
+
+        assert.containsNone(
+            target,
+            ".invisible_node",
+            "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
         );
     });
 });

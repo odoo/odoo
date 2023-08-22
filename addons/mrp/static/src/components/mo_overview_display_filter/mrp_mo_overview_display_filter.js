@@ -1,19 +1,21 @@
 /** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
     setup() {
         if (!this.props.limited) {
             this.displayOptions = {
-                replenishments: this.env._t("Replenishments"),
-                availabilities: this.env._t("Availabilities"),
-                receipts: this.env._t("Receipts"),
+                replenishments: _t("Replenishments"),
+                availabilities: _t("Availabilities"),
+                receipts: _t("Receipts"),
             };
         }
         this.displayOptions = {
             ...(this.displayOptions || {}),
-            moCosts: this.env._t("MO Costs"),
-            productCosts: this.env._t("Product Costs"),
+            moCosts: _t("MO Costs"),
+            productCosts: _t("Product Costs"),
         };
     }
 }

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import {
     EmojisTextField,
     emojisTextField,
@@ -80,7 +81,7 @@ export class SmsWidget extends EmojisTextField {
         var content = this.props.record.data[this.props.name] || '';
         if( !content.trim().length && content.length > 0) {
             this.notification.add(
-                this.env._t("Your SMS Text Message must include at least one non-whitespace character"),
+                _t("Your SMS Text Message must include at least one non-whitespace character"),
                 { type: 'danger' },
             )
             await this.props.record.update({ [this.props.name]: content.trim() });

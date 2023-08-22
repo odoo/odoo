@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
@@ -8,7 +10,7 @@ function runJSTestsItem({ env }) {
     const runTestsURL = browser.location.origin + "/web/tests?debug=assets";
     return {
         type: "item",
-        description: env._t("Run JS Tests"),
+        description: _t("Run JS Tests"),
         href: runTestsURL,
         callback: () => {
             browser.open(runTestsURL);
@@ -21,7 +23,7 @@ function runJSTestsMobileItem({ env }) {
     const runTestsMobileURL = browser.location.origin + "/web/tests/mobile?debug=assets";
     return {
         type: "item",
-        description: env._t("Run JS Mobile Tests"),
+        description: _t("Run JS Mobile Tests"),
         href: runTestsMobileURL,
         callback: () => {
             browser.open(runTestsMobileURL);
@@ -50,11 +52,11 @@ export function openViewItem({ env }) {
 
     return {
         type: "item",
-        description: env._t("Open View"),
+        description: _t("Open View"),
         callback: () => {
             env.services.dialog.add(SelectCreateDialog, {
                 resModel: "ir.ui.view",
-                title: env._t("Select a view"),
+                title: _t("Select a view"),
                 multiSelect: false,
                 domain: [
                     ["type", "!=", "qweb"],

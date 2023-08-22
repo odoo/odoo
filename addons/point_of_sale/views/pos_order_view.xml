@@ -6,11 +6,11 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Orders" create="0">
                 <header>
-                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
+                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            attrs="{'invisible': [('state','!=','paid')]}"/>
+                            invisible="state != 'paid'"/>
                     <button name="refund" string="Return Products" type="object"
-                        attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
+                        invisible="state == 'draft' or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                     <field name="has_refundable_lines" invisible="1" />
                     <field name="refunded_orders_count" invisible="1" />
@@ -23,43 +23,43 @@
                         type="object"
                         class="oe_stat_button"
                         icon="fa-truck"
-                        attrs="{'invisible':[('picking_count', '=', 0)]}">
-                        <field name="picking_count" widget="statinfo" string="Pickings" attrs="{'invisible': [('failed_pickings', '!=', False)]}"/>
-                        <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" attrs="{'invisible': [('failed_pickings', '=', False)]}"/>
+                        invisible="picking_count == 0">
+                        <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
+                        <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
                     </button>
                     <button name="action_view_invoice"
                         string="Invoice"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
-                        attrs="{'invisible':[('state','!=','invoiced')]}">
+                        invisible="state != 'invoiced'">
                     </button>
                     <button name="action_view_refund_orders"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-undo"
-                        attrs="{'invisible':[('is_refunded', '=', False)]}">
+                        invisible="not is_refunded">
                         <field name="refund_orders_count" widget="statinfo" string="Refunds" />
                     </button>
                     <button name="action_view_refunded_orders"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-shopping-cart "
-                        attrs="{'invisible':[('refunded_orders_count', '=', 0)]}">
+                        invisible="refunded_orders_count == 0">
                         <field name="refunded_orders_count" widget="statinfo" string="Refunded Orders" />
                     </button>
                 </div>
                 <group col="4" colspan="4" name="order_fields">
                     <field name="name"/>
                     <field name="date_order"/>
-                    <field name="session_id" />
-                    <field string="User" name="user_id"/>
-                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" attrs="{'readonly': [('state','=','invoiced')]}"/>
-                    <field name="fiscal_position_id" options="{'no_create': True}"/>
+                    <field name="session_id"  readonly="state != 'draft'"/>
+                    <field string="User" name="user_id" readonly="state in ['done', 'invoiced']"/>
+                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="state == 'invoiced'"/>
+                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
-                        <field name="lines" colspan="4" nolabel="1">
+                        <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'">
                             <tree string="Order lines" editable="bottom">
                                 <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
@@ -67,16 +67,16 @@
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary"/>
-                                <field name="is_total_cost_computed" invisible="1"/>
-                                <field name="total_cost" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
-                                <field name="margin" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
-                                <field name="margin_percent" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="percentage"/>
+                                <field name="is_total_cost_computed" column_invisible="True"/>
+                                <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
+                                <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
+                                <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
                                 <field name="discount" string="Disc.%"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
-                                <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                <field name="tax_ids" widget="many2many_tags" column_invisible="True"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="currency_id" column_invisible="True"/>
                                 <field name="refunded_qty" optional="hide" />
                             </tree>
                             <form string="Order lines">
@@ -102,7 +102,7 @@
                             <div class="oe_subtotal_footer_separator oe_inline o_td_label">
                                 <label for="amount_total" />
                                 <button name="button_dummy"
-                                    states="draft" string="(update)" class="oe_edit_only oe_link"/>
+                                    invisible="state != 'draft'" string="(update)" class="oe_edit_only oe_link"/>
                             </div>
                             <field name="amount_total"
                                    force_save="1"
@@ -113,14 +113,15 @@
                                 string="Total Paid (with rounding)"
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
-                                attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+                                invisible="amount_paid == 'amount_total'"
+                                readonly="state != 'draft'"/>
                             <label for="margin"/>
                             <div class="text-nowrap">
-                                <field name="margin" class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}"/>
-                                <span class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}">
+                                <field name="margin" class="oe_inline" invisible="not is_total_cost_computed"/>
+                                <span class="oe_inline" invisible="not is_total_cost_computed">
                                     (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
                                 </span>
-                                <span attrs="{'invisible': [('is_total_cost_computed','=', True)]}">TBD</span>
+                                <span invisible="is_total_cost_computed">TBD</span>
                             </div>
                             <field name="is_total_cost_computed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
@@ -130,7 +131,7 @@
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1">
                             <tree string="Payments">
-                                <field name="currency_id" invisible="1" />
+                                <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
                                 <field name="payment_method_id"/>
                                 <field name="amount"/>
@@ -142,14 +143,13 @@
                             <group
                                 string="Accounting"
                                 groups="account.group_account_manager"
-                                attrs="{'invisible':['|', ('session_move_id','=', False), ('state', '=', 'invoiced')]}"
-                            >
+                                invisible="not session_move_id or state == 'invoiced'">
                                 <field name="session_move_id" readonly="1" />
                             </group>
                             <group string="Other Information">
                                 <field name="pos_reference"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                                <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
                             </group>
                         </group>
                     </page>
@@ -260,13 +260,13 @@
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
             <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
-                <field name="session_id" />
+                <field name="session_id"  readonly="state != 'draft'"/>
                 <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field string="Cashier" name="user_id" widget="many2one_avatar_user"/>
+                <field string="Cashier" name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
             </tree>
@@ -308,7 +308,7 @@
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="create_date" readonly="1"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
             </tree>
         </field>
     </record>
@@ -362,7 +362,7 @@
                 <field name="product_id" />
                 <field name="qty" />
                 <field name="price_unit" widget="monetary"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" column_invisible="True"/>
             </tree>
         </field>
     </record>

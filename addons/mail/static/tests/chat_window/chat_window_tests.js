@@ -10,16 +10,16 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    contains,
     createFile,
     insertText,
     isScrolledToBottom,
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "@web/../tests/legacy/helpers/test_utils";
 
 const { inputFiles } = file;
@@ -28,7 +28,7 @@ QUnit.module("chat window");
 
 QUnit.test(
     "Mobile: chat window shouldn't open automatically after receiving a new message",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -41,7 +41,8 @@ QUnit.test(
         });
         patchUiSize({ size: SIZES.SM });
         const { env } = await start();
-
+        await contains(".o_menu_systray i[aria-label='Messages']");
+        await contains(".o-mail-MessagingMenu-counter", 0);
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
             env.services.rpc("/mail/message/post", {
@@ -50,14 +51,14 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await nextAnimationFrame();
-        assert.containsNone($, ".o-mail-ChatWindow");
+        await contains(".o-mail-MessagingMenu-counter:contains(1)");
+        await contains(".o-mail-ChatWindow", 0);
     }
 );
 
 QUnit.test(
     'chat window: post message on channel with "CTRL-Enter" keyboard shortcut for small screen size',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
@@ -69,8 +70,8 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
         await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
-        await afterNextRender(() => triggerHotkey("control+Enter"));
-        assert.containsOnce($, ".o-mail-Message");
+        triggerHotkey("control+Enter");
+        await contains(".o-mail-Message");
     }
 );
 
@@ -94,26 +95,19 @@ QUnit.test("Message post in chat window of chatter should log a note", async (as
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce(
-        $,
-        ".o-mail-Message:contains(A needaction message to have it in messaging menu)"
-    );
-    assert.containsOnce(
-        $(".o-mail-Message:contains(A needaction message to have it in messaging menu)"),
-        ".o-mail-Message-bubble.border" // bordered bubble = "Send message" mode
-    );
-    assert.containsOnce($, ".o-mail-Composer [placeholder='Log an internal note...']");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-Message:contains(A needaction message to have it in messaging menu)");
+    await contains(
+        ".o-mail-Message:contains(A needaction message to have it in messaging menu) .o-mail-Message-bubble.border"
+    ); // bordered bubble = "Send message" mode
+    await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
-    await afterNextRender(() => triggerHotkey("control+Enter"));
-    assert.containsOnce($, ".o-mail-Message:contains(Test)");
-    assert.containsNone(
-        $(".o-mail-Message:contains(Test)"),
-        ".o-mail-Message-bubble.border" // non-bordered bubble = "Log note" mode
-    );
+    triggerHotkey("control+Enter");
+    await contains(".o-mail-Message:contains(Test)");
+    await contains(".o-mail-Message:contains(Test) .o-mail-Message-bubble.border", 0); // non-bordered bubble = "Log note" mode
 });
 
-QUnit.test("load messages from opening chat window from messaging menu", async (assert) => {
+QUnit.test("load messages from opening chat window from messaging menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -130,7 +124,7 @@ QUnit.test("load messages from opening chat window from messaging menu", async (
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsN($, ".o-mail-Message", 21);
+    await contains(".o-mail-Message", 21);
 });
 
 QUnit.test("chat window: basic rendering", async (assert) => {
@@ -139,45 +133,45 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow-header");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-header");
     assert.containsOnce($(".o-mail-ChatWindow-header"), ".o-mail-ChatWindow-threadAvatar");
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(General)");
-    assert.containsN($, ".o-mail-ChatWindow-command", 4);
-    assert.containsOnce($, "[title='Start a Call']");
-    assert.containsOnce($, "[title='Open Actions Menu']");
-    assert.containsOnce($, "[title='Fold']");
-    assert.containsOnce($, "[title='Close Chat Window']");
-    assert.containsOnce($, ".o-mail-ChatWindow-content .o-mail-Thread");
+    await contains(".o-mail-ChatWindow-name:contains(General)");
+    await contains(".o-mail-ChatWindow-command", 4);
+    await contains("[title='Start a Call']");
+    await contains("[title='Open Actions Menu']");
+    await contains("[title='Fold']");
+    await contains("[title='Close Chat Window']");
+    await contains(".o-mail-ChatWindow-content .o-mail-Thread");
     assert.strictEqual(
         $(".o-mail-ChatWindow-content .o-mail-Thread").text().trim(),
         "There are no messages in this conversation."
     );
     await click("[title='Open Actions Menu']");
-    assert.containsN($, ".o-mail-ChatWindow-command", 9);
-    assert.containsOnce($, "[title='Pinned Messages']");
-    assert.containsOnce($, "[title='Add Users']");
-    assert.containsOnce($, "[title='Show Member List']");
-    assert.containsOnce($, "[title='Show Call Settings']");
-    assert.containsOnce($, "[title='Open in Discuss']");
+    await contains(".o-mail-ChatWindow-command", 9);
+    await contains("[title='Pinned Messages']");
+    await contains("[title='Add Users']");
+    await contains("[title='Show Member List']");
+    await contains("[title='Show Call Settings']");
+    await contains("[title='Open in Discuss']");
 });
 
-QUnit.test("Fold state of chat window is sync among browser tabs", async (assert) => {
+QUnit.test("Fold state of chat window is sync among browser tabs", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.click(".o_menu_systray i[aria-label='Messages']");
-    await tab1.click(".o-mail-NotificationItem");
-    await tab1.click(".o-mail-ChatWindow-header"); // Fold
-    assert.containsNone(tab1.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    assert.containsNone(tab2.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    await tab2.click(".o-mail-ChatWindow-header"); // Unfold
-    assert.containsOnce(tab1.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    assert.containsOnce(tab2.target, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    await tab1.click("[title='Close Chat Window']");
-    assert.containsNone(tab1.target, ".o-mail-ChatWindow");
-    assert.containsNone(tab2.target, ".o-mail-ChatWindow");
+    await click(".o_menu_systray i[aria-label='Messages']", { target: tab1.target });
+    await click(".o-mail-NotificationItem", { target: tab1.target });
+    await click(".o-mail-ChatWindow-header", { target: tab1.target }); // Fold
+    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", 0, { target: tab1.target });
+    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", 0, { target: tab2.target });
+    await click(".o-mail-ChatWindow-header", { target: tab2.target }); // Unfold
+    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", 1, { target: tab1.target });
+    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", 1, { target: tab2.target });
+    await click("[title='Close Chat Window']", { target: tab1.target });
+    await contains(".o-mail-ChatWindow", 0, { target: tab1.target });
+    await contains(".o-mail-ChatWindow", 0, { target: tab2.target });
 });
 
 QUnit.test(
@@ -193,6 +187,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
+        await click(".o-mail-ChatWindow");
         const [member] = pyEnv["discuss.channel.member"].searchRead([
             ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
@@ -214,18 +209,18 @@ QUnit.test("chat window: fold", async (assert) => {
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow .o-mail-Thread");
+    await contains(".o-mail-ChatWindow .o-mail-Thread");
     assert.verifySteps(["rpc:channel_fold/open"]);
 
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
+    await contains(".o-mail-ChatWindow .o-mail-Thread", 0);
     assert.verifySteps(["rpc:channel_fold/folded"]);
-    assert.containsNone($, ".o-mail-ChatWindow .o-mail-Thread");
 
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
+    await contains(".o-mail-ChatWindow .o-mail-Thread");
     assert.verifySteps(["rpc:channel_fold/open"]);
-    assert.containsOnce($, ".o-mail-ChatWindow .o-mail-Thread");
 });
 
 QUnit.test("chat window: open / close", async (assert) => {
@@ -238,20 +233,20 @@ QUnit.test("chat window: open / close", async (assert) => {
             }
         },
     });
-    assert.containsNone($, ".o-mail-ChatWindow");
     await click("button i[aria-label='Messages']");
+    await contains(".o-mail-ChatWindow", 0);
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
     assert.verifySteps(["rpc:channel_fold/open"]);
 
     await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
-    assert.containsNone($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow", 0);
     assert.verifySteps(["rpc:channel_fold/closed"]);
 
     // Reopen chat window
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
     assert.verifySteps(["rpc:channel_fold/open"]);
 });
 
@@ -263,7 +258,7 @@ QUnit.test("open chat on very narrow device should work", async (assert) => {
     assert.ok(CHAT_WINDOW_WIDTH > 200, "Device is narrower than usual chat window width"); // scenario where this might fail
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });
 
 QUnit.test(
@@ -279,9 +274,9 @@ QUnit.test(
         await start();
         await click("button i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        assert.containsOnce($, ".o-mail-ChatWindow");
+        await contains(".o-mail-ChatWindow");
         await click("[title='Close Chat Window']");
-        assert.containsNone($, ".o-mail-ChatWindow");
+        await contains(".o-mail-ChatWindow", 0);
         const [member] = pyEnv["discuss.channel.member"].searchRead([
             ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
@@ -304,17 +299,17 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
             }
         },
     });
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 
     $(".o-mail-Composer-input")[0].focus();
-    await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-ChatWindow");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", 0);
     assert.verifySteps(["rpc:channel_fold/closed"]);
 });
 
 QUnit.test(
     "Close composer suggestions in chat window with ESCAPE does not also close the chat window",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({
             email: "testpartner@odoo.com",
@@ -330,14 +325,15 @@ QUnit.test(
         });
         await start();
         await insertText(".o-mail-Composer-input", "@");
-        await afterNextRender(() => triggerHotkey("Escape"));
-        assert.containsOnce($, ".o-mail-ChatWindow");
+
+        triggerHotkey("Escape");
+        await contains(".o-mail-ChatWindow");
     }
 );
 
 QUnit.test(
     "Close emoji picker in chat window with ESCAPE does not also close the chat window",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             name: "general",
@@ -347,9 +343,9 @@ QUnit.test(
         });
         await start();
         await click("button[aria-label='Emojis']");
-        await afterNextRender(() => triggerHotkey("Escape"));
-        assert.containsNone($, ".o-EmojiPicker");
-        assert.containsOnce($, ".o-mail-ChatWindow");
+        triggerHotkey("Escape");
+        await contains(".o-EmojiPicker", 0);
+        await contains(".o-mail-ChatWindow");
     }
 );
 
@@ -364,8 +360,8 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
     await start();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Channel_1)");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Channel_1)");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
     assert.strictEqual(
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_1)")
@@ -375,9 +371,9 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
 
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Channel_2)");
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Channel_2)");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Channel_1)");
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindow-header:contains(Channel_2)");
+    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
     assert.strictEqual(
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_2)")
@@ -408,26 +404,65 @@ QUnit.test("open 3 different chat windows: not enough screen width", async (asse
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Channel_1)");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindowHiddenToggler", 0);
 
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Channel_2)");
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsNone($, ".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindowHiddenToggler", 0);
 
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Channel_3)");
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Channel_1)");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Channel_3)");
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindowHiddenToggler");
+    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
+    await contains(".o-mail-ChatWindow-header:contains(Channel_3)");
     assert.strictEqual(
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_3)")
             .closest(".o-mail-ChatWindow")
             .find(".o-mail-Composer-input")[0]
     );
+});
+
+QUnit.test("closing hidden chat window", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "Ch_1" },
+        { name: "Ch_2" },
+        { name: "Ch_3" },
+        { name: "Ch_4" },
+    ]);
+    patchUiSize({ width: 900 });
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH < 900,
+        "should have enough space to open 2 chat windows simultaneously"
+    );
+    assert.ok(
+        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2 >
+            900,
+        "should not have enough space to open 3 chat windows simultaneously"
+    );
+    await start();
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_1)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_3)");
+    await click("i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem:contains(Ch_4)");
+    await click(".o-mail-ChatWindowHiddenToggler");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_2)");
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
+    await click(".o-mail-ChatWindow:contains(Ch_2) [title='Close Chat Window']");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
+    await contains(".o-mail-ChatWindow:contains(Ch_2)", 0);
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
 });
 
 QUnit.test(
@@ -471,14 +506,14 @@ QUnit.test(
             "should have enough space to open 2 chat windows simultaneously"
         );
         await start();
-        assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer-input", 2);
+        await contains(".o-mail-ChatWindow .o-mail-Composer-input", 2);
 
         $(".o-mail-ChatWindow-name:contains(MyTeam)")
             .closest(".o-mail-ChatWindow")
             .find(".o-mail-Composer-input")[0]
             .focus();
-        await afterNextRender(() => triggerHotkey("Escape"));
-        assert.containsOnce($, ".o-mail-ChatWindow");
+        triggerHotkey("Escape");
+        await contains(".o-mail-ChatWindow");
         assert.strictEqual(
             document.activeElement,
             $(".o-mail-ChatWindow-name:contains(General)")
@@ -488,7 +523,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("chat window: switch on TAB", async (assert) => {
+QUnit.test("chat window: switch on TAB [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -499,43 +534,19 @@ QUnit.test("chat window: switch on TAB", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(channel1)");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(channel1)");
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(channel1)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    await contains(".o-mail-ChatWindow", 1);
+    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
 
-    await afterNextRender(() => triggerHotkey("Tab"));
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(channel1)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
 
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(channel2)");
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(channel1)");
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(channel2)");
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(channel2)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    await contains(".o-mail-ChatWindow", 2);
+    await contains(".o-mail-ChatWindow:contains(channel2) .o-mail-Composer-input:focus");
 
-    await afterNextRender(() => triggerHotkey("Tab"));
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(channel1)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
 });
 
 QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async (assert) => {
@@ -592,40 +603,22 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
     );
     await start();
     // FIXME: assumes ordering: MyProject, MyTeam, General
-    assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer-input", 3);
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input", 3);
+    (await contains(".o-mail-ChatWindow:contains(MyProject) .o-mail-Composer-input"))[0].focus();
 
-    $(".o-mail-ChatWindow-name:contains(MyProject)")
-        .closest(".o-mail-ChatWindow")
-        .find(".o-mail-Composer-input")[0]
-        .focus();
-    await afterNextRender(() => triggerHotkey("Tab"));
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(MyTeam)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:contains(MyTeam) .o-mail-Composer-input:focus");
 
-    await afterNextRender(() => triggerHotkey("Tab"));
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(General)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:contains(General) .o-mail-Composer-input:focus");
 
-    await afterNextRender(() => triggerHotkey("Tab"));
-    assert.strictEqual(
-        document.activeElement,
-        $(".o-mail-ChatWindow-name:contains(MyProject)")
-            .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
-    );
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:contains(MyProject) .o-mail-Composer-input:focus");
 });
 
 QUnit.test(
     "new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
@@ -656,24 +649,22 @@ QUnit.test(
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
         const { env } = await start();
         // simulate receiving a message
-        await afterNextRender(async () =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "hu", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.containsOnce($, ".o-mail-ChatWindow");
-        assert.containsN($, ".o-mail-Message", 2);
-        assert.containsOnce($, "hr + span:contains(New messages)");
+        await contains(".o-mail-ChatWindow");
+        await contains(".o-mail-Message", 2);
+        await contains("hr + span:contains(New messages)");
     }
 );
 
 QUnit.test(
     "new message separator is shown in chat window of chat on receiving new message when there was no history",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const userId = pyEnv["res.users"].create({
@@ -689,20 +680,18 @@ QUnit.test(
         });
         const { env } = await start();
         // simulate receiving a message
-        await afterNextRender(async () =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "hu", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.containsOnce($, "hr + span:contains(New messages)");
+        await contains("hr + span:contains(New messages)");
     }
 );
 
-QUnit.test("chat window should open when receiving a new DM", async (assert) => {
+QUnit.test("chat window should open when receiving a new DM", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -714,20 +703,18 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
         channel_type: "chat",
     });
     const { env } = await start();
-    // simulate receiving the first message on chat
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
-                post_data: { body: "new message", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
-        )
+    await contains(".o-mail-ChatWindowContainer");
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
     );
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("chat window should not open when receiving a new DM from odoobot", async (assert) => {
+QUnit.test("chat window should not open when receiving a new DM from odoobot", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ partner_id: pyEnv.odoobotId });
     const channelId = pyEnv["discuss.channel"].create({
@@ -738,17 +725,15 @@ QUnit.test("chat window should not open when receiving a new DM from odoobot", a
         channel_type: "chat",
     });
     const { env } = await start();
-    // simulate receiving new message from odoobot
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
-                post_data: { body: "new message", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
-        )
+    await contains(".o-mail-ChatWindowContainer");
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
     );
-    assert.containsNone($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow", 0);
 });
 
 QUnit.test(
@@ -777,16 +762,12 @@ QUnit.test(
         }
         await start();
         await insertText(".o-mail-Composer-input", "WOLOLO");
-        await afterNextRender(() =>
-            triggerEvent(document.body, ".o-mail-Composer-input", "keydown", {
-                key: "Enter",
-            })
-        );
+        triggerHotkey("Enter");
         assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
     }
 );
 
-QUnit.test("chat window should remain folded when new message is received", async (assert) => {
+QUnit.test("chat window should remain folded when new message is received", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({
@@ -809,8 +790,8 @@ QUnit.test("chat window should remain folded when new message is received", asyn
         channel_type: "chat",
     });
     const { env } = await start();
-    assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
-
+    await contains(".o-mail-ChatWindow.o-folded");
+    await contains(".o-mail-ChatWindow-counter", 0);
     pyEnv.withUser(userId, () =>
         env.services.rpc("/mail/message/post", {
             post_data: { body: "New Message", message_type: "comment" },
@@ -818,8 +799,8 @@ QUnit.test("chat window should remain folded when new message is received", asyn
             thread_model: "discuss.channel",
         })
     );
-    await nextTick();
-    assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
+    await contains(".o-mail-ChatWindow-counter:contains(1)");
+    await contains(".o-mail-ChatWindow.o-folded");
 });
 
 QUnit.test(
@@ -845,7 +826,7 @@ QUnit.test(
             "should not have enough space to open 3 chat windows simultaneously"
         );
         const { openDiscuss } = await start();
-        await openDiscuss();
+        openDiscuss();
         // open, from systray menu, chat windows of channels with id 1, 2, 3
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name:contains(Channel-1)");
@@ -854,11 +835,9 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name:contains(Channel-3)");
         // simulate resize to go into mobile
-        await afterNextRender(() => {
-            patchUiSize({ size: SIZES.SM });
-            window.dispatchEvent(new UIEvent("resize"));
-        });
-        assert.containsNone($, ".o-mail-ChatWindowHiddenToggler");
+        patchUiSize({ size: SIZES.SM });
+        window.dispatchEvent(new UIEvent("resize"));
+        await contains(".o-mail-ChatWindowHiddenToggler", 0);
     }
 );
 
@@ -870,7 +849,7 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
     await insertText(".o-mail-Composer-input", "XDU for the win !");
-    assert.containsNone($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
+    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 0);
     // Set attachments of the composer
     const files = [
         await createFile({
@@ -885,24 +864,23 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         }),
     ];
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], files);
-    await waitUntil(".o-mail-AttachmentCard .fa-check", 2);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
+    await contains(".o-mail-AttachmentCard .fa-check", 2);
 
-    await openDiscuss();
-    assert.containsNone($, ".o-mail-ChatWindow");
+    openDiscuss();
+    await contains(".o-mail-ChatWindow", 0);
 
-    await openView({
+    openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "form"]],
     });
+    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
     assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
-    assert.containsN($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
 });
 
 QUnit.test(
     "focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const userId = pyEnv["res.users"].create({
@@ -940,18 +918,16 @@ QUnit.test(
         const { env } = await start();
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "hu", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.containsOnce($, "hr + span:contains(New messages)");
-        await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
-        assert.containsNone($, "hr + span:contains(New messages)");
+        await contains("hr + span:contains(New messages)");
+        $(".o-mail-Composer-input")[0].focus();
+        await contains("hr + span:contains(New messages)", 0);
     }
 );
 
@@ -967,17 +943,21 @@ QUnit.test("chat window: scroll conservation on toggle discuss", async (assert) 
     }
     const { openDiscuss, openView } = await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click(".o-mail-NotificationItem");
-    $(".o-mail-Thread")[0].scrollTop = 142;
-    await openDiscuss(null, { waitUntilMessagesLoaded: false });
-    assert.containsNone($, ".o-mail-ChatWindow");
+    /**
+     * The afterNextRender is necessary because otherwise useAutoScroll would
+     * set the scroll to bottom after the manually set value from this test.
+     */
+    await afterNextRender(async () => await click(".o-mail-NotificationItem"));
+    (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
+    openDiscuss(null, { waitUntilMessagesLoaded: false });
+    await contains(".o-mail-ChatWindow", 0);
 
-    await openView({
+    openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "list"]],
     });
-    assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
+    assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
 });
 
 QUnit.test(
@@ -994,17 +974,19 @@ QUnit.test(
         }
         await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        await click(".o-mail-NotificationItem");
-        // Set a scroll position to chat window
-        $(".o-mail-Thread")[0].scrollTop = 142;
-        assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
+        /**
+         * The afterNextRender is necessary because otherwise useAutoScroll would
+         * set the scroll to bottom after the manually set value from this test.
+         */
+        await afterNextRender(async () => await click(".o-mail-NotificationItem"));
+        (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
 
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
-        assert.containsNone($, ".o-mail-Thread");
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 0);
         // unfold chat window
         await click(".o-mail-ChatWindow-command[title='Open']");
-        assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
+        assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
     }
 );
 
@@ -1022,27 +1004,30 @@ QUnit.test(
         }
         const { openDiscuss, openView } = await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        await click(".o-mail-NotificationItem");
+        /**
+         * The afterNextRender is necessary because otherwise useAutoScroll would
+         * set the scroll to bottom after the manually set value from this test.
+         */
+        await afterNextRender(async () => await click(".o-mail-NotificationItem"));
+        (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
 
-        // Set a scroll position to chat window
-        $(".o-mail-Thread")[0].scrollTop = 142;
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
-        await openDiscuss(null, { waitUntilMessagesLoaded: false });
-        assert.containsNone($, ".o-mail-ChatWindow");
+        openDiscuss(null, { waitUntilMessagesLoaded: false });
+        await contains(".o-mail-ChatWindow", 0);
 
-        await openView({
+        openView({
             res_id: channelId,
             res_model: "discuss.channel",
             views: [[false, "list"]],
         });
         // unfold chat window
         await click(".o-mail-ChatWindow-command[title='Open']");
-        assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 142);
+        assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
     }
 );
 
-QUnit.test("folded chat window should hide member-list and settings buttons", async (assert) => {
+QUnit.test("folded chat window should hide member-list and settings buttons", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({});
     await start();
@@ -1050,24 +1035,26 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click("[title='Open Actions Menu']");
-    assert.containsOnce($, "[title='Show Member List']");
-    assert.containsOnce($, "[title='Show Call Settings']");
+    await contains("[title='Show Member List']");
+    await contains("[title='Show Call Settings']");
+
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
+    await contains("[title='Show Member List']", 0);
 
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
-    assert.containsNone($, "[title='Open Actions Menu']");
-    assert.containsNone($, "[title='Show Member List']");
-    assert.containsNone($, "[title='Show Call Settings']");
+    await contains("[title='Open Actions Menu']", 0);
+    await contains("[title='Show Member List']", 0);
+    await contains("[title='Show Call Settings']", 0);
 
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
     await click("[title='Open Actions Menu']");
-    assert.containsOnce($, "[title='Show Member List']");
-    assert.containsOnce($, "[title='Show Call Settings']");
+    await contains("[title='Show Member List']");
+    await contains("[title='Show Call Settings']");
 });
 
-QUnit.test("Chat window in mobile are not foldable", async (assert) => {
+QUnit.test("Chat window in mobile are not foldable", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -1078,13 +1065,13 @@ QUnit.test("Chat window in mobile are not foldable", async (assert) => {
     await start();
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsNone($, ".o-mail-ChatWindow-header.cursor-pointer");
+    await contains(".o-mail-ChatWindow-header.cursor-pointer", 0);
     click(".o-mail-ChatWindow-header").catch(() => {});
     await nextAnimationFrame();
-    assert.containsOnce($, ".o-mail-ChatWindow-content"); // content => non-folded
+    await contains(".o-mail-ChatWindow-content"); // content => non-folded
 });
 
-QUnit.test("Server-synced chat windows should not open at page load on mobile", async (assert) => {
+QUnit.test("Server-synced chat windows should not open at page load on mobile", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -1097,23 +1084,24 @@ QUnit.test("Server-synced chat windows should not open at page load on mobile", 
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    assert.containsNone($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindowContainer");
+    await contains(".o-mail-ChatWindow", 0);
 });
 
-QUnit.test("chat window of channels should not have 'Open in Discuss' (mobile)", async (assert) => {
+QUnit.test("chat window of channels should not have 'Open in Discuss' (mobile)", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, "[title='Open Actions Menu']");
+    await contains(".o-mail-ChatWindow");
+    await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    assert.containsNone($, "[title='Open in Discuss']");
+    await contains("[title='Open in Discuss']", 0);
 });
 
-QUnit.test("Open chat window of new inviter", async (assert) => {
+QUnit.test("Open chat window of new inviter", async () => {
     const pyEnv = await startServer();
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Newbie" });
@@ -1123,16 +1111,15 @@ QUnit.test("Open chat window of new inviter", async (assert) => {
         username: "Newbie",
         partnerId,
     });
-    await waitUntil(".o-mail-ChatWindow:contains(Newbie)");
-    assert.containsOnce(
-        $,
+    await contains(".o-mail-ChatWindow:contains(Newbie)");
+    await contains(
         ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"
     );
 });
 
 QUnit.test(
     "keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat window",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         pyEnv["mail.message"].create({
@@ -1144,22 +1131,22 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        await afterNextRender(() => {
-            $(".o-mail-Message")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
-        });
-        await click(".o-mail-Message [title='Expand']");
-        $(".o-mail-Message [title='Expand']")[0].focus(); // necessary otherwise focus is in composer input
-        assert.containsOnce($, ".o-mail-Message-moreMenu.dropdown-menu");
-        await triggerHotkey("ArrowDown");
-        assert.containsOnce($, ".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
-        await triggerHotkey("ArrowDown");
-        assert.containsOnce($, ".o-mail-Message-moreMenu .dropdown-item:eq(1).focus");
+        await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+        const expand = await click(".o-mail-Message [title='Expand']");
+        await contains(".o-mail-Message-moreMenu.dropdown-menu");
+        expand.focus(); // necessary otherwise focus is in composer input
+
+        triggerHotkey("ArrowDown");
+        await contains(".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
+
+        triggerHotkey("ArrowDown");
+        await contains(".o-mail-Message-moreMenu .dropdown-item:eq(1).focus");
     }
 );
 
 QUnit.test(
     "Close dropdown in chat window with ESCAPE does not also close the chat window",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         pyEnv["mail.message"].create({
@@ -1171,14 +1158,11 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        await afterNextRender(() => {
-            $(".o-mail-Message")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
-        });
-        await click(".o-mail-Message [title='Expand']");
-        $(".o-mail-Message [title='Expand']")[0].focus(); // necessary otherwise focus is in composer input
-        assert.containsOnce($, ".o-mail-Message-moreMenu.dropdown-menu");
-        await triggerHotkey("Escape");
-        assert.containsNone($, ".o-mail-Message-moreMenu.dropdown-menu");
-        assert.containsOnce($, ".o-mail-ChatWindow");
+        const expand = await click(".o-mail-Message [title='Expand']");
+        await contains(".o-mail-Message-moreMenu.dropdown-menu");
+        expand.focus(); // necessary otherwise focus is in composer input
+        triggerHotkey("Escape");
+        await contains(".o-mail-Message-moreMenu.dropdown-menu", 0);
+        await contains(".o-mail-ChatWindow");
     }
 );

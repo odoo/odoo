@@ -13,7 +13,6 @@ class AccountPayment(models.Model):
     l10n_latam_check_id = fields.Many2one(
         comodel_name='account.payment',
         string='Check',
-        readonly=True, states={'draft': [('readonly', False)]},
         copy=False,
         check_company=True,
     )
@@ -40,17 +39,15 @@ class AccountPayment(models.Model):
         comodel_name='res.bank',
         string='Check Bank',
         compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
         compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
     )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Cash-In Date',
         help="Date from when you can cash in the check, turn the check into cash",
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=False,
     )
 
     # This is a technical field for the view only
@@ -250,7 +247,7 @@ class AccountPayment(models.Model):
     def action_unmark_sent(self):
         """ Unmarking as sent for electronic/deferred check would give the option to print and re-number check but
         it's not implemented yet for this kind of checks"""
-        if self.filtered('l10n_latam_manual_checks'):
+        if self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks):
             raise UserError(_('Unmark sent is not implemented for electronic or deferred checks'))
         return super().action_unmark_sent()
 
@@ -262,7 +259,7 @@ class AccountPayment(models.Model):
         res = super().action_post()
 
         # mark own checks that are not printed as sent
-        self.filtered('l10n_latam_manual_checks').write({'is_move_sent': True})
+        self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
         return res
 
     @api.model

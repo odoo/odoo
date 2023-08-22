@@ -23,15 +23,15 @@ export class SuggestionService {
         return [["@"], ["#"]];
     }
 
-    async fetchSuggestions({ delimiter, term }, { thread, onFetched } = {}) {
+    async fetchSuggestions({ delimiter, term }, { thread } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                this.fetchPartners(cleanedSearchTerm, thread).then(onFetched);
+                await this.fetchPartners(cleanedSearchTerm, thread);
                 break;
             }
             case "#":
-                this.fetchThreads(cleanedSearchTerm).then(onFetched);
+                await this.fetchThreads(cleanedSearchTerm);
                 break;
         }
     }
@@ -61,6 +61,9 @@ export class SuggestionService {
         });
     }
 
+    /**
+     * @param {string} term
+     */
     async fetchThreads(term) {
         const suggestedThreads = await this.orm.silent.call(
             "discuss.channel",

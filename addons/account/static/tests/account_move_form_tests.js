@@ -1,49 +1,52 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { AccountMoveFormRenderer } from "@account/components/account_move_form/account_move_form";
-import { accountMove as accountMoveService} from '@account/components/account_move_service/account_move_service';
+import { accountMove as accountMoveService } from "@account/components/account_move_service/account_move_service";
 
-QUnit.module("Views", {}, function (hooks) {
-    QUnit.module('MoveFormView');
+import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+
+import { makeDeferred, triggerHotkey } from "@web/../tests/helpers/utils";
+
+QUnit.module("Views", {}, function () {
+    QUnit.module("MoveFormView");
 
     QUnit.test("When I switch tabs, it saves", async (assert) => {
         const pyEnv = await startServer();
-        const accountMove = pyEnv['account.move'].create([{ name: "move0" }]);
+        const accountMove = pyEnv["account.move"].create([{ name: "move0" }]);
 
         const views = {
-            'account.move,false,form':
-                `<form js_class='account_move_form'>
+            "account.move,false,form": `<form js_class='account_move_form'>
                         <sheet>
                             <notebook>
-                                <page id="invoice_tab" name="invoice_tab" string="Invoice Lines"></page>
+                                <page id="invoice_tab" name="invoice_tab" string="Invoice Lines">
+                                    <field name="name"/>
+                                </page>
                                 <page id="aml_tab" string="Journal Items" name="aml_tab"></page>
                             </notebook>
                         </sheet>
                      </form>`,
         };
-        const { click, openView } = await start({
+        const def = makeDeferred();
+        const { openFormView } = await start({
             serverData: { views },
             services: {
-                'account_move': accountMoveService,
-            }
-        });
-        patchWithCleanup(AccountMoveFormRenderer.prototype, {
-            saveBeforeTabChange() {
-                super.saveBeforeTabChange();
-                assert.step("tab saved");
+                account_move: accountMoveService,
+            },
+            async mockRPC(route) {
+                if (route === "/web/dataset/call_kw/account.move/write") {
+                    assert.step("tab saved");
+                    def.resolve();
+                }
             },
         });
-        await openView({
-            res_id: accountMove,
-            res_model: 'account.move',
-            views: [[false, 'form']],
-        });
+        openFormView("account.move", accountMove);
+        await insertText("[name='name'] input", "somebody save me!");
+        triggerHotkey("Enter");
 
-        click('a[name="aml_tab"]');
-        assert.verifySteps(["tab saved"],
-            "When clicking on a tab, the saving method should be called and succeed");
+        await click('a[name="aml_tab"]');
+        await def;
+        assert.verifySteps(
+            ["tab saved"],
+            "When clicking on a tab, the saving method should be called and succeed"
+        );
     });
-
 });

@@ -35,6 +35,7 @@ class TestCommon(HttpCase):
     @patch_api
     def setUp(self):
         super(TestCommon, self).setUp()
+        self.env.user.unpause_microsoft_synchronization()
 
         # prepare users
         self.organizer_user = self.env["res.users"].search([("name", "=", "Mike Organizer")])

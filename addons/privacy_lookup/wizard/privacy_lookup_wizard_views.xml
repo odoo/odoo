@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Privacy Lookup">
                 <header>
-                    <button string="Lookup" name="action_lookup" type="object" class="oe_highlight" data-hotkey="q" attrs="{'invisible': [('line_ids', '!=', [])]}"/>
+                    <button string="Lookup" name="action_lookup" type="object" class="oe_highlight" data-hotkey="q" invisible="line_ids"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -20,13 +20,13 @@
                     </div>
                     <group>
                         <group>
-                            <field name="email" attrs="{'readonly': [('line_ids', '!=', [])]}"/>
-                            <field name="name" attrs="{'readonly': [('line_ids', '!=', [])]}"/>
+                            <field name="email" readonly="line_ids"/>
+                            <field name="name" readonly="line_ids"/>
                             <field name="records_description" invisible="1"/>
-                            <field name="execution_details" attrs="{'invisible': [('execution_details', '=', '')]}"/>
+                            <field name="execution_details" invisible="execution_details == ''"/>
                             <field name="log_id" invisible="1"/>
                         </group>
-                        <field name="line_ids" attrs="{'invisible': [('line_ids', '=', [])]}" options="{'no_open': True, 'no_create': True}" invisible="1"/>
+                        <field name="line_ids" options="{'no_open': True, 'no_create': True}" invisible="1"/>
                     </group>
                 </sheet>
            </form>
@@ -47,16 +47,16 @@
         <field name="arch" type="xml">
             <tree create="0">
                 <field name="res_model_id"/>
-                <field name="res_name" invisible="1"/>
-                <field name="res_model" invisible="1"/>
-                <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" attrs="{'invisible': [('resource_ref', '=', False)]}"/>
-                <button name="action_open_record" type="object" icon="fa-external-link" attrs="{'invisible': [('resource_ref', '=', False)]}" title="Open Record"/>
+                <field name="res_name" column_invisible="True"/>
+                <field name="res_model" column_invisible="True"/>
+                <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" invisible="not resource_ref"/>
+                <button name="action_open_record" type="object" icon="fa-external-link" invisible="not resource_ref" title="Open Record"/>
                 <field name="res_id" string="ID"/>
-                <field name="has_active" invisible="1"/>
-                <field name="execution_details" invisible="1"/>
-                <field name="is_active" widget="boolean_toggle" attrs="{'invisible': ['|', ('is_unlinked', '=', True), ('has_active', '=', False)]}"/>
-                <field name="is_unlinked" invisible="True"/>
-                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" attrs="{'invisible': [('is_unlinked', '=', True)]}" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
+                <field name="has_active" column_invisible="True"/>
+                <field name="execution_details" column_invisible="True"/>
+                <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
+                <field name="is_unlinked" column_invisible="True"/>
+                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
             </tree>
         </field>
     </record>

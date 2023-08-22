@@ -1,6 +1,7 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
@@ -29,7 +30,7 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
         },
     ]);
     const { env } = await start();
-    assert.containsOnce(target, ".o_menu_systray i[aria-label='Activities']");
+    await contains(".o_menu_systray i[aria-label='Activities']");
     await click(".o_menu_systray i[aria-label='Activities']");
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -37,10 +38,10 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
             assert.step("action");
         },
     });
-    assert.containsOnce(target, ".o-mail-ActivityGroup:contains(Today's Meetings)");
-    assert.containsN(target, ".o-mail-ActivityGroup .o-calendar-metting", 2);
-    assert.containsOnce(target, ".o-calendar-metting:contains(meeting1)");
-    assert.containsOnce(target, ".o-calendar-metting:contains(meeting2)");
+    await contains(".o-mail-ActivityGroup:contains(Today's Meetings)");
+    await contains(".o-mail-ActivityGroup .o-calendar-metting", 2);
+    await contains(".o-calendar-metting:contains(meeting1)");
+    await contains(".o-calendar-metting:contains(meeting2)");
     assert.hasClass($(target).find("span:contains(meeting1)"), "fw-bold");
     assert.doesNotHaveClass($(target).find("span:contains(meeting2)"), "fw-bold");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup");

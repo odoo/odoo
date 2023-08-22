@@ -1,11 +1,11 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 
 QUnit.module("messaging menu (patch)");
 
-QUnit.test('livechats should be in "chat" filter', async (assert) => {
+QUnit.test('livechats should be in "chat" filter', async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -18,15 +18,14 @@ QUnit.test('livechats should be in "chat" filter', async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-MessagingMenu button:contains(All)");
-    assert.hasClass($(".o-mail-MessagingMenu button:contains(All)"), "fw-bolder");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    await contains(".o-mail-MessagingMenu button:contains(All).fw-bolder");
+    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
     await click(".o-mail-MessagingMenu button:contains(Chat)");
-    assert.hasClass($(".o-mail-MessagingMenu button:contains(Chat)"), "fw-bolder");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    await contains(".o-mail-MessagingMenu button:contains(Chat).fw-bolder");
+    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
 });
 
-QUnit.test('livechats should be in "livechat" tab in mobile', async (assert) => {
+QUnit.test('livechats should be in "livechat" tab in mobile', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
@@ -41,7 +40,7 @@ QUnit.test('livechats should be in "livechat" tab in mobile', async (assert) => 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(Livechat)");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
     await click("button:contains(Chat)");
-    assert.containsNone($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    await contains(".o-mail-NotificationItem:contains(Visitor 11)", 0);
 });

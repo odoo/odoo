@@ -497,7 +497,7 @@ class TestO2M(TransactionCase):
 
     def test_o2m_remove(self):
         def commands():
-            return [c[0] for c in f._values['line_ids']]
+            return [c[0] for c in f._values['line_ids'].to_commands()]
 
         with Form(self.env['test_testing_utilities.onchange_count']) as f:
             self.assertEqual(f.count, 0)
@@ -525,15 +525,15 @@ class TestO2M(TransactionCase):
 
         with Form(r) as f:
             f.line_ids.remove(0)
-            self.assertEqual(commands(), [2, 1])
+            self.assertEqual(commands(), [2])
             f.count = 1
-            self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
+            self.assertEqual(commands(), [0, 2, 2], "should contain 1 creation and 2 deletions")
         self.assertEqual(len(r.line_ids), 1)
 
     def test_o2m_self_recursive(self):
         Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
 
-    def test_o2m_attrs(self):
+    def test_o2m_readonly(self):
         Model = self.env['test_testing_utilities.parent']
         with Form(Model, view='test_testing_utilities.o2m_modifier') as form:
             with form.subs.new() as line:
@@ -543,7 +543,7 @@ class TestO2M(TransactionCase):
                 with self.assertRaises(AssertionError):
                     line.value = 7
 
-    def test_o2m_attrs_parent(self):
+    def test_o2m_readonly_parent(self):
         Model = self.env['test_testing_utilities.parent']
         with Form(Model, view='test_testing_utilities.o2m_modifier_parent') as form:
             with form.subs.new() as line:
@@ -553,6 +553,25 @@ class TestO2M(TransactionCase):
             with form.subs.new() as line:
                 with self.assertRaises(AssertionError):
                     line.value = 7
+
+    def test_o2m_external_readonly_parent(self):
+        Model = self.env['test_testing_utilities.ref']
+        with Form(Model, view='test_testing_utilities.o2m_modifier_ref') as form:
+            with form.subs.new() as line:
+                line.a = 1
+                line.b = 2
+                # readonly from context
+                # with self.assertRaises(AssertionError): # this part must raise but the context attributes on x2m field is not used. To fix.
+                #     line.c = 3
+                # will hide 'subs' field
+                form.value = 666
+                with self.assertRaisesRegex(AssertionError, 'invisible'):
+                    line.a = 4
+                # this makes 'has_parent' readonly on lines
+                form.value = 42
+                line.a = 5
+                with self.assertRaisesRegex(AssertionError, 'readonly'):
+                    line.b = 6
 
     def test_o2m_widget(self):
         create = self.env['test_testing_utilities.sub'].create

@@ -9,10 +9,7 @@ export class Setting extends Component {
     setup() {
         if (this.props.fieldName) {
             this.fieldType = this.props.record.fields[this.props.fieldName].type;
-            if (
-                typeof this.props.fieldInfo.modifiers.readonly === "boolean" &&
-                this.props.fieldInfo.modifiers.readonly === true
-            ) {
+            if (this.props.fieldInfo.readonly === "True") {
                 this.notMuttedLabel = true;
             }
         }

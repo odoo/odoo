@@ -1,27 +1,28 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("crosstab");
 
-QUnit.test("Add member to channel", async (assert) => {
+QUnit.test("Add member to channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click("[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Mitchell Admin)");
+    await contains(".o-discuss-ChannelMember:contains(Mitchell Admin)");
     await click("[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
-    await click("[title='Invite to Channel']");
+    await click("[title='Invite to Channel']:not(:disabled)");
+    await contains(".o-discuss-ChannelInvitation", 0);
     await click("[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
+    await contains(".o-discuss-ChannelMember:contains(Harry)");
 });
 
-QUnit.test("Remove member from channel", async (assert) => {
+QUnit.test("Remove member from channel", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     const partnerId = pyEnv["res.partner"].create({
@@ -36,10 +37,11 @@ QUnit.test("Remove member from channel", async (assert) => {
         ],
     });
     const { env, openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click("[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
+    await contains(".o-discuss-ChannelMember:contains(Harry)");
     pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
+    await contains(".o-discuss-ChannelMember:contains(Harry)", 0);
 });

@@ -144,7 +144,7 @@
                             string="Assign Leads"
                             class="oe_highlight"
                             confirm="This will assign leads to all members. Do you want to proceed?"
-                            attrs="{'invisible': ['|', '&amp;', ('use_leads', '=', False), ('use_opportunities', '=', False), ('assignment_enabled', '=', False)]}"/>
+                            invisible="not use_leads and not use_opportunities or not assignment_enabled"/>
                     </header>
                 </xpath>
                 <xpath expr="//div[@name='options_active']" position="inside">
@@ -159,34 +159,35 @@
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
                     <label for="alias_name" string="Email Alias"
-                        attrs="{'invisible': [('use_leads', '=', False),('use_opportunities', '=', False)]}"/>
+                        invisible="not use_leads and not use_opportunities"/>
                     <div class="oe_inline" name="alias_def"
-                        attrs="{'invisible': [('use_leads', '=', False),('use_opportunities', '=', False)]}">
+                        invisible="not use_leads and not use_opportunities">
                         <field name="alias_id" class="oe_read_only oe_inline"
-                            string="Email Alias" required="0"
-                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                            string="Email Alias"
+                            required="0"
+                            invisible="not alias_domain"/>
                         <div class="oe_inline" name="edit_alias" style="display: inline;" >
-                            <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <div class="oe_edit_only" invisible="not alias_domain">
                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
-                            <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                            <button icon="oi-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" invisible="alias_domain"/>
                         </div>
                     </div>
                     <field name="alias_contact"
                         string="Accept Emails From"
-                        attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
+                        invisible="not use_leads and not use_opportunities"/>
                 </xpath>
                 <xpath expr="//group[@name='right']" position="attributes">
                     <attribute name="string">Assignment Rules</attribute>
-                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', False)]}</attribute>
+                    <attribute name="invisible">not assignment_enabled</attribute>
                 </xpath>
                 <xpath expr="//group[@name='right']" position="inside">
                     <field name="assignment_enabled" invisible="1"/>
                     <field name="assignment_auto_enabled" invisible="1"/>
                     <field name="lead_all_assigned_month_exceeded" invisible="1"/>
                     <div colspan="2">
-                        <div class="o_crm_lead_all_assigned_month_exceeded" attrs="{'invisible': [('lead_all_assigned_month_exceeded', '=', False)]}"/>
-                        <div class="o_crm_lead_month_assignment text-muted" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
+                        <div class="o_crm_lead_all_assigned_month_exceeded" invisible="not lead_all_assigned_month_exceeded"/>
+                        <div class="o_crm_lead_month_assignment text-muted" invisible="not assignment_enabled">
                             <i class="fa fa-info-circle me-2" title="Assigned Lead Count"/>
                             <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month
                             on a maximum of </span><field name="assignment_max" class="oe_inline"/>
@@ -194,14 +195,14 @@
                     </div>
                     <field name="assignment_domain" widget="domain" string="Domain"
                         options="{'model': 'crm.lead', 'in_dialog': True}"
-                        attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
-                    <field name="assignment_optout" attrs="{'invisible': [('assignment_auto_enabled', '=', False)]}"/>
+                        invisible="not assignment_enabled"/>
+                    <field name="assignment_optout" invisible="not assignment_auto_enabled"/>
                 </xpath>
                 <xpath expr="//field[@name='member_ids']" position="attributes">
-                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', True)]}</attribute>
+                    <attribute name="invisible">assignment_enabled</attribute>
                 </xpath>
                 <xpath expr="//field[@name='crm_team_member_ids']" position="attributes">
-                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', False)]}</attribute>
+                    <attribute name="invisible">not assignment_enabled</attribute>
                 </xpath>
             </field>
         </record>

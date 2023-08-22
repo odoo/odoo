@@ -6,7 +6,7 @@
          <field name="model">delivery.carrier</field>
          <field name="arch" type="xml">
              <xpath expr="//field[@name='integration_level']" position="before">
-                 <field attrs="{'invisible': [('delivery_type', '!=', 'onsite')]}" name="warehouse_id" options="{'no_quick_create': True}"
+                 <field invisible="delivery_type != 'onsite'" name="warehouse_id" options="{'no_quick_create': True}"
                         domain="[('company_id', '=?', company_id)]"/>
              </xpath>
          </field>

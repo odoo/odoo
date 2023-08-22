@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_send_sms" type="object" class="btn btn-primary"
-                        attrs="{'invisible': [('mobile', '=', False)]}" string="Send SMS"/>
+                        invisible="not mobile" string="Send SMS"/>
             </xpath>
         </field>
     </record>
@@ -22,12 +22,12 @@
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_sms" type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('mobile', '=', False)]}">SMS
+                        invisible="not mobile">SMS
                 </button>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
                 <button name="action_send_sms" type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('mobile', '=', False)]}">SMS
+                        invisible="not mobile">SMS
                 </button>
             </xpath>
         </field>
@@ -39,11 +39,11 @@
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='is_connected']" position="before">
-                <field name="mobile" invisible="1"/>
+                <field name="mobile" column_invisible="True"/>
             </xpath>
             <xpath expr="//button[@name='action_send_mail']" position="after">
                 <button name="action_send_sms" type="object" icon="fa-mobile"
-                        attrs="{'invisible': [('mobile', '=', False)]}" string="SMS"/>
+                        invisible="not mobile" string="SMS"/>
             </xpath>
         </field>
     </record>

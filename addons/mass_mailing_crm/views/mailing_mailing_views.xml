@@ -10,12 +10,12 @@
                     type="object"
                     icon="fa-star"
                     class="oe_stat_button"
-                    attrs="{'invisible': [('state', '=', 'draft')]}">
+                    invisible="state == 'draft'">
                     <div class="o_field_widget o_stat_info">
                         <field name="use_leads" invisible="1"/>
                         <span class="o_stat_value"><field nolabel="1" name="crm_lead_count"/></span>
-                        <span class="o_stat_text" attrs="{'invisible': [('use_leads', '=', False)]}">Leads</span>
-                        <span class="o_stat_text" attrs="{'invisible': [('use_leads', '=', True)]}">Opportunities</span>
+                        <span class="o_stat_text" invisible="not use_leads">Leads</span>
+                        <span class="o_stat_text" invisible="use_leads">Opportunities</span>
                     </div>
                 </button>
     		</xpath>

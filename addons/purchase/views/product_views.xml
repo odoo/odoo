@@ -13,7 +13,7 @@
                     <attribute name="editable">bottom</attribute>
                 </xpath>
                 <xpath expr="//tree" position="inside">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" column_invisible="True"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
@@ -42,8 +42,8 @@
                     <attribute name="groups">purchase.group_purchase_user</attribute>
                 </xpath>
                 <group name="purchase" position="before">
-                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&gt;',1)], 'readonly': [('product_variant_count','&gt;',1)]}"/>
-                    <field name="variant_seller_ids" context="{'model': active_model, 'active_id': active_id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" attrs="{'invisible': [('product_variant_count','&lt;=',1)], 'readonly': [('product_variant_count','&lt;=',1)]}"/>
+                    <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
+                    <field name="variant_seller_ids" context="{'model': active_model, 'active_id': active_id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &lt;= 1" readonly="product_variant_count &lt;= 1"/>
                 </group>
                 <group name="bill" position="attributes">
                     <attribute name="groups">purchase.group_purchase_manager</attribute>
@@ -60,7 +60,9 @@
                         <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
                             <field name="purchase_line_warn" nolabel="1" colspan="2"/>
                             <field name="purchase_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
-                                attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')], 'invisible':[('purchase_line_warn','=','no-message')]}"/>
+                                invisible="purchase_line_warn == 'no-message'"
+                                readonly="purchase_line_warn == 'no-message'"
+                                required="purchase_line_warn != 'no-message'"/>
                         </group>
                     </group>
                 </group>
@@ -73,10 +75,10 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="property_account_expense_id" position="attributes">
-                    <attribute name="attrs">{'readonly': [('purchase_ok', '=', 0)]}</attribute>
+                    <attribute name="readonly">purchase_ok == 0</attribute>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
-                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}" context="{'default_type_tax_use':'purchase'}"/>
+                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" readonly="purchase_ok == 0" context="{'default_type_tax_use':'purchase'}"/>
                 </field>
             </field>
         </record>
@@ -89,7 +91,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_po"
                         groups="purchase.group_purchase_user"
-                        type="object" icon="fa-credit-card" attrs="{'invisible': [('purchase_ok', '=', False)]}" help="Purchased in the last 365 days">
+                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline"/>
@@ -110,7 +112,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_po"
                         groups="purchase.group_purchase_user"
-                        type="object" icon="fa-credit-card" attrs="{'invisible': [('purchase_ok', '=', False)]}" help="Purchased in the last 365 days">
+                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline"/>

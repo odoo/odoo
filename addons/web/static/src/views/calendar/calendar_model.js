@@ -828,9 +828,7 @@ export class CalendarModel extends Model {
             type: "all",
             recordId: null,
             value: "all",
-            label: isUserOrPartner
-                ? this.env._t("Everybody's calendars")
-                : this.env._t("Everything"),
+            label: isUserOrPartner ? _t("Everybody's calendars") : _t("Everything"),
             active: previousAllFilter ? previousAllFilter.active : false,
             canRemove: false,
             colorIndex: null,

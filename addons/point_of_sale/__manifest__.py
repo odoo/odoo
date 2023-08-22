@@ -223,7 +223,6 @@
             'web/static/lib/ace/mode-xml.js',
             'web/static/lib/ace/mode-js.js',
             'web/static/lib/ace/mode-qweb.js',
-            'web/static/lib/nearest/jquery.nearest.js',
             'web/static/lib/stacktracejs/stacktrace.js',
             'web/static/lib/Chart/Chart.js',
             'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',

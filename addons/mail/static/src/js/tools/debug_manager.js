@@ -1,5 +1,6 @@
-/* @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export function manageMessages({ component, env }) {
@@ -7,7 +8,7 @@ export function manageMessages({ component, env }) {
     if (!resId) {
         return null; // No record
     }
-    const description = env._t("Manage Messages");
+    const description = _t("Manage Messages");
     return {
         type: "item",
         description,

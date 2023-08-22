@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <field name="tag_ids" position="before">
                 <field name="is_published" string="Show on Website" widget="boolean_toggle"/>
-                <field name="website_id" groups="website.group_multi_website" string="Website" attrs="{'invisible': [('is_published', '=', False)]}"/>
+                <field name="website_id" groups="website.group_multi_website" string="Website" invisible="not is_published"/>
             </field>
         </field>
     </record>

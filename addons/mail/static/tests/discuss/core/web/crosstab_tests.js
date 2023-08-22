@@ -1,14 +1,8 @@
 /* @odoo-module */
 
-import {
-    afterNextRender,
-    click,
-    insertText,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("crosstab");
 
@@ -21,9 +15,11 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
             assert.step("update-channels");
         },
     });
-    await openDiscuss();
+    openDiscuss();
     await click("[title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector", "General");
-    await afterNextRender(() => triggerHotkey("Enter"));
+    await click(".o-discuss-ChannelSelector-suggestion:eq(0)");
+    await contains(".o-mail-DiscussSidebarChannel", 1);
+    await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });

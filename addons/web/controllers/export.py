@@ -224,7 +224,7 @@ class ExportXlsxWriter:
                 cell_value = pycompat.to_text(cell_value)
             except UnicodeDecodeError:
                 raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
-        elif isinstance(cell_value, (list, tuple)):
+        elif isinstance(cell_value, (list, tuple, dict)):
             cell_value = pycompat.to_text(cell_value)
 
         if isinstance(cell_value, str):
@@ -332,10 +332,7 @@ class Export(http.Controller):
                 if exclude and field_name in exclude:
                     continue
                 if field.get('readonly'):
-                    # If none of the field's states unsets readonly, skip the field
-                    if all(dict(attrs).get('readonly', True)
-                           for attrs in field.get('states', {}).values()):
-                        continue
+                    continue
             if not field.get('exportable', True):
                 continue
 

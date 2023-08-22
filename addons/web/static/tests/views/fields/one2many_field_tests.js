@@ -436,7 +436,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("O2M with parented m2o and domain on parent.m2o", async function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         // Records in an o2m can have a m2o pointing to themselves.
         // In that case, a domain evaluation on that field followed by name_search
@@ -475,6 +475,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, { kwargs }) {
                 if (route === "/web/dataset/call_kw/turtle/name_search") {
                     assert.deepEqual(kwargs.args, [["id", "in", []]]);
+                    assert.deepEqual(JSON.stringify(kwargs.args), '[["id","in",[]]]');
                 }
             },
         });
@@ -648,8 +649,8 @@ QUnit.module("Fields", (hooks) => {
                     <field name="p">
                         <tree editable="bottom">
                             <field name="turtles" invisible="1"/>
-                            <field name="foo" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
-                            <field name="qux" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>
+                            <field name="foo" readonly="turtles"/>
+                            <field name="qux" readonly="turtles"/>
                         </tree>
                     </field>
                 </form>`,
@@ -1502,7 +1503,7 @@ QUnit.module("Fields", (hooks) => {
                             <tree editable="bottom" default_order="turtle_int" limit="10">
                                 <field name="turtle_int" widget="handle"/>
                                 <field name="turtle_foo"/>
-                                <field name="turtle_qux" attrs="{'readonly': [('turtle_foo', '=', False)]}"/>
+                                <field name="turtle_qux" readonly="not turtle_foo"/>
                             </tree>
                         </field>
                     </form>`,
@@ -2310,7 +2311,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.views = {
                 "turtle,false,form": `
                 <form>
-                <field name="display_name" attrs="{'invisible': [('turtle_foo', '==', 'yop')]}"/>
+                <field name="display_name" invisible="turtle_foo == 'yop'"/>
                 <field name="turtle_foo"/>
             </form>`,
             };
@@ -3016,6 +3017,111 @@ QUnit.module("Fields", (hooks) => {
             "donatello"
         );
     });
+
+    QUnit.test("open a record in an one2many readonly", async function (assert) {
+        serverData.views = {
+            "turtle,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles" readonly='1'>
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                        <form>
+                            <field name="display_name" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal div[name=display_name] span").textContent,
+            "donatello"
+        );
+
+        await click(target, ".modal .o_form_button_cancel");
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal div[name=display_name] span").textContent,
+            "donatello"
+        );
+    });
+
+    QUnit.test(
+        "open a record in a one2many kanban with an x2m in the form",
+        async function (assert) {
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[1].p = [4];
+
+            serverData.views = {
+                "partner,false,form": `
+                <form>
+                    <field name="display_name"/>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <t t-esc="record.display_name.value"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+                resId: 1,
+                async mockRPC(route, args) {
+                    if (args.method === "web_read" && args.args[0][0] === 2) {
+                        assert.step("web_read: 2");
+                        await def;
+                    }
+                },
+            });
+
+            await click(target.querySelector(".o_kanban_record"));
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".modal [name=display_name] input").value,
+                "second record"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".modal .o_data_row")].map((el) => el.textContent),
+                ["aaa"]
+            );
+
+            assert.verifySteps(["web_read: 2"]);
+        }
+    );
 
     QUnit.test(
         "one2many in kanban: add a line custom control create editable",
@@ -5217,7 +5323,7 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                         <field name="turtles">
                             <tree editable="bottom">
-                                <field name="turtle_foo" widget="char" attrs="{'readonly': [('turtle_int', '==', 11111)]}"/>
+                                <field name="turtle_foo" widget="char" readonly="turtle_int == 11111"/>
                                 <field name="turtle_int"/>
                             </tree>
                         </field>
@@ -5281,7 +5387,7 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                         <field name="p">
                             <tree editable="top">
-                                <field name="display_name" attrs='{"readonly": [["product_id", "=", false]]}'/>
+                                <field name="display_name" readonly="not product_id"/>
                                 <field name="product_id"/>
                             </tree>
                         </field>
@@ -6479,7 +6585,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles">
                             <tree editable="top" limit="2">
                                 <field name="turtle_foo"/>
-                                <field name="partner_ids" widget="many2many_tags" attrs="{'readonly': [('turtle_foo', '=', 'a')]}"/>
+                                <field name="partner_ids" widget="many2many_tags" readonly="turtle_foo == 'a'"/>
                             </tree>
                         </field>
                     </form>`,
@@ -7815,7 +7921,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles">
                             <tree editable="top">
                                 <field name="turtle_int"/>
-                                <field name="turtle_foo" attrs='{"required": [["turtle_int", "=", 0]]}'/>
+                                <field name="turtle_foo" required='turtle_int == 0'/>
                             </tree>
                         </field>
                     </form>`,
@@ -8302,7 +8408,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                     <form>
                         <field name="name"/>
-                        <field name="p" attrs="{'readonly': [['name', '=', 'readonly']]}">
+                        <field name="p" readonly="name == 'readonly'">
                             <tree><field name="display_name"/></tree>
                             <form>
                                 <field name="display_name"/>
@@ -10574,8 +10680,8 @@ QUnit.module("Fields", (hooks) => {
                                 <field name="bar"/>
                                 <field name="p">
                                     <tree>
-                                        <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                                        <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
+                                        <field name="foo" column_invisible="parent.product_id"/>
+                                        <field name="bar" column_invisible="not parent.bar"/>
                                     </tree>
                                 </field>
                             </page>
@@ -10626,7 +10732,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="p">
                         <tree>
                             <field name="foo"/>
-                            <button name="abc" string="Do it" class="some_button" attrs="{'column_invisible': [('parent.product_id', '=', False)]}"/>
+                            <button name="abc" string="Do it" class="some_button" column_invisible="not parent.product_id"/>
                         </tree>
                     </field>
                 </form>`,
@@ -10661,10 +10767,10 @@ QUnit.module("Fields", (hooks) => {
                     <field name="p">
                         <tree>
                             <button name="abc1" string="Do it 1" class="some_button1"/>
-                            <button name="abc2" string="Do it 2" class="some_button2" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
+                            <button name="abc2" string="Do it 2" class="some_button2" column_invisible="parent.product_id"/>
                             <field name="foo"/>
-                            <button name="abc3" string="Do it 3" class="some_button3" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                            <button name="abc4" string="Do it 4" class="some_button4" attrs="{'column_invisible': [('parent.trululu', '!=', False)]}"/>
+                            <button name="abc3" string="Do it 3" class="some_button3" column_invisible="parent.product_id"/>
+                            <button name="abc4" string="Do it 4" class="some_button4" column_invisible="parent.trululu"/>
                         </tree>
                     </field>
                 </form>`,
@@ -11971,7 +12077,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="p">
                             <tree editable="bottom">
                                 <field name="foo"/>
-                                <field name="int_field" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
+                                <field name="int_field" column_invisible="not parent.bar"/>
                             </tree>
                         </field>
                     </form>`,
@@ -11997,8 +12103,8 @@ QUnit.module("Fields", (hooks) => {
         serverData.views = {
             "partner,false,list": `
                 <tree>
-                    <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
-                    <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}"/>
+                    <field name="foo" column_invisible="parent.product_id"/>
+                    <field name="bar" column_invisible="not parent.bar"/>
                 </tree>`,
         };
 

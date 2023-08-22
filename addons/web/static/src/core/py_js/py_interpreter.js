@@ -136,6 +136,9 @@ function isIn(left, right) {
     if (typeof right === "string" && typeof left === "string") {
         return right.includes(left);
     }
+    if (typeof right === "object") {
+        return left in right;
+    }
     return false;
 }
 
@@ -261,6 +264,15 @@ const DICT = {
     },
 };
 
+const STRING = {
+    lower(str) {
+        return () => str.toLowerCase();
+    },
+    upper(str) {
+        return () => str.toUpperCase();
+    },
+};
+
 // -----------------------------------------------------------------------------
 // Evaluate function
 // -----------------------------------------------------------------------------
@@ -274,14 +286,16 @@ export function evaluate(ast, context = {}) {
     const dicts = new Set();
     let pyContext;
     const evalContext = Object.create(context);
-    Object.defineProperty(evalContext, "context", {
-        get() {
-            if (!pyContext) {
-                pyContext = toPyDict(context);
-            }
-            return pyContext;
-        },
-    });
+    if (!evalContext.context) {
+        Object.defineProperty(evalContext, "context", {
+            get() {
+                if (!pyContext) {
+                    pyContext = toPyDict(context);
+                }
+                return pyContext;
+            },
+        });
+    }
 
     /**
      * @param {AST} ast
@@ -361,6 +375,12 @@ export function evaluate(ast, context = {}) {
                 if (dicts.has(left) || Object.isPrototypeOf.call(PY_DICT, left)) {
                     // this is a dictionary => need to apply dict methods
                     return DICT[ast.key](left);
+                }
+                if (typeof left === 'string') {
+                    return STRING[ast.key](left);
+                }
+                if (ast.key == 'get' && typeof left === 'object') {
+                    return DICT[ast.key](toPyDict(left));
                 }
                 const result = left[ast.key];
                 if (typeof result === "function" && !isConstructor(result)) {

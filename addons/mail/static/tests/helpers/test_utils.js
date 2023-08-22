@@ -125,23 +125,6 @@ function getAfterEvent({ messagingBus }) {
     };
 }
 
-function getClick({ target, afterNextRender }) {
-    return async function click(selector) {
-        await afterNextRender(() => {
-            if (typeof selector === "string") {
-                $(target ?? document.body)
-                    .find(selector)[0]
-                    .click();
-            } else if (selector instanceof HTMLElement) {
-                selector.click();
-            } else {
-                // jquery
-                selector[0].click();
-            }
-        });
-    };
-}
-
 function getMouseenter({ afterNextRender }) {
     return async function mouseenter(selector) {
         await afterNextRender(() =>
@@ -431,7 +414,6 @@ async function start(param0 = {}) {
         advanceTime,
         afterEvent,
         afterNextRender,
-        click: getClick({ target, afterNextRender }),
         env: webClient.env,
         insertText,
         mouseenter: getMouseenter({ afterNextRender }),
@@ -536,22 +518,26 @@ function pasteFiles(el, files) {
  * @param {Object} [param2 = {}]
  * @param {boolean} [param2.replace = false]
  */
-export async function insertText(selector, content, { replace = false } = {}) {
-    await afterNextRender(() => {
-        if (replace) {
-            document.querySelector(selector).value = "";
-        }
-        document.querySelector(selector).focus();
-        for (const char of content) {
-            document.execCommand("insertText", false, char);
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
-        }
-    });
+export async function insertText(target, content, { replace = false } = {}) {
+    if (typeof target === "string") {
+        target = (await contains(target))[0];
+    }
+    if (replace) {
+        target.value = "";
+    }
+    target.focus();
+    for (const char of content) {
+        document.execCommand("insertText", false, char);
+        target.dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+        target.dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
+        target.dispatchEvent(new window.InputEvent("input"));
+        target.dispatchEvent(new window.InputEvent("change"));
+    }
+    if (!content) {
+        target.dispatchEvent(new window.InputEvent("input"));
+        target.dispatchEvent(new window.InputEvent("change"));
+    }
+    return $(target);
 }
 
 //------------------------------------------------------------------------------
@@ -672,35 +658,79 @@ export {
     startServer,
 };
 
-export const click = getClick({ afterNextRender });
+export async function click(selector, { target = document.body } = {}) {
+    if (typeof selector === "string") {
+        const $e = await contains(selector, 1, { target });
+        $e[0].click();
+        return $($e[0]);
+    } else if (selector instanceof HTMLElement) {
+        selector.click();
+        return Promise.resolve($(selector));
+    } else {
+        // jquery
+        selector[0].click();
+        return Promise.resolve($(selector[0]));
+    }
+}
 
+let hasUsedContainsPositively = false;
+QUnit.testStart(() => (hasUsedContainsPositively = false));
 /**
- * Function that wait until a selector is present in the DOM
+ * Function that waits until a selector is present in the DOM.
  *
  * @param {string} selector
+ * @param {number} [count=1]
+ * @returns {JQuery<HTMLElement>}
  */
-export function waitUntil(selector, count = 1) {
+export function contains(selector, count = 1, { target = document.body } = {}) {
+    if (count) {
+        hasUsedContainsPositively = true;
+    } else if (!hasUsedContainsPositively) {
+        throw new Error(
+            `Starting a test with "contains" of count 0 for selector "${selector}" is useless because it might immediately resolve. Start the test by checking that an expected element actually exists.`
+        );
+    }
+    const res = $(target).find(selector);
+    const resMessage = `Found ${count} occurrence(s) of ${selector}`;
+    if (res.length === count) {
+        QUnit.assert.ok(true, resMessage);
+        return Promise.resolve(res);
+    }
     return new Promise((resolve, reject) => {
-        if ($(selector).length === count) {
-            return resolve($(selector));
-        }
+        let done = false;
         const timer = setTimeout(() => {
             observer.disconnect();
-            reject(new Error(`Waited 5 second for ${selector}`));
-            console.error(`Waited 5 second for ${selector}`);
+            const res = $(target).find(selector);
+            const message = `Waited 5 second for ${count} occurrence(s) of ${selector}. Found ${res.length} instead.`;
+            QUnit.assert.ok(false, message);
+            reject(new Error(message));
+            done = true;
         }, 5000);
-        const observer = new MutationObserver((mutations) => {
-            if ($(selector).length === count) {
-                resolve($(selector));
+        const observer = new MutationObserver(() => {
+            const res = $(target).find(selector);
+            if (res.length === count) {
                 observer.disconnect();
+                QUnit.assert.ok(true, resMessage);
+                resolve(res);
                 clearTimeout(timer);
+                done = true;
             }
         });
-
         observer.observe(document.body, {
             attributes: true,
             childList: true,
             subtree: true,
+        });
+        registerCleanup(() => {
+            if (!done) {
+                observer.disconnect();
+                const res = $(target).find(selector);
+                const message = `Test ended while waiting for ${count} occurrence(s) of ${selector}. Found ${res.length} instead.`;
+                QUnit.assert.ok(false, message);
+                reject(new Error(message));
+                clearTimeout(timer);
+                done = true;
+            }
         });
     });
 }

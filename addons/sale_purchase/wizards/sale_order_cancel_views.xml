@@ -9,7 +9,7 @@
             </field>
             <span id="display_invoice_alert" position="after">
                 <span id="display_purchase_orders_alert"
-                        attrs="{'invisible': [('display_purchase_orders_alert', '=', False)]}">
+                        invisible="not display_purchase_orders_alert">
                     There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>
                 </span>
             </span>

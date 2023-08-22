@@ -1,25 +1,16 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import testUtils from '@web/../tests/legacy/helpers/test_utils';
-import { registry } from "@web/core/registry";
-import {
-    click,
-    getFixture,
-    nextTick,
-} from '@web/../tests/helpers/utils';
-import { setupViewRegistries } from "@web/../tests/views/helpers";
-import {
-    start,
-    startServer,
-    waitUntil,
-} from '@mail/../tests/helpers/test_utils';
+import { addModelNamesToFetch } from "@bus/../tests/helpers/model_definitions_helpers";
+
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
+import { registry } from "@web/core/registry";
+import testUtils from "@web/../tests/legacy/helpers/test_utils";
+import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { setupViewRegistries } from "@web/../tests/views/helpers";
 
-import { addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
-addModelNamesToFetch([
-    'mrp.document',
-]);
+addModelNamesToFetch(["mrp.document"]);
 
 const serviceRegistry = registry.category("services");
 
@@ -224,19 +215,14 @@ QUnit.module('MrpDocumentsKanbanView', {
                 </kanban>`
         };
         const { openView } = await start({ serverData: { views } });
-        await openView({
-            res_model: 'mrp.document',
-            views: [[false, 'kanban']],
+        openView({
+            res_model: "mrp.document",
+            views: [[false, "kanban"]],
         });
-        assert.containsOnce(target, ".o_kanban_previewer");
-
-        await click(target.querySelector(".o_kanban_previewer"));
-        await waitUntil('.o-FileViewer');
-        assert.containsOnce(target, '.o-FileViewer');
-        assert.containsOnce(target, '.o-FileViewer-headerButton .fa-times');
-
-        await click(target, '.o-FileViewer-headerButton .fa-times');
-        assert.containsNone(target, '.o-FileViewer');
+        await click(".o_kanban_previewer");
+        await contains(".o-FileViewer");
+        await click(".o-FileViewer-headerButton .fa-times");
+        await contains(".o-FileViewer", 0);
     });
 });
 

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { GraphModel } from "@web/views/graph/graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 
@@ -78,7 +79,7 @@ export class BurndownChartModel extends GraphModel {
      * @override
      */
     async _loadDataPoints(metaData) {
-        metaData.measures.__count.string = this.env._t("# of Tasks");
+        metaData.measures.__count.string = _t("# of Tasks");
         return super._loadDataPoints(metaData);
     }
 }

@@ -1,9 +1,10 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/core/domain";
+import { Domain } from "@web/core/domain";
 import { RPCError } from "@web/core/network/rpc_service";
 import { Cache } from "@web/core/utils/cache";
 import {
@@ -50,12 +51,11 @@ import {
 // Commons
 //
 export function useSelectCreate({ resModel, activeActions, onSelected, onCreateEdit, onUnselect }) {
-    const env = useEnv();
     const addDialog = useOwnedDialogs();
 
     function selectCreate({ domain, context, filters, title }) {
         addDialog(SelectCreateDialog, {
-            title: title || env._t("Select records"),
+            title: title || _t("Select records"),
             noCreate: !activeActions.create,
             multiSelect: "link" in activeActions ? activeActions.link : false, // LPE Fixme
             resModel,
@@ -121,7 +121,7 @@ export function useActiveActions({
         let evalFn = () => actionName !== "write";
         if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
-            evalFn = (evalContext) => evalDomain(action, evalContext);
+            evalFn = (evalContext) => Boolean(action && new Domain(action).contains(evalContext));
         }
 
         if (actionName in subViewActiveActions) {
@@ -223,7 +223,7 @@ export class Many2XAutocomplete extends Component {
     }
     get optionsSource() {
         return {
-            placeholder: this.env._t("Loading..."),
+            placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
         };
     }
@@ -282,7 +282,7 @@ export class Many2XAutocomplete extends Component {
 
         if (this.props.quickCreate && request.length) {
             options.push({
-                label: this.env._t('Create "%s"', request),
+                label: _t('Create "%s"', request),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
                 action: async (params) => {
                     try {
@@ -303,7 +303,7 @@ export class Many2XAutocomplete extends Component {
 
         if (!this.props.noViewAll && records.length > 0) {
             options.push({
-                label: this.env._t("View all"),
+                label: _t("View all"),
                 action: this.onViewAll.bind(this, request),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_view_all",
             });
@@ -315,7 +315,7 @@ export class Many2XAutocomplete extends Component {
                 : this.activeActions.create;
         if (!request.length && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
             options.push({
-                label: this.env._t("Start typing..."),
+                label: _t("Start typing..."),
                 classList: "o_m2o_start_typing",
                 unselectable: true,
             });
@@ -324,7 +324,7 @@ export class Many2XAutocomplete extends Component {
         if (request.length && canCreateEdit) {
             const context = this.getCreationContext(request);
             options.push({
-                label: this.env._t("Create and edit..."),
+                label: _t("Create and edit..."),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
                 action: () => this.openMany2X({ context }),
             });
@@ -332,7 +332,7 @@ export class Many2XAutocomplete extends Component {
 
         if (!records.length && !this.activeActions.create) {
             options.push({
-                label: this.env._t("No records"),
+                label: _t("No records"),
                 classList: "o_m2o_no_result",
                 unselectable: true,
             });
@@ -362,13 +362,13 @@ export class Many2XAutocomplete extends Component {
 
             dynamicFilters = [
                 {
-                    description: this.env._t("Quick search: %s", request),
+                    description: _t("Quick search: %s", request),
                     domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
                 },
             ];
         }
 
-        const title = this.env._t("Search: %s", fieldString);
+        const title = _t("Search: %s", fieldString);
         this.selectCreate({
             domain,
             context,
@@ -442,7 +442,6 @@ export function useOpenMany2XRecord({
     isToMany,
     onClose = (isNew) => {},
 }) {
-    const env = useEnv();
     const addDialog = useOwnedDialogs();
     const orm = useService("orm");
 
@@ -460,7 +459,7 @@ export function useOpenMany2XRecord({
 
         let resolve = () => {};
         if (!title) {
-            title = resId ? env._t("Open: %s", fieldString) : env._t("Create %s", fieldString);
+            title = resId ? _t("Open: %s", fieldString) : _t("Create %s", fieldString);
         }
 
         const { create: canCreate, write: canWrite } = activeActions;
@@ -619,7 +618,7 @@ export class X2ManyFieldDialog extends Component {
         const saved = await this.save({ saveAndNew: true });
         if (saved) {
             if (this.title) {
-                this.title = this.title.replace(this.env._t("Open:"), this.env._t("New:"));
+                this.title = this.title.replace(_t("Open:"), _t("New:"));
             }
             this.render(true);
         }
@@ -708,8 +707,8 @@ export function useOpenX2ManyRecord({
     async function openRecord({ record, mode, context, title, onClose }) {
         if (!title) {
             title = record
-                ? env._t("Open: %s", activeField.string)
-                : env._t("Create %s", activeField.string);
+                ? _t("Open: %s", activeField.string)
+                : _t("Create %s", activeField.string);
         }
         const list = getList();
         const { archInfo, fields: _fields } = await getFormViewInfo({
@@ -730,8 +729,7 @@ export function useOpenX2ManyRecord({
         if (record) {
             const { delete: canDelete, onDelete } = activeActions;
             deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;
-            deleteButtonLabel =
-                activeActions.type === "one2many" ? env._t("Delete") : env._t("Remove");
+            deleteButtonLabel = activeActions.type === "one2many" ? _t("Delete") : _t("Remove");
         } else {
             params.context = makeContext([list.context, context]);
             params.withoutParent = isMany2Many;

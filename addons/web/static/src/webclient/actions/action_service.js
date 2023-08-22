@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
@@ -883,7 +884,7 @@ function makeActionManager(env) {
         } else {
             const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
-                const msg = env._t(
+                const msg = _t(
                     "A popup window has been blocked. You may need to change your " +
                         "browser settings to allow popup windows for this page."
                 );
@@ -1098,7 +1099,7 @@ function makeActionManager(env) {
             if (message) {
                 env.services.notification.add(message, {
                     sticky: true,
-                    title: env._t("Report"),
+                    title: _t("Report"),
                 });
             }
             if (!success) {
@@ -1305,7 +1306,7 @@ function makeActionManager(env) {
         const view = _getView(viewType);
         if (!view) {
             throw new ViewNotFoundError(
-                env._t("No view of type '%s' could be found in the current action.", viewType)
+                _t("No view of type '%s' could be found in the current action.", viewType)
             );
         }
         const newController = controller.action.controllers[viewType] || {

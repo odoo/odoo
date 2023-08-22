@@ -93,7 +93,7 @@ export const errorService = {
                     return;
                 }
                 uncaughtError = new UncaughtCorsError();
-                uncaughtError.traceback = env._t(
+                uncaughtError.traceback = _t(
                     `Unknown CORS error\n\n` +
                         `An unknown CORS error occured.\n` +
                         `The error probably originates from a JavaScript file served from a different origin.\n` +

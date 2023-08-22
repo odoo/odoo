@@ -18,15 +18,13 @@ class LunchOrder(models.Model):
     product_id = fields.Many2one('lunch.product', string="Product", required=True)
     category_id = fields.Many2one(
         string='Product Category', related='product_id.category_id', store=True)
-    date = fields.Date('Order Date', required=True, readonly=True,
-                       states={'new': [('readonly', False)]},
+    date = fields.Date('Order Date', required=True, readonly=False,
                        default=fields.Date.context_today)
     supplier_id = fields.Many2one(
         string='Vendor', related='product_id.supplier_id', store=True, index=True)
     available_today = fields.Boolean(related='supplier_id.available_today')
     order_deadline_passed = fields.Boolean(related='supplier_id.order_deadline_passed')
-    user_id = fields.Many2one('res.users', 'User', readonly=True,
-                              states={'new': [('readonly', False)]},
+    user_id = fields.Many2one('res.users', 'User', readonly=False,
                               default=lambda self: self.env.uid)
     lunch_location_id = fields.Many2one('lunch.location', default=lambda self: self.env.user.last_lunch_location_id)
     note = fields.Text('Notes')

@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { formatFloat } from '@web/views/fields/formatters';
 import { ViewButton } from '@web/views/view_button/view_button';
@@ -52,8 +53,8 @@ export class ProjectRightSidePanel extends Component {
 
     get sectionNames() {
         return {
-            'milestones': this.env._t('Milestones'),
-            'profitability': this.env._t('Profitability'),
+            'milestones': _t('Milestones'),
+            'profitability': _t('Profitability'),
         };
     }
 
@@ -115,7 +116,7 @@ export class ProjectRightSidePanel extends Component {
         };
         this.openFormViewDialog({
             context,
-            title: this.env._t('New Milestone'),
+            title: _t('New Milestone'),
             resModel: 'project.milestone',
             onRecordSaved: async () => {
                 await this.loadMilestones();

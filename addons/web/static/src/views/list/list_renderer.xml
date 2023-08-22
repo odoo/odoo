@@ -176,7 +176,7 @@
                     <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
-                            <t t-if="!evalModifier(button.modifiers.invisible, group.record)">
+                            <t t-if="!evalInvisible(button.invisible, group.record)">
                                 <t t-if="button.clickParams.type === 'edit'">
                                     <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)" tabindex="-1">
                                         <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
@@ -226,7 +226,7 @@
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
-                    <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record) or !(column.name in record.data)"/>
+                    <t t-set="isInvisible" t-value="evalInvisible(column.invisible, record) or !(column.name in record.data)"/>
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
@@ -244,7 +244,7 @@
                 <t t-if="column.type === 'button_group'">
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
-                            <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
+                            <ViewButton t-if="!evalInvisible(button.invisible, record)"
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"

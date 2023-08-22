@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -36,7 +37,7 @@ patch(TicketScreen.prototype, {
     },
     _showNotAllowedRefundNotification() {
         this.notification.add(
-            this.env._t(
+            _t(
                 "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
             ),
             5000

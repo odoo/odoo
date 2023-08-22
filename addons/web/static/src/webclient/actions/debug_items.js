@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { editModelDebug } from "@web/core/debug/debug_utils";
 import { registry } from "@web/core/registry";
 
@@ -30,7 +31,7 @@ function editAction({ action, env }) {
     if (!action.id) {
         return null;
     }
-    const description = env._t("Edit Action");
+    const description = _t("Edit Action");
     return {
         type: "item",
         description,
@@ -45,7 +46,7 @@ function viewFields({ action, env }) {
     if (!action.res_model) {
         return null;
     }
-    const description = env._t("View Fields");
+    const description = _t("View Fields");
     return {
         type: "item",
         description,
@@ -77,7 +78,7 @@ function manageFilters({ action, env }) {
     if (!action.res_model) {
         return null;
     }
-    const description = env._t("Manage Filters");
+    const description = _t("Manage Filters");
     return {
         type: "item",
         description,
@@ -105,7 +106,7 @@ function viewAccessRights({ accessRights, action, env }) {
     if (!action.res_model || !accessRights.canSeeModelAccess) {
         return null;
     }
-    const description = env._t("View Access Rights");
+    const description = _t("View Access Rights");
     return {
         type: "item",
         description,
@@ -137,10 +138,10 @@ function viewRecordRules({ accessRights, action, env }) {
     if (!action.res_model || !accessRights.canSeeRecordRules) {
         return null;
     }
-    const description = env._t("Model Record Rules");
+    const description = _t("Model Record Rules");
     return {
         type: "item",
-        description: env._t("View Record Rules"),
+        description: _t("View Record Rules"),
         callback: async () => {
             const modelId = (
                 await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {

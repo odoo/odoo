@@ -29,31 +29,33 @@
                     <field name="trigger_field_ids"
                         options="{'no_open': True, 'no_create': True}"
                         domain="[('model_id', '=', model_id)]"
-                        attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}" widget="many2many_tags"/>
+                        invisible="trigger not in ['on_write', 'on_create_or_write']" widget="many2many_tags"/>
                     <field name="on_change_field_ids" string="Trigger Fields"
                         options="{'no_open': True, 'no_create': True}"
                         domain="[('model_id', '=', model_id)]"
-                        attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"
+                        invisible="trigger != 'on_change'"
+                        required="trigger == 'on_change'"
                         widget='many2many_tags'/>
 
                     <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"
-                           attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}"/>
+                           invisible="trigger not in ['on_write', 'on_create_or_write']"/>
                     <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
                     <field name="trg_date_id"
                         options="{'no_open': True, 'no_create': True}"
-                        attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
+                        invisible="trigger != 'on_time'"
+                        required="trigger == 'on_time'"/>
                     <label for="trg_date_range"
-                        attrs="{'invisible': [('trigger', '!=', 'on_time')]}"/>
-                    <div class="o_row" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
-                        <field name="trg_date_range" attrs="{'required': [('trigger','=','on_time')]}"/>
-                        <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
+                        invisible="trigger != 'on_time'"/>
+                    <div class="o_row" invisible="trigger != 'on_time'">
+                        <field name="trg_date_range" required="trigger == 'on_time'"/>
+                        <field name="trg_date_range_type" required="trigger == 'on_time'"/>
                     </div>
                     <field name="trg_date_calendar_id"
                         options="{'no_open': True, 'no_create': True}"
-                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
+                        invisible="not trg_date_id or trg_date_range_type != 'day'"/>
                 </xpath>
                 <xpath expr="//group[@name='action_wrapper']" position="after">
-                    <div class="alert alert-info" role="alert" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
+                    <div class="alert alert-info" role="alert" invisible="trigger != 'on_time'">
                         <field name="least_delay_msg"/>
                     </div>
                 </xpath>

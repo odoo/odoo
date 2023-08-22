@@ -39,7 +39,7 @@
         <field name="arch" type="xml">
             <sheet position="before">
                 <div class="alert alert-danger mb-0" role="alert"
-                        attrs="{'invisible': [('l10n_latam_check_warning_msg', '=', False)]}">
+                        invisible="not l10n_latam_check_warning_msg">
                     <field name="l10n_latam_check_warning_msg" nolabel="1"/>
                 </div>
             </sheet>
@@ -47,38 +47,37 @@
             <field name="destination_journal_id" position="after">
                 <!-- Move Third party checks -->
                 <field name="l10n_latam_check_id"
-                    attrs="{
-                        'invisible': [('payment_method_code', 'not in', ['in_third_party_checks', 'out_third_party_checks']), ('l10n_latam_check_id', '=', False)],
-                        'required': [('payment_method_code', 'in', ['in_third_party_checks', 'out_third_party_checks'])]}"
+                    invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks'] and not l10n_latam_check_id"
+                    readonly="state != 'draft'"
+                    required="payment_method_code in ['in_third_party_checks', 'out_third_party_checks']"
                     domain="
                         [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if payment_type == 'outbound' else
                         [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if is_internal_transfer else
                         [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]"
-                    options="{'no_create': True}"
-                />
+                    options="{'no_create': True}"/>
             </field>
             <field name="payment_method_line_id" position="after">
                 <field name="l10n_latam_manual_checks" invisible="1"/>
                 <field name="l10n_latam_check_number"
                     string='Check Number'
-                    attrs="{
-                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_manual_checks', '=', False)],
-                        'required': ['|', ('payment_method_code', '=', 'new_third_party_checks'), ('payment_method_code', '=', 'check_printing'), ('l10n_latam_manual_checks', '=', True)],
-                        'readonly': [('state', '!=', 'draft')]}"/>
-                <field name="l10n_latam_check_payment_date" attrs="{
-                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_manual_checks', '=', False)]}"/>
+                    invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)"
+                    readonly="state != 'draft'"
+                    required="(payment_method_code == 'new_third_party_checks' or payment_method_code == 'check_printing') and l10n_latam_manual_checks"/>
+                <field name="l10n_latam_check_payment_date" invisible="payment_method_code != 'new_third_party_checks' and (payment_method_code != 'check_printing' or not l10n_latam_manual_checks)" readonly="state != 'draft'"/>
                 <field name="l10n_latam_check_bank_id" string="Check Bank"
-                    attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                    invisible="payment_method_code != 'new_third_party_checks'"
+                    readonly="state in ['cancel', 'posted']"/>
                 <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat"
-                    attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                    invisible="payment_method_code != 'new_third_party_checks'"
+                    readonly="state in ['cancel', 'posted']"/>
                 <label for="l10n_latam_check_current_journal_id" string="Check Current Journal"
-                    attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                    invisible="state != 'posted' or payment_method_code != 'new_third_party_checks'"/>
                 <div class="oe_inline"
-                        attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'new_third_party_checks')]}">
+                        invisible="state != 'posted' or payment_method_code != 'new_third_party_checks'">
                     <field name="l10n_latam_check_current_journal_id"/>
-                    <span attrs="{'invisible': [('l10n_latam_check_current_journal_id', '!=', False)]}">Not in Wallet</span>
+                    <span invisible="l10n_latam_check_current_journal_id">Not in Wallet</span>
                     <button name="button_open_check_operations" type="object" string="⇒ Check Operations" class="oe_link"/>
                 </div>
             </field>
@@ -91,12 +90,12 @@
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
             <tree default_order="date desc, id desc, name desc">
-                <field name="date"/>
+                <field name="date" readonly="state in ['cancel', 'posted']"/>
                 <field name="name"/>
                 <field name="payment_type"/>
                 <field name="journal_id"/>
                 <field name="partner_id" string="Customer"/>
-                <field name="state" invisible="1"/>
+                <field name="state" column_invisible="True"/>
             </tree>
         </field>
     </record>
@@ -145,7 +144,7 @@
                 <attribute name="invisible">1</attribute>
             </field>
             <field name="date" position="after">
-                <field name="l10n_latam_check_payment_date" optional="show"/>
+                <field name="l10n_latam_check_payment_date" optional="show" readonly="state != 'draft'"/>
             </field>
             <tree>
                 <field name="is_matched"/>

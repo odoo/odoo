@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -51,6 +52,7 @@ export class KanbanRenderer extends Component {
         "deleteRecord",
         "openRecord",
         "readonly",
+        "evalViewModifier",
         "forceGlobalClick?",
         "noContentHelp?",
         "scrollTop?",
@@ -221,14 +223,13 @@ export class KanbanRenderer extends Component {
         const fieldNodes = Object.values(this.props.archInfo.fieldNodes).filter(
             (fieldNode) => fieldNode.name === groupByField.name
         );
-        let isReadonly;
+        let isReadonly = this.props.list.fields[groupByField.name].readonly;
         if (
+            !isReadonly &&
             fieldNodes.length &&
-            fieldNodes.some((fieldNode) => "readonly" in fieldNode.modifiers)
+            fieldNodes.some((fieldNode) => "readonly" in fieldNode)
         ) {
-            isReadonly = fieldNodes.every((fieldNode) => fieldNode.modifiers.readonly === true);
-        } else {
-            isReadonly = this.props.list.fields[groupByField.name].readonly;
+            isReadonly = fieldNodes.every((fieldNode) => fieldNode.readonly === 'True');
         }
         return !isReadonly && this.isMovableField(groupByField);
     }
@@ -328,7 +329,7 @@ export class KanbanRenderer extends Component {
         if (this.exampleData && this.exampleData.ghostColumns) {
             colNames = this.exampleData.ghostColumns;
         } else {
-            colNames = [1, 2, 3, 4].map((num) => this.env._t("Column %s", num));
+            colNames = [1, 2, 3, 4].map((num) => _t("Column %s", num));
         }
         return colNames.map((colName) => ({
             name: colName,

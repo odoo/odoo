@@ -8,19 +8,19 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="department_id" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            <field name="department_id" invisible="not department_id"/>
                             <field name="plan_id" widget="radio"/>
                             <field name="due_date"/>
                             <field name="employee_ids" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                         </group>
-                        <div role="alert" class="alert alert-danger mb8" attrs="{'invisible': [('warning', '=', False)]}">
+                        <div role="alert" class="alert alert-danger mb8" invisible="not warning">
                             <field name="warning"/>
                         </div>
                     </sheet>
                     <footer>
-                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" attrs="{'invisible': [('warning', '!=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
-                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight disabled" attrs="{'invisible': [('warning', '=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" invisible="warning" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight disabled" invisible="not warning" groups="hr.group_hr_user" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>

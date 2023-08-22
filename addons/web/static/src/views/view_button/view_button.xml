@@ -48,9 +48,21 @@
                 <span class="o-tooltip--technical--title">Context:</span>
                 <t t-esc="button.context || context"/>
             </li>
-            <li t-if="button.modifiers" data-item="modifiers">
-                <span class="o-tooltip--technical--title">Modifiers:</span>
-                <t t-esc="button.modifiers"/>
+            <li t-if="'invisible' in button" data-item="invisible">
+                <span class="o-tooltip--technical--title">Invisible:</span>
+                <t t-esc="button.invisible"/>
+            </li>
+            <li t-if="'column_invisible' in button" data-item="column_invisible">
+                <span class="o-tooltip--technical--title">Column invisible:</span>
+                <t t-esc="button.column_invisible"/>
+            </li>
+            <li t-if="'required' in button" data-item="required">
+                <span class="o-tooltip--technical--title">Required:</span>
+                <t t-esc="button.required"/>
+            </li>
+            <li t-if="'readonly' in button" data-item="readonly">
+                <span class="o-tooltip--technical--title">Readonly:</span>
+                <t t-esc="button.readonly"/>
             </li>
             <li t-if="button.special" data-item="special">
                 <span class="o-tooltip--technical--title">Special:</span>

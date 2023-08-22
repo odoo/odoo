@@ -38,11 +38,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         Object.assign(this.state, this.props.info.state);
         useValidateCashInput("closingCashInput");
         if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
-            this.otherPaymentMethods.forEach(pm => {
+            this.otherPaymentMethods.forEach((pm) => {
                 if (this._getShowDiff(pm)) {
-                    useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                    useValidateCashInput(
+                        "closingCashInput_" + pm.id,
+                        this.state.payments[pm.id].counted
+                    );
                 }
-            })
+            });
         }
     }
     //@override
@@ -51,8 +54,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             this.closeSession();
         } else if (this.hasUserAuthority()) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Payments Difference"),
-                body: this.env._t(
+                title: _t("Payments Difference"),
+                body: _t(
                     "Do you want to accept payments difference and post a profit/loss journal entry?"
                 ),
             });
@@ -61,13 +64,13 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             }
         } else {
             await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Payments Difference"),
-                body: this.env._t(
+                title: _t("Payments Difference"),
+                body: _t(
                     "The maximum difference allowed is %s.\n\
                     Please contact your manager to accept the closing difference.",
                     this.env.utils.formatCurrency(this.amountAuthorizedDiff)
                 ),
-                confirmText: this.env._t("OK"),
+                confirmText: _t("OK"),
             });
         }
     }
@@ -103,14 +106,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        return this.report.download("point_of_sale.sale_details_report", [
-            this.pos.pos_session.id,
-        ]);
+        return this.report.download("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
     }
     handleInputChange(paymentId, event) {
-        if (event.target.classList.contains('invalid-cash-input')) return;
+        if (event.target.classList.contains("invalid-cash-input")) {
+            return;
+        }
         let expectedAmount;
-        if (paymentId === this.defaultCashDetails.id) {
+        if (paymentId === this.defaultCashDetails?.id) {
             this.manualInputCashCount = true;
             this.moneyDetails = null;
             this.state.notes = "";

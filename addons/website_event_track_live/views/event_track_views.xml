@@ -9,7 +9,7 @@
             <xpath expr="//field[@name='active']" position="after">
                 <field name="youtube_video_url" widget="url" />
                 <field name="is_youtube_replay"
-                    attrs="{'invisible': ['|', ('youtube_video_url', '=', False), ('youtube_video_url', '=', '')]}" />
+                    invisible="not youtube_video_url or youtube_video_url == ''" />
             </xpath>
         </field>
     </record>

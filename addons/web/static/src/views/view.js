@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -334,7 +334,7 @@ export class View extends Component {
         if ("useSampleModel" in props) {
             viewProps.useSampleModel = props.useSampleModel;
         } else if (sample) {
-            viewProps.useSampleModel = Boolean(evaluateExpr(sample));
+            viewProps.useSampleModel = evaluateBooleanExpr(sample);
         }
 
         for (const key in props) {

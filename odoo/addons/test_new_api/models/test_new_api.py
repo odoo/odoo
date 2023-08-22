@@ -1638,9 +1638,7 @@ class PrecomputeReadonly(models.Model):
         ('confirmed', 'Confirmed'),
     ], default='draft')
     bar = fields.Char(compute='_compute_bar', precompute=True, store=True, readonly=True)
-    baz = fields.Char(
-        compute='_compute_baz', precompute=True, store=True, readonly=True, states={'draft': [('readonly', False)]}
-    )
+    baz = fields.Char(compute='_compute_baz', precompute=True, store=True, readonly=False)
 
     @api.depends('foo')
     def _compute_bar(self):

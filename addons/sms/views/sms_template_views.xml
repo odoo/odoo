@@ -10,7 +10,7 @@
                     <button string="Reset Template"
                             name="%(sms_template_reset_action)d" type="action"
                             groups="base.group_system"
-                            attrs="{'invisible': [('template_fs', '=', False)]}"/>
+                            invisible="not template_fs"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -18,7 +18,7 @@
                         <button name="action_create_sidebar_action" type="object"
                                 groups="base.group_no_one"
                                 class="oe_stat_button"
-                                attrs="{'invisible':[('sidebar_action_id','!=',False)]}" icon="fa-plus"
+                                invisible="sidebar_action_id" icon="fa-plus"
                                 help="Add a contextual action on the related model to open a sms composer with this template">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Add</span>
@@ -28,7 +28,7 @@
                         <button name="action_unlink_sidebar_action" type="object"
                                 groups="base.group_no_one"
                                 class="oe_stat_button" icon="fa-minus"
-                                attrs="{'invisible':[('sidebar_action_id','=',False)]}"
+                                invisible="not sidebar_action_id"
                                 help="Remove the contextual action of the related model" widget="statinfo">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Remove</span>

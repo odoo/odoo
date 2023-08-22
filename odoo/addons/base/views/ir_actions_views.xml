@@ -61,21 +61,21 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="create_action" type="object"
-                                    attrs="{'invisible':[('binding_model_id','!=',False)]}" icon="fa-plus-square"
+                                    invisible="binding_model_id" icon="fa-plus-square"
                                     help="Display an option on related documents to print this report" class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Add to the 'Print' menu</span>
                                     </div>
                             </button>
                             <button name="unlink_action" type="object"
-                                    attrs="{'invisible':[('binding_model_id','=',False)]}" icon="fa-minus-square"
+                                    invisible="not binding_model_id" icon="fa-minus-square"
                                     help="Remove the contextual action related to this report" class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Remove from the 'Print' menu</span>
                                     </div>
                             </button>
                             <button name="associated_view" type="object"
-                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html', 'qweb-text'])]}" icon='fa-code'
+                                    invisible="report_type not in ['qweb-pdf', 'qweb-html', 'qweb-text']" icon='fa-code'
                                     class="oe_stat_button">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Qweb Views</span>
@@ -87,7 +87,7 @@
                                 <field name="name"/>
                                 <field name="report_type"/>
                                 <field name="paperformat_id"
-                                       attrs="{'invisible':[('report_type','not in',['qweb-pdf'])]}"/>
+                                       invisible="report_type != 'qweb-pdf'"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -314,14 +314,14 @@
                         <field name="binding_model_id" invisible="1"/>
                         <button name="create_action" string="Create Contextual Action" type="object"
                                 class="btn-primary"
-                                attrs="{'invisible':[('binding_model_id','!=',False)]}"
+                                invisible="binding_model_id"
                                 help="Display an option in the 'More' top-menu in order to run this action."/>
                         <button name="unlink_action" string="Remove Contextual Action" type="object"
-                                attrs="{'invisible':[('binding_model_id','=',False)]}"
+                                invisible="not binding_model_id"
                                 help="Remove 'More' top-menu contextual action related to this action"/>
                         <button name="run" string="Run" type="object"
                                 class="btn-primary"
-                                attrs="{'invisible':['|', ('model_id', '!=', %(base.model_ir_actions_server)s), ('state', '!=', 'code')]}"
+                                invisible="model_name != 'ir.actions.server' or state != 'code'"
                                 help="Run this action manually."/>
                     </header>
                     <sheet>
@@ -339,25 +339,26 @@
                                 <field name="type" invisible="1"/>
                                 <field name="crud_model_id"
                                     options="{'no_create': True}"
-                                    attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}"/>
+                                    invisible="state != 'object_create'"
+                                    required="state == 'object_create'"/>
                                 <field name="crud_model_name" invisible="1"/>
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
                                     options="{'no_create': True}"
-                                    attrs="{'invisible': [('state', '!=', 'object_create')]}"
+                                    invisible="state != 'object_create'"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Python Code" name='code'
-                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                    invisible="state != 'code'">
                                 <field name="code" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
                             <page string="Data to Write" name="page_object"
-                                    attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
-                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    invisible="state not in ['object_create', 'object_write']">
+                                <p invisible="model_id">
                                     Please set the Model to Create before choosing values
                                 </p>
                                 <field name="fields_lines">
@@ -368,9 +369,9 @@
                                         <field name="evaluation_type"/>
                                         <field name="resource_ref"
                                             options="{'hide_model': True, 'no_create': True}"
-                                            attrs="{'readonly': [('evaluation_type', '!=', 'reference')]}"/>
+                                            readonly="evaluation_type != 'reference'"/>
                                         <field name="value"
-                                            attrs="{'readonly': [('evaluation_type', '=', 'reference')]}"
+                                            readonly="evaluation_type == 'reference'"
                                             options="{'no_create': True}"
                                             force_save="1"/>
                                     </tree>
@@ -382,7 +383,7 @@
                             </page>
 
                             <page string="Actions" name="actions"
-                                    attrs="{'invisible': [('state', '!=', 'multi')]}">
+                                    invisible="state != 'multi'">
                                 <p class="oe_grey">
                                     If several child actions return an action, only the last one will be executed.
                                     This may happen when having server actions executing code that returns an action, or server actions returning a client action.
@@ -391,7 +392,7 @@
                             </page>
 
                             <page string="Help" name="help_info"
-                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                    invisible="state != 'code'">
                                 <div style="margin-top: 4px;">
                                     <h3>Help with Python expressions</h3>
                                     <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
@@ -408,7 +409,7 @@
                                         <li><code>Command</code>: x2many commands namespace</li>
                                         <li>To return an action, assign: <code>action = {...}</code></li>
                                     </ul>
-                                    <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                    <div invisible="state != 'code'">
                                         <p>Example of Python code</p>
 <code style='white-space: pre-wrap'>
 partner_name = record.name + '_code' \n
@@ -471,8 +472,8 @@ env['res.partner'].create({'name': partner_name})
                     <field name="sequence" widget='handle'/>
                     <field name="action_id"/>
                     <field name="state" readonly="1"/>
-                    <button name="action_launch" states="open" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
-                    <button name="action_open" states="done"
+                    <button name="action_launch" invisible="state != 'open'" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
+                    <button name="action_open" invisible="state != 'done'"
                             string="Todo" type="object" help="Set as Todo"
                             icon="fa-exchange"/>
                 </tree>
@@ -485,10 +486,10 @@ env['res.partner'].create({'name': partner_name})
                 <form string="Config Wizard Steps">
                   <header>
                         <button name="action_launch"
-                            states="open" string="Launch"
+                            invisible="state != 'open'" string="Launch"
                             type="object" icon="fa-cogs" class="oe_highlight"
                             help="Launch Configuration Wizard"/>
-                        <button name="action_open" states="done"
+                        <button name="action_open" invisible="state != 'done'"
                             string="Set as Todo" type="object"
                             icon="fa-exchange" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" />
@@ -507,7 +508,7 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">ir.actions.todo.select</field>
             <field name="arch" type="xml">
                 <search string="Search Actions">
-                    <filter string="To Do" name="todo" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
+                    <filter string="To Do" name="todo" domain="[('state','=','open')]" help="Wizards to be Launched"/>
                     <field name="action_id"/>
                     <field name="state"/>
                 </search>

@@ -4,7 +4,12 @@ import { formatFloat } from "@web/views/fields/formatters";
 import { uuidv4 } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
-import { formatDate, formatDateTime, serializeDateTime, deserializeDate } from "@web/core/l10n/dates";
+import {
+    formatDate,
+    formatDateTime,
+    serializeDateTime,
+    deserializeDate,
+} from "@web/core/l10n/dates";
 import {
     roundDecimals as round_di,
     roundPrecision as round_pr,
@@ -169,7 +174,7 @@ export class Product extends PosModel {
                 const { confirmed, payload } = await this.pos.env.services.popup.add(
                     EditListPopup,
                     {
-                        title: this.pos.env._t("Lot/Serial Number(s) Required"),
+                        title: _t("Lot/Serial Number(s) Required"),
                         name: this.display_name,
                         isSingleItem: isAllowOnlyOneLot,
                         array: packLotLinesToEdit,
@@ -309,22 +314,14 @@ export class Product extends PosModel {
     }
     get_display_price(pricelist, quantity) {
         const order = this.pos.get_order();
-        const taxes = this.pos.get_taxes_after_fp(
-            this.taxes_id, 
-            order && order.fiscal_position
-        );
+        const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
         const priceAfterFp = this.pos.computePriceAfterFp(
-            this.get_price(pricelist, quantity), 
+            this.get_price(pricelist, quantity),
             currentTaxes
         );
-        const allPrices = this.pos.compute_all(
-            taxes,
-            priceAfterFp,
-            1,
-            this.pos.currency.rounding
-        );
-        if (this.pos.config.iface_tax_included === 'total') {
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
+        if (this.pos.config.iface_tax_included === "total") {
             return allPrices.total_included;
         } else {
             return allPrices.total_excluded;
@@ -840,8 +837,8 @@ export class Orderline extends PosModel {
             return this.get_all_prices(1).priceWithoutTax;
         }
     }
-    getUnitDisplayPriceBeforeDiscount(){
-        if (this.pos.config.iface_tax_included === 'total') {
+    getUnitDisplayPriceBeforeDiscount() {
+        if (this.pos.config.iface_tax_included === "total") {
             return this.get_all_prices(1).priceWithTaxBeforeDiscount;
         } else {
             return this.get_all_prices(1).priceWithoutTaxBeforeDiscount;
@@ -880,13 +877,13 @@ export class Orderline extends PosModel {
             return this.get_price_without_tax();
         }
     }
-    get_taxed_lst_unit_price(){
+    get_taxed_lst_unit_price() {
         const lstPrice = this.compute_fixed_price(this.get_lst_price());
-        const product =  this.get_product();
+        const product = this.get_product();
         const taxesIds = product.taxes_id;
         const productTaxes = this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
-        const unitPrices =  this.compute_all(productTaxes, lstPrice, 1, this.pos.currency.rounding);
-        if (this.pos.config.iface_tax_included === 'total') {
+        const unitPrices = this.compute_all(productTaxes, lstPrice, 1, this.pos.currency.rounding);
+        if (this.pos.config.iface_tax_included === "total") {
             return unitPrices.total_included;
         } else {
             return unitPrices.total_excluded;
@@ -937,7 +934,7 @@ export class Orderline extends PosModel {
         const taxDetails = this.get_tax_details();
         return productTaxes
             .filter((tax) => tax.price_include)
-            .reduce((sum, tax) => sum + taxDetails[tax.id], 0);
+            .reduce((sum, tax) => sum + taxDetails[tax.id].amount, 0);
     }
     _map_tax_fiscal_position(tax, order = false) {
         return this.pos._map_tax_fiscal_position(tax, order);
@@ -1017,7 +1014,7 @@ export class Orderline extends PosModel {
     display_discount_policy() {
         return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
-    compute_fixed_price (price) {
+    compute_fixed_price(price) {
         return this.pos.computePriceAfterFp(price, this.get_taxes());
     }
     get_fixed_lst_price() {
@@ -1046,6 +1043,14 @@ export class Orderline extends PosModel {
     }
     get_total_cost() {
         return this.product.standard_price * this.quantity;
+    }
+    /**
+     * Checks if the current line is a tip from a customer.
+     * @returns Boolean
+     */
+    isTipLine() {
+        const tipProduct = this.pos.config.tip_product_id;
+        return tipProduct && this.product.id === tipProduct[0];
     }
 }
 
@@ -2182,10 +2187,13 @@ export class Order extends PosModel {
     _get_ignored_product_ids_total_discount() {
         return [];
     }
-    _reduce_total_discount_callback(sum, orderLine){
-        let discountUnitPrice = orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount()/100);
-        if (orderLine.display_discount_policy() === 'without_discount'){
-            discountUnitPrice += orderLine.get_taxed_lst_unit_price() - orderLine.getUnitDisplayPriceBeforeDiscount();
+    _reduce_total_discount_callback(sum, orderLine) {
+        let discountUnitPrice =
+            orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount() / 100);
+        if (orderLine.display_discount_policy() === "without_discount") {
+            discountUnitPrice +=
+                orderLine.get_taxed_lst_unit_price() -
+                orderLine.getUnitDisplayPriceBeforeDiscount();
         }
         return sum + discountUnitPrice * orderLine.get_quantity();
     }
@@ -2200,7 +2208,8 @@ export class Order extends PosModel {
                         orderLine.get_quantity();
                     if (orderLine.display_discount_policy() === "without_discount") {
                         sum +=
-                            (orderLine.get_taxed_lst_unit_price() - orderLine.getUnitDisplayPriceBeforeDiscount()) *
+                            (orderLine.get_taxed_lst_unit_price() -
+                                orderLine.getUnitDisplayPriceBeforeDiscount()) *
                             orderLine.get_quantity();
                     }
                 }
@@ -2224,7 +2233,7 @@ export class Order extends PosModel {
                     if (!(taxId in groupTaxes)) {
                         groupTaxes[taxId] = 0;
                     }
-                    groupTaxes[taxId] += taxDetails[taxId];
+                    groupTaxes[taxId] += taxDetails[taxId].amount;
                 }
             });
 

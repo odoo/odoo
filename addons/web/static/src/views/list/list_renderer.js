@@ -2,12 +2,11 @@
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Domain, evalDomain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
@@ -15,6 +14,7 @@ import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getClassNameFromDecoration } from "@web/views/utils";
+import { combineModifiers } from "@web/model/relational_model/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -106,7 +106,7 @@ export class ListRenderer extends Component {
 
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
-            : [{ type: "create", string: this.env._t("Add a line") }];
+            : [{ type: "create", string: _t("Add a line") }];
 
         this.cellToFocus = null;
         this.activeRowId = null;
@@ -218,7 +218,7 @@ export class ListRenderer extends Component {
     }
 
     displaySaveNotification() {
-        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+        this.notificationService.add(_t('Please click on the "save" button first'), {
             type: "danger",
         });
     }
@@ -228,7 +228,13 @@ export class ListRenderer extends Component {
             if (list.isGrouped && col.widget === "handle") {
                 return false; // no handle column if the list is grouped
             }
-            return !col.optional || this.optionalActiveFields[col.name];
+            if (col.optional && !this.optionalActiveFields[col.name]) {
+                return false;
+            }
+            if (this.evalColumnInvisible(col.column_invisible)) {
+                return false;
+            }
+            return true;
         });
     }
 
@@ -263,6 +269,7 @@ export class ListRenderer extends Component {
                 return {
                     ...getPropertyFieldInfo(propertyField),
                     id: `${column.id}_${propertyField.name}`,
+                    column_invisible: combineModifiers(propertyField.column_invisible, column.column_invisible, 'OR'),
                     classNames: column.classNames,
                     optional: "hide",
                     type: "field",
@@ -274,12 +281,9 @@ export class ListRenderer extends Component {
     }
 
     getFieldProps(record, column) {
-        if (this.isCellReadonly(column, record) || this.isRecordReadonly(record)) {
-            return {
-                readonly: true,
-            };
-        }
-        return {};
+        return {
+            readonly: this.isCellReadonly(column, record) || this.isRecordReadonly(record),
+        };
     }
 
     // The following code manipulates the DOM directly to avoid having to wait for a
@@ -565,7 +569,9 @@ export class ListRenderer extends Component {
     get optionalFieldGroups() {
         const propertyGroups = {};
         const optionalFields = [];
-        for (const col of this.allColumns.filter((col) => col.optional)) {
+        const optionalColumns = this.allColumns.filter((col) =>
+            col.optional && !this.evalColumnInvisible(col.column_invisible));
+        for (const col of optionalColumns) {
             const optionalField = {
                 label: col.label,
                 name: col.name,
@@ -589,7 +595,8 @@ export class ListRenderer extends Component {
     }
 
     get hasOptionalFields() {
-        return this.allColumns.some((c) => c.optional);
+        return this.allColumns.some((col) =>
+            col.optional && !this.evalColumnInvisible(col.column_invisible));
     }
 
     get displayOptionalFields() {
@@ -796,7 +803,7 @@ export class ListRenderer extends Component {
     getRowClass(record) {
         // classnames coming from decorations
         const classNames = this.props.archInfo.decorations
-            .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
+            .filter((decoration) => evaluateBooleanExpr(decoration.condition, record.evalContext))
             .map((decoration) => decoration.class);
         if (record.selected) {
             classNames.push("table-info");
@@ -840,8 +847,7 @@ export class ListRenderer extends Component {
         }
         const classNames = [...this.cellClassByColumn[column.id]];
         if (column.type === "field") {
-            const { required } = column.modifiers;
-            if (required && evalDomain(required, record.evalContext)) {
+            if (evaluateBooleanExpr(column.required, record.evalContext)) {
                 classNames.push("o_required_modifier");
             }
             if (record.isFieldInvalid(column.name)) {
@@ -856,7 +862,7 @@ export class ListRenderer extends Component {
                 // only handle the text-decoration.
                 const { decorations } = column;
                 for (const decoName in decorations) {
-                    if (evaluateExpr(decorations[decoName], record.evalContext)) {
+                    if (evaluateBooleanExpr(decorations[decoName], record.evalContext)) {
                         classNames.push(getClassNameFromDecoration(decoName));
                     }
                 }
@@ -875,10 +881,10 @@ export class ListRenderer extends Component {
     }
 
     isCellReadonly(column, record) {
-        return (
+        return !!(
             this.isRecordReadonly(record) ||
             (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
-            evalDomain(column.modifiers.readonly, record.evalContext)
+            evaluateBooleanExpr(column.readonly, record.evalContext)
         );
     }
 
@@ -910,12 +916,15 @@ export class ListRenderer extends Component {
         return getFormattedValue(record, fieldName, column.attrs);
     }
 
-    evalModifier(modifier, record) {
-        return !!(modifier && new Domain(modifier).contains(record.evalContext));
+    evalInvisible(invisible, record) {
+        return evaluateBooleanExpr(invisible, record.evalContext);
+    }
+
+    evalColumnInvisible(columnInvisible) {
+        return this.props.evalViewModifier(columnInvisible);
     }
 
     getGroupDisplayName(group) {
-        const { _t } = this.env;
         if (group.groupByField.type === "boolean") {
             return group.value === undefined ? _t("None") : group.value ? _t("Yes") : _t("No");
         } else {
@@ -2106,6 +2115,7 @@ ListRenderer.props = [
     "list",
     "archInfo",
     "openRecord",
+    "evalViewModifier",
     "onAdd?",
     "cycleOnTab?",
     "allowSelectors?",

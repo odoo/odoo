@@ -51,11 +51,11 @@
                         decoration-warning="channel_enroll == 'payment'"
                         optional="hide"/>
                     <field name="channel_website_id" groups="website.group_multi_website" optional="hide"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
                     <button name="action_archive" title="Archive" icon="fa-times" type="object"
-                        attrs="{'invisible': [('active', '=', False)]}"/>
+                        invisible="not active"/>
                     <button name="action_unarchive" title="Unarchive" icon="fa-undo" type="object"
-                        attrs="{'invisible': [('active', '=', True)]}"/>
+                        invisible="active"/>
                 </tree>
             </field>
         </record>

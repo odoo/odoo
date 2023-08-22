@@ -40,6 +40,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_unit_label': 'Diamond',
             'currency_subunit_label': 'Carbon',
         }, rate2016=6.0, rate2017=4.0)
+        cls.currency_data_3 = cls.setup_multi_currency_data(default_values={
+            'name': 'Sand',
+            'symbol': 'S',
+            'currency_unit_label': 'Sand',
+            'currency_subunit_label': 'Sand',
+        }, rate2016=0.0001, rate2017=0.00001)
 
         # ==== Cash Basis Taxes setup ====
 
@@ -1148,6 +1154,30 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertRecordValues(amls, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
             {'amount_residual': 40.0,       'amount_residual_currency': 40.0,   'reconciled': False},
+        ])
+
+    def test_reconcile_one_foreign_currency_fallback_company_currency(self):
+        comp_curr = self.company_data['currency']
+        foreign_curr = self.currency_data_3['currency']
+
+        line_1 = self.create_line_for_reconciliation(-10.0, -10.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(1000000.0, 100.0, foreign_curr, '2017-01-01')
+        amls = line_1 + line_2
+
+        amls.reconcile()
+        partials = self._get_partials(amls)
+
+        self.assertRecordValues(partials, [{
+            'amount': 10.0,
+            'debit_amount_currency': 0.001,
+            'credit_amount_currency': 10.0,
+            'debit_move_id': line_2.id,
+            'credit_move_id': line_1.id,
+        }])
+        self.assertFalse(partials.exchange_move_id)
+        self.assertRecordValues(line_1 + line_2, [
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 999990.0,   'amount_residual_currency': 99.999, 'reconciled': False},
         ])
 
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_full_payment(self):
@@ -4299,14 +4329,20 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
         self.assertEqual(len(caba_move.line_ids), 6, "All lines should be there")
+        tax_group_base_tags = (tax_a | tax_b).invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'base').tag_ids.ids
+        tax_a_tax_tag = tax_a.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids.ids
+        tax_b_tax_tag = tax_b.invoice_repartition_line_ids.filtered(lambda l: l.repartition_type == 'tax').tag_ids.ids
         self.assertRecordValues(caba_move.line_ids, [
-            {'balance':  3000.0, 'tax_line_id':    False},
-            {'balance': -3000.0, 'tax_line_id':    False},
-            {'balance':  1000.0, 'tax_line_id':    False},
-            {'balance': -1000.0, 'tax_line_id': tax_a.id},
-            {'balance':     1.0, 'tax_line_id':    False},
-            {'balance':    -1.0, 'tax_line_id': tax_b.id},
+            {'balance':  3000.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance': -3000.0, 'tax_line_id':    False, 'tax_tag_ids': tax_group_base_tags, 'tax_ids': (tax_a | tax_b).ids},
+            {'balance':  1000.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance': -1000.0, 'tax_line_id': tax_a.id, 'tax_tag_ids':       tax_a_tax_tag, 'tax_ids':                  []},
+            {'balance':     1.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
+            {'balance':    -1.0, 'tax_line_id': tax_b.id, 'tax_tag_ids':       tax_b_tax_tag, 'tax_ids':                  []},
         ])
+        # No exchange journal entry created for CABA.
+        exchange_difference_move = invoice.line_ids.filtered(lambda line: line.account_id.account_type == 'receivable').full_reconcile_id.exchange_move_id
+        self.assertFalse(exchange_difference_move)
 
     def test_caba_rounding_adjustment_monocurrency(self):
         self.env.company.tax_exigibility = True

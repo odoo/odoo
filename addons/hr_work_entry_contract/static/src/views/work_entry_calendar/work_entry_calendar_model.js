@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { useWorkEntry } from "@hr_work_entry_contract/views/work_entry_hook";
 
@@ -22,7 +23,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
     makeFilterAll() {
         return {
             ...super.makeFilterAll(...arguments),
-            label: this.env._t("Everybody's work entries"),
+            label: _t("Everybody's work entries"),
             active: true,
         };
     }

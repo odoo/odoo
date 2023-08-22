@@ -1,17 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture } from "@web/../tests/helpers/utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-let target;
-
-QUnit.module("activity", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
-
-QUnit.test("activity click on Reschedule", async function (assert) {
+QUnit.test("activity click on Reschedule", async () => {
     const pyEnv = await startServer();
     const resPartnerId = pyEnv["res.partner"].create({});
     const meetingActivityTypeId = pyEnv["mail.activity.type"].create({
@@ -36,7 +27,7 @@ QUnit.test("activity click on Reschedule", async function (assert) {
         calendar_event_id: calendaMeetingId,
     });
     const { openFormView } = await start();
-    await openFormView("res.partner", resPartnerId);
+    openFormView("res.partner", resPartnerId);
     await click(".btn:contains('Reschedule')");
-    assert.containsOnce(target, ".o_calendar_view");
+    await contains(".o_calendar_view");
 });

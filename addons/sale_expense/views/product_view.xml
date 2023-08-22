@@ -16,11 +16,11 @@
                 </group>
             </xpath>
             <xpath expr="//field[@name='standard_price']" position="before">
-                <field name="list_price" attrs="{'invisible':[('expense_policy', '!=', 'sales_price')]}"/>
+                <field name="list_price" invisible="expense_policy != 'sales_price'"/>
             </xpath>
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">
-                <field name="taxes_id" widget="many2many_tags" attrs="{'invisible':[('expense_policy', '=', 'no')]}"
-                       options="{'no_quick_create': True}"/>
+                <field name="taxes_id" widget="many2many_tags" invisible="expense_policy == 'no'"
+                       options="{'no_quick_create': True}" class="w-50"/>
             </xpath>
         </field>
     </record>

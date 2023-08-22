@@ -21,7 +21,7 @@
             <tree>
                 <field name="name"/>
                 <field name="mode"/>
-                <field name="message" invisible="1"/>
+                <field name="message" column_invisible="True"/>
                 <field name="available_today"/>
                 <field name="active" widget="boolean_toggle"/>
             </tree>
@@ -43,19 +43,19 @@
                     <group>
                         <group>
                             <field name="mode" widget="radio"/>
-                            <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
+                            <field name="recipients" invisible="mode != 'chat'" widget="radio"/>
                             <field name="location_ids" widget="many2many_tags" required="1"/>
                             <field name="until"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group>
                             <div class="o_td_label">
-                                <label for="notification_time" attrs="{'invisible': [['mode', '!=', 'chat']]}"/>
+                                <label for="notification_time" invisible="mode != 'chat'"/>
                             </div>
                             <div class="o_col">
                                 <widget name="week_days"/>
-                                <div class="o_row" attrs="{'invisible': [['mode', '!=', 'chat']]}">
-                                    <field name="notification_time" attrs="{'required': [('mode', '=', 'chat')]}" widget="float_time"/>
+                                <div class="o_row" invisible="mode != 'chat'">
+                                    <field name="notification_time" required="mode == 'chat'" widget="float_time"/>
                                     <field name="notification_moment"/>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><field name="name"/></strong>
                                         <span><br/><field name="mode"/></span>
-                                        <span attrs="{'invisible':[['mode', '!=', 'chat']]}">
+                                        <span invisible="mode != 'chat'">
                                             to <field name="recipients"/>
                                             on <field name="notification_time"/>
                                             <field name="notification_moment"/>

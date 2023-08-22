@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'mollie')]}">
-                    <field name="mollie_api_key" string="API Key" attrs="{'required': [('code', '=', 'mollie'), ('state', '!=', 'disabled')]}" password="True"/>
+                <group invisible="code != 'mollie'">
+                    <field name="mollie_api_key" string="API Key" required="code == 'mollie' and state != 'disabled'" password="True"/>
                 </group>
             </group>
         </field>

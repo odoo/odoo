@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from '@web/core/utils/hooks';
 
 const { useRef, useEffect, useState } = owl;
@@ -93,7 +94,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         const attachmentIds = attachments.map((a) => a.id);
         if (!attachmentIds.length) {
             this.notification.add(
-                this.env._t('An error occurred during the upload')
+                _t('An error occurred during the upload')
             );
             return;
         }

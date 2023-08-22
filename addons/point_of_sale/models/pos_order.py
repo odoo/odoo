@@ -255,28 +255,24 @@ class PosOrder(models.Model):
         comodel_name='res.users', string='Responsible',
         help="Person who uses the cash register. It can be a reliever, a student or an interim employee.",
         default=lambda self: self.env.uid,
-        states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]},
     )
     amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
     amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
-    amount_paid = fields.Float(string='Paid', states={'draft': [('readonly', False)]},
-        readonly=True, digits=0, required=True)
+    amount_paid = fields.Float(string='Paid', digits=0, required=True)
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
     is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
         help="Allows to know if all the total cost of the order lines have already been computed")
-    lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
+    lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', states={
-                                   'draft': [('readonly', False)]}, readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null', states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
+    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
 
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
-        domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
-        readonly=True)
+        domain="[('state', '=', 'opened')]")
     config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
@@ -299,8 +295,7 @@ class PosOrder(models.Model):
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position', string='Fiscal Position',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
+        readonly=False,
     )
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
@@ -1086,7 +1081,7 @@ class PosOrder(models.Model):
             if orders_info[key_order] < orderline.write_date:
                 orders_info[key_order] = orderline.write_date
         totalCount = self.search_count(real_domain)
-        return {'ordersInfo': list(orders_info.items()), 'totalCount': totalCount}
+        return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
     def _export_for_ui(self, order):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')

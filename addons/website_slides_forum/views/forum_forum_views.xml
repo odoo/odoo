@@ -6,18 +6,20 @@
         <field name="inherit_id" ref="website_forum.forum_forum_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_order']" position="after">
-                <group string="eLearning" name="group_slides" attrs="{'invisible': [('slide_channel_id', '=', False)]}">
+                <group string="eLearning" name="group_slides" invisible="not slide_channel_id">
                     <field name="slide_channel_id" readonly="True"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='privacy']" position="attributes">
-                <attribute name="attrs">{'invisible': [('slide_channel_id', '!=', False)], 'required': [('slide_channel_id', '=', 'False')]}</attribute>
+                <attribute name="invisible">slide_channel_id</attribute>
+                <attribute name="required">slide_channel_id == 'False'</attribute>
             </xpath>
             <xpath expr="//field[@name='authorized_group_id']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('privacy', '!=', 'private'), ('slide_channel_id', '!=', False)], 'required': [('privacy', '=', 'private')]}</attribute>
+                <attribute name="invisible">privacy != 'private' or slide_channel_id</attribute>
+                <attribute name="required">privacy == 'private'</attribute>
             </xpath>
             <xpath expr="//field[@name='privacy']" position="before">
-                <field name="visibility" attrs="{'invisible': [('slide_channel_id', '=', False)]}"/>
+                <field name="visibility" invisible="not slide_channel_id"/>
             </xpath>
         </field>
     </record>

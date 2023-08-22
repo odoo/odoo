@@ -39,10 +39,10 @@
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='name']" position="after">
-                <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="so_line" widget="so_line_field" optional="show" options="{'no_create': True, 'no_open': True}" context="{'create': False, 'edit': False, 'delete': False}" attrs="{'invisible': [('allow_billable', '=', False)], 'readonly': [('readonly_timesheet', '=', True)]}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
+                <field name="commercial_partner_id" column_invisible="True" groups="sales_team.group_sale_salesman"/>
+                <field name="is_so_line_edited" column_invisible="True" groups="sales_team.group_sale_salesman"/>
+                <field name="allow_billable" column_invisible="True" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_field" optional="show" options="{'no_create': True, 'no_open': True}" context="{'create': False, 'edit': False, 'delete': False}" invisible="not allow_billable" readonly="readonly_timesheet" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>
@@ -56,19 +56,19 @@
                 <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
                 <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
                 <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}" attrs="{'invisible': [('allow_billable', '=', False)], 'readonly': [('readonly_timesheet', '=', True)]}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}" invisible="not allow_billable" readonly="readonly_timesheet" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
             </xpath>
             <xpath expr="//group" position="before">
                 <t groups="sales_team.group_sale_salesman">
                     <field name="order_id" invisible="1"/>
                     <field name="timesheet_invoice_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" attrs="{'invisible': [('order_id', '=', False)]}">
+                        <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not order_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Sales Order</span>
                             </div>
                         </button>
-                        <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('timesheet_invoice_id', '=', False)]}">
+                        <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not timesheet_invoice_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Invoice</span>
                             </div>

@@ -4605,7 +4605,7 @@ class TestPrecompute(common.TransactionCase):
           but with a states attributes changing the readonly of the field according to the state of the record,
           can be altered by the user.
         The `bar` field is store=True, precompute=True, readonly=True
-        The `baz` field is store=True, precompute=True, readonly=True, states={'draft': [('readonly', False)]}
+        The `baz` field is store=True, precompute=True, readonly=False,
         """
         model = self.env['test_new_api.precompute.readonly']
 
@@ -4621,7 +4621,7 @@ class TestPrecompute(common.TransactionCase):
         self.assertEqual(record.baz, 'COMPUTED')
 
         # no value for bar, value for baz
-        # baz is readonly=True but states={'draft': [('readonly', False)]}
+        # baz is readonly=False
         # the value for baz must be taken into account
         record = model.create({'foo': 'foo', 'baz': 'baz'})
         self.assertEqual(record.bar, 'COMPUTED')

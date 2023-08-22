@@ -1,11 +1,12 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { start, startServer, click } from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu (patch)");
 
-QUnit.test("mark as read", async (assert) => {
+QUnit.test("mark as read", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         message_type: "sms",
@@ -20,15 +21,12 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
-    assert.containsOnce($, ".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsOnce(
-        $,
-        ".o-mail-NotificationItem:contains(An error occurred when sending an SMS)"
-    );
+    await contains(".o-mail-NotificationItem [title='Mark As Read']");
+    await contains(".o-mail-NotificationItem:contains(An error occurred when sending an SMS)");
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsNone($, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", 0);
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -72,7 +70,7 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
+    await contains(".o-mail-NotificationItem", 2);
     const items = $(".o-mail-NotificationItem");
     assert.ok(items[0].textContent.includes("Partner"));
     assert.ok(items[0].textContent.includes("2")); // counter
@@ -135,8 +133,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
 
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

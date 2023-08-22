@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 const { onWillUpdateProps } = owl;
@@ -19,14 +19,8 @@ export class ProjectSharingListRenderer extends ListRenderer {
             const allColumns = [];
             const firstRecord = this.props.list.records[0];
             for (const column of columns) {
-                if (
-                    column.modifiers.column_invisible &&
-                    column.modifiers.column_invisible instanceof Array
-                ) {
-                    const result = evalDomain(column.modifiers.column_invisible, firstRecord.evalContext);
-                    if (result) {
-                        continue;
-                    }
+                if (evaluateBooleanExpr(column.column_invisible, firstRecord.evalContext)) {
+                    continue;
                 }
                 allColumns.push(column);
             }

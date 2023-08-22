@@ -3,12 +3,12 @@
 import { Command } from "@mail/../tests/helpers/command";
 import {
     click,
+    contains,
     createFile,
     mockGetMedia,
     nextAnimationFrame,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
@@ -119,7 +119,7 @@ function patchAudio() {
     };
 }
 
-QUnit.test("make voice message in chat", async (assert) => {
+QUnit.test("make voice message in chat", async () => {
     const file = await createFile({
         content: Array(500).map(() => new Int8Array()), // some non-empty content
         contentType: "audio/mp3",
@@ -158,26 +158,23 @@ QUnit.test("make voice message in chat", async (assert) => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsOnce($, "button[title='Voice Message']");
+    openDiscuss(channelId);
     await click("button[title='Voice Message']");
-    assert.containsOnce($, ".o-mail-VoiceRecorder");
-    assert.containsOnce($, ".o-mail-VoiceRecorder:contains(00 : 00)");
+    await contains(".o-mail-VoiceRecorder:contains(00 : 00)");
+    await nextAnimationFrame();
     // simulate 10 sec elapsed
     patchDate(2023, 6, 31, 13, 0, 11); // +1 so exactly 10 sec elapsed
     // simulate some microphone data
     audioProcessor.process([[new Float32Array(128)]]);
-    await waitUntil(".o-mail-VoiceRecorder:contains(00 : 10)");
-    assert.containsOnce($, "button[title='Stop Recording']");
+    await contains(".o-mail-VoiceRecorder:contains(00 : 10)");
     await click("button[title='Stop Recording']");
-    assert.containsOnce($, ".o-mail-VoicePlayer");
+    await contains(".o-mail-VoicePlayer");
     // wait for audio stream decode + drawing of waves
     await voicePlayerDrawing;
     await nextAnimationFrame();
-    assert.containsOnce($, ".o-mail-VoicePlayer button[title='Play']");
-    assert.containsN($, ".o-mail-VoicePlayer canvas", 2); // 1 for global waveforms, 1 for played waveforms
-    assert.containsOnce($, ".o-mail-VoicePlayer:contains(00 : 04)"); // duration of call_02_in_.mp3
-    assert.containsOnce($, ".o-mail-VoiceRecorder button[title='Voice Message']");
-    assert.ok($(".o-mail-VoiceRecorder button[title='Voice Message']")[0].disabled);
+    await contains(".o-mail-VoicePlayer button[title='Play']");
+    await contains(".o-mail-VoicePlayer canvas", 2); // 1 for global waveforms, 1 for played waveforms
+    await contains(".o-mail-VoicePlayer:contains(00 : 04)"); // duration of call_02_in_.mp3
+    await contains(".o-mail-VoiceRecorder button[title='Voice Message']:disabled");
     cleanUp();
 });

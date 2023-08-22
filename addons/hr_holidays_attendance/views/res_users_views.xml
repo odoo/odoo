@@ -12,7 +12,7 @@
                     string="Deduct Extra Hours"
                     type="action"
                     context="{'default_employee_id': employee_id, 'deduct_extra_hours': True, 'deduct_extra_hours_employee_request': True}"
-                    attrs="{'invisible': [('request_overtime', '=', False)]}"/>
+                    invisible="not request_overtime"/>
             </xpath>
         </field>
     </record>

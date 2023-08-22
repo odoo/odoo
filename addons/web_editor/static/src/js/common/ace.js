@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import config from "@web/legacy/js/services/config";
-import concurrency from "@web/legacy/js/core/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
@@ -671,7 +671,7 @@ var ViewEditor = Widget.extend({
         if (errorFound) return Promise.reject(errorFound);
 
         var defs = [];
-        var mutex = new concurrency.Mutex();
+        var mutex = new Mutex();
         Object.entries(toSave || {}).forEach(
             (([type, _toSave]) => {
                 // Child views first as COW on a parent would delete them

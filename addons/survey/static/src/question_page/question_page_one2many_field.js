@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
 import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
@@ -38,7 +39,7 @@ class SurveySaveError extends Error {}
 function SurveySaveErrorHandler(env, error, originalError) {
     if (originalError instanceof SurveySaveError) {
         env.services.notification.add(originalError.message, {
-            title: env._t("Validation Error"),
+            title: _t("Validation Error"),
             type: "danger",
         });
         return true;

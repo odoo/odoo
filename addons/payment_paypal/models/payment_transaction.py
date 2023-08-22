@@ -51,7 +51,6 @@ class PaymentTransaction(models.Model):
             'currency_code': self.currency_id.name,
             'email': self.partner_email,
             'first_name': partner_first_name,
-            'handling': self.fees,
             'item_name': f"{self.company_id.name}: {self.reference}",
             'item_number': self.reference,
             'last_name': partner_last_name,

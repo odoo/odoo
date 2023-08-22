@@ -16,7 +16,7 @@
                             <button icon="fa-eye"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
-                                attrs="{'invisible': [('total_views', '=', 0)]}">
+                                invisible="total_views == 0">
                                 <field name="total_views" widget="statinfo" string="Visits"/>
                             </button>
                             <button name="action_view_slides"
@@ -53,7 +53,7 @@
                                 icon="fa-star-half-o"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
-                                attrs="{'invisible': [('allow_comment', '=', False)]}">
+                                invisible="not allow_comment">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="rating_avg_stars" nolabel="1"/>/5</span>
                                     <span name="rating_count_label" class="o_stat_text"><field name="rating_count" nolabel="1"/> Reviews</span>
@@ -61,7 +61,7 @@
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Course Title"/>
@@ -77,12 +77,12 @@
                                      <tree decoration-bf="is_category" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
-                                        <field name="slide_category" attrs="{'invisible': [('slide_category', '=', 'category')]}"/>
-                                        <field name="completion_time" attrs="{'invisible': [('slide_category', '=', 'category')]}" string="Duration" widget="float_time"/>
-                                        <field name="total_views" attrs="{'invisible': [('slide_category', '=', 'category')]}"/>
+                                        <field name="slide_category" invisible="slide_category == 'category'"/>
+                                        <field name="completion_time" invisible="slide_category == 'category'" string="Duration" widget="float_time"/>
+                                        <field name="total_views" invisible="slide_category == 'category'"/>
                                         <field name="is_preview" string="Preview"/>
                                         <field name="is_published" string="Published"/>
-                                        <field name="is_category" invisible="1"/>
+                                        <field name="is_category" column_invisible="True"/>
                                         <control>
                                             <create name="add_slide_section" string="Add Section" context="{'default_is_category': True}"/>
                                             <create name="add_slide_lesson" string="Add Content"/>
@@ -102,13 +102,14 @@
                                     <group name="access_rights" string="Access Rights">
                                         <field name="website_published" invisible="1"/>
                                         <field name="prerequisite_channel_ids" widget="many2many_tags"/>
-                                        <field name="prerequisite_of_channel_ids" widget="many2many_tags" readonly="1"
-                                               attrs="{'invisible': [('prerequisite_of_channel_ids', '=', [])]}"/>
+                                        <field name="prerequisite_of_channel_ids" widget="many2many_tags"
+                                               readonly="1"
+                                               invisible="not prerequisite_of_channel_ids"/>
                                         <field name="visibility" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'members')]}"/>
+                                        <field name="enroll" widget="radio" options="{'horizontal': true}" invisible="visibility == 'members'"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                                        <field name="enroll_msg" attrs="{'invisible': ['|', ('enroll', '!=', 'invite'), ('visibility', '=', 'members')]}"/>
+                                        <field name="enroll_msg" invisible="enroll != 'invite' or visibility == 'members'"/>
                                     </group>
                                 </group>
                                 <group>
@@ -122,10 +123,10 @@
                                     <group name="display" string="Display">
                                         <field string="Type" name="channel_type" widget="radio" options="{'horizontal': true}"/>
                                         <field name="promote_strategy" widget="selection"
-                                            attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
+                                            invisible="channel_type == 'training'"/>
                                         <field name="promoted_slide_id"
-                                               attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('promote_strategy', '!=', 'specific')],
-                                                       'required': [('channel_type', '!=', 'training'), ('promote_strategy', '=', 'specific')]}"
+                                               invisible="channel_type == 'training' or promote_strategy != 'specific'"
+                                               required="channel_type != 'training' and promote_strategy == 'specific'"
                                                string="Content"
                                                domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
                                     </group>
@@ -137,10 +138,10 @@
                                         <field name="karma_gen_channel_rank" string="Review Course"/>
                                         <field name="karma_gen_channel_finish" string="Finish Course"/>
                                     </group>
-                                    <group string="Access Rights" attrs="{'invisible': [('allow_comment', '!=', True)]}">
-                                        <field name="karma_review" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
-                                        <field name="karma_slide_comment" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
-                                        <field name="karma_slide_vote" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
+                                    <group string="Access Rights" invisible="not allow_comment">
+                                        <field name="karma_review" invisible="not allow_comment"/>
+                                        <field name="karma_slide_comment" invisible="not allow_comment"/>
+                                        <field name="karma_slide_vote" invisible="not allow_comment"/>
                                     </group>
                                 </group>
                             </page>
@@ -169,7 +170,7 @@
                     <field name="visibility"/>
                     <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
                     <field name="is_published" string="Published"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -266,12 +267,12 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="ribbon ribbon-top-right"
-                                    attrs="{'invisible': [('active', '=', True)]}">
+                                    invisible="active">
                                     <field name="active" invisible="1"/>
                                     <span class="text-bg-danger">Archived</span>
                                 </div>
                                 <div class="ribbon ribbon-top-right"
-                                    attrs="{'invisible': ['|', ('website_published', '!=', True), ('active', '=', False)]}">
+                                    invisible="not website_published or not active">
                                     <field name="website_published" invisible="1"/>
                                     <span class="text-bg-success">Published</span>
                                 </div>

@@ -39,20 +39,21 @@
                 <button name="action_view_sale_order" type="object"
                         class="oe_stat_button" icon="fa-usd"
                         groups="sales_team.group_sale_salesman"
-                        attrs="{'invisible': [('sale_order_id', '=', False)]}">
+                        invisible="not sale_order_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Sale Order</span>
                         </div>
                 </button>
+                <field name="sale_order_id" invisible="1"/>
             </xpath>
             <xpath expr="//group" position="before">
                 <field name="is_paid" invisible="1"/>
-                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="not is_paid"/>
             </xpath>
             <group name="utm_link" position="before">
                 <group string="Transaction" groups="base.group_no_one">
                     <field name="sale_order_id"/>
-                    <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+                    <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
                 </group>
             </group>
         </field>

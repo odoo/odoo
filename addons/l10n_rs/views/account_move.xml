@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_payment_term_id']/parent::div" position="after">
-                <field name="l10n_rs_turnover_date" attrs="{'invisible': [('country_code', '!=', 'RS')]}"/>
+                <field name="l10n_rs_turnover_date" invisible="country_code != 'RS'"/>
             </xpath>
         </field>
     </record>

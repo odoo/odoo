@@ -2,7 +2,7 @@
 
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { XMLParser } from "@web/core/utils/xml";
 import { DEFAULT_INTERVAL, DEFAULT_PERIOD } from "@web/search/utils/dates";
 
@@ -109,9 +109,8 @@ export class SearchArchParser extends XMLParser {
     visitField(node) {
         this.pushGroup("field");
         const preField = { type: "field" };
-        const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-        if (modifiers.invisible === true) {
-            preField.invisible = true;
+        if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
+            preField.invisible = "True";
         }
         if (node.hasAttribute("domain")) {
             preField.domain = node.getAttribute("domain");
@@ -221,9 +220,8 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.domain = stringRepr;
             }
         }
-        const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-        if (modifiers.invisible === true) {
-            preSearchItem.invisible = true;
+        if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
+            preSearchItem.invisible = "True";
             const fieldName = preSearchItem.fieldName;
             if (fieldName && !this.fields[fieldName]) {
                 // In some case when a field is limited to specific groups
@@ -290,8 +288,7 @@ export class SearchArchParser extends XMLParser {
             if (node.nodeType !== 1 || node.tagName !== "field") {
                 continue;
             }
-            const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-            if (modifiers.invisible === true) {
+            if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
                 continue;
             }
             const attrs = {};
@@ -303,8 +300,8 @@ export class SearchArchParser extends XMLParser {
             const section = {
                 color: attrs.color || null,
                 description: attrs.string || this.fields[attrs.name].string,
-                enableCounters: Boolean(evaluateExpr(attrs.enable_counters || "0")),
-                expand: Boolean(evaluateExpr(attrs.expand || "0")),
+                enableCounters: evaluateBooleanExpr(attrs.enable_counters),
+                expand: evaluateBooleanExpr(attrs.expand),
                 fieldName: attrs.name,
                 icon: attrs.icon || null,
                 id: nextSectionId++,
@@ -315,7 +312,7 @@ export class SearchArchParser extends XMLParser {
             if (type === "category") {
                 section.activeValueId = this.searchPanelDefaults[attrs.name];
                 section.icon = section.icon || "fa-folder";
-                section.hierarchize = Boolean(evaluateExpr(attrs.hierarchize || "1"));
+                section.hierarchize = evaluateBooleanExpr(attrs.hierarchize || "1");
                 section.values.set(false, {
                     childrenIds: [],
                     display_name: ALL.toString(),

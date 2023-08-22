@@ -58,7 +58,7 @@
             <field name="arch" type="xml">
                 <tree string="Contacts" sample="1" multi_edit="1">
                     <field name="display_name" string="Name"/>
-                    <field name="function" invisible="1"/>
+                    <field name="function" column_invisible="True"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="mobile" optional="hide"/>
                     <field name="email" optional="show"/>
@@ -69,9 +69,9 @@
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                    <field name="is_company" invisible="1"/>
-                    <field name="parent_id" invisible="1" readonly="1"/>
-                    <field name="active" invisible="1"/>
+                    <field name="is_company" column_invisible="True"/>
+                    <field name="parent_id" readonly="1" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -101,19 +101,19 @@
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company','=', True)], 'invisible': [('is_company','=', False)]}"/>
-                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'),('is_company','=', False)], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact' and is_company"/>
+                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                            attrs="{'invisible': [('is_company','=', True)]}"/>
+                            invisible="is_company"/>
                     </div>
                     <group>
-                        <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
+                        <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
                         <field name="user_ids" invisible="1"/>
-                        <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
+                        <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False) or user_ids"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                         <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                     </group>
@@ -138,8 +138,8 @@
                     <field name="parent_id" invisible="1"/>
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
+                            <label for="type" invisible="not parent_id" groups="base.group_no_one"/>
+                            <div invisible="not parent_id" name="div_type" groups="base.group_no_one">
                                 <field name="type" class="oe_inline"/>
                             </div>
                             <label for="street" string="Address"/>
@@ -166,15 +166,15 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Partners">
-                <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_vat_partner_id', '=', False)]}">
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
                   A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id"/>), are you sure to create a new one?
                 </div>
-                <div class="alert alert-warning oe_edit_only" role="alert" attrs="{'invisible': [('same_company_registry_partner_id', '=', False)]}">
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_company" invisible="not same_company_registry_partner_id">
                   A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id"/>), are you sure to create a new one?
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title mb24">
@@ -185,58 +185,58 @@
                         <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
-                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
+                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" invisible="is_company" required="type == 'contact'"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company Name..."
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                                attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
-                                <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
+                                <field name="company_name" invisible="not company_name or company_name == '' or is_company"/>
                                 <button name="create_company" icon="fa-plus-square" string="Create company"
                                     type="object" class="oe_edit_only btn-link"
-                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                                    invisible="is_company or company_name == '' or not company_name"/>
                         </div>
                     </div>
 
                     <group>
                         <group>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <field name="type" attrs="{'invisible': [('is_company','=', True)], 'required': [('is_company','!=', True)], 'readonly': [('user_ids', '!=', [])]}" class="fw-bold"/>
-                                <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
+                                <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/>
+                                <b invisible="not is_company">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    readonly="type == 'contact' and parent_id"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    readonly="type == 'contact' and parent_id"/>
                                 <field name="city" placeholder="City" class="o_address_city"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    readonly="type == 'contact' and parent_id"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                    readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    readonly="type == 'contact' and parent_id"/>
                                 <div name="partner_address_country" class="d-flex justify-content-between">
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                        attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                        readonly="type == 'contact' and parent_id"/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                            <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
-                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                                invisible="is_company"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
-                                attrs="{'invisible': [('is_company', '=', True)]}"/>
+                                invisible="is_company"/>
                             <field name="active_lang_count" invisible="1"/>
-                            <field name="lang" attrs="{'invisible': [('active_lang_count', '&lt;=', 1)]}"/>
+                            <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
@@ -300,29 +300,29 @@
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
                                         <div class="text-muted oe_edit_only">
-                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'contact')]}">
+                                            <p class="mb-0" invisible="type != 'contact'">
                                                 <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).</span>
                                             </p>
-                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'invoice')]}">
+                                            <p class="mb-0" invisible="type != 'invoice'">
                                                 <span>Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.</span>
                                             </p>
-                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'delivery')]}">
+                                            <p class="mb-0" invisible="type != 'delivery'">
                                                 <span>Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.</span>
                                             </p>
-                                            <p class="mb-0" attrs="{'invisible': [('type', '!=', 'other')]}">
+                                            <p class="mb-0" invisible="type != 'other'">
                                                 <span>Other address for the company (e.g. subsidiary, ...)</span>
                                             </p>
                                         </div>
                                         <hr/>
                                         <group>
                                             <group>
-                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="name" string="Contact Name" required="type == 'contact'"/>
                                                 <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                    invisible="type != 'contact'"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                                                <label for="street" string="Address" attrs="{'invisible': [('type','=', 'contact')]}"/>
-                                                <div attrs="{'invisible': [('type','=', 'contact')]}">
+                                                    invisible="type != 'contact'"/>
+                                                <label for="street" string="Address" invisible="type == 'contact'"/>
+                                                <div invisible="type == 'contact'">
                                                     <div class="o_address_format" name="div_address">
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
@@ -357,10 +357,10 @@
                                 <group string="Purchase" name="purchase" priority="2">
                                 </group>
                                 <group name="misc" string="Misc">
-                                    <field name="company_registry" attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                                    <field name="company_registry" invisible="parent_id"/>
                                     <field name="ref" string="Reference"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
-                                    <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="parent_id" force_save="1"/>
+                                    <field name="industry_id" invisible="not is_company" options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
@@ -412,7 +412,7 @@
                                 <tree editable="bottom">
                                     <field name="bank_id"/>
                                     <field name="acc_number"/>
-                                    <field name="acc_holder_name" invisible="1"/>
+                                    <field name="acc_holder_name" column_invisible="True"/>
                                 </tree>
                             </field>
                         </group>
@@ -496,7 +496,7 @@
                                         <img  t-attf-src="#{kanban_image('res.partner', 'avatar_128', record.id.raw_value)}" role="img" t-att-alt="record.id.value"/>
                                     </div>
                                 </t>
-                                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
+                                <div class="ribbon ribbon-top-right" invisible="active">
                                     <span class="text-bg-danger">Archived</span>
                                 </div>
                                 <div class="oe_kanban_details d-flex flex-column justify-content-between">
@@ -708,7 +708,7 @@
                 <tree string="Industry" editable="bottom">
                     <field name="name"/>
                     <field name="full_name"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>

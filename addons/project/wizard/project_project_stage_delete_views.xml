@@ -7,19 +7,20 @@
             <form string="Delete Project Stage">
                 <field name="projects_count" invisible="1" />
                 <field name="stages_active" invisible="1" />
-                <div attrs="{'invisible': [('projects_count', '>', 0)]}">
+                <div invisible="projects_count &gt; 0">
                     <p>Are you sure you want to delete these stages?</p>
                 </div>
-                <div attrs="{'invisible': ['|', ('stages_active', '=', False), ('projects_count', '=', 0)]}">
+                <div invisible="not stages_active or projects_count == 0">
                     <p>You cannot delete stages containing projects. You can either archive them or first delete all of their projects.</p>
                 </div>
-                <div attrs="{'invisible': ['|', ('stages_active', '=', True), ('projects_count', '=', 0)]}">
+                <div invisible="stages_active or projects_count == 0">
                     <p>You cannot delete stages containing projects. You should first delete all of their projects.</p>
                 </div>
                 <footer>
-                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': ['|', ('stages_active', '=', False), ('projects_count', '=', 0)]}" data-hotkey="q"/>
-                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" attrs="{'invisible': [('projects_count', '>', 0)]}" data-hotkey="w"/>
-                    <button string="Discard" special="cancel" data-hotkey="x" t-att-class="stages_active or projects_count ? '' : 'btn btn-primary'" />
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or projects_count == 0" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="projects_count &gt; 0" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-primary" invisible="not (stages_active or projects_count)" />
+                    <button string="Discard" special="cancel" data-hotkey="x" invisible="stages_active or projects_count" />
                 </footer>
             </form>
         </field>

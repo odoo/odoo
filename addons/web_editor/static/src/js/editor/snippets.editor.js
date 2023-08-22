@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import concurrency from "@web/legacy/js/core/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
@@ -23,6 +23,7 @@ import {
     xml,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
+import { touching, closest } from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -1311,8 +1312,7 @@ var SnippetEditor = Widget.extend({
 
         // TODO lot of this is duplicated code of the d&d feature of snippets
         if (!this.dropped) {
-            const { nearest } = this.$body[0].ownerDocument.defaultView.$;
-            let $el = nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: this.$body[0]}).first();
+            let $el = $(closest(this.$body[0].querySelectorAll('.oe_drop_zone'), {x: ui.position.left, y: ui.position.top}));
             // Some drop zones might have been disabled.
             $el = $el.filter(this.$dropZones);
             if ($el.length) {
@@ -1743,7 +1743,7 @@ var SnippetsMenu = Widget.extend({
         this.snippetEditors = [];
         this._enabledEditorHierarchy = [];
 
-        this._mutex = new concurrency.Mutex();
+        this._mutex = new Mutex();
 
         this._notActivableElementsSelector = [
             '#web_editor-top-edit',
@@ -3348,18 +3348,13 @@ var SnippetsMenu = Widget.extend({
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         const point = {x: ui.position.left, y: ui.position.top};
-                        const container = {container: doc.body};
-                        let droppedOnNotNearest = doc.defaultView.$.touching(
-                            point, '.oe_structure_not_nearest', container
-                        ).first();
+                        let droppedOnNotNearest = touching(doc.body.querySelectorAll('.oe_structure_not_nearest'), point);
                         // If dropped outside of a dropzone with class oe_structure_not_nearest,
                         // move the snippet to the nearest dropzone without it
-                        const selector = droppedOnNotNearest.length
+                        const selector = droppedOnNotNearest
                             ? '.oe_drop_zone'
                             : ':not(.oe_structure_not_nearest) > .oe_drop_zone';
-                        let $el = doc.defaultView.$.nearest(
-                            point, selector, container
-                        ).first();
+                        let $el = $(closest(doc.body.querySelectorAll(selector), point));
                         // Some drop zones might have been disabled.
                         $el = $el.filter($dropZones);
                         if ($el.length) {

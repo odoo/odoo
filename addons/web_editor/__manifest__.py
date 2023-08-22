@@ -46,7 +46,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/cropperjs/cropper.js',
             'web_editor/static/lib/jquery-cropper/jquery-cropper.js',
             'web_editor/static/lib/jQuery.transfo.js',
-            'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
             'web_editor/static/lib/DOMPurify.js',
 

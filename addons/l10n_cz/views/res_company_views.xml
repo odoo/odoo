@@ -6,7 +6,7 @@
         <field name="model">res.company</field>
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
-                <field name="trade_registry" attrs="{'invisible': [('country_code', '!=', 'CZ')]}"/>
+                <field name="trade_registry" invisible="country_code != 'CZ'"/>
             </field>
         </field>
     </record>

@@ -2,7 +2,8 @@
 
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Domain, evalDomain } from "@web/core/domain";
+import { Domain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -541,17 +542,17 @@ export class Record extends DataPoint {
 
     _isInvisible(fieldName) {
         const invisible = this.activeFields[fieldName].invisible;
-        return invisible ? evalDomain(invisible, this.evalContext) : false;
+        return invisible ? evaluateBooleanExpr(invisible, this.evalContext) : false;
     }
 
     _isReadonly(fieldName) {
         const readonly = this.activeFields[fieldName].readonly;
-        return readonly ? evalDomain(readonly, this.evalContext) : false;
+        return readonly ? evaluateBooleanExpr(readonly, this.evalContext) : false;
     }
 
     _isRequired(fieldName) {
         const required = this.activeFields[fieldName].required;
-        return required ? evalDomain(required, this.evalContext) : false;
+        return required ? evaluateBooleanExpr(required, this.evalContext) : false;
     }
 
     async _load(nextConfig = {}) {
@@ -614,7 +615,7 @@ export class Record extends DataPoint {
                         } else if (property.type === "many2one") {
                             parsedValues[fieldPropertyName] =
                                 property.value.length && property.value[1] === null
-                                    ? [property.value[0], this.model.env._t("No Access")]
+                                    ? [property.value[0], this.model._t("No Access")]
                                     : property.value;
                         } else {
                             parsedValues[fieldPropertyName] = property.value ?? false;

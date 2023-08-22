@@ -129,21 +129,16 @@ class ProductProduct(models.Model):
             groupby=['product_id'],
             aggregates=['value:sum', 'quantity:sum'],
         )
-        remaining = self
         # Browse all products and compute products' quantities_dict in batch.
-        for product, value_sum, quantity_sum in groups:
+        group_mapping = {product: aggregates for product, *aggregates in groups}
+        for product in self:
+            value_sum, quantity_sum = group_mapping.get(product._origin, (0, 0))
             value_svl = company_id.currency_id.round(value_sum)
             avg_cost = value_svl / quantity_sum if quantity_sum else 0
             product.value_svl = value_svl
             product.quantity_svl = quantity_sum
             product.avg_cost = avg_cost
             product.total_value = avg_cost * product.sudo(False).qty_available
-            remaining -= product
-
-        remaining.value_svl = 0
-        remaining.quantity_svl = 0
-        remaining.avg_cost = 0
-        remaining.total_value = 0
 
     # -------------------------------------------------------------------------
     # Actions

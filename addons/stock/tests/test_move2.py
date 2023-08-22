@@ -2345,7 +2345,7 @@ class TestSinglePicking(TestStockCommon):
         ), view='stock.view_picking_form')
         receipt_form.partner_id = partner
         receipt_form.picking_type_id = picking_type
-        # <field name="location_id" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"
+        # <field name="location_id" invisible="picking_type_code' == 'incoming'"
         receipt_form.location_dest_id = stock_location
         receipt = receipt_form.save()
         with receipt_form.move_line_nosuggest_ids.new() as move_line:

@@ -21,7 +21,7 @@
             <xpath expr="//button[@name='action_schedule_meeting']" position="after">
                 <field name="registration_ids" invisible="1"/>
                 <button name="%(event_registration_action_from_lead)d" type="action" class="oe_stat_button" icon="fa-ticket"
-                    attrs="{'invisible': [('registration_count', '=', 0)]}" groups="event.group_event_user">
+                    invisible="registration_count == 0" groups="event.group_event_user">
                     <div class="o_stat_info">
                         <field name="registration_count"/>
                         <span class="o_stat_text"> Attendees</span>

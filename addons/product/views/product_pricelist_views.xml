@@ -59,7 +59,7 @@
         <field name="arch" type="xml">
             <form string="Products Price List">
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="e.g. USD Retailers"/></h1>
                     </div>
@@ -81,29 +81,29 @@
                                     options="{'no_create':1}"/>
                                     <field name="min_quantity"/>
                                     <field name="fixed_price" string="Price"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="pricelist_id" invisible="1"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="pricelist_id" column_invisible="True"/>
                                     <!-- Pricelist ID is here only for related fields to be correctly computed -->
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="base" invisible="1"/>
-                                    <field name="applied_on" invisible="1"/>
-                                    <field name="company_id" invisible="1"/>
+                                    <field name="base" column_invisible="True"/>
+                                    <field name="applied_on" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/>
                                 </tree>
                                 <!-- When in advanced pricelist mode : pricelist rules
                                     Should open in a form view and not be editable inline anymore.
                                 -->
                                 <tree groups="product.group_sale_pricelist" string="Pricelist Rules">
-                                    <field name="product_tmpl_id" invisible="1"/>
+                                    <field name="product_tmpl_id" column_invisible="True"/>
                                     <field name="name" string="Applicable On"/>
                                     <field name="min_quantity"/>
                                     <field name="price" string="Price"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="base" invisible="1"/>
-                                    <field name="price_discount" invisible="1"/>
-                                    <field name="applied_on" invisible="1"/>
-                                    <field name="compute_price" invisible="1"/>
+                                    <field name="base" column_invisible="True"/>
+                                    <field name="price_discount" column_invisible="True"/>
+                                    <field name="applied_on" column_invisible="True"/>
+                                    <field name="compute_price" column_invisible="True"/>
                                 </tree>
                             </field>
                         </page>

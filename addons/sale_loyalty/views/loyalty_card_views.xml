@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="loyalty.loyalty_card_view_form"/>
         <field name="arch" type="xml">
             <field name="partner_id"  position="after">
-                <field name="order_id" attrs="{'invisible': [('order_id', '=', False)]}"/>
+                <field name="order_id" invisible="not order_id"/>
             </field>
         </field>
     </record>

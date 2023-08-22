@@ -313,7 +313,7 @@
                                 <div class="col overflow-hidden text-start">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-out="dashboard.number_draft"/> Invoices to Validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
+                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate" id="account_dashboard_purchase_draft"><t t-out="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
                                 <div class="col-auto text-end">

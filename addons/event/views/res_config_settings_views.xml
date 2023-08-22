@@ -5,21 +5,21 @@
             <field name="name">res.config.settings.view.form.inherit.event</field>
             <field name="model">res.config.settings</field>
             <field name="priority" eval="65"/>
-            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <app data-string="Events" string="Events" name="event" groups="event.group_event_manager">
                         <block title="Events" name="events_setting_container">
                             <setting id="manage_tracks" title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc." string="Schedule &amp; Tracks" help="Manage &amp; publish a schedule with tracks">
                                 <field name="module_website_event_track"/>
-                                <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                <div class="mt-3 d-flex" invisible="not module_website_event_track">
                                     <field name="module_website_event_track_live" class="w-auto"/>
                                     <div>
                                         <label string="Live Broadcast" for="module_website_event_track_live"/><br/>
                                         <span class="text-muted">Air your tracks online through a Youtube integration</span>
                                     </div>
                                 </div>
-                                <div class="mt-3 d-flex" attrs="{'invisible': [('module_website_event_track', '=', False)]}">
+                                <div class="mt-3 d-flex" invisible="not module_website_event_track">
                                     <field name="module_website_event_track_quiz" class="w-auto"/>
                                     <div>
                                         <label string="Event Gamification" for="module_website_event_track_quiz"/><br/>
@@ -57,16 +57,16 @@
                     <setting string="Google Maps" help="Insert dynamic Google Maps in your email templates"
                              documentation="https://developers.google.com/maps/documentation/maps-static/get-api-key">
                         <field name="use_google_maps_static_api"/>
-                        <div attrs="{'invisible': [('use_google_maps_static_api', '=', False)]}">
+                        <div invisible="not use_google_maps_static_api">
                             <div class="content-group mt16">
                                 <label for="google_maps_static_api_key" class="o_form_label col-lg-3 o_light_label"/>
                                 <field name="google_maps_static_api_key" string="Key"
-                                       attrs="{'required': [('use_google_maps_static_api','=',True)]}"/>
+                                       required="use_google_maps_static_api"/>
                             </div>
                             <div class="content-group">
                                 <label for="google_maps_static_api_secret" class="o_form_label col-lg-3 o_light_label"/>
                                 <field name="google_maps_static_api_secret" string="Secret"
-                                       attrs="{'required': [('use_google_maps_static_api','=',True)]}"/>
+                                       required="use_google_maps_static_api"/>
                             </div>
                         </div>
                     </setting>

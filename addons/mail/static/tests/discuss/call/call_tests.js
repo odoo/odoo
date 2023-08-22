@@ -4,10 +4,10 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    contains,
     mockGetMedia,
     start,
     startServer,
-    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
@@ -15,32 +15,32 @@ import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("call");
 
-QUnit.test("basic rendering", async (assert) => {
+QUnit.test("basic rendering", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-discuss-Call");
-    assert.containsOnce($, ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
-    assert.containsOnce($, ".o-discuss-CallActionList");
-    assert.containsOnce($, ".o-discuss-CallMenu-buttonContent");
-    assert.containsN($, ".o-discuss-CallActionList button", 5);
-    assert.containsOnce($, "button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Deafen']");
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Turn camera on']");
-    assert.containsOnce($, "button[title='More']");
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-Call");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
+    await contains(".o-discuss-CallActionList");
+    await contains(".o-discuss-CallMenu-buttonContent");
+    await contains(".o-discuss-CallActionList button", 5);
+    await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
+    await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
+    await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
+    await contains("button[title='More']");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("button[title='More']");
-    assert.containsOnce($, "[title='Raise Hand']");
-    assert.containsOnce($, "[title='Share Screen']");
-    assert.containsOnce($, "[title='Enter Full Screen']");
+    await contains("[title='Raise Hand']");
+    await contains("[title='Share Screen']");
+    await contains("[title='Enter Full Screen']");
 });
 
-QUnit.test("no call with odoobot", async (assert) => {
+QUnit.test("no call with odoobot", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -50,43 +50,37 @@ QUnit.test("no call with odoobot", async (assert) => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Discuss-header button[title='Start a Call']");
+    openDiscuss(channelId);
+    await contains(".o-mail-Discuss-header");
+    await contains(".o-mail-Discuss-header button[title='Start a Call']", 0);
 });
 
-QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
+QUnit.test("should not display call UI when no more members (self disconnect)", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-discuss-Call");
-
-    click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await waitUntil(".o-discuss-Call", 0);
+    await contains(".o-discuss-Call");
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-Call", 0);
 });
 
-QUnit.test("show call UI in chat window when in call", async (assert) => {
+QUnit.test("show call UI in chat window when in call", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(General)");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-discuss-Call");
-    assert.containsOnce(
-        $,
-        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
-    );
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-discuss-Call", 0);
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
 
     await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
-    assert.containsOnce($, ".o-discuss-Call");
-    assert.containsNone(
-        $,
-        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
-    );
+    await contains(".o-discuss-Call");
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']", 0);
 });
 
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
@@ -94,7 +88,7 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     patchWithCleanup(browser, {
         navigator: {
             ...browser.navigator,
@@ -110,7 +104,7 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     });
 
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-discuss-Call");
+    await contains(".o-discuss-Call");
     // simulate page close
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     await nextTick();
@@ -140,69 +134,65 @@ QUnit.test("should display invitations", async (assert) => {
         channel_id: channelId,
     });
     await start();
-    // Simulate receive call invitation
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-            Thread: {
-                id: channelId,
-                model: "discuss.channel",
-                rtcInvitingSession: { id: sessionId, channelMember: { id: memberId } },
-            },
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        Thread: {
+            id: channelId,
+            model: "discuss.channel",
+            rtcInvitingSession: { id: sessionId, channelMember: { id: memberId } },
+        },
     });
-    assert.containsOnce($, ".o-discuss-CallInvitation");
+    await contains(".o-discuss-CallInvitation");
     assert.verifySteps(["play_sound_effect"]);
     // Simulate stop receiving call invitation
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-            Thread: {
-                id: channelId,
-                model: "discuss.channel",
-                rtcInvitingSession: [["unlink"]],
-            },
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        Thread: {
+            id: channelId,
+            model: "discuss.channel",
+            rtcInvitingSession: [["unlink"]],
+        },
     });
-    assert.containsNone($, ".o-discuss-CallInvitation");
+    await contains(".o-discuss-CallInvitation", 0);
     assert.verifySteps(["pause_sound_effect"]);
 });
 
-QUnit.test("can share screen", async (assert) => {
+QUnit.test("can share screen", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
     await click(".o-discuss-CallActionList [title='More']");
     await click("[title='Share Screen']");
-    assert.containsOnce($, ".o-discuss-CallParticipantCard video");
+    await contains(".o-discuss-CallParticipantCard video");
     await click(".o-discuss-CallActionList [title='More']");
     await click("[title='Stop Sharing Screen']");
-    assert.containsNone($, ".o-discuss-CallParticipantCard video");
+    await contains(".o-discuss-CallParticipantCard video", 0);
 });
 
-QUnit.test("can share user camera", async (assert) => {
+QUnit.test("can share user camera", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channelId);
+    openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    assert.containsOnce($, ".o-discuss-CallParticipantCard video");
+    await contains(".o-discuss-CallParticipantCard video");
     await click(".o-discuss-CallActionList button[title='Stop camera']");
-    assert.containsNone($, ".o-discuss-CallParticipantCard video");
+    await contains(".o-discuss-CallParticipantCard video", 0);
 });
 
-QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
+QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
     mockGetMedia();
     const { openDiscuss } = await start();
-    await openDiscuss();
+    openDiscuss();
     await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
-    assert.containsOnce($, ".o-discuss-Call");
+    await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    await contains(".o-discuss-Call");
+    await contains(".o-discuss-ChannelInvitation");
 });

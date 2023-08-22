@@ -97,7 +97,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                                 <div>This is a different setting</div>
                             </setting>
                         </block>
-                        <block title="Hide group Foo" attrs="{'invisible': [('bar','=',False)]}">
+                        <block title="Hide group Foo" invisible="not bar">
                             <setting string="Hide Foo" help="this is hide foo">
                                 <field name="foo"/>
                             </setting>

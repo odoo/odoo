@@ -73,7 +73,7 @@ QUnit.module('section_and_note', (hooks) => {
                     <field name="invoice_line_ids" widget="section_and_note_one2many">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="display_type" invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
                             <field name="name" widget="section_and_note_text"/>
                             <field name="price"/>
                         </tree>

@@ -139,7 +139,7 @@
                 <form string="Users">
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div class="alert alert-info text-center mb-3" attrs="{'invisible': [('id', '>', 0)]}" role="alert">
+                        <div class="alert alert-info text-center mb-3" invisible="id &gt; 0" role="alert">
                             You are inviting a new user.
                         </div>
                         <field name="avatar_128" invisible="1"/>
@@ -157,8 +157,8 @@
                         <group name="phone_numbers">
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                             <label for="groups_id" string="Access Rights"
-                                    attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
-                            <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
+                                    invisible="id &gt; 0" groups="base.group_no_one"/>
+                            <div invisible="id &gt; 0" groups="base.group_no_one">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
@@ -188,15 +188,10 @@
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <field name="active_partner" required="0" readonly="1" invisible="1"/>
                         <div class="alert alert-info text-center o_form_header"
-                            attrs="{'invisible': [
-                                '|', '|',
-                                '&amp;', ('active', '=', True), ('active_partner', '=', True),
-                                '&amp;', ('active', '=', False), ('active_partner', '=', False),
-                                '&amp;', ('active', '=', True), ('active_partner', '=', False),
-                            ]}"
+                            invisible="active and active_partner or not active and not active_partner or active and not active_partner"
                             role="alert">
                           <a class="close" data-bs-dismiss="alert" href="#">x</a>
                           <div>
@@ -215,14 +210,16 @@
                             <label for="login" string="Email Address"/>
                             <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
-                                <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
-                                        attrs="{'invisible': [('id', '=', False)]}"/>
+                                <field name="partner_id" groups="base.group_no_one"
+                                        readonly="1"
+                                        required="0"
+                                        invisible="not id"/>
                                 <field name="share" invisible="1"/>
                             </group>
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
-                                <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
+                                <group string="Multi Companies" invisible="companies_count &lt;= 1">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
@@ -247,7 +244,7 @@
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
                                     <group string="Menus Customization" groups="base.group_no_one"
-                                        attrs="{'invisible': [('share', '=', True)]}">
+                                        invisible="share">
                                         <field name="action_id"/>
                                     </group>
                                 </group>
@@ -485,7 +482,7 @@
                                         Learn more
                                     </a>
                                 </div>
-                                <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
+                                <div colspan="2" invisible="not api_key_ids">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
                                         <tree editable="bottom" create="false" delete="false">
                                             <field name="name"/>

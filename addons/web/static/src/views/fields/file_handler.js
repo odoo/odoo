@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { checkFileSize } from "@web/core/utils/files";
@@ -30,12 +31,9 @@ export class FileUploader extends Component {
             const data = await getDataURLFromFile(file);
             if (!file.size) {
                 console.warn(`Error while uploading file : ${file.name}`);
-                this.notification.add(
-                    this.env._t("There was a problem while uploading your file."),
-                    {
-                        type: "danger",
-                    }
-                );
+                this.notification.add(_t("There was a problem while uploading your file."), {
+                    type: "danger",
+                });
             }
             try {
                 await this.props.onUploaded({

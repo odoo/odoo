@@ -1,33 +1,27 @@
 /* @odoo-module */
 
-import {
-    afterNextRender,
-    click,
-    start,
-    startServer,
-    waitUntil,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { triggerHotkey, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("crosstab");
 
-QUnit.test("Messages are received cross-tab", async (assert) => {
+QUnit.test("Messages are received cross-tab", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
     await tab1.insertText(".o-mail-Composer-input", "Hello World!");
-    await tab1.click("button:contains(Send)");
-    assert.containsOnce(tab1.target, ".o-mail-Message:contains(Hello World!)");
-    assert.containsOnce(tab2.target, ".o-mail-Message:contains(Hello World!)");
+    await click("button:contains(Send):not(:disabled)", { target: tab1.target });
+    await contains(".o-mail-Message:contains(Hello World!)", 1, { target: tab1.target });
+    await contains(".o-mail-Message:contains(Hello World!)", 1, { target: tab2.target });
 });
 
-QUnit.test("Delete starred message updates counter", async (assert) => {
+QUnit.test("Delete starred message updates counter", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -40,71 +34,71 @@ QUnit.test("Delete starred message updates counter", async (assert) => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
-    assert.containsOnce(tab2.target, "button:contains(Starred1)");
-    await afterNextRender(() =>
-        tab1.env.services.rpc("/mail/message/update_content", {
-            message_id: messageId,
-            body: "",
-            attachment_ids: [],
-        })
-    );
-    assert.containsNone(tab2.target, "button:contains(Starred1)");
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
+    await contains("button:contains(Starred1)", 1, { target: tab2.target });
+    tab1.env.services.rpc("/mail/message/update_content", {
+        message_id: messageId,
+        body: "",
+        attachment_ids: [],
+    });
+    await contains("button:contains(Starred1)", 0, { target: tab2.target });
 });
 
-QUnit.test("Thread rename", async (assert) => {
+QUnit.test("Thread rename", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
-    await tab1.insertText(".o-mail-Discuss-threadName", "Sales", { replace: true });
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(tab2.target, ".o-mail-Discuss-threadName[title='Sales']");
-    assert.containsOnce(tab2.target, ".o-mail-DiscussSidebarChannel:contains(Sales)");
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
+    await tab1.insertText(".o-mail-Discuss-threadName:not(:disabled)", "Sales", { replace: true });
+    triggerHotkey("Enter");
+    await contains(".o-mail-Discuss-threadName[title='Sales']", 1, { target: tab2.target });
+    await contains(".o-mail-DiscussSidebarChannel:contains(Sales)", 1, { target: tab2.target });
 });
 
-QUnit.test("Thread description update", async (assert) => {
+QUnit.test("Thread description update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
-        create_uid: pyEnv.currentPartnerId,
+        create_uid: pyEnv.currentUserId,
         name: "General",
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
     await tab1.insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
         replace: true,
     });
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce(
-        tab2.target,
-        ".o-mail-Discuss-threadDescription[title='The very best channel']"
-    );
+    triggerHotkey("Enter");
+    await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", 1, {
+        target: tab2.target,
+    });
 });
 
 QUnit.test("Channel subscription is renewed when channel is added from invite", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "Sales", channel_member_ids: [] });
+    const [, channelId] = pyEnv["discuss.channel"].create([
+        { name: "R&D" },
+        { name: "Sales", channel_member_ids: [] },
+    ]);
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
             assert.step("update-channels");
         },
     });
-    await openDiscuss();
-    // simulate receiving invite
-    await afterNextRender(() => {
-        env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [pyEnv.currentPartnerId],
-        });
+    openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel");
+    env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
+        partner_ids: [pyEnv.currentPartnerId],
     });
+    await contains(".o-mail-DiscussSidebarChannel", 2);
+    await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });
 
@@ -117,12 +111,14 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
             assert.step("update-channels");
         },
     });
-    await openDiscuss();
+    openDiscuss();
     await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
+    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });
 
-QUnit.test("Adding attachments", async (assert) => {
+QUnit.test("Adding attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts Legacy" });
     const messageId = pyEnv["mail.message"].create({
@@ -133,23 +129,21 @@ QUnit.test("Adding attachments", async (assert) => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
     });
-    await afterNextRender(() =>
-        tab1.env.services.rpc("/mail/message/update_content", {
-            body: "Hello world!",
-            attachment_ids: [attachmentId],
-            message_id: messageId,
-        })
-    );
-    assert.containsOnce(tab2.target, ".o-mail-AttachmentCard:contains(test.txt)");
+    tab1.env.services.rpc("/mail/message/update_content", {
+        body: "Hello world!",
+        attachment_ids: [attachmentId],
+        message_id: messageId,
+    });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", 1, { target: tab2.target });
 });
 
-QUnit.test("Remove attachment from message", async (assert) => {
+QUnit.test("Remove attachment from message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
@@ -165,15 +159,15 @@ QUnit.test("Remove attachment from message", async (assert) => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    await tab1.openDiscuss(channelId);
-    await tab2.openDiscuss(channelId);
-    assert.containsOnce(tab1.target, ".o-mail-AttachmentCard:contains(test.txt)");
-    await tab2.click(".o-mail-AttachmentCard-unlink");
-    await tab2.click(".modal-footer .btn:contains(Ok)");
-    assert.containsNone(tab1.target, ".o-mail-AttachmentCard:contains(test.txt)");
+    tab1.openDiscuss(channelId);
+    tab2.openDiscuss(channelId);
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", 1, { target: tab1.target });
+    await click(".o-mail-AttachmentCard-unlink", { target: tab2.target });
+    await click(".modal-footer .btn:contains(Ok)", { target: tab2.target });
+    await contains(".o-mail-AttachmentCard:contains(test.txt)", 0, { target: tab1.target });
 });
 
-QUnit.test("Message delete notification", async (assert) => {
+QUnit.test("Message delete notification", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
@@ -189,15 +183,15 @@ QUnit.test("Message delete notification", async (assert) => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss();
+    openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
-    assert.containsOnce($, "button:contains(Inbox) .badge");
-    assert.containsOnce($, "button:contains(Starred) .badge");
+    await contains("button:contains(Inbox) .badge");
+    await contains("button:contains(Starred) .badge");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
         message_ids: [messageId],
     });
-    await waitUntil(".o-mail-Message", 0);
-    assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, "button:contains(Starred) .badge");
+    await contains(".o-mail-Message", 0);
+    await contains("button:contains(Inbox) .badge", 0);
+    await contains("button:contains(Starred) .badge", 0);
 });

@@ -5,13 +5,11 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start, setCookie, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
-import { waitUntil } from "@mail/../tests/helpers/test_utils";
-
-import { nextTick } from "@web/../tests/helpers/utils";
+import { contains } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("autopopup");
 
-QUnit.test("persisted session", async (assert) => {
+QUnit.test("persisted session", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
@@ -25,15 +23,14 @@ QUnit.test("persisted session", async (assert) => {
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
-    await start();
-    await waitUntil(".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    start();
+    await contains(".o-mail-ChatWindow");
 });
 
-QUnit.test("rule received in init", async (assert) => {
+QUnit.test("rule received in init", async () => {
     await startServer();
     await loadDefaultConfig();
-    await start({
+    start({
         mockRPC(route) {
             if (route === "/im_livechat/init") {
                 return {
@@ -43,6 +40,5 @@ QUnit.test("rule received in init", async (assert) => {
             }
         },
     });
-    await nextTick();
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });

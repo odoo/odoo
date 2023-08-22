@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <span id="display_invoice_alert" position="after">
                 <field name="display_delivery_alert" invisible="1"/>
-                <span attrs="{'invisible': [('display_delivery_alert', '=', False)]}">
+                <span invisible="not display_delivery_alert">
                     Some deliveries are already done. Returns can be created from the Delivery Orders.
                 </span>
             </span>

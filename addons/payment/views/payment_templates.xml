@@ -22,7 +22,6 @@
             - 'providers' - The payment providers compatible with the current transaction
             - 'tokens' - The payment tokens of the current partner and payment providers
             - 'default_token_id' - The id of the token that should be pre-selected. Optional
-            - 'fees_by_provider' - The dict of transaction fees for each provider. Optional
             - 'show_tokenize_input' - Whether the option to save the payment method is shown
             - 'reference_prefix' - The custom prefix to compute the full transaction reference
             - 'amount' - The amount to pay. Optional (sale_subscription)
@@ -52,7 +51,6 @@
                t-value="default_token_id if default_token_id and token_count > 0
                         else providers[0].id if provider_count == 1 and token_count == 0
                         else None"/>
-            <t t-set="fees_by_provider" t-value="fees_by_provider or dict()"/>
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
 
@@ -75,13 +73,6 @@
                                 <span class="payment_option_name" t-esc="token.display_name"/>
                                 <!-- === "V" check mark === -->
                                 <t t-call="payment.verified_token_checkmark"/>
-                                <!-- === "Fees" badge === -->
-                                <span t-if="fees_by_provider.get(provider)"
-                                      class="badge rounded-pill text-bg-secondary ms-1">
-                                        + <t t-esc="fees_by_provider.get(provider)"
-                                             t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                        Fees
-                                </span>
                                 <!-- === "Test token" badge === -->
                                 <t t-call="payment.test_token_badge"/>
                                 <!-- === "Unpublished" badge === -->
@@ -142,14 +133,6 @@
                                   class="badge rounded-pill text-bg-danger ms-1">
                                 Unpublished
                             </span>
-                            <!-- === Extra fees badge === -->
-                            <t t-if="fees_by_provider.get(provider)">
-                                <span class="badge rounded-pill text-bg-secondary ms-1">
-                                    + <t t-esc="fees_by_provider.get(provider)"
-                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                    Fees
-                                </span>
-                            </t>
                         </label>
                         <!-- === Payment method icons list === -->
                         <t t-call="payment.icon_list"/>

@@ -17,7 +17,7 @@
                          role="alert">
                         <span>Are you sure you want to cancel this order? <br/></span>
                         <span id="display_invoice_alert"
-                              attrs="{'invisible': [('display_invoice_alert', '=', False)]}">
+                              invisible="not display_invoice_alert">
                             Draft invoices for this order will be cancelled. <br/>
                         </span>
                     </div>

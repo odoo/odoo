@@ -16,6 +16,6 @@ export class ErrorBarcodePopup extends ErrorPopup {
     };
 
     get translatedMessage() {
-        return this.env._t(this.props.message);
+        return _t(this.props.message);
     }
 }

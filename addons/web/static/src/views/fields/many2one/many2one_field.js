@@ -5,7 +5,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
@@ -19,7 +19,7 @@ class CreateConfirmationDialog extends Component {
     static components = { Dialog };
 
     get title() {
-        return this.env._t("New: %s", this.props.name);
+        return _t("New: %s", this.props.name);
     }
 
     async onCreate() {
@@ -168,7 +168,7 @@ export class Many2OneField extends Component {
     get classFromDecoration() {
         const evalContext = this.props.record.evalContext;
         for (const decorationName in this.props.decorations) {
-            if (evaluateExpr(this.props.decorations[decorationName], evalContext)) {
+            if (evaluateBooleanExpr(this.props.decorations[decorationName], evalContext)) {
                 return `text-${decorationName}`;
             }
         }
@@ -217,8 +217,11 @@ export class Many2OneField extends Component {
         };
     }
     getDomain() {
-        const domain = this.props.domain;
-        return typeof domain === "function" ? domain() : domain;
+        let domain = this.props.domain;
+        if (typeof domain === "function") {
+            domain = domain();
+        }
+        return domain;
     }
     async openAction() {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
@@ -268,7 +271,7 @@ export class Many2OneField extends Component {
                 browser.navigator.vibrate(100);
             }
         } else {
-            this.notification.add(this.env._t("Please, scan again!"), {
+            this.notification.add(_t("Please, scan again!"), {
                 type: "warning",
             });
         }

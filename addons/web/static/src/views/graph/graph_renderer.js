@@ -96,7 +96,7 @@ export class GraphRenderer extends Component {
             const td = document.createElement("td");
             tr.classList.add("o_show_more", "text-center", "fw-bold");
             td.setAttribute("colspan", "2");
-            td.innerText = this.env._t("...");
+            td.innerText = _t("...");
             tr.appendChild(td);
             tooltip.querySelector("tbody").appendChild(tr);
         }

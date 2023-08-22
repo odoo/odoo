@@ -1,5 +1,7 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
@@ -378,8 +380,8 @@ export class FloorScreen extends Component {
     }
     async addFloor() {
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-            title: this.env._t("New Floor"),
-            placeholder: this.env._t("Floor name"),
+            title: _t("New Floor"),
+            placeholder: _t("Floor name"),
         });
         if (!confirmed) {
             return;
@@ -441,7 +443,7 @@ export class FloorScreen extends Component {
         if (selectedTables.length == 0) {
             const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
                 startingValue: selectedFloor.name,
-                title: this.env._t("Floor Name ?"),
+                title: _t("Floor Name ?"),
             });
             if (!confirmed) {
                 return;
@@ -455,7 +457,7 @@ export class FloorScreen extends Component {
         const selectedTable = selectedTables[0];
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
             startingValue: selectedTable.name,
-            title: this.env._t("Table Name?"),
+            title: _t("Table Name?"),
         });
         if (!confirmed) {
             return;
@@ -473,7 +475,7 @@ export class FloorScreen extends Component {
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: 0,
             cheap: true,
-            title: this.env._t("Number of Seats?"),
+            title: _t("Number of Seats?"),
             isInputSelected: true,
         });
         if (!confirmed) {
@@ -525,8 +527,8 @@ export class FloorScreen extends Component {
         if (this.selectedTables.length == 0) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: `Removing floor ${this.activeFloor.name}`,
-                body: this.env._t(
-                    "Removing a floor cannot be undone. Do you still want to remove %s?",
+                body: sprintf(
+                    _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
                     this.activeFloor.name
                 ),
             });
@@ -563,8 +565,8 @@ export class FloorScreen extends Component {
             return;
         }
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Are you sure?"),
-            body: this.env._t("Removing a table cannot be undone"),
+            title: _t("Are you sure?"),
+            body: _t("Removing a table cannot be undone"),
         });
         if (!confirmed) {
             return;
@@ -587,8 +589,8 @@ export class FloorScreen extends Component {
                 delete this.pos.tables_by_id[id];
             } else {
                 await this.popup.add(ErrorPopup, {
-                    title: this.env._t("Delete Error"),
-                    body: this.env._t(
+                    title: _t("Delete Error"),
+                    body: _t(
                         "You cannot delete a table with orders still in draft for this table."
                     ),
                 });

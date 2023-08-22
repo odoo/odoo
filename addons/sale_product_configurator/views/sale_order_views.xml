@@ -7,18 +7,18 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="invisible">0</attribute>
+                <attribute name="column_invisible">0</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="after">
-                <field name="product_template_attribute_value_ids" invisible="1" />
-                <field name="product_custom_attribute_value_ids" invisible="1" >
+                <field name="product_template_attribute_value_ids" column_invisible="1" />
+                <field name="product_custom_attribute_value_ids" column_invisible="1" >
                     <tree>
                         <field name="custom_product_template_attribute_value_id" />
                         <field name="custom_value" />
                     </tree>
                 </field>
-                <field name="product_no_variant_attribute_value_ids" invisible="1" />
-                <field name="is_configurable_product" invisible="1" />
+                <field name="product_no_variant_attribute_value_ids" column_invisible="1" />
+                <field name="is_configurable_product" column_invisible="1" />
             </xpath>
             <xpath expr="//tree/field[@name='product_id']" position="attributes">
                 <attribute name="optional">hide</attribute>

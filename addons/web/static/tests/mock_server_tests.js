@@ -1377,14 +1377,14 @@ QUnit.module("MockServer", (hooks) => {
         data.views = {
             "bar,10001,list": `
                 <tree>
-                    <field name="bool" invisible="1"/>
+                    <field name="bool" column_invisible="1"/>
                     <field name="foo"/>
                 </tree>
             `,
             "bar,10001,search": `<search></search>`,
         };
         const expectedList = `<tree>
-                    <field name="bool" modifiers="{&quot;column_invisible&quot;:true}"/>
+                    <field name="bool" column_invisible="True"/>
                     <field name="foo"/>
                 </tree>`;
         const mockServer = new MockServer(data);

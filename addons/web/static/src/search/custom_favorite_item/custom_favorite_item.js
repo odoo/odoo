@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
@@ -25,10 +26,9 @@ export class CustomFavoriteItem extends Component {
      */
     saveFavorite(ev) {
         if (!this.state.description) {
-            this.notificationService.add(
-                this.env._t("A name for your favorite filter is required."),
-                { type: "danger" }
-            );
+            this.notificationService.add(_t("A name for your favorite filter is required."), {
+                type: "danger",
+            });
             ev.stopPropagation();
             return this.descriptionRef.el.focus();
         }
@@ -36,7 +36,7 @@ export class CustomFavoriteItem extends Component {
             (s) => s.type === "favorite" && s.description === this.state.description
         );
         if (favorites.length) {
-            this.notificationService.add(this.env._t("A filter with same name already exists."), {
+            this.notificationService.add(_t("A filter with same name already exists."), {
                 type: "danger",
             });
             ev.stopPropagation();

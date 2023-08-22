@@ -7,21 +7,21 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="before">
-                <div invisible="context.get('stripe_onboarding', False)"
+                <div
                      name="stripe_onboarding_group"
-                     attrs="{'invisible': ['|', '|', ('code', '!=', 'stripe'), ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
+                     invisible="context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key or stripe_publishable_key)">
                     <button string="Connect Stripe"
                             type="object"
                             name="action_stripe_connect_account"
                             class="btn-primary"
                             colspan="2"
-                            attrs="{'invisible': [('state', '=', 'enabled')]}"/>
+                            invisible="state == 'enabled'"/>
                 </div>
             </group>
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'stripe')]}" name="stripe_credentials">
-                    <field name="stripe_publishable_key" attrs="{'required':[('code', '=', 'stripe'), ('state', '!=', 'disabled')]}"/>
-                    <field name="stripe_secret_key" attrs="{'required':[('code', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
+                <group invisible="code != 'stripe'" name="stripe_credentials">
+                    <field name="stripe_publishable_key" required="code == 'stripe' and state != 'disabled'"/>
+                    <field name="stripe_secret_key" required="code == 'stripe' and state != 'disabled'" password="True"/>
                     <label for="stripe_webhook_secret"/>
                     <div class="o_row" col="2">
                         <field name="stripe_webhook_secret" password="True"/>
@@ -29,26 +29,25 @@
                                 type="object"
                                 name="action_stripe_create_webhook"
                                 class="btn-primary"
-                                attrs="{'invisible': ['|', ('stripe_webhook_secret', '!=', False), ('stripe_secret_key', '=', False)]}"/>
+                                invisible="stripe_webhook_secret or not stripe_secret_key"/>
                     </div>
                 </group>
                 <div name="stripe_keys_link"
-                     invisible="not context.get('stripe_onboarding', False)"
-                     attrs="{'invisible': ['|', ('code', '!=', 'stripe'), '&amp;', ('stripe_secret_key', '!=', False), ('stripe_publishable_key', '!=', False)]}">
+                     invisible="not context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key and stripe_publishable_key)">
                     <a class="btn btn-link" role="button" href="https://dashboard.stripe.com/account/apikeys" target="_blank">
                         Get your Secret and Publishable keys
                     </a>
                 </div>
             </group>
             <field name="allow_express_checkout" position="replace">
-                <label for="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
-                <div class="o_row" col="2" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}">
+                <label for="allow_express_checkout" invisible="not support_express_checkout or not show_allow_express_checkout"/>
+                <div class="o_row" col="2" invisible="not support_express_checkout or not show_allow_express_checkout">
                     <field name="allow_express_checkout"/>
                     <button string="Enable Apple Pay"
                             type="object"
                             name="action_stripe_verify_apple_pay_domain"
                             class="btn btn-primary"
-                            attrs="{'invisible': [('allow_express_checkout', '!=', True)]}"/>
+                            invisible="not allow_express_checkout"/>
                 </div>
             </field>
         </field>

@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
+    /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
         clearRawMentions() {
@@ -32,16 +33,27 @@ export function useSuggestion() {
             if (selectionStart !== selectionEnd) {
                 // avoid interfering with multi-char selection
                 self.clearSearch();
+                return;
             }
             const candidatePositions = [];
+            // consider the chars before the current cursor position
+            let numberOfSpaces = 0;
+            for (let index = selectionStart - 1; index >= 0; --index) {
+                if (/\s/.test(content[index])) {
+                    numberOfSpaces++;
+                    if (numberOfSpaces === 2) {
+                        // The consideration stops after the second space since
+                        // a majority of partners have a two-word name. This
+                        // removes the need to check for mentions following a
+                        // delimiter used earlier in the content.
+                        break;
+                    }
+                }
+                candidatePositions.push(index);
+            }
             // keep the current delimiter if it is still valid
             if (self.search.position !== undefined && self.search.position < selectionStart) {
                 candidatePositions.push(self.search.position);
-            }
-            // consider the char before the current cursor position if the
-            // current delimiter is no longer valid (or if there is none)
-            if (selectionStart > 0) {
-                candidatePositions.push(selectionStart - 1);
             }
             const supportedDelimiters = suggestionService.getSupportedDelimiters(self.thread);
             for (const candidatePosition of candidatePositions) {
@@ -135,22 +147,35 @@ export function useSuggestion() {
         },
     };
     useEffect(
-        () => {
+        (delimiter, position, term) => {
             self.update();
+            if (self.search.position === undefined || !self.search.delimiter) {
+                return; // nothing else to fetch
+            }
             sequential(async () => {
-                if (self.search.position === undefined || !self.search.delimiter) {
+                if (
+                    self.search.delimiter !== delimiter ||
+                    self.search.position !== position ||
+                    self.search.term !== term
+                ) {
                     return; // ignore obsolete call
                 }
                 await suggestionService.fetchSuggestions(self.search, {
                     thread: self.thread,
-                    onFetched() {
-                        if (owl.status(comp) === "destroyed") {
-                            return;
-                        }
-                        self.update();
-                    },
                 });
+                if (owl.status(comp) === "destroyed") {
+                    return;
+                }
                 self.update();
+                if (
+                    self.search.delimiter === delimiter &&
+                    self.search.position === position &&
+                    self.search.term === term &&
+                    !self.state.items?.mainSuggestions.length &&
+                    !self.state.items?.extraSuggestions.length
+                ) {
+                    self.clearSearch();
+                }
             });
         },
         () => {

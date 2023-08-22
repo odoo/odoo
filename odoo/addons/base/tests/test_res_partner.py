@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.exceptions import AccessError, UserError
 
 
@@ -120,6 +120,49 @@ class TestPartner(TransactionCase):
         self.assertEqual(first_child.lang, 'de_DE')
         self.assertEqual(second_child.lang, 'fr_FR')
 
+    def test_partner_merge_wizard_dst_partner_id(self):
+        """ Check that dst_partner_id in merge wizard displays id along with partner name """
+        test_partner = self.env['res.partner'].create({'name': 'Radu the Handsome'})
+        expected_partner_name = '%s (%s)' % (test_partner.name, test_partner.id)
+
+        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
+            {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
+        self.assertEqual(
+            partner_merge_wizard.dst_partner_id.display_name, expected_partner_name,
+            "'Destination Contact' name should contain db ID in brackets"
+        )
+
+    def test_partner_is_public(self):
+        """ Check that base.partner_user is a public partner."""
+        self.assertFalse(self.env.ref('base.public_user').active)
+        self.assertFalse(self.env.ref('base.public_partner').active)
+        self.assertTrue(self.env.ref('base.public_partner').is_public)
+
+    def test_display_address_missing_key(self):
+        """ Check _display_address when some keys are missing. As a defaultdict is used, missing keys should be
+        filled with empty strings. """
+        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s", "code": "ZV"})
+        partner = self.env["res.partner"].create({
+            "name": "TestPartner",
+            "country_id": country.id,
+            "city": "TestCity",
+            "zip": "12345",
+        })
+        before = partner._display_address()
+        # Manually update the country address_format because placeholders are checked by create
+        self.env.cr.execute(
+            "UPDATE res_country SET address_format ='%%(city)s %%(zip)s %%(nothing)s' WHERE id=%s",
+            [country.id]
+        )
+        self.env["res.country"].invalidate_model()
+        self.assertEqual(before, partner._display_address().strip())
+
+
+@tagged('post_install', '-at_install')
+class TestPartnerForm(TransactionCase):
+    # those tests are made post-install because they need module 'web' for the
+    # form view to work properly
+
     def test_lang_computation_form_view(self):
         """ Check computation of lang: coming from installed languages, forced
         default value and propagation from parent."""
@@ -174,24 +217,6 @@ class TestPartner(TransactionCase):
         self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "First Child").lang, 'de_DE')
         self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "Second Child").lang, 'fr_FR')
 
-    def test_partner_merge_wizard_dst_partner_id(self):
-        """ Check that dst_partner_id in merge wizard displays id along with partner name """
-        test_partner = self.env['res.partner'].create({'name': 'Radu the Handsome'})
-        expected_partner_name = '%s (%s)' % (test_partner.name, test_partner.id)
-
-        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
-            {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
-        self.assertEqual(
-            partner_merge_wizard.dst_partner_id.display_name, expected_partner_name,
-            "'Destination Contact' name should contain db ID in brackets"
-        )
-
-    def test_partner_is_public(self):
-        """ Check that base.partner_user is a public partner."""
-        self.assertFalse(self.env.ref('base.public_user').active)
-        self.assertFalse(self.env.ref('base.public_partner').active)
-        self.assertTrue(self.env.ref('base.public_partner').is_public)
-
     def test_onchange_parent_sync_user(self):
         company_1 = self.env['res.company'].create({'name': 'company_1'})
         test_user = self.env['res.users'].create({
@@ -211,22 +236,3 @@ class TestPartner(TransactionCase):
             partner_form.company_type = 'person'
             partner_form.name = 'Philip'
             self.assertEqual(partner_form.user_id, test_parent_partner.user_id)
-
-    def test_display_address_missing_key(self):
-        """ Check _display_address when some keys are missing. As a defaultdict is used, missing keys should be
-        filled with empty strings. """
-        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s", "code": "ZV"})
-        partner = self.env["res.partner"].create({
-            "name": "TestPartner",
-            "country_id": country.id,
-            "city": "TestCity",
-            "zip": "12345",
-        })
-        before = partner._display_address()
-        # Manually update the country address_format because placeholders are checked by create
-        self.env.cr.execute(
-            "UPDATE res_country SET address_format ='%%(city)s %%(zip)s %%(nothing)s' WHERE id=%s",
-            [country.id]
-        )
-        self.env["res.country"].invalidate_model()
-        self.assertEqual(before, partner._display_address().strip())

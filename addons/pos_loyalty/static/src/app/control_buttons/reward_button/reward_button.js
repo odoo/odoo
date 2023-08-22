@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
@@ -72,7 +73,7 @@ export class RewardButton extends Component {
                 item: product_id,
             }));
             const { confirmed, payload: selectedProduct } = await this.popup.add(SelectionPopup, {
-                title: this.env._t("Please select a product for this reward"),
+                title: _t("Please select a product for this reward"),
                 list: productsList,
             });
             if (!confirmed) {
@@ -107,7 +108,7 @@ export class RewardButton extends Component {
                 item: reward,
             }));
             const { confirmed, payload: selectedReward } = await this.popup.add(SelectionPopup, {
-                title: this.env._t("Please select a reward"),
+                title: _t("Please select a reward"),
                 list: rewardsList,
             });
             if (confirmed) {

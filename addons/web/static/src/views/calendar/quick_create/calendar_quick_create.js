@@ -46,8 +46,8 @@ export class CalendarQuickCreate extends Component {
             }
         } else {
             this.titleRef.el.classList.add("o_field_invalid");
-            this.notification.add(this.env._t("Meeting Subject"), {
-                title: this.env._t("Invalid fields"),
+            this.notification.add(_t("Meeting Subject"), {
+                title: _t("Invalid fields"),
                 type: "danger",
             });
         }

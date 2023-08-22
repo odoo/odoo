@@ -8,7 +8,7 @@
             <xpath expr="//div[hasclass('oe_button_box')]/button[@name='action_view_picking']" position="before">
                 <button 
                     class="oe_stat_button" name="action_view_subcontracting_resupply" 
-                    type="object" icon="fa-truck" attrs="{'invisible': [('subcontracting_resupply_picking_count', '=', 0)]}" groups="stock.group_stock_user">
+                    type="object" icon="fa-truck" invisible="subcontracting_resupply_picking_count == 0" groups="stock.group_stock_user">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="subcontracting_resupply_picking_count"/></span>
                         <span class="o_stat_text">Resupply</span>

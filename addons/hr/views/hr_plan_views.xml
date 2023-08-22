@@ -24,7 +24,7 @@
                     <field name="steps_count"/>
                     <field name="department_id" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" column_invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -36,7 +36,7 @@
                 <form string="Planning">
                     <field name="company_id" invisible="1"/>
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name" string="Plan Name"/>
                             <h1>
@@ -52,11 +52,11 @@
                             <page string="Activities To Generate">
                                 <field name="plan_activity_type_ids" nolabel="1">
                                     <tree>
-                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_id" column_invisible="True"/>
                                         <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                                         <field name="summary"/>
                                         <field name="responsible"/>
-                                        <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}" optional="hide"/>
+                                        <field name="responsible_id" readonly="responsible != 'other'" optional="hide"/>
                                     </tree>
                                 </field>
                             </page>
@@ -91,7 +91,7 @@
                             <field name="summary"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="responsible"/>
-                            <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
+                            <field name="responsible_id" invisible="responsible != 'other'"/>
                             <field name="note"/>
                         </group>
                     </sheet>
@@ -189,24 +189,16 @@
             <field name="priority">50</field>
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='delay_count']" position="attributes">
-                    <attribute name="attrs">
-                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
-                    </attribute>                </xpath>
+                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>                </xpath>
 
                 <field name="delay_count" position="attributes">
-                    <attribute name="attrs">
-                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
-                    </attribute>
+                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
                 </field>
                 <field name="delay_from" position="attributes">
-                    <attribute name="attrs">
-                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
-                    </attribute>
+                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
                 </field>
                 <field name="delay_unit" position="attributes">
-                    <attribute name="attrs">
-                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
-                    </attribute>
+                    <attribute name="invisible">chaining_type == 'suggest' and not suggested_next_type_ids or chaining_type == 'trigger' and not triggered_next_type_id</attribute>
                 </field>
             </field>
         </record>

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
@@ -33,7 +34,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     isInvisible(fieldNode, record) {
-        return evalDomain(fieldNode.modifiers.invisible, record.evalContext);
+        return evaluateBooleanExpr(fieldNode.invisible, record.evalContext);
     }
 
     computeDateTimeAndDuration() {
@@ -48,13 +49,11 @@ export class CalendarCommonPopover extends Component {
             const duration = end.diff(start, ["hours", "minutes"]);
             const formatParts = [];
             if (duration.hours > 0) {
-                const hourString =
-                    duration.hours === 1 ? this.env._t("hour") : this.env._t("hours");
+                const hourString = duration.hours === 1 ? _t("hour") : _t("hours");
                 formatParts.push(`h '${hourString}'`);
             }
             if (duration.minutes > 0) {
-                const minuteStr =
-                    duration.minutes === 1 ? this.env._t("minute") : this.env._t("minutes");
+                const minuteStr = duration.minutes === 1 ? _t("minute") : _t("minutes");
                 formatParts.push(`m '${minuteStr}'`);
             }
             this.timeDuration = duration.toFormat(formatParts.join(", "));
@@ -65,10 +64,10 @@ export class CalendarCommonPopover extends Component {
 
             if (record.isAllDay) {
                 if (isSameDay) {
-                    this.dateDuration = this.env._t("All day");
+                    this.dateDuration = _t("All day");
                 } else {
                     const duration = end.plus({ day: 1 }).diff(start, "days");
-                    this.dateDuration = duration.toFormat(`d '${this.env._t("days")}'`);
+                    this.dateDuration = duration.toFormat(`d '${_t("days")}'`);
                 }
             }
         }

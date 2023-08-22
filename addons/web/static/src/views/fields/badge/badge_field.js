@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
@@ -28,7 +28,7 @@ export class BadgeField extends Component {
     get classFromDecoration() {
         const evalContext = this.props.record.evalContext;
         for (const decorationName in this.props.decorations) {
-            if (evaluateExpr(this.props.decorations[decorationName], evalContext)) {
+            if (evaluateBooleanExpr(this.props.decorations[decorationName], evalContext)) {
                 return `text-bg-${decorationName}`;
             }
         }

@@ -17,21 +17,20 @@
                         </setting>
                     </block>
                     <block name="pincode_setting_container">
-                        <setting attrs="{'invisible': [('attendance_kiosk_mode', '=', 'manual')]}" company_dependent="1" help="Define the camera used for the barcode scan.">
+                        <setting invisible="attendance_kiosk_mode == 'manual'" company_dependent="1" help="Define the camera used for the barcode scan.">
                             <field name="attendance_barcode_source" required="1"/>
                         </setting>
-                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." attrs="{'invisible': [('attendance_kiosk_mode', '=', 'barcode')]}" help="Use PIN codes (defined on the Employee's profile) to check-in.">
+                        <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
                             <field name="group_attendance_use_pin"/>
                         </setting>
                     </block>
                     <block title="Extra Hours" name="overtime_settings">
                         <setting title="Activate the count of employees' extra hours." string="Count of Extra Hours" company_dependent="1" help="Compare attendance with working hours set on employee.">
                             <field name="hr_attendance_overtime"/>
-                            <div class="mt16" attrs="{'invisible': [('hr_attendance_overtime', '=', False)],
-                                                        'required': [('hr_attendance_overtime', '=', True)]}">
+                            <div class="mt16" invisible="not hr_attendance_overtime" required="hr_attendance_overtime">
                                 <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
                                     <label for="overtime_start_date" string="Start from" class="o_light_label col-lg-3"/>
-                                    <field name="overtime_start_date" class="col-lg-3 w-75" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
+                                    <field name="overtime_start_date" class="col-lg-3 w-75" required="hr_attendance_overtime" />
                                 </div>
                                 <br/>
                                 <label for="overtime_company_threshold" class="o_form_label">
@@ -41,7 +40,7 @@
                                     Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
                                 </div>
                                 <span>Time Period </span><field name="overtime_company_threshold" class="text-center"
-                                    attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                    required="hr_attendance_overtime" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                                 <br/>
                                 <br/>
                                 <label for="overtime_employee_threshold" class="o_form_label">
@@ -51,7 +50,7 @@
                                     Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
                                 </div>
                                 <span>Time Period </span><field name="overtime_employee_threshold" class="text-center"
-                                    attrs="{'required': [('hr_attendance_overtime', '=', True)]}" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
+                                    required="hr_attendance_overtime" style="width: 10%; min-width: 4rem;"/><span> Minutes</span>
                             </div>
                         </setting>
                     </block>

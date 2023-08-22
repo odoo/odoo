@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { FileInput } from "@web/core/file_input/file_input";
@@ -37,7 +38,7 @@ export class MailAttachments extends Component {
         for (const file of files) {
             if (file.error) {
                 return this.notification.add(file.error, {
-                    title: this.env._t("Uploading error"),
+                    title: _t("Uploading error"),
                     type: "danger",
                 });
             }

@@ -8,7 +8,7 @@
             <xpath expr="//page[@name='general_info']/group/group[last()]" position="after">
                 <group>
                     <field name="l10n_es_tbai_license_html" type="object"
-                        attrs="{'invisible': [('country_code', '!=', 'ES')]}"/>
+                        invisible="country_code != 'ES'"/>
                 </group>
             </xpath>
         </field>

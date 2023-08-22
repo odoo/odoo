@@ -1,5 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import legacyEnv from '@web/legacy/js/common_env';
 
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -297,7 +298,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             // primaryClick/secondaryClick props, so that closing the dialog
             // with "esc" or the top right cross icon also executes onStay.
             this.dialogs.add(WebsiteDialog, {
-                body: this.env._t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
+                body: _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."),
                 primaryClick: () => leaving = true,
             }, {
                 onClose: () => {
@@ -446,10 +447,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             .filter(':o_editable');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
                 .attr('data-editor-message-default', true)
-                .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
+                .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
         for (let htmlEl of $wrap.not("[placeholder]").filter('[data-oe-sanitize="no_block"]')) {
-            const placeholderText = this.env._t("Type in text here...");
+            const placeholderText = _t("Type in text here...");
             // Put the placeholder in the same location as the powerbox hint.
             htmlEl = htmlEl.querySelector("p, div") || htmlEl;
             htmlEl.setAttribute("placeHolder", placeholderText);
@@ -626,10 +627,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         };
         const commands = [
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Alert'),
+                category: _t('Website'),
+                name: _t('Alert'),
                 priority: 100,
-                description: this.env._t('Insert an alert snippet'),
+                description: _t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -637,10 +638,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Rating'),
+                category: _t('Website'),
+                name: _t('Rating'),
                 priority: 90,
-                description: this.env._t('Insert a rating snippet'),
+                description: _t('Insert a rating snippet'),
                 fontawesome: 'fa-star-half-o',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -648,10 +649,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Card'),
+                category: _t('Website'),
+                name: _t('Card'),
                 priority: 80,
-                description: this.env._t('Insert a card snippet'),
+                description: _t('Insert a card snippet'),
                 fontawesome: 'fa-sticky-note',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -659,10 +660,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Share'),
+                category: _t('Website'),
+                name: _t('Share'),
                 priority: 70,
-                description: this.env._t('Insert a share snippet'),
+                description: _t('Insert a share snippet'),
                 fontawesome: 'fa-share-square-o',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -670,10 +671,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Text Highlight'),
+                category: _t('Website'),
+                name: _t('Text Highlight'),
                 priority: 60,
-                description: this.env._t('Insert a text Highlight snippet'),
+                description: _t('Insert a text Highlight snippet'),
                 fontawesome: 'fa-sticky-note',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -681,10 +682,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Chart'),
+                category: _t('Website'),
+                name: _t('Chart'),
                 priority: 50,
-                description: this.env._t('Insert a chart snippet'),
+                description: _t('Insert a chart snippet'),
                 fontawesome: 'fa-bar-chart',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -692,10 +693,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Progress Bar'),
+                category: _t('Website'),
+                name: _t('Progress Bar'),
                 priority: 40,
-                description: this.env._t('Insert a progress bar snippet'),
+                description: _t('Insert a progress bar snippet'),
                 fontawesome: 'fa-spinner',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -703,10 +704,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Badge'),
+                category: _t('Website'),
+                name: _t('Badge'),
                 priority: 30,
-                description: this.env._t('Insert a badge snippet'),
+                description: _t('Insert a badge snippet'),
                 fontawesome: 'fa-tags',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -714,10 +715,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Blockquote'),
+                category: _t('Website'),
+                name: _t('Blockquote'),
                 priority: 20,
-                description: this.env._t('Insert a blockquote snippet'),
+                description: _t('Insert a blockquote snippet'),
                 fontawesome: 'fa-quote-left',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
@@ -725,10 +726,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 },
             },
             {
-                category: this.env._t('Website'),
-                name: this.env._t('Separator'),
+                category: _t('Website'),
+                name: _t('Separator'),
                 priority: 10,
-                description: this.env._t('Insert an horizontal separator snippet'),
+                description: _t('Insert an horizontal separator snippet'),
                 fontawesome: 'fa-minus',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {

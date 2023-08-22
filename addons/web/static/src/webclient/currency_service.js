@@ -15,7 +15,7 @@ export const currencyService = {
             for (const k in currencies) {
                 delete currencies[k];
             }
-            Object.assign(currencies, result);
+            Object.assign(currencies, result?.currencies);
         }
         env.bus.addEventListener("RPC:RESPONSE", (ev) => {
             const { data, error } = ev.detail;

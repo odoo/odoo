@@ -83,7 +83,7 @@ QUnit.test(
         const { openDiscuss, openFormView } = await start();
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
-        await click(".o-mail-Composer-send");
+        await click(".o-mail-Composer-send:not(:disabled)");
         // leaving discuss.
         await openFormView("res.partner", partnerId);
         assert.containsNone($, ".o-mail-ChatWindow-header:contains(Dumbledore)");

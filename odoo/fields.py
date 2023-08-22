@@ -140,8 +140,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param str help: the tooltip of the field seen by users
 
-    :param invisible: whether the field is invisible (boolean, by default ``False``)
-
     :param bool readonly: whether the field is readonly (default: ``False``)
 
         This only has an impact on the UI. Any field assignation in code will work
@@ -165,7 +163,7 @@ class Field(MetaField('DummyField', (object,), {})):
     :type default: value or callable
 
     :param dict states: a dictionary mapping state values to lists of UI attribute-value
-        pairs; possible attributes are: ``readonly``, ``required``, ``invisible``.
+        pairs; possible attributes are: ``readonly``, ``required``.
 
         .. warning:: Any state-based condition requires the ``state`` field value to be
             available on the client-side UI. This is typically done by including it in
@@ -320,7 +318,6 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
-    invisible = False                   # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
@@ -539,6 +536,16 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.setup_related(model)
             else:
                 self.setup_nonrelated(model)
+
+            if not isinstance(self.required, bool):
+                warnings.warn(f'Property {self}.required should be a boolean ({self.required}).')
+
+            if not isinstance(self.readonly, bool):
+                warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).')
+
+            if self.states:
+                warnings.warn(f'Since Odoo 17, property {self}.states is no longer supported.')
+
             self._setup_done = True
 
     #
@@ -641,8 +648,6 @@ class Field(MetaField('DummyField', (object,), {})):
         # special cases of inherited fields
         if self.inherited:
             self.inherited_field = field
-            if not self.states:
-                self.states = field.states
             if field.required:
                 self.required = True
             # add modules from delegate and target fields; the first one ensures
@@ -864,7 +869,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
     _description_required = property(attrgetter('required'))
-    _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
@@ -898,9 +902,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def is_editable(self):
         """ Return whether the field can be editable in a view. """
-        return not self.readonly or self.states and any(
-            'readonly' in item for items in self.states.values() for item in items
-        )
+        return not self.readonly
 
     ############################################################################
     #

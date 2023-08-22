@@ -3,6 +3,7 @@
 import { formatDate } from "@web/core/l10n/dates";
 import { useService } from '@web/core/utils/hooks';
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 const { Component, useState, onWillUpdateProps, status } = owl;
 const { DateTime } = luxon;
@@ -49,7 +50,7 @@ export class ProjectMilestone extends Component {
 
     async onDeleteMilestone() {
         this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this record?"),
+            body: _t("Are you sure you want to delete this record?"),
             confirm: async () => {
                 await this.orm.call('project.milestone', 'unlink', [this.milestone.id]);
                 await this.props.load();
@@ -64,7 +65,7 @@ export class ProjectMilestone extends Component {
             this.props.open({
                 resModel: this.resModel,
                 resId: this.milestone.id,
-                title: this.env._t("Milestone"),
+                title: _t("Milestone"),
             }, {
                 onClose: async () => {
                     if (status(this) === "mounted") {

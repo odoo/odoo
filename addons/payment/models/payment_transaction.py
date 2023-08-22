@@ -45,9 +45,6 @@ class PaymentTransaction(models.Model):
         string="Amount", currency_field='currency_id', readonly=True, required=True)
     currency_id = fields.Many2one(
         string="Currency", comodel_name='res.currency', readonly=True, required=True)
-    fees = fields.Monetary(
-        string="Fees", currency_field='currency_id',
-        help="The fees amount; set by the system as it depends on the provider", readonly=True)
     token_id = fields.Many2one(
         string="Payment Token", comodel_name='payment.token', readonly=True,
         domain='[("provider_id", "=", "provider_id")]', ondelete='restrict')
@@ -187,15 +184,6 @@ class PaymentTransaction(models.Model):
                 'partner_phone': partner.phone,
             })
 
-            # Compute fees. For validation transactions, fees are zero.
-            if values.get('operation') == 'validation':
-                values['fees'] = 0
-            else:
-                currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
-                values['fees'] = provider._compute_fees(
-                    values.get('amount', 0), currency, partner.country_id,
-                )
-
             # Include provider-specific create values
             values.update(self._get_specific_create_values(provider.code, values))
 
@@ -212,11 +200,11 @@ class PaymentTransaction(models.Model):
         # can lead to inconsistent string representation of the amounts sent to the providers.
         # E.g., tx.create(amount=1111.11) -> tx.amount == 1111.1100000000001
         # To ensure a proper string representation, we invalidate this request's cache values of the
-        # `amount` and `fees` fields for the created transactions. This forces the ORM to read the
-        # values from the DB where there were stored using `float_repr`, which produces a result
-        # consistent with the format expected by providers.
+        # `amount` field for the created transactions. This forces the ORM to read the values from
+        # the DB where there were stored using `float_repr`, which produces a result consistent with
+        # the format expected by providers.
         # E.g., tx.create(amount=1111.11) ; tx.invalidate_recordset() -> tx.amount == 1111.11
-        txs.invalidate_recordset(['amount', 'fees'])
+        txs.invalidate_recordset(['amount'])
 
         return txs
 

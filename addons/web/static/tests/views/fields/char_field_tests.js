@@ -429,7 +429,7 @@ QUnit.module("Fields", (hooks) => {
                     <sheet>
                         <group>
                             <field name="int_field" />
-                            <field name="foo"  attrs="{'invisible': [('int_field', '==', 9)]}"/>
+                            <field name="foo"  invisible="int_field == 9"/>
                         </group>
                     </sheet>
                 </form>`,

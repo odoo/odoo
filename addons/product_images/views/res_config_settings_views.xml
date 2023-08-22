@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='msg_module_product_images']" position="replace">
                 <div class="content-group"
-                     attrs="{'invisible': [('module_product_images', '=', False)]}"
+                     invisible="not module_product_images"
                      id="msg_module_product_images">
                     <div class="content-group mt16 row">
                         <label string="API Key" for="google_custom_search_key"

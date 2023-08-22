@@ -94,6 +94,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
     content: 'Click on Add a line to create a new timesheet into the task.',
 }, {
+    trigger: '.o_field_x2many div[name="name"] input',
+    content: 'Enter a description for this timesheet',
+    run: 'text work',
+}, {
     trigger: 'div[name="unit_amount"] input',
     content: 'Enter one hour for this timesheet',
     run: 'text 1',

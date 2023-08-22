@@ -45,17 +45,16 @@ class StockMove(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
-        domain="[('type', 'in', ['product', 'consu'])]", index=True, required=True,
-        states={'done': [('readonly', True)]})
+        domain="[('type', 'in', ['product', 'consu'])]", index=True, required=True)
     description_picking = fields.Text('Description of Picking')
     product_qty = fields.Float(
-        'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
+        'Real Quantity', compute='_compute_product_qty',
         digits=0, store=True, compute_sudo=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Demand',
         digits='Product Unit of Measure',
-        default=0, required=True, states={'done': [('readonly', True)]},
+        default=0, required=True,
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
@@ -86,7 +85,6 @@ class StockMove(models.Model):
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
-        states={'done': [('readonly', True)]},
         help="Optional address where goods are to be delivered, specifically used for allotment",
         compute='_compute_partner_id', store=True, readonly=False)
     move_dest_ids = fields.Many2many(
@@ -97,7 +95,7 @@ class StockMove(models.Model):
         'stock.move', 'stock_move_move_rel', 'move_dest_id', 'move_orig_id', 'Original Move',
         copy=False,
         help="Optional: previous stock move when chaining them")
-    picking_id = fields.Many2one('stock.picking', 'Transfer', index=True, states={'done': [('readonly', True)]}, check_company=True)
+    picking_id = fields.Many2one('stock.picking', 'Transfer', index=True, check_company=True)
     state = fields.Selection([
         ('draft', 'New'),
         ('waiting', 'Waiting Another Move'),
@@ -1940,7 +1938,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         :returns: list of dict. stock move values """
         self.ensure_one()
         if self.state in ('done', 'cancel'):
-            raise UserError(_('You cannot split a stock move that has been set to \'Done\'.'))
+            raise UserError(_('You cannot split a stock move that has been set to \'Done\' or \'Cancel\'.'))
         elif self.state == 'draft':
             # we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.

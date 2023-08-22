@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { markRaw } from "@odoo/owl";
 import { evalDomain } from "@web/core/domain";
 import { Reactive } from "@web/core/utils/reactive";
 import { getId } from "./utils";
@@ -39,6 +40,8 @@ export class DataPoint extends Reactive {
         super(...arguments);
         this.id = getId("datapoint");
         this.model = model;
+        markRaw(config.activeFields);
+        markRaw(config.fields);
         this._config = config;
         this.setup(config, data, options);
     }

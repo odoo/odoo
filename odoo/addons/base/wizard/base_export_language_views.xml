@@ -8,12 +8,12 @@
                 <form string="Export Translations">
                     <field invisible="1" name="state"/>
                     <field name="name" invisible="1"/>
-                    <group states="choose" string="Export Settings">
+                    <group invisible="state != 'choose'" string="Export Settings">
                         <field name="lang"/>
                         <field name="format"/>
                         <field name="modules" widget="many2many_tags" options="{'no_create': True}"/>
                     </group>
-                    <div states="get">
+                    <div invisible="state != 'get'">
                         <h2>Export Complete</h2>
                         <p>Here is the exported translation file: <field name="data" readonly="1" filename="name"/></p>
                         <p>This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit
@@ -30,11 +30,11 @@
                         <p>For more details about translating Odoo in your language, please refer to the
                            <a href="https://github.com/odoo/odoo/wiki/Translations" target="_blank">documentation</a>.</p>
                     </div>
-                    <footer states="choose">
+                    <footer invisible="state != 'choose'">
                         <button name="act_getfile" string="Export" type="object" class="btn-primary" data-hotkey="q"/>
                         <button special="cancel" data-hotkey="x" string="Cancel" type="object" class="btn-secondary"/>
                     </footer>
-                    <footer states="get">
+                    <footer invisible="state != 'get'">
                         <button special="cancel" data-hotkey="x" string="Close" type="object" class="btn-primary"/>
                     </footer>
                 </form>

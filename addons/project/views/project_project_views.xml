@@ -21,9 +21,9 @@
                     <field name="analytic_account_id" invisible="1"/>
                     <header>
                         <button name="%(project.project_share_wizard_action)d" string="Share Read-only" type="action" class="oe_highlight" groups="project.group_project_manager"
-                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read', 'dialog_size': 'medium'}" data-hotkey="r"/>
+                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read', 'dialog_size': 'medium'}" data-hotkey="r"/>
                         <button name="%(project.project_share_wizard_action)d" string="Share Editable" type="action" class="oe_highlight" groups="project.group_project_manager"
-                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'edit', 'dialog_size': 'medium'}" data-hotkey="e"/>
+                        invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'edit', 'dialog_size': 'medium'}" data-hotkey="e"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages"/>
                     </header>
                 <sheet string="Project">
@@ -43,7 +43,7 @@
                                 <field name="last_update_status" readonly="1" widget="status_with_color" status_label="Project Status"/>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" attrs="{'invisible':[('privacy_visibility', '!=', 'portal')]}">
+                        <button class="oe_stat_button" name="%(project.project_collaborator_action)d" type="action" icon="fa-users" groups="project.group_project_manager" invisible="privacy_visibility != 'portal'">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="collaborator_count" nolabel="1"/>
@@ -54,7 +54,7 @@
                             </div>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
                             <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-2"/>
@@ -70,8 +70,8 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
-                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' attrs="{'required': ['|', ('date_start', '!=', False), ('date', '!=', False)]}" />
+                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
+                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' required="date_start or date" />
                             <field name="date" invisible="1" />
                         </group>
                     </group>
@@ -84,19 +84,19 @@
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id, 'default_company_id': company_id} " groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
-                                    <span colspan="2" class="text-muted o_row ps-1" attrs="{'invisible':[('access_instruction_message', '=', '')]}">
+                                    <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
                                         <i class="fa fa-lightbulb-o"/>&amp;nbsp;<field class="d-inline" name="access_instruction_message" nolabel="1"/>
                                     </span>
-                                    <span colspan="2" class="text-muted o_row ps-1" attrs="{'invisible':[('privacy_visibility_warning', '=', '')]}">
+                                    <span colspan="2" class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
                                         <i class="fa fa-warning"/>&amp;nbsp;<field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
                                     </span>
                                 </group>
                                 <group>
-                                    <div name="alias_def" colspan="2" class="pb-2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <div name="alias_def" colspan="2" class="pb-2" invisible="not alias_domain">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
-                                        <field name="alias_email" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
+                                        <field name="alias_email" class="oe_read_only d-inline" widget="email" readonly="1" invisible="not alias_name" />
                                         <span class="oe_edit_only o_row">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </span>
@@ -104,7 +104,7 @@
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
                                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"
-                                           attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
+                                           invisible="alias_name == '' or not alias_name"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
@@ -121,22 +121,22 @@
                                     </div>
                                 </group>
                                 <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
-                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
+                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" invisible="not allow_rating">
                                     <div>
                                         <field name="allow_rating" invisible="1"/>
                                         <setting class="col-lg-12" name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
                                             <field name="rating_active"/>
-                                            <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
+                                            <div class="mt16" invisible="not rating_active">
                                                 <span class="text-muted o_row ps-1 pb-3">Send a rating request:</span>
                                                 <field name="rating_status" widget="radio" class="o_row"/>
-                                                <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
+                                                <div  invisible="rating_status != 'periodic'"  required="rating_status == 'periodic'">
                                                     <label for="rating_status_period" string="Frequency"/>
                                                     <field name="rating_status_period"/>
                                                 </div>
                                                 <span colspan="2" class="text-muted o_row ps-1">
                                                     <i class="fa fa-lightbulb-o pe-2"/>
-                                                    <span attrs="{'invisible': [('rating_status','=','periodic')]}">A rating request will be sent as soon as the task reaches a stage on which a Rating Email Template is defined.</span>
-                                                    <span attrs="{'invisible': [('rating_status','=','stage')]}">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>
+                                                    <span invisible="rating_status == 'periodic'">A rating request will be sent as soon as the task reaches a stage on which a Rating Email Template is defined.</span>
+                                                    <span invisible="rating_status == 'stage'">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>
                                                 </span>
                                                 <div class="content-group">
                                                     <div class="mt8">
@@ -204,19 +204,19 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id">
-                    <field name="sequence" invisible="1"/>
-                    <field name="message_needaction" invisible="1"/>
-                    <field name="active" invisible="1"/>
+                    <field name="sequence" column_invisible="True"/>
+                    <field name="message_needaction" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/>
                     <field name="is_favorite" string="Favorite" nolabel="1" widget="boolean_favorite" optional="hide"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" column_invisible="True"/>
                     <!-- XBO: required modifiers contains a falsy domain to be able to display the daterange without any button to set the date_end -->
-                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date'}" attrs="{'required': [(1, '=', 0)]}" optional="hide"/>
-                    <field name="date" invisible="1" />
+                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date'}" required="False" optional="hide"/>
+                    <field name="date" column_invisible="True" />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
-                    <field name="last_update_color" invisible="1"/>
+                    <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection" options="{'hide_label': True}"/>
                     <field name="stage_id" options="{'no_open': True}" optional="show"/>
@@ -319,7 +319,7 @@
                     </div>
                     <field name="user_id" invisible="1"/>
                     <div class="row o_settings_container"/>
-                    <div name="alias_def" class="mt-4" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <div name="alias_def" class="mt-4" colspan="2" invisible="not alias_domain">
                         <label for="alias_name" string="Create tasks by sending an email to"/>
                         <field name="alias_enabled" invisible="1"/>
                         <span>
@@ -551,13 +551,13 @@
                     event_open_popup="true"
                     quick_add="false"
                     color="color">
-                    <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
-                    <field name="user_id" widget="many2one_avatar_user" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                    <field name="partner_id" invisible="not partner_id"/>
+                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id"/>
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" string="Favorite"/>
-                    <field name="stage_id" groups="project.group_project_stages" attrs="{'invisible': [('stage_id', '=', False)]}"/>
+                    <field name="stage_id" groups="project.group_project_stages" invisible="not stage_id"/>
                     <field name="last_update_color" invisible="1"/>
-                    <field name="last_update_status" string="Status" widget="status_with_color" attrs="{'invisible': [('last_update_status', '=', 'to_define')]}"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
+                    <field name="last_update_status" string="Status" widget="status_with_color" invisible="last_update_status == 'to_define'"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not tag_ids"/>
                 </calendar>
             </field>
         </record>

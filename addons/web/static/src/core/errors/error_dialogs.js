@@ -24,9 +24,7 @@ export const standardErrorDialogProps = {
 
 export const odooExceptionTitleMap = new Map(
     Object.entries({
-        "odoo.addons.base.models.ir_mail_server.MailDeliveryException": _t(
-            "MailDeliveryException"
-        ),
+        "odoo.addons.base.models.ir_mail_server.MailDeliveryException": _t("MailDeliveryException"),
         "odoo.exceptions.AccessDenied": _t("Access Denied"),
         "odoo.exceptions.MissingError": _t("Missing Record"),
         "odoo.exceptions.UserError": _t("User Error"),
@@ -92,13 +90,13 @@ export class RPCErrorDialog extends ErrorDialog {
         }
         switch (this.props.type) {
             case "server":
-                this.title = this.env._t("Odoo Server Error");
+                this.title = _t("Odoo Server Error");
                 break;
             case "script":
-                this.title = this.env._t("Odoo Client Error");
+                this.title = _t("Odoo Client Error");
                 break;
             case "network":
-                this.title = this.env._t("Odoo Network Error");
+                this.title = _t("Odoo Network Error");
                 break;
         }
     }
@@ -127,7 +125,7 @@ export class WarningDialog extends Component {
         if (this.props.exceptionName && odooExceptionTitleMap.has(this.props.exceptionName)) {
             return odooExceptionTitleMap.get(this.props.exceptionName).toString();
         }
-        return this.props.title || this.env._t("Odoo Warning");
+        return this.props.title || _t("Odoo Warning");
     }
 }
 WarningDialog.template = "web.WarningDialog";
@@ -145,7 +143,7 @@ export class RedirectWarningDialog extends Component {
         this.actionService = useService("action");
         const { data, subType } = this.props;
         const [message, actionId, buttonText, additionalContext] = data.arguments;
-        this.title = capitalize(subType) || this.env._t("Odoo Warning");
+        this.title = capitalize(subType) || _t("Odoo Warning");
         this.message = message;
         this.actionId = actionId;
         this.buttonText = buttonText;

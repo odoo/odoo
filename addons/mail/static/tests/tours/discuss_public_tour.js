@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         },
         {
             content: "Send message",
-            trigger: ".o-mail-Composer-send",
+            trigger: ".o-mail-Composer-send:not(:disabled)",
         },
         {
             content: "Check message is shown",

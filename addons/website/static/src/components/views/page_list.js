@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import {PageControllerMixin, PageRendererMixin} from "./page_views_mixin";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
@@ -39,11 +40,11 @@ export class PageListController extends PageControllerMixin(listView.Controller)
             menuItems.publish = {
                 sequence: 15,
                 icon: "fa fa-globe",
-                description: this.env._t("Publish"),
+                description: _t("Publish"),
                 callback: async () => {
                     this.dialogService.add(ConfirmationDialog, {
-                        title: this.env._t("Publish Website Content"),
-                        body: this.env._t("%s record(s) selected, are you sure you want to publish them all?", this.model.root.selection.length),
+                        title: _t("Publish Website Content"),
+                        body: _t("%s record(s) selected, are you sure you want to publish them all?", this.model.root.selection.length),
                         confirm: () => this.togglePublished(true),
                     });
                 },
@@ -51,7 +52,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
             menuItems.unpublish = {
                 sequence: 16,
                 icon: "fa fa-chain-broken",
-                description: this.env._t("Unpublish"),
+                description: _t("Unpublish"),
                 callback: async () => this.togglePublished(false),
             };
         }

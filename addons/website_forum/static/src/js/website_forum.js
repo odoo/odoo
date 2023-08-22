@@ -387,7 +387,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 $voteUp.prop('disabled', userVote === 1);
                 $voteDown.prop('disabled', userVote === -1);
 
-                $items.removeClass('text-success text-danger text-muted o_forum_vote_animate');
+                $items.removeClass('text-success text-danger text-muted opacity-75 o_forum_vote_animate');
                 void $container[0].offsetWidth; // Force a refresh
 
                 if (userVote === 1) {
@@ -401,6 +401,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     $voteUp.removeClass('karma_required');
                 }
                 if (userVote === 0) {
+                    $voteCount.addClass('text-muted opacity-75');
                     if (!$voteDown.data('can-downvote')) {
                         $voteDown.addClass('karma_required');
                     }
@@ -447,6 +448,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         queueCountBadge.innerText = nbLeftInQueue;
         if (!nbLeftInQueue) {
             document.querySelector('.o_caught_up_alert').classList.remove('d-none');
+            document.querySelector('.o_wforum_btn_filter_tool')?.classList.add('d-none');
             queueCountBadge.classList.add('d-none');
         }
     },

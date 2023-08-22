@@ -1,4 +1,6 @@
-/** @odoo-module */
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
@@ -10,7 +12,7 @@ const localStorageNoDialogKey = 'website_translator_nodialog';
 
 export class AttributeTranslateDialog extends Component {
     setup() {
-        this.title = this.env._t("Translate Attribute");
+        this.title = _t("Translate Attribute");
 
         this.formEl = useRef('form-container');
 
@@ -50,7 +52,7 @@ AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
 // possible to interact with the content of `.o_translation_select` elements.
 export class SelectTranslateDialog extends Component {
     setup() {
-        this.title = this.env._t("Translate Selection Option");
+        this.title = _t("Translate Selection Option");
         this.inputEl = useRef('input');
         this.optionEl = this.props.node;
     }
@@ -79,8 +81,8 @@ SelectTranslateDialog.template = xml`
 
 export class TranslatorInfoDialog extends Component {
     setup() {
-        this.strongOkButton = this.env._t("Ok, never show me this again");
-        this.okButton = this.env._t("Ok");
+        this.strongOkButton = _t("Ok, never show me this again");
+        this.okButton = _t("Ok");
     }
 
     onStrongOkClick() {
@@ -269,9 +271,9 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         styleEl.sheet.insertRule(`[data-oe-translation-state] {background: ${toTranslateColor} !important;}`);
 
         const showNotification = ev => {
-            let message = this.env._t('This translation is not editable.');
+            let message = _t('This translation is not editable.');
             if (ev.target.closest('.s_table_of_content_navbar_wrap')) {
-                message = this.env._t('Translate header in the text. Menu is generated automatically.');
+                message = _t('Translate header in the text. Menu is generated automatically.');
             }
             this.env.services.notification.add(message, {
                 type: 'info',

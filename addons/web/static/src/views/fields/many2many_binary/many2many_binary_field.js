@@ -50,7 +50,7 @@ export class Many2ManyBinaryField extends Component {
         for (const file of files) {
             if (file.error) {
                 return this.notification.add(file.error, {
-                    title: this.env._t("Uploading error"),
+                    title: _t("Uploading error"),
                     type: "danger",
                 });
             }

@@ -14,8 +14,8 @@
                             <field name="product_id" class="col-6"
                                 options="{'no_open': True, 'no_create': True}"
                                 domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                                attrs="{'invisible': [('product_variant_count', '=', 1)]}"
-                                readonly="context.get('default_product_id')"/>
+                                readonly="context.get('default_product_id')"
+                                invisible="product_variant_count == 1"/>
                         </div>
                         <div class="row">
                             <label for="new_quantity" class="col-5 col-md-4 col-lg-3"/>
