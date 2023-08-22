@@ -224,6 +224,14 @@ class EventEvent(models.Model):
     lang = fields.Selection(_lang_get, string='Language',
         help="All the communication emails sent to attendees will be translated in this language.")
     # ticket reports
+    badge_format = fields.Selection(
+        string='Badge Dimension',
+        selection=[
+            ('A4_french_fold', 'A4 foldable'),
+            ('A6', 'A6'),
+            ('four_per_sheet', '4 per sheet')
+        ], default='A6', required=True)
+    badge_image = fields.Image('Badge Background', max_width=1024, max_height=1024)
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")

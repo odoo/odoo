@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="paperformat_event_foldable_badge" model="report.paperformat">
-        <field name="name">Custom Paperformat for the Event Foldable Badge report</field>
+    <record id="paperformat_event_badge" model="report.paperformat">
+        <field name="name">Custom Paperformat for the Event Badge report</field>
         <field name="default" eval="False"/>
         <field name="disable_shrinking" eval="True"/>
         <field name="format">A4</field>
@@ -31,9 +31,8 @@
         <field name="dpi">96</field>
     </record>
 
-    <!-- The "Full Page Ticket", as opposed to the foldable badge that is meant to be folded and
-    only contains the bare minimum (attendee name + barcode), gives all the information of the
-    ticket in a portrait A4 format.
+    <!-- The "Full Page Ticket", as opposed to the (a6) badge that only contains the bare minimum
+    (attendee name + barcode), gives all the information of the ticket in a portrait A4 format.
     It allows to add some information in the ticket_instructions field and, when printed, functions
     as an "official" ticket that the attendee can show to the registration desk where all
     the information are available (event name, organizer, SO reference, barcode, footer with
@@ -62,28 +61,28 @@
         <field name="paperformat_id" ref="paperformat_event_full_page_ticket"/>
     </record>
 
-    <record id="action_report_event_registration_foldable_badge" model="ir.actions.report">
-        <field name="name">Foldable Badge</field>
+    <record id="action_report_event_registration_badge" model="ir.actions.report">
+        <field name="name">Badge</field>
         <field name="model">event.registration</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">event.event_registration_report_template_foldable_badge</field>
-        <field name="report_file">event.event_registration_report_template_foldable_badge</field>
-        <field name="print_report_name">'Foldable Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), (object.name or '').replace('/',''))</field>
+        <field name="report_name">event.event_registration_report_template_badge</field>
+        <field name="report_file">event.event_registration_report_template_badge</field>
+        <field name="print_report_name">'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), (object.name or '').replace('/',''))</field>
         <field name="binding_model_id" ref="model_event_registration"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="paperformat_event_foldable_badge"/>
+        <field name="paperformat_id" ref="paperformat_event_badge"/>
     </record>
 
-    <record id="action_report_event_event_foldable_badge" model="ir.actions.report">
-        <field name="name">Foldable Badge Example</field>
+    <record id="action_report_event_event_badge" model="ir.actions.report">
+        <field name="name">Badge Example</field>
         <field name="model">event.event</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">event.event_event_report_template_foldable_badge</field>
-        <field name="report_file">event.event_event_report_template_foldable_badge</field>
-        <field name="print_report_name">'Foldable Badge - %s' % (object.name or 'Event').replace('/','')</field>
+        <field name="report_name">event.event_event_report_template_badge</field>
+        <field name="report_file">event.event_event_report_template_badge</field>
+        <field name="print_report_name">'Badge - %s' % (object.name or 'Event').replace('/','')</field>
         <field name="binding_model_id" ref="model_event_event"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="paperformat_event_foldable_badge"/>
+        <field name="paperformat_id" ref="paperformat_event_badge"/>
     </record>
 
     <record id="action_report_event_registration_responsive_html_ticket" model="ir.actions.report">
