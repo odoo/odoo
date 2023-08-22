@@ -25,9 +25,13 @@ class Users(models.Model):
         return super().SELF_READABLE_FIELDS + ['odoobot_state']
 
     def _init_messaging(self):
+        odoobot_onboarding = False
         if self.odoobot_state in [False, 'not_initialized'] and self._is_internal():
+            odoobot_onboarding = True
             self._init_odoobot()
-        return super()._init_messaging()
+        res = super()._init_messaging()
+        res['odoobotOnboarding'] = odoobot_onboarding
+        return res
 
     def _init_odoobot(self):
         self.ensure_one()

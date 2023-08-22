@@ -48,13 +48,15 @@ export class DiscussCoreWeb {
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message } }) => {
-                if (
-                    !this.ui.isSmall &&
-                    channel.correspondent !== this.store.odoobot &&
-                    !message.isSelfAuthored
-                ) {
-                    this.chatWindowService.insert({ thread: channel });
+                if (this.ui.isSmall || message.isSelfAuthored) {
+                    return;
                 }
+                if (channel.correspondent === this.store.odoobot && this.store.odoobotOnboarding) {
+                    // this cancels odoobot onboarding auto-opening of chat window
+                    this.store.odoobotOnboarding = false;
+                    return;
+                }
+                this.chatWindowService.insert({ thread: channel });
             }
         );
         this.busService.subscribe("mail.record/insert", (payload) => {
