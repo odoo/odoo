@@ -4,7 +4,15 @@ import { browser } from "@web/core/browser/browser";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, mount, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+    mockTimeout,
+    triggerEvent,
+} from "../../helpers/utils";
 
 import { markup } from "@odoo/owl";
 
@@ -312,6 +320,33 @@ QUnit.test("can close a non-sticky notification", async (assert) => {
     // simulate end of timeout, which should try to close the notification as well
     timeoutCB();
     await nextTick();
+    assert.containsNone(target, ".o_notification");
+});
+
+QUnit.test("can refresh the duration of a non-sticky notification", async (assert) => {
+    const { advanceTime } = mockTimeout();
+    const env = await makeTestEnv({ serviceRegistry });
+    const { Component: NotificationContainer, props } = registry
+        .category("main_components")
+        .get("NotificationContainer");
+    const notifService = env.services.notification;
+    await mount(NotificationContainer, target, { env, props });
+
+    notifService.add("I'm a first non-sticky notification");
+    notifService.add("I'm a second non-sticky notification");
+    await nextTick();
+    assert.containsN(target, ".o_notification", 2);
+
+    await advanceTime(3000);
+    await triggerEvent(target, ".o_notification:first-child", "mouseenter");
+    await advanceTime(5000);
+    // Both notifications should be visible as long as mouse is over one of them
+    assert.containsN(target, ".o_notification", 2);
+    await triggerEvent(target, ".o_notification:first-child", "mouseleave");
+    await advanceTime(3000);
+    // Both notifications should be refreshed in duration (4000 ms)
+    assert.containsN(target, ".o_notification", 2);
+    await advanceTime(1000);
     assert.containsNone(target, ".o_notification");
 });
 

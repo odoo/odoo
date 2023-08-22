@@ -34,6 +34,8 @@ Notification.props = {
         optional: true,
     },
     close: { type: Function },
+    refresh: { type: Function },
+    freeze: { type: Function },
 };
 Notification.defaultProps = {
     buttons: [],
