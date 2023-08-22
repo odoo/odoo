@@ -139,7 +139,7 @@
                 />
                 <field name="sale_line_id"
                     groups="sales_team.group_sale_salesman"
-                    options="{'no_create': True, 'no_edit': True, 'delete': False}"
+                    options="{'no_edit': True, 'delete': False}"
                     attrs="{
                         'invisible': [
                             '|',
@@ -213,7 +213,6 @@
                 <field name="sale_line_id"
                     groups="sales_team.group_sale_salesman"
                     string="Sales Order Item"
-                    options='{"no_create": True}'
                     readonly="0"
                     context="{
                         'create': False, 'edit': False, 'delete': False,
