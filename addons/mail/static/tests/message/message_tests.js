@@ -1457,6 +1457,8 @@ QUnit.test("Can reply to chatter messages from history", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
     assert.containsOnce($, ".o-mail-Message [title='Reply']");
+    await click("[title='Reply']");
+    assert.containsOnce($, "button[title='Full composer']");
 });
 
 QUnit.test("Mark as unread", async (assert) => {
