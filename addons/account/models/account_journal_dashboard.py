@@ -193,7 +193,8 @@ class account_journal(models.Model):
         result = {}
         for journal in self:
             graph_title, graph_key = journal._graph_title_and_key()
-            currency = journal.currency_id or journal.company_id.currency_id
+            # User may have read access on the journal but not on the company
+            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             journal_result = query_result[journal.id]
 
             color = '#875A7B' if 'e' in version else '#7c7bad'
@@ -257,7 +258,8 @@ class account_journal(models.Model):
         query_results = {r['journal_id']: r for r in self.env.cr.dictfetchall()}
         result = {}
         for journal in self:
-            currency = journal.currency_id or journal.company_id.currency_id
+            # User may have read access on the journal but not on the company
+            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             graph_title, graph_key = journal._graph_title_and_key()
             sign = 1 if journal.type == 'sale' else -1
             journal_data = query_results.get(journal.id)
@@ -300,7 +302,7 @@ class account_journal(models.Model):
         dashboard_data = {}  # container that will be filled by functions below
         for journal in self:
             dashboard_data[journal.id] = {
-                'currency_id': journal.currency_id.id or journal.company_id.currency_id.id,
+                'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
                 'company_count': len(self.env.companies),
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
@@ -397,7 +399,8 @@ class account_journal(models.Model):
         }
 
         for journal in bank_cash_journals:
-            currency = journal.currency_id or journal.company_id.currency_id
+            # User may have read access on the journal but not on the company
+            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal.id, (0, 0))
             misc_balance, number_misc = misc_totals.get(journal.default_account_id, (0, 0))
@@ -457,7 +460,8 @@ class account_journal(models.Model):
         curr_cache = {}
         sale_purchase_journals._fill_dashboard_data_count(dashboard_data, 'account.move', 'entries_count', [])
         for journal in sale_purchase_journals:
-            currency = journal.currency_id or journal.company_id.currency_id
+            # User may have read access on the journal but not on the company
+            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency, curr_cache=curr_cache)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency, curr_cache=curr_cache)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
@@ -613,7 +617,8 @@ class account_journal(models.Model):
         result = {}
         curr_cache = {}
         for journal in self:
-            currency = journal.currency_id or journal.company_id.currency_id
+            # User may have read access on the journal but not on the company
+            currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             result[journal.id] = self._count_results_and_sum_amounts(query_result[journal.id], currency, curr_cache)
         return result
 
