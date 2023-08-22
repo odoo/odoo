@@ -596,16 +596,18 @@ class AccountJournal(models.Model):
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company, cache=None):
-        journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
+    def get_next_bank_cash_default_code(self, journal_type, company, cache=None, protected_codes=False):
+        prefix_map = {'cash': 'CSH', 'general': 'GEN', 'bank': 'BNK'}
+        journal_code_base = prefix_map.get(journal_type)
         existing_codes = set(self.env['account.journal'].with_context(active_test=False).search([
             *self.env['account.journal']._check_company_domain(company),
             ('code', 'like', journal_code_base + '%'),
         ]).mapped('code') + (cache or []))
+
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
-            if journal_code not in existing_codes:
+            if journal_code not in existing_codes and (protected_codes and journal_code not in protected_codes or not protected_codes):
                 return journal_code
 
     @api.model
@@ -619,12 +621,11 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    def _fill_missing_values(self, vals):
+    def _fill_missing_values(self, vals, protected_codes=False):
         journal_type = vals.get('type')
-        if 'import_file' in self.env.context and not journal_type:
-            vals['type'] = 'general'
-            if not vals.get('code'):
-                vals['code'] = vals.get('name')
+        is_import = 'import_file' in self.env.context
+        if is_import and not journal_type:
+            vals['type'] = journal_type = 'general'
 
         # 'type' field is required.
         if not journal_type:
@@ -664,6 +665,12 @@ class AccountJournal(models.Model):
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
 
+        if is_import and not vals.get('code'):
+            code = vals['name'][:5]
+            vals['code'] = code if not protected_codes or code not in protected_codes else self.get_next_bank_cash_default_code(journal_type, company, protected_codes)
+            if not vals['code']:
+                raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
+
         # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
@@ -677,7 +684,9 @@ class AccountJournal(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            self._fill_missing_values(vals)
+            # have to keep track of new journal codes when importing
+            codes = [vals['code'] for vals in vals_list if 'code' in vals] if 'import_file' in self.env.context else False
+            self._fill_missing_values(vals, protected_codes=codes)
 
         journals = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals_list)
 
