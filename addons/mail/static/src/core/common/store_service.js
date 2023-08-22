@@ -90,6 +90,7 @@ export class Store {
 
     /** @type {import("@mail/core/common/persona_model").Persona} */
     odoobot = null;
+    odoobotOnboarding;
     /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
     personas = {};
 
