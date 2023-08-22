@@ -698,6 +698,13 @@ export class Record extends DataPoint {
                 delete changes[fieldName];
                 continue;
             }
+            if (
+                fieldName in this.activeFields &&
+                this.activeFields[fieldName].relatedPropertyField
+            ) {
+                delete changes[fieldName];
+                continue;
+            }
             const fieldType = this.fields[fieldName].type;
             if (["one2many", "many2many"].includes(fieldType)) {
                 const staticList = this._cache[fieldName];
