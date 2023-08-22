@@ -67,10 +67,15 @@ patch(Messaging.prototype, "mail/web", {
         const message = this.store.messages[notif.payload.message.id];
         if (
             !this.store.isSmall &&
-            channel.correspondent !== this.store.odoobot &&
+            !(channel.correspondent === this.store.odoobot && this.store.odoobotOnboarding) &&
             !message.isSelfAuthored
         ) {
             this.chatWindowService.insert({ thread: channel });
+        }
+        if (channel.correspondent === this.store.odoobot && this.store.odoobotOnboarding) {
+            // odoobot onboarding was cancelled
+            // this lets new messages of odoobot be managed as any other new messages
+            this.store.odoobotOnboarding = false;
         }
     },
 });

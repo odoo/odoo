@@ -124,6 +124,7 @@ export class Messaging {
         });
         this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
         this.store.initBusId = data.initBusId;
+        this.store.odoobotOnboarding = data.odoobotOnboarding;
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }

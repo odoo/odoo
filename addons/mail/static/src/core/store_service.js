@@ -83,6 +83,7 @@ export class Store {
 
     /** @type {import("@mail/core/persona_model").Persona} */
     odoobot = null;
+    odoobotOnboarding = undefined;
     /** @type {Object.<number, import("@mail/core/persona_model").Persona>} */
     personas = {};
 
