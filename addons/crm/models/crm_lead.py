@@ -139,11 +139,6 @@ class Lead(models.Model):
         compute='_compute_stage_id', readonly=False, store=True,
         copy=False, group_expand='_read_group_stage_ids', ondelete='restrict',
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
-    kanban_state = fields.Selection([
-        ('grey', 'No next activity planned'),
-        ('red', 'Next activity late'),
-        ('green', 'Next activity is planned')], string='Kanban State',
-        compute='_compute_kanban_state')
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -252,19 +247,6 @@ class Lead(models.Model):
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
-
-    @api.depends('activity_date_deadline')
-    def _compute_kanban_state(self):
-        today = date.today()
-        for lead in self:
-            kanban_state = 'grey'
-            if lead.activity_date_deadline:
-                lead_date = fields.Date.from_string(lead.activity_date_deadline)
-                if lead_date >= today:
-                    kanban_state = 'green'
-                else:
-                    kanban_state = 'red'
-            lead.kanban_state = kanban_state
 
     @api.depends('company_id')
     def _compute_user_company_ids(self):
