@@ -11,7 +11,6 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss sidebar");
@@ -995,18 +994,16 @@ QUnit.test("Can unpin chat channel", async () => {
     await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)", 0);
 });
 
-QUnit.test("Unpinning chat should display notification", async (assert) => {
+QUnit.test("Unpinning chat should display notification", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    const { openDiscuss } = await start({
-        services: {
-            notification: makeFakeNotificationService((message) => assert.step(message)),
-        },
-    });
+    const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", 0);
-    assert.verifySteps(["You unpinned your conversation with Mitchell Admin"]);
+    await contains(
+        ".o_notification.border-info:contains(You unpinned your conversation with Mitchell Admin)"
+    );
 });
 
 QUnit.test("Can leave channel", async () => {
