@@ -118,7 +118,7 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl = document.createElement('a');
                         anchorEl.setAttribute('target', '_blank');
                         const iEl = document.createElement('i');
-                        iEl.classList.add('fa', 'rounded-circle', 'shadow-sm');
+                        iEl.classList.add('fa', 'rounded-circle', 'shadow-sm', 'o_editable_media');
                         anchorEl.appendChild(iEl);
                     } else {
                         // Copy existing style if there is already another link.
