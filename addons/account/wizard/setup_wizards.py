@@ -78,6 +78,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         domain=[('type', '=', 'bank'), ('bank_account_id', '=', False)])
     bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
+    company_id = fields.Many2one('res.company', required=True, compute='_compute_company_id')
 
     def _number_unlinked_journal(self):
         return self.env['account.journal'].search_count([
@@ -151,3 +152,8 @@ class SetupBarBankConfigWizard(models.TransientModel):
         extension hook in account_bank_statement_import.
         """
         return self.env["onboarding.onboarding.step"].action_validate_step("account.onboarding_onboarding_step_bank_account")
+
+    def _compute_company_id(self):
+        for wizard in self:
+            if not wizard.company_id:
+                wizard.company_id = self.env.company
