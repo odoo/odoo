@@ -182,7 +182,9 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 ('notifications@example.com', 'example.com'),
                 # default relies on "odoo"
                 (False, 'example.com'),
-                # fallback on user email
+                # fallback on user email if no from_filter
+                ('example_2.com', ' '),
+                ('example_2.com', ','),
                 ('example_2.com', False),
                 (False, False),
             ], [
@@ -192,6 +194,8 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 'full_email@example_2.com',
                 'notifications@example.com',
                 'odoo@example.com',
+                self.env.user.email,
+                self.env.user.email,
                 self.env.user.email,
                 self.env.user.email,
             ],
