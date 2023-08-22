@@ -63,7 +63,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange2",
+            "onchange",
             "/web/action/load",
             "/web/action/run",
             "close handler",

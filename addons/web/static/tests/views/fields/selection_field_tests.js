@@ -147,7 +147,7 @@ QUnit.module("Fields", (hooks) => {
             "should have correct value in color field"
         );
 
-        assert.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange2"]);
+        assert.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange"]);
     });
 
     QUnit.test("unset selection field with 0 as key", async function (assert) {

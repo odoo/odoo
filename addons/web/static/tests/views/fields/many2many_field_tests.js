@@ -666,7 +666,7 @@ QUnit.module("Fields", (hooks) => {
                 "web_read",
                 "get_views",
                 "unity_web_search_read",
-                "onchange2",
+                "onchange",
             ]);
             modal = target.querySelector(".modal");
             await editInput(modal, "[name='display_name'] input", "Hello");
@@ -725,7 +725,7 @@ QUnit.module("Fields", (hooks) => {
                 "web_read",
                 "get_views",
                 "unity_web_search_read",
-                "onchange2",
+                "onchange",
             ]);
 
             modal = target.querySelector(".modal");
@@ -1614,7 +1614,7 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, args) {
                     const { method, kwargs } = args;
                     assert.step(method);
-                    if (method === "onchange2") {
+                    if (method === "onchange") {
                         assert.strictEqual(kwargs.context.default_turtle_trululu, 1);
                         assert.deepEqual(args.args, [
                             [],
@@ -1642,7 +1642,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector("[name='turtle_trululu'] input").value,
                 "first record"
             );
-            assert.verifySteps(["get_views", "onchange2"]);
+            assert.verifySteps(["get_views", "onchange"]);
         }
     );
 
@@ -1699,7 +1699,7 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, ".o_field_widget[name=foo] input", "trigger onchange");
 
-        assert.verifySteps(["onchange2"]);
+        assert.verifySteps(["onchange"]);
         assert.strictEqual(
             $(target).find(".o_x2m_control_panel .o_pager_counter").text().trim(),
             "1-40 / 45",
@@ -1787,7 +1787,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     if (firstOnChange) {
                         firstOnChange = false;
                         return {
@@ -2020,7 +2020,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
                 </tree>`,
             mockRPC(route, args) {
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     assert.strictEqual(args.kwargs.context.default_partner_id, 1);
                     assert.strictEqual(args.kwargs.context.model, "partner");
                     assert.deepEqual(args.kwargs.context.ids, [1]);
@@ -2077,7 +2077,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     assert.strictEqual(args.kwargs.context.default_partner_id, 1);
                     assert.strictEqual(args.kwargs.context.model, "partner");
                     assert.deepEqual(args.kwargs.context.ids, [1]);
@@ -2142,7 +2142,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                     </form>`,
                 mockRPC(route, args) {
-                    if (args.method === "onchange2") {
+                    if (args.method === "onchange") {
                         assert.strictEqual(args.kwargs.context.default_partner_id, 1);
                         assert.strictEqual(args.kwargs.context.model, "partner");
                         assert.deepEqual(args.kwargs.context.ids, [1]);

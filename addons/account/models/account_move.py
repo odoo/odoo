@@ -2519,7 +2519,7 @@ class AccountMove(models.Model):
         for move in self:
             move.display_name = move._get_move_display_name(show_ref=True)
 
-    def onchange2(self, values, field_names, fields_spec):
+    def onchange(self, values, field_names, fields_spec):
         # Since only one field can be changed at the same time (the record is
         # saved when changing tabs) we can avoid building the snapshots for the
         # other field
@@ -2529,7 +2529,7 @@ class AccountMove(models.Model):
         elif 'invoice_line_ids' in field_names:
             values = {key: val for key, val in values.items() if key != 'line_ids'}
             fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
-        return super().onchange2(values, field_names, fields_spec)
+        return super().onchange(values, field_names, fields_spec)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS

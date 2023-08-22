@@ -538,14 +538,14 @@ class HolidaysAllocation(models.Model):
     # ORM Overrides methods
     ####################################################
 
-    def onchange2(self, values, field_names, fields_spec):
+    def onchange(self, values, field_names, fields_spec):
         # Try to force the leave_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
         if values and 'employee_id' in fields_spec and 'employee_id' not in self._context:
             employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
             self = self.with_context(employee_id=employee_id)
-        return super().onchange2(values, field_names, fields_spec)
+        return super().onchange(values, field_names, fields_spec)
 
     @api.depends(
         'holiday_type', 'mode_company_id', 'department_id',

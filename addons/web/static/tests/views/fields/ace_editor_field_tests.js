@@ -257,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
         textArea.value = "a";
         await triggerEvent(textArea, null, "input", {});
         await triggerEvents(textArea, null, ["blur"]);
-        assert.verifySteps(['onchange2: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]']);
+        assert.verifySteps(['onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]']);
         await click(target, ".o_form_button_save");
         assert.verifySteps(['write: [[1],{"foo":"a"}]', "web_read: [[1]]"]);
     });

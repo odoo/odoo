@@ -501,7 +501,7 @@ QUnit.module("Fields", (hooks) => {
         // execute the setTimeout callback
         mockSetTimeout();
         await nextTick();
-        assert.verifySteps(["onchange2"]);
+        assert.verifySteps(["onchange"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField sends batched changes on save", async function (assert) {
@@ -541,7 +541,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "web_read", "name_search"]);
         // save
         await clickSave(target);
-        assert.verifySteps(["onchange2", "write", "web_read"]);
+        assert.verifySteps(["onchange", "write", "web_read"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField in a notebook tab", async function (assert) {
