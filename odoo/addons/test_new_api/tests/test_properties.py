@@ -2223,7 +2223,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
     @mute_logger('odoo.fields')
     def test_properties_field_read_progress_bar(self):
-        """Test the fallback of "_read_progress_bar" when we read a field non-stored."""
+        """Test "_read_progress_bar" with a properties field."""
         Model = self.env['test_new_api.message']
 
         self.messages.discussion = self.discussion_1
@@ -2239,7 +2239,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         result = Model.read_progress_bar(
             domain=[],
             group_by='attributes.myinteger',
-            progress_bar={'field': 'size', 'colors': [0]},
+            progress_bar={'field': 'priority', 'colors': [0]},
         )
         self.assertEqual(result, {'1337': {0: 2}, '5': {0: 1}, 'False': {0: 1}})
 
