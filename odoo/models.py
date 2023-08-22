@@ -6418,21 +6418,16 @@ class BaseModel(metaclass=MetaModel):
             for dep in self.pool.get_dependent_fields(field.base_field)
         )
 
-    def _onchange_eval(self, field_name, onchange, result):
-        """ Apply onchange method(s) for field ``field_name`` with spec ``onchange``
-            on record ``self``. Value assignments are applied on ``self``, while
-            domain and warning messages are put in dictionary ``result``.
+    def _apply_onchange_methods(self, field_name, result):
+        """ Apply onchange method(s) for field ``field_name`` on ``self``. Value
+            assignments are applied on ``self``, while warning messages are put
+            in dictionary ``result``.
         """
-        onchange = onchange.strip()
-        if onchange not in ("1", "true"):
-            return
-
         for method in self._onchange_methods.get(field_name, ()):
             res = method(self)
             if not res:
                 continue
             if res.get('value'):
-                res['value'].pop('id', None)
                 for key, val in res['value'].items():
                     if key in self._fields and key != 'id':
                         self[key] = val

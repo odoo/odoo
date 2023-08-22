@@ -84,5 +84,5 @@ class TestAutomation(TransactionCase):
         self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
 
         # simulate a onchange call on name
-        result = self_portal.onchange2({}, [], {"name": {}, "active": {}})
+        result = self_portal.onchange({}, [], {"name": {}, "active": {}})
         self.assertEqual(result["value"]["active"], False)

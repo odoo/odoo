@@ -585,7 +585,7 @@ export class RelationalModel extends Model {
         }
         const spec = getFieldsSpec(activeFields, fields, evalContext, { withInvisible: true });
         const args = [resId ? [resId] : [], changes, fieldNames, spec];
-        const response = await this.orm.call(resModel, "onchange2", args, { context });
+        const response = await this.orm.call(resModel, "onchange", args, { context });
         if (response.warning) {
             const { type, title, message, className, sticky } = response.warning;
             if (type === "dialog") {

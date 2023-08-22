@@ -1409,7 +1409,7 @@ class PropertiesCase(TestPropertiesMixin):
                 'value': 'Test',
             }],
         }
-        result = message.onchange2(values, ['discussion'], fields_spec)
+        result = message.onchange(values, ['discussion'], fields_spec)
         self.assertIn('attributes', result['value'], 'Should have detected the definition record change')
         self.assertEqual(result['value']['attributes'], [], 'Should have reset the properties definition')
 
@@ -1420,7 +1420,7 @@ class PropertiesCase(TestPropertiesMixin):
             'discussion': self.discussion_2.id,
             'attributes': [],
         }
-        result = message.onchange2(values, ['discussion'], fields_spec)
+        result = message.onchange(values, ['discussion'], fields_spec)
         self.assertIn('attributes', result['value'], 'Should have detected the definition record change')
         self.assertEqual(
             result['value']['attributes'],

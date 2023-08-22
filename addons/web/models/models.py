@@ -886,7 +886,7 @@ class Base(models.AbstractModel):
 
             return { 'values': field_range, }
 
-    def onchange2(self, values: Dict, field_names: List[str], fields_spec: Dict):
+    def onchange(self, values: Dict, field_names: List[str], fields_spec: Dict):
         """
         Perform an onchange on the given fields, and return the result.
 
@@ -1062,7 +1062,7 @@ class Base(models.AbstractModel):
         while todo:
             # apply field-specific onchange methods
             for field_name in todo:
-                record._onchange_eval(field_name, "1", result)
+                record._apply_onchange_methods(field_name, result)
                 done.add(field_name)
 
             if not env.context.get('recursive_onchanges', True):

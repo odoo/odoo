@@ -347,7 +347,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" context="{'blip': int_field, 'blop': 3}" />
                 </form>`,
             mockRPC(route, { method, args }) {
-                if (method === "onchange2") {
+                if (method === "onchange") {
                     const context = args[3].trululu.context;
                     assert.strictEqual(
                         context.blip,
@@ -800,7 +800,7 @@ QUnit.module("Fields", (hooks) => {
                     if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    if (method === "onchange2") {
+                    if (method === "onchange") {
                         assert.strictEqual(
                             args[1].user_id,
                             17,
@@ -829,7 +829,7 @@ QUnit.module("Fields", (hooks) => {
                 "web_read",
                 "write",
                 "read",
-                "onchange2",
+                "onchange",
             ]);
         }
     );
@@ -2742,7 +2742,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             async mockRPC(route, { args, method }, performRPC) {
                 assert.step(method);
-                if (method === "onchange2") {
+                if (method === "onchange") {
                     const result = await performRPC(...arguments);
                     result.value.trululu = {
                         ...result.value.trululu,
@@ -2758,7 +2758,7 @@ QUnit.module("Fields", (hooks) => {
             "hello world",
             "should have taken the correct display name"
         );
-        assert.verifySteps(["get_views", "onchange2"]);
+        assert.verifySteps(["get_views", "onchange"]);
     });
 
     QUnit.test(
@@ -3589,7 +3589,7 @@ QUnit.module("Fields", (hooks) => {
                 "get_views",
                 "unity_web_search_read", // to display results in the dialog
                 "name_search",
-                "onchange2",
+                "onchange",
                 "write",
                 "web_read",
             ]);
@@ -3639,7 +3639,7 @@ QUnit.module("Fields", (hooks) => {
                 "get_views",
                 "unity_web_search_read", // to display results in the dialog
                 "name_search",
-                "onchange2",
+                "onchange",
                 "write",
                 "web_read",
             ]);
@@ -3791,7 +3791,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views", // main form view
-            "onchange2",
+            "onchange",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
             "unity_web_search_read", // to display results in the dialog
@@ -3849,7 +3849,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views", // main form view
-            "onchange2",
+            "onchange",
             "name_search", // empty search, triggered when the user clicks in the input
             "name_search", // to display results in the dropdown
             "name_search", // to get preselected ids matching the search
@@ -4000,7 +4000,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views",
-            "onchange2",
+            "onchange",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
             "unity_web_search_read", // to display results in the dialog

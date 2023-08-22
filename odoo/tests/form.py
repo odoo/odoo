@@ -529,7 +529,7 @@ class Form:
                 record = record.with_context(**context)
 
         values = self._get_onchange_values()
-        result = record.onchange2(values, field_names, self._view['fields_spec'])
+        result = record.onchange(values, field_names, self._view['fields_spec'])
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 

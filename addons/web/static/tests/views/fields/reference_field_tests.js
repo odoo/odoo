@@ -248,7 +248,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(
             [
                 "get_views",
-                "onchange2",
+                "onchange",
                 "name_search", // for the select
                 "name_search", // for the spawned many2one
                 "name_create",
@@ -861,7 +861,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="display_name"/>
                 </tree>`,
             mockRPC: (route, { method, args }) => {
-                if (method === "onchange2") {
+                if (method === "onchange") {
                     return {
                         value: {
                             reference: {
