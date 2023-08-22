@@ -16,8 +16,9 @@ class TestL10nPtPos(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)
 
         self.company_data['company'].write({
-            'name': 'real',
+            'name': 'Portuguese Company',
             'country_id': self.env.ref('base.pt').id,
+            'account_fiscal_country_id': self.env.ref('base.pt').id,
             'vat': 'PT123456789',
         })
         self.company_pt = self.company_data['company']
