@@ -4,6 +4,7 @@ import { ActivityCompiler } from "@mail/views/web/activity/activity_compiler";
 
 import { Component } from "@odoo/owl";
 
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { Field } from "@web/views/fields/field";
 import {
@@ -25,6 +26,7 @@ export class ActivityRecord extends Component {
     static template = "mail.ActivityRecord";
 
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.user = useService("user");
         this.widget = {
             deletable: false,
