@@ -379,6 +379,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         $extraEditableZones = $extraEditableZones.add($editableSavableZones
             .find('.s_social_media a > i'));
 
+        // TODO find a similar system for texts.
+        // grep: SOCIAL_MEDIA_TITLE_CONTENTEDITABLE
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media .s_social_media_title'));
+
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span
