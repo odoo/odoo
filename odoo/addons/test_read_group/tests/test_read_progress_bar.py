@@ -143,17 +143,6 @@ class TestReadProgressBar(common.TransactionCase):
             'field': 'x_state_computed',
             'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
         }
-        result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
-        self.assertEqual(result, {
-            str(c1.id): {'foo': 3, 'bar': 1, 'baz': 1},
-            str(c2.id): {'foo': 1, 'bar': 2, 'baz': 1},
-            str(c3.id): {'foo': 2, 'bar': 0, 'baz': 4},
-        })
-
-        result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
-        self.assertEqual(result, {
-            # first week is not the same as above, but that seems acceptable...
-            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
-            'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
-            'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
-        })
+        # It is not possible to read_progress_bar with ungroupable fields
+        with self.assertRaises(ValueError):
+            result = self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
