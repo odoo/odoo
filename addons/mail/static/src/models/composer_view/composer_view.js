@@ -7,6 +7,8 @@ import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 
+import session from "web.session";
+
 function factory(dependencies) {
 
     class ComposerView extends dependencies['mail.model'] {
@@ -298,6 +300,7 @@ function factory(dependencies) {
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                params.context = Object.assign(params.context || {}, session.user_context);
                 const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
