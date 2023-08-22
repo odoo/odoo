@@ -9,18 +9,18 @@
 
 .o_field_selector_popover:not(.o_legacy_field_selector_popover) {
     width: 265px;
-    background: white;
-    --o-input-background-color: white;
+    background-color: $dropdown-bg;
+    --o-input-background-color: #{$dropdown-bg};
 
     &:focus {
         outline: none;
     }
 
-    .o_field_selector_popover_header {
-        color: white;
+    .o_field_selector_popover_header, .o_field_selector_popover_footer {
+        color: color-contrast(map-get($theme-colors, 'primary'));
         background: map-get($theme-colors, 'primary');
         font-weight: bold;
-        padding: 5px 0 5px 0.4em;
+        padding: 5px 0.4em;
 
         .o_field_selector_title {
             width: 100%;
@@ -28,14 +28,11 @@
             padding: 0px 35px;
             text-align: center;
         }
-        .o_field_selector_search {
-            padding-right: 0.4rem;
-            > .o_input {
-                font-size: 13px;
-                padding: 5px 0.4rem;
-                text-align: left;
-                line-height: normal;
-            }
+        .o_field_selector_search > .o_input, > input {
+            color: $o-main-text-color;
+            font-size: 115%;
+            border: none;
+            padding: 5px 0.4rem;
         }
         .o_field_selector_popover_option {
             @include o-position-absolute($top: 0);
@@ -67,10 +64,8 @@
                 cursor: pointer;
                 font-family: Arial;
                 font-size: 13px;
-                color: #444;
-                border-bottom: 1px solid #eee;
                 &.active {
-                    background: #f5f5f5;
+                    background: $dropdown-link-hover-bg;
                 }
                 .o_field_selector_item_title {
                     font-size: 12px;
@@ -82,16 +77,6 @@
                     padding: 10px;
                 }
             }
-        }
-    }
-    .o_field_selector_popover_footer {
-        background: map-get($theme-colors, 'primary');
-        padding: 5px 0.4em;
-
-        > input {
-            font-size: 13px;
-            width: 100%;
-            padding: 0 0.4rem;
         }
     }
 }
