@@ -460,7 +460,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/functions.scss',
             'web/static/src/scss/mixins_forwardport.scss',
             'web/static/src/scss/bs_mixins_overrides.scss',
-            'web/static/src/legacy/scss/utils.scss',
+            'web/static/src/scss/utils.scss',
 
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
