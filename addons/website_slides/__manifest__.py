@@ -143,6 +143,7 @@ Featuring
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
             'web/static/src/views/fields/translation_dialog.scss',
+            'web/static/src/views/fields/signature/signature_field.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
