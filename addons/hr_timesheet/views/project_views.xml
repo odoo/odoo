@@ -119,12 +119,12 @@
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="progress" widget="progressbar" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
-                <xpath expr="//field[@name='date_deadline']" position="before" groups="hr_timesheet.group_hr_timesheet_user">
+                <xpath expr="//field[@name='date_deadline']" position="before">
                     <field name="encode_uom_in_days" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
-                    <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('encode_uom_in_days', '=', True)]}"/>
-                    <label for="planned_hours" string="Allocated Days" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('encode_uom_in_days', '=', False)]}"/>
-                    <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('encode_uom_in_days', '=', True)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <label for="planned_hours" string="Allocated Days" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('encode_uom_in_days', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="planned_hours" class="oe_inline" widget="float_time"/>
                         <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
                             (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
