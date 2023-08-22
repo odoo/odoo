@@ -35,9 +35,9 @@
 
 // BASE SETTINGS LAYOUT
 .o_base_settings_view .o_form_renderer {
-   --settings__tab-bg: #{map-get($grays, '900')};
-   --settings__tab-bg--active: #{map-get($grays, '800')};
-   --settings__tab-color: #{map-get($grays, '400')};
+   --settings__tab-bg: #{map-get($grays, '100')};
+   --settings__tab-bg--active: #{map-get($grays, '200')};
+   --settings__tab-color: #{map-get($grays, '500')};
    --settings__title-bg: #{map-get($grays, '200')};
 
    height: 100%;
@@ -92,7 +92,7 @@
                }
 
                &:hover, &.selected {
-                   color: white;
+                   color: map-get($grays, '900');
                }
            }
        }
