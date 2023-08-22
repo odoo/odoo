@@ -25,3 +25,27 @@ ProductScreen.do.scan_ean13_barcode("2100002080003");
 ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', 8);
 
 Tour.register('BarcodeScanningTour', { test: true, url: '/pos/ui' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+
+// Add the Product 1 with GS1 barcode
+ProductScreen.do.scan_barcode("0108431673020125100000001");
+ProductScreen.check.selectedOrderlineHas('Product 1');
+ProductScreen.do.scan_barcode("0108431673020125100000001");
+ProductScreen.check.selectedOrderlineHas('Product 1', 2);
+
+// Add the Product 2 with normal barcode
+ProductScreen.do.scan_barcode("08431673020126");
+ProductScreen.check.selectedOrderlineHas('Product 2');
+ProductScreen.do.scan_barcode("08431673020126");
+ProductScreen.check.selectedOrderlineHas('Product 2', 2);
+
+// Add the Product 3 with normal barcode
+ProductScreen.do.scan_barcode("3760171283370");
+ProductScreen.check.selectedOrderlineHas('Product 3');
+ProductScreen.do.scan_barcode("3760171283370");
+ProductScreen.check.selectedOrderlineHas('Product 3', 2);
+
+Tour.register('GS1BarcodeScanningTour', { test: true, url: '/pos/ui' }, getSteps());
