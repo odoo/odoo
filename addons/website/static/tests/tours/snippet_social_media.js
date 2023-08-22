@@ -157,5 +157,32 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         content: "Wait until save's calls are finished",
         trigger: "iframe body:not(.editor_enable)",
         run: function () {}, // it's a check
-    }
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnSnippet({
+        id: 's_social_media',
+        name: 'Social Media',
+    }),
+    {
+        content: "Check if we can still change custom icons",
+        trigger: 'iframe .s_social_media a[href="https://whatever.it/1EdSw9X"] i.fa-pencil',
+        run: 'dblclick',
+    },
+    {
+        content: "Select a new icon",
+        trigger: '.o_select_media_dialog .fa-heart',
+    },
+    {
+        content: "Check if the result is correct after setting the icon",
+        trigger: "iframe .s_social_media" +
+                 ":has(a:eq(0)[href='/website/social/twitter'])" +
+                 ":has(a:eq(1)[href='/website/social/linkedin'])" +
+                 ":has(a:eq(2)[href='/website/social/youtube'])" +
+                 ":has(a:eq(3)[href='/website/social/instagram'])" +
+                 ":has(a:eq(4)[href='/website/social/github'])" +
+                 ":has(a:eq(5)[href='/website/social/facebook'])" +
+                 ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-heart))" +
+                 ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+        run: () => {}, // This is a check.
+    },
 ]);
