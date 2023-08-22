@@ -412,12 +412,12 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.notOk(target.querySelector(".o_field_boolean input").disabled);
             assert.verifySteps([
                 "get_views", // initial setting action
-                "onchange2", // this is a setting view => new record transient record
+                "onchange", // this is a setting view => new record transient record
                 "create", // create the record before doing the action
                 "web_read", // read the created record
                 "get_views", // for other action in breadcrumb,
                 "unity_web_search_read", // with a searchread
-                "onchange2", // when we come back, we want to restart from scratch
+                "onchange", // when we come back, we want to restart from scratch
             ]);
         }
     );
@@ -550,7 +550,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         assert.verifySteps([
             "get_views", // initial setting action
-            "onchange2", // this is a setting view => new record transient record
+            "onchange", // this is a setting view => new record transient record
         ]);
 
         await click(target.querySelector("button[name='4']"));
@@ -559,14 +559,14 @@ QUnit.module("SettingsFormView", (hooks) => {
             "create", // settings: create the record before doing the action
             "web_read", // settings: read the created record
             "get_views", // dialog: get views
-            "onchange2", // dialog: onchange
+            "onchange", // dialog: onchange
         ]);
 
         await click(target, ".modal button.btn.btn-primary.o_form_button_save");
         assert.verifySteps([
             "create", // dialog: create the record before doing back to the settings
             "web_read", // dialog: read the created record
-            "onchange2", // settings: when we come back, we want to restart from scratch
+            "onchange", // settings: when we come back, we want to restart from scratch
         ]);
     });
 
@@ -1034,7 +1034,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "onchange2"]);
+        assert.verifySteps(["get_views", "onchange"]);
         await click(target, ".o_field_boolean input[type='checkbox']");
         await click(target, ".myBtn");
         await click(target, ".modal .btn-primary");
@@ -1075,7 +1075,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "onchange2"]);
+        assert.verifySteps(["get_views", "onchange"]);
         await click(target, ".o_field_boolean input[type='checkbox']");
         await click(target, ".myBtn");
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
@@ -1479,7 +1479,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "onchange2",
+            "onchange",
         ]);
         assert.containsNone(
             target,
@@ -1497,7 +1497,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ".o_field_boolean input:checked",
             "checkbox should not be checked"
         );
-        assert.verifySteps(["onchange2"]);
+        assert.verifySteps(["onchange"]);
     });
 
     QUnit.test("Settings Radio widget: show and search", async function (assert) {

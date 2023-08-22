@@ -118,8 +118,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal:contains(Create new product as a new Product)")
         assert.verifySteps([
             "get_views",
-            "onchange2",
-            "onchange2",
+            "onchange",
+            "onchange",
             "name_search",
         ]);
 
