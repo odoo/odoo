@@ -170,6 +170,9 @@
                         onSubmit: this._dropinOnSubmit.bind(this),
                     };
                     const checkout = new AdyenCheckout(configuration);
+                    const dropinContainer = document.getElementById(
+                        `o_adyen_${this.formType}_dropin_container_${paymentOptionId}`
+                    );
                     this.adyenDropin = checkout.create(
                         'dropin', {
                             openFirstPaymentMethod: true,
@@ -178,8 +181,35 @@
                             showPaymentMethods: true,
                             showPayButton: false,
                             setStatusAutomatically: true,
+                            onSelect: component => {
+                                if (component.props.name === "PayPal") {
+                                    if (!this.paypalForm) {
+                                        // create div element to render PayPal component
+                                        this.paypalForm = document.createElement("div");
+                                        dropinContainer.appendChild(this.paypalForm);
+                                        this.paypalForm.classList.add("mt-2");
+                                        // create and mount PayPal button in the component
+                                        checkout.create("paypal",
+                                            {
+                                                style: {
+                                                    disableMaxWidth: true
+                                                },
+                                                blockPayPalCreditButton: true,
+                                                blockPayPalPayLaterButton: true
+                                            }
+                                        ).mount(this.paypalForm).providerId = paymentOptionId;
+                                        this.txContext.tokenizationRequested = false;
+                                    }
+                                    // Hide Pay button and show PayPal component
+                                    this._hideInputs();
+                                    this.paypalForm.classList.remove('d-none');
+                                } else if (this.paypalForm) {
+                                    this.paypalForm.classList.add('d-none');
+                                    this._showInputs();
+                                }
+                            },
                         },
-                    ).mount(`#o_adyen_${this.formType}_dropin_container_${paymentOptionId}`);
+                    ).mount(dropinContainer);
                     this.adyenDropin.providerId = paymentOptionId;
                 });
             }).guardedCatch((error) => {
