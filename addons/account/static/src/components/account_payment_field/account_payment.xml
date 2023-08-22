@@ -92,6 +92,10 @@
                             <td><strong>Journal: </strong></td>
                             <td><t t-out="props.journal_name"/><span t-if="props.payment_method_name"> (<t t-out="props.payment_method_name"/>)</span></td>
                         </tr>
+                        <tr t-if="props.company_name">
+                            <td><strong>Branch: </strong></td>
+                            <td><t t-out="props.company_name"/></td>
+                        </tr>
                     </table>
                 </div>
                 <button class="btn btn-sm btn-primary js_unreconcile_payment float-start" t-if="!props.is_exchange" style="margin-top:5px; margin-bottom:5px;" groups="account.group_account_invoice" t-on-click="() => props._onRemoveMoveReconcile(props.move_id, props.partial_id)">Unreconcile</button>
