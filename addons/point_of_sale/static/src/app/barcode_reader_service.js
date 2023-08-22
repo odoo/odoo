@@ -55,6 +55,9 @@ export class BarcodeReader {
         let parseBarcode;
         try {
             parseBarcode = this.parser.parse_barcode(code);
+            if (Array.isArray(parseBarcode) && !parseBarcode.some(element => element.type === 'product')) {
+                throw new GS1BarcodeError('The GS1 barcode must contain a product.');
+            }
         } catch (error) {
             if (this.fallbackParser && error instanceof GS1BarcodeError) {
                 parseBarcode = this.fallbackParser.parse_barcode(code);
