@@ -194,37 +194,38 @@
 
 <t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
-        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
+        <div class="o_configurator_odoo_logo position-lg-absolute my-4 mb-lg-0 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
-            <div class="m-auto w-100 w-md-75 w-xl-100">
-                <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
+            <div class="d-flex flex-column align-items-center justify-content-lg-center m-auto px-lg-4 h-100 w-100 w-sm-75 w-lg-100">
+                <div class="o_configurator_typing_text mb-4">
+                    <span>Choose your favorite <b>Theme</b></span>
                 </div>
-                <div class="container">
-                    <div class="row pb-4 pt-5">
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
+                <div class="o_themes_preview_container container-fluid">
+                    <div class="row h-100">
+                        <div class="col-12 col-lg-4 d-flex align-items-center mb-4 mb-lg-0">
                             <t t-if="state.getThemeName(1)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                <div class="theme_preview border rounded position-relative w-100 o_configurator_show_fast">
+                                    <h6 class="theme_preview_tip d-none d-lg-block text-center">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(1))"/>
                                 </div>
                             </t>
                         </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
+                        <div class="col-12 col-lg-4 d-flex align-items-center mb-4 mb-lg-0">
                             <t t-if="state.getThemeName(0)">
                                 <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                    <h6 class="theme_preview_tip d-none d-lg-block text-center">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(0))"/>
                                 </div>
                             </t>
                         </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end">
+                        <div class="col-12 col-lg-4 d-flex align-items-center mb-4 mb-lg-0">
                             <t t-if="state.getThemeName(2)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                <div class="theme_preview border rounded position-relative w-100 o_configurator_show_fast">
+                                    <h6 class="theme_preview_tip d-none d-lg-block text-center">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3" dir="ltr"/>
                                     <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(2))"/>
