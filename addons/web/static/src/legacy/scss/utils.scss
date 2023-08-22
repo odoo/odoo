@@ -223,13 +223,6 @@
     @return $-map;
 }
 
-// Function to swap two values in a list
-@function o-swap($list, $i, $j) {
-    $tmp: nth($list, $i);
-    $list: set-nth($list, $i, nth($list, $j));
-    @return set-nth($list, $j, $tmp);
-}
-
 // Function to get an element of a list with a default value in case the index
 // is out-of-bounds; also return that value if the retrieved value is null.
 @function o-safe-nth($list, $index, $default: null) {
@@ -245,15 +238,6 @@
 }
 
 // ------- Kanban grouped mixins -------
-@mixin o-kanban-tag-color {
-    @for $size from 1 through length($o-colors) {
-        // Note: the first color is supposed to be invisible if there is a color
-        // field but it is used as a default color when there is no color field
-        &.o_tag_color_#{$size - 1} span {
-            background-color: nth($o-colors, $size);
-        }
-    }
-}
 @mixin o-kanban-record-color {
     @for $size from 2 through length($o-colors) {
         // Note: the first color is not defined as it is the 'no color' for kanban
@@ -265,13 +249,6 @@
         }
     }
 }
-@mixin o-kanban-header-title {
-    display: flex;
-    align-items: center;
-    height: $o-kanban-header-title-height;
-    line-height: 2.2;
-    color: $headings-color;
-}
 
 // ------- Kanban records mixins -------
 @mixin o-kanban-record-title($font-size: $h5-font-size) {
@@ -280,16 +257,6 @@
     font-weight: 500;
     margin-bottom: 0;
     margin-top: 0;
-}
-@mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
-    margin: 1px 1px 0 0;
-    padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
-    vertical-align: top;
-    @include o-hover-text-color($body-color, $headings-color);
-}
-@mixin o-kanban-dropdown-open {
-    position: relative;
-    z-index: $zindex-dropdown + 1;
 }
 @mixin o-kanban-colorpicker {
     max-width: 150px;

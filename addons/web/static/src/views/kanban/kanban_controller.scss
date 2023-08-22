@@ -298,10 +298,15 @@
             }
 
             .dropdown-toggle {
-                @include o-kanban-dropdown(var(--KanbanRecord-padding-h));
+                $padding-base: var(--KanbanRecord-padding-h);
+                margin: 1px 1px 0 0;
+                padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
+                vertical-align: top;
+                @include o-hover-text-color($body-color, $headings-color);
             }
             &.show .dropdown-toggle {
-                @include o-kanban-dropdown-open;
+                position: relative;
+                z-index: $zindex-dropdown + 1;
             }
             .dropdown-menu {
                 margin-top: -1px;
@@ -336,7 +341,13 @@
             .o_tag {
                 --Tag-max-width: MAX(200px, 100%);
                 --Tag-font-size: #{$o-font-size-base-smaller};
-                @include o-kanban-tag-color;
+                @for $size from 1 through length($o-colors) {
+                    // Note: the first color is supposed to be invisible if there is a color
+                    // field but it is used as a default color when there is no color field
+                    &.o_tag_color_#{$size - 1} span {
+                        background-color: nth($o-colors, $size);
+                    }
+                }
             }
         }
 
