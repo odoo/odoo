@@ -117,6 +117,9 @@ var BarcodeReader = core.Class.extend({
         let parsed_result;
         try {
             parsed_result = this.barcode_parser.parse_barcode(code);
+            if (Array.isArray(parsed_result) && !parsed_result.some(element => element.type === 'product')) {
+                throw new GS1BarcodeError('The GS1 barcode must contain a product.');
+            }
         } catch (error) {
             if (this.fallbackBarcodeParser && error instanceof GS1BarcodeError) {
                 parsed_result = this.fallbackBarcodeParser.parse_barcode(code);
