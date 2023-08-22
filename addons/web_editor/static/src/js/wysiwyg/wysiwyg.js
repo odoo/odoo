@@ -1467,6 +1467,7 @@ export class Wysiwyg extends Component {
             if (!link) {
                 return
             }
+            this._shouldDelayBlur = true;
             this.env.services.dialog.add(LinkDialog, {
                 ...this.options.linkOptions,
                 editable: this.odooEditor.editable,
@@ -2743,7 +2744,10 @@ export class Wysiwyg extends Component {
             this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         }
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
-        if (e.target.closest('.oe-toolbar') || e.target.closest('.o_we_crop_buttons') || (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
+        if (
+            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_buttons') ||
+            (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))
+        ) {
             this._shouldDelayBlur = true;
         } else {
             if (this._pendingBlur && !e.target.closest('.o_wysiwyg_wrapper')) {
