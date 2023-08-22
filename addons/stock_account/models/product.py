@@ -856,7 +856,7 @@ class ProductCategory(models.Model):
             account_moves._post()
         return res
 
+    # delete in master
     @api.onchange('property_valuation')
     def onchange_property_valuation(self):
-        # Remove or set the account stock properties if necessary
-        self._check_valuation_accounts()
+        pass
