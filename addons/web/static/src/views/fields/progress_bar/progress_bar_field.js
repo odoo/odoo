@@ -54,6 +54,10 @@ export class ProgressBarField extends Component {
         return this.props.record.data[this.maxValueField] || 100;
     }
 
+    get progressBarColorClass() {
+        return this.currentValue > this.maxValue ? this.props.overflowClass : "bg-primary";
+    }
+
     formatCurrentValue(humanReadable = !this.state.isEditing) {
         const formatter = formatters.get(Number.isInteger(this.currentValue) ? "integer" : "float");
         return formatter(this.currentValue, { humanReadable });
