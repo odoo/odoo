@@ -437,7 +437,7 @@
                            decoration-danger="payment_state == 'not_paid'"
                            decoration-warning="payment_state in ('partial', 'in_payment')"
                            decoration-success="payment_state in ('paid', 'reversed')"
-                           invisible="payment_state in 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
+                           invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
                            optional="show"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
