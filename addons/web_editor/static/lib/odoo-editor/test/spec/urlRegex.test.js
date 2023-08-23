@@ -13,20 +13,20 @@ describe('urlRegex', () => {
         const match = text.match(URL_REGEX);
         chai.expect(match).to.be.equal(null);
     });
-    it('should match abc.abc.abc', () => {
-        const url = 'abc.abc.abc';
+    it('should match abc.abc.com', () => {
+        const url = 'abc.abc.com';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX);
         chai.expect(match[0]).to.be.equal(url);
     });
-    it('should match http://abc.abc.abc', () => {
-        const url = 'http://abc.abc.abc';
+    it('should match http://abc.abc.in', () => {
+        const url = 'http://abc.abc.in';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX);
         chai.expect(match[0]).to.be.equal(url);
     });
-    it('should match https://abc.abc.abc', () => {
-        const url = 'https://abc.abc.abc';
+    it('should match https://abc.abc.be', () => {
+        const url = 'https://abc.abc.be';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX);
         chai.expect(match[0]).to.be.equal(url);
@@ -58,20 +58,20 @@ describe('urlRegex with infos', () => {
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match).to.be.equal(null);
     });
-    it('should match abc.abc.abc', () => {
-        const url = 'abc.abc.abc';
+    it('should match abc.abc.com', () => {
+        const url = 'abc.abc.com';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match[0]).to.be.equal(url);
     });
-    it('should match http://abc.abc.abc', () => {
-        const url = 'http://abc.abc.abc';
+    it('should match http://abc.abc.in', () => {
+        const url = 'http://abc.abc.in';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match[0]).to.be.equal(url);
     });
-    it('should match https://abc.abc.abc', () => {
-        const url = 'https://abc.abc.abc';
+    it('should match https://abc.abc.be', () => {
+        const url = 'https://abc.abc.be';
         const text = `abc ${url} abc`;
         const match = text.match(URL_REGEX_WITH_INFOS);
         chai.expect(match[0]).to.be.equal(url);

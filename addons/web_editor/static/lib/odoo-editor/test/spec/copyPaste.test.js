@@ -1259,9 +1259,9 @@ describe('Copy and paste', () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="http://existing.com">[]c</a>d</p>',
                     stepFunction: async editor => {
-                        await pasteText(editor, 'https://www.xyz.xdc');
+                        await pasteText(editor, 'https://www.xyz.c');
                     },
-                    contentAfter: '<p>a<a href="https://www.xyz.xdcc">https://www.xyz.xdc[]c</a>d</p>',
+                    contentAfter: '<p>a<a href="https://www.xyz.cc">https://www.xyz.c[]c</a>d</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<a href="http://existing.com">b[].com</a>d</p>',
@@ -1477,9 +1477,9 @@ describe('Copy and paste', () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
                     stepFunction: async editor => {
-                        await pasteText(editor, 'https://www.xyz.xdc ');
+                        await pasteText(editor, 'https://www.xyz.be ');
                     },
-                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
+                    contentAfter: '<p>ab<a href="https://www.xyz.be">https://www.xyz.be</a> []cd</p>',
                 });
             });
             it('should paste plain text content over a link if all of its contents is selected', async () => {
