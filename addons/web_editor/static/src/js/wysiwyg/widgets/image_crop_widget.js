@@ -74,6 +74,7 @@ const ImageCropWidget = Widget.extend({
         }
         const _super = this._super.bind(this);
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
+        const $cropButtons = this.$('.o_we_crop_buttons');
 
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
@@ -86,6 +87,8 @@ const ImageCropWidget = Widget.extend({
         offset.left += parseInt(this.$media.css('padding-left'));
         offset.top += parseInt(this.$media.css('padding-right'));
         $cropperWrapper.offset(offset);
+        offset.top += parseInt(cropperImage.style.height) + 10;
+        $cropButtons.offset(offset);
 
         await loadImage(this.originalSrc, cropperImage);
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
