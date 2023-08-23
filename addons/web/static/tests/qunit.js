@@ -9,6 +9,7 @@ import {
 } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
 import { escape } from "@web/core/utils/strings";
+import { ElementSelector } from "@web/core/utils/element_selector";
 
 function setQUnitDebugMode() {
     owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
@@ -47,26 +48,30 @@ export function setupQUnit() {
     // QUnit assert
     // -----------------------------------------------------------------------------
     /**
-     * Checks that the target contains exactly n matches for the selector.
+     * Checks that the HTMLElement target contains exactly n matches for the HTMLElement selector.
      *
      * Example: assert.containsN(document.body, '.modal', 0)
      */
     function containsN(target, selector, n, msg) {
-        let $el;
-        if (target._widgetRenderAndInsert) {
-            $el = target.$el; // legacy widget
-        } else if (target instanceof Component) {
+        let targetElement = new ElementSelector(target);
+        if (target instanceof Component && !target.el) {
             if (!target.el) {
                 throw new Error(
                     `containsN assert with selector '${selector}' called on an unmounted component`
                 );
             }
-            $el = $(target.el);
-        } else {
-            $el = target instanceof Element ? $(target) : target;
+            targetElement = new ElementSelector(target.el);
         }
-        msg = msg || `Selector '${selector}' should have exactly ${n} matches inside the target`;
-        QUnit.assert.strictEqual($el.find(selector).length, n, msg);
+        if (targetElement.toElement instanceof HTMLElement) {
+            msg =
+                msg ||
+                `Selector '${selector.toText}' should have exactly ${n} matches inside the target ${targetElement.toText}`;
+            QUnit.assert.strictEqual(targetElement.contains(selector), n, msg);
+        } else {
+            throw new Error(
+                `target must be instanceof HTMLElement (and be unique, not a NodeList)`
+            );
+        }
     }
 
     /**
