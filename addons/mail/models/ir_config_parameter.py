@@ -20,9 +20,6 @@ class IrConfigParameter(models.Model):
                 # remove existing users, including inactive template user
                 # admin will regain the right via implied_ids on group_system
                 group_user._remove_group(group_mail_template_editor)
-        # sanitize, normalize; note that False = unlink ICP
-        elif key in {'mail.bounce.alias', 'mail.catchall.alias'} and value:
-            value = self.env['mail.alias']._sanitize_alias_name(value)
         # sanitize and normalize allowed catchall domains
         elif key == 'mail.catchall.domain.allowed' and value:
             value = self.env['mail.alias']._sanitize_allowed_domains(value)

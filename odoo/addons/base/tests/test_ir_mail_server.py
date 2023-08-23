@@ -51,9 +51,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # TEMPORARY
-        for icp in {'mail.default.from', 'mail.catchall.alias', 'mail.bounce.alias', 'mail.catchall.domain', 'mail.default.from_filter'}:
-            cls.env['ir.config_parameter'].sudo().set_param(icp, False)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', False)
         cls._init_mail_servers()
         cls.default_bounce_address = 'CACA'
         cls.default_from_address = 'PROUT'
