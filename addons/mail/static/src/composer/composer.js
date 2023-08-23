@@ -484,7 +484,7 @@ export class Composer extends Component {
         const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (
-            el.value.trim() ||
+            this.props.composer.textInputContent.trim() ||
             (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
             (this.message && this.message.attachments.length > 0)
         ) {
@@ -492,7 +492,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(el.value);
+            await cb(this.props.composer.textInputContent);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -525,7 +525,10 @@ export class Composer extends Component {
     }
 
     async editMessage() {
-        if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
+        if (
+            this.props.composer.textInputContent ||
+            this.props.composer.message.attachments.length > 0
+        ) {
             await this.processMessage(async (value) =>
                 this.messageService.edit(
                     this.props.composer.message,
@@ -546,7 +549,7 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        const textContent = this.ref.el.value;
+        const textContent = this.props.composer.textInputContent;
         const firstPart = textContent.slice(0, this.props.composer.selection.start);
         const secondPart = textContent.slice(this.props.composer.selection.end, textContent.length);
         this.props.composer.textInputContent = firstPart + str + secondPart;
