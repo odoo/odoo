@@ -866,6 +866,47 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id == new_lot)), 1)
         self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_id != new_lot)), 2)
 
+    def test_multiple_component_records_for_incomplete_move(self):
+        self.bom.consumption = 'flexible'
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 10
+            picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        move = picking_receipt.move_ids_without_package
+
+        # Register the five first finished products
+        action = move.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 5
+            mo_form.save()
+        mo.subcontracting_record_component()
+        self.assertEqual(move.quantity_done, 5)
+
+        # Register two other finished products
+        action = move.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 2
+            mo_form.save()
+        mo.subcontracting_record_component()
+        self.assertEqual(move.quantity_done, 7)
+
+        # Validate picking without backorder
+        backorder_wizard_dict = picking_receipt.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+
+        self.assertRecordValues(move._get_subcontract_production(), [
+            {'product_qty': 5, 'state': 'done'},
+            {'product_qty': 2, 'state': 'done'},
+            {'product_qty': 3, 'state': 'cancel'},
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
