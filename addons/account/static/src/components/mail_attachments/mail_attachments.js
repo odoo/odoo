@@ -54,12 +54,20 @@ export class MailAttachments extends Component {
     }
 
     onFileRemove(deleteId) {
-        for(let item of this.getValue()){
-            if(item.id == deleteId && !item.placeholder){
-                this.attachmentIdsToUnlink.add(item.id);
+        const newValue = [];
+        for (let item of this.getValue()) {
+            if (item.id === deleteId) {
+                if (item.placeholder || item.protect_from_deletion) {
+                    const copyItem = Object.assign({ skip: true }, item);
+                    newValue.push(copyItem);
+                } else {
+                    this.attachmentIdsToUnlink.add(item.id);
+                }
+            } else {
+                newValue.push(item);
             }
         }
-        this.props.record.update({ [this.props.name]: this.getValue().filter((item) => !this.attachmentIdsToUnlink.has(item.id)) });
+        this.props.record.update({ [this.props.name]: newValue });
     }
 
     async onWillUnmount(){

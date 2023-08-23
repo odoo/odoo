@@ -5,24 +5,38 @@
        t-inherit="web.Many2ManyBinaryField.attachment_preview"
        t-inherit-mode="primary"
        owl="1">
-        <xpath expr="//div[hasclass('o_attachment_wrap')]" position="after">
-            <!-- lite display for placeholder files -->
-            <div class="o_attachment_wrap" t-if="file.placeholder">
-                <div class="o_image_box float-start">
-                    <span class="o_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img" style="height:15px;width:30px;"/>
-                </div>
-                <div class="caption">
-                    <t t-esc='file.name'/>
-                </div>
+        <!-- Remove the download on hover for placeholder. -->
+        <xpath expr="//div[hasclass('o_image_box', 'float-start')]" position="replace">
+            <div class="o_image_box float-start"
+                 t-att="{
+                    'data-tooltip': !file.placeholder ? `Download ${file.name}` : undefined,
+                 }"
+            >
+                <a t-att="{
+                    'href': !file.placeholder ? url : undefined,
+                    'aria-label': !file.placeholder ? 'Download' : undefined,
+                    'download': !file.placeholder ? '' : undefined,
+                   }"
+                >
+                    <span class="o_image o_hover"
+                          style="height:15px;width:30px;"
+                          t-att-data-mimetype="file.mimetype"
+                          t-att-data-ext="ext"
+                          role="img"/>
+                </a>
             </div>
         </xpath>
-        <xpath expr="//div[hasclass('o_attachment_wrap')]" position="attributes">
-            <attribute name="t-if">!file.placeholder</attribute>
+        <xpath expr="//div[hasclass('caption')]/a" position="replace">
+            <a class="ml4"
+               t-att="{
+                'data-tooltip': !file.placeholder ? `Download ${file.name}` : undefined,
+                'href': !file.placeholder ? url : undefined,
+                'download': !file.placeholder ? '' : undefined,
+               }"
+               t-esc='file.name'/>
         </xpath>
-        <xpath expr="//div[hasclass('caption','small')]" position="replace"/>
-        <xpath expr="//span[hasclass('o_image','o_hover')]" position="attributes">
-            <attribute name="style">height:15px;width:30px;</attribute>
-        </xpath>
+        <!-- Remove the mimetype on the second line. -->
+        <xpath expr="//div[hasclass('caption', 'small')]" position="replace"/>
     </t>
 
     <t t-name="account.mail_attachments" owl="1">
@@ -31,7 +45,9 @@
         <div t-attf-class="oe_fileupload" aria-atomic="true">
             <div class="o_attachments">
                 <t t-foreach="data" t-as="file" t-key="file.id">
-                    <t t-call="account.mail_attachment_file"/>
+                    <t t-if="!file.skip">
+                        <t t-call="account.mail_attachment_file"/>
+                    </t>
                 </t>
             </div>
             <div t-if="!props.readonly" class="oe_add">
