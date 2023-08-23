@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
@@ -17,6 +18,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../helpers/utils";
+import { mountInFixture } from "../helpers/mountInFixture";
 
 const serviceRegistry = registry.category("services");
 
@@ -27,6 +29,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(async () => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("popover", popoverService);
         target = getFixture();
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
@@ -42,11 +45,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.components = { AccordionItem };
         env = await makeTestEnv();
         await mount(Parent, target, { env });
-        assert.strictEqual(
-            target.querySelector(".o_accordion").outerHTML,
-            `<div class="o_accordion position-relative"><button class="o_menu_item o_accordion_toggle dropdown-item text-primary" tabindex="0" aria-expanded="false">Test</button></div>`
-        );
-        assert.containsOnce(target, "button.o_accordion_toggle");
+        assert.containsOnce(target, "div.o_accordion");
+        assert.containsOnce(target, ".o_accordion button.o_accordion_toggle");
         assert.containsNone(target, ".o_accordion_values");
 
         await click(target, "button.o_accordion_toggle");
@@ -61,18 +61,21 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {}
         Parent.template = xml`
             <Dropdown>
-                <DropdownItem>item 1</DropdownItem>
-                <AccordionItem description="'item 2'" selected="false">
-                    <DropdownItem>item 2-1</DropdownItem>
-                    <DropdownItem>item 2-2</DropdownItem>
-                </AccordionItem>
-                <DropdownItem>item 3</DropdownItem>
+                <button>Dropdown</button>
+                <t t-set-slot="content">
+                    <DropdownItem>item 1</DropdownItem>
+                    <AccordionItem description="'item 2'" selected="false">
+                        <DropdownItem>item 2-1</DropdownItem>
+                        <DropdownItem>item 2-2</DropdownItem>
+                    </AccordionItem>
+                    <DropdownItem>item 3</DropdownItem>
+                </t>
             </Dropdown>
         `;
         Parent.components = { Dropdown, DropdownItem, AccordionItem };
         env = await makeTestEnv();
-        await mount(Parent, target, { env });
-        await click(target, ".o-dropdown .dropdown-toggle");
+        await mountInFixture(Parent, target, { env });
+        await click(target, ".o-dropdown.dropdown-toggle");
 
         // Navigate with arrows
         assert.containsNone(
@@ -105,18 +108,19 @@ QUnit.module("Components", ({ beforeEach }) => {
             { key: "home", expected: "item 1" },
         ];
 
-        for (const step of scenarioSteps) {
+        for (let i = 0; i < scenarioSteps.length; i++) {
+            const step = scenarioSteps[i];
             triggerHotkey(step.key);
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".dropdown-menu .focus").innerText,
                 step.expected,
-                `selected menu should be ${step.expected}`
+                `Step ${i}: selected menu should be ${step.expected}`
             );
             assert.strictEqual(
                 document.activeElement.innerText,
                 step.expected,
-                `document.activeElement should be ${step.expected}`
+                `Step ${i}: document.activeElement should be ${step.expected}`
             );
         }
     });
