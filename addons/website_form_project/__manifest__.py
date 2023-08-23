@@ -21,6 +21,14 @@ Generate tasks in Project app from a form published on your website. This module
         'website.assets_wysiwyg': [
             'website_form_project/static/src/js/website_form_project_editor.js',
         ],
+        'project.webclient': [
+            # In website, there is a patch of the LinkDialog (see
+            # website/static/src/js/editor/editor.js) that require the utils.js.
+            # Thus, when website is installed, this bundle need to have the
+            # utils.js in its assets, otherwise, there will be an unmet
+            # dependency.
+            'website/static/src/js/utils.js',
+        ],
     },
     'license': 'LGPL-3',
 }
