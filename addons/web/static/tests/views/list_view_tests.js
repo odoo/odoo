@@ -19407,6 +19407,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, "Value 1");
     });
+
     QUnit.test("monetary field display for rtl languages", async function (assert) {
         patchWithCleanup(localization, {
             direction: "rtl",
@@ -19441,5 +19442,41 @@ QUnit.module("Views", (hooks) => {
             "ltr",
             "Monetary cells should have ltr direction"
         );
+    });
+
+    QUnit.test("add record in editable list view with sample data", async function (assert) {
+        serverData.models.foo.records = [];
+        let def;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree sample="1" editable="top"><field name="int_field"/></tree>',
+            noContentHelp: "click to add a record",
+            mockRPC(route, args) {
+                if (args.method === "unity_web_search_read") {
+                    return def;
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsN(target, ".o_data_row", 10);
+
+        def = makeDeferred();
+        await clickAdd();
+
+        assert.containsOnce(target, ".o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsN(target, ".o_data_row", 10);
+
+        def.resolve();
+        await nextTick();
+
+        assert.containsNone(target, ".o_view_sample_data");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_data_row");
+        assert.containsOnce(target, ".o_data_row.o_selected_row");
     });
 });
