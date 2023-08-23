@@ -57,6 +57,15 @@ export class ImageCrop extends Component {
                 this.state.active = true;
                 await this._show(this.props);
             }
+            const cropBtns = $el[0].ownerDocument.querySelectorAll('.o_we_user_value_widget.cropBtn');
+            if (cropBtns?.length) {
+                cropBtns.forEach(btn => {
+                    btn.addEventListener('click', (ev) => {
+                        const targetButton = ev.srcElement.nodeName === 'WE-BUTTON' ? ev.srcElement : ev.srcElement.closest('.o_we_user_value_widget.cropBtn');
+                        targetButton && this._onCropOptionClick(targetButton.dataset);
+                    });
+                });
+            }
             this.mountedResolve();
         });
         onWillUpdateProps((newProps) => {
@@ -227,7 +236,7 @@ export class ImageCrop extends Component {
      * @param {MouseEvent} ev
      */
     _onCropOptionClick(ev) {
-        const {action, value, scaleDirection} = ev.currentTarget.dataset;
+        const {action, value, scaleDirection} = ev.currentTarget ? ev.currentTarget.dataset : ev;
         switch (action) {
             case 'ratio':
                 this.$cropperImage.cropper('reset');
@@ -236,6 +245,7 @@ export class ImageCrop extends Component {
                 break;
             case 'zoom':
             case 'reset':
+                this.$cropperImage.cropper('setAspectRatio',0);
                 this.$cropperImage.cropper(action, value);
                 break;
             case 'rotate':

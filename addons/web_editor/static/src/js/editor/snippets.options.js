@@ -3706,6 +3706,12 @@ const SnippetOptionWidget = Widget.extend({
             }
             el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
         }
+        for(const el of this.$el.parent().children()){
+            const classNames = el.classList
+            if(classNames.contains("snippet-option-CropTools")){
+                classNames.add("d-none");
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -6015,6 +6021,14 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async crop() {
+        const siblingNodes = this.$el.parent().children();
+        for(const child of siblingNodes){
+            if(child.tagName === "WE-CUSTOMIZEBLOCK-OPTION" && !child.classList.contains("snippet-option-CropTools")){
+                child.classList.add("d-none")
+            } else {
+                child.classList.remove("d-none")
+            }
+        }
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
@@ -6027,7 +6041,10 @@ registry.ImageTools = ImageHandlerOption.extend({
             media: img,
             mimetype: this._getImageMimetype(img),
         });
-
+        await imageCropWrapper.mount(imageCropWrapperElement);
+        // Hides the floating crop button toolbar
+        const cropBtns = this.$el[0].ownerDocument.querySelectorAll('.o_we_crop_buttons');
+        cropBtns.forEach(btn => btn.classList.add('d-none'));
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
@@ -6039,6 +6056,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         });
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
+        for(const child of siblingNodes){
+            if(child.tagName === "WE-CUSTOMIZEBLOCK-OPTION" && !child.classList.contains("snippet-option-CropTools")){
+                child.classList.remove("d-none")
+            }
+        }
         this.trigger_up('enable_loading_effect');
     },
     /**
