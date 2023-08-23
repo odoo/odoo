@@ -374,14 +374,19 @@ class BaseModel(models.AbstractModel):
     # GATEWAY: NOTIFICATION
     # ------------------------------------------------------------
 
-    def _notify_by_email_get_headers(self):
-        """ Generate the email headers based on record """
+    def _notify_by_email_get_headers(self, headers=None):
+        """ Generate the email headers based on record. Each header not already
+        present in 'headers' will be added in it. """
+        headers = headers or {}
         if not self:
-            return {}
+            return headers
         self.ensure_one()
-        return {
-            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
-        }
+        headers['X-Odoo-Objects'] = f"{self._name}-{self.id}"
+        if 'Return-Path' not in headers:
+            company = self._mail_get_companies(default=self.env.company)[self.id]
+            if company.bounce_email:
+                headers['Return-Path'] = company.bounce_email
+        return headers
 
     # ------------------------------------------------------------
     # TOOLS

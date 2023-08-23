@@ -1297,7 +1297,7 @@ class TestComposerInternals(TestMailComposer):
                     new_partners.unlink()
 
 
-@tagged('mail_composer', 'multi_lang')
+@tagged('mail_composer', 'multi_lang', 'multi_company')
 class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
@@ -1492,6 +1492,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         # update test configuration
         test_records = self.test_records
         test_companies = self.company_admin + self.company_2
+        self.company_2.alias_domain_id = self.mail_alias_domain
         for company, record in zip(test_companies, test_records):
             record.company_id = company.id
 
@@ -1529,7 +1530,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 # update mail config
                 default_from = mail_config.get('default_from', self.default_from)
                 from_filter = mail_config.get('from_filter', self.default_from_filter)
-                self.env['ir.config_parameter'].sudo().set_param('mail.default.from', default_from)
+                self.mail_alias_domain.default_from = default_from
                 self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', from_filter)
 
                 for email_from, exp_smtp_from, exp_msg_from in zip(emails_from, exp_smtp_from_lst, exp_msg_from_lst):
@@ -1963,13 +1964,14 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                             mail_message=message,
                             email_values={
                                 'headers': {
-                                    'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+                                    'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
                                 },
                                 'subject': f'TemplateSubject {record.name}',
                             },
                             fields_values={
                                 'headers': {
+                                    'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
                                 },
                                 'mail_server_id': self.env['ir.mail_server'],
@@ -1983,16 +1985,19 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                             smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
                         else:
                             smtp_to_list = [recipient.email_normalized]
-                        if recipient != record.customer_id:
-                            emails_count = len(test_records)  # not distinguishable using this assert
+                        if exp_alias_domain == self.mail_alias_domain:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=f'{self.default_from}@{self.alias_domain}',
+                                smtp_to_list=smtp_to_list,
+                                mail_server=self.mail_server_notification,
+                                emails_count=1,
+                            )
                         else:
-                            emails_count = 1
-                        self.assertSMTPEmailsSent(
-                            smtp_from=f'{self.default_from}@{self.alias_domain}',
-                            smtp_to_list=smtp_to_list,
-                            mail_server=self.mail_server_notification,
-                            emails_count=emails_count,
-                        )
+                            self.assertSMTPEmailsSent(
+                                smtp_from=exp_alias_domain.bounce_email,
+                                smtp_to_list=smtp_to_list,
+                                emails_count=1,
+                            )
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -2695,7 +2700,6 @@ class TestComposerResultsMass(TestMailComposer):
                             # self.assertIn(exp_button_es, sent_mail['body'])
                             self.assertIn(exp_button_en, sent_mail['body'])
 
-
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_composer_wtpl_mc(self):
@@ -2722,10 +2726,11 @@ class TestComposerResultsMass(TestMailComposer):
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
-        for companies, expected_companies in [
+        for companies, expected_companies, expected_alias_domains in [
             (
                 self.company_admin + self.company_2,
                 self.company_admin + self.company_2,
+                self.mail_alias_domain + self.mail_alias_domain_c2,
             ),
         ]:
             with self.subTest(companies=companies):
@@ -2751,8 +2756,8 @@ class TestComposerResultsMass(TestMailComposer):
                 new_partner = self.env['res.partner'].search([('email_normalized', '=', 'test.to.1@test.example.com')])
                 self.assertEqual(len(new_partner), 1)
                 # check output, company-specific values mainly for this test
-                for record, exp_company in zip(
-                    test_records, expected_companies
+                for record, exp_company, exp_alias_domain in zip(
+                    test_records, expected_companies, expected_alias_domains
                 ):
                     # message copy is kept
                     message = record.message_ids[0]
@@ -2764,16 +2769,19 @@ class TestComposerResultsMass(TestMailComposer):
                         mail_message=message,
                         email_values={
                             'headers': {
-                                'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+                                'Return-Path': f'{exp_alias_domain.bounce_email}',
                                 'X-Odoo-Objects': f'{record._name}-{record.id}',
                             },
                             'subject': f'TemplateSubject {record.name}',
                         },
                         fields_values={
                             'headers': {
+                                'Return-Path': f'{exp_alias_domain.bounce_email}',
                                 'X-Odoo-Objects': f'{record._name}-{record.id}',
                             },
                             'mail_server_id': self.env['ir.mail_server'],
+                            'record_alias_domain_id': exp_alias_domain,
+                            'record_company_id': exp_company,
                             'subject': f'TemplateSubject {record.name}',
                         },
                     )
@@ -2783,16 +2791,19 @@ class TestComposerResultsMass(TestMailComposer):
                             smtp_to_list = ['"test.to.1@test.example.com"', 'test.to.1@test.example.com']
                         else:
                             smtp_to_list = [recipient.email_normalized]
-                        if recipient != record.customer_id:
-                            emails_count = len(test_records)  # not distinguishable using this assert
+                        if exp_alias_domain == self.mail_alias_domain:
+                            self.assertSMTPEmailsSent(
+                                smtp_from=f'{self.default_from}@{self.alias_domain}',
+                                smtp_to_list=smtp_to_list,
+                                mail_server=self.mail_server_notification,
+                                emails_count=1,
+                            )
                         else:
-                            emails_count = 1
-                        self.assertSMTPEmailsSent(
-                            smtp_from=f'{self.default_from}@{self.alias_domain}',
-                            smtp_to_list=smtp_to_list,
-                            mail_server=self.mail_server_notification,
-                            emails_count=emails_count,
-                        )
+                            self.assertSMTPEmailsSent(
+                                smtp_from=exp_alias_domain.bounce_email,
+                                smtp_to_list=smtp_to_list,
+                                emails_count=1,
+                            )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
