@@ -230,6 +230,7 @@ export class DynamicGroupList extends DynamicList {
             [this.groupByField.name]: [id, groupName],
             value: id,
             displayName: groupName,
+            rawValue: [id, groupName],
         };
 
         const group = this._createGroupDatapoint(data);
