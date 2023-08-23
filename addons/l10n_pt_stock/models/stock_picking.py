@@ -1,6 +1,4 @@
 import re
-import urllib.parse
-import stdnum.pt.nif
 from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
@@ -114,9 +112,9 @@ class StockPicking(models.Model):
             qr_code_str += "O:0.00"
             qr_code_str += f"Q:{picking.l10n_pt_stock_inalterable_hash_short}*"
             qr_code_str += "R:0000"  # TODO: Fill with Certificate number provided by the Tax Authority
-            picking.l10n_pt_stock_qr_code_str = urllib.parse.quote_plus(qr_code_str)
+            picking.l10n_pt_stock_qr_code_str = qr_code_str
 
-    def _get_integrity_hash_fields(self):
+    def _l10n_pt_stock_get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_done', 'create_date', 'name']
@@ -125,7 +123,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         return re.sub(r'[^A-Za-z0-9]+', '', self.picking_type_id.sequence_code), self.l10n_pt_stock_secure_sequence_number
 
-    def _hash_compute(self, previous_hash=None):
+    def _l10n_pt_stock_hash_compute(self, previous_hash=None):
         if self.company_id.account_fiscal_country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
             return {}
         endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
@@ -188,14 +186,14 @@ class StockPicking(models.Model):
                 raise UserError(_("You have to set an Official Series in the Stock Picking Type."))
             picking.picking_type_id._create_l10n_pt_stock_secure_sequence()
             picking.l10n_pt_stock_secure_sequence_number = picking.picking_type_id.l10n_pt_stock_secure_sequence_id.next_by_id()
-            picking.l10n_pt_stock_inalterable_hash = picking.with_context(l10n_pt_force_compute_signature=True)._hash_compute()[picking.id]
+            picking.l10n_pt_stock_inalterable_hash = picking.with_context(l10n_pt_force_compute_signature=True)._l10n_pt_stock_hash_compute()[picking.id]
         return res
 
     def write(self, vals):
         if not vals:
             return True
         for picking in self.filtered(lambda p: p.company_id.account_fiscal_country_id.code == 'PT' and p.state == 'done'):
-            violated_fields = set(vals).intersection(picking._get_integrity_hash_fields() + ['l10n_pt_stock_inalterable_hash', 'l10n_pt_stock_secure_sequence_number'])
+            violated_fields = set(vals).intersection(picking._l10n_pt_stock_get_integrity_hash_fields() + ['l10n_pt_stock_inalterable_hash', 'l10n_pt_stock_secure_sequence_number'])
             if picking.l10n_pt_stock_inalterable_hash and violated_fields:
                 raise UserError(_("You cannot edit the following fields: %s.", ', '.join(f['string'] for f in self.fields_get(violated_fields).values())))
         return super(StockPicking, self).write(vals)

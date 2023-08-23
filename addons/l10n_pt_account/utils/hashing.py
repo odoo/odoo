@@ -2,7 +2,7 @@ import base64
 import binascii
 import logging
 import requests
-import stdnum
+import stdnum.pt.nif
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding

@@ -6,8 +6,8 @@ import { patch } from "@web/core/utils/patch";
 patch(ClosePosPopup.prototype, "l10n_pt_pos.ClosePosPopup", {
     async closeSession() {
         const _super = this._super;
-        if (this.pos.is_portuguese_country()) {
-            await this.pos.l10n_pt_pos_compute_missing_hashes();
+        if (this.pos.isPortugueseCountry()) {
+            await this.pos.l10nPtPosComputeMissingHashes();
         }
         return _super(...arguments);
     },

@@ -1,6 +1,4 @@
 import re
-import urllib.parse
-import stdnum.pt.nif
 
 from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, _, api
@@ -26,7 +24,7 @@ class PosOrder(models.Model):
             and o.name
             and not o.l10n_pt_pos_document_number
         )):
-            sequence_prefix, sequence_number = order._get_l10n_pt_pos_sequence_info()
+            sequence_prefix, sequence_number = order._l10n_pt_pos_get_sequence_info()
             order.l10n_pt_pos_document_number = f"pos_order {sequence_prefix}/{sequence_number}"
 
     @api.depends('l10n_pt_pos_inalterable_hash')
@@ -43,7 +41,7 @@ class PosOrder(models.Model):
                 and order.l10n_pt_pos_inalterable_hash
                 and not order.l10n_pt_pos_atcud
             ):
-                order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_official_series_id.code}-{order._get_l10n_pt_pos_sequence_info()[1]}"
+                order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_official_series_id.code}-{order._l10n_pt_pos_get_sequence_info()[1]}"
             else:
                 order.l10n_pt_pos_atcud = False
 
@@ -114,20 +112,20 @@ class PosOrder(models.Model):
             qr_code_str += f"O:{format_amount(order, order.amount_total)}*"
             qr_code_str += f"Q:{order.l10n_pt_pos_inalterable_hash_short}*"
             qr_code_str += "R:0000"  # TODO: Fill with Certificate number provided by the Tax Authority
-            order.l10n_pt_pos_qr_code_str = urllib.parse.quote_plus(qr_code_str)
+            order.l10n_pt_pos_qr_code_str = qr_code_str
 
-    def _get_integrity_hash_fields(self):
+    def _l10n_pt_pos_get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_order', 'create_date', 'amount_total', 'name']
 
-    def _get_l10n_pt_pos_sequence_info(self):
+    def _l10n_pt_pos_get_sequence_info(self):
         self.ensure_one()
         sequence_prefix = re.sub(r'[^A-Za-z0-9]+', '_', '_'.join(self.name.split('/')[:-1])).rstrip('_')
         sequence_number = self.name.split('/')[-1]
         return sequence_prefix, sequence_number
 
-    def _hash_compute(self, previous_hash=None):
+    def _l10n_pt_pos_hash_compute(self, previous_hash=None):
         if self.company_id.account_fiscal_country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
             return {}
         endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
@@ -187,7 +185,7 @@ class PosOrder(models.Model):
         ], order='id')
         if not orders:
             return ''
-        orders_hashes = self.env['pos.order'].browse([o.id for o in orders]).with_context(l10n_pt_force_compute_signature=True)._hash_compute()
+        orders_hashes = self.env['pos.order'].browse([o.id for o in orders]).with_context(l10n_pt_force_compute_signature=True)._l10n_pt_pos_hash_compute()
         for order_id, l10n_pt_pos_inalterable_hash in orders_hashes.items():
             super(PosOrder, self.env['pos.order'].browse(order_id)).write({'l10n_pt_pos_inalterable_hash': l10n_pt_pos_inalterable_hash})
         return {
@@ -212,7 +210,7 @@ class PosOrder(models.Model):
         if not vals:
             return True
         for order in self:
-            violated_fields = set(vals).intersection(order._get_integrity_hash_fields() + ['l10n_pt_pos_inalterable_hash'])
+            violated_fields = set(vals).intersection(order._l10n_pt_pos_get_integrity_hash_fields() + ['l10n_pt_pos_inalterable_hash'])
             if (
                 order.company_id.account_fiscal_country_id.code == 'PT'
                 and violated_fields

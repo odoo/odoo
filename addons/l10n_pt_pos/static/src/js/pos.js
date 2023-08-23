@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
-    is_portuguese_country() {
+    isPortugueseCountry() {
         if (!this.company.country) {
             this.env.services.popup.add(ErrorPopup, {
                 title: this.env._t("Missing Country"),
@@ -17,7 +17,7 @@ patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
         return this.company.country.code === 'PT';
     },
     // Returns the last hash computed
-    async l10n_pt_pos_compute_missing_hashes() {
+    async l10nPtPosComputeMissingHashes() {
         try {
             return await this.orm.call("pos.order", "l10n_pt_pos_compute_missing_hashes", [this.company.id]);
         } catch {
@@ -32,41 +32,51 @@ patch(PosStore.prototype, "l10n_pt_pos.PosStore", {
 patch(Order.prototype, "l10n_pt_pos.Order", {
     setup() {
         this._super(...arguments);
-        this.l10n_pt_pos_inalterable_hash = this.l10n_pt_pos_inalterable_hash || false;
-        this.l10n_pt_pos_atcud = this.l10n_pt_pos_atcud || false;
-        this.l10n_pt_pos_qr_code_str = this.l10n_pt_pos_qr_code_str || false;
+        this.l10nPtPosInalterableHash = this.l10nPtPosInalterableHash || false;
+        this.l10nPtPosInalterableHashShort = this.l10nPtPosInalterableHashShort || false;
+        this.l10nPtPosAtcud = this.l10nPtPosAtcud || false;
+        this.l10nPtPosQrCodeStr = this.l10nPtPosQrCodeStr || false;
         this.save_to_db();
     },
 
     export_for_printing() {
         const result = this._super(...arguments);
-        result.l10n_pt_pos_inalterable_hash = this.get_l10n_pt_pos_inalterable_hash();
-        result.l10n_pt_pos_atcud = this.get_l10n_pt_pos_atcud();
-        result.l10n_pt_pos_qr_code_str = this.get_l10n_pt_pos_qr_code_str();
+        result.l10nPtPosInalterableHash = this.getL10nPtPosInalterableHash();
+        result.l10nPtPosInalterableHashShort = this.getL10nPtPosInalterableHashShort();
+        result.l10nPtPosAtcud = this.getL10nPtPosAtcud();
+        result.l10nPtPosQrCodeStr = this.getL10nPtPosQrCodeStr();
         return result;
     },
 
-    set_l10n_pt_pos_inalterable_hash(l10n_pt_pos_inalterable_hash) {
-        this.l10n_pt_pos_inalterable_hash = l10n_pt_pos_inalterable_hash;
+    setL10nPtPosInalterableHash(l10nPtPosInalterableHash) {
+        this.l10nPtPosInalterableHash = l10nPtPosInalterableHash;
     },
 
-    get_l10n_pt_pos_inalterable_hash() {
-        return this.l10n_pt_pos_inalterable_hash;
+    getL10nPtPosInalterableHash() {
+        return this.l10nPtPosInalterableHash;
     },
 
-    set_l10n_pt_pos_atcud(l10n_pt_pos_atcud) {
-        this.l10n_pt_pos_atcud = l10n_pt_pos_atcud;
+    setL10nPtPosInalterableHashShort(l10nPtPosInalterableHashShort) {
+        this.l10nPtPosInalterableHashShort = l10nPtPosInalterableHashShort;
     },
 
-    get_l10n_pt_pos_atcud() {
-        return this.l10n_pt_pos_atcud;
+    getL10nPtPosInalterableHashShort() {
+        return this.l10nPtPosInalterableHashShort;
     },
 
-    set_l10n_pt_pos_qr_code_str(l10n_pt_pos_qr_code_str) {
-        this.l10n_pt_pos_qr_code_str = l10n_pt_pos_qr_code_str;
+    setL10nPtPosAtcud(l10nPtPosAtcud) {
+        this.l10nPtPosAtcud = l10nPtPosAtcud;
     },
 
-    get_l10n_pt_pos_qr_code_str() {
-        return this.l10n_pt_pos_qr_code_str;
+    getL10nPtPosAtcud() {
+        return this.l10nPtPosAtcud;
+    },
+
+    setL10nPtPosQrCodeStr(l10nPtPosQrCodeStr) {
+        this.l10nPtPosQrCodeStr = l10nPtPosQrCodeStr;
+    },
+
+    getL10nPtPosQrCodeStr() {
+        return this.l10nPtPosQrCodeStr;
     },
 });

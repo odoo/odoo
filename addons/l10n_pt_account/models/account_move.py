@@ -1,6 +1,4 @@
 import re
-import urllib.parse
-import stdnum.pt.nif
 
 from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
 from odoo import models, fields, api, _
@@ -140,7 +138,7 @@ class AccountMove(models.Model):
             qr_code_str += f"O:{format_amount(move, move.tax_totals['amount_total'])}*"
             qr_code_str += f"Q:{move.l10n_pt_account_inalterable_hash_short}*"
             qr_code_str += "R:0000"  # TODO: Fill with Certificate number provided by the Tax Authority
-            move.l10n_pt_account_qr_code_str = urllib.parse.quote_plus(qr_code_str)
+            move.l10n_pt_account_qr_code_str = qr_code_str
 
     def _l10n_pt_get_vat_exemptions_reasons(self):
         self.ensure_one()
