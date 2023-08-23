@@ -1,8 +1,11 @@
 $-editor-messages-margin-x: 2%;
 %o-editor-messages {
-    border: 2px dashed #999999;
+    background: rgba(lighten($o-we-handles-accent-color, 50%), .95);
     text-align: center;
-    color: white;
+    color: $o-we-handles-accent-color;
+    outline: $o-we-dropzone-border-width dashed $o-we-handles-accent-color;
+    outline-offset: -$o-we-dropzone-border-width;
+    backdrop-filter: blur(2px);
 
     &:before {
         content: attr(data-editor-message);
@@ -87,7 +90,6 @@ $-editor-messages-margin-x: 2%;
         > .oe_drop_zone.oe_insert:not(.oe_vertical) {
             @extend %o-editor-messages;
             height: auto;
-            text-shadow: -1px -1px 0 $o-brand-odoo, 1px -1px 0 $o-brand-odoo, -1px 1px 0 $o-brand-odoo, 1px 1px 0 $o-brand-odoo;
 
             // Empty editable element during drag & drop
             &:only-child {
@@ -111,13 +113,12 @@ $-editor-messages-margin-x: 2%;
             @extend %o-editor-messages;
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
-            color: #999999;
+            border-radius: $border-radius-lg;
         }
 
         // Exception 2: empty wrap during drag & drop (override of base case)
         &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             padding: 112px 0px;
-            color: #999999;
             text-shadow: none;
         }
 
