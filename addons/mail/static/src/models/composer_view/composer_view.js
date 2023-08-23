@@ -9,6 +9,7 @@ import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/j
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 const { escape } = owl;
+import session from "web.session";
 
 registerModel({
     name: 'ComposerView',
@@ -340,6 +341,7 @@ registerModel({
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                params.context = Object.assign(params.context || {}, session.user_context);
                 const chatter = this.chatter;
                 const { threadView = {} } = this;
                 const { thread: chatterThread } = this.chatter || {};
