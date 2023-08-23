@@ -1248,6 +1248,10 @@ class MailCommon(common.TransactionCase, MailCase):
             'name': 'Company 2',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+        cls.company_3 = cls.env['res.company'].create({
+            'email': 'company_3@test.example.com',
+            'name': 'Company 3',
+        })
 
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
@@ -1267,7 +1271,7 @@ class MailCommon(common.TransactionCase, MailCase):
             company_id=cls.company_2.id,
             company_ids=[(6, 0, (cls.company_admin + cls.company_2).ids)],
             email='etchenne@example.com',
-            groups='base.group_user,base.group_erp_manager,mail.group_mail_template_editor',
+            groups='base.group_user,base.group_erp_manager,mail.group_mail_template_editor,base.group_partner_manager',
             login='erp_manager',
             name='Etchenne Tchagada',
             notification_type='inbox',
