@@ -30,7 +30,7 @@ QUnit.test("Can invite a partner to a livechat channel", async (assert) => {
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
     await click("button:contains(Invite)");
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(James)");
+    assert.containsOnce(document.body, ".o-discuss-ChannelMember:contains(James)");
 });
 
 QUnit.test("Available operators come first", async (assert) => {

@@ -42,10 +42,16 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
         "should have enough scroll height to trigger jump to present"
     );
     await afterNextRender(() => $(".o-mail-Thread").scrollTop(0));
-    assert.containsOnce($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(You're viewing older messagesJump to Present)"
+    );
     await click(".o-mail-Thread-jumpPresent");
     await nextTick();
-    assert.containsNone($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    assert.containsNone(
+        document.body,
+        ".o-mail-Thread:contains(You're viewing older messagesJump to Present)"
+    );
     assert.ok(
         $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
             $(".o-mail-Thread")[0].clientHeight
@@ -96,10 +102,16 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
         "Hello world!",
         "should correctly execute HTML tags in parent message when using 'load around' feature"
     );
-    assert.containsOnce($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(You're viewing older messagesJump to Present)"
+    );
     await click(".o-mail-Thread-jumpPresent");
     await nextAnimationFrame();
-    assert.containsNone($, ".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    assert.containsNone(
+        document.body,
+        ".o-mail-Thread:contains(You're viewing older messagesJump to Present)"
+    );
     assert.ok(
         $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
             $(".o-mail-Thread")[0].clientHeight

@@ -24,5 +24,5 @@ QUnit.test("redirect to author (open profile) in livechat", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message-avatarContainer[title='Open profile']");
+    assert.containsOnce(document.body, ".o-mail-Message-avatarContainer[title='Open profile']");
 });

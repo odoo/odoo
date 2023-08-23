@@ -12,27 +12,27 @@ QUnit.test("open/close temporary channel", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     await start();
-    assert.containsOnce($, ".o-livechat-LivechatButton");
+    assert.containsOnce(document.body, ".o-livechat-LivechatButton");
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
     await click("[title='Close Chat Window']");
-    assert.containsNone($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsNone(document.body, ".o-mail-ChatWindow");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
 });
 
 QUnit.test("open/close persisted channel", async (assert) => {
     await startServer();
     await loadDefaultConfig();
     await start();
-    assert.containsOnce($, ".o-livechat-LivechatButton");
+    assert.containsOnce(document.body, ".o-livechat-LivechatButton");
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello");
     await afterNextRender(() => triggerHotkey("Enter"));
     await click("[title='Close Chat Window']");
     await click("[title='Close Chat Window']");
-    assert.containsNone($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsNone(document.body, ".o-mail-ChatWindow");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
 });
 
 QUnit.test("livechat not available", async (assert) => {
@@ -45,5 +45,5 @@ QUnit.test("livechat not available", async (assert) => {
             }
         },
     });
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
 });

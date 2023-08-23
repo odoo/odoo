@@ -70,18 +70,27 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async (asse
     const { openDiscuss } = await start();
     await openDiscuss(channelIds[0]);
 
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
-    assert.containsOnce($, ".o-mail-Composer-footer:contains(Tab to next livechat)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)"
+    );
+    assert.containsOnce(document.body, ".o-mail-Composer-footer:contains(Tab to next livechat)");
     await afterNextRender(() => {
         document.querySelector(".o-mail-Composer-input").focus();
         triggerHotkey("Tab");
     });
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 13)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 13)"
+    );
     await afterNextRender(() => {
         document.querySelector(".o-mail-Composer-input").focus();
         triggerHotkey("Tab");
     });
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 12)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 12)"
+    );
 });
 
 QUnit.test("switching to folded chat window unfolds it", async (assert) => {
@@ -228,7 +237,10 @@ QUnit.test("tab on composer doesn't switch thread if user is typing", async (ass
     await insertText(".o-mail-Composer-input", "Hello, ");
     triggerHotkey("Tab");
     await nextTick();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)"
+    );
 });
 
 QUnit.test("tab on composer doesn't switch thread if no unread thread", async (assert) => {
@@ -261,5 +273,8 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async (a
     document.querySelector(".o-mail-Composer-input").focus();
     triggerHotkey("Tab");
     await nextTick();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)"
+    );
 });

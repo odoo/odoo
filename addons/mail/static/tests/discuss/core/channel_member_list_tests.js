@@ -23,7 +23,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, "[title='Show Member List']");
+        assert.containsOnce(document.body, "[title='Show Member List']");
     }
 );
 
@@ -43,7 +43,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("[title='Show Member List']");
-        assert.containsOnce($, ".o-discuss-ChannelMemberList");
+        assert.containsOnce(document.body, ".o-discuss-ChannelMemberList");
     }
 );
 
@@ -61,9 +61,12 @@ QUnit.test("should have correct members in member list", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
-    assert.containsN($, ".o-discuss-ChannelMember", 2);
-    assert.containsOnce($, `.o-discuss-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains('Demo')");
+    assert.containsN(document.body, ".o-discuss-ChannelMember", 2);
+    assert.containsOnce(
+        document.body,
+        `.o-discuss-ChannelMember:contains("${pyEnv.currentPartner.name}")`
+    );
+    assert.containsOnce(document.body, ".o-discuss-ChannelMember:contains('Demo')");
 });
 
 QUnit.test(
@@ -82,7 +85,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("[title='Show Member List']");
-        assert.containsOnce($, "[title='Hide Member List']");
+        assert.containsOnce(document.body, "[title='Hide Member List']");
     }
 );
 
@@ -102,7 +105,7 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await click(".o-discuss-ChannelMember.cursor-pointer");
-    assert.containsOnce($, ".o-mail-AutoresizeInput[title='Demo']");
+    assert.containsOnce(document.body, ".o-mail-AutoresizeInput[title='Demo']");
 });
 
 QUnit.test(
@@ -123,7 +126,7 @@ QUnit.test(
         await openDiscuss(channelId);
         pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
         await click("[title='Show Member List']");
-        assert.containsOnce($, "button:contains(Load more)");
+        assert.containsOnce(document.body, "button:contains(Load more)");
     }
 );
 
@@ -144,7 +147,7 @@ QUnit.test("Load more button should load more members", async (assert) => {
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
     await click("[title='Load more']");
-    assert.containsN($, ".o-discuss-ChannelMember", 102);
+    assert.containsN(document.body, ".o-discuss-ChannelMember", 102);
 });
 
 QUnit.test("Channel member count update after user joined", async (assert) => {

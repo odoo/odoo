@@ -43,10 +43,10 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
 
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsN($, ".o-mail-Composer-suggestion", 3);
+    assert.containsN(document.body, ".o-mail-Composer-suggestion", 3);
 });
 
 QUnit.test(
@@ -72,13 +72,13 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-Composer-suggestion");
+        assert.containsNone(document.body, ".o-mail-Composer-suggestion");
         await insertText(".o-mail-Composer-input", "first message");
         triggerHotkey("Enter");
         await nextTick();
 
         await insertText(".o-mail-Composer-input", "@");
-        assert.containsN($, ".o-mail-Composer-suggestion", 3);
+        assert.containsN(document.body, ".o-mail-Composer-suggestion", 3);
     }
 );
 
@@ -87,9 +87,9 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     const { openFormView } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
 QUnit.test("show other channel member in @ mention", async (assert) => {
@@ -108,7 +108,7 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(TestPartner)");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion:contains(TestPartner)");
 });
 
 QUnit.test("select @ mention insert mention text in composer", async (assert) => {
@@ -139,9 +139,9 @@ QUnit.test('display channel mention suggestions on typing "#"', async (assert) =
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestionList .o-open");
 });
 
 QUnit.test("mention a channel", async (assert) => {
@@ -152,10 +152,10 @@ QUnit.test("mention a channel", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -194,12 +194,12 @@ QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingUser");
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", " ");
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
 QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (assert) => {
@@ -208,10 +208,10 @@ QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingChannel");
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", " ");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(General)");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion:contains(General)");
 });

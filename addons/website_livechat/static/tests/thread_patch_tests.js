@@ -29,17 +29,23 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, "img.o-website_livechat-VisitorBanner-avatar");
+    assert.containsOnce(document.body, "img.o-website_livechat-VisitorBanner-avatar");
     assert.containsOnce(
         $,
         "img.o-website_livechat-VisitorBanner-avatar[data-src='/mail/static/src/img/smiley/avatar.jpg']"
     );
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
-    assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    assert.containsOnce($, `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`);
-    assert.containsOnce($, "span:contains(English)");
-    assert.containsOnce($, "span>:contains(General website)");
-    assert.containsOnce($, "span:contains(Home → Contact)");
+    assert.containsOnce(document.body, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
+    assert.containsOnce(
+        document.body,
+        ".o_country_flag[data-src='/base/static/img/country_flags/be.png']"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o-website_livechat-VisitorBanner span:contains(Visitor #${visitorId})`
+    );
+    assert.containsOnce(document.body, "span:contains(English)");
+    assert.containsOnce(document.body, "span>:contains(General website)");
+    assert.containsOnce(document.body, "span:contains(Home → Contact)");
 });
 
 QUnit.test("Livechat with non-logged visitor should show visitor banner", async (assert) => {
@@ -65,7 +71,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner");
+    assert.containsOnce(document.body, ".o-website_livechat-VisitorBanner");
 });
 
 QUnit.test("Livechat with logged visitor should show visitor banner", async (assert) => {
@@ -92,8 +98,11 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async (ass
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner");
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner:contains(Partner Visitor)");
+    assert.containsOnce(document.body, ".o-website_livechat-VisitorBanner");
+    assert.containsOnce(
+        document.body,
+        ".o-website_livechat-VisitorBanner:contains(Partner Visitor)"
+    );
 });
 
 QUnit.test("Livechat without visitor should not show visitor banner", async (assert) => {
@@ -110,8 +119,8 @@ QUnit.test("Livechat without visitor should not show visitor banner", async (ass
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread");
-    assert.containsNone($, ".o-website_livechat-VisitorBanner");
+    assert.containsOnce(document.body, ".o-mail-Thread");
+    assert.containsNone(document.body, ".o-website_livechat-VisitorBanner");
 });
 
 QUnit.test("Non-livechat channel should not show visitor banner", async (assert) => {
@@ -119,6 +128,6 @@ QUnit.test("Non-livechat channel should not show visitor banner", async (assert)
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread");
-    assert.containsNone($, ".o-website_livechat-VisitorBanner");
+    assert.containsOnce(document.body, ".o-mail-Thread");
+    assert.containsNone(document.body, ".o-website_livechat-VisitorBanner");
 });

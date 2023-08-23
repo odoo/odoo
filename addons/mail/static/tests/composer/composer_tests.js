@@ -45,8 +45,8 @@ QUnit.test("composer text input: basic rendering when posting a message", async 
     const { openFormView } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-Composer");
-    assert.containsOnce($, "textarea.o-mail-Composer-input");
+    assert.containsOnce(document.body, ".o-mail-Composer");
+    assert.containsOnce(document.body, "textarea.o-mail-Composer-input");
     assert.hasAttrValue(
         $(".o-mail-Composer-input"),
         "placeholder",
@@ -59,8 +59,8 @@ QUnit.test("composer text input: basic rendering when logging note", async (asse
     const { openFormView } = await start();
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Log note)");
-    assert.containsOnce($, ".o-mail-Composer");
-    assert.containsOnce($, "textarea.o-mail-Composer-input");
+    assert.containsOnce(document.body, ".o-mail-Composer");
+    assert.containsOnce(document.body, "textarea.o-mail-Composer-input");
     assert.hasAttrValue($(".o-mail-Composer-input"), "placeholder", "Log an internal note...");
 });
 
@@ -71,8 +71,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "dofus-disco" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Composer");
-        assert.containsOnce($, "textarea.o-mail-Composer-input");
+        assert.containsOnce(document.body, ".o-mail-Composer");
+        assert.containsOnce(document.body, "textarea.o-mail-Composer-input");
     }
 );
 
@@ -206,7 +206,7 @@ QUnit.test(
         await click("button[aria-label='Emojis']");
         await click(".o-Emoji:contains(👺)");
         await click("button[aria-label='Emojis']");
-        assert.containsOnce($, ".o-EmojiPicker");
+        assert.containsOnce(document.body, ".o-EmojiPicker");
     }
 );
 
@@ -322,8 +322,11 @@ QUnit.test("Show send button in mobile", async (assert) => {
     await openDiscuss();
     await click("button:contains(Channel)");
     await click(".o-mail-NotificationItem:contains(minecraft-wii-u)");
-    assert.containsOnce($, ".o-mail-Composer button[aria-label='Send']");
-    assert.containsOnce($, ".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o");
+    assert.containsOnce(document.body, ".o-mail-Composer button[aria-label='Send']");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o"
+    );
 });
 
 QUnit.test(
@@ -361,7 +364,7 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
@@ -382,7 +385,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual(
@@ -391,7 +394,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
         "text content of composer should have content"
     );
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -408,10 +411,10 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -435,7 +438,10 @@ QUnit.test("pending mentions are kept when toggling composer", async (assert) =>
     await click("button:contains(Send message)");
     await click("button:contains(Send message)");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Message-body a.o_mail_redirect:contains(@Mitchell Admin)"
+    );
 });
 
 QUnit.test(
@@ -445,12 +451,12 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "general" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-Message");
+        assert.containsNone(document.body, ".o-mail-Message");
 
         await insertText(".o-mail-Composer-input", "Test");
         await triggerHotkey("shift+Enter");
         await nextTick();
-        assert.containsNone($, ".o-mail-Message");
+        assert.containsNone(document.body, ".o-mail-Message");
     }
 );
 
@@ -459,12 +465,12 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async (asse
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     // insert some HTML in editable
     await insertText(".o-mail-Composer-input", "Test");
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
 });
 
 QUnit.test("leave command on channel", async (assert) => {
@@ -482,8 +488,8 @@ QUnit.test("leave command on channel", async (assert) => {
     await insertText(".o-mail-Composer-input", "/leave");
     await afterNextRender(() => triggerHotkey("Enter"));
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(general)");
-    assert.containsOnce($, ".o-mail-Discuss:contains(No conversation selected.)");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel:contains(general)");
+    assert.containsOnce(document.body, ".o-mail-Discuss:contains(No conversation selected.)");
     assert.verifySteps(["You unsubscribed from general."]);
 });
 
@@ -504,8 +510,8 @@ QUnit.test("Can handle leave notification from unknown member", async (assert) =
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Mitchell)");
-    assert.containsNone($, ".o-discuss-ChannelMember:contains(Dobby)");
+    assert.containsOnce(document.body, ".o-discuss-ChannelMember:contains(Mitchell)");
+    assert.containsNone(document.body, ".o-discuss-ChannelMember:contains(Dobby)");
 });
 
 QUnit.test("leave command on chat", async (assert) => {
@@ -530,8 +536,8 @@ QUnit.test("leave command on chat", async (assert) => {
     await insertText(".o-mail-Composer-input", "/leave");
     await afterNextRender(() => triggerHotkey("Enter"));
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(Chuck Norris)");
-    assert.containsOnce($, ".o-mail-Discuss:contains(No conversation selected.)");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel:contains(Chuck Norris)");
+    assert.containsOnce(document.body, ".o-mail-Discuss:contains(No conversation selected.)");
     assert.verifySteps(["You unpinned your conversation with Chuck Norris"]);
 });
 
@@ -547,7 +553,7 @@ QUnit.test("Can post suggestions", async (assert) => {
     await afterNextRender(() => triggerHotkey("Enter"));
     // Send the message.
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce($, ".o-mail-Message .o_channel_redirect");
+    assert.containsOnce(document.body, ".o-mail-Message .o_channel_redirect");
 });
 
 QUnit.test(
@@ -600,14 +606,14 @@ QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message:contains(Test)");
-    assert.containsNone($, ".o-mail-Message:contains(Test) .o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Test)");
+    assert.containsNone(document.body, ".o-mail-Message:contains(Test) .o-mail-Composer");
 
     await afterNextRender(() => triggerHotkey("ArrowUp"));
-    assert.containsOnce($, ".o-mail-Message .o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Message .o-mail-Composer");
 
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-Message .o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Message .o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
     // non-empty composer should not trigger quick edit
@@ -617,7 +623,7 @@ QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
     // Wait 2 animation frames to make sure it doesn't show quick edit
     await nextTick();
     await nextTick();
-    assert.containsNone($, ".o-mail-Message .o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Message .o-mail-Composer");
 });
 
 QUnit.test("Select composer suggestion via Enter does not send the message", async (assert) => {
@@ -666,16 +672,16 @@ QUnit.test("composer: drop attachments", async (assert) => {
             name: "text2.txt",
         }),
     ];
-    assert.containsNone($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
+    assert.containsNone(document.body, ".o-mail-Dropzone");
+    assert.containsNone(document.body, ".o-mail-AttachmentCard");
 
     await afterNextRender(() => dragenterFiles($(".o-mail-Composer-input")[0]));
-    assert.containsOnce($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-Dropzone");
+    assert.containsNone(document.body, ".o-mail-AttachmentCard");
 
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsNone($, ".o-mail-Dropzone");
-    assert.containsN($, ".o-mail-AttachmentCard", 2);
+    assert.containsNone(document.body, ".o-mail-Dropzone");
+    assert.containsN(document.body, ".o-mail-AttachmentCard", 2);
 
     await afterNextRender(() => dragenterFiles($(".o-mail-Composer-input")[0]));
     await afterNextRender(async () =>
@@ -687,7 +693,7 @@ QUnit.test("composer: drop attachments", async (assert) => {
             }),
         ])
     );
-    assert.containsN($, ".o-mail-AttachmentCard", 3);
+    assert.containsN(document.body, ".o-mail-AttachmentCard", 3);
 });
 
 QUnit.test("composer: add an attachment", async (assert) => {
@@ -703,8 +709,11 @@ QUnit.test("composer: add an attachment", async (assert) => {
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
     await waitUntil(".o-mail-AttachmentCard .fa-check");
 
-    assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
-    assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-Composer-footer .o-mail-AttachmentList");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard"
+    );
 });
 
 QUnit.test("composer: add an attachment in reply to message in history", async (assert) => {
@@ -733,8 +742,11 @@ QUnit.test("composer: add an attachment in reply to message in history", async (
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
     await waitUntil(".o-mail-AttachmentCard .fa-check");
 
-    assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
-    assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-Composer-footer .o-mail-AttachmentList");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard"
+    );
 });
 
 QUnit.test(
@@ -758,14 +770,14 @@ QUnit.test(
         });
         inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
         await waitUntil(".o-mail-AttachmentCard.o-isUploading");
-        assert.containsOnce($, ".o-mail-Composer-send");
+        assert.containsOnce(document.body, ".o-mail-Composer-send");
         assert.ok($(".o-mail-Composer-send")[0].attributes.disabled);
 
         // simulates attachment finishes uploading
         await afterNextRender(() => attachmentUploadedPromise.resolve());
-        assert.containsOnce($, ".o-mail-AttachmentCard");
-        assert.containsNone($, ".o-mail-AttachmentCard.o-isUploading");
-        assert.containsOnce($, ".o-mail-Composer-send");
+        assert.containsOnce(document.body, ".o-mail-AttachmentCard");
+        assert.containsNone(document.body, ".o-mail-AttachmentCard.o-isUploading");
+        assert.containsOnce(document.body, ".o-mail-Composer-send");
         assert.notOk($(".o-mail-Composer-send")[0].attributes.disabled);
     }
 );
@@ -782,11 +794,11 @@ QUnit.test("remove an attachment from composer does not need any confirmation", 
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
     await waitUntil(".o-mail-AttachmentCard .fa-check");
-    assert.containsOnce($, ".o-mail-Composer-footer .o-mail-AttachmentList");
-    assert.containsOnce($, ".o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-Composer-footer .o-mail-AttachmentList");
+    assert.containsOnce(document.body, ".o-mail-AttachmentList .o-mail-AttachmentCard");
 
     await click(".o-mail-AttachmentCard-unlink");
-    assert.containsNone($, ".o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsNone(document.body, ".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
 QUnit.test("composer: paste attachments", async (assert) => {
@@ -801,10 +813,10 @@ QUnit.test("composer: paste attachments", async (assert) => {
             name: "text.txt",
         }),
     ];
-    assert.containsNone($, ".o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsNone(document.body, ".o-mail-AttachmentList .o-mail-AttachmentCard");
 
     await afterNextRender(() => pasteFiles($(".o-mail-Composer-input")[0], files));
-    assert.containsOnce($, ".o-mail-AttachmentList .o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
 QUnit.test("Replying on a channel should focus composer initially", async (assert) => {
@@ -844,10 +856,10 @@ QUnit.test("remove an uploading attachment", async (assert) => {
     });
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file]);
     await waitUntil(".o-mail-AttachmentCard.o-isUploading");
-    assert.containsOnce($, ".o-mail-AttachmentCard.o-isUploading");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard.o-isUploading");
 
     await click(".o-mail-AttachmentCard-unlink");
-    assert.containsNone($, ".o-mail-Composer .o-mail-AttachmentCard");
+    assert.containsNone(document.body, ".o-mail-Composer .o-mail-AttachmentCard");
 });
 
 QUnit.test("Show a thread name in the recipient status text.", async (assert) => {
@@ -862,8 +874,8 @@ QUnit.test("Show a thread name in the recipient status text.", async (assert) =>
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-Chatter:contains(To: test)");
-    assert.containsOnce($, 'span[title="test@odoo.com"]');
+    assert.containsOnce(document.body, ".o-mail-Chatter:contains(To: test)");
+    assert.containsOnce(document.body, 'span[title="test@odoo.com"]');
 });
 
 QUnit.test("Show recipient list when there is more than 5 followers.", async (assert) => {
@@ -887,15 +899,18 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async (as
     const { openFormView } = await start();
     await openFormView("res.partner", partnerIds[0]);
     await click("button:contains(Send message)");
-    assert.containsOnce($, "button[title='Show all recipients']");
+    assert.containsOnce(document.body, "button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
-    assert.containsOnce($, "li:contains('test1@odoo.com')");
-    assert.containsOnce($, "li:contains('test2@odoo.com')");
-    assert.containsOnce($, "li:contains('test3@odoo.com')");
-    assert.containsOnce($, "li:contains('test4@odoo.com')");
-    assert.containsOnce($, "li:contains('test5@odoo.com')");
-    assert.containsOnce($, "li:contains('test6@odoo.com')");
-    assert.containsOnce($, ".o-mail-Chatter:contains('test1, test2, test3, test4, test5, …')");
+    assert.containsOnce(document.body, "li:contains('test1@odoo.com')");
+    assert.containsOnce(document.body, "li:contains('test2@odoo.com')");
+    assert.containsOnce(document.body, "li:contains('test3@odoo.com')");
+    assert.containsOnce(document.body, "li:contains('test4@odoo.com')");
+    assert.containsOnce(document.body, "li:contains('test5@odoo.com')");
+    assert.containsOnce(document.body, "li:contains('test6@odoo.com')");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Chatter:contains('test1, test2, test3, test4, test5, …')"
+    );
 });
 
 QUnit.test(
@@ -926,7 +941,7 @@ QUnit.test(
         inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], [file1, file2]);
         await waitUntil(".o-mail-AttachmentCard:contains(text1.txt)");
         await waitUntil(".o-mail-AttachmentCard:contains(text2.txt)");
-        assert.containsN($, ".o-mail-AttachmentCard-aside div[title='Uploading']", 2);
+        assert.containsN(document.body, ".o-mail-AttachmentCard-aside div[title='Uploading']", 2);
     }
 );
 
@@ -965,7 +980,7 @@ QUnit.test(
 
         // Simulates the completion of the upload of the first attachment
         await afterNextRender(() => uploadPromise.resolve());
-        assert.containsOnce($, '.o-mail-AttachmentCard:contains("text1.txt")');
+        assert.containsOnce(document.body, '.o-mail-AttachmentCard:contains("text1.txt")');
     }
 );
 
@@ -981,5 +996,5 @@ QUnit.test("Message is sent only once when pressing enter twice in a row", async
         await nextTick();
         triggerHotkey("Enter");
     });
-    assert.containsOnce($, ".o-mail-Message:contains(Hello World!)");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Hello World!)");
 });

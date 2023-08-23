@@ -65,6 +65,6 @@ QUnit.test("list activity widget: reschedule button in dropdown", async (assert)
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "OXP");
 
     await click(".o-mail-ActivityButton"); // open the popover
-    assert.containsNone($, ".o-mail-ActivityListPopoverItem-editbtn .fa-pencil");
-    assert.containsOnce($, ".o-mail-ActivityListPopoverItem-editbtn .fa-calendar");
+    assert.containsNone(document.body, ".o-mail-ActivityListPopoverItem-editbtn .fa-pencil");
+    assert.containsOnce(document.body, ".o-mail-ActivityListPopoverItem-editbtn .fa-calendar");
 });

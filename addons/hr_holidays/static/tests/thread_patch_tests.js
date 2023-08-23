@@ -20,5 +20,5 @@ QUnit.test("out of office message on direct chat with out of office partner", as
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".alert:contains(Out of office until Jan 1, 2023)");
+    assert.containsOnce(document.body, ".alert:contains(Out of office until Jan 1, 2023)");
 });

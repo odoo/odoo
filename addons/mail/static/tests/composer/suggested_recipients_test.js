@@ -29,7 +29,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
     const { openFormView } = await start();
     await openFormView("res.fake", fakeId);
     await click("button:contains(Send message)");
-    assert.containsNone($, "button:contains(Show more)");
+    assert.containsNone(document.body, "button:contains(Show more)");
 });
 
 QUnit.test(
@@ -63,8 +63,8 @@ QUnit.test(
             },
         });
         await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        assert.containsOnce(document.body, ".o-mail-SuggestedRecipient:contains(john@test.be)");
+        assert.containsOnce(document.body, ".o-mail-SuggestedRecipient:contains(John Jane)");
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -100,8 +100,8 @@ QUnit.test(
             },
         });
         await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(john@test.be)");
-        assert.containsOnce($, ".o-mail-SuggestedRecipient:contains(John Jane)");
+        assert.containsOnce(document.body, ".o-mail-SuggestedRecipient:contains(john@test.be)");
+        assert.containsOnce(document.body, ".o-mail-SuggestedRecipient:contains(John Jane)");
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -130,7 +130,7 @@ QUnit.test(
         const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
-        assert.containsOnce($, "button:contains(Show more)");
+        assert.containsOnce(document.body, "button:contains(Show more)");
     }
 );
 
@@ -151,7 +151,7 @@ QUnit.test(
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsN($, ".o-mail-SuggestedRecipient", 4);
+        assert.containsN(document.body, ".o-mail-SuggestedRecipient", 4);
     }
 );
 
@@ -172,7 +172,7 @@ QUnit.test(
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
-        assert.containsOnce($, "button:contains(Show less)");
+        assert.containsOnce(document.body, "button:contains(Show less)");
     }
 );
 
@@ -194,8 +194,8 @@ QUnit.test(
         await click("button:contains(Send message)");
         await click("button:contains(Show more)");
         await click("button:contains(Show less)");
-        assert.containsN($, ".o-mail-SuggestedRecipient", 3);
-        assert.containsOnce($, "button:contains(Show more)");
+        assert.containsN(document.body, ".o-mail-SuggestedRecipient", 3);
+        assert.containsOnce(document.body, "button:contains(Show more)");
     }
 );
 
@@ -214,7 +214,7 @@ QUnit.test(
         const { openFormView } = await start({ serverData: { views } });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
-        assert.containsN($, ".o-mail-SuggestedRecipient input:checked", 2);
+        assert.containsN(document.body, ".o-mail-SuggestedRecipient input:checked", 2);
         assert.ok(
             $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
         );

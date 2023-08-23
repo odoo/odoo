@@ -22,14 +22,17 @@ QUnit.test("activity mark done popover simplest layout", async (assert) => {
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    assert.containsOnce(document.body, ".o-mail-ActivityMarkAsDone");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']"
+    );
     assert.containsOnce(
         $,
         ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
     );
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
+    assert.containsOnce(document.body, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    assert.containsOnce(document.body, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
 QUnit.test("activity with force next mark done popover simplest layout", async (assert) => {
@@ -49,14 +52,17 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
         views: [[false, "form"]],
     });
     await click(".btn:contains('Mark Done')");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
+    assert.containsOnce(document.body, ".o-mail-ActivityMarkAsDone");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']"
+    );
     assert.containsOnce(
         $,
         ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']"
     );
-    assert.containsNone($, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    assert.containsOnce($, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
+    assert.containsNone(document.body, ".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    assert.containsOnce(document.body, ".o-mail-ActivityMarkAsDone button:contains(Discard)");
 });
 
 QUnit.test("activity mark done popover mark done without feedback", async (assert) => {

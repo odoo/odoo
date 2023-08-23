@@ -36,7 +36,7 @@ QUnit.test("dragover files on thread with composer", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await afterNextRender(() => dragenterFiles($(".o-mail-Thread")[0]));
-    assert.containsOnce($, ".o-mail-Dropzone");
+    assert.containsOnce(document.body, ".o-mail-Dropzone");
 });
 
 QUnit.test("load more messages from channel (auto-load on scroll)", async (assert) => {
@@ -55,10 +55,10 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async (asser
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, "button:contains(Load More) ~ .o-mail-Message", 30);
+    assert.containsN(document.body, "button:contains(Load More) ~ .o-mail-Message", 30);
 
     await afterNextRender(() => ($(".o-mail-Thread")[0].scrollTop = 0));
-    assert.containsN($, ".o-mail-Message", 60);
+    assert.containsN(document.body, ".o-mail-Message", 60);
 });
 
 QUnit.test(
@@ -78,8 +78,11 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-Message:contains(Subject: Salutations, voyageur)");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Message:contains(Subject: Salutations, voyageur)"
+        );
     }
 );
 
@@ -100,7 +103,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-Message:contains(Salutations, voyageur)");
+        assert.containsNone(document.body, ".o-mail-Message:contains(Salutations, voyageur)");
     }
 );
 
@@ -116,7 +119,7 @@ QUnit.test("auto-scroll to bottom of thread on load", async (assert) => {
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, ".o-mail-Message", 25);
+    assert.containsN(document.body, ".o-mail-Message", 25);
     assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
 });
 
@@ -137,7 +140,7 @@ QUnit.test("display day separator before first message of the day", async (asser
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread-date");
+    assert.containsOnce(document.body, ".o-mail-Thread-date");
 });
 
 QUnit.test("do not display day separator if all messages of the day are empty", async (assert) => {
@@ -150,7 +153,7 @@ QUnit.test("do not display day separator if all messages of the day are empty", 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Thread-date");
+    assert.containsNone(document.body, ".o-mail-Thread-date");
 });
 
 QUnit.test(
@@ -405,8 +408,11 @@ QUnit.test("show empty placeholder when thread contains no message", async (asse
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread:contains(There are no messages in this conversation.)");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(There are no messages in this conversation.)"
+    );
+    assert.containsNone(document.body, ".o-mail-Message");
 });
 
 QUnit.test("show empty placeholder when thread contains only empty messages", async (assert) => {
@@ -415,8 +421,11 @@ QUnit.test("show empty placeholder when thread contains only empty messages", as
     pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread:contains(There are no messages in this conversation.)");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(There are no messages in this conversation.)"
+    );
+    assert.containsNone(document.body, ".o-mail-Message");
 });
 
 QUnit.test(
@@ -441,8 +450,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
-        assert.containsN($, ".o-mail-Message", 10);
-        assert.containsOnce($, "button:contains(Load More)"); // still 40 non-empty
+        assert.containsN(document.body, ".o-mail-Message", 10);
+        assert.containsOnce(document.body, "button:contains(Load More)"); // still 40 non-empty
     }
 );
 
@@ -469,8 +478,8 @@ QUnit.test(
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsNone($, "hr + span:contains(New messages)");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsNone(document.body, "hr + span:contains(New messages)");
 
         await insertText(".o-mail-Composer-input", "hey!");
         await afterNextRender(() => {
@@ -478,8 +487,8 @@ QUnit.test(
             $(".o-mail-Composer-send")[0].focus();
             $(".o-mail-Composer-send")[0].click();
         });
-        assert.containsN($, ".o-mail-Message", 2);
-        assert.containsNone($, "hr + span:contains(New messages)");
+        assert.containsN(document.body, ".o-mail-Message", 2);
+        assert.containsNone(document.body, "hr + span:contains(New messages)");
     }
 );
 
@@ -511,8 +520,8 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message", "should have an initial message");
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsOnce(document.body, ".o-mail-Message", "should have an initial message");
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
@@ -525,13 +534,13 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
             })
         )
     );
-    assert.containsN($, ".o-mail-Message", 2);
-    assert.containsOnce($, "hr + span:contains(New messages)");
-    assert.containsOnce($, ".o-mail-Thread-newMessage ~ .o-mail-Message:contains(hu)");
+    assert.containsN(document.body, ".o-mail-Message", 2);
+    assert.containsOnce(document.body, "hr + span:contains(New messages)");
+    assert.containsOnce(document.body, ".o-mail-Thread-newMessage ~ .o-mail-Message:contains(hu)");
 
     $(".o-mail-Composer-input")[0].focus();
     await nextTick();
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 });
 
 QUnit.test("no new messages separator on posting message (no message history)", async (assert) => {
@@ -545,13 +554,13 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Message");
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsNone(document.body, ".o-mail-Message");
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 });
 
 QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async (assert) => {
@@ -608,7 +617,7 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
     await insertText(".o-mail-Composer-input", "Te");
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message-body");
+    assert.containsOnce(document.body, ".o-mail-Message-body");
     assert.containsOnce(
         $(".o-mail-Message-body"),
         `.o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
@@ -672,7 +681,7 @@ QUnit.test("mention 2 different channels that have the same name", async (assert
     await insertText(".o-mail-Composer-input", "m");
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message-body");
+    assert.containsOnce(document.body, ".o-mail-Message-body");
     assert.containsOnce(
         $(".o-mail-Message-body"),
         `.o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:contains("#my channel")`
@@ -731,12 +740,12 @@ QUnit.test("basic rendering of canceled notification", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message-notification .fa-envelope-o");
+    assert.containsOnce(document.body, ".o-mail-Message-notification .fa-envelope-o");
 
     await click(".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover .fa-trash-o");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(Someone)");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover .fa-trash-o");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
 QUnit.test(
@@ -785,9 +794,12 @@ QUnit.test(
                 })
             )
         );
-        assert.containsN($, ".o-mail-Message", 3);
-        assert.containsOnce($, "hr + span:contains(New messages)");
-        assert.containsOnce($, ".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
+        assert.containsN(document.body, ".o-mail-Message", 3);
+        assert.containsOnce(document.body, "hr + span:contains(New messages)");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage"
+        );
     }
 );
 
@@ -826,8 +838,8 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name");
-        assert.containsOnce($, ".o-mail-ChatWindow");
-        assert.containsNone($, ".o-mail-ChatWindow-header:contains('(1)')");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow");
+        assert.containsNone(document.body, ".o-mail-ChatWindow-header:contains('(1)')");
     }
 );
 
@@ -864,11 +876,11 @@ QUnit.test(
             },
         });
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsOnce($, ".o-mail-NotificationItem");
-        assert.containsNone($, ".o-mail-ChatWindow");
+        assert.containsOnce(document.body, ".o-mail-NotificationItem");
+        assert.containsNone(document.body, ".o-mail-ChatWindow");
 
         await click(".o-mail-NotificationItem");
-        assert.containsOnce($, ".o-mail-ChatWindow");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow");
     }
 );
 
@@ -1009,10 +1021,10 @@ QUnit.test("can be marked as read while loading", async function (assert) {
         },
     });
     await openDiscuss(undefined, { waitUntilMessagesLoaded: false });
-    assert.containsOnce($, ".o-discuss-badge:contains(1)");
+    assert.containsOnce(document.body, ".o-discuss-badge:contains(1)");
     await click(".o-mail-DiscussSidebarChannel:contains(Demo)");
     await afterNextRender(loadDeferred.resolve);
-    assert.containsNone($, ".o-discuss-badge");
+    assert.containsNone(document.body, ".o-discuss-badge");
 });
 
 QUnit.test(
@@ -1033,9 +1045,9 @@ QUnit.test(
         ]);
         const { openFormView } = await start();
         await openFormView("res.partner", pyEnv.currentPartnerId);
-        assert.containsNone($, ".o-mail-Thread-newMessage");
+        assert.containsNone(document.body, ".o-mail-Thread-newMessage");
         await click("button:contains(Log note)");
-        assert.containsNone($, ".o-mail-Thread-newMessage");
+        assert.containsNone(document.body, ".o-mail-Thread-newMessage");
     }
 );
 
@@ -1046,7 +1058,7 @@ QUnit.test("Transient messages are added at the end of the thread", async (asser
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
     await editInput(document.body, ".o-mail-Composer-input", "/help");
     await afterNextRender(() => triggerHotkey("Enter"));
     const lastMessage = document.querySelectorAll(".o-mail-Message")[1];

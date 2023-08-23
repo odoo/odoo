@@ -35,8 +35,8 @@ QUnit.test("Unsuccessful message post shows session expired", async (assert) => 
     });
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce($, ".o_notification:contains(Session expired)");
-    assert.containsNone($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o_notification:contains(Session expired)");
+    assert.containsNone(document.body, ".o-mail-ChatWindow");
 });
 
 QUnit.test("Session is reset after failing to persist the channel", async (assert) => {
@@ -57,10 +57,10 @@ QUnit.test("Session is reset after failing to persist the channel", async (asser
         $,
         ".o_notification:contains(No available collaborator, please try again later.)"
     );
-    assert.containsOnce($, ".o-livechat-LivechatButton");
+    assert.containsOnce(document.body, ".o-livechat-LivechatButton");
     await advanceTime(LivechatButton.DEBOUNCE_DELAY + 10);
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });
 
 QUnit.test("Thread state is saved on the session", async (assert) => {

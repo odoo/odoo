@@ -57,7 +57,7 @@ QUnit.test("receive and display simple notification with specific type", async (
             type: "info",
         });
     });
-    assert.containsOnce($, ".o_notification.border-info");
+    assert.containsOnce(document.body, ".o_notification.border-info");
 });
 
 QUnit.test("receive and display simple notification as sticky", async (assert) => {
@@ -79,5 +79,5 @@ QUnit.test("receive and display simple notification as sticky", async (assert) =
             sticky: true,
         });
     });
-    assert.containsOnce($, ".o_notification");
+    assert.containsOnce(document.body, ".o_notification");
 });

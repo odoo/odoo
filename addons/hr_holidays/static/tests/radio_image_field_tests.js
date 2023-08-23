@@ -39,16 +39,16 @@ QUnit.test("field is correctly renderered", async (assert) => {
         serverData,
         arch: '<form><field name="product_id" widget="hr_holidays_radio_image"/></form>',
     });
-    assert.containsOnce($, ".o_field_widget.o_field_hr_holidays_radio_image");
-    assert.containsN($, ".o_radio_input", 3);
-    assert.containsNone($, ".o_radio_input:checked");
-    assert.containsN($, "img", 3);
+    assert.containsOnce(document.body, ".o_field_widget.o_field_hr_holidays_radio_image");
+    assert.containsN(document.body, ".o_radio_input", 3);
+    assert.containsNone(document.body, ".o_radio_input:checked");
+    assert.containsN(document.body, "img", 3);
 
     await click($("img")[0]);
-    assert.containsOnce($, ".o_radio_input:checked");
+    assert.containsOnce(document.body, ".o_radio_input:checked");
 
     await clickSave(document.body);
-    assert.containsOnce($, ".o_field_widget.o_field_hr_holidays_radio_image");
-    assert.containsN($, ".o_radio_input", 3);
-    assert.containsN($, "img", 3);
+    assert.containsOnce(document.body, ".o_field_widget.o_field_hr_holidays_radio_image");
+    assert.containsN(document.body, ".o_radio_input", 3);
+    assert.containsN(document.body, "img", 3);
 });

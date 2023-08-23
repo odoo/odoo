@@ -21,8 +21,8 @@ QUnit.test("rating value displayed on the preview", async (assert) => {
     });
     await start();
     await triggerEvent(document.body, ".o_menu_systray i[aria-label='Messages']", "click");
-    assert.containsOnce($, ".o-mail-NotificationItem-text:contains(Rating:)");
-    assert.containsOnce($, ".o-rating-preview-image[data-alt='top']");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem-text:contains(Rating:)");
+    assert.containsOnce(document.body, ".o-rating-preview-image[data-alt='top']");
     assert.containsOnce(
         $,
         ".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']"
@@ -56,8 +56,8 @@ QUnit.test("rating value displayed on the needaction preview", async (assert) =>
     ]);
     await start();
     await triggerEvent(document.body, ".o_menu_systray i[aria-label='Messages']", "click");
-    assert.containsOnce($, ".o-mail-NotificationItem-text:contains(Rating:)");
-    assert.containsOnce($, ".o-rating-preview-image[data-alt='top']");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem-text:contains(Rating:)");
+    assert.containsOnce(document.body, ".o-rating-preview-image[data-alt='top']");
     assert.containsOnce(
         $,
         ".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']"

@@ -66,7 +66,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
         "silver",
         "the opened modal in edit mode should be a form view dialog with the res.partner 14"
     );
-    assert.containsOnce($, ".modal-content .o_form_view .o_input#email_0");
+    assert.containsOnce(document.body, ".modal-content .o_form_view .o_input#email_0");
 
     // set the email and save the modal (will rerender the form view)
     await testUtils.fields.editInput(
@@ -109,10 +109,10 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async (a
         views: [[false, "form"]],
     });
 
-    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 100);
-    assert.containsOnce($, ".o_form_editable");
+    assert.containsN(document.body, '.o_field_widget[name="partner_ids"] .badge', 100);
+    assert.containsOnce(document.body, ".o_form_editable");
 
     // add a record to the relation
     await selectDropdownItem(document.body, "partner_ids", "Public user");
-    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 101);
+    assert.containsN(document.body, '.o_field_widget[name="partner_ids"] .badge', 101);
 });

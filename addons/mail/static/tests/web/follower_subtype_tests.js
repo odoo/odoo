@@ -38,7 +38,10 @@ QUnit.test("simplest layout of a followed subtype", async (assert) => {
     });
     await click(".o-mail-Followers-button");
     await click("button[title='Edit subscription']");
-    assert.containsOnce($, ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"
+    );
     assert.containsOnce($(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"), "label");
     assert.containsOnce(
         $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"),

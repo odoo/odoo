@@ -35,7 +35,7 @@ QUnit.test(
                 })
             )
         );
-        assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow-header:contains(Dumbledore)");
     }
 );
 
@@ -64,7 +64,7 @@ QUnit.test(
         );
         // leaving discuss.
         await openFormView("res.partner", partnerId);
-        assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow-header:contains(Dumbledore)");
     }
 );
 
@@ -86,6 +86,6 @@ QUnit.test(
         await click(".o-mail-Composer-send");
         // leaving discuss.
         await openFormView("res.partner", partnerId);
-        assert.containsNone($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
+        assert.containsNone(document.body, ".o-mail-ChatWindow-header:contains(Dumbledore)");
     }
 );

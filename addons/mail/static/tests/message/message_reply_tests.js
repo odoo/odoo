@@ -25,7 +25,7 @@ QUnit.test("click on message in reply to highlight the parent message", async (a
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message:contains(Reply to Hey) .o-mail-MessageInReply-message");
-    assert.containsOnce($, ".o-mail-Message:contains(Hey lol).o-highlighted");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Hey lol).o-highlighted");
 });
 
 QUnit.test("click on message in reply to scroll to the parent message", async (assert) => {

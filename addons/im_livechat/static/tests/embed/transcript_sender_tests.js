@@ -24,12 +24,12 @@ QUnit.test("send", async (assert) => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     await click(".o-mail-ChatWindow-command[title*='Close']");
-    assert.containsOnce($, ".form-text:contains(Receive a copy of this conversation)");
-    assert.containsOnce($, "button[data-action='sendTranscript']:disabled");
+    assert.containsOnce(document.body, ".form-text:contains(Receive a copy of this conversation)");
+    assert.containsOnce(document.body, "button[data-action='sendTranscript']:disabled");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
     await click("button[data-action='sendTranscript']");
     assert.verifySteps(["send_transcript - odoobot@odoo.com"]);
-    assert.containsOnce($, ".form-text:contains(The conversation was sent)");
+    assert.containsOnce(document.body, ".form-text:contains(The conversation was sent)");
 });
 
 QUnit.test("send failed", async (assert) => {
@@ -48,5 +48,5 @@ QUnit.test("send failed", async (assert) => {
     await click(".o-mail-ChatWindow-command[title*='Close']");
     await insertText("input[placeholder='mail@example.com']", "odoobot@odoo.com");
     await click("button[data-action='sendTranscript']");
-    assert.containsOnce($, ".form-text:contains(An error occurred. Please try again.)");
+    assert.containsOnce(document.body, ".form-text:contains(An error occurred. Please try again.)");
 });

@@ -35,7 +35,7 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
         )
     );
     await waitUntil(".o-mail-ChatWindow-header:contains(1)");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(1)");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow-header:contains(1)");
 });
 
 QUnit.test("focus on unread livechat marks it as read", async (assert) => {
@@ -65,5 +65,5 @@ QUnit.test("focus on unread livechat marks it as read", async (assert) => {
     );
     await waitUntil(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(Are you there?)");
     await afterNextRender(() => $(".o-mail-Composer-input").trigger("focus"));
-    assert.containsNone($, ".o-mail-Thread-newMessage");
+    assert.containsNone(document.body, ".o-mail-Thread-newMessage");
 });

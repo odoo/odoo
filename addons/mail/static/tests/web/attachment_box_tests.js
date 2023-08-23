@@ -24,9 +24,9 @@ QUnit.test("base empty rendering", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-AttachmentBox");
-    assert.containsOnce($, "button:contains('Attach files')");
-    assert.containsNone($, ".o-mail-Chatter .o-mail-AttachmentImage");
+    assert.containsOnce(document.body, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, "button:contains('Attach files')");
+    assert.containsNone(document.body, ".o-mail-Chatter .o-mail-AttachmentImage");
 });
 
 QUnit.test("base non-empty rendering", async (assert) => {
@@ -62,10 +62,10 @@ QUnit.test("base non-empty rendering", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-AttachmentBox");
-    assert.containsOnce($, "button:contains('Attach files')");
-    assert.containsOnce($, ".o-mail-Chatter input[type='file']");
-    assert.containsOnce($, ".o-mail-AttachmentList");
+    assert.containsOnce(document.body, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, "button:contains('Attach files')");
+    assert.containsOnce(document.body, ".o-mail-Chatter input[type='file']");
+    assert.containsOnce(document.body, ".o-mail-AttachmentList");
 });
 
 QUnit.test("remove attachment should ask for confirmation", async (assert) => {
@@ -93,15 +93,18 @@ QUnit.test("remove attachment should ask for confirmation", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-AttachmentCard");
-    assert.containsOnce($, "button[title='Remove']");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard");
+    assert.containsOnce(document.body, "button[title='Remove']");
 
     await click("button[title='Remove']");
-    assert.containsOnce($, ".modal-body:contains('Do you really want to delete \"Blah.txt\"?')");
+    assert.containsOnce(
+        document.body,
+        ".modal-body:contains('Do you really want to delete \"Blah.txt\"?')"
+    );
 
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
-    assert.containsNone($, ".o-mail-AttachmentImage");
+    assert.containsNone(document.body, ".o-mail-AttachmentImage");
 });
 
 QUnit.test("view attachments", async (assert) => {
@@ -136,16 +139,16 @@ QUnit.test("view attachments", async (assert) => {
         views: [[false, "form"]],
     });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
-    assert.containsOnce($, ".o-FileViewer");
-    assert.containsOnce($, ".o-FileViewer-header:contains(Blah.txt)");
-    assert.containsOnce($, ".o-FileViewer div[aria-label='Next']");
+    assert.containsOnce(document.body, ".o-FileViewer");
+    assert.containsOnce(document.body, ".o-FileViewer-header:contains(Blah.txt)");
+    assert.containsOnce(document.body, ".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    assert.containsOnce($, ".o-FileViewer-header:contains(Blu.txt)");
-    assert.containsOnce($, ".o-FileViewer div[aria-label='Next']");
+    assert.containsOnce(document.body, ".o-FileViewer-header:contains(Blu.txt)");
+    assert.containsOnce(document.body, ".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    assert.containsOnce($, ".o-FileViewer-header:contains(Blah.txt)");
+    assert.containsOnce(document.body, ".o-FileViewer-header:contains(Blah.txt)");
 });
 
 QUnit.test("scroll to attachment box when toggling on", async (assert) => {
@@ -192,9 +195,9 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter [aria-label='Attach files']:contains(3)");
+    assert.containsOnce(document.body, ".o-mail-Chatter [aria-label='Attach files']:contains(3)");
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    assert.containsOnce($, ".o-mail-AttachmentCard:eq(0):contains(C.txt)");
-    assert.containsOnce($, ".o-mail-AttachmentCard:eq(1):contains(B.txt)");
-    assert.containsOnce($, ".o-mail-AttachmentCard:eq(2):contains(A.txt)");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:eq(0):contains(C.txt)");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:eq(1):contains(B.txt)");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:eq(2):contains(A.txt)");
 });

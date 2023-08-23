@@ -71,9 +71,9 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         },
     ]);
     const { env } = await start();
-    assert.containsOnce($, ".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu-counter");
-    assert.containsOnce($, ".o-mail-ActivityMenu-counter:contains(5)");
+    assert.containsOnce(document.body, ".o_menu_systray i[aria-label='Activities']");
+    assert.containsOnce(document.body, ".o-mail-ActivityMenu-counter");
+    assert.containsOnce(document.body, ".o-mail-ActivityMenu-counter:contains(5)");
     let context = {};
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -85,10 +85,10 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_overdue: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu");
-    assert.containsN($, ".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
+    assert.containsOnce(document.body, ".o-mail-ActivityMenu");
+    assert.containsN(document.body, ".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Late')");
-    assert.containsNone($, ".o-mail-ActivityMenu");
+    assert.containsNone(document.body, ".o-mail-ActivityMenu");
     context = {
         force_search_count: 1,
         search_default_activities_today: 1,
@@ -139,7 +139,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
     ]);
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsN($, "button[title='Summary']", 2);
+    assert.containsN(document.body, "button[title='Summary']", 2);
     const first = $(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     const second = $(
         ".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
@@ -161,7 +161,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
         },
     });
     await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
-    assert.containsNone($, ".o-dropdown-menu");
+    assert.containsNone(document.body, ".o-dropdown-menu");
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
@@ -170,7 +170,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
 QUnit.test("activity menu widget: close on messaging menu click", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    assert.containsOnce($, ".o-mail-ActivityMenu");
+    assert.containsOnce(document.body, ".o-mail-ActivityMenu");
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone($, ".o-mail-ActivityMenu");
+    assert.containsNone(document.body, ".o-mail-ActivityMenu");
 });

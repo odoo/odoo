@@ -24,7 +24,7 @@ QUnit.test("auto layout with link preview list", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message .o-mail-LinkPreviewList");
+    assert.containsOnce(document.body, ".o-mail-Message .o-mail-LinkPreviewList");
 });
 
 QUnit.test("auto layout with link preview as gif", async (assert) => {
@@ -47,7 +47,7 @@ QUnit.test("auto layout with link preview as gif", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-LinkPreviewImage");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewImage");
 });
 
 QUnit.test("simplest card layout", async (assert) => {
@@ -68,9 +68,9 @@ QUnit.test("simplest card layout", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-LinkPreviewCard");
-    assert.containsOnce($, ".o-mail-LinkPreviewCard:contains(Article title)");
-    assert.containsOnce($, ".o-mail-LinkPreviewCard:contains(Description)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard:contains(Article title)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard:contains(Description)");
 });
 
 QUnit.test("simplest card layout with image", async (assert) => {
@@ -92,10 +92,10 @@ QUnit.test("simplest card layout with image", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-LinkPreviewCard");
-    assert.containsOnce($, ".o-mail-LinkPreviewCard:contains(Article title)");
-    assert.containsOnce($, ".o-mail-LinkPreviewCard:contains(Description)");
-    assert.containsOnce($, ".o-mail-LinkPreviewCard img");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard:contains(Article title)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard:contains(Description)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewCard img");
 });
 
 QUnit.test("Link preview video layout", async (assert) => {
@@ -117,10 +117,10 @@ QUnit.test("Link preview video layout", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-LinkPreviewVideo");
-    assert.containsOnce($, ".o-mail-LinkPreviewVideo:contains(video title)");
-    assert.containsOnce($, ".o-mail-LinkPreviewVideo:contains(Description)");
-    assert.containsOnce($, ".o-mail-LinkPreviewVideo-overlay");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewVideo");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewVideo:contains(video title)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewVideo:contains(Description)");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewVideo-overlay");
 });
 
 QUnit.test("Link preview image layout", async (assert) => {
@@ -140,7 +140,7 @@ QUnit.test("Link preview image layout", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-LinkPreviewImage");
+    assert.containsOnce(document.body, ".o-mail-LinkPreviewImage");
 });
 
 QUnit.test("Remove link preview Gif", async (assert) => {
@@ -164,9 +164,9 @@ QUnit.test("Remove link preview Gif", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
-    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    assert.containsOnce(document.body, "p:contains(Do you really want to delete this preview?)");
     await click(".modal-footer button:contains(Ok)");
-    assert.containsNone($, ".o-mail-LinkPreviewImage");
+    assert.containsNone(document.body, ".o-mail-LinkPreviewImage");
 });
 
 QUnit.test("Remove link preview card", async (assert) => {
@@ -188,9 +188,9 @@ QUnit.test("Remove link preview card", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
-    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    assert.containsOnce(document.body, "p:contains(Do you really want to delete this preview?)");
     await click(".modal-footer button:contains(Ok)");
-    assert.containsNone($, ".o-mail-LinkPreviewCard");
+    assert.containsNone(document.body, ".o-mail-LinkPreviewCard");
 });
 
 QUnit.test("Remove link preview video", async (assert) => {
@@ -213,9 +213,9 @@ QUnit.test("Remove link preview video", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
-    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    assert.containsOnce(document.body, "p:contains(Do you really want to delete this preview?)");
     await click(".modal-footer button:contains(Ok)");
-    assert.containsNone($, ".o-mail-LinkPreviewVideo");
+    assert.containsNone(document.body, ".o-mail-LinkPreviewVideo");
 });
 
 QUnit.test("Remove link preview image", async (assert) => {
@@ -236,9 +236,9 @@ QUnit.test("Remove link preview image", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
-    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    assert.containsOnce(document.body, "p:contains(Do you really want to delete this preview?)");
     await click(".modal-footer button:contains(Ok)");
-    assert.containsNone($, ".o-mail-LinkPreviewImage");
+    assert.containsNone(document.body, ".o-mail-LinkPreviewImage");
 });
 
 QUnit.test("No crash on receiving link preview of non-known message", async (assert) => {
@@ -285,7 +285,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-Message-bubble");
+        assert.containsNone(document.body, ".o-mail-Message-bubble");
     }
 );
 
@@ -309,7 +309,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Message-bubble");
+        assert.containsOnce(document.body, ".o-mail-Message-bubble");
     }
 );
 
@@ -332,6 +332,6 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Message-bubble");
+        assert.containsOnce(document.body, ".o-mail-Message-bubble");
     }
 );

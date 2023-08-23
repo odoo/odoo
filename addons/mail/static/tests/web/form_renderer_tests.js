@@ -28,7 +28,7 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await click("button:contains(Activities)");
-        assert.containsOnce($, ".o_dialog:contains(Schedule Activity)");
+        assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)");
     }
 );
 
@@ -128,7 +128,7 @@ QUnit.test(
                 resIds: [partnerId_1, partnerId_2],
             }
         );
-        assert.containsOnce($, ".o-mail-Chatter button:contains(2)");
+        assert.containsOnce(document.body, ".o-mail-Chatter button:contains(2)");
 
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
@@ -136,7 +136,7 @@ QUnit.test(
         // Simulate unlinking attachment 1 from Partner 1.
         pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
         await click(".o_pager_previous");
-        assert.containsOnce($, ".o-mail-Chatter button:contains(1)");
+        assert.containsOnce(document.body, ".o-mail-Chatter button:contains(1)");
     }
 );
 
@@ -180,9 +180,9 @@ QUnit.test(
             views: [[false, "form"]],
         };
         await openView(openViewAction);
-        assert.containsOnce($, ".o-mail-Chatter");
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-read-more-less");
+        assert.containsOnce(document.body, ".o-mail-Chatter");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsOnce(document.body, ".o-mail-read-more-less");
     }
 );
 
@@ -226,12 +226,12 @@ QUnit.test("read more links becomes read less after being clicked", async (asser
         views: [[false, "form"]],
     };
     await openView(openViewAction);
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-read-more-less:contains(Read More)");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-read-more-less:contains(Read More)");
 
     await click(".o-mail-read-more-less");
-    assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
+    assert.containsOnce(document.body, ".o-mail-read-more-less:contains(Read Less)");
 });
 
 QUnit.test(
@@ -282,13 +282,13 @@ QUnit.test(
             res_id: partnerId,
             views: [[false, "form"]],
         });
-        assert.containsOnce($, ".o-mail-read-more-less:contains(Read More)");
+        assert.containsOnce(document.body, ".o-mail-read-more-less:contains(Read More)");
 
         await click(".o-mail-read-more-less");
-        assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
+        assert.containsOnce(document.body, ".o-mail-read-more-less:contains(Read Less)");
 
         await click(".o-mail-Message");
-        assert.containsOnce($, ".o-mail-read-more-less:contains(Read Less)");
+        assert.containsOnce(document.body, ".o-mail-read-more-less:contains(Read Less)");
     }
 );
 
@@ -331,5 +331,5 @@ QUnit.test("read more/less links on message of type notification", async (assert
         views: [[false, "form"]],
     };
     await openView(openViewAction);
-    assert.containsOnce($, ".o-mail-Message a:contains(Read More)");
+    assert.containsOnce(document.body, ".o-mail-Message a:contains(Read More)");
 });

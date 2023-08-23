@@ -106,7 +106,7 @@ QUnit.test("url", async (assert) => {
     const messageBody = "https://odoo.com?test=~^|`{}[]#";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button:contains(Send)");
-    assert.containsOnce($, `.o-mail-Message a:contains(${messageBody})`);
+    assert.containsOnce(document.body, `.o-mail-Message a:contains(${messageBody})`);
 });
 
 QUnit.test("url with comma at the end", async (assert) => {
@@ -117,8 +117,8 @@ QUnit.test("url with comma at the end", async (assert) => {
     const messageBody = "Go to https://odoo.com, it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button:contains(Send)");
-    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
-    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+    assert.containsOnce(document.body, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce(document.body, `.o-mail-Message:contains(${messageBody})`);
 });
 
 QUnit.test("url with dot at the end", async (assert) => {
@@ -129,8 +129,8 @@ QUnit.test("url with dot at the end", async (assert) => {
     const messageBody = "Go to https://odoo.com. It's great!";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button:contains(Send)");
-    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
-    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+    assert.containsOnce(document.body, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce(document.body, `.o-mail-Message:contains(${messageBody})`);
 });
 
 QUnit.test("url with semicolon at the end", async (assert) => {
@@ -141,8 +141,8 @@ QUnit.test("url with semicolon at the end", async (assert) => {
     const messageBody = "Go to https://odoo.com; it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button:contains(Send)");
-    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
-    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+    assert.containsOnce(document.body, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce(document.body, `.o-mail-Message:contains(${messageBody})`);
 });
 
 QUnit.test("url with ellipsis at the end", async (assert) => {
@@ -153,8 +153,8 @@ QUnit.test("url with ellipsis at the end", async (assert) => {
     const messageBody = "Go to https://odoo.com... it's great!";
     await insertText(".o-mail-Composer-input", messageBody);
     await click("button:contains(Send)");
-    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
-    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+    assert.containsOnce(document.body, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce(document.body, `.o-mail-Message:contains(${messageBody})`);
 });
 
 QUnit.test("url with number in subdomain", async (assert) => {

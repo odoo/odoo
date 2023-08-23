@@ -25,14 +25,14 @@ QUnit.test("simplest layout", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Message .o-mail-AttachmentList");
+    assert.containsOnce(document.body, ".o-mail-Message .o-mail-AttachmentList");
     assert.hasAttrValue($(".o-mail-AttachmentCard"), "title", "test.txt");
-    assert.containsOnce($, ".o-mail-AttachmentCard-image");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard-image");
     assert.hasClass($(".o-mail-AttachmentCard-image"), "o_image"); // required for mimetype.scss style
     assert.hasAttrValue($(".o-mail-AttachmentCard-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
-    assert.containsN($, ".o-mail-AttachmentCard-aside button", 2);
-    assert.containsOnce($, ".o-mail-AttachmentCard-unlink");
-    assert.containsOnce($, ".o-mail-AttachmentCard-aside button[title='Download']");
+    assert.containsN(document.body, ".o-mail-AttachmentCard-aside button", 2);
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard-unlink");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard-aside button[title='Download']");
 });
 
 QUnit.test("layout with card details and filename and extension", async (assert) => {
@@ -54,8 +54,8 @@ QUnit.test("layout with card details and filename and extension", async (assert)
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-AttachmentCard:contains('test.txt')");
-    assert.containsOnce($, ".o-mail-AttachmentCard small:contains('txt')");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains('test.txt')");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard small:contains('txt')");
 });
 
 QUnit.test(
@@ -114,9 +114,9 @@ QUnit.test("view attachment", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-AttachmentImage img");
+    assert.containsOnce(document.body, ".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
-    assert.containsOnce($, ".o-FileViewer");
+    assert.containsOnce(document.body, ".o-FileViewer");
 });
 
 QUnit.test("close attachment viewer", async (assert) => {
@@ -138,13 +138,13 @@ QUnit.test("close attachment viewer", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-AttachmentImage img");
+    assert.containsOnce(document.body, ".o-mail-AttachmentImage img");
 
     await click(".o-mail-AttachmentImage");
-    assert.containsOnce($, ".o-FileViewer");
+    assert.containsOnce(document.body, ".o-FileViewer");
 
     await click(".o-FileViewer div[aria-label='Close']");
-    assert.containsNone($, ".o-FileViewer");
+    assert.containsNone(document.body, ".o-FileViewer");
 });
 
 QUnit.test(
@@ -308,17 +308,17 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-AttachmentImage[title='test.png']");
-        assert.containsOnce($, ".o-mail-AttachmentCard:contains(test.odt)");
+        assert.containsOnce(document.body, ".o-mail-AttachmentImage[title='test.png']");
+        assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains(test.odt)");
         assert.hasClass($(".o-mail-AttachmentImage[title='test.png'] img"), "o-viewable");
         assert.doesNotHaveClass($(".o-mail-AttachmentCard:contains(test.odt)"), "o-viewable");
 
         click(".o-mail-AttachmentCard:contains(test.odt)").catch(() => {});
         await nextTick();
-        assert.containsNone($, ".o-FileViewer");
+        assert.containsNone(document.body, ".o-FileViewer");
 
         await click(".o-mail-AttachmentImage[title='test.png']");
-        assert.containsOnce($, ".o-FileViewer");
+        assert.containsOnce(document.body, ".o-FileViewer");
     }
 );
 

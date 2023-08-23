@@ -18,12 +18,12 @@ QUnit.test('livechats should be in "chat" filter', async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-MessagingMenu button:contains(All)");
+    assert.containsOnce(document.body, ".o-mail-MessagingMenu button:contains(All)");
     assert.hasClass($(".o-mail-MessagingMenu button:contains(All)"), "fw-bolder");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(Visitor 11)");
     await click(".o-mail-MessagingMenu button:contains(Chat)");
     assert.hasClass($(".o-mail-MessagingMenu button:contains(Chat)"), "fw-bolder");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(Visitor 11)");
 });
 
 QUnit.test('livechats should be in "livechat" tab in mobile', async (assert) => {
@@ -41,7 +41,7 @@ QUnit.test('livechats should be in "livechat" tab in mobile', async (assert) => 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(Livechat)");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(Visitor 11)");
     await click("button:contains(Chat)");
-    assert.containsNone($, ".o-mail-NotificationItem:contains(Visitor 11)");
+    assert.containsNone(document.body, ".o-mail-NotificationItem:contains(Visitor 11)");
 });

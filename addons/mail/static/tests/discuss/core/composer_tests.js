@@ -59,7 +59,7 @@ QUnit.test("add an emoji after a command", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "/");
     await click(".o-mail-Composer-suggestion");

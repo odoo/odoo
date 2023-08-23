@@ -20,8 +20,11 @@ QUnit.test("Unknown visitor", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Visitor 11)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat"
+    );
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(Visitor 11)");
 });
 
 QUnit.test("Known user with country", async (assert) => {
@@ -44,7 +47,7 @@ QUnit.test("Known user with country", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Jean (Belgium))");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(Jean (Belgium))");
 });
 
 QUnit.test("Do not show channel when visitor is typing", async (assert) => {
@@ -71,7 +74,7 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarCategory-livechat");
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await pyEnv.withUser(pyEnv.publicUserId, () =>
@@ -81,7 +84,7 @@ QUnit.test("Do not show channel when visitor is typing", async (assert) => {
         })
     );
     await nextTick();
-    assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarCategory-livechat");
 });
 
 QUnit.test("Close should update the value on the server", async (assert) => {
@@ -368,7 +371,7 @@ QUnit.test("Close manually by clicking the title", async (assert) => {
     );
     // fold the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel");
 });
 
 QUnit.test("Open manually by clicking the title", async (assert) => {
@@ -499,5 +502,5 @@ QUnit.test("Message unread counter", async (assert) => {
             })
         )
     );
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel .badge:contains(1)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });

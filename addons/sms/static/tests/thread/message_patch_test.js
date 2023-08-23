@@ -22,16 +22,16 @@ QUnit.test("Notification Sent", async (assert) => {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-Message-notification i");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message-notification");
+    assert.containsOnce(document.body, ".o-mail-Message-notification i");
     assert.hasClass($(".o-mail-Message-notification i"), "fa-mobile");
 
     await click(".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover i");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover i");
     assert.hasClass($(".o-mail-MessageNotificationPopover i"), "fa-check");
-    assert.containsOnce($, ".o-mail-MessageNotificationPopover:contains(Someone)");
+    assert.containsOnce(document.body, ".o-mail-MessageNotificationPopover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async (assert) => {
@@ -61,9 +61,9 @@ QUnit.test("Notification Error", async (assert) => {
         },
     });
 
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-notification");
-    assert.containsOnce($, ".o-mail-Message-notification i");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message-notification");
+    assert.containsOnce(document.body, ".o-mail-Message-notification i");
     assert.hasClass($(".o-mail-Message-notification i"), "fa-mobile");
     click(".o-mail-Message-notification").catch(() => {});
     await openResendActionDef;

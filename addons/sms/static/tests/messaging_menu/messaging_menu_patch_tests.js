@@ -20,15 +20,15 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
-    assert.containsOnce($, ".o-mail-NotificationItem [title='Mark As Read']");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem [title='Mark As Read']");
     assert.containsOnce(
         $,
         ".o-mail-NotificationItem:contains(An error occurred when sending an SMS)"
     );
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsNone($, ".o-mail-NotificationItem");
+    assert.containsNone(document.body, ".o-mail-NotificationItem");
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -72,7 +72,7 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
+    assert.containsN(document.body, ".o-mail-NotificationItem", 2);
     const items = $(".o-mail-NotificationItem");
     assert.ok(items[0].textContent.includes("Partner"));
     assert.ok(items[0].textContent.includes("2")); // counter
@@ -135,8 +135,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
 
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

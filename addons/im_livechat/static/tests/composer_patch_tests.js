@@ -22,8 +22,8 @@ QUnit.test("No add attachments button", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Composer");
-    assert.containsNone($, "button[title='Attach files']");
+    assert.containsOnce(document.body, ".o-mail-Composer");
+    assert.containsNone(document.body, "button[title='Attach files']");
 });
 
 QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
@@ -36,10 +36,10 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
     dragenterFiles($(".o-mail-Composer-input")[0]);
     await nextTick();
-    assert.containsNone($, ".o-mail-Dropzone");
+    assert.containsNone(document.body, ".o-mail-Dropzone");
 });
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
@@ -94,7 +94,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
             })
         )
     );
-    assert.containsOnce($, ".o-discuss-Typing:contains(Visitor 20 is typing...)");
+    assert.containsOnce(document.body, ".o-discuss-Typing:contains(Visitor 20 is typing...)");
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async (assert) => {
@@ -114,9 +114,9 @@ QUnit.test('display canned response suggestions on typing ":"', async (assert) =
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestionList .o-open");
 });
 
 QUnit.test("use a canned response", async (assert) => {
@@ -136,10 +136,10 @@ QUnit.test("use a canned response", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -165,12 +165,12 @@ QUnit.test("use a canned response some text", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -196,10 +196,10 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestion");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),

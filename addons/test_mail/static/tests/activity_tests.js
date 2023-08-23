@@ -665,10 +665,10 @@ QUnit.module("test_mail", {}, function () {
         await testUtils.dom.click(
             document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
         );
-        assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
+        assert.containsOnce(document.body, ".modal.o_technical_modal", "Activity Modal should be opened");
 
         await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
-        assert.containsNone($, ".modal.o_technical_modal", "Activity Modal should be closed");
+        assert.containsNone(document.body, ".modal.o_technical_modal", "Activity Modal should be closed");
     });
 
     QUnit.test(

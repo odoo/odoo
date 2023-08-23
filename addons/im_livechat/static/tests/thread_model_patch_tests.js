@@ -25,11 +25,11 @@ QUnit.test("Thread name unchanged when inviting new users", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Discuss-threadName[title='Visitor #20']");
+    assert.containsOnce(document.body, ".o-mail-Discuss-threadName[title='Visitor #20']");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
     await click("button:contains(Invite)");
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-discuss-ChannelMember:contains(James)");
-    assert.containsOnce($, ".o-mail-Discuss-threadName[title='Visitor #20']");
+    assert.containsOnce(document.body, ".o-discuss-ChannelMember:contains(James)");
+    assert.containsOnce(document.body, ".o-mail-Discuss-threadName[title='Visitor #20']");
 });

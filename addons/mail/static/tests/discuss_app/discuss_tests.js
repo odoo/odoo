@@ -37,8 +37,8 @@ QUnit.test("sanity check", async (assert) => {
         },
     });
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebar");
-    assert.containsOnce($, "h4:contains(Congratulations, your inbox is empty)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebar");
+    assert.containsOnce(document.body, "h4:contains(Congratulations, your inbox is empty)");
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -60,7 +60,7 @@ QUnit.test("can change the thread name of #general", async (assert) => {
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce($, "input.o-mail-Discuss-threadName");
+    assert.containsOnce(document.body, "input.o-mail-Discuss-threadName");
     const $name = $("input.o-mail-Discuss-threadName");
 
     click($name).catch(() => {});
@@ -88,7 +88,7 @@ QUnit.test("can change the thread description of #general", async (assert) => {
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce($, "input.o-mail-Discuss-threadDescription");
+    assert.containsOnce(document.body, "input.o-mail-Discuss-threadDescription");
     const $description = $("input.o-mail-Discuss-threadDescription");
 
     click($description).then(() => {});
@@ -122,7 +122,7 @@ QUnit.test("Message following a notification should not be squashed", async (ass
     await openDiscuss(channelId);
     await editInput(document.body, ".o-mail-Composer-input", "Hello world!");
     await click(".o-mail-Composer button:contains(Send)");
-    assert.containsOnce($, ".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
+    assert.containsOnce(document.body, ".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
 });
 
 QUnit.test("Posting message should transform links.", async (assert) => {
@@ -135,7 +135,7 @@ QUnit.test("Posting message should transform links.", async (assert) => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, "a[href='https://www.odoo.com/']");
+    assert.containsOnce(document.body, "a[href='https://www.odoo.com/']");
 });
 
 QUnit.test("Posting message should transform relevant data to emoji.", async (assert) => {
@@ -148,7 +148,7 @@ QUnit.test("Posting message should transform relevant data to emoji.", async (as
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($, ".o-mail-Message-body:contains(test 😛 😆)");
+    assert.containsOnce(document.body, ".o-mail-Message-body:contains(test 😛 😆)");
 });
 
 QUnit.test(
@@ -177,8 +177,8 @@ QUnit.test(
         flag = true;
         await editInput(document.body, ".o-mail-Composer-input", "def");
         await click(".o-mail-Composer button:contains(Send)");
-        assert.containsN($, ".o-mail-Message", 2);
-        assert.containsN($, ".o-mail-Message-header", 1); // just 1, because 2nd message is squashed
+        assert.containsN(document.body, ".o-mail-Message", 2);
+        assert.containsN(document.body, ".o-mail-Message-header", 1); // just 1, because 2nd message is squashed
     }
 );
 
@@ -195,9 +195,12 @@ QUnit.test("Click on avatar opens its partner chat window", async (assert) => {
     });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Message-sidebar .o-mail-Message-avatarContainer img"
+    );
     await click(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
-    assert.containsOnce($, ".o-mail-ChatWindow-name");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     assert.ok($(".o-mail-ChatWindow-name").text().includes("testPartner"));
 });
 
@@ -246,7 +249,7 @@ QUnit.test("sidebar: chat im_status rendering", async (assert) => {
     ]);
     const { openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss();
-    assert.containsN($, ".o-mail-DiscussSidebarChannel-threadIcon", 3);
+    assert.containsN(document.body, ".o-mail-DiscussSidebarChannel-threadIcon", 3);
     const chat1 = $(".o-mail-DiscussSidebarChannel")[0];
     const chat2 = $(".o-mail-DiscussSidebarChannel")[1];
     const chat3 = $(".o-mail-DiscussSidebarChannel")[2];
@@ -280,8 +283,8 @@ QUnit.test("No load more when fetch below fetch limit of 30", async (assert) => 
         },
     });
     await openDiscuss(channelId);
-    assert.containsN($, ".o-mail-Message", 29);
-    assert.containsNone($, "button:contains(Load more)");
+    assert.containsN(document.body, ".o-mail-Message", 29);
+    assert.containsNone(document.body, "button:contains(Load more)");
 });
 
 QUnit.test("show date separator above mesages of similar date", async (assert) => {
@@ -356,21 +359,21 @@ QUnit.test("reply to message from inbox (message linked to document)", async (as
         },
     });
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message-header:contains(on Refactoring)");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message-header:contains(on Refactoring)");
 
     await click("[title='Reply']");
     assert.hasClass($(".o-mail-Message"), "o-selected");
-    assert.containsOnce($, ".o-mail-Composer");
-    assert.containsOnce($, ".o-mail-Composer-coreHeader:contains(on: Refactoring)");
+    assert.containsOnce(document.body, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer-coreHeader:contains(on: Refactoring)");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send");
     assert.verifySteps(["message_post"]);
-    assert.containsNone($, ".o-mail-Composer");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(Test)");
+    assert.containsNone(document.body, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Test)");
     assert.doesNotHaveClass($(".o-mail-Message"), "o-selected");
 });
 
@@ -390,11 +393,11 @@ QUnit.test("Can reply to starred message", async (assert) => {
     });
     await openDiscuss("mail.box_starred");
     await click("[title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer-coreHeader:contains('RandomName')");
+    assert.containsOnce(document.body, ".o-mail-Composer-coreHeader:contains('RandomName')");
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send");
     assert.verifySteps(['Message posted on "RandomName"']);
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
 });
 
 QUnit.test("Can reply to history message", async (assert) => {
@@ -419,20 +422,20 @@ QUnit.test("Can reply to history message", async (assert) => {
     });
     await openDiscuss("mail.box_history");
     await click("[title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer-coreHeader:contains('RandomName')");
+    assert.containsOnce(document.body, ".o-mail-Composer-coreHeader:contains('RandomName')");
     await insertText(".o-mail-Composer-input", "abc");
     await click(".o-mail-Composer-send");
     assert.verifySteps(['Message posted on "RandomName"']);
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
 });
 
 QUnit.test("receive new needaction messages", async (assert) => {
     const { openDiscuss, pyEnv } = await start();
     await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox)");
+    assert.containsOnce(document.body, "button:contains(Inbox)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
-    assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, ".o-mail-Thread .o-mail-Message");
+    assert.containsNone(document.body, "button:contains(Inbox) .badge");
+    assert.containsNone(document.body, ".o-mail-Thread .o-mail-Message");
 
     // simulate receiving a new needaction message
     await afterNextRender(() => {
@@ -444,10 +447,10 @@ QUnit.test("receive new needaction messages", async (assert) => {
             res_id: 20,
         });
     });
-    assert.containsOnce($, "button:contains(Inbox) .badge");
-    assert.containsOnce($, "button:contains(Inbox) .badge:contains(1)");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(not empty 1)");
+    assert.containsOnce(document.body, "button:contains(Inbox) .badge");
+    assert.containsOnce(document.body, "button:contains(Inbox) .badge:contains(1)");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(not empty 1)");
 
     // simulate receiving another new needaction message
     await afterNextRender(() => {
@@ -459,29 +462,29 @@ QUnit.test("receive new needaction messages", async (assert) => {
             res_id: 20,
         });
     });
-    assert.containsOnce($, "button:contains(Inbox) .badge:contains(2)");
-    assert.containsN($, ".o-mail-Message", 2);
-    assert.containsOnce($, ".o-mail-Message:contains(not empty 1)");
-    assert.containsOnce($, ".o-mail-Message:contains(not empty 2)");
+    assert.containsOnce(document.body, "button:contains(Inbox) .badge:contains(2)");
+    assert.containsN(document.body, ".o-mail-Message", 2);
+    assert.containsOnce(document.body, ".o-mail-Message:contains(not empty 1)");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(not empty 2)");
 });
 
 QUnit.test("basic rendering", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebar");
-    assert.containsOnce($, ".o-mail-Discuss-content");
-    assert.containsOnce($, ".o-mail-Discuss-content .o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebar");
+    assert.containsOnce(document.body, ".o-mail-Discuss-content");
+    assert.containsOnce(document.body, ".o-mail-Discuss-content .o-mail-Thread");
 });
 
 QUnit.test("basic rendering: sidebar", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(Inbox)");
-    assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(Starred)");
-    assert.containsOnce($, ".o-mail-DiscussSidebar button:contains(History)");
-    assert.containsN($, ".o-mail-DiscussSidebarCategory", 2);
-    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-channel");
-    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-chat");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebar button:contains(Inbox)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebar button:contains(Starred)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebar button:contains(History)");
+    assert.containsN(document.body, ".o-mail-DiscussSidebarCategory", 2);
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarCategory-channel");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarCategory-chat");
     assert.strictEqual($(".o-mail-DiscussSidebarCategory-channel").text(), "Channels");
     assert.strictEqual($(".o-mail-DiscussSidebarCategory-chat").text(), "Direct messages");
 });
@@ -489,22 +492,22 @@ QUnit.test("basic rendering: sidebar", async (assert) => {
 QUnit.test("sidebar: Inbox should have icon", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox)");
+    assert.containsOnce(document.body, "button:contains(Inbox)");
     assert.containsOnce($("button:contains(Inbox)"), ".fa-inbox");
 });
 
 QUnit.test("sidebar: default active inbox", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox)");
+    assert.containsOnce(document.body, "button:contains(Inbox)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
 });
 
 QUnit.test("sidebar: change active", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox)");
-    assert.containsOnce($, "button:contains(Starred)");
+    assert.containsOnce(document.body, "button:contains(Inbox)");
+    assert.containsOnce(document.body, "button:contains(Starred)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
     assert.doesNotHaveClass($("button:contains(Starred)"), "o-active");
     await click("button:contains(Starred)");
@@ -517,7 +520,7 @@ QUnit.test("sidebar: basic channel rendering", async (assert) => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel");
     assert.strictEqual($(".o-mail-DiscussSidebarChannel").text(), "General");
     assert.containsOnce($(".o-mail-DiscussSidebarChannel"), "img[data-alt='Thread Image']");
     assert.containsOnce(
@@ -543,10 +546,10 @@ QUnit.test("channel become active", async (assert) => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel");
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel.o-active");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel.o-active");
     await click(".o-mail-DiscussSidebarChannel");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel.o-active");
 });
 
 QUnit.test("channel become active - show composer in discuss content", async (assert) => {
@@ -555,8 +558,8 @@ QUnit.test("channel become active - show composer in discuss content", async (as
     const { openDiscuss } = await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel");
-    assert.containsOnce($, ".o-mail-Thread");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-Composer");
 });
 
 QUnit.test("sidebar: channel rendering with needaction counter", async (assert) => {
@@ -574,8 +577,11 @@ QUnit.test("sidebar: channel rendering with needaction counter", async (assert) 
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(general)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(general) .badge:contains(1)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(general)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-DiscussSidebarChannel:contains(general) .badge:contains(1)"
+    );
 });
 
 QUnit.test("sidebar: chat rendering with unread counter", async (assert) => {
@@ -588,7 +594,7 @@ QUnit.test("sidebar: chat rendering with unread counter", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel .badge:contains(100)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel .badge:contains(100)");
     assert.containsNone(
         $,
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands:contains(Unpin Conversation)"
@@ -653,7 +659,7 @@ QUnit.test("rendering of inbox message", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
     const $message = $(".o-mail-Message");
     assert.containsOnce($message, ".o-mail-Message-header:contains(on Refactoring)");
     assert.containsN($message, ".o-mail-Message-actions i", 4);
@@ -706,7 +712,7 @@ QUnit.test("Unfollow message", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
     // 2 messages about "Thread followed" with unfollow button and 1 message about "Thread not followed" without it
-    assert.containsN($, ".o-mail-Message", 3);
+    assert.containsN(document.body, ".o-mail-Message", 3);
     for (const messageN of [0, 1]) {
         const $message = $(`.o-mail-Message:eq(${messageN})`);
         assert.containsOnce($message, ".o-mail-Message-header:contains(on Thread followed)");
@@ -731,8 +737,8 @@ QUnit.test("Unfollow message", async function (assert) {
         2,
         "Unfollowing message 0 marks it as read -> Message removed"
     );
-    assert.containsOnce($, ".o-mail-Message-header:contains(on Thread followed)");
-    assert.containsOnce($, ".o-mail-Message-header:contains(on Thread not followed)");
+    assert.containsOnce(document.body, ".o-mail-Message-header:contains(on Thread followed)");
+    assert.containsOnce(document.body, ".o-mail-Message-header:contains(on Thread not followed)");
     for (const messageN of [0, 1]) {
         const $message = $(`.o-mail-Message:eq(${messageN})`);
         await afterNextRender(() => $message.find("[title='Expand']").click());
@@ -776,21 +782,27 @@ QUnit.test('messages marked as read move to "History" mailbox', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
     assert.hasClass($("button:contains(History)"), "o-active");
-    assert.containsOnce($, ".o-mail-Thread:contains(No history messages)");
+    assert.containsOnce(document.body, ".o-mail-Thread:contains(No history messages)");
 
     await click("button:contains(Inbox)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
-    assert.containsNone($, ".o-mail-Thread:contains(Congratulations, your inbox is empty)");
-    assert.containsN($, ".o-mail-Thread .o-mail-Message", 2);
+    assert.containsNone(
+        document.body,
+        ".o-mail-Thread:contains(Congratulations, your inbox is empty)"
+    );
+    assert.containsN(document.body, ".o-mail-Thread .o-mail-Message", 2);
 
     await click("button:contains(Mark all read)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
-    assert.containsOnce($, ".o-mail-Thread:contains(Congratulations, your inbox is empty)");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(Congratulations, your inbox is empty)"
+    );
 
     await click("button:contains(History)");
     assert.hasClass($("button:contains(History)"), "o-active");
-    assert.containsNone($, ".o-mail-Thread:contains(No history messages)");
-    assert.containsN($, ".o-mail-Thread .o-mail-Message", 2);
+    assert.containsNone(document.body, ".o-mail-Thread:contains(No history messages)");
+    assert.containsN(document.body, ".o-mail-Thread .o-mail-Message", 2);
 });
 
 QUnit.test(
@@ -824,20 +836,20 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_history");
         assert.hasClass($("button:contains(History)"), "o-active");
-        assert.containsOnce($, ".o-mail-Thread:contains(No history messages)");
+        assert.containsOnce(document.body, ".o-mail-Thread:contains(No history messages)");
 
         await click("button:contains(Inbox)");
         assert.hasClass($("button:contains(Inbox)"), "o-active");
-        assert.containsN($, ".o-mail-Message", 2);
+        assert.containsN(document.body, ".o-mail-Message", 2);
 
         await click(".o-mail-Message:contains(not empty 1) [title='Mark as Read']");
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-Message:contains(not empty 2)");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsOnce(document.body, ".o-mail-Message:contains(not empty 2)");
 
         await click("button:contains(History)");
         assert.hasClass($("button:contains(History)"), "o-active");
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-Message:contains(not empty 1)");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsOnce(document.body, ".o-mail-Message:contains(not empty 1)");
     }
 );
 
@@ -857,7 +869,7 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     const { openDiscuss } = await start();
     await openDiscuss();
     await click("button:contains(Mark all read)");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     await click("button:contains(History)");
     $(".o-mail-Thread")[0].scrollTop = 0;
@@ -880,8 +892,11 @@ QUnit.test("post a simple message", async (assert) => {
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Thread:contains(There are no messages in this conversation.)");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-Thread:contains(There are no messages in this conversation.)"
+    );
+    assert.containsNone(document.body, ".o-mail-Message");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
 
     // insert some HTML in editable
@@ -891,10 +906,10 @@ QUnit.test("post a simple message", async (assert) => {
     await click(".o-mail-Composer-send");
     assert.verifySteps(["message_post"]);
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
     pyEnv["mail.message"].search([], { order: "id DESC" });
     const $message = $(".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(Test)");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Test)");
     assert.strictEqual($message.find(".o-mail-Message-author").text(), "Mitchell Admin");
     assert.strictEqual($message.find(".o-mail-Message-body").text(), "Test");
 });
@@ -908,13 +923,13 @@ QUnit.test("starred: unstar all", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_starred");
     assert.strictEqual($("button:contains(Starred) .badge").text(), "2");
-    assert.containsN($, ".o-mail-Message", 2);
+    assert.containsN(document.body, ".o-mail-Message", 2);
     let $unstarAll = $("button:contains(Unstar all)");
     assert.notOk($unstarAll[0].disabled);
 
     await click($unstarAll);
-    assert.containsNone($, "button:contains(Starred) .badge");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, "button:contains(Starred) .badge");
+    assert.containsNone(document.body, ".o-mail-Message");
     $unstarAll = $("button:contains(Unstar all)");
     assert.ok($unstarAll[0].disabled);
 });
@@ -934,22 +949,22 @@ QUnit.test("auto-focus composer on opening thread", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, "button:contains(Inbox)");
+    assert.containsOnce(document.body, "button:contains(Inbox)");
     assert.hasClass($("button:contains(Inbox)"), "o-active");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(General)");
     assert.doesNotHaveClass($(".o-mail-DiscussSidebarChannel:contains(General)"), "o-active");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Demo User)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(Demo User)");
     assert.doesNotHaveClass($(".o-mail-DiscussSidebarChannel:contains(Demo User)"), "o-active");
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Composer");
 
     await click(".o-mail-DiscussSidebarChannel:contains(General)");
     assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(General)"), "o-active");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
     await click(".o-mail-DiscussSidebarChannel:contains(Demo User)");
     assert.hasClass($(".o-mail-DiscussSidebarChannel:contains(Demo User)"), "o-active");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 });
 
@@ -1119,7 +1134,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(Demo)");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel:contains(Demo)");
 
     // simulate receiving the first message on channel 11
     await afterNextRender(() =>
@@ -1131,7 +1146,7 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
             })
         )
     );
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Demo)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(Demo)");
 });
 
 QUnit.test("'Add Users' button should be displayed in the topbar of channels", async (assert) => {
@@ -1142,7 +1157,7 @@ QUnit.test("'Add Users' button should be displayed in the topbar of channels", a
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, "button[title='Add Users']");
+    assert.containsOnce(document.body, "button[title='Add Users']");
 });
 
 QUnit.test("'Add Users' button should be displayed in the topbar of chats", async (assert) => {
@@ -1157,7 +1172,7 @@ QUnit.test("'Add Users' button should be displayed in the topbar of chats", asyn
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, "button[title='Add Users']");
+    assert.containsOnce(document.body, "button[title='Add Users']");
 });
 
 QUnit.test("'Add Users' button should be displayed in the topbar of groups", async (assert) => {
@@ -1172,7 +1187,7 @@ QUnit.test("'Add Users' button should be displayed in the topbar of groups", asy
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, "button[title='Add Users']");
+    assert.containsOnce(document.body, "button[title='Add Users']");
 });
 
 QUnit.test(
@@ -1180,7 +1195,7 @@ QUnit.test(
     async (assert) => {
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_starred");
-        assert.containsNone($, "button[title='Add Users']");
+        assert.containsNone(document.body, "button[title='Add Users']");
     }
 );
 
@@ -1196,7 +1211,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+        assert.containsOnce(document.body, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
@@ -1211,7 +1226,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+        assert.containsOnce(document.body, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
@@ -1265,18 +1280,27 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         await click(".o-mail-DiscussSidebarChannel:contains('Michel Online')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Online']");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Discuss-header .o-mail-ImStatus [title='Online']"
+        );
         await click(".o-mail-DiscussSidebarChannel:contains('Jacqueline Offline')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']"
+        );
         await click(".o-mail-DiscussSidebarChannel:contains('Nabuchodonosor Idle')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']"
+        );
         await click(".o-mail-DiscussSidebarChannel:contains('Robert Fired')");
         assert.containsOnce(
             $,
             ".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']"
         );
         await click(".o-mail-DiscussSidebarChannel:contains('OdooBot')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
+        assert.containsOnce(document.body, ".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
     }
 );
 
@@ -1287,7 +1311,7 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ channel_type: "group" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+        assert.containsOnce(document.body, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
@@ -1349,7 +1373,7 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
         },
     });
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussSidebarChannel:contains(General)");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarChannel:contains(General)");
     await afterNextRender(() => {
         pyEnv.withUser(userId, () =>
             env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
@@ -1357,7 +1381,7 @@ QUnit.test("Channel is added to discuss after invitation", async (assert) => {
             })
         );
     });
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(General)");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(General)");
     assert.verifySteps(["You have been invited to #General"]);
 });
 
@@ -1365,9 +1389,9 @@ QUnit.test("select another mailbox", async (assert) => {
     patchUiSize({ height: 360, width: 640 });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-Discuss");
+    assert.containsOnce(document.body, ".o-mail-Discuss");
     assert.strictEqual($(".o-mail-Discuss-threadName").val(), "Inbox");
-    assert.containsOnce($, "button:contains(Starred)");
+    assert.containsOnce(document.body, "button:contains(Starred)");
 
     await click("button:contains(Starred)");
     assert.strictEqual($(".o-mail-Discuss-threadName").val(), "Starred");
@@ -1380,9 +1404,12 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         assert.strictEqual($(".o-mail-Discuss-threadName").val(), "Inbox");
-        assert.containsOnce($, ".o-mail-MessagingMenu-navbar:contains(Mailboxes) .fw-bolder");
-        assert.containsOnce($, "button:contains(Inbox).o-active");
-        assert.containsOnce($, "h4:contains(Congratulations, your inbox is empty)");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-MessagingMenu-navbar:contains(Mailboxes) .fw-bolder"
+        );
+        assert.containsOnce(document.body, "button:contains(Inbox).o-active");
+        assert.containsOnce(document.body, "h4:contains(Congratulations, your inbox is empty)");
     }
 );
 
@@ -1446,7 +1473,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId_2);
         await click("button:contains(Bla)");
-        assert.containsNone($, ".o-unread");
+        assert.containsNone(document.body, ".o-unread");
     }
 );
 
@@ -1479,9 +1506,9 @@ QUnit.test(
         await afterNextRender(() =>
             editInput(document.body, ".o-mail-Composer input[type=file]", [file])
         );
-        assert.containsOnce($, ".o-mail-AttachmentCard");
-        assert.containsOnce($, ".o-mail-AttachmentCard.o-isUploading");
-        assert.containsOnce($, ".o-mail-Composer-send");
+        assert.containsOnce(document.body, ".o-mail-AttachmentCard");
+        assert.containsOnce(document.body, ".o-mail-AttachmentCard.o-isUploading");
+        assert.containsOnce(document.body, ".o-mail-Composer-send");
 
         // Try to send message
         triggerHotkey("Enter");
@@ -1521,8 +1548,8 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsN($, ".o-mail-Message", 25);
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsN(document.body, ".o-mail-Message", 25);
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 
     $(".o-mail-Discuss-content .o-mail-Thread")[0].scrollTop = 0;
     // composer is focused by default, we remove that focus
@@ -1537,14 +1564,14 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async (assert) => {
             })
         )
     );
-    assert.containsN($, ".o-mail-Message", 26);
-    assert.containsOnce($, "hr + span:contains(New messages)");
+    assert.containsN(document.body, ".o-mail-Message", 26);
+    assert.containsOnce(document.body, "hr + span:contains(New messages)");
     const messageList = $(".o-mail-Discuss-content .o-mail-Thread")[0];
     messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
-    assert.containsOnce($, "hr + span:contains(New messages)");
+    assert.containsOnce(document.body, "hr + span:contains(New messages)");
 
     await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
-    assert.containsNone($, "hr + span:contains(New messages)");
+    assert.containsNone(document.body, "hr + span:contains(New messages)");
 });
 
 QUnit.test("failure on loading messages should display error", async (assert) => {
@@ -1581,7 +1608,7 @@ QUnit.test("failure on loading messages should prompt retry button", async (asse
         },
     });
     await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
-    assert.containsOnce($, "button:contains(Click here to retry)");
+    assert.containsOnce(document.body, "button:contains(Click here to retry)");
 });
 
 QUnit.test(
@@ -1615,7 +1642,7 @@ QUnit.test(
         await openDiscuss(channelId);
         messageFetchShouldFail = true;
         await click("button:contains(Load More)");
-        assert.containsN($, ".o-mail-Message", 30);
+        assert.containsN(document.body, ".o-mail-Message", 30);
     }
 );
 
@@ -1654,8 +1681,8 @@ QUnit.test(
             $,
             ".o-mail-Thread-error:contains(An error occurred while fetching messages.)"
         );
-        assert.containsOnce($, "button:contains(Click here to retry)");
-        assert.containsNone($, "button:contains(Load More)");
+        assert.containsOnce(document.body, "button:contains(Click here to retry)");
+        assert.containsNone(document.body, "button:contains(Load More)");
     }
 );
 
@@ -1694,7 +1721,7 @@ QUnit.test(
         await click("button:contains(Load More)");
         messageFetchShouldFail = false;
         await click("button:contains(Click here to retry)");
-        assert.containsN($, ".o-mail-Message", 60);
+        assert.containsN(document.body, ".o-mail-Message", 60);
     }
 );
 
@@ -1738,15 +1765,15 @@ QUnit.test("composer state: attachments save and restore", async (assert) => {
     // Switch back to #general
     await click("button:contains(General)");
     // Check attachment is reloaded
-    assert.containsOnce($, ".o-mail-Composer .o-mail-AttachmentCard");
-    assert.containsOnce($, ".o-mail-AttachmentCard:contains(text.txt)");
+    assert.containsOnce(document.body, ".o-mail-Composer .o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains(text.txt)");
 
     // Switch back to #special
     await click("button:contains(Special)");
-    assert.containsN($, ".o-mail-Composer .o-mail-AttachmentCard", 3);
-    assert.containsOnce($, ".o-mail-AttachmentCard:contains(text2.txt)");
-    assert.containsOnce($, ".o-mail-AttachmentCard:contains(text3.txt)");
-    assert.containsOnce($, ".o-mail-AttachmentCard:contains(text4.txt)");
+    assert.containsN(document.body, ".o-mail-Composer .o-mail-AttachmentCard", 3);
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains(text2.txt)");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains(text3.txt)");
+    assert.containsOnce(document.body, ".o-mail-AttachmentCard:contains(text4.txt)");
 });
 
 QUnit.test(
@@ -1762,8 +1789,8 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsOnce($, "button:contains(General)");
-        assert.containsNone($, "div[title='Leave this channel']");
+        assert.containsOnce(document.body, "button:contains(General)");
+        assert.containsNone(document.body, "div[title='Leave this channel']");
     }
 );
 
@@ -1789,7 +1816,7 @@ QUnit.test("restore thread scroll position", async (assert) => {
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId_1);
-    assert.containsN($, ".o-mail-Message", 25);
+    assert.containsN(document.body, ".o-mail-Message", 25);
     let thread = $(".o-mail-Thread")[0];
     assert.ok(isScrolledToBottom(thread));
 
@@ -1801,7 +1828,7 @@ QUnit.test("restore thread scroll position", async (assert) => {
     // initially planned for channel 2 to actually apply on channel 1.
     // task-2333535
     await click("button:contains(Channel2)");
-    assert.containsN($, ".o-mail-Message", 24);
+    assert.containsN(document.body, ".o-mail-Message", 24);
 
     await click("button:contains(Channel1)");
     assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 0);
@@ -1851,7 +1878,7 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
     await click(
         ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"
     );
-    assert.containsOnce($, ".o-mail-Message:contains(hello world)");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(hello world)");
 });
 
 QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
@@ -1863,10 +1890,10 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button:contains(Start a meeting)");
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
-    assert.containsOnce($, ".o-discuss-Call");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    assert.containsOnce(document.body, ".o-discuss-Call");
     await waitUntil(".o-discuss-ChannelInvitation");
-    assert.containsOnce($, ".o-discuss-ChannelInvitation");
+    assert.containsOnce(document.body, ".o-discuss-ChannelInvitation");
 });
 
 QUnit.test(
@@ -1907,9 +1934,9 @@ QUnit.test(
         await openDiscuss();
         await click(".o_main_navbar i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        assert.containsNone($, ".o-mail-Discuss");
-        assert.containsOnce($, ".o_form_view .o-mail-Chatter");
-        assert.containsOnce($, ".o_form_view .o_breadcrumb:contains(TestPartner)");
+        assert.containsNone(document.body, ".o-mail-Discuss");
+        assert.containsOnce(document.body, ".o_form_view .o-mail-Chatter");
+        assert.containsOnce(document.body, ".o_form_view .o_breadcrumb:contains(TestPartner)");
         assert.containsOnce(
             $,
             ".o-mail-Chatter .o-mail-Message:contains(A needaction message to have it in messaging menu)"

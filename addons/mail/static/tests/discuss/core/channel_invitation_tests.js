@@ -25,7 +25,7 @@ QUnit.test(
         const { openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await click(".o-mail-Discuss-header button[title='Add Users']");
-        assert.containsOnce($, ".o-discuss-ChannelInvitation");
+        assert.containsOnce(document.body, ".o-discuss-ChannelInvitation");
     }
 );
 
@@ -46,12 +46,12 @@ QUnit.test("can invite users in channel from chat window", async (assert) => {
     await start();
     await click("[title='Open Actions Menu']");
     await click("[title='Add Users']");
-    assert.containsOnce($, ".o-discuss-ChannelInvitation");
+    assert.containsOnce(document.body, ".o-discuss-ChannelInvitation");
     await click(
         ".o-discuss-ChannelInvitation-selectable:contains(TestPartner) input[type='checkbox']"
     );
     await click("[title='Invite to Channel']");
-    assert.containsNone($, ".o-discuss-ChannelInvitation");
+    assert.containsNone(document.body, ".o-discuss-ChannelInvitation");
     assert.containsOnce(
         $,
         ".o-mail-Thread .o-mail-NotificationMessage:contains(Mitchell Admin invited TestPartner to the channel)"

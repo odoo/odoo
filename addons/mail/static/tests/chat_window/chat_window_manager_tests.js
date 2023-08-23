@@ -45,8 +45,8 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
             }
         },
     });
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
+    assert.containsN(document.body, ".o-mail-ChatWindow", 2);
+    assert.containsOnce(document.body, ".o-mail-ChatWindowHiddenToggler");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
@@ -84,8 +84,8 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
             }
         },
     });
-    assert.containsN($, ".o-mail-ChatWindow", 2);
-    assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler");
+    assert.containsN(document.body, ".o-mail-ChatWindow", 2);
+    assert.containsOnce(document.body, ".o-mail-ChatWindowHiddenToggler");
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");
     await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-command[title='Open']");
@@ -125,14 +125,14 @@ QUnit.test(
         await waitUntil(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
-        assert.containsN($, ".o-mail-ChatWindow", 2);
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-D)");
-        assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler:contains(2)");
+        assert.containsN(document.body, ".o-mail-ChatWindow", 2);
+        assert.containsOnce(document.body, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow:eq(1):contains(channel-D)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindowHiddenToggler:contains(2)");
         await click(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-C)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
+        assert.containsOnce(document.body, ".o-mail-ChatWindow:eq(1):contains(channel-C)");
     }
 );

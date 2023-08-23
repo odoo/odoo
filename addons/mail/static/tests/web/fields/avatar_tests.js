@@ -17,13 +17,13 @@ QUnit.test("basic rendering", async (assert) => {
             displayName: "User display name",
         },
     });
-    assert.containsOnce($, ".o-mail-Avatar");
-    assert.containsOnce($, ".o-mail-Avatar img");
+    assert.containsOnce(document.body, ".o-mail-Avatar");
+    assert.containsOnce(document.body, ".o-mail-Avatar img");
     assert.strictEqual($(".o-mail-Avatar img")[0].dataset.src, "/web/image/res.users/2/avatar_128");
-    assert.containsOnce($, ".o-mail-Avatar span");
+    assert.containsOnce(document.body, ".o-mail-Avatar span");
     assert.strictEqual($(".o-mail-Avatar span")[0].innerText, "User display name");
-    assert.containsNone($, ".o-mail-ChatWindow");
+    assert.containsNone(document.body, ".o-mail-ChatWindow");
 
     await click(".o-mail-Avatar img");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });

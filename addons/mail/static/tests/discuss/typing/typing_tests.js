@@ -361,7 +361,7 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
         $(".o-mail-DiscussSidebarChannel"),
         ".o-mail-DiscussSidebarChannel-threadIcon"
     );
-    assert.containsOnce($, ".fa-circle.text-success");
+    assert.containsOnce(document.body, ".fa-circle.text-success");
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() =>
@@ -372,7 +372,7 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
             })
         )
     );
-    assert.containsOnce($, ".o-discuss-Typing-icon");
+    assert.containsOnce(document.body, ".o-discuss-Typing-icon");
     assert.strictEqual($(".o-discuss-Typing-icon")[0].title, "Demo is typing...");
 
     // simulate receive typing notification from demo "no longer is typing"
@@ -384,7 +384,7 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
             })
         )
     );
-    assert.containsOnce($, ".fa-circle.text-success");
+    assert.containsOnce(document.body, ".fa-circle.text-success");
 });
 
 QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
@@ -405,7 +405,7 @@ QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsNone($, "[title='Demo is typing...']");
+    assert.containsNone(document.body, "[title='Demo is typing...']");
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() =>
         pyEnv.withUser(userId, () =>
@@ -415,7 +415,7 @@ QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
             })
         )
     );
-    assert.containsOnce($, "[title='Demo is typing...']");
+    assert.containsOnce(document.body, "[title='Demo is typing...']");
     // simulate receive typing notification from demo "no longer is typing"
     await afterNextRender(() =>
         pyEnv.withUser(userId, () =>
@@ -425,5 +425,5 @@ QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
             })
         )
     );
-    assert.containsNone($, "[title='Demo is typing...']");
+    assert.containsNone(document.body, "[title='Demo is typing...']");
 });

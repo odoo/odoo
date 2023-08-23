@@ -17,7 +17,7 @@ QUnit.test("on leave & online", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Online']");
+    assert.containsOnce(document.body, ".o-mail-ImStatus i.fa-plane[title='Online']");
 });
 
 QUnit.test("on leave & away", async (assert) => {
@@ -32,7 +32,7 @@ QUnit.test("on leave & away", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Idle']");
+    assert.containsOnce(document.body, ".o-mail-ImStatus i.fa-plane[title='Idle']");
 });
 
 QUnit.test("on leave & offline", async (assert) => {
@@ -47,5 +47,5 @@ QUnit.test("on leave & offline", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Out of office']");
+    assert.containsOnce(document.body, ".o-mail-ImStatus i.fa-plane[title='Out of office']");
 });

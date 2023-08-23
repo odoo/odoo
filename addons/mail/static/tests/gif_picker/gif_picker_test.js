@@ -93,7 +93,7 @@ QUnit.test("composer should display a GIF button", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, "button[aria-label='GIFs']");
+    assert.containsOnce(document.body, "button[aria-label='GIFs']");
 });
 
 QUnit.test("Composer GIF button should open the GIF picker", async (assert) => {
@@ -102,7 +102,7 @@ QUnit.test("Composer GIF button should open the GIF picker", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    assert.containsOnce($, ".o-discuss-GifPicker");
+    assert.containsOnce(document.body, ".o-discuss-GifPicker");
 });
 
 QUnit.test("Searching for a GIF", async (assert) => {
@@ -118,7 +118,7 @@ QUnit.test("Searching for a GIF", async (assert) => {
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await insertText("input[placeholder='Search for a gif']", "search");
-    assert.containsOnce($, "i[aria-label='back']");
+    assert.containsOnce(document.body, "i[aria-label='back']");
     await waitUntil(".o-discuss-Gif", 2);
 });
 
@@ -162,7 +162,7 @@ QUnit.test("Reopen GIF category list when going back", async (assert) => {
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("i[aria-label='back']");
-    assert.containsOnce($, ".o-discuss-GifPicker div[aria-label='list']");
+    assert.containsOnce(document.body, ".o-discuss-GifPicker div[aria-label='list']");
 });
 
 QUnit.test("Add GIF to favorite", async (assert) => {
@@ -182,10 +182,10 @@ QUnit.test("Add GIF to favorite", async (assert) => {
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click($(".o-discuss-Gif .fa-star-o"));
-    assert.containsOnce($, ".o-discuss-Gif .fa-star");
+    assert.containsOnce(document.body, ".o-discuss-Gif .fa-star");
     await click("i[aria-label='back']");
     await click(".o-discuss-GifPicker div[aria-label='list-item']:contains(Favorites)");
-    assert.containsOnce($, ".o-discuss-Gif");
+    assert.containsOnce(document.body, ".o-discuss-Gif");
 });
 
 QUnit.test("Chatter should not have the GIF button", async (assert) => {
@@ -193,7 +193,7 @@ QUnit.test("Chatter should not have the GIF button", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button:contains(Log note)");
-    assert.containsNone($, "button[aria-label='GIFs']");
+    assert.containsNone(document.body, "button[aria-label='GIFs']");
 });
 
 QUnit.test(
@@ -206,7 +206,7 @@ QUnit.test(
         await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
         await click("span:contains(channel)");
         await click("button[aria-label='GIFs']");
-        assert.containsNone($, ".popover .o-discuss-GifPicker");
-        assert.containsOnce($, ".o-mail-Composer-footer .o-discuss-GifPicker");
+        assert.containsNone(document.body, ".popover .o-discuss-GifPicker");
+        assert.containsOnce(document.body, ".o-mail-Composer-footer .o-discuss-GifPicker");
     }
 );

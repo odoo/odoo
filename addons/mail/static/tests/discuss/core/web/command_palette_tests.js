@@ -30,7 +30,7 @@ QUnit.test("open the chatWindow of a user from the command palette", async (asse
     await editSearchBar("@");
     await afterNextRender(() => advanceTime(commandSetupRegistry.get("@").debounceDelay));
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });
 
 QUnit.test("open the chatWindow of a channel from the command palette", async (assert) => {
@@ -43,12 +43,12 @@ QUnit.test("open the chatWindow of a channel from the command palette", async (a
     // Switch to channels
     await editSearchBar("#");
     await afterNextRender(() => advanceTime(commandSetupRegistry.get("#").debounceDelay));
-    assert.containsOnce($, ".o_command:contains(general)");
-    assert.containsOnce($, ".o_command:contains(project)");
+    assert.containsOnce(document.body, ".o_command:contains(general)");
+    assert.containsOnce(document.body, ".o_command:contains(project)");
 
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow-name:contains(general)");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow-name:contains(general)");
 });
 
 QUnit.test("Channel mentions in the command palette of Discuss app with @", async (assert) => {
@@ -78,7 +78,7 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     await nextTick();
     await editSearchBar("@");
     await afterNextRender(() => advanceTime(commandSetupRegistry.get("@").debounceDelay));
-    assert.containsOnce($, ".o_command_palette:contains('Mentions')");
+    assert.containsOnce(document.body, ".o_command_palette:contains('Mentions')");
     assert.containsOnce(
         $(".o_command_category:contains('Mentions')"),
         ".o_command:contains('Mitchell Admin and Mario')"
@@ -91,10 +91,10 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
         $(".o_command_category:not(:contains('Mentions'))"),
         ".o_command:contains('Mitchell Admin')"
     );
-    assert.containsOnce($, ".o_command.focused:contains('Mitchell Admin and Mario')");
+    assert.containsOnce(document.body, ".o_command.focused:contains('Mitchell Admin and Mario')");
 
     await click(".o_command.focused");
-    assert.containsOnce($, ".o-mail-ChatWindow:contains('Mitchell Admin and Mario')");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow:contains('Mitchell Admin and Mario')");
 });
 
 QUnit.test(
@@ -110,7 +110,7 @@ QUnit.test(
         await nextTick();
         await editSearchBar("#");
         await afterNextRender(() => advanceTime(commandSetupRegistry.get("#").debounceDelay));
-        assert.containsOnce($, ".o_command_palette:contains('Recent')");
+        assert.containsOnce(document.body, ".o_command_palette:contains('Recent')");
         assert.containsN($(".o_command_category:contains('Recent')"), ".o_command", 3);
     }
 );

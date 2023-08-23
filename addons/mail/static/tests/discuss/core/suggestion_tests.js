@@ -31,9 +31,9 @@ QUnit.test('display command suggestions on typing "/"', async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     await insertText(".o-mail-Composer-input", "/");
-    assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestionList .o-open");
 });
 
 QUnit.test("use a command for a specific channel type", async (assert) => {
@@ -41,7 +41,7 @@ QUnit.test("use a command for a specific channel type", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "/");
     await click(".o-mail-Composer-suggestion");
@@ -62,12 +62,12 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+        assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
         assert.strictEqual($(".o-mail-Composer-input").val(), "");
         await insertText(".o-mail-Composer-input", "bluhbluh ");
         assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
         await insertText(".o-mail-Composer-input", "/");
-        assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
+        assert.containsNone(document.body, ".o-mail-Composer-suggestionList .o-open");
     }
 );
 
@@ -121,11 +121,11 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     await click(".o-mail-DiscussSidebarChannel:contains('User 2')");
     await insertText(".o-mail-Composer-input", "This is a test");
     await click(".o-mail-Composer-send:not(:disabled)");
-    assert.containsOnce($, ".o-mail-Message:contains('This is a test')");
+    assert.containsOnce(document.body, ".o-mail-Message:contains('This is a test')");
     await click(".o-mail-DiscussSidebarChannel:contains('General')");
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "User");
-    assert.containsN($, ".o-mail-Composer-suggestion", 3);
+    assert.containsN(document.body, ".o-mail-Composer-suggestion", 3);
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(2).text(), "User 3");
@@ -146,11 +146,11 @@ QUnit.test("suggestion are shown after deleting a character", async (assert) => 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "John Da");
-    assert.containsNone($, ".o-mail-Composer-suggestion:contains(John Doe)");
+    assert.containsNone(document.body, ".o-mail-Composer-suggestion:contains(John Doe)");
     // Simulate pressing backspace
     await afterNextRender(() => {
         const textarea = document.querySelector(".o-mail-Composer-input");
         textarea.value = textarea.value.slice(0, -1);
     });
-    assert.containsOnce($, ".o-mail-Composer-suggestion:contains(John Doe)");
+    assert.containsOnce(document.body, ".o-mail-Composer-suggestion:contains(John Doe)");
 });

@@ -27,7 +27,7 @@ QUnit.test("persisted session", async (assert) => {
     setCookie("im_livechat_session", JSON.stringify(channelInfo));
     await start();
     await waitUntil(".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });
 
 QUnit.test("rule received in init", async (assert) => {
@@ -44,5 +44,5 @@ QUnit.test("rule received in init", async (assert) => {
         },
     });
     await nextTick();
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });

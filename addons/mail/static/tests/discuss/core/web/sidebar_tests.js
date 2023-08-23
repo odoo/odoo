@@ -37,8 +37,8 @@ QUnit.test("sidebar find shows channels matching search term", async (assert) =>
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel with the search term
-    assert.containsN($, ".o-mail-NavigableList-item", 2);
-    assert.containsN($, ".o-mail-NavigableList-item:contains(test)", 2);
+    assert.containsN(document.body, ".o-mail-NavigableList-item", 2);
+    assert.containsN(document.body, ".o-mail-NavigableList-item:contains(test)", 2);
 });
 
 QUnit.test(
@@ -67,7 +67,7 @@ QUnit.test(
         // When searching for a single existing channel, the results list will have at least 2 lines:
         // One for the existing channel itself
         // One for creating a channel with the search term
-        assert.containsN($, ".o-mail-NavigableList-item", 2);
-        assert.containsN($, ".o-mail-NavigableList-item:contains(test)", 2);
+        assert.containsN(document.body, ".o-mail-NavigableList-item", 2);
+        assert.containsN(document.body, ".o-mail-NavigableList-item:contains(test)", 2);
     }
 );

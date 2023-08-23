@@ -31,8 +31,8 @@ QUnit.test("simple chatter on a record", async (assert) => {
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsOnce($, ".o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsOnce(document.body, ".o-mail-Thread");
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -68,16 +68,16 @@ QUnit.test("can post a message on a record thread", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
 
     await editInput(document.body, ".o-mail-Composer-input", "hey");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     await click(".o-mail-Composer button:contains(Send)");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
 });
 
@@ -108,24 +108,24 @@ QUnit.test("can post a note on a record thread", async (assert) => {
         },
     });
     await openFormView("res.partner", partnerId);
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Composer");
 
     await click("button:contains(Log note)");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
 
     await editInput(document.body, ".o-mail-Composer-input", "hey");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     await click(".o-mail-Composer button:contains(Log)");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
 });
 
 QUnit.test("No attachment loading spinner when creating records", async (assert) => {
     const { openFormView } = await start();
     await openFormView("res.partner");
-    assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsNone(document.body, "button[aria-label='Attach files'] .fa-spin");
 });
 
 QUnit.test(
@@ -144,7 +144,7 @@ QUnit.test(
         await advanceTime(DELAY_FOR_SPINNER);
         await waitUntil("button[aria-label='Attach files'] .fa-spin");
         await click(".o_form_button_create");
-        assert.containsNone($, "button[aria-label='Attach files'] .fa-spin");
+        assert.containsNone(document.body, "button[aria-label='Attach files'] .fa-spin");
     }
 );
 
@@ -157,7 +157,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    assert.containsOnce($, ".o-mail-Composer-input");
+    assert.containsOnce(document.body, ".o-mail-Composer-input");
 });
 
 QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
@@ -212,11 +212,11 @@ QUnit.test("chatter: drop attachments", async (assert) => {
         }),
     ];
     await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
-    assert.containsOnce($, ".o-mail-Dropzone");
-    assert.containsNone($, ".o-mail-AttachmentCard");
+    assert.containsOnce(document.body, ".o-mail-Dropzone");
+    assert.containsNone(document.body, ".o-mail-AttachmentCard");
 
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 2);
+    assert.containsN(document.body, ".o-mail-AttachmentCard", 2);
 
     await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
     files = [
@@ -227,7 +227,7 @@ QUnit.test("chatter: drop attachments", async (assert) => {
         }),
     ];
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 3);
+    assert.containsN(document.body, ".o-mail-AttachmentCard", 3);
 });
 
 QUnit.test("should display subject when subject isn't infered from the record", async (assert) => {
@@ -245,7 +245,7 @@ QUnit.test("should display subject when subject isn't infered from the record", 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Message:contains(Subject: Salutations, voyageur)");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Subject: Salutations, voyageur)");
 });
 
 QUnit.test("should not display user notification messages in chatter", async (assert) => {
@@ -262,7 +262,7 @@ QUnit.test("should not display user notification messages in chatter", async (as
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 });
 
 QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async (assert) => {
@@ -274,12 +274,12 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "Test");
     await afterNextRender(() => triggerHotkey("control+Enter"));
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
 });
 
 QUnit.test("base rendering when chatter has no attachment", async (assert) => {
@@ -298,11 +298,11 @@ QUnit.test("base rendering when chatter has no attachment", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsNone($, ".o-mail-AttachmentBox");
-    assert.containsOnce($, ".o-mail-Thread");
-    assert.containsN($, ".o-mail-Message", 30);
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsNone(document.body, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, ".o-mail-Thread");
+    assert.containsN(document.body, ".o-mail-Message", 30);
 });
 
 QUnit.test("base rendering when chatter has no record", async (assert) => {
@@ -311,15 +311,15 @@ QUnit.test("base rendering when chatter has no record", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsNone($, ".o-mail-AttachmentBox");
-    assert.containsOnce($, ".o-mail-Chatter .o-mail-Thread");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsNone(document.body, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, ".o-mail-Chatter .o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-Message");
     assert.strictEqual($(".o-mail-Message-body").text(), "Creating a new record...");
-    assert.containsNone($, "button:contains(Load More)");
-    assert.containsOnce($, ".o-mail-Message-actions");
-    assert.containsNone($, ".o-mail-Message-actions i");
+    assert.containsNone(document.body, "button:contains(Load More)");
+    assert.containsOnce(document.body, ".o-mail-Message-actions");
+    assert.containsNone(document.body, ".o-mail-Message-actions i");
 });
 
 QUnit.test("base rendering when chatter has attachments", async (assert) => {
@@ -345,9 +345,9 @@ QUnit.test("base rendering when chatter has attachments", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsNone($, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsNone(document.body, ".o-mail-AttachmentBox");
 });
 
 QUnit.test("show attachment box", async (assert) => {
@@ -373,14 +373,14 @@ QUnit.test("show attachment box", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsOnce($, "button[aria-label='Attach files']:contains(2)");
-    assert.containsNone($, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']:contains(2)");
+    assert.containsNone(document.body, ".o-mail-AttachmentBox");
 
     await click("button[aria-label='Attach files']");
-    assert.containsOnce($, ".o-mail-AttachmentBox");
+    assert.containsOnce(document.body, ".o-mail-AttachmentBox");
 });
 
 QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async (assert) => {
@@ -392,26 +392,26 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Send message)");
-    assert.containsOnce($, "button:contains(Log note)");
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsOnce(document.body, "button:contains(Send message)");
+    assert.containsOnce(document.body, "button:contains(Log note)");
+    assert.containsNone(document.body, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
     await click("button:contains(Log note)");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
     await click("button:contains(Log note)");
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.containsOnce($, ".o-mail-Composer");
+    assert.containsOnce(document.body, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.containsNone($, ".o-mail-Composer");
+    assert.containsNone(document.body, ".o-mail-Composer");
 });
 
 QUnit.test('do not post message with "Enter" keyboard shortcut', async (assert) => {
@@ -423,12 +423,12 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async (assert) 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "Test");
     await triggerHotkey("Enter");
-    assert.containsNone($, ".o-mail-Message");
+    assert.containsNone(document.body, ".o-mail-Message");
 });
 
 QUnit.test(
@@ -450,7 +450,7 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsNone($, ".o-mail-Message:contains(Salutations, voyageur)");
+        assert.containsNone(document.body, ".o-mail-Message:contains(Salutations, voyageur)");
     }
 );
 
@@ -502,7 +502,7 @@ QUnit.test("basic chatter rendering", async (assert) => {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
 });
 
 QUnit.test("basic chatter rendering without activities", async (assert) => {
@@ -526,12 +526,12 @@ QUnit.test("basic chatter rendering without activities", async (assert) => {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsNone($, "button:contains(Activities)");
-    assert.containsOnce($, ".o-mail-Followers");
-    assert.containsOnce($, ".o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsNone(document.body, "button:contains(Activities)");
+    assert.containsOnce(document.body, ".o-mail-Followers");
+    assert.containsOnce(document.body, ".o-mail-Thread");
 });
 
 QUnit.test(
@@ -557,8 +557,11 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await click(".o_form_button_create");
-        assert.containsOnce($, ".o-mail-Message");
-        assert.containsOnce($, ".o-mail-Message-body:contains(Creating a new record...)");
+        assert.containsOnce(document.body, ".o-mail-Message");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-Message-body:contains(Creating a new record...)"
+        );
     }
 );
 
@@ -575,7 +578,7 @@ QUnit.test(
         });
         const { openFormView } = await start();
         await openFormView("res.fake", fakeId);
-        assert.containsNone($, ".o-mail-Message:contains(Custom Default Subject)");
+        assert.containsNone(document.body, ".o-mail-Message:contains(Custom Default Subject)");
     }
 );
 
@@ -592,7 +595,7 @@ QUnit.test(
         });
         const { openFormView } = await start();
         await openFormView("res.fake", fakeId);
-        assert.containsNone($, ".o-mail-Message:contains(Custom Default Subject)");
+        assert.containsNone(document.body, ".o-mail-Message:contains(Custom Default Subject)");
     }
 );
 
@@ -617,16 +620,16 @@ QUnit.test("basic chatter rendering without followers", async (assert) => {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsOnce($, "button:contains(Activities)");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsOnce(document.body, "button:contains(Activities)");
     assert.containsNone(
         $,
         ".o-mail-Followers",
         "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
     );
-    assert.containsOnce($, ".o-mail-Chatter .o-mail-Thread");
+    assert.containsOnce(document.body, ".o-mail-Chatter .o-mail-Thread");
 });
 
 QUnit.test("basic chatter rendering without messages", async (assert) => {
@@ -650,11 +653,11 @@ QUnit.test("basic chatter rendering without messages", async (assert) => {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter");
-    assert.containsOnce($, ".o-mail-Chatter-topbar");
-    assert.containsOnce($, "button[aria-label='Attach files']");
-    assert.containsOnce($, "button:contains(Activities)");
-    assert.containsOnce($, ".o-mail-Followers");
+    assert.containsOnce(document.body, ".o-mail-Chatter");
+    assert.containsOnce(document.body, ".o-mail-Chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsOnce(document.body, "button:contains(Activities)");
+    assert.containsOnce(document.body, ".o-mail-Followers");
     assert.containsNone(
         $,
         ".o-mail-Chatter .o-mail-Thread",
@@ -689,7 +692,7 @@ QUnit.test("chatter updating", async (assert) => {
         props: { resIds: [partnerId_1, partnerId_2] },
     });
     await click(".o_pager_next");
-    assert.containsOnce($, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message");
 });
 
 QUnit.test("post message on draft record", async (assert) => {
@@ -712,8 +715,8 @@ QUnit.test("post message on draft record", async (assert) => {
     await click("button:contains(Send message)");
     await editInput(document.body, ".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button:contains(Send)");
-    assert.containsOnce($, ".o-mail-Message");
-    assert.containsOnce($, ".o-mail-Message:contains(Test)");
+    assert.containsOnce(document.body, ".o-mail-Message");
+    assert.containsOnce(document.body, ".o-mail-Message:contains(Test)");
 });
 
 QUnit.test(
@@ -733,7 +736,7 @@ QUnit.test(
         const { openView } = await start({ serverData: { views } });
         await openView({ res_model: "res.partner", views: [[false, "form"]] });
         await click("button:contains(Activities)");
-        assert.containsOnce($, ".o_dialog:contains(Schedule Activity)");
+        assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)");
     }
 );
 
@@ -759,7 +762,7 @@ QUnit.test("upload attachment on draft record", async (assert) => {
         contentType: "text/plain",
         name: "text.txt",
     });
-    assert.containsNone($, ".button[aria-label='Attach files']:contains(1)");
+    assert.containsNone(document.body, ".button[aria-label='Attach files']:contains(1)");
     await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], [file]));
     await waitUntil("button[aria-label='Attach files']:contains(1)");
@@ -768,5 +771,5 @@ QUnit.test("upload attachment on draft record", async (assert) => {
 QUnit.test("Follower count of draft record is set to 0", async (assert) => {
     const { openView } = await start();
     await openView({ res_model: "res.partner", views: [[false, "form"]] });
-    assert.containsOnce($, ".o-mail-Followers:contains(0)");
+    assert.containsOnce(document.body, ".o-mail-Followers:contains(0)");
 });

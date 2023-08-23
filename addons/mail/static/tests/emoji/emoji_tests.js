@@ -20,7 +20,7 @@ QUnit.test("search emoji from keywords", async (assert) => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
-    assert.containsOnce($, ".o-Emoji:contains(🌮)");
+    assert.containsOnce(document.body, ".o-Emoji:contains(🌮)");
 });
 
 QUnit.test("search emoji from keywords should be case insensitive", async (assert) => {
@@ -30,7 +30,7 @@ QUnit.test("search emoji from keywords should be case insensitive", async (asser
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "ok");
-    assert.containsOnce($, ".o-Emoji:contains(🆗)"); // all search terms are uppercase OK
+    assert.containsOnce(document.body, ".o-Emoji:contains(🆗)"); // all search terms are uppercase OK
 });
 
 QUnit.test("search emoji from keywords with special regex character", async (assert) => {
@@ -40,7 +40,7 @@ QUnit.test("search emoji from keywords with special regex character", async (ass
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
-    assert.containsOnce($, ".o-Emoji:contains(🆎)");
+    assert.containsOnce(document.body, ".o-Emoji:contains(🆎)");
 });
 
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert) => {
@@ -50,7 +50,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-EmojiPicker");
+    assert.containsNone(document.body, ".o-EmojiPicker");
 });
 
 QUnit.test("Basic keyboard navigation", async (assert) => {
@@ -59,24 +59,19 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200"); // bg-200 means active
+    assert.containsOnce(document.body, ".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200"); // bg-200 means active
     await afterNextRender(() => triggerHotkey("ArrowRight"));
-    assert.containsOnce($, ".o-EmojiPicker-content .o-Emoji[data-index=1].bg-200");
+    assert.containsOnce(document.body, ".o-EmojiPicker-content .o-Emoji[data-index=1].bg-200");
     await afterNextRender(() => triggerHotkey("ArrowDown"));
     assert.containsOnce(
         $,
         `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW + 1}].bg-200`
     );
     await afterNextRender(() => triggerHotkey("ArrowLeft"));
-    assert.containsOnce(
-        $,
-        `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`
-    );
+    assert.containsOnce($, `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`);
     await afterNextRender(() => triggerHotkey("ArrowUp"));
-    assert.containsOnce($, ".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200");
-    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data(
-        "codepoints"
-    );
+    assert.containsOnce(document.body, ".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200");
+    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data("codepoints");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.strictEqual($(".o-mail-Composer-input").val(), codepoints);
 });
@@ -87,10 +82,10 @@ QUnit.test("recent category (basic)", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsNone($, ".o-EmojiPicker-navbar [title='Frequently used']");
+    assert.containsNone(document.body, ".o-EmojiPicker-navbar [title='Frequently used']");
     await click(".o-EmojiPicker-content .o-Emoji:contains(😀)");
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-EmojiPicker-navbar [title='Frequently used']");
+    assert.containsOnce(document.body, ".o-EmojiPicker-navbar [title='Frequently used']");
     assert.containsOnce(
         $,
         "span:contains(Frequently used) ~ .o-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"
@@ -158,7 +153,7 @@ QUnit.test("first category should be highlight by default", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-EmojiPicker-navbar .o-Emoji:eq(0).bg-300");
+    assert.containsOnce(document.body, ".o-EmojiPicker-navbar .o-Emoji:eq(0).bg-300");
 });
 
 QUnit.test(
@@ -174,7 +169,7 @@ QUnit.test(
                 new MouseEvent("click", { shiftKey: true })
             )
         );
-        assert.containsOnce($, ".o-EmojiPicker");
+        assert.containsOnce(document.body, ".o-EmojiPicker");
         assert.strictEqual($(".o-mail-Composer-input").val(), "👺");
     }
 );

@@ -16,9 +16,9 @@ QUnit.test("Do not ask feedback if empty", async (assert) => {
     await loadDefaultConfig();
     await start();
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
     await click("[title='Close Chat Window']");
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
 });
 
 QUnit.test("Close without feedback", async (assert) => {
@@ -35,12 +35,12 @@ QUnit.test("Close without feedback", async (assert) => {
         },
     });
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     await click("[title='Close Chat Window']");
     await click("button:contains('Close')");
-    assert.containsNone($, ".o-livechat-LivechatButton");
+    assert.containsNone(document.body, ".o-livechat-LivechatButton");
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
 });
 
@@ -60,7 +60,7 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
         },
     });
     await click(".o-livechat-LivechatButton");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     await click("[title='Close Chat Window']");
@@ -68,7 +68,7 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send)");
-    assert.containsOnce($, "p:contains(Thank you for your feedback)");
+    assert.containsOnce(document.body, "p:contains(Thank you for your feedback)");
     assert.verifySteps(["/im_livechat/feedback"]);
 });
 
@@ -80,8 +80,11 @@ QUnit.test("Closing folded chat window should open it with feedback", async (ass
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     await click("[title='Fold']");
-    assert.containsOnce($, ".o-mail-ChatWindow.o-folded");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");
-    assert.containsNone($, ".o-mail-ChatWindow.o-folded");
-    assert.containsOnce($, ".o-mail-ChatWindow:contains(Did we correctly answer your question?)");
+    assert.containsNone(document.body, ".o-mail-ChatWindow.o-folded");
+    assert.containsOnce(
+        document.body,
+        ".o-mail-ChatWindow:contains(Did we correctly answer your question?)"
+    );
 });

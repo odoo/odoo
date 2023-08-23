@@ -28,5 +28,5 @@ QUnit.test("chat request opens chat window", async (assert) => {
         },
     });
     await start();
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    assert.containsOnce(document.body, ".o-mail-ChatWindow");
 });

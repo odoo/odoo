@@ -40,7 +40,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-mail-ActivityButton i.text-muted");
+    assert.containsOnce(document.body, ".o-mail-ActivityButton i.text-muted");
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
@@ -140,7 +140,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-mail-ActivityButton i.text-warning.fa-warning");
+    assert.containsOnce(document.body, ".o-mail-ActivityButton i.text-warning.fa-warning");
     assert.strictEqual($(".o-mail-ListActivity-summary")[0].innerText, "Warning");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
@@ -275,7 +275,7 @@ QUnit.test("list activity exception widget with activity", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsN($, ".o_data_row", 2);
+    assert.containsN(document.body, ".o_data_row", 2);
     assert.containsNone(
         $(".o_data_row .o_activity_exception_cell")[0],
         ".o-mail-ActivityException"

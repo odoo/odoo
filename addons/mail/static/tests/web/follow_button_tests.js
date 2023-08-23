@@ -11,7 +11,7 @@ QUnit.test("base rendering not editable", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, ".o-mail-Chatter-follow");
+    assert.containsOnce(document.body, ".o-mail-Chatter-follow");
 });
 
 QUnit.test("hover following button", async (assert) => {
@@ -29,16 +29,16 @@ QUnit.test("hover following button", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Following)");
-    assert.containsNone($, ".fa-times + span:contains(Following)");
-    assert.containsOnce($, ".fa-check + span:contains(Following)");
+    assert.containsOnce(document.body, "button:contains(Following)");
+    assert.containsNone(document.body, ".fa-times + span:contains(Following)");
+    assert.containsOnce(document.body, ".fa-check + span:contains(Following)");
 
     await afterNextRender(() => {
         $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
     });
-    assert.containsOnce($, "button:contains(Unfollow)");
-    assert.containsOnce($, ".fa-times + span:contains(Unfollow)");
-    assert.containsNone($, ".fa-check + span:contains(Unfollow)");
+    assert.containsOnce(document.body, "button:contains(Unfollow)");
+    assert.containsOnce(document.body, ".fa-times + span:contains(Unfollow)");
+    assert.containsNone(document.body, ".fa-check + span:contains(Unfollow)");
 });
 
 QUnit.test('click on "follow" button', async (assert) => {
@@ -48,10 +48,10 @@ QUnit.test('click on "follow" button', async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Follow)");
+    assert.containsOnce(document.body, "button:contains(Follow)");
 
     await click("button:contains(Follow)");
-    assert.containsOnce($, "button:contains(Following)");
+    assert.containsOnce(document.body, "button:contains(Following)");
 });
 
 QUnit.test('Click on "follow" button should save draft record', async (assert) => {
@@ -68,11 +68,11 @@ QUnit.test('Click on "follow" button should save draft record', async (assert) =
     };
     const { openFormView } = await start({ serverData: { views } });
     await openFormView("res.partner");
-    assert.containsOnce($, "button:contains(Follow)");
-    assert.containsOnce($, "div.o_field_char");
+    assert.containsOnce(document.body, "button:contains(Follow)");
+    assert.containsOnce(document.body, "div.o_field_char");
 
     await click("button:contains(Follow)");
-    assert.containsOnce($, "div.o_field_invalid");
+    assert.containsOnce(document.body, "div.o_field_invalid");
 });
 
 QUnit.test('click on "unfollow" button', async (assert) => {
@@ -90,8 +90,8 @@ QUnit.test('click on "unfollow" button', async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce($, "button:contains(Following)");
+    assert.containsOnce(document.body, "button:contains(Following)");
 
     await click("button:contains(Following)");
-    assert.containsOnce($, "button:contains(Follow)");
+    assert.containsOnce(document.body, "button:contains(Follow)");
 });

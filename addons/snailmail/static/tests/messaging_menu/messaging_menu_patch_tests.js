@@ -22,15 +22,15 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
-    assert.containsOnce($, ".o-mail-NotificationItem [title='Mark As Read']");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem [title='Mark As Read']");
     assert.containsOnce(
         $,
         ".o-mail-NotificationItem:contains(An error occurred when sending a letter with Snailmail.)"
     );
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.containsNone($, ".o-mail-NotificationItem");
+    assert.containsNone(document.body, ".o-mail-NotificationItem");
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -74,7 +74,7 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsN($, ".o-mail-NotificationItem", 2);
+    assert.containsN(document.body, ".o-mail-NotificationItem", 2);
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("Partner"));
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("2")); // counter
     assert.ok(
@@ -144,9 +144,9 @@ QUnit.test("grouped notifications by document model", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner)");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(2)"); // counter
+    assert.containsOnce(document.body, ".o-mail-NotificationItem");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(Partner)");
+    assert.containsOnce(document.body, ".o-mail-NotificationItem:contains(2)"); // counter
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

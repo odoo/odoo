@@ -192,12 +192,12 @@ QUnit.test("Message delete notification", async (assert) => {
     await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
-    assert.containsOnce($, "button:contains(Inbox) .badge");
-    assert.containsOnce($, "button:contains(Starred) .badge");
+    assert.containsOnce(document.body, "button:contains(Inbox) .badge");
+    assert.containsOnce(document.body, "button:contains(Starred) .badge");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await waitUntil(".o-mail-Message", 0);
-    assert.containsNone($, "button:contains(Inbox) .badge");
-    assert.containsNone($, "button:contains(Starred) .badge");
+    assert.containsNone(document.body, "button:contains(Inbox) .badge");
+    assert.containsNone(document.body, "button:contains(Starred) .badge");
 });

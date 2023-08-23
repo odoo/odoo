@@ -24,8 +24,8 @@ QUnit.test("No call buttons", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsNone($, ".o-mail-Discuss-header button[title='Show Call Settings']");
+    assert.containsNone(document.body, ".o-mail-Discuss-header button[title='Start a Call']");
+    assert.containsNone(document.body, ".o-mail-Discuss-header button[title='Show Call Settings']");
 });
 
 QUnit.test("No reaction button", async (assert) => {
@@ -47,7 +47,7 @@ QUnit.test("No reaction button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Add a Reaction']");
+    assert.containsNone(document.body, "[title='Add a Reaction']");
 });
 
 QUnit.test("No reply button", async (assert) => {
@@ -69,7 +69,7 @@ QUnit.test("No reply button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Reply']");
+    assert.containsNone(document.body, "[title='Reply']");
 });
 
 QUnit.test("add livechat in the sidebar on visitor sending first message", async (assert) => {
@@ -92,7 +92,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
+    assert.containsNone(document.body, ".o-mail-DiscussSidebarCategory-livechat");
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     await afterNextRender(() =>
@@ -103,7 +103,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
             })
         )
     );
-    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-livechat");
+    assert.containsOnce(document.body, ".o-mail-DiscussSidebarCategory-livechat");
     assert.containsOnce(
         $,
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel"
@@ -130,7 +130,7 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send");
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Add a Reaction']");
+    assert.containsNone(document.body, "[title='Add a Reaction']");
 });
 
 QUnit.test("invite button should be present on livechat", async (assert) => {
@@ -146,7 +146,7 @@ QUnit.test("invite button should be present on livechat", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Discuss button[title='Add Users']");
+    assert.containsOnce(document.body, ".o-mail-Discuss button[title='Add Users']");
 });
 
 QUnit.test(
@@ -195,7 +195,7 @@ QUnit.test(
         await click(".o-mail-DiscussSidebarChannel:eq(1)");
         await insertText(".o-mail-Composer-input", "Blabla");
         await click(".o-mail-Composer-send");
-        assert.containsN($, ".o-mail-DiscussSidebarChannel", 2);
+        assert.containsN(document.body, ".o-mail-DiscussSidebarChannel", 2);
         assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(0)").text(), "Visitor 11");
         assert.strictEqual($(".o-mail-DiscussSidebarChannel:eq(1)").text(), "Visitor 12");
     }

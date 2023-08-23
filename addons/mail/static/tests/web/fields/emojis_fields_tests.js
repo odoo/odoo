@@ -13,10 +13,10 @@ import { click } from "@web/../tests/helpers/utils";
  * @param {string} emojiComponentSelector unique selector to get the component template root (e.g. "o_field_text_emojis")
  */
 export async function testEmojiButtonVisible(assert, selector) {
-    assert.containsOnce($, ".o_form_editable");
-    assert.containsOnce($, selector);
-    assert.containsOnce($, `${selector} button`);
-    assert.containsOnce($, `${selector} button .fa-smile-o`);
+    assert.containsOnce(document.body, ".o_form_editable");
+    assert.containsOnce(document.body, selector);
+    assert.containsOnce(document.body, `${selector} button`);
+    assert.containsOnce(document.body, `${selector} button .fa-smile-o`);
 }
 
 /**
@@ -29,7 +29,7 @@ export async function testEmojiButtonVisible(assert, selector) {
 export async function testEmojiButton(assert, input, button) {
     // emoji picker opens
     await click(button);
-    assert.containsOnce($, ".o-EmojiPicker");
+    assert.containsOnce(document.body, ".o-EmojiPicker");
     // clicking an emoji adds it to the input field
     const emoji_1 = $(".o-EmojiPicker-content .o-Emoji")[0];
     const emojiChar_1 = emoji_1.textContent;

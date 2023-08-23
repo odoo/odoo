@@ -33,14 +33,18 @@ QUnit.test("Renders the call settings", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
-    assert.containsOnce($, ".o-discuss-CallSettings", "Should have a call settings menu");
-    assert.containsOnce($, "label[aria-label='Input device']");
-    assert.containsOnce($, "option[value=mockAudioDeviceId]");
-    assert.containsNone($, "option[value=mockVideoDeviceId]");
-    assert.containsOnce($, "input[title='toggle push-to-talk']");
-    assert.containsOnce($, "label[aria-label='Voice detection threshold']");
-    assert.containsOnce($, "input[title='Show video participants only']");
-    assert.containsOnce($, "input[title='Blur video background']");
+    assert.containsOnce(
+        document.body,
+        ".o-discuss-CallSettings",
+        "Should have a call settings menu"
+    );
+    assert.containsOnce(document.body, "label[aria-label='Input device']");
+    assert.containsOnce(document.body, "option[value=mockAudioDeviceId]");
+    assert.containsNone(document.body, "option[value=mockVideoDeviceId]");
+    assert.containsOnce(document.body, "input[title='toggle push-to-talk']");
+    assert.containsOnce(document.body, "label[aria-label='Voice detection threshold']");
+    assert.containsOnce(document.body, "input[title='Show video participants only']");
+    assert.containsOnce(document.body, "input[title='Blur video background']");
 });
 
 QUnit.test("activate push to talk", async (assert) => {
@@ -58,9 +62,9 @@ QUnit.test("activate push to talk", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='toggle push-to-talk']");
-    assert.containsOnce($, "i[aria-label='Register new key']");
-    assert.containsOnce($, "label[aria-label='Delay after releasing push-to-talk']");
-    assert.containsNone($, "label[aria-label='Voice detection threshold']");
+    assert.containsOnce(document.body, "i[aria-label='Register new key']");
+    assert.containsOnce(document.body, "label[aria-label='Delay after releasing push-to-talk']");
+    assert.containsNone(document.body, "label[aria-label='Voice detection threshold']");
 });
 
 QUnit.test("activate blur", async (assert) => {
@@ -78,15 +82,15 @@ QUnit.test("activate blur", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
     await click("input[title='Blur video background']");
-    assert.containsOnce($, "label[aria-label='Background blur intensity']");
-    assert.containsOnce($, "label[aria-label='Edge blur intensity']");
+    assert.containsOnce(document.body, "label[aria-label='Background blur intensity']");
+    assert.containsOnce(document.body, "label[aria-label='Edge blur intensity']");
 });
 
 QUnit.test("Inbox should not have any call settings menu", async (assert) => {
     await startServer();
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_inbox");
-    assert.containsNone($, "button[title='Show Call Settings']");
+    assert.containsNone(document.body, "button[title='Show Call Settings']");
 });
 
 QUnit.test(
@@ -106,7 +110,7 @@ QUnit.test(
         await openDiscuss(channelId);
         await click("button[title='Show Call Settings']");
         await click("button:contains(Inbox)");
-        assert.containsNone($, "button[title='Hide Call Settings']");
-        assert.containsNone($, ".o-discuss-CallSettings");
+        assert.containsNone(document.body, "button[title='Hide Call Settings']");
+        assert.containsNone(document.body, ".o-discuss-CallSettings");
     }
 );
