@@ -133,7 +133,7 @@ QUnit.test("display day separator before first message of the day", async () => 
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Thread-date");
+    await contains(".o-mail-DateSection");
 });
 
 QUnit.test("do not display day separator if all messages of the day are empty", async () => {
@@ -147,7 +147,7 @@ QUnit.test("do not display day separator if all messages of the day are empty", 
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Thread-empty");
-    await contains(".o-mail-Thread-date", 0);
+    await contains(".o-mail-DateSection", 0);
 });
 
 QUnit.test(

@@ -3,6 +3,7 @@
 import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { url } from "@web/core/utils/urls";
 
 export class Attachment extends Record {
@@ -25,6 +26,8 @@ export class Attachment extends Record {
     uploading;
     /** @type {import("@mail/core/common/message_model").Message} */
     message;
+    /** @type {string} */
+    create_date;
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
@@ -52,6 +55,14 @@ export class Attachment extends Record {
 
     get isPdf() {
         return this.mimetype && this.mimetype.startsWith("application/pdf");
+    }
+
+    get monthYear() {
+        if (!this.create_date) {
+            return undefined;
+        }
+        const datetime = deserializeDateTime(this.create_date);
+        return `${datetime.monthLong}, ${datetime.year}`;
     }
 
     get isImage() {

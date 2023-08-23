@@ -38,6 +38,7 @@ export class AttachmentService {
     update(attachment, data) {
         assignDefined(attachment, data, [
             "checksum",
+            "create_date",
             "filename",
             "mimetype",
             "name",
