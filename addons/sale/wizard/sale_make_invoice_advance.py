@@ -134,8 +134,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('sale_order_ids')
     def _compute_invoice_amounts(self):
         for wizard in self:
-            wizard.amount_invoiced = sum(wizard.sale_order_ids.mapped('amount_invoiced'))
-            wizard.amount_to_invoice = sum(wizard.sale_order_ids.mapped('amount_to_invoice'))
+            wizard.amount_invoiced = sum(wizard.sale_order_ids._origin.mapped('amount_invoiced'))
+            wizard.amount_to_invoice = sum(wizard.sale_order_ids._origin.mapped('amount_to_invoice'))
 
     #=== ONCHANGE METHODS ===#
 
@@ -222,12 +222,17 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if self.advance_payment_method == 'fixed':
                 delta_amount = (invoice.amount_total - self.fixed_amount) * (1 if invoice.is_inbound() else -1)
                 if not order.currency_id.is_zero(delta_amount):
+                    product_line = invoice.line_ids\
+                        .filtered(lambda aml: aml.display_type == 'product')[:1]
                     tax_line = invoice.line_ids\
                         .filtered(lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))[:1]
                     receivable_line = invoice.line_ids\
                         .filtered(lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
-                    if tax_line and receivable_line:
+                    if product_line and tax_line and receivable_line:
                         invoice.line_ids = [
+                            Command.update(product_line.id, {
+                                'price_total': product_line.price_total - delta_amount,
+                            }),
                             Command.update(tax_line.id, {
                                 'amount_currency': tax_line.amount_currency + delta_amount,
                             }),
