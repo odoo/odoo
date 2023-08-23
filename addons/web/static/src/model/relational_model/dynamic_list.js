@@ -210,10 +210,10 @@ export class DynamicList extends DataPoint {
         return unlinked;
     }
 
-    _leaveSampleMode() {
+    async _leaveSampleMode() {
         if (this.model.useSampleModel) {
+            await this._load(this.offset, this.limit, this.orderBy, this.domain);
             this.model.useSampleModel = false;
-            return this._load(this.offset, this.limit, this.orderBy, this.domain);
         }
     }
 
