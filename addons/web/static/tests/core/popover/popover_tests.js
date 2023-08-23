@@ -211,6 +211,7 @@ QUnit.test("reposition popover should properly change classNames", async (assert
     );
     assert.strictEqual(arrow.className, "popover-arrow top-auto");
 });
+<<<<<<< HEAD
 
 QUnit.test("within iframe", async (assert) => {
     const iframe = document.createElement("iframe");
@@ -264,3 +265,35 @@ QUnit.test("within iframe", async (assert) => {
     assert.strictEqual(popoverBox.top, expectedTop);
     assert.strictEqual(popoverBox.left, expectedLeft);
 });
+||||||| parent of 8462d49e1d0 (temp)
+=======
+
+QUnit.test("within iframe", async (assert) => {
+    const iframe = document.createElement("iframe");
+    iframe.style.height = "200px";
+    iframe.srcdoc = `<div id="target" style="height:400px;">Within iframe</div>`;
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    fixture.appendChild(iframe);
+    await def;
+
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction }) {
+            assert.step(direction);
+        }
+    };
+
+    popoverTarget = iframe.contentDocument.getElementById("target");
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget },
+    });
+    assert.verifySteps(["bottom"]);
+
+    // The popover should be rendered outside the iframe
+    assert.containsOnce(fixture, ".o_popover");
+    assert.strictEqual(
+        iframe.contentDocument.documentElement.querySelectorAll(".o_popover").length,
+        0
+    );
+});
+>>>>>>> 8462d49e1d0 (temp)

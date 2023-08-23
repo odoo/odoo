@@ -98,6 +98,7 @@ Popover.props = {
         type: Function,
         optional: true,
     },
+<<<<<<< HEAD
     target: {
         validate: (target) => {
             // target may be inside an iframe, so get the Element constructor
@@ -106,6 +107,17 @@ Popover.props = {
             return Boolean(Element) && target instanceof Element;
         },
     },
+||||||| parent of 8462d49e1d0 (temp)
+    target: HTMLElement,
+=======
+    target: {
+        validate: (el) =>
+            el &&
+            typeof el === "object" &&
+            (el instanceof HTMLElement ||
+                (el.ownerDocument && el instanceof el.ownerDocument.defaultView.HTMLElement)),
+    },
+>>>>>>> 8462d49e1d0 (temp)
     slots: {
         type: Object,
         optional: true,
