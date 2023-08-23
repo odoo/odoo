@@ -49,6 +49,8 @@ class StockPicking(models.Model):
             recorded_qty = sum(recorded_productions.mapped('qty_producing'))
             sm_done_qty = sum(productions._get_subcontract_move().filtered(lambda m: m.picked).mapped('quantity'))
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(move.product_uom_qty, move.quantity, precision_digits=rounding) > 0 and self._context.get('cancel_backorder'):
+                move._update_subcontract_order_qty(move.quantity)
             if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
                 continue
             production = productions - recorded_productions
