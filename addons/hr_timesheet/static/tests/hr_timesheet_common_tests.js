@@ -35,11 +35,12 @@ export const getServerData = () => JSON.parse(JSON.stringify({
             fields: {
                 name: { string: "Name", type: "string" },
                 project_id: { string: "Project", type: "many2one", relation: "project.project" },
+                progress: { string: "progress", type: "float" },
             },
             records: [
-                { id: 1, name: "Task 1\u00A0AdditionalInfo", project_id: 1 },
-                { id: 2, name: "Task 2\u00A0AdditionalInfo", project_id: 1 },
-                { id: 3, name: "Task 3\u00A0AdditionalInfo", project_id: 1 },
+                { id: 1, name: "Task 1\u00A0AdditionalInfo", project_id: 1, progress: 50 },
+                { id: 2, name: "Task 2\u00A0AdditionalInfo", project_id: 1, progress: 80 },
+                { id: 3, name: "Task 3\u00A0AdditionalInfo", project_id: 1, progress: 104 },
             ],
         },
     },

@@ -12,7 +12,7 @@
                 <field name="subtask_effective_hours" string="Sub-tasks Hours Spent" widget="timesheet_uom" sum="Sub-tasks Hours Spent" optional="hide"/>
                 <field name="total_hours_spent" string="Total Hours" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
                 <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
-                <field name="progress" widget="progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}"/>
+                <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/>

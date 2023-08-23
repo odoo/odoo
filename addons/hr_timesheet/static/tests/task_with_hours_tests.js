@@ -64,4 +64,22 @@ QUnit.module("hr_timesheet", (hooks) => {
         assert.containsN(firstRow, '.o_list_many2one[name=task_id] .dropdown ul li:contains("AdditionalInfo")', 3);
     });
 
+    QUnit.test("project task progress bar color", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "project.task",
+            arch: `
+                <tree>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}"/>
+                </tree>
+            `,
+        });
+
+        assert.containsOnce(target, "div.o_progressbar .bg-success", "Task 1 having progress = 50 < 80 => green color")
+        assert.containsOnce(target, "div.o_progressbar .bg-warning", "Task 2 having progress = 80 >= 80 => orange color")
+        assert.containsOnce(target, "div.o_progressbar .bg-success", "Task 3 having progress = 101 > 100 => red color")
+    });
 });
