@@ -3456,7 +3456,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_data_row", 4);
-        assert.containsNone($(target).find(".o_control_panel_actions"), ".o_list_selection_box");
+        assert.containsNone(
+            target.querySelector(".o_control_panel_actions"),
+            ".o_list_selection_box"
+        );
 
         // select a record
         await click(target, ".o_data_row:first-child .o_list_record_selector input");

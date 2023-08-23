@@ -677,7 +677,7 @@ QUnit.test("no code injection in message body preview", async (assert) => {
         $(".o-mail-NotificationItem-text").text().replace(/\s/g, ""),
         "You:&shoulnotberaisedthrownewError('CodeInjectionError');"
     );
-    assert.containsNone($(".o-mail-NotificationItem-text"), "script");
+    assert.containsNone(".o-mail-NotificationItem-text", "script");
 });
 
 QUnit.test("no code injection in message body preview from sanitized message", async (assert) => {
@@ -696,7 +696,7 @@ QUnit.test("no code injection in message body preview from sanitized message", a
         $(".o-mail-NotificationItem-text").text().replace(/\s/g, ""),
         "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>"
     );
-    assert.containsNone($(".o-mail-NotificationItem-text"), "script");
+    assert.containsNone(".o-mail-NotificationItem-text", "script");
 });
 
 QUnit.test("<br/> tags in message body preview are transformed in spaces", async (assert) => {

@@ -3920,7 +3920,7 @@ QUnit.module("Fields", (hooks) => {
             "There should be a modal having Remove Button"
         );
         await click($(".modal .modal-footer .o_btn_remove")[0]);
-        assert.containsNone($(".o_modal"), "modal should have been closed");
+        assert.containsNone(".o_modal", "modal should have been closed");
         assert.strictEqual(
             $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
             3,

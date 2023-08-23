@@ -85,5 +85,6 @@ QUnit.module("utils", () => {
         assert.containsN(target, ".hello:contains(Coucou !!!)", 10);
         assert.containsNone(target, ".blibla");
         assert.containsOnce(target, ".brol");
+        assert.containsOnce(document.querySelectorAll(".hello")[0], ".brol");
     });
 });

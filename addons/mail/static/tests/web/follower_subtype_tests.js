@@ -42,7 +42,7 @@ QUnit.test("simplest layout of a followed subtype", async (assert) => {
         document.body,
         ".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"
     );
-    assert.containsOnce($(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"), "label");
+    assert.containsOnce(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)", "label");
     assert.containsOnce(
         $(".o-mail-FollowerSubtypeDialog-subtype:contains(TestSubtype)"),
         "input[type='checkbox']"

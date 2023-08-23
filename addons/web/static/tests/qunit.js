@@ -69,7 +69,7 @@ export function setupQUnit() {
             QUnit.assert.strictEqual(targetElement.contains(selector), n, msg);
         } else {
             throw new Error(
-                `target must be instanceof HTMLElement (and be unique, not a NodeList)`
+                `target ${targetElement.toText} must be instanceof HTMLElement (and be unique, not a NodeList)`
             );
         }
     }

@@ -53,7 +53,7 @@ QUnit.test("Sms button in form view", async (assert) => {
                 </sheet>
             </form>`,
     });
-    assert.containsOnce($(".o_field_phone"), ".o_field_phone_sms");
+    assert.containsOnce(".o_field_phone", ".o_field_phone_sms");
 });
 
 QUnit.test("Sms button with option enable_sms set as False", async (assert) => {
@@ -70,7 +70,7 @@ QUnit.test("Sms button with option enable_sms set as False", async (assert) => {
                 </sheet>
             </form>`,
     });
-    assert.containsNone($(".o_field_phone"), ".o_field_phone_sms");
+    assert.containsNone(".o_field_phone", ".o_field_phone_sms");
 });
 
 QUnit.test("click on the sms button while creating a new record in a FormView", async (assert) => {

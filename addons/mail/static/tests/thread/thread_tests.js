@@ -218,7 +218,7 @@ QUnit.test("mention a channel with space in the name", async (assert) => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
+    assert.containsOnce(".o-mail-Message-body", ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good boy");
 });
 
@@ -230,7 +230,7 @@ QUnit.test('mention a channel with "&" in the name', async (assert) => {
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
+    assert.containsOnce(".o-mail-Message-body", ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General & good");
 });
 
@@ -637,7 +637,7 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
-    assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
+    assert.containsOnce(".o-mail-Message-body", ".o_channel_redirect");
     assert.strictEqual($(".o_channel_redirect").text(), "#General good");
 });
 
@@ -654,7 +654,7 @@ QUnit.test(
         $(".o-mail-Composer-input").val(text.slice(0, -1));
         await insertText(".o-mail-Composer-input", ", test");
         await click(".o-mail-Composer-send");
-        assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
+        assert.containsOnce(".o-mail-Message-body", ".o_channel_redirect");
         assert.strictEqual($(".o_channel_redirect").text(), "#General good");
     }
 );

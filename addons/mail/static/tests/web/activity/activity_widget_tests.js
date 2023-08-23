@@ -92,12 +92,18 @@ QUnit.test("list activity widget with activities", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($(".o_data_row:eq(0)"), ".o-mail-ActivityButton i.text-warning.fa-phone");
+    assert.containsOnce(
+        document.querySelectorAll(".o_data_row")[0],
+        ".o-mail-ActivityButton i.text-warning.fa-phone"
+    );
     assert.strictEqual(
         $(".o_data_row:eq(0) .o-mail-ListActivity-summary")[0].innerText,
         "Call with Al"
     );
-    assert.containsOnce($(".o_data_row:eq(1)"), ".o-mail-ActivityButton i.text-success.fa-clock-o");
+    assert.containsOnce(
+        document.querySelectorAll(".o_data_row")[1],
+        ".o-mail-ActivityButton i.text-success.fa-clock-o"
+    );
     assert.strictEqual($(".o_data_row:eq(1) .o-mail-ListActivity-summary")[0].innerText, "Type 2");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });

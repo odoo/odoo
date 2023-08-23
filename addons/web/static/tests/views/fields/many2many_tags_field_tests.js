@@ -1311,20 +1311,20 @@ QUnit.module("Fields", (hooks) => {
             await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
             await nextTick();
             //await testUtils.fields.many2one.createAndEdit("timmy", "Ralts");
-            assert.containsOnce($(target), ".modal .o_form_view", "should have opened the modal");
+            assert.containsOnce(target, ".modal .o_form_view", "should have opened the modal");
 
             // Create multiple records with save & new
             await editInput(target, ".modal input", "Ralts");
             await click($(".modal .btn-primary:nth-child(2)")[0]);
             await nextTick();
-            assert.containsOnce($(target), ".modal .o_form_view", "modal should still be open");
+            assert.containsOnce(target, ".modal .o_form_view", "modal should still be open");
             assert.equal($(".modal input:first")[0].value, "", "input should be empty");
 
             // Create another record and click save & close
             await editInput(target, ".modal input", "Pikachu");
 
             await click($(".modal .o_form_buttons_edit .btn-primary:first")[0]);
-            assert.containsNone($(target), ".modal .o_list_view", "should have closed the modal");
+            assert.containsNone(target, ".modal .o_list_view", "should have closed the modal");
             assert.containsN(
                 target,
                 '.o_field_many2many_tags[name="timmy"] .badge',
@@ -1770,16 +1770,13 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "web_read") {
                     await def;
                 }
-            }
+            },
         });
         patchWithCleanup(form.env.services.notification, {
             add: () => assert.step("notification"),
         });
 
-        assert.verifySteps([
-            "get_views",
-            "onchange2",
-        ]);
+        assert.verifySteps(["get_views", "onchange2"]);
 
         assert.containsNone(target, ".o_tag");
 
@@ -1788,10 +1785,7 @@ QUnit.module("Fields", (hooks) => {
         await clickOpenedDropdownItem(target, "timmy", "gold");
         assert.containsNone(target, ".o_tag");
 
-        assert.verifySteps([
-            "name_search",
-            "web_read",
-        ]);
+        assert.verifySteps(["name_search", "web_read"]);
 
         await clickSave(target);
         assert.doesNotHaveClass(target, "[name='timmy']", "o_field_invalid");
@@ -1801,10 +1795,7 @@ QUnit.module("Fields", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.verifySteps([
-            "create",
-            "web_read",
-        ]);
+        assert.verifySteps(["create", "web_read"]);
     });
 
     QUnit.test("Many2ManyTagsField with option 'no_quick_create' set to true", async (assert) => {

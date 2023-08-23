@@ -493,7 +493,7 @@ QUnit.test("sidebar: Inbox should have icon", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(document.body, "button:contains(Inbox)");
-    assert.containsOnce($("button:contains(Inbox)"), ".fa-inbox");
+    assert.containsOnce("button:contains(Inbox)", ".fa-inbox");
 });
 
 QUnit.test("sidebar: default active inbox", async (assert) => {
@@ -522,7 +522,7 @@ QUnit.test("sidebar: basic channel rendering", async (assert) => {
     await openDiscuss();
     assert.containsOnce(document.body, ".o-mail-DiscussSidebarChannel");
     assert.strictEqual($(".o-mail-DiscussSidebarChannel").text(), "General");
-    assert.containsOnce($(".o-mail-DiscussSidebarChannel"), "img[data-alt='Thread Image']");
+    assert.containsOnce(".o-mail-DiscussSidebarChannel", "img[data-alt='Thread Image']");
     assert.containsOnce(
         $(".o-mail-DiscussSidebarChannel"),
         ".o-mail-DiscussSidebarChannel-commands"
