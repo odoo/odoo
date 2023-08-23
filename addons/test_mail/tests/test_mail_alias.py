@@ -46,49 +46,6 @@ class TestMailAlias(TestMailAliasCommon):
             self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
             self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
 
-    @users('admin')
-    @mute_logger('odoo.models.unlink')
-    def test_alias_domain_parameters(self):
-        """ Check the validation of ``mail.bounce.alias`` and ``mail.catchall.alias``
-        parameters. """
-        ICP = self.env['ir.config_parameter']
-        # sanitization
-        for (bounce_value, catchall_value), (expected_bounce, expected_catchall) in zip(
-            [
-                ('bounce+b4r=*R3wl_#_-$€{}[]()~|\\/!?&%^\'"`~', 'catchall+b4r=*R3wl_#_-$€{}[]()~|\\/!?&%^\'"`~'),
-                ('bounce+😊', 'catchall+😊'),
-                ('Bouncâïde 😊', 'Catchôïee 😊'),
-                ('ぁ', 'ぁぁ'),
-            ],
-            [
-                ('bounce+b4r=*r3wl_#_-$-{}-~|-/!?&%^\'-`~', 'catchall+b4r=*r3wl_#_-$-{}-~|-/!?&%^\'-`~'),
-                ('bounce+-', 'catchall+-'),
-                ('bouncaide-', 'catchoiee-'),
-                ('?', '??'),
-            ]
-        ):
-            with self.subTest(bounce_value=bounce_value):
-                ICP.set_param('mail.bounce.alias', bounce_value)
-                self.assertEqual(ICP.get_param('mail.bounce.alias'), expected_bounce)
-            with self.subTest(catchall_value=catchall_value):
-                ICP.set_param('mail.catchall.alias', catchall_value)
-                self.assertEqual(ICP.get_param('mail.catchall.alias'), expected_catchall)
-
-        # falsy values
-        for config_value in [False, None, '', ' ']:
-            with self.subTest(config_value=config_value):
-                ICP.set_param('mail.bounce.alias', config_value)
-                self.assertFalse(ICP.get_param('mail.bounce.alias'))
-                ICP.set_param('mail.catchall.alias', config_value)
-                self.assertFalse(ICP.get_param('mail.catchall.alias'))
-
-        # check successive param set, should not raise for unicity against itself
-        for _ in range(2):
-            ICP.set_param('mail.bounce.alias', 'bounce+double.test')
-            ICP.set_param('mail.catchall.alias', 'catchall+double.test')
-            self.assertEqual(ICP.get_param('mail.bounce.alias'), 'bounce+double.test')
-            self.assertEqual(ICP.get_param('mail.catchall.alias'), 'catchall+double.test')
-
     @users('erp_manager')
     def test_alias_domain_company_check(self):
         """ Check constraint trying to avoid ill-defined company setup aka

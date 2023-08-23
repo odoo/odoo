@@ -460,7 +460,6 @@ class TestMessageAccess(MailCommon):
 
     def test_mail_message_access_create_reply(self):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].with_user(self.user_employee).create({'model': 'discuss.channel', 'res_id': self.private_group.id, 'body': 'Test', 'parent_id': self.message.id})
 

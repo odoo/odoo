@@ -99,7 +99,6 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_activity_data.xml',
         'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
-        'data/ir_config_parameter.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'views/discuss_public_templates.xml',
