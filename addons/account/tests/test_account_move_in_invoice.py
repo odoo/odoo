@@ -2292,3 +2292,41 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.assertIn('access_token=', additional_partner_mail.body_html,
                       "The additional partner should be sent the link including the token")
+
+    def test_onchange_journal_currency(self):
+        """
+        Ensure invoice currency changes on journal change, iff the journal
+        has a currency_id set.
+        """
+
+        chf = self.env.ref('base.CHF')
+        eur = self.env.ref('base.EUR')
+
+        journal_gen_exp = self.env['account.journal'].create({
+            'name': 'Expenses (generic)',
+            'type': 'purchase',
+            'code': 'EXPGEN',
+        })
+        journal_swiss_exp = self.env['account.journal'].create({
+            'name': 'Expenses (CHF)',
+            'type': 'purchase',
+            'code': 'EXPCHF',
+            'currency_id': chf.id,
+        })
+
+        self.invoice.currency_id = eur
+        move_form = Form(self.invoice)
+        invoice = move_form.save()
+        self.assertEqual(invoice.currency_id, eur)
+
+        # No change expected with generic journal
+        move_form.journal_id = journal_gen_exp
+        move_form.save()
+        self.assertEqual(invoice.currency_id, eur,
+                         "Changing to a journal without set currency shouldn't affect invoice currency")
+
+        # Currency should change
+        move_form.journal_id = journal_swiss_exp
+        move_form.save()
+        self.assertEqual(invoice.currency_id, chf,
+                         "Changing to a journal with a set currency should change invoice currency")
