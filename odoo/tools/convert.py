@@ -566,7 +566,8 @@ form: module.record_id""" % (xml_id,)
                     f_val = val[0] + ',' + str(val[1])
                 else:
                     f_val = self.id_get(f_ref, raise_if_not_found=nodeattr2bool(rec, 'forcecreate', True))
-                    if not f_val:
+                    # the record may not exist anymore because of a cascade deletion
+                    if not f_val or (f_model and not env[f_model].browse(f_val).exists()):
                         _logger.warning("Skipping creation of %r because %s=%r could not be resolved", xid, f_name, f_ref)
                         return None
             else:

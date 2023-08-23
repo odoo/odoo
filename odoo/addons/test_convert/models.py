@@ -8,6 +8,7 @@ class TestModel(models.Model):
     _description = "Test Convert Model"
 
     usered_ids = fields.One2many('test_convert.usered', 'test_id')
+    parent_id = fields.Many2one('test_convert.test_model', ondelete='cascade')
 
     @api.model
     def action_test_date(self, today_date):

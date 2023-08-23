@@ -9,6 +9,7 @@ from lxml.builder import E
 
 import odoo
 from odoo.tests import common
+from odoo.tools import mute_logger
 from odoo.tools.convert import xml_import, _eval_xml
 
 Field = E.field
@@ -218,6 +219,29 @@ class TestEvalXML(common.TransactionCase):
         for data in call_args[0]:
             self.assertNotIn('usered_ids', data['values'],
                              "Unexpected value in O2M When loading XML with sub records")
+
+    def test_m2o_ondelete_cascade(self):
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+
+        xml = ET.fromstring("""
+            <record id="test_convert.child" model="test_convert.test_model"/>
+        """.strip())
+        res = obj._tag_record(xml)
+
+        parent = self.env['test_convert.test_model'].create({})
+        child = self.env['test_convert.test_model'].browse(res[1])
+        child.parent_id = parent
+        parent.unlink()
+
+        xml = ET.fromstring("""
+            <record id="test_convert.grandchild" model="test_convert.test_model" forcecreate="0">
+                <field name="parent_id" ref="test_convert.child"/>
+            </record>
+        """.strip())
+        with mute_logger('odoo.tools.convert'):
+            res = obj._tag_record(xml)
+
+        self.assertFalse(res)
 
     @unittest.skip("not tested")
     def test_xml(self):
