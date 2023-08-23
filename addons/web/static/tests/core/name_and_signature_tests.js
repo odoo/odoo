@@ -2,6 +2,7 @@
 
 import { makeFakeRPCService } from "@web/../tests/helpers/mock_services";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 import { makeTestEnv } from "../helpers/mock_env";
@@ -31,6 +32,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             }
         };
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("popover", popoverService);
         serviceRegistry.add("rpc", makeFakeRPCService(mockRPC));
 
         target = getFixture();

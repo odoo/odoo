@@ -585,7 +585,7 @@ export function editSelect(el, selector, value) {
 export async function editSelectMenu(el, selector, value) {
     const dropdown = el.querySelector(selector);
     await click(dropdown.querySelector(".dropdown-toggle"));
-    for (const item of Array.from(dropdown.querySelectorAll(".dropdown-item"))) {
+    for (const item of Array.from(el.querySelectorAll(".o_select_menu_menu .dropdown-item"))) {
         if (item.textContent === value) {
             return click(item);
         }
@@ -983,7 +983,15 @@ export function getDropdownMenu(target, togglerSelector) {
     if (!(target instanceof HTMLElement)) {
         throw new Error(`getDropdownMenu: target is not an HTMLElement.`);
     }
-    const el = target.querySelector(togglerSelector);
+
+    let el =
+        togglerSelector instanceof HTMLElement
+            ? togglerSelector
+            : target.querySelector(togglerSelector);
+    console.log(el);
+    if (el && !el.classList.contains("o-dropdown")) {
+        el = el.querySelector(".o-dropdown");
+    }
     if (!el) {
         throw new Error(`getDropdownMenu: Could not find element "${togglerSelector}".`);
     }

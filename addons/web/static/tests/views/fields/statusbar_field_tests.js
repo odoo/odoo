@@ -435,9 +435,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(target, ".o_statusbar_status .dropdown-toggle");
+            assert.containsOnce(target, ".dropdown-item.disabled");
 
             const status = target.querySelectorAll(".o_statusbar_status");
-            assert.containsOnce(status[0], ".dropdown-item.disabled");
             assert.containsOnce(status[status.length - 1], "button.disabled");
         }
     );
@@ -476,7 +476,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(target, ".o_statusbar_status .dropdown-toggle");
-        await click(target, ".o-dropdown .dropdown-item");
+        await click(target, ".o-dropdown--menu .dropdown-item");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
             "second record",

@@ -58,7 +58,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
 
         await toggleActionMenu(target);
-        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+        assert.containsOnce(target, ".o-dropdown--menu");
         assert.containsOnce(target, ".o_import_menu");
         await click(target.querySelector(".o_import_menu"));
     });
@@ -131,7 +131,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
 
         await toggleActionMenu(target);
-        assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+        assert.containsOnce(target, ".o-dropdown--menu");
         assert.containsOnce(target, ".o_import_menu");
         await click(target.querySelector(".o_import_menu"));
     });

@@ -6,9 +6,11 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
-import { click, getFixture, makeDeferred, mount, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, makeDeferred, patchWithCleanup } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
+import { popoverService } from "@web/core/popover/popover_service";
+import { mountInFixture } from "../helpers/mountInFixture";
 
 const serviceRegistry = registry.category("services");
 
@@ -30,7 +32,7 @@ async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
         });
     }
     const env = await makeTestEnv();
-    const scMenu = await mount(SwitchCompanyMenu, target, { env });
+    const scMenu = await mountInFixture(SwitchCompanyMenu, target, { env });
     return scMenu;
 }
 
@@ -49,6 +51,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("company", companyService);
         serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("popover", popoverService);
         target = getFixture();
     });
 
@@ -101,8 +104,8 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-check-square", 1);
         assert.containsN(target, "[data-company-id] .fa-square-o", 4);
         assert.deepEqual(
-            [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
-                (el) => el.getAttribute('aria-checked')
+            [...target.querySelectorAll("[data-company-id] .toggle_company")].map((el) =>
+                el.getAttribute("aria-checked")
             ),
             ["true", "false", "false", "false", "false"]
         );
@@ -123,8 +126,8 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(target, "[data-company-id] .fa-check-square", 2);
         assert.containsN(target, "[data-company-id] .fa-square-o", 3);
         assert.deepEqual(
-            [...target.querySelectorAll("[data-company-id] .toggle_company")].map(
-                (el) => el.getAttribute('aria-checked')
+            [...target.querySelectorAll("[data-company-id] .toggle_company")].map((el) =>
+                el.getAttribute("aria-checked")
             ),
             ["true", "true", "false", "false", "false"]
         );

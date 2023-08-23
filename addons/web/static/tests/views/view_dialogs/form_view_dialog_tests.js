@@ -140,7 +140,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         function getVisibleButtonTexts() {
             return [...target.querySelectorAll(".modal-footer button:not(.d-none)")].map((x) =>
-                x.innerHTML.trim()
+                x.innerText.trim()
             );
         }
     });

@@ -319,11 +319,6 @@
             visibility: visible;
         }
 
-        // Kanban Record - Dropdown colorpicker
-        .oe_kanban_colorpicker {
-            @include o-kanban-colorpicker;
-        }
-
         // Kanban Record - Inner elements
         .o_field_many2many_tags {
             display: block;
@@ -696,4 +691,9 @@
 .modal .o_kanban_cover_container .o_kanban_cover_image {
     height: 120px;
     width: 120px;
+}
+
+// Kanban Record - Dropdown colorpicker
+.oe_kanban_colorpicker {
+    @include o-kanban-colorpicker;
 }

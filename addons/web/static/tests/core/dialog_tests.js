@@ -367,8 +367,8 @@ QUnit.module("Components", (hooks) => {
             x: headerRect.x + headerRect.width / 2 + 20,
             y: headerRect.y + headerRect.height / 2 + 50,
         });
-        assert.strictEqual(content.style.top, "50px");
-        assert.strictEqual(content.style.left, "20px");
+        assert.strictEqual(Math.round(parseFloat(content.style.top)), 50);
+        assert.strictEqual(Math.round(parseFloat(content.style.left)), 20);
     });
 
     QUnit.test("dialog's position is reset on resize", async (assert) => {
@@ -390,8 +390,8 @@ QUnit.module("Components", (hooks) => {
             x: headerRect.x + headerRect.width / 2 + 20,
             y: headerRect.y + headerRect.height / 2 + 50,
         });
-        assert.strictEqual(content.style.top, "50px");
-        assert.strictEqual(content.style.left, "20px");
+        assert.strictEqual(Math.round(parseFloat(content.style.top)), 50);
+        assert.strictEqual(Math.round(parseFloat(content.style.left)), 20);
 
         await triggerEvent(window, null, "resize");
         assert.strictEqual(content.style.top, "0px");

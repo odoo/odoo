@@ -27,7 +27,7 @@ QUnit.module("ActionManager", (hooks) => {
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await click(target, ".o_navbar_apps_menu button");
-        await click(target, ".o_navbar_apps_menu .dropdown-item:nth-child(3)");
+        await click(target, ".o-dropdown-item:nth-child(3)");
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;
@@ -46,7 +46,7 @@ QUnit.module("ActionManager", (hooks) => {
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await click(target, ".o_navbar_apps_menu button");
-        await click(target, ".o_navbar_apps_menu .dropdown-item:nth-child(3)");
+        await click(target, ".o-dropdown-item:nth-child(3)");
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;
@@ -151,7 +151,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, "client_action_pushes");
         await click(target, ".test_client_action");
         await click(target, ".o_navbar_apps_menu button");
-        await click(target, ".o_navbar_apps_menu .dropdown-item:nth-child(3)");
+        await click(target, ".o-dropdown-item:nth-child(3)");
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;

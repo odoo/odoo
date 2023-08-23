@@ -21,7 +21,7 @@ const serviceRegistry = registry.category("services");
 
 async function exportAllAction(target) {
     await click(target, ".o_cp_action_menus .dropdown-toggle");
-    await click(target, ".o_cp_action_menus .dropdown-item");
+    await click(target, ".o-dropdown--menu .dropdown-item");
 }
 
 QUnit.module("ViewDialogs", (hooks) => {
@@ -32,11 +32,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     const openExportDataDialog = async () => {
         await click(target.querySelector(".o_list_record_selector input[type='checkbox'"));
         await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
+        await click(target, ".o-dropdown--menu span:first-child");
         await nextTick();
     };
 
@@ -896,11 +892,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         isDomainSelected = true;
         await click(target.querySelector(".o_list_select_domain"));
         await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
-        await click(
-            target.querySelector(
-                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
-            )
-        );
+        await click(target.querySelector(".o-dropdown--menu span:first-child"));
         await click(target.querySelector(".o_select_button"));
     });
 
@@ -1220,44 +1212,41 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "Direct export list take optional fields into account",
-        async function (assert) {
-            assert.expect(3);
+    QUnit.test("Direct export list take optional fields into account", async function (assert) {
+        assert.expect(3);
 
-            mockDownload(({ url, data }) => {
-                assert.strictEqual(
-                    url,
-                    "/web/export/xlsx",
-                    "should call get_file with the correct url"
-                );
-                assert.deepEqual(JSON.parse(data.data).fields, [
-                    { label: "Bar", name: "bar", type: "boolean" },
-                ]);
-                return Promise.resolve();
-            });
+        mockDownload(({ url, data }) => {
+            assert.strictEqual(
+                url,
+                "/web/export/xlsx",
+                "should call get_file with the correct url"
+            );
+            assert.deepEqual(JSON.parse(data.data).fields, [
+                { label: "Bar", name: "bar", type: "boolean" },
+            ]);
+            return Promise.resolve();
+        });
 
-            await makeView({
-                serverData,
-                type: "list",
-                resModel: "partner",
-                arch: `
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
                  <tree>
                      <field name="foo" optional="show"/>
                      <field name="bar" optional="show"/>
                  </tree>`,
-            });
+        });
 
-            await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
-            await click(target, "div.o_optional_columns_dropdown span.dropdown-item:first-child");
-            assert.containsN(
-                target,
-                "th",
-                3,
-                "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
-            );
+        await click(target, "table .o_optional_columns_dropdown .dropdown-toggle");
+        await click(target, "span.dropdown-item:first-child");
+        assert.containsN(
+            target,
+            "th",
+            3,
+            "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
+        );
 
-            await exportAllAction(target);
-        }
-    );
+        await exportAllAction(target);
+    });
 });

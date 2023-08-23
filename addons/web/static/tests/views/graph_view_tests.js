@@ -2950,7 +2950,9 @@ QUnit.module("Views", (hooks) => {
         });
         await toggleMenu(target, "Measures");
         assert.deepEqual(
-            [...target.querySelectorAll(".o-dropdown .o_menu_item")].map((el) => el.innerText),
+            [...target.querySelectorAll(".o-dropdown--menu .o_menu_item")].map(
+                (el) => el.innerText
+            ),
             ["Foo", "Revenue", "Count"]
         );
     });
@@ -2993,7 +2995,9 @@ QUnit.module("Views", (hooks) => {
             });
             await toggleMenu(target, "Measures");
             assert.deepEqual(
-                [...target.querySelectorAll(".o-dropdown .o_menu_item")].map((el) => el.innerText),
+                [...target.querySelectorAll(".o-dropdown--menu .o_menu_item")].map(
+                    (el) => el.innerText
+                ),
                 ["Bouh", "Foo", "Revenue", "Count"]
             );
         }
