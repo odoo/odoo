@@ -105,7 +105,7 @@
     <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div t-attf-class="vote d-inline-flex align-items-center ms-n2 #{classes} text-muted text-center">
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
-            t-attf-class="btn vote_up #{ 'text-success' if own_vote == 1 else '' } #{ 'karma_required text-reset opacity-25' if not can_upvote else ''}#{ ' text-300' if post_id.create_uid.id == uid else ''}"
+            t-attf-class="btn vote_up #{ 'text-success' if own_vote == 1 else '' } #{ 'karma_required text-reset opacity-25' if not can_upvote else ''}#{ ' text-300' if post.create_uid.id == uid else ''}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
             t-att-data-can-upvote="can_upvote"
@@ -115,7 +115,7 @@
         <small t-attf-class="vote_count #{ 'text-success' if own_vote == 1 else 'text-danger' if own_vote == -1 else ('text-muted opacity-75' if post.vote_count == 0 and not own_vote else '') }"
             t-out="post.vote_count"/>
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
-            t-attf-class="btn vote_down #{ 'text-danger' if own_vote == -1 else ''} #{'karma_required text-reset opacity-25' if not can_downvote else '' }#{' text-300' if post_id.create_uid.id == uid else '' }"
+            t-attf-class="btn vote_down #{ 'text-danger' if own_vote == -1 else ''} #{'karma_required text-reset opacity-25' if not can_downvote else '' }#{' text-300' if post.create_uid.id == uid else '' }"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
