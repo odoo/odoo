@@ -64,7 +64,7 @@
                                            required="is_account_peppol_participant"/>
                                 </div>
                                 <div class="content-group pt-3"
-                                     invisible="account_peppol_proxy_state not in 'not_registered' or not is_account_peppol_participant">
+                                     invisible="account_peppol_proxy_state != 'not_registered' or not is_account_peppol_participant">
                                     <span>
                                         I want to migrate my Peppol connection to Odoo (optional):
                                     </span>

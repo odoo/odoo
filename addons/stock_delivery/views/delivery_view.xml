@@ -25,7 +25,7 @@
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
                             <field name="carrier_tracking_ref" class="oe_inline" readonly="state in ('done', 'cancel')"/>
-                            <button type='object' class="oi oi-arrow-right oe_link" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state not in 'done'"/>
+                            <button type='object' class="oi oi-arrow-right oe_link" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done'"/>
                         </div>
                         <label for="weight" string="Weight"/>
                         <div>
@@ -44,7 +44,7 @@
                          invisible="not carrier_tracking_ref or not carrier_id or delivery_type == 'grid'" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state not in 'done' or picking_type_code == 'incoming'" data-hotkey="shift+v"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done' or picking_type_code == 'incoming'" data-hotkey="shift+v"/>
                 </xpath>
                 <xpath expr="/form/header/button[last()]" position="after">
                     <button name="print_return_label" string="Print Return Label" type="object" invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'" data-hotkey="shift+o"/>
