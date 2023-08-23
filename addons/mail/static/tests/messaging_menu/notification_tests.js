@@ -7,7 +7,7 @@ import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("notification");
 
-QUnit.test("basic layout", async (assert) => {
+QUnit.test("basic layout", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -32,16 +32,15 @@ QUnit.test("basic layout", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-name:contains(Channel)");
     await contains(".o-mail-NotificationItem-counter:contains(2)");
-    assert.containsOnce(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
-        ".o-mail-NotificationItem-date:contains(now)"
+    await contains(
+        ".o-mail-NotificationItem:contains(Channel) .o-mail-NotificationItem-date:contains(now)"
     );
     await contains(
         ".o-mail-NotificationItem-text:contains(An error occurred when sending an email)"
     );
 });
 
-QUnit.test("mark as read", async (assert) => {
+QUnit.test("mark as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
@@ -59,24 +58,13 @@ QUnit.test("mark as read", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvent(
         (
-            await contains(".o-mail-NotificationItem-name:contains(Channel)")
-        ).closest(".o-mail-NotificationItem")[0],
+            await contains(".o-mail-NotificationItem:contains(Channel)")
+        )[0],
         null,
         "mouseenter"
     );
-    assert.containsOnce(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
-        ".o-mail-NotificationItem-markAsRead"
-    );
-
-    await click(
-        $(".o-mail-NotificationItem-name:contains(Channel)")
-            .closest(".o-mail-NotificationItem")
-            .find(".o-mail-NotificationItem-markAsRead")
-    );
-    assert.containsNone(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem")
-    );
+    await click(".o-mail-NotificationItem:contains(Channel) .o-mail-NotificationItem-markAsRead");
+    await contains(".o-mail-NotificationItem:contains(Channel)", 0);
 });
 
 QUnit.test("open non-channel failure", async (assert) => {
@@ -136,7 +124,7 @@ QUnit.test("open non-channel failure", async (assert) => {
     assert.verifySteps(["do_action"]);
 });
 
-QUnit.test("different discuss.channel are not grouped", async (assert) => {
+QUnit.test("different discuss.channel are not grouped", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel_1" },

@@ -429,9 +429,7 @@ QUnit.test("different discuss.channel are not grouped", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", 4);
-
-    const group_1 = $(".o-mail-NotificationItem:contains(Channel):first");
-    await click(group_1);
+    await click(".o-mail-NotificationItem:contains(Channel):first");
     await contains(".o-mail-ChatWindow");
 });
 

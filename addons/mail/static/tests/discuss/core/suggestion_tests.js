@@ -31,43 +31,36 @@ QUnit.test('display command suggestions on typing "/"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("use a command for a specific channel type", async (assert) => {
+QUnit.test("use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-mail-Composer-suggestion:eq(0)");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "/who ",
-        "command + additional whitespace afterwards"
-    );
+    await click(".o-mail-Composer-suggestion:contains(who)");
+    await contains(".o-mail-Composer-input", 1, { value: "/who " });
 });
 
-QUnit.test(
-    "command suggestion should only open if command is the first character",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "General",
-            channel_type: "channel",
-        });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Composer-suggestionList");
-        await contains(".o-mail-Composer-suggestionList .o-open", 0);
-        assert.strictEqual($(".o-mail-Composer-input").val(), "");
-        await insertText(".o-mail-Composer-input", "bluhbluh ");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
-        await insertText(".o-mail-Composer-input", "/");
-        await contains(".o-mail-Composer-suggestionList .o-open", 0);
-    }
-);
+QUnit.test("command suggestion should only open if command is the first character", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "" });
+    await insertText(".o-mail-Composer-input", "bluhbluh ");
+    await contains(".o-mail-Composer-input", 1, { value: "bluhbluh " });
+    await insertText(".o-mail-Composer-input", "/");
+    // weak test, no guarantee that we waited long enough for the potential list to open
+    await contains(".o-mail-Composer-suggestionList .o-open", 0);
+});
 
 QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     const pyEnv = await startServer();

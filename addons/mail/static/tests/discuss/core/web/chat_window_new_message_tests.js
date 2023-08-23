@@ -135,11 +135,7 @@ QUnit.test(
             await insertText(".o-discuss-ChannelSelector input", "131");
             await imSearchDef;
         });
-        await contains(".o-discuss-ChannelSelector-suggestion a");
-        const $link = $(".o-discuss-ChannelSelector-suggestion a");
-        assert.strictEqual($link.text(), "Partner 131");
-
-        await click($link);
+        await click(".o-discuss-ChannelSelector-suggestion a:contains(Partner 131)");
         await contains(".o-mail-ChatWindow-header:contains(New message)", 0);
         assert.strictEqual($(".o-mail-ChatWindow-name:eq(1)").text(), "Partner 131");
     }

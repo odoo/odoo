@@ -69,7 +69,7 @@ QUnit.test(
 
 QUnit.test(
     "composer text input placeholder should contain channel name when thread does not have specific correspondent",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
@@ -81,15 +81,14 @@ QUnit.test(
     }
 );
 
-QUnit.test("add an emoji", async (assert) => {
+QUnit.test("add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😤)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "😤");
+    await contains(".o-mail-Composer-input", 1, { value: "😤" });
 });
 
 QUnit.test(
@@ -106,34 +105,31 @@ QUnit.test(
     }
 );
 
-QUnit.test("add an emoji after some text", async (assert) => {
+QUnit.test("add an emoji after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla");
+    await contains(".o-mail-Composer-input", 1, { value: "Blabla" });
 
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(🤑)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤑");
+    await contains(".o-mail-Composer-input", 1, { value: "Blabla🤑" });
 });
 
-QUnit.test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async (assert) => {
+QUnit.test("add emoji replaces (keyboard) text selection [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const textarea = (await insertText(".o-mail-Composer-input", "Blabla"))[0];
-    assert.strictEqual(textarea.value, "Blabla");
-
+    await insertText(".o-mail-Composer-input", "Blabla");
+    const textarea = (await contains(".o-mail-Composer-input", 1, { value: "Blabla" }))[0];
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(🤠)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "🤠");
+    await contains(".o-mail-Composer-input", 1, { value: "🤠" });
 });
 
 QUnit.test("Cursor is positioned after emoji after adding it", async (assert) => {
@@ -150,21 +146,19 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     assert.strictEqual(textarea.selectionEnd, expectedPos);
 });
 
-QUnit.test("selected text is not replaced after cancelling the selection", async (assert) => {
+QUnit.test("selected text is not replaced after cancelling the selection", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const textarea = (await insertText(".o-mail-Composer-input", "Blabla"))[0];
-    assert.strictEqual(textarea.value, "Blabla");
-
+    await insertText(".o-mail-Composer-input", "Blabla");
+    const textarea = (await contains(".o-mail-Composer-input", 1, { value: "Blabla" }))[0];
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
     await click(".o-mail-Discuss-content");
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(🤠)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤠");
+    await contains(".o-mail-Composer-input", 1, { value: "Blabla🤠" });
 });
 
 QUnit.test(
@@ -182,8 +176,8 @@ QUnit.test(
         const textarea = $(".o-mail-Composer-input")[0];
         textarea.setSelectionRange(0, textarea.value.length);
         await nextTick();
-        await click($(".o-mail-DiscussSidebarChannel:eq(1)"));
-        await click($(".o-mail-DiscussSidebarChannel:eq(0)"));
+        await click(".o-mail-DiscussSidebarChannel:eq(1)");
+        await click(".o-mail-DiscussSidebarChannel:eq(0)");
         assert.ok(textarea.selectionStart === 0 && textarea.selectionEnd === textarea.value.length);
     }
 );
@@ -260,17 +254,17 @@ QUnit.test(
     }
 );
 
-QUnit.test("composer text input cleared on message post", async (assert) => {
+QUnit.test("composer text input cleared on message post", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "au-secours-aidez-moi" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const textarea = await insertText(".o-mail-Composer-input", "test message");
-    assert.strictEqual(textarea.val(), "test message");
+    await insertText(".o-mail-Composer-input", "test message");
+    await contains(".o-mail-Composer-input", 1, { value: "test message" });
 
     await click(".o-mail-Composer-send:not([disabled])");
     await contains(".o-mail-Message");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
 });
 
 QUnit.test("send message only once when button send is clicked twice quickly", async () => {
@@ -284,12 +278,12 @@ QUnit.test("send message only once when button send is clicked twice quickly", a
     await contains(".o-mail-Message");
 });
 
-QUnit.test('send button on discuss.channel should have "Send" as label', async (assert) => {
+QUnit.test('send button on discuss.channel should have "Send" as label', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    assert.strictEqual((await contains(".o-mail-Composer-send:disabled")).text().trim(), "Send");
+    await contains(".o-mail-Composer-send:disabled:contains(Send)");
 });
 
 QUnit.test("Show send button in mobile", async () => {
@@ -306,7 +300,7 @@ QUnit.test("Show send button in mobile", async () => {
 
 QUnit.test(
     "composer textarea content is retained when changing channel then going back",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [channelId] = pyEnv["discuss.channel"].create([
             { name: "minigolf-galaxy-iv" },
@@ -315,21 +309,19 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "According to all known laws of aviation,");
-        await click($("span:contains('epic-shrek-lovers')"));
+        await click("span:contains('epic-shrek-lovers')");
         await contains("textarea.o-mail-Composer-input[placeholder='Message #epic-shrek-lovers…']");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "");
-        await click($("span:contains('minigolf-galaxy-iv')"));
+        await contains(".o-mail-Composer-input", 1, { value: "" });
+        await click("span:contains('minigolf-galaxy-iv')");
         await contains(
-            "textarea.o-mail-Composer-input[placeholder='Message #minigolf-galaxy-iv…']"
-        );
-        assert.strictEqual(
-            $(".o-mail-Composer-input").val(),
-            "According to all known laws of aviation,"
+            "textarea.o-mail-Composer-input[placeholder='Message #minigolf-galaxy-iv…']",
+            1,
+            { value: "According to all known laws of aviation," }
         );
     }
 );
 
-QUnit.test("add an emoji after a partner mention", async (assert) => {
+QUnit.test("add an emoji after a partner mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -344,18 +336,16 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    assert.strictEqual((await contains(".o-mail-Composer-input")).val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
+    await contains(".o-mail-Composer-input", 1, { value: "@TestPartner " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😊)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner 😊");
+    await contains(".o-mail-Composer-input", 1, { value: "@TestPartner 😊" });
 });
 
-QUnit.test("mention a channel after some text", async (assert) => {
+QUnit.test("mention a channel after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -363,25 +353,15 @@ QUnit.test("mention a channel after some text", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    assert.strictEqual((await contains(".o-mail-Composer-input")).val(), "");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val(),
-        "bluhbluh ",
-        "text content of composer should have content"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "bluhbluh " });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "bluhbluh #General ",
-        "previous content + mentioned channel + additional whitespace afterwards"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "bluhbluh #General " });
 });
 
-QUnit.test("add an emoji after a channel mention", async (assert) => {
+QUnit.test("add an emoji after a channel mention", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -389,33 +369,23 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    assert.strictEqual((await contains(".o-mail-Composer-input")).val(), "");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "#General ",
-        "previous content + mentioned channel + additional whitespace afterwards"
-    );
-
-    // select emoji
+    await contains(".o-mail-Composer-input", 1, { value: "#General " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😊)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "#General 😊");
+    await contains(".o-mail-Composer-input", 1, { value: "#General 😊" });
 });
 
-QUnit.test("pending mentions are kept when toggling composer", async (assert) => {
+QUnit.test("pending mentions are kept when toggling composer", async () => {
     const pyEnv = await startServer();
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "@Mitchell Admin ");
+    await contains(".o-mail-Composer-input", 1, { value: "@Mitchell Admin " });
     await click("button:contains(Send message)");
     await contains(".o-mail-Composer-input", 0);
     await click("button:contains(Send message)");
@@ -455,7 +425,7 @@ QUnit.test("leave command on channel", async () => {
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion", 1);
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel:contains(general)", 0);
     await contains(".o-mail-Discuss:contains(No conversation selected.)");
@@ -499,7 +469,7 @@ QUnit.test("leave command on chat", async () => {
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-Composer-suggestion", 1);
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel:contains(Chuck Norris)", 0);
     await contains(".o-mail-Discuss:contains(No conversation selected.)");
@@ -514,7 +484,7 @@ QUnit.test("Can post suggestions", async () => {
     await insertText(".o-mail-Composer-input", "#general");
     await contains(".o-mail-Composer-suggestion", 1);
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#general " });
     triggerHotkey("Enter");
     await contains(".o-mail-Message .o_channel_redirect");
 });
@@ -537,7 +507,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
+QUnit.test("quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
@@ -558,7 +528,7 @@ QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
 
     triggerHotkey("Escape");
     await contains(".o-mail-Message .o-mail-Composer", 0);
-    assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+    await contains(".o-mail-Composer-input:focus");
 
     // non-empty composer should not trigger quick edit
     await insertText(".o-mail-Composer-input", "Shrek");
@@ -570,7 +540,7 @@ QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
     await contains(".o-mail-Message .o-mail-Composer", 0);
 });
 
-QUnit.test("Select composer suggestion via Enter does not send the message", async (assert) => {
+QUnit.test("Select composer suggestion via Enter does not send the message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "shrek@odoo.com",
@@ -589,9 +559,9 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     await insertText(".o-mail-Composer-input", "@Shrek");
     await contains(".o-mail-Composer-suggestion");
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "@Shrek " });
+    // weak test, no guarantee that we waited long enough for the potential message to be posted
     await contains(".o-mail-Message", 0);
-    assert.equal($(".o-mail-Composer-input").val().trim(), "@Shrek");
 });
 
 QUnit.test("composer: drop attachments", async () => {
@@ -833,7 +803,7 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
 
 QUnit.test(
     "Uploading multiple files in the composer create multiple temporary attachments",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         // Promise to block attachment uploading
         const uploadPromise = makeDeferred();

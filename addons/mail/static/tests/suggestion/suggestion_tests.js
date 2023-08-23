@@ -38,9 +38,6 @@ QUnit.test('display partner mention suggestions on typing "@"', async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Composer-suggestion", 0);
-
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", 3);
 });
@@ -69,7 +66,6 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await contains(".o-mail-Composer-input");
-        await contains(".o-mail-Composer-suggestion", 0);
         await insertText(".o-mail-Composer-input", "first message");
         await click("button:contains(Send):not(:disabled)");
         await contains(".o-mail-Message");
@@ -83,7 +79,6 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
-    await contains(".o-mail-Composer-suggestion", 0);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
@@ -107,7 +102,27 @@ QUnit.test("show other channel member in @ mention", async () => {
     await contains(".o-mail-Composer-suggestion:contains(TestPartner)");
 });
 
-QUnit.test("select @ mention insert mention text in composer", async (assert) => {
+QUnit.test("select @ mention insert mention text in composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion:contains(TestPartner)");
+    await contains(".o-mail-Composer-input", 1, { value: "@TestPartner " });
+});
+
+QUnit.test("select @ mention closes suggestions", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -125,7 +140,6 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
     await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val().trim(), "@TestPartner");
 });
 
 QUnit.test('display channel mention suggestions on typing "#"', async () => {
@@ -142,7 +156,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("mention a channel", async (assert) => {
+QUnit.test("mention a channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -152,15 +166,10 @@ QUnit.test("mention a channel", async (assert) => {
     openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "#General ",
-        "mentioned channel + additional whitespace afterwards"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "#General " });
 });
 
 QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) => {
@@ -196,8 +205,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (
     await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingUser");
     await contains(".o-mail-Composer-suggestion", 0);
-    await insertText(".o-mail-Composer-input", " ");
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", " @");
     await contains(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
@@ -210,8 +218,7 @@ QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (
     await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingChannel");
     await contains(".o-mail-Composer-suggestion", 0);
-    await insertText(".o-mail-Composer-input", " ");
-    await insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer-input", " #");
     await contains(".o-mail-Composer-suggestion:contains(General)");
 });
 
@@ -234,7 +241,6 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
-    await contains(".o-mail-Composer-suggestion", 0);
     await insertText(".o-mail-Composer-input", "@My ");
     await contains(".o-mail-Composer-suggestion", 3);
     await insertText(".o-mail-Composer-input", "Test ");

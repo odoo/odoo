@@ -47,7 +47,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
     await contains(".o-EmojiPicker", 0);
 });
 
-QUnit.test("Basic keyboard navigation", async (assert) => {
+QUnit.test("Basic keyboard navigation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
@@ -65,7 +65,7 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
     const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data("codepoints");
     triggerHotkey("Enter");
     await contains(".o-EmojiPicker", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), codepoints);
+    await contains(".o-mail-Composer-input", 1, { value: codepoints });
 });
 
 QUnit.test("recent category (basic)", async () => {
@@ -144,7 +144,7 @@ QUnit.test("first category should be highlighted by default", async () => {
 
 QUnit.test(
     "selecting an emoji while holding down the Shift key prevents the emoji picker from closing",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "" });
         const { openDiscuss } = await start();
@@ -155,6 +155,6 @@ QUnit.test(
         );
         await contains(".o-EmojiPicker-navbar [title='Frequently used']");
         await contains(".o-EmojiPicker");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "👺");
+        await contains(".o-mail-Composer-input", 1, { value: "👺" });
     }
 );
