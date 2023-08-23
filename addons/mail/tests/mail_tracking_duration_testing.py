@@ -192,5 +192,5 @@ class TestMailTrackingDurationMixin(MailCommon):
         self.flush_tracking()
         batch[self.track_duration_field] = self.stage_2.id
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             batch._compute_duration_tracking()

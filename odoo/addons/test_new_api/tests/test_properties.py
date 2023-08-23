@@ -1402,7 +1402,7 @@ class PropertiesCase(TestPropertiesMixin):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
 
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             message_form.discussion = self.discussion_1
             message_form.author = self.user
 

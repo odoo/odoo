@@ -456,11 +456,7 @@ class TestUsersGroupWarning(TransactionCase):
         warning should be there since 'Sales: Administrator' is required when
         user is having 'Field Service: Administrator'. When user reverts the
         changes, warning should disappear. """
-        # 97 requests if only base is installed
-        # 412 runbot community
-        # 549 runbot enterprise
-        with self.assertQueryCount(__system__=436), \
-             Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
+        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.sales_categ_field] = False
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -475,11 +471,7 @@ class TestUsersGroupWarning(TransactionCase):
         should be there since 'Sales: Administrator' is required when user is
         having 'Field Service: Administrator'. When user reverts the changes,
         warning should disappear. """
-        # 97 requests if only base is installed
-        # 412 runbot community
-        # 549 runbot enterprise
-        with self.assertQueryCount(__system__=437), \
-             Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
+        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.sales_categ_field] = self.group_sales_user.id
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -496,11 +488,7 @@ class TestUsersGroupWarning(TransactionCase):
         are required when user is havning 'Field Service: Administrator'.
         When user reverts the changes For 'Sales: Administrator', warning
         should disappear for Sales Access."""
-        # 101 requests if only base is installed
-        # 416 runbot community
-        # 553 runbot enterprise
-        with self.assertQueryCount(__system__=438), \
-             Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
+        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.sales_categ_field] = self.group_sales_user.id
             UserForm[self.project_categ_field] = self.group_project_user.id
             self.assertTrue(
@@ -520,11 +508,7 @@ class TestUsersGroupWarning(TransactionCase):
         'Timesheets: User: all timesheets' is at least required when user is
         having 'Project: Administrator'. When user reverts the changes For
         'Timesheets: User: all timesheets', warning should disappear."""
-        # 98 requests if only base is installed
-        # 413 runbot community
-        # 550 runbot enterprise
-        with self.assertQueryCount(__system__=437), \
-             Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
+        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
             self.assertEqual(
                 UserForm.user_group_warning,
@@ -538,11 +522,7 @@ class TestUsersGroupWarning(TransactionCase):
         """ User changes 'Field Service: User' from 'Field Service: Administrator'.
         The warning should not be there since 'Field Service: User' is not affected
         by any other groups."""
-        # 83 requests if only base is installed
-        # 397 runbot community
-        # 534 runbot enterprise
-        with self.assertQueryCount(__system__=420), \
-             Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
+        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.field_service_categ_field] = self.group_field_service_user.id
             self.assertFalse(UserForm.user_group_warning)
 

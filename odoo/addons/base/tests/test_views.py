@@ -318,7 +318,7 @@ class TestViewInheritance(ViewCase):
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(7):
             base_view = self.assertValid("""
                 <form string="View">
                     <header>
@@ -332,7 +332,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 2)
 
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(6):
             self.assertValid("""
                 <field name="name" position="replace"/>
             """, inherit_id=base_view.id)
@@ -343,7 +343,7 @@ class TestViewInheritance(ViewCase):
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
         hit, miss = counter.hit, counter.miss
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             base_view = self.assertValid("""
                 <form string="View">
                     <field name="name" groups="base.group_system"/>
@@ -354,7 +354,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 1)
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             self.assertValid("""
                 <field name="name" position="replace">
                     <field name="key" groups="base.group_system"/>

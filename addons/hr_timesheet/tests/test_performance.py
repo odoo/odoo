@@ -13,7 +13,7 @@ class TestPerformanceTimesheet(TestCommonTimesheet):
         } for i in range(17) for project in projects])
         self.env.invalidate_all()
         self.env.registry.clear_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(5):
             self.env['account.analytic.line']._timesheet_preprocess([
                 {'task_id': task.id} for task in tasks for _i in range(10)
             ])

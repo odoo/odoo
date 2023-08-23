@@ -1093,7 +1093,10 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.partner_admin = cls.env.ref('base.partner_admin')
         cls.company_admin = cls.user_admin.company_id
-        cls.company_admin.write({'email': 'company@example.com'})
+        cls.company_admin.write({
+            'email': 'your.company@example.com',  # ensure email for various fallbacks
+            'name': 'YourTestCompany',  # force for reply_to computation
+        })
         with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
             cls.user_admin.write({
                 'country_id': cls.env.ref('base.be').id,

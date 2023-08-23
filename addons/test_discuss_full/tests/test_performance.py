@@ -1044,4 +1044,4 @@ class TestDiscussFullPerformance(HttpCase):
             Returns the expected query count.
             The point of having a separate getter is to allow it to be overriden.
         """
-        return 71
+        return 59
