@@ -20,7 +20,7 @@ threadActionsRegistry.add("pinned-messages", {
     iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
     name: _t("Pinned Messages"),
     nameActive: _t("Hide Pinned Messages"),
-    sequence: 29,
+    sequence: 20,
     setup(action) {
         useChildSubEnv({
             pinMenu: {

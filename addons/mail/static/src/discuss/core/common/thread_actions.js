@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 
@@ -10,6 +11,18 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 threadActionsRegistry
+    .add("attachments", {
+        condition: (component) =>
+            component.thread?.hasAttachmentPanel &&
+            (!component.props.chatWindow || component.props.chatWindow.isOpen),
+        component: AttachmentPanel,
+        icon: "fa fa-fw fa-paperclip",
+        iconLarge: "fa fa-fw fa-lg fa-paperclip",
+        name: _t("Show Attachments"),
+        nameActive: _t("Hide Attachments"),
+        sequence: 25,
+        toggle: true,
+    })
     .add("add-users", {
         close(component, action) {
             action.popover?.close();
