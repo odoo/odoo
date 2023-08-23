@@ -9,7 +9,7 @@ from odoo import exceptions
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 from odoo.tests.common import users
-from odoo.tools import mute_logger
+from odoo.tools import formataddr, mute_logger
 
 
 class TestMailAliasCommon(MailCommon):
@@ -91,24 +91,30 @@ class TestMailAlias(TestMailAliasCommon):
 
     @users('admin')
     def test_alias_name_unique(self):
+        """ Check uniqueness constraint on alias names, at create and update.
+        Also check conflict management with bounce / catchall aliases. """
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
 
-        # test you cannot create aliases matching bounce / catchall
+        new_mail_alias = self.env['mail.alias'].create({
+            'alias_model_id': alias_model_id,
+            'alias_name': 'unused.test.alias',
+        })
+        other_alias = self.env['mail.alias'].create({
+            'alias_model_id': alias_model_id,
+            'alias_name': 'other.test.alias',
+        })
+
+        # test you cannot create or update aliases matching bounce / catchall
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': catchall_alias})
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': bounce_alias})
-
-        new_mail_alias = self.env['mail.alias'].create({
-            'alias_model_id': alias_model_id,
-            'alias_name': 'unused.test.alias'
-        })
-        other_alias = self.env['mail.alias'].create({
-            'alias_model_id': alias_model_id,
-            'alias_name': 'other.test.alias'
-        })
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({'alias_name': catchall_alias})
+        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+            new_mail_alias.write({'alias_name': bounce_alias})
 
         # test that alias names should be unique
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
@@ -124,18 +130,26 @@ class TestMailAlias(TestMailAliasCommon):
                 }
                 for alias_name in ('new.alias.1', 'new.alias.2', 'new.alias.1')
             ])
-        with self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint(), mute_logger('odoo.sql_db'):
-            new_mail_alias.copy({'alias_name': 'unused.test.alias'})
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             other_alias.write({'alias_name': 'unused.test.alias'})
 
-        # test that re-using catchall and bounce alias raises UserError
+        # cannot set catchall / bounce to used alias
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            new_mail_alias.write({'alias_name': catchall_alias})
+            self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', new_mail_alias.alias_name)
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            new_mail_alias.write({'alias_name': bounce_alias})
+            self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
-        new_mail_alias.write({'alias_name': 'another.unused.test.alias'})
+    @users('admin')
+    def test_alias_name_unique_copy(self):
+        """ Check uniqueness constraint check when copying aliases """
+        alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
+        new_mail_alias = self.env['mail.alias'].create({
+            'alias_model_id': alias_model_id,
+            'alias_name': 'unused.test.alias'
+        })
+
+        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint():
+            new_mail_alias.copy({'alias_name': 'unused.test.alias'})
 
         # test that duplicating an alias should have blank name
         copy_1 = new_mail_alias.copy()
@@ -147,12 +161,6 @@ class TestMailAlias(TestMailAliasCommon):
         # cannot batch update, would create duplicates
         with self.assertRaises(exceptions.UserError):
             (copy_1 + copy_2).write({'alias_name': 'test.alias.other'})
-
-        # cannot set catchall / bounce to used alias
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', new_mail_alias.alias_name)
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
-            self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
     @users('admin')
     @mute_logger('odoo.models.unlink')
@@ -236,6 +244,45 @@ class TestMailAlias(TestMailAliasCommon):
         with self.assertRaises(exceptions.ValidationError):
             alias.write({'alias_defaults': "{'custom_field': brokendict"})
         alias.write({'alias_defaults': "{'custom_field': 'validdict'}"})
+
+
+@tagged('mail_alias', 'multi_company')
+class TestAliasCompany(TestMailAliasCommon):
+    """ Test company / alias domain and configuration synchronization """
+
+    def test_assert_initial_values(self):
+        """ Test initial setup values: currently all companies share the same
+        alias configuration as it is unique. """
+        self.assertEqual(self.company_admin.catchall_email, f'{self.alias_catchall}@{self.alias_domain}')
+        self.assertEqual(
+            self.company_admin.catchall_formatted,
+            formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}'))
+        )
+
+        self.assertEqual(self.company_2.catchall_email, f'{self.alias_catchall}@{self.alias_domain}')
+        self.assertEqual(
+            self.company_2.catchall_formatted,
+            formataddr((self.company_2.name, f'{self.alias_catchall}@{self.alias_domain}'))
+        )
+
+        self.assertEqual(self.company_3.catchall_email, f'{self.alias_catchall}@{self.alias_domain}')
+        self.assertEqual(
+            self.company_3.catchall_formatted,
+            formataddr((self.company_3.name, f'{self.alias_catchall}@{self.alias_domain}'))
+        )
+
+    @users('erp_manager')
+    def test_res_company_creation_alias_domain(self):
+        """ Test alias domain configuration when creating new companies """
+        company = self.env['res.company'].create({
+            'email': '"Super Company" <super.company@test3.mycompany.com>',
+            'name': 'Super Company',
+        })
+        company.flush_recordset()
+        self.assertEqual(
+            company.catchall_formatted,
+            formataddr((company.name, f'{self.alias_catchall}@{self.alias_domain}'))
+        )
 
 
 @tagged('mail_gateway', 'mail_alias', 'multi_company')

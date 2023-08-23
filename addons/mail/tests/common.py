@@ -1250,6 +1250,10 @@ class MailCommon(common.TransactionCase, MailCase):
             'name': 'ELIT',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+        cls.company_3 = cls.env['res.company'].create({
+            'email': 'company_3@test.example.com',
+            'name': 'Company 3',
+        })
 
         # employee specific to second company
         cls.user_employee_c2 = mail_new_test_user(
