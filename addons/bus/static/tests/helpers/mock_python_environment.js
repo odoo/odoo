@@ -76,7 +76,6 @@ async function getModelDefinitions() {
 }
 
 let _cookie = {};
-QUnit.testDone(() => (_cookie = {}));
 export const pyEnvTarget = {
     cookie: {
         get(key) {
@@ -323,7 +322,10 @@ export async function startServer({ actions, views = {} } = {}) {
     });
     pyEnv["mockServer"] = await makeMockServer({ actions, models, views });
     pyEnv["mockServer"].pyEnv = pyEnv;
-    registerCleanup(() => (pyEnv = undefined));
+    registerCleanup(() => {
+        pyEnv = undefined;
+        _cookie = {};
+    });
     if ("res.users" in pyEnv.mockServer.models) {
         const adminUser = pyEnv["res.users"].searchRead([["id", "=", pyEnv.adminUserId]])[0];
         pyEnv.authenticate(adminUser.login, adminUser.password);
