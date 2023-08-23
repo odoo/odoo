@@ -11097,7 +11097,7 @@ core_defaults._set('scale', {
 	// grid line settings
 	gridLines: {
 		display: true,
-		color: 'rgba(0,0,0,0.1)',
+		color: 'rgba(55,65,81,.25)',
 		lineWidth: 1,
 		drawBorder: true,
 		drawOnChartArea: true,
