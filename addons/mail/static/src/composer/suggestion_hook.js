@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 export function useSuggestion() {
     const comp = useComponent();
     const sequential = useSequential();
-    let pendingFetchCount = 0;
     /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
@@ -30,14 +29,10 @@ export function useSuggestion() {
             if (selectionStart !== selectionEnd) {
                 // avoid interfering with multi-char selection
                 self.clearSearch();
+                return;
             }
             const candidatePositions = [];
-            // keep the current delimiter if it is still valid
-            if (self.search.position !== undefined && self.search.position < selectionStart) {
-                candidatePositions.push(self.search.position);
-            }
-            // consider the chars before the current cursor position if the
-            // current delimiter is no longer valid (or if there is none)
+            // consider the chars before the current cursor position
             let numberOfSpaces = 0;
             for (let index = selectionStart - 1; index >= 0; --index) {
                 if (/\s/.test(content[index])) {
@@ -51,6 +46,10 @@ export function useSuggestion() {
                     }
                 }
                 candidatePositions.push(index);
+            }
+            // keep the current delimiter if it is still valid
+            if (self.search.position !== undefined && self.search.position < selectionStart) {
+                candidatePositions.push(self.search.position);
             }
             const supportedDelimiters = suggestionService.getSupportedDelimiters(self.thread);
             for (const candidatePosition of candidatePositions) {
@@ -115,7 +114,7 @@ export function useSuggestion() {
             count: 0,
             items: undefined,
         }),
-        update({ clearSearchOnEmpty = true } = {}) {
+        update() {
             if (!self.search.delimiter) {
                 return;
             }
@@ -126,11 +125,7 @@ export function useSuggestion() {
             );
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             if (!mainSuggestions.length && !extraSuggestions.length) {
-                if (clearSearchOnEmpty) {
-                    self.clearSearch();
-                } else {
-                    self.state.items = undefined;
-                }
+                self.state.items = undefined;
                 return;
             }
             // arbitrary limit to avoid displaying too many elements at once
@@ -145,27 +140,35 @@ export function useSuggestion() {
         },
     };
     useEffect(
-        () => {
-            self.update({ clearSearchOnEmpty: false });
+        (delimiter, position, term) => {
+            self.update();
+            if (self.search.position === undefined || !self.search.delimiter) {
+                return; // nothing else to fetch
+            }
             sequential(async () => {
-                if (self.search.position === undefined || !self.search.delimiter) {
+                if (
+                    self.search.delimiter !== delimiter ||
+                    self.search.position !== position ||
+                    self.search.term !== term
+                ) {
                     return; // ignore obsolete call
                 }
-                pendingFetchCount++;
-                try {
-                    await suggestionService.fetchSuggestions(self.search, {
-                        thread: self.thread,
-                        onFetched() {
-                            if (owl.status(comp) === "destroyed") {
-                                return;
-                            }
-                            self.update({ clearSearchOnEmpty: pendingFetchCount === 0 });
-                        },
-                    });
-                } finally {
-                    pendingFetchCount--;
+                await suggestionService.fetchSuggestions(self.search, {
+                    thread: self.thread,
+                });
+                if (owl.status(comp) === "destroyed") {
+                    return;
                 }
-                self.update({ clearSearchOnEmpty: pendingFetchCount === 0 });
+                self.update();
+                if (
+                    self.search.delimiter === delimiter &&
+                    self.search.position === position &&
+                    self.search.term === term &&
+                    !self.state.items?.mainSuggestions.length &&
+                    !self.state.items?.extraSuggestions.length
+                ) {
+                    self.clearSearch();
+                }
             });
         },
         () => {
