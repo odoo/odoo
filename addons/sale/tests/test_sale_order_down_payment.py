@@ -412,3 +412,53 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0,              False                         ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_tax_price_include_amount_rounding(self):
+        """Test downpayment fixed amount is correctly reported in downpayment invoice product line
+           and in original SO amount invoiced"""
+        tax_21 = self.create_tax(21)
+
+        self.sale_order.order_line[0].price_unit = 900
+        self.sale_order.order_line[0].product_uom_qty = 1
+        self.sale_order.order_line[0].tax_id = tax_21
+
+        self.sale_order.order_line[1].price_unit = 90
+        self.sale_order.order_line[1].product_uom_qty = 2
+        self.sale_order.order_line[1].tax_id = tax_21
+
+        self.sale_order.order_line[2].price_unit = 49
+        self.sale_order.order_line[2].product_uom_qty = 4
+        self.sale_order.order_line[2].tax_id = tax_21
+
+        self.sale_order.order_line[3].unlink()
+        self.sale_order.action_confirm()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.sale_order.id],
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 550.0,
+            'deposit_account_id': self.revenue_account.id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        downpayment.create_invoices()
+        invoice = self.sale_order.invoice_ids
+        # pylint: disable=C0326
+        expected = [
+            # keys
+            ['account_id',               'tax_ids',                       'balance',    'price_total'],
+            # base lines
+            [self.revenue_account.id,    tax_21.ids,                      -454.55,       550.0       ],
+            # taxes
+            [self.tax_account.id,        self.env['account.tax'],         -95.45,        0           ],
+            # receivable
+            [self.receivable_account.id, self.env['account.tax'],         550.0,         0           ],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
+        invoice.action_post()
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        self.assertEqual(downpayment.amount_invoiced, 550.0, "Amount invoiced is not equal to downpayment amount")
