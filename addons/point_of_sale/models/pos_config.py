@@ -703,16 +703,18 @@ class PosConfig(models.Model):
             WITH pm AS (
                   SELECT product_id,
                          Max(write_date) date
-                    FROM stock_quant
+                    FROM stock_move_line
                 GROUP BY product_id
+                ORDER BY date DESC
             )
                SELECT product_product.id
                  FROM {tables}
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE {where_clause}
-             ORDER BY product_product__product_tmpl_id.priority DESC,
-                      product_product__product_tmpl_id.detailed_type DESC,
-                      COALESCE(pm.date, product_product.write_date) DESC
+                ORDER BY product_product__product_tmpl_id.priority DESC,
+                    case when product_product__product_tmpl_id.detailed_type = 'service' then 1 else 0 end DESC,
+                    pm.date DESC NULLS LAST,
+                    product_product.write_date
                 LIMIT %s
         """
         self.env.cr.execute(query, params + [20000])
