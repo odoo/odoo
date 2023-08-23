@@ -29,6 +29,16 @@ export class SMLX2ManyField extends X2ManyField {
     }
 
     async onAdd({ context, editable } = {}) {
+        if(!this.props.context.use_create_lots && !this.props.context.use_existing_lots)
+        {
+            return super.onAdd({
+                editable,
+                context: {
+                    ...context,
+                }
+            });
+        }
+        this.activeActions.create = this.props.context.use_create_lots;
         context = {
             ...context,
             single_product: true,

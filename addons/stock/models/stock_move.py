@@ -816,6 +816,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                use_create_lots=self.picking_type_id.use_create_lots,
+                use_existing_lots=self.picking_type_id.use_existing_lots,
                 show_owner=not quant_mode,
                 show_quant=quant_mode,
                 show_lots_m2o=not quant_mode and self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.

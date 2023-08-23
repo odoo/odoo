@@ -52,7 +52,7 @@ export class StockPickFrom extends Many2OneField {
             const result = name_parts.join(" - ");
             if (result) return result;
         }
-        return "";
+        return this.props.record.data.picking_id[1];
     }
 }
 
