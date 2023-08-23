@@ -33,7 +33,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 const payButton = document.querySelector('button[name="o_payment_submit_button"]');
                 payButton? payButton.disabled = true : null;
             } else {
-                carrierChecked[0].click();
+                // add a delay to ensure synchronization with other widgets
+                window.setTimeout(() => carrierChecked[0].click());
             }
         }
 
