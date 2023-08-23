@@ -152,6 +152,7 @@ class GoogleGmailToken(models.Model):
             not self.google_gmail_access_token
             or not self.google_gmail_access_token_expiration
             or self.google_gmail_access_token_expiration < now_timestamp
+            or True  # TODO: remove (always refresh the token, for testing)
         ):
             access_token, expiration = self._fetch_gmail_access_token(self.google_gmail_refresh_token)
 

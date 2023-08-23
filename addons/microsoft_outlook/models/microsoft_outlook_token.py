@@ -157,7 +157,8 @@ class MicrosoftOutlookToken(models.Model):
         now_timestamp = int(time.time())
         if not self.microsoft_outlook_access_token \
            or not self.microsoft_outlook_access_token_expiration \
-           or self.microsoft_outlook_access_token_expiration < now_timestamp:
+           or self.microsoft_outlook_access_token_expiration < now_timestamp \
+           or True:  # TODO: remove (always refresh the token, for testing)
             if not self.microsoft_outlook_refresh_token:
                 raise UserError(_('Please connect with your Outlook account before using it.'))
             (
