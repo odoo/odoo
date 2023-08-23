@@ -118,7 +118,7 @@
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
-                    <field name="is_so_line_edited" invisible="1" />
+                    <field name="is_so_line_edited" column_invisible="True"/>
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
