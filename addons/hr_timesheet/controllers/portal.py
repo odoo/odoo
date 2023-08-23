@@ -34,9 +34,9 @@ class TimesheetCustomerPortal(CustomerPortal):
         }
 
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
-        values = super()._task_get_searchbar_sortings(milestones_allowed, project)
-        values['progress'] = {'label': _('Progress'), 'order': 'progress asc', 'sequence': 10}
-        return values
+        return super()._task_get_searchbar_sortings(milestones_allowed, project) | {
+            'progress asc': {'label': _('Progress'), 'order': 'progress asc', 'sequence': 100},
+        }
 
     def _get_searchbar_groupby(self):
         return {
