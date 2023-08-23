@@ -127,6 +127,39 @@
                 <xpath expr="/pivot" position="inside">
                     <field name="user_ids" type="row"/>
                 </xpath>
+                <xpath expr="//field[@name='project_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_task_graph" model="ir.ui.view">
+            <field name="name">project.task.graph</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <graph string="Tasks" sample="1" js_class="project_graph">
+                    <field name="project_id"/>
+                    <field name="stage_id"/>
+                    <field name="color" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="rating_last_value" string="Rating (/5)"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_project_task_graph_inherit" model="ir.ui.view">
+            <field name="name">project.task.graph.inherit</field>
+            <field name="model">project.task</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="project.view_project_task_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='stage_id']" position="after">
+                    <field name="user_ids"/>
+                </xpath>
+                
             </field>
         </record>
 
@@ -186,6 +219,7 @@
     <record id="project_all_task_graph_action_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="80"/>
         <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_project_task_graph_inherit"/>
         <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
     </record>
 
@@ -1607,20 +1641,6 @@
                     <attribute name="filters">1</attribute>
                     <attribute name="color">color</attribute>
                 </xpath>
-            </field>
-        </record>
-
-        <record id="view_project_task_graph" model="ir.ui.view">
-            <field name="name">project.task.graph</field>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-                <graph string="Tasks" sample="1" js_class="project_graph">
-                    <field name="project_id"/>
-                    <field name="stage_id"/>
-                    <field name="color" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
-                    <field name="rating_last_value" string="Rating (/5)"/>
-                </graph>
             </field>
         </record>
 
