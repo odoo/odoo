@@ -46,6 +46,11 @@ class AccountMove(models.Model):
         views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]
         return dict(action, domain=domain, context=context, views=views)
 
+    def _post(self, soft=True):
+        posted = super()._post(soft)
+        posted.sudo().landed_costs_ids.reconcile_landed_cost()
+        return posted
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
