@@ -1811,13 +1811,15 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_res_partner(self, params):
-        if not self.config_id.limited_partners_loading:
-            return self.env['res.partner'].search_read(**params['search_params'])
-        partner_ids = [res[0] for res in self.config_id.get_limited_partners_loading()]
-        # Need to search_read because get_limited_partners_loading
-        # might return a partner id that is not accessible.
-        params['search_params']['domain'] = [('id', 'in', partner_ids)]
         return self.env['res.partner'].search_read(**params['search_params'])
+        ## Disabled limited loading because of search issue by additional attributes
+        # if not self.config_id.limited_partners_loading:
+        #     return self.env['res.partner'].search_read(**params['search_params'])
+        # partner_ids = [res[0] for res in self.config_id.get_limited_partners_loading()]
+        # # Need to search_read because get_limited_partners_loading
+        # # might return a partner id that is not accessible.
+        # params['search_params']['domain'] = [('id', 'in', partner_ids)]
+        # return self.env['res.partner'].search_read(**params['search_params'])
 
     def _loader_params_op_student(self):
         return {
