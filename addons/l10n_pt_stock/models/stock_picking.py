@@ -10,7 +10,7 @@ from odoo.tools import format_date
 class PickingType(models.Model):
     _inherit = 'stock.picking.type'
 
-    country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', depends=['company_id.account_fiscal_country_id'])
 
     l10n_pt_stock_secure_sequence_id = fields.Many2one(
         'ir.sequence',
@@ -20,14 +20,14 @@ class PickingType(models.Model):
     l10n_pt_stock_official_series_id = fields.Many2one("l10n_pt_account.official.series", string="Official Series of the Tax Authority")
 
     def write(self, vals):
-        for picking_type in self.filtered(lambda pt: pt.company_id.country_id.code == 'PT'):
+        for picking_type in self.filtered(lambda pt: pt.company_id.account_fiscal_country_id.code == 'PT'):
             if vals.get('l10n_pt_stock_official_series_id') and picking_type.l10n_pt_stock_official_series_id:
                 if self.env['stock.picking'].search_count([('picking_type_id', '=', picking_type.id)]):
                     raise UserError(_("You cannot change the official series of a journal once it has been used."))
         return super().write(vals)
 
     def _create_l10n_pt_stock_secure_sequence(self):
-        for picking_type in self.filtered(lambda pt: pt.company_id.country_id.code == 'PT' and not pt.l10n_pt_stock_secure_sequence_id):
+        for picking_type in self.filtered(lambda pt: pt.company_id.account_fiscal_country_id.code == 'PT' and not pt.l10n_pt_stock_secure_sequence_id):
             picking_type.l10n_pt_stock_secure_sequence_id = self.env['ir.sequence'].create({
                 'name': _('Securisation of %s', picking_type.name),
                 'code': 'SECURE-' + picking_type.code,
@@ -42,13 +42,12 @@ class PickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', depends=['company_id.account_fiscal_country_id'])
     l10n_pt_stock_document_number = fields.Char(string='Portuguese Document Number', compute='_compute_l10n_pt_stock_document_number', store=True)
     l10n_pt_stock_secure_sequence_number = fields.Integer(string='Inalterable no-gap sequence number', copy=False)
     l10n_pt_stock_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     l10n_pt_stock_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_stock_qr_code_str', store=True)
-    l10n_pt_stock_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_stock_inalterable_hash_info')
-    l10n_pt_stock_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_stock_inalterable_hash_info')
+    l10n_pt_stock_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_stock_inalterable_hash_short')
     l10n_pt_stock_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_stock_atcud', store=True)
 
     @api.depends('l10n_pt_stock_secure_sequence_number')
@@ -64,21 +63,15 @@ class StockPicking(models.Model):
             picking.l10n_pt_stock_document_number = f"stock_picking {sequence_prefix}/{sequence_number}"
 
     @api.depends('l10n_pt_stock_inalterable_hash')
-    def _compute_l10n_pt_stock_inalterable_hash_info(self):
+    def _compute_l10n_pt_stock_inalterable_hash_short(self):
         for picking in self:
-            if picking.l10n_pt_stock_inalterable_hash:
-                hash_version, hash_str = picking.l10n_pt_stock_inalterable_hash.split("$")[1:]
-                picking.l10n_pt_stock_inalterable_hash_version = int(hash_version)
-                picking.l10n_pt_stock_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                picking.l10n_pt_stock_inalterable_hash_version = False
-                picking.l10n_pt_stock_inalterable_hash_short = False
+            picking.l10n_pt_stock_inalterable_hash_short = L10nPtHashingUtils._l10n_pt_get_short_hash(picking.l10n_pt_stock_inalterable_hash)
 
     @api.depends('name', 'picking_type_id.l10n_pt_stock_official_series_id.code', 'l10n_pt_stock_inalterable_hash')
     def _compute_l10n_pt_stock_atcud(self):
         for picking in self:
             if (
-                picking.company_id.country_id.code == 'PT'
+                picking.company_id.account_fiscal_country_id.code == 'PT'
                 and picking.picking_type_id.l10n_pt_stock_official_series_id
                 and picking.l10n_pt_stock_inalterable_hash
                 and not picking.l10n_pt_stock_atcud
@@ -92,22 +85,12 @@ class StockPicking(models.Model):
         """ Generate the informational QR code for Portugal
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
         """
-        for picking in self.filtered(lambda o: (
-            o.company_id.country_id.code == "PT"
-            and not o.l10n_pt_stock_qr_code_str  # Skip if already computed
+        for picking in self.filtered(lambda p: (
+            p.company_id.account_fiscal_country_id.code == "PT"
+            and p.l10n_pt_stock_inalterable_hash
+            and not p.l10n_pt_stock_qr_code_str  # Skip if already computed
         )):
-            if not picking.l10n_pt_stock_inalterable_hash:
-                continue
-            company_vat_ok = picking.company_id.vat and stdnum.pt.nif.is_valid(picking.company_id.vat)
-            hash_ok = picking.l10n_pt_stock_inalterable_hash
-            atcud_ok = picking.l10n_pt_stock_atcud
-
-            if not company_vat_ok or not hash_ok or not atcud_ok:
-                error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
-                error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the operation type's official series") if not atcud_ok else ""
-                error_msg += _("- The `hash` is not defined. You can contact the support.") if not hash_ok else ""
-                raise UserError(error_msg)
+            L10nPtHashingUtils._l10n_pt_verify_qr_code_prerequisites(picking.company_id, picking.l10n_pt_stock_atcud)
 
             company_vat = re.sub(r'\D', '', picking.company_id.vat)
             partner_vat = re.sub(r'\D', '', picking.partner_id.vat or '999999990')
@@ -134,7 +117,7 @@ class StockPicking(models.Model):
             picking.l10n_pt_stock_qr_code_str = urllib.parse.quote_plus(qr_code_str)
 
     def _get_integrity_hash_fields(self):
-        if self.company_id.country_id.code != 'PT':
+        if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_done', 'create_date', 'name']
 
@@ -143,7 +126,7 @@ class StockPicking(models.Model):
         return re.sub(r'[^A-Za-z0-9]+', '', self.picking_type_id.sequence_code), self.l10n_pt_stock_secure_sequence_number
 
     def _hash_compute(self, previous_hash=None):
-        if self.company_id.country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
+        if self.company_id.account_fiscal_country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
             return {}
         endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         if endpoint == 'demo':
@@ -176,20 +159,9 @@ class StockPicking(models.Model):
         ], order="l10n_pt_stock_secure_sequence_number DESC", limit=1)
 
     def _l10n_pt_stock_sign_records_using_demo_key(self, previous_hash):
-        """
-        Technical requirements from the Portuguese tax authority can be found at page 13 of the following document:
-        https://info.portaldasfinancas.gov.pt/pt/docs/Portug_tax_system/Documents/Order_No_8632_2014_of_the_3rd_July.pdf
-        """
-        res = {}
-        for picking in self:
-            if not previous_hash:
-                previous = picking._l10n_pt_stock_get_last_record()
-                previous_hash = previous.l10n_pt_stock_inalterable_hash if previous else ""
-            previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-            message = picking._l10n_pt_stock_get_message_to_hash(previous_hash)
-            res[picking.id] = L10nPtHashingUtils._l10n_pt_sign_using_demo_key(self.env, message)
-            previous_hash = res[picking.id]
-        return res
+        return L10nPtHashingUtils._l10n_pt_sign_records_using_demo_key(
+            self, previous_hash, 'l10n_pt_stock_inalterable_hash', StockPicking._l10n_pt_stock_get_last_record, StockPicking._l10n_pt_stock_get_message_to_hash
+        )
 
     def _l10n_pt_stock_verify_integrity(self, previous_hash, public_key_str):
         """
@@ -205,14 +177,14 @@ class StockPicking(models.Model):
         if res is not True:
             return res
         for picking in self.filtered(lambda p: (
-                p.company_id.country_id.code == 'PT'
-                and p.state == 'done'
-                and p.picking_type_id.code == 'outgoing'
-                and not p.l10n_pt_stock_secure_sequence_number
-            )):
-            if not picking.company_id.country_id:
+            p.company_id.account_fiscal_country_id.code == 'PT'
+            and p.state == 'done'
+            and p.picking_type_id.code == 'outgoing'
+            and not p.l10n_pt_stock_secure_sequence_number
+        )):
+            if not picking.company_id.account_fiscal_country_id:
                 raise UserError(_("You have to set a country in your company setting."))
-            if picking.company_id.country_id.code == 'PT' and not picking.picking_type_id.l10n_pt_stock_official_series_id:
+            if picking.company_id.account_fiscal_country_id.code == 'PT' and not picking.picking_type_id.l10n_pt_stock_official_series_id:
                 raise UserError(_("You have to set an Official Series in the Stock Picking Type."))
             picking.picking_type_id._create_l10n_pt_stock_secure_sequence()
             picking.l10n_pt_stock_secure_sequence_number = picking.picking_type_id.l10n_pt_stock_secure_sequence_id.next_by_id()
@@ -222,7 +194,7 @@ class StockPicking(models.Model):
     def write(self, vals):
         if not vals:
             return True
-        for picking in self.filtered(lambda p: p.company_id.country_id.code == 'PT' and p.state == 'done'):
+        for picking in self.filtered(lambda p: p.company_id.account_fiscal_country_id.code == 'PT' and p.state == 'done'):
             violated_fields = set(vals).intersection(picking._get_integrity_hash_fields() + ['l10n_pt_stock_inalterable_hash', 'l10n_pt_stock_secure_sequence_number'])
             if picking.l10n_pt_stock_inalterable_hash and violated_fields:
                 raise UserError(_("You cannot edit the following fields: %s.", ', '.join(f['string'] for f in self.fields_get(violated_fields).values())))

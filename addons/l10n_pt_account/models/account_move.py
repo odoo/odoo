@@ -19,8 +19,7 @@ class AccountMove(models.Model):
 
     l10n_pt_account_document_number = fields.Char(string='Portuguese Document Number', compute='_compute_l10n_pt_account_document_number', store=True)
     l10n_pt_account_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_account_qr_code_str', store=True)
-    l10n_pt_account_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_account_inalterable_hash')
-    l10n_pt_account_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_account_inalterable_hash')
+    l10n_pt_account_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_account_inalterable_hash_short')
     l10n_pt_account_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_account_atcud', store=True)
     l10n_pt_account_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
 
@@ -36,15 +35,9 @@ class AccountMove(models.Model):
             move.l10n_pt_account_document_number = f"{L10N_PT_ACCOUNT_INVOICE_TYPE_MAP[move.move_type]} {re.sub(r'[^A-Za-z0-9]+', '', move.sequence_prefix)}/{move.sequence_number}"
 
     @api.depends('inalterable_hash')
-    def _compute_l10n_pt_account_inalterable_hash(self):
+    def _compute_l10n_pt_account_inalterable_hash_short(self):
         for move in self:
-            if move.inalterable_hash:
-                hash_version, hash_str = move.inalterable_hash.split("$")[1:]
-                move.l10n_pt_account_inalterable_hash_version = int(hash_version)
-                move.l10n_pt_account_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                move.l10n_pt_account_inalterable_hash_version = False
-                move.l10n_pt_account_inalterable_hash_short = False
+            move.l10n_pt_account_inalterable_hash_short = L10nPtHashingUtils._l10n_pt_get_short_hash(move.inalterable_hash)
 
     @api.depends(
         'sequence_number',
@@ -111,20 +104,12 @@ class AccountMove(models.Model):
             return res
 
         for move in self.filtered(lambda m: (
-                m.company_id.account_fiscal_country_id.code == "PT"
-                and m.move_type in L10N_PT_ACCOUNT_INVOICE_TYPE_MAP
-                and not m.l10n_pt_account_qr_code_str  # Skip if already computed
+            m.company_id.account_fiscal_country_id.code == "PT"
+            and m.move_type in L10N_PT_ACCOUNT_INVOICE_TYPE_MAP
+            and m.inalterable_hash
+            and not m.l10n_pt_account_qr_code_str  # Skip if already computed
         )):
-            if not move.inalterable_hash:
-                continue
-            company_vat_ok = move.company_id.vat and stdnum.pt.nif.is_valid(move.company_id.vat)
-            atcud_ok = move.l10n_pt_account_atcud
-
-            if not company_vat_ok or not atcud_ok:
-                error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
-                error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the journal's official series") if not atcud_ok else ""
-                raise UserError(error_msg)
+            L10nPtHashingUtils._l10n_pt_verify_qr_code_prerequisites(move.company_id, move.l10n_pt_account_atcud)
 
             company_vat = re.sub(r'\D', '', move.company_id.vat)
             partner_vat = re.sub(r'\D', '', move.partner_id.vat or '999999990')
@@ -259,16 +244,9 @@ class AccountMove(models.Model):
         ], limit=1)
 
     def _l10n_pt_account_sign_records_using_demo_key(self, previous_hash):
-        res = {}
-        if not previous_hash:
-            previous_move = self[0]._l10n_pt_account_get_last_record()
-            previous_hash = previous_move.inalterable_hash if previous_move else ""
-        for move in self:
-            previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-            message = move._l10n_pt_account_get_message_to_hash(previous_hash)
-            res[move.id] = L10nPtHashingUtils._l10n_pt_sign_using_demo_key(self.env, message)
-            previous_hash = res[move.id]
-        return res
+        return L10nPtHashingUtils._l10n_pt_sign_records_using_demo_key(
+            self, previous_hash, 'inalterable_hash', AccountMove._l10n_pt_account_get_last_record, AccountMove._l10n_pt_account_get_message_to_hash
+        )
 
     def _l10n_pt_account_verify_integrity(self, previous_hash, public_key_string):
         """

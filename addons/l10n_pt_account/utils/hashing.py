@@ -2,6 +2,7 @@ import base64
 import binascii
 import logging
 import requests
+import stdnum
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -17,7 +18,36 @@ class L10nPtHashingUtils:
     L10N_PT_SIGN_DEFAULT_ENDPOINT = 'http://l10n-pt.api.odoo.com/iap/l10n_pt'
 
     @staticmethod
-    def _l10n_pt_error(error_code):
+    def _l10n_pt_get_short_hash(inalterable_hash):
+        if not inalterable_hash:
+            return False
+        hash_str = inalterable_hash.split("$")[2]
+        return hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
+
+    @staticmethod
+    def _l10n_pt_verify_qr_code_prerequisites(company, atcud):
+        company_vat_ok = company.vat and stdnum.pt.nif.is_valid(company.vat)
+        if not company_vat_ok or not atcud:
+            error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
+            error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
+            error_msg += _("- The `ATCUD` is not defined. Please verify the operation type's official series") if not atcud else ""
+            raise UserError(error_msg)
+
+    @staticmethod
+    def _l10n_pt_sign_records_using_demo_key(records, previous_hash, hash_field, get_last_record_function, get_message_to_hash_function):
+        res = {}
+        if not previous_hash:
+            previous_move = get_last_record_function(records[0])
+            previous_hash = previous_move[hash_field] if previous_move else ""
+        for record in records:
+            previous_hash = previous_hash.split("$")[2] if previous_hash else ""
+            message = get_message_to_hash_function(record, previous_hash)
+            res[record.id] = L10nPtHashingUtils._l10n_pt_sign_using_demo_key(record.env, message)
+            previous_hash = res[record.id]
+        return res
+
+    @staticmethod
+    def _l10n_pt_get_iap_error(error_code):
         return {
             'error_db_unknown': _("Your database uuid does not exist. Please contact Odoo support."),
             'error_db_subscription_verification': _("An error has occurred when trying to verify your subscription. Please contact Odoo support."),
@@ -40,7 +70,7 @@ class L10nPtHashingUtils:
                 raise ConnectionError
             result = response.json().get('result')
             if result.get('error'):
-                raise Exception(L10nPtHashingUtils._l10n_pt_error(result['error']))
+                raise Exception(L10nPtHashingUtils._l10n_pt_get_iap_error(result['error']))
             for public_key_version, public_key_str in result.items():
                 res[int(public_key_version)] = public_key_str
         except ConnectionError as e:
@@ -99,7 +129,7 @@ class L10nPtHashingUtils:
                 raise ConnectionError
             result = response.json().get('result')
             if result.get('error'):
-                raise Exception(L10nPtHashingUtils._l10n_pt_error(result['error']))
+                raise Exception(L10nPtHashingUtils._l10n_pt_get_iap_error(result['error']))
             for record_id, record_info in result.items():
                 res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
         except ConnectionError as e:

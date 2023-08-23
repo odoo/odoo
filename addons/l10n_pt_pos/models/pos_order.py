@@ -11,12 +11,11 @@ from odoo.tools import float_repr, format_date
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    country_code = fields.Char(related='company_id.country_id.code', depends=['company_id.country_id'])
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', depends=['company_id.account_fiscal_country_id'])
     l10n_pt_pos_document_number = fields.Char(string='Portuguese Document Number', compute='_compute_l10n_pt_pos_document_number', store=True)
     l10n_pt_pos_inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     l10n_pt_pos_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_pos_qr_code_str', store=True)
-    l10n_pt_pos_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_pos_inalterable_hash_info')
-    l10n_pt_pos_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_pos_inalterable_hash_info')
+    l10n_pt_pos_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_pos_inalterable_hash_short')
     l10n_pt_pos_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_pos_atcud', store=True)
 
     @api.depends('name', 'company_id.account_fiscal_country_id.code')
@@ -31,21 +30,15 @@ class PosOrder(models.Model):
             order.l10n_pt_pos_document_number = f"pos_order {sequence_prefix}/{sequence_number}"
 
     @api.depends('l10n_pt_pos_inalterable_hash')
-    def _compute_l10n_pt_pos_inalterable_hash_info(self):
+    def _compute_l10n_pt_pos_inalterable_hash_short(self):
         for order in self:
-            if order.l10n_pt_pos_inalterable_hash:
-                hash_version, hash_str = order.l10n_pt_pos_inalterable_hash.split("$")[1:]
-                order.l10n_pt_pos_inalterable_hash_version = int(hash_version)
-                order.l10n_pt_pos_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                order.l10n_pt_stock_inalterable_hash_version = False
-                order.l10n_pt_pos_inalterable_hash_short = False
+            order.l10n_pt_pos_inalterable_hash_short = L10nPtHashingUtils._l10n_pt_get_short_hash(order.l10n_pt_pos_inalterable_hash)
 
     @api.depends('name', 'config_id.l10n_pt_pos_official_series_id.code', 'l10n_pt_pos_inalterable_hash')
     def _compute_l10n_pt_pos_atcud(self):
         for order in self:
             if (
-                order.company_id.country_id.code == 'PT'
+                order.company_id.account_fiscal_country_id.code == 'PT'
                 and order.config_id.l10n_pt_pos_official_series_id
                 and order.l10n_pt_pos_inalterable_hash
                 and not order.l10n_pt_pos_atcud
@@ -86,21 +79,11 @@ class PosOrder(models.Model):
             return res
 
         for order in self.filtered(lambda o: (
-            o.company_id.country_id.code == "PT"
+            o.company_id.account_fiscal_country_id.code == "PT"
+            and o.l10n_pt_pos_inalterable_hash
             and not o.l10n_pt_pos_qr_code_str  # Skip if already computed
         )):
-            if not order.l10n_pt_pos_inalterable_hash:
-                continue
-            company_vat_ok = order.company_id.vat and stdnum.pt.nif.is_valid(order.company_id.vat)
-            hash_ok = order.l10n_pt_pos_inalterable_hash
-            atcud_ok = order.l10n_pt_pos_atcud
-
-            if not company_vat_ok or not hash_ok or not atcud_ok:
-                error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
-                error_msg += _('- The `VAT` of your company should be defined and match the following format: PT123456789\n') if not company_vat_ok else ""
-                error_msg += _("- The `ATCUD` is not defined. Please verify the POS config's official series") if not atcud_ok else ""
-                error_msg += _("- The `hash` is not defined. You can contact the support.") if not hash_ok else ""
-                raise UserError(error_msg)
+            L10nPtHashingUtils._l10n_pt_verify_qr_code_prerequisites(order.company_id, order.l10n_pt_pos_atcud)
 
             company_vat = re.sub(r'\D', '', order.company_id.vat)
             partner_vat = re.sub(r'\D', '', order.partner_id.vat or '999999990')
@@ -134,7 +117,7 @@ class PosOrder(models.Model):
             order.l10n_pt_pos_qr_code_str = urllib.parse.quote_plus(qr_code_str)
 
     def _get_integrity_hash_fields(self):
-        if self.company_id.country_id.code != 'PT':
+        if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
         return ['date_order', 'create_date', 'amount_total', 'name']
 
@@ -145,7 +128,7 @@ class PosOrder(models.Model):
         return sequence_prefix, sequence_number
 
     def _hash_compute(self, previous_hash=None):
-        if self.company_id.country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
+        if self.company_id.account_fiscal_country_id.code != 'PT' or not self._context.get('l10n_pt_force_compute_signature'):
             return {}
         endpoint = self.env['ir.config_parameter'].sudo().get_param('l10n_pt_account.iap_endpoint', L10nPtHashingUtils.L10N_PT_SIGN_DEFAULT_ENDPOINT)
         if endpoint == 'demo':
@@ -178,20 +161,9 @@ class PosOrder(models.Model):
         ], order="id DESC", limit=1)
 
     def _l10n_pt_pos_sign_records_using_demo_key(self, previous_hash):
-        """
-        Technical requirements from the Portuguese tax authority can be found at page 13 of the following document:
-        https://info.portaldasfinancas.gov.pt/pt/docs/Portug_tax_system/Documents/Order_No_8632_2014_of_the_3rd_July.pdf
-        """
-        res = {}
-        for order in self:
-            if not previous_hash:
-                previous = order._l10n_pt_pos_get_last_record()
-                previous_hash = previous.l10n_pt_pos_inalterable_hash if previous else ""
-            previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-            message = order._l10n_pt_pos_get_message_to_hash(previous_hash)
-            res[order.id] = L10nPtHashingUtils._l10n_pt_sign_using_demo_key(self.env, message)
-            previous_hash = res[order.id]
-        return res
+        return L10nPtHashingUtils._l10n_pt_sign_records_using_demo_key(
+            self, previous_hash, 'l10n_pt_pos_inalterable_hash', PosOrder._l10n_pt_pos_get_last_record, PosOrder._l10n_pt_pos_get_message_to_hash
+        )
 
     def _l10n_pt_pos_verify_integrity(self, previous_hash, public_key_str):
         """
@@ -220,13 +192,14 @@ class PosOrder(models.Model):
             super(PosOrder, self.env['pos.order'].browse(order_id)).write({'l10n_pt_pos_inalterable_hash': l10n_pt_pos_inalterable_hash})
         return {
             "hash": orders[-1].l10n_pt_pos_inalterable_hash,
+            "hash_short": orders[-1].l10n_pt_pos_inalterable_hash_short,
             "qr_code_str": orders[-1].l10n_pt_pos_qr_code_str,
             "atcud": orders[-1].l10n_pt_pos_atcud,
         }
 
     @api.model
     def _l10n_pt_pos_cron_compute_missing_hashes(self):
-        companies = self.env['res.company'].search([]).filtered(lambda c: c.country_id.code == 'PT')
+        companies = self.env['res.company'].search([]).filtered(lambda c: c.account_fiscal_country_id.code == 'PT')
         for company in companies:
             self.l10n_pt_pos_compute_missing_hashes(company.id)
 
@@ -241,7 +214,7 @@ class PosOrder(models.Model):
         for order in self:
             violated_fields = set(vals).intersection(order._get_integrity_hash_fields() + ['l10n_pt_pos_inalterable_hash'])
             if (
-                order.company_id.country_id.code == 'PT'
+                order.company_id.account_fiscal_country_id.code == 'PT'
                 and violated_fields
                 and order.l10n_pt_pos_inalterable_hash
             ):
