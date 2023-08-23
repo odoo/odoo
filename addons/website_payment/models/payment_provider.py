@@ -16,5 +16,6 @@ class PaymentProvider(models.Model):
     def get_base_url(self):
         # Give priority to url_root to handle multi-website cases
         if request and request.httprequest.url_root:
-            return request.httprequest.url_root
+            url_root = request.httprequest.url_root.replace("\\", "")
+            return url_root
         return super().get_base_url()
