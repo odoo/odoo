@@ -735,18 +735,51 @@ class PosConfig(models.Model):
             """
             WITH pm AS (
                   SELECT product_id,
+<<<<<<< HEAD
                          MAX(write_date) date
+||||||| parent of 585a1c08a5d6 (temp)
+                         Max(write_date) date
+                    FROM stock_quant
+=======
+                         Max(write_date) date
+>>>>>>> 585a1c08a5d6 (temp)
                     FROM stock_move_line
                 GROUP BY product_id
+                ORDER BY date DESC
             )
                SELECT product_product.id
                  FROM %s
             LEFT JOIN pm ON product_product.id=pm.product_id
+<<<<<<< HEAD
                 WHERE %s
+||||||| parent of 585a1c08a5d6 (temp)
+                WHERE {where_clause}
+=======
+                WHERE {where_clause}
+<<<<<<< HEAD
+>>>>>>> 585a1c08a5d6 (temp)
              ORDER BY product_product__product_tmpl_id.is_favorite DESC,
+<<<<<<< HEAD
                       CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
                       pm.date DESC NULLS LAST,
                       product_product.write_date DESC
+||||||| parent of 585a1c08a5d6 (temp)
+                      product_product__product_tmpl_id.detailed_type DESC,
+                      COALESCE(pm.date, product_product.write_date) DESC
+=======
+                      product_product__product_tmpl_id.detailed_type DESC,
+                      COALESCE(pm.date, product_product.write_date) DESC
+||||||| parent of f7bb729c054e (temp)
+             ORDER BY product_product__product_tmpl_id.priority DESC,
+                      product_product__product_tmpl_id.detailed_type DESC,
+                      COALESCE(pm.date, product_product.write_date) DESC
+=======
+                ORDER BY product_product__product_tmpl_id.priority DESC,
+                    case when product_product__product_tmpl_id.detailed_type = 'service' then 1 else 0 end DESC,
+                    pm.date DESC NULLS LAST,
+                    product_product.write_date
+>>>>>>> f7bb729c054e (temp)
+>>>>>>> 585a1c08a5d6 (temp)
                 LIMIT %s
             """,
             query.from_clause,
