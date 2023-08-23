@@ -515,11 +515,13 @@ class StockMove(models.Model):
                     cost = -1 * cost
                     self.with_company(self.company_id)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
             elif self._is_dropshipped_returned():
-                if cost > 0:
+                if cost > 0 and self.location_dest_id._should_be_valued():
                     self.with_company(self.company_id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
+                elif cost > 0:
+                    self.with_company(self.company_id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
                 else:
                     cost = -1 * cost
-                    self.with_company(self.company_id)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
+                    self.with_company(self.company_id)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts

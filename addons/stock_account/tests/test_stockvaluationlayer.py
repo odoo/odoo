@@ -1076,3 +1076,89 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
         self.assertEqual(len(anglo_lines), 2)
         self.assertEqual(abs(anglo_lines[0].balance), 10)
         self.assertEqual(abs(anglo_lines[1].balance), 10)
+
+    def test_dropship_return_accounts_1(self):
+        """
+        When returning a dropshipped move, make sure the correct accounts are used
+        """
+        # pylint: disable=bad-whitespace
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        move1 = self._make_dropship_move(self.product1, 2, unit_cost=10)
+        move2 = self._make_return(move1, 2)
+
+        # First: Input -> Valuation
+        # Second: Valuation -> Output
+        origin_svls = move1.stock_valuation_layer_ids.sorted('quantity', reverse=True)
+        # First: Output -> Valuation
+        # Second: Valuation -> Input
+        return_svls = move2.stock_valuation_layer_ids.sorted('quantity', reverse=True)
+        self.assertEqual(len(origin_svls), 2)
+        self.assertEqual(len(return_svls), 2)
+
+        acc_in, acc_out, acc_valuation = self.stock_input_account, self.stock_output_account, self.stock_valuation_account
+
+        # Dropshipping should be: Input -> Output
+        self.assertRecordValues(origin_svls[0].account_move_id.line_ids, [
+            {'account_id': acc_in.id,        'debit': 0,  'credit': 20},
+            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
+        ])
+        self.assertRecordValues(origin_svls[1].account_move_id.line_ids, [
+            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
+            {'account_id': acc_out.id,       'debit': 20, 'credit': 0},
+        ])
+        # Return should be: Output -> Input
+        self.assertRecordValues(return_svls[0].account_move_id.line_ids, [
+            {'account_id': acc_out.id,       'debit': 0,  'credit': 20},
+            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
+        ])
+        self.assertRecordValues(return_svls[1].account_move_id.line_ids, [
+            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
+            {'account_id': acc_in.id,        'debit': 20, 'credit': 0},
+        ])
+
+    def test_dropship_return_accounts_2(self):
+        """
+        When returning a dropshipped move, make sure the correct accounts are used
+        """
+        # pylint: disable=bad-whitespace
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        move1 = self._make_dropship_move(self.product1, 2, unit_cost=10)
+
+        # return to WH/Stock
+        stock_return_picking = Form(self.env['stock.return.picking']\
+            .with_context(active_ids=[move1.picking_id.id], active_id=move1.picking_id.id, active_model='stock.picking'))
+        stock_return_picking = stock_return_picking.save()
+        stock_return_picking.product_return_moves.quantity = 2
+        stock_return_picking.location_id = self.stock_location
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 2
+        return_pick._action_done()
+        move2 = return_pick.move_lines
+
+        # First: Input -> Valuation
+        # Second: Valuation -> Output
+        origin_svls = move1.stock_valuation_layer_ids.sorted('quantity', reverse=True)
+        # Only one: Output -> Valuation
+        return_svl = move2.stock_valuation_layer_ids
+        self.assertEqual(len(origin_svls), 2)
+        self.assertEqual(len(return_svl), 1)
+
+        acc_in, acc_out, acc_valuation = self.stock_input_account, self.stock_output_account, self.stock_valuation_account
+
+        # Dropshipping should be: Input -> Output
+        self.assertRecordValues(origin_svls[0].account_move_id.line_ids, [
+            {'account_id': acc_in.id,        'debit': 0,  'credit': 20},
+            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
+        ])
+        self.assertRecordValues(origin_svls[1].account_move_id.line_ids, [
+            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
+            {'account_id': acc_out.id,       'debit': 20, 'credit': 0},
+        ])
+        # Return should be: Output -> Valuation
+        self.assertRecordValues(return_svl.account_move_id.line_ids, [
+            {'account_id': acc_out.id,       'debit': 0,  'credit': 20},
+            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
+        ])
