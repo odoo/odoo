@@ -229,7 +229,7 @@ class PosGlobalState extends PosModel {
         this.db.set_uuid(this.config.uuid);
     }
     addPartners(partners) {
-        this._enrichPartners(this.partners, this.students);
+        this._enrichPartners(partners, this.students);
         return this.db.add_partners(partners);
     }
     _enrichPartners(partners, students) {
