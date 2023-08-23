@@ -59,7 +59,15 @@ class ReportSaleDetails(models.AbstractModel):
 
         orders = self.env['pos.order'].search(domain)
 
-        user_currency = self.env.company.currency_id
+        if config_ids:
+            config_currencies = self.env['pos.config'].search([('id', 'in', config_ids)]).mapped('currency_id')
+        else:
+            config_currencies = self.env['pos.session'].search([('id', 'in', session_ids)]).mapped('config_id.currency_id')
+        # If all the pos.config have the same currency, we can use it, else we use the company currency
+        if all(i == config_currencies.ids[0] for i in config_currencies.ids):
+            user_currency = config_currencies[0]
+        else:
+            user_currency = self.env.company.currency_id
 
         total = 0.0
         products_sold = {}
