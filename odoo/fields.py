@@ -4159,7 +4159,8 @@ class _RelationalMulti(_Relational):
             Comodel._active_name
             and self.context.get('active_test', record.env.context.get('active_test', True))
         ):
-            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
+            accessible_corecord_ids = set(corecords.sudo().filtered(Comodel._active_name).ids)
+            corecords = corecords.filtered(lambda record: record.id in accessible_corecord_ids).with_prefetch(prefetch_ids)
         return corecords
 
     def convert_to_record_multi(self, values, records):

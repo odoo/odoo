@@ -7,5 +7,11 @@
             <field name="domain_force">[('user_id', '=', user.id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
         </record>
+
+        <record id="ir_rule_test_new_api_m2m_access_rights_model1" model="ir.rule">
+            <field name="name">ir_rule_test_new_api_m2m_access_rights_model1</field>
+            <field name="model_id" ref="model_test_new_api_m2m_access_rights_model1"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
     </data>
 </odoo>

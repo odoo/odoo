@@ -1828,3 +1828,24 @@ class AnyTag(models.Model):
 
     name = fields.Char()
     child_ids = fields.Many2many('test_new_api.any.child')
+
+
+class M2mAccessRightsModel1(models.Model):
+    _name = 'test_new_api.m2m_access_rights_model1'
+    _description = "Test Company Access Rights, 1st model"
+    _check_company_auto = True
+
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one(comodel_name='res.company', required=True)
+
+
+class M2mAccessRightsModel2(models.Model):
+    _name = 'test_new_api.m2m_access_rights_model2'
+    _description = "Test Company Access Rights, 2th model"
+
+    m2m_ids = fields.Many2many(
+        comodel_name='test_new_api.m2m_access_rights_model1',
+        relation='m2m_access_rights_rel',
+        column1='parent_id',
+        column2='child_id',
+    )
