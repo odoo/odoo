@@ -48,6 +48,7 @@ import { Component, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/views/sample_server";
 import { pick } from "@web/core/utils/objects";
 import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -9788,6 +9789,69 @@ QUnit.module("Views", (hooks) => {
             "read",
         ]);
     });
+
+    QUnit.test(
+        "drag & drop records grouped by date with progressbar with aggregates",
+        async (assert) => {
+            serverData.models.partner.records[0].date = "2010-11-30";
+            serverData.models.partner.records[1].date = "2010-11-30";
+            serverData.models.partner.records[2].date = "2010-10-30";
+            serverData.models.partner.records[3].date = "2010-10-30";
+
+            // Usually kanban views grouped by a date, cannot drag and drop.
+            // There are some overrides that allow the drag and drop of dates (CRM forecast for instance).
+            // This patch is done to simulate these overrides.
+            patchWithCleanup(KanbanRenderer.prototype, {
+                isMovableField() {
+                    return true;
+                },
+            });
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban>
+                        <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'  sum_field="int_field"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="int_field"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                groupBy: ["date:month"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
+            });
+
+            assert.deepEqual(getCounters(), ["13", "19"]);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.deepEqual(getCounters(), ["-4", "36"]);
+
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "write",
+                "read_progress_bar",
+                "web_read_group",
+                "read",
+                "/web/dataset/resequence",
+                "read",
+            ]);
+        }
+    );
 
     QUnit.test("progress bar subgroup count recompute", async (assert) => {
         await makeView({
