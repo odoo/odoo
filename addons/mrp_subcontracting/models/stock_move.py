@@ -203,10 +203,11 @@ class StockMove(models.Model):
     def _action_cancel(self):
         for move in self:
             if move.is_subcontract:
-                active_production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
-                moves = self.env.context.get('moves_todo')
-                if not moves or active_production not in moves.move_orig_ids.production_id:
-                    active_production.with_context(skip_activity=True).action_cancel()
+                active_productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
+                moves_todo = self.env.context.get('moves_todo')
+                not_todo_productions = active_productions.filtered(lambda p: p not in moves_todo.move_orig_ids.production_id) if moves_todo else active_productions
+                if not_todo_productions:
+                    not_todo_productions.with_context(skip_activity=True).action_cancel()
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
