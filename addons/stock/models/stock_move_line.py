@@ -83,7 +83,7 @@ class StockMoveLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
-    quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
+    quant_id = fields.Many2one('stock.quant', "Pick From", store=True)  # Dummy field for the detailed operation view
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
