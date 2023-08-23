@@ -171,6 +171,7 @@ class AccountMoveSend(models.Model):
                 'name': attachment.name,
                 'mimetype': attachment.mimetype,
                 'placeholder': False,
+                'protect_from_deletion': True,
             }
             for attachment in self._get_invoice_extra_attachments(move)
         ]
@@ -197,7 +198,13 @@ class AccountMoveSend(models.Model):
 
     @api.model
     def _get_email_attachment_ids_from_attachment_data(self, mail_attachments_widget):
-        return [x['id'] for x in mail_attachments_widget if not x.get('placeholder')]
+        to_exclude = set(x['name'] for x in mail_attachments_widget if x.get('skip'))
+        return [
+            x['id']
+            for x in mail_attachments_widget
+            if not x.get('placeholder')
+            and x['name'] not in to_exclude
+        ]
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
