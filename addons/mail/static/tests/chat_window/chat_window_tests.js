@@ -875,7 +875,7 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         views: [[false, "form"]],
     });
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
+    await contains(".o-mail-Composer-input", 1, { value: "XDU for the win !" });
 });
 
 QUnit.test(
@@ -1132,9 +1132,9 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
         await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
-        const expand = await click(".o-mail-Message [title='Expand']");
+        await click(".o-mail-Message [title='Expand']");
         await contains(".o-mail-Message-moreMenu.dropdown-menu");
-        expand.focus(); // necessary otherwise focus is in composer input
+        document.querySelector(".o-mail-Message [title='Expand']").focus(); // necessary otherwise focus is in composer input
 
         triggerHotkey("ArrowDown");
         await contains(".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
@@ -1158,9 +1158,9 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        const expand = await click(".o-mail-Message [title='Expand']");
+        await click(".o-mail-Message [title='Expand']");
         await contains(".o-mail-Message-moreMenu.dropdown-menu");
-        expand.focus(); // necessary otherwise focus is in composer input
+        document.querySelector(".o-mail-Message [title='Expand']").focus(); // necessary otherwise focus is in composer input
         triggerHotkey("Escape");
         await contains(".o-mail-Message-moreMenu.dropdown-menu", 0);
         await contains(".o-mail-ChatWindow");

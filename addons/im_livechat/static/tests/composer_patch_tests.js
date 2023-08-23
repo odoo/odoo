@@ -139,15 +139,10 @@ QUnit.test("use a canned response", async (assert) => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? ",
-        "canned response + additional whitespace afterwards"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? " });
 });
 
 QUnit.test("use a canned response some text", async (assert) => {
@@ -168,21 +163,15 @@ QUnit.test("use a canned response some text", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestion", 0);
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "bluhbluh Hello! How are you? ",
-        "previous content + canned response substitution + additional whitespace afterwards"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "bluhbluh Hello! How are you? " });
 });
 
-QUnit.test("add an emoji after a canned response", async (assert) => {
+QUnit.test("add an emoji after a canned response", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
@@ -200,21 +189,11 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? ",
-        "previous content + canned response substitution + additional whitespace afterwards"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😊)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "Hello! How are you? 😊"
-    );
+    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? 😊" });
 });

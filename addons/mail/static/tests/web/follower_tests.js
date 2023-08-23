@@ -190,7 +190,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
     await contains(".o-mail-Followers-counter:contains(0)");
-    assert.strictEqual($(".o_field_char[name=name] input").val(), "some value");
+    await contains(".o_field_char[name=name] input", 1, { value: "some value" });
     await contains(".o_tag:contains(General)");
 });
 

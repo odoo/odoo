@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { selectDropdownItem } from "@web/../tests/helpers/utils";
-import testUtils from "@web/../tests/legacy/helpers/test_utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
 
@@ -61,24 +60,13 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
         ".modal-content .o_form_view",
         "there should be one modal opened to edit the empty email"
     );
-    assert.strictEqual(
-        $(".modal-content .o_form_view .o_input#name_0").val(),
-        "silver",
-        "the opened modal in edit mode should be a form view dialog with the res.partner 14"
-    );
+    await contains(".modal-content .o_form_view .o_input#name_0", 1, { value: "silver" });
     assert.containsOnce($, ".modal-content .o_form_view .o_input#email_0");
 
     // set the email and save the modal (will rerender the form view)
-    await testUtils.fields.editInput(
-        $(".modal-content .o_form_view .o_input#email_0"),
-        "coucou@petite.perruche"
-    );
-    await testUtils.dom.click($(".modal-content .o_form_button_save"));
-    assert.containsN(
-        $,
-        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0',
-        2
-    );
+    await insertText(".modal-content .o_form_view .o_input#email_0", "coucou@petite.perruche");
+    await click(".modal-content .o_form_button_save");
+    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', 2);
     const firstTag = $('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0')[0];
     assert.strictEqual(
         firstTag.querySelector(".o_badge_text").innerText,

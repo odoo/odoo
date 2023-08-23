@@ -116,7 +116,7 @@ QUnit.test("Searching for a GIF", async () => {
     await contains(".o-discuss-Gif", 2);
 });
 
-QUnit.test("Open a GIF category trigger the search for the category", async (assert) => {
+QUnit.test("Open a GIF category trigger the search for the category", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start({
@@ -133,10 +133,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async (ass
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", 2);
-    assert.strictEqual(
-        document.querySelector("input[placeholder='Search for a gif']").value,
-        "cry"
-    );
+    await contains("input[placeholder='Search for a gif']", 1, { value: "cry" });
 });
 
 QUnit.test("Reopen GIF category list when going back", async () => {

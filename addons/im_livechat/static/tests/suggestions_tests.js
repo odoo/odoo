@@ -25,7 +25,6 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
     await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", ")");
     await contains(".o-mail-Composer-suggestion", 0);
-    await insertText(".o-mail-Composer-input", " ");
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", " :");
     await contains(".o-mail-Composer-suggestion:contains(hello)");
 });

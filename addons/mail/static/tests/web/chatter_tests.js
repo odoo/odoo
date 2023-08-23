@@ -164,7 +164,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
 });
 
-QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
+QUnit.test("Textarea content is kept when switching from aside to bottom", async () => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -175,7 +175,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "Hello world !");
+    await contains(".o-mail-Composer-input", 1, { value: "Hello world !" });
 });
 
 QUnit.test("Composer type is kept when switching from aside to bottom", async (assert) => {

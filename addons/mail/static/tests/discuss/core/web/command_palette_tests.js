@@ -82,11 +82,9 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     await contains(
         ".o_command_category:contains('Mentions') .o_command:contains('Mitchell Admin and Mario')"
     );
+    await contains(".o_command_category:not(:contains('Mentions')) .o_command:contains('Mario')");
     await contains(
-        $(".o_command_category:not(:contains('Mentions')) .o_command:contains('Mario')")
-    );
-    await contains(
-        $(".o_command_category:not(:contains('Mentions')) .o_command:contains('Mitchell Admin')")
+        ".o_command_category:not(:contains('Mentions')) .o_command:contains('Mitchell Admin')"
     );
     await contains(".o_command.focused:contains('Mitchell Admin and Mario')");
     await click(".o_command.focused");
