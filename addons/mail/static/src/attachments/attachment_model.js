@@ -133,9 +133,9 @@ export class Attachment {
         return assignDefined(
             {},
             {
-                access_token: this.accessToken,
+                access_token: this.accessToken || undefined,
                 filename: this.name || undefined,
-                unique: this.checksum,
+                unique: this.checksum || undefined,
             }
         );
     }
