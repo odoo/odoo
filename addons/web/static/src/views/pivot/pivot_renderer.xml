@@ -27,7 +27,7 @@
                             <t t-set="cell" t-value="row"/>
                         </t>
                         <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
-                            <td class="o_pivot_cell_value text-end bg-100" t-att-class="{
+                            <td class="o_pivot_cell_value bg-100" t-att-class="{
                                     o_empty: cell.value === undefined,
                                     'cursor-pointer': cell.value !== undefined,
                                     'fw-bold': cell.isBold,
@@ -83,9 +83,8 @@
                     onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
                 />
             </t>
-            <span t-if="l10n.direction === 'rtl'" t-esc="cell.title"/>
             <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
-            <span t-if="l10n.direction === 'ltr'" t-esc="cell.title"/>
+            <span t-esc="cell.title"/>
         </th>
     </t>
 
