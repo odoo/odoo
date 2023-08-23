@@ -7440,6 +7440,57 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_view_nocontent");
     });
 
+    QUnit.test("quick create record in grouped kanban with sample data", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban sample="1" on_create="quick_create">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, { kwargs, method }, performRpc) {
+                const result = await performRpc(...arguments);
+                if (method === "web_read_group") {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    result.groups.forEach((group) => {
+                        group[`${kwargs.groupby[0]}_count`] = 0;
+                    });
+                }
+                return result;
+            },
+            noContentHelp: "No content helper",
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2, "there should be two columns");
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_view_nocontent");
+        assert.containsN(
+            target,
+            ".o_kanban_record",
+            16,
+            "there should be 8 sample records by column"
+        );
+
+        await createRecord();
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.containsNone(target, ".o_kanban_record");
+        assert.containsNone(target, ".o_kanban_load_more");
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(
+            target.querySelector(".o_kanban_group:first-child"),
+            ".o_kanban_quick_create"
+        );
+    });
+
     QUnit.test("empty grouped kanban with sample data and cancel quick create", async (assert) => {
         await makeView({
             type: "kanban",
@@ -13767,18 +13818,20 @@ QUnit.module("Views", (hooks) => {
         assert.notEqual(previousScrollTop, 0, "Should not have the scrollTop value at 0");
     });
 
-    QUnit.test("Kanban: no reset of the groupby when a non-empty column is deleted", async (assert) => {
-        let dialogProps;
+    QUnit.test(
+        "Kanban: no reset of the groupby when a non-empty column is deleted",
+        async (assert) => {
+            let dialogProps;
 
-        patchDialog((_cls, props) => {
-            dialogProps = props;
-        });
+            patchDialog((_cls, props) => {
+                dialogProps = props;
+            });
 
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch: `
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <kanban default_group_by="product_id">
                     <field name="foo"/>
                     <field name="product_id"/>
@@ -13789,54 +13842,55 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            searchViewArch: `
+                searchViewArch: `
             <search>
                 <filter name="groupby_category" string="Category" context="{'group_by': 'category_ids'}"/>
             </search>
             `,
-        });
-        // validate presence of the search arch info
-        await toggleSearchBarMenu(target);
-        assert.containsOnce(target, ".o_group_by_menu span.o_menu_item");
-        // select the groupby:category_ids filter
-        await click(target.querySelector('.o_group_by_menu span.o_menu_item'));
-        // check the initial rendering
-        assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
-        // check availability of delete action in kanban header's config dropdown
-        await toggleColumnActions(2);
-        assert.containsOnce(
-            getColumn(2),
-            ".o_column_delete",
-            "should be able to delete the column"
-        );
-        // delete second column (first cancel the confirm request, then confirm)
-        let clickColumnAction = await toggleColumnActions(1);
-        await clickColumnAction("Delete");
-        dialogProps.cancel();
-        await nextTick();
+            });
+            // validate presence of the search arch info
+            await toggleSearchBarMenu(target);
+            assert.containsOnce(target, ".o_group_by_menu span.o_menu_item");
+            // select the groupby:category_ids filter
+            await click(target.querySelector(".o_group_by_menu span.o_menu_item"));
+            // check the initial rendering
+            assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
+            // check availability of delete action in kanban header's config dropdown
+            await toggleColumnActions(2);
+            assert.containsOnce(
+                getColumn(2),
+                ".o_column_delete",
+                "should be able to delete the column"
+            );
+            // delete second column (first cancel the confirm request, then confirm)
+            let clickColumnAction = await toggleColumnActions(1);
+            await clickColumnAction("Delete");
+            dialogProps.cancel();
+            await nextTick();
 
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
-            "gold",
-            'column [6, "gold"] should still be there'
-        );
+            assert.strictEqual(
+                getColumn(1).querySelector(".o_column_title").innerText,
+                "gold",
+                'column [6, "gold"] should still be there'
+            );
 
-        dialogProps.confirm();
-        await nextTick();
+            dialogProps.confirm();
+            await nextTick();
 
-        clickColumnAction = await toggleColumnActions(1);
-        await clickColumnAction("Delete");
+            clickColumnAction = await toggleColumnActions(1);
+            await clickColumnAction("Delete");
 
-        assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
-            "silver",
-            'last column should now be [7, "silver"]'
-        );
-        assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
-        assert.strictEqual(
-            getColumn(0).querySelector(".o_column_title").innerText,
-            "None\n3",
-            "first column should have no id (Undefined column)"
-        );
-    });
+            assert.strictEqual(
+                getColumn(1).querySelector(".o_column_title").innerText,
+                "silver",
+                'last column should now be [7, "silver"]'
+            );
+            assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
+            assert.strictEqual(
+                getColumn(0).querySelector(".o_column_title").innerText,
+                "None\n3",
+                "first column should have no id (Undefined column)"
+            );
+        }
+    );
 });
