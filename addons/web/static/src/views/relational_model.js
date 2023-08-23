@@ -2385,6 +2385,7 @@ export class DynamicGroupList extends DynamicList {
             count: 0,
             value: id,
             displayName: groupName,
+            __rawValue: [id, groupName],
             aggregates: {},
             groupByField: this.groupByField,
             groupDomain: Domain.and([this.domain, [[this.groupByField.name, "=", id]]]).toList(),
