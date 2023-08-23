@@ -146,8 +146,9 @@ QUnit.test("chat window: basic rendering", async (assert) => {
         "There are no messages in this conversation."
     );
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", 9);
+    await contains(".o-mail-ChatWindow-command", 10);
     await contains("[title='Pinned Messages']");
+    await contains("[title='Show Attachments']");
     await contains("[title='Add Users']");
     await contains("[title='Show Member List']");
     await contains("[title='Show Call Settings']");

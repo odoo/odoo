@@ -76,6 +76,7 @@ class IrAttachment(models.Model):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         return [{
             'checksum': attachment.checksum,
+            'create_date': attachment.create_date,
             'id': attachment.id,
             'filename': attachment.name,
             'name': attachment.name,

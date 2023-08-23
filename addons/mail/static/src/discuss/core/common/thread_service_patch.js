@@ -27,4 +27,24 @@ patch(ThreadService.prototype, {
         }
         return super.post(...arguments);
     },
+
+    async fetchMoreAttachments(thread, limit = 30) {
+        if (thread.isLoadingAttachments || thread.areAttachmentsLoaded) {
+            return;
+        }
+        thread.isLoadingAttachments = true;
+        try {
+            const rawAttachments = await this.rpc("/discuss/channel/attachments", {
+                before: Math.min(...thread.attachments.map(({ id }) => id)),
+                channel_id: thread.id,
+                limit,
+            });
+            const attachments = rawAttachments.map((a) => this.store.Attachment.insert(a));
+            if (attachments.length < limit) {
+                thread.areAttachmentsLoaded = true;
+            }
+        } finally {
+            thread.isLoadingAttachments = false;
+        }
+    },
 });

@@ -22,6 +22,7 @@ patch(MockServer.prototype, {
         const attachments = this.mockRead("ir.attachment", [ids]);
         return attachments.map((attachment) => {
             const res = {
+                create_date: attachment.create_date,
                 checksum: attachment.checksum,
                 filename: attachment.name,
                 id: attachment.id,

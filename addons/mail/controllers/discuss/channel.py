@@ -81,3 +81,21 @@ class ChannelController(http.Controller):
     def discuss_channel_notify_typing(self, channel_id, is_typing):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         channel_member_sudo._notify_typing(is_typing)
+
+    @http.route("/discuss/channel/attachments", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def load_attachments(self, channel_id, limit=30, before=None):
+        """Load attachments of a channel. If before is set, load attachments
+        older than the given id.
+        :param channel_id: id of the channel
+        :param limit: maximum number of attachments to return
+        :param before: id of the attachment from which to load older attachments
+        """
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=channel_id)
+        domain = [
+            ["res_id", "=", channel_id],
+            ["res_model", "=", "discuss.channel"],
+        ]
+        if before:
+            domain.append(["id", "<", before])
+        return channel_member_sudo.env["ir.attachment"].search(domain, limit=limit, order="id DESC")._attachment_format()

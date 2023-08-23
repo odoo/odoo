@@ -204,6 +204,10 @@ export class Thread extends Record {
         return ["channel", "group"].includes(this.type);
     }
 
+    get hasAttachmentPanel() {
+        return this.model === "discuss.channel";
+    }
+
     get isChatChannel() {
         return ["chat", "group"].includes(this.type);
     }
