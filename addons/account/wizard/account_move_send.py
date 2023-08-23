@@ -432,7 +432,7 @@ class AccountMoveSend(models.Model):
             # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
             # to 'mail_attachments_widget'.
             attachment_ids = list(set(self._get_email_attachment_ids_from_attachment_data(
-                self.mail_attachments_widget + self._get_invoice_extra_attachments_data(self.move_ids)
+                (self.mail_attachments_widget or []) + self._get_invoice_extra_attachments_data(self.move_ids)
             )))
             return {
                 'body': self.mail_body,
