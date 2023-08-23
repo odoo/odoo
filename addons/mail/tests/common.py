@@ -1241,6 +1241,10 @@ class MailCommon(common.TransactionCase, MailCase):
             'name': 'Company 2',
         })
         cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+        cls.company_3 = cls.env['res.company'].create({
+            'email': 'company_3@test.example.com',
+            'name': 'Company 3',
+        })
 
         cls.user_employee_c2 = mail_new_test_user(
             cls.env, login='employee_c2',
