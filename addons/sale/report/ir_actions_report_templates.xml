@@ -151,18 +151,38 @@
                     </t>
                 </tbody>
             </table>
-            <div class="clearfix" name="so_total_summary">
-                <div id="total" class="row" name="total">
-                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="table table-sm table-borderless">
-                            <!-- Tax totals -->
-                            <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                            <t t-call="sale.document_tax_totals"/>
-                        </table>
+
+            <div class="d-flex justify-content-between">
+                <div>
+                    <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="doc.company_id.qr_code_sale and doc.state == 'sale'">
+                        <div class="qrcode me-3" id="qrcode_image">
+                            <t t-set="qr_code_url" t-value="doc._generate_qr_code(silent_errors=True)"/>
+                            <p t-if="qr_code_url" class="position-relative mb-0">
+                                <img t-att-src="qr_code_url"/>
+                                <img src="/sale/static/src/img/Odoo_logo_O.svg"
+                                     id="qrcode_odoo_logo"
+                                     class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                />
+                            </p>
+                        </div>
+                        <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
+                            <p>Scan this QR Code to<br/>pay with your mobile</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row" name="total">
+                        <div t-attf-class="ms-auto">
+                            <table class="table table-sm table-borderless">
+                                <!-- Tax totals -->
+                                <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                <t t-call="#{doc._get_name_tax_totals_view()}"/>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="oe_structure"></div>
 
             <div t-if="not doc.signature" class="oe_structure"></div>
             <div t-else="" class="mt-4 ml64 mr4" name="signature">

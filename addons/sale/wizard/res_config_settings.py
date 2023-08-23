@@ -57,6 +57,8 @@ class ResConfigSettings(models.TransientModel):
     portal_confirmation_pay = fields.Boolean(
         related='company_id.portal_confirmation_pay',
         readonly=False)
+    qr_code_sale = fields.Boolean(string='Display QR-code', related='company_id.qr_code_sale', readonly=False)
+
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

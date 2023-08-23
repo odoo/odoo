@@ -109,6 +109,9 @@
                         <setting id="proforma_configuration" help="Allows you to send Pro-Forma Invoice to your customers">
                             <field name="group_proforma_sales"/>
                         </setting>
+                        <setting id="qr_code_report" title="Add a QR-code to your sale order print so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your sale order print">
+                            <field name="qr_code_sale" class="oe_inline"/>
+                        </setting>
                     </block>
                     <block title="Shipping" name="sale_shipping_setting_container">
                         <setting id="delivery" help="Compute shipping costs on orders">
