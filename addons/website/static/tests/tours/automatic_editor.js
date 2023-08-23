@@ -80,10 +80,10 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         trigger: 'button[name="button_choose_theme"]'
     },
     {
-        content: "Check that the editor is loaded",
-        trigger: 'iframe body.editor_enable',
+        content: "Check that the homepage is loaded",
+        trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
+        extra_trigger: ".o_menu_systray .o_user_menu",
         timeout: 30000,
-        run: () => null, // it's a check
+        isCheck: true,
     },
-    ...wTourUtils.clickOnSave(),
 ]);

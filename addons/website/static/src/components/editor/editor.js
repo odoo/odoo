@@ -86,7 +86,6 @@ export class WebsiteEditorComponent extends Component {
         }
         this.wysiwygOptions.invalidateSnippetCache = false;
         this.websiteService.unblockPreview();
-        this.websiteService.hideLoader();
     }
     /**
      * Prepares the editor for reload. Copies the widget element tree

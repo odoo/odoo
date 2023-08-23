@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import wTourUtils from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('configurator_flow', {
     test: true,
@@ -72,12 +71,11 @@ registry.category("web_tour.tours").add('configurator_flow', {
         trigger: '.o_website_loader_container',
         run: function () {}, // it's a check
     }, {
-        content: "Wait untill the configurator is finished",
-        trigger: '#oe_snippets.o_loaded',
+        content: "Wait until the configurator is finished",
+        trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
-    },
-    ...wTourUtils.clickOnSave(),
-    {
+        isCheck: true,
+    }, {
         content: "check menu and footer links are correct",
         trigger: 'body:not(.editor_enable)', // edit mode left
         run: function () {

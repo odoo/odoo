@@ -13,7 +13,7 @@ const clickOnImgAndWaitForLoad = [
         run: () => null,
     },
 ];
-const enterEditModeOfTestProduct = [
+const enterEditModeOfTestProduct = () => [
     {
         content: "Click on the product anchor",
         trigger: "iframe a:contains('Test Remove Image')",
@@ -39,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour("add_and_remove_main_product_image_no_vari
     url: "/shop?search=Test Remove Image",
     test: true,
 }, () => [
-    ...enterEditModeOfTestProduct,
+    ...enterEditModeOfTestProduct(),
     {
         content: "Double click on the product image",
         trigger: "iframe #o-carousel-product img[alt='Test Remove Image']",
@@ -60,7 +60,7 @@ wTourUtils.registerWebsitePreviewTour("remove_main_product_image_with_variant", 
     url: "/shop?search=Test Remove Image",
     test: true,
 }, () => [
-    ...enterEditModeOfTestProduct,
+    ...enterEditModeOfTestProduct(),
     ...clickOnImgAndWaitForLoad,
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),

@@ -404,8 +404,8 @@ class IrModuleModule(models.Model):
         if active_todo:
             result = active_todo.action_launch()
         else:
-            result = website.button_go_website(mode_edit=True)
-        if result.get('tag') == 'website_preview' and result.get('context', {}).get('params', {}).get('enable_editor'):
+            result = website.button_go_website()
+        if result.get('tag') == 'website_preview' and result.get('context', {}).get('params'):
             result['context']['params']['with_loader'] = True
         return result
 
