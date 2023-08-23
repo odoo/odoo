@@ -256,7 +256,7 @@ QUnit.test("sidebar: open pinned channel", async (assert) => {
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel:contains(General)");
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    assert.strictEqual($(".o-mail-Discuss-threadName").val(), "General");
+    await contains(".o-mail-Discuss-threadName", 1, { value: "General" });
 });
 
 QUnit.test("sidebar: open channel and leave it", async (assert) => {
@@ -286,10 +286,10 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
     await click(".o-mail-DiscussSidebarChannel:contains(General) .btn[title='Leave this channel']");
     assert.verifySteps(["action_unfollow"]);
     await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
-    assert.notOk($(".o-mail-Discuss-threadName")?.val() === "General");
+    await contains(".o-mail-Discuss-threadName", 0, { value: "General" });
 });
 
-QUnit.test("sidebar: unpin channel from bus", async (assert) => {
+QUnit.test("sidebar: unpin channel from bus", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
@@ -298,13 +298,13 @@ QUnit.test("sidebar: unpin channel from bus", async (assert) => {
 
     await click(".o-mail-DiscussSidebarChannel:contains(General)");
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    assert.strictEqual($(".o-mail-Discuss-threadName").val(), "General");
+    await contains(".o-mail-Discuss-threadName", 1, { value: "General" });
 
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
     await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
-    assert.notOk($(".o-mail-Discuss-threadName")?.val() === "General");
+    await contains(".o-mail-Discuss-threadName", 0, { value: "General" });
 });
 
 QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (assert) => {

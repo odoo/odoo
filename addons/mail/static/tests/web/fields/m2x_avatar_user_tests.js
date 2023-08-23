@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 import {
     click,
     patchWithCleanup,
@@ -125,7 +125,7 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Mario");
+        await contains(".o_field_many2one_avatar_user input", 1, { value: "Mario" });
 
         triggerHotkey("control+k");
         await nextTick();
@@ -142,7 +142,7 @@ QUnit.test(
         );
         await click(document.body, "#o_command_3");
         await nextTick();
-        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Luigi");
+        await contains(".o_field_many2one_avatar_user input", 1, { value: "Luigi" });
     }
 );
 
@@ -169,7 +169,7 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Mario");
+        await contains(".o_field_many2one_avatar_user input", 1, { value: "Mario" });
         triggerHotkey("control+k");
         await nextTick();
         const idx = [...document.querySelectorAll(".o_command")]
@@ -180,14 +180,14 @@ QUnit.test(
         // Assign me (Luigi)
         triggerHotkey("alt+shift+i");
         await nextTick();
-        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "Luigi");
+        await contains(".o_field_many2one_avatar_user input", 1, { value: "Luigi" });
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
         await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
-        assert.strictEqual($(".o_field_many2one_avatar_user input").val(), "");
+        await contains(".o_field_many2one_avatar_user input", 1, { value: "" });
     }
 );
 

@@ -608,31 +608,34 @@ export {
     startServer,
 };
 
+/**
+ * Waits until exactly one element matching the given selector is present in
+ * `options.target` and then clicks on it.
+ *
+ * @param {string} selector
+ * @param {Object} [options={}]
+ * @param {HTMLElement} [options.target=document.body]
+ */
 export async function click(selector, { target = document.body } = {}) {
-    if (typeof selector === "string") {
-        const $e = await contains(selector, 1, { target });
-        $e[0].click();
-        return $($e[0]);
-    } else if (selector instanceof HTMLElement) {
-        selector.click();
-        return Promise.resolve($(selector));
-    } else {
-        // jquery
-        selector[0].click();
-        return Promise.resolve($(selector[0]));
-    }
+    await contains(selector, 1, { click: true, target });
 }
 
 let hasUsedContainsPositively = false;
 QUnit.testStart(() => (hasUsedContainsPositively = false));
 /**
- * Function that waits until a selector is present in the DOM.
+ * Waits until `count` elements matching the given selector are present in
+ * `options.target`.
  *
  * @param {string} selector
  * @param {number} [count=1]
+ * @param {Object} [options={}]
+ * @param {boolean} [options.click] if provided, clicks on the found element
+ * @param {HTMLElement} [options.target=document.body]
+ * @param {string} [options.value] if provided, the input value of the found element(s) must match.
+ *  Note: value changes are not observed directly, another mutation must happen to catch them.
  * @returns {Promise<JQuery<HTMLElement>>}
  */
-export function contains(selector, count = 1, { target = document.body } = {}) {
+export function contains(selector, count = 1, { click, target = document.body, value } = {}) {
     if (count) {
         hasUsedContainsPositively = true;
     } else if (!hasUsedContainsPositively) {
@@ -640,30 +643,29 @@ export function contains(selector, count = 1, { target = document.body } = {}) {
             `Starting a test with "contains" of count 0 for selector "${selector}" is useless because it might immediately resolve. Start the test by checking that an expected element actually exists.`
         );
     }
-    const res = $(target).find(selector);
-    const resMessage = `Found ${count} occurrence(s) of ${selector}`;
-    if (res.length === count) {
-        QUnit.assert.ok(true, resMessage);
-        return Promise.resolve(res);
-    }
     return new Promise((resolve, reject) => {
+        let selectorMessage = `${count} of "${selector}"`;
+        if (value !== undefined) {
+            selectorMessage = `${selectorMessage} with value "${value}"`;
+        }
+        const $res = select();
+        if ($res.length === count) {
+            execute($res, "immediately");
+            return;
+        }
         let done = false;
         const timer = setTimeout(() => {
-            observer.disconnect();
-            const res = $(target).find(selector);
-            const message = `Waited 5 second for ${count} occurrence(s) of ${selector}. Found ${res.length} instead.`;
+            clean();
+            const $res = select();
+            const message = `Waited 5 second for ${selectorMessage}. Found ${$res.length} instead.`;
             QUnit.assert.ok(false, message);
             reject(new Error(message));
-            done = true;
         }, 5000);
         const observer = new MutationObserver(() => {
-            const res = $(target).find(selector);
-            if (res.length === count) {
-                observer.disconnect();
-                QUnit.assert.ok(true, resMessage);
-                resolve(res);
-                clearTimeout(timer);
-                done = true;
+            const $res = select();
+            if ($res.length === count) {
+                clean();
+                execute($res, "after mutations");
             }
         });
         observer.observe(document.body, {
@@ -673,14 +675,30 @@ export function contains(selector, count = 1, { target = document.body } = {}) {
         });
         registerCleanup(() => {
             if (!done) {
-                observer.disconnect();
-                const res = $(target).find(selector);
-                const message = `Test ended while waiting for ${count} occurrence(s) of ${selector}. Found ${res.length} instead.`;
+                clean();
+                const $res = select();
+                const message = `Test ended while waiting for ${selectorMessage}. Found ${$res.length} instead.`;
                 QUnit.assert.ok(false, message);
                 reject(new Error(message));
-                clearTimeout(timer);
-                done = true;
             }
         });
+        function select() {
+            const $res = $(target).find(selector);
+            return value === undefined ? $res : $res.filter((i, el) => el.value === value);
+        }
+        function execute($res, whenMessage) {
+            let message = `Found ${selectorMessage} (${whenMessage})`;
+            if (click) {
+                message = `${message} and clicked it`;
+                $res[0].click();
+            }
+            QUnit.assert.ok(true, message);
+            resolve($res);
+        }
+        function clean() {
+            observer.disconnect();
+            clearTimeout(timer);
+            done = true;
+        }
     });
 }

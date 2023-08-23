@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
@@ -37,7 +37,7 @@ QUnit.module("test_mail", {}, function () {
             const mailActivityIds = pyEnv["mail.activity"].create([
                 {
                     display_name: "An activity",
-                    date_deadline: serializeDate(DateTime.now().plus({days:3})),
+                    date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -56,7 +56,7 @@ QUnit.module("test_mail", {}, function () {
                 {
                     res_model: "mail.test.activity",
                     display_name: "An activity",
-                    date_deadline: serializeDate(DateTime.now().minus({days:2})),
+                    date_deadline: serializeDate(DateTime.now().minus({ days: 2 })),
                     can_write: true,
                     state: "overdue",
                     activity_type_id: mailActivityTypeIds[1],
@@ -228,7 +228,7 @@ QUnit.module("test_mail", {}, function () {
             for (let i = 0; i < 81; i++) {
                 activityToCreate.push({
                     display_name: "An activity " + i,
-                    date_deadline: serializeDate(DateTime.now().plus({days:3})),
+                    date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -827,13 +827,13 @@ QUnit.module("test_mail", {}, function () {
         pyEnv["mail.activity"].create([
             {
                 display_name: "An activity",
-                date_deadline: serializeDate(DateTime.now().plus({days:3})),
+                date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
                 can_write: true,
                 state: "planned",
                 activity_type_id: mailActivityTypeIds[2],
                 mail_template_ids: mailTemplateIds,
                 user_id: resUsersId1,
-            }
+            },
         ]);
         const mailActivityIds = pyEnv["mail.activity"].search([]);
         const [mailTestActivityId1] = pyEnv["mail.test.activity"].search([
@@ -885,7 +885,11 @@ QUnit.module("test_mail", {}, function () {
             ".o_activity_filter_planned",
             "planned should be active filter"
         );
-        assert.hasClass(target.querySelector(".o_activity_type_cell:nth-child(2) .bg-success"), "progress-bar-animated progress-bar-striped", "progress bar is animated with a strip effect");
+        assert.hasClass(
+            target.querySelector(".o_activity_type_cell:nth-child(2) .bg-success"),
+            "progress-bar-animated progress-bar-striped",
+            "progress bar is animated with a strip effect"
+        );
         assert.containsOnce(target, ".progress-bar-striped", "only one progress bar is animated");
         assert.containsN(
             document.querySelector(".o_activity_view tbody"),
@@ -1063,20 +1067,23 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
-    QUnit.test("test node is not displayed with invisible attribute on node", async function (assert) {
-        const { target, openView } = await start({
-            serverData,
-        });
-        await openView({
-            res_model: "mail.test.activity",
-            views: [[1, "activity"]],
-            context: { invisible: true },
-        });
+    QUnit.test(
+        "test node is not displayed with invisible attribute on node",
+        async function (assert) {
+            const { target, openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[1, "activity"]],
+                context: { invisible: true },
+            });
 
-        assert.containsNone(
-            target,
-            ".invisible_node",
-            "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
-        );
-    });
+            assert.containsNone(
+                target,
+                ".invisible_node",
+                "The node with the invisible attribute should be displayed since `invisible` key in the context contains truly value"
+            );
+        }
+    );
 });

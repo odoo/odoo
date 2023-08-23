@@ -23,7 +23,7 @@ const { DateTime } = luxon;
 
 QUnit.module("message");
 
-QUnit.test("Start edition on click edit", async (assert) => {
+QUnit.test("Start edition on click edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -40,8 +40,7 @@ QUnit.test("Start edition on click edit", async (assert) => {
     openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
-    await contains(".o-mail-Message-editable .o-mail-Composer");
-    assert.strictEqual($(".o-mail-Message-editable .o-mail-Composer-input").val(), "Hello world");
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", 1, { value: "Hello world" });
 });
 
 QUnit.test("Can edit message comment in chatter", async () => {
@@ -344,14 +343,14 @@ QUnit.test("can add new mentions when editing message", async () => {
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", " @");
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "Hello @TestPartner " });
     await click(".o-mail-Message a:contains('save')");
     await contains(
         ".o-mail-Message-body:contains(Hello @TestPartner) a.o_mail_redirect:contains(@TestPartner)"
     );
 });
 
-QUnit.test("Other messages are grayed out when replying to another one", async (assert) => {
+QUnit.test("Other messages are grayed out when replying to another one", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -946,7 +945,7 @@ QUnit.test(
         await contains(".o-mail-Message");
         triggerHotkey("ArrowUp");
         await contains(".o-mail-Message .o-mail-Message-editable");
-        assert.strictEqual($(".o-mail-Message .o-mail-Composer-input").val(), "not empty");
+        await contains(".o-mail-Message .o-mail-Composer-input", 1, { value: "not empty" });
     }
 );
 
@@ -1264,7 +1263,7 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion:contains(Test Partner)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "@Test Partner " });
     await click(".o-mail-Composer-send:not(:disabled)");
     await click(".o_mail_redirect");
     await contains(".o-mail-ChatWindow-content");

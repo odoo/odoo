@@ -226,30 +226,28 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
 });
 
-QUnit.test("mention a channel with space in the name", async (assert) => {
+QUnit.test("mention a channel with space in the name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#General good boy " });
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message-body .o_channel_redirect");
-    assert.strictEqual($(".o_channel_redirect").text(), "#General good boy");
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General good boy)");
 });
 
-QUnit.test('mention a channel with "&" in the name', async (assert) => {
+QUnit.test('mention a channel with "&" in the name', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#General & good " });
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message-body .o_channel_redirect");
-    assert.strictEqual($(".o_channel_redirect").text(), "#General & good");
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General & good)");
 });
 
 QUnit.test(
@@ -571,7 +569,7 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     await contains("hr + span:contains(New messages)", 0);
 });
 
-QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async (assert) => {
+QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "usatyi@example.com",
@@ -589,7 +587,7 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "@Pynya's spokesman " });
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`
@@ -620,10 +618,10 @@ QUnit.test("mention 2 different partners that have the same name", async () => {
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "@TestPartner " });
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion:eq(1)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "@TestPartner @TestPartner " });
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
@@ -633,17 +631,16 @@ QUnit.test("mention 2 different partners that have the same name", async () => {
     );
 });
 
-QUnit.test("mention a channel on a second line when the first line contains #", async (assert) => {
+QUnit.test("mention a channel on a second line when the first line contains #", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#blabla\n#General good " });
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message-body .o_channel_redirect");
-    assert.strictEqual($(".o_channel_redirect").text(), "#General good");
+    await contains(".o-mail-Message-body .o_channel_redirect:contains(#General good)");
 });
 
 QUnit.test(
@@ -655,7 +652,7 @@ QUnit.test(
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "#");
         await click(".o-mail-Composer-suggestion");
-        await contains(".o-mail-Composer-suggestion", 0);
+        await contains(".o-mail-Composer-input", 1, { value: "#General good " });
         const text = $(".o-mail-Composer-input").val();
         $(".o-mail-Composer-input").val(text.slice(0, -1));
         await insertText(".o-mail-Composer-input", ", test");
@@ -681,10 +678,10 @@ QUnit.test("mention 2 different channels that have the same name", async () => {
     openDiscuss(channelId_1);
     await insertText(".o-mail-Composer-input", "#m");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#my channel " });
     await insertText(".o-mail-Composer-input", "#m");
     await click(".o-mail-Composer-suggestion:eq(1)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-input", 1, { value: "#my channel #my channel " });
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(
         `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:contains("#my channel")`
@@ -713,7 +710,7 @@ QUnit.test(
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
         await click(".o-mail-Composer-suggestion");
-        await contains(".o-mail-Composer-suggestion", 0);
+        await contains(".o-mail-Composer-input", 1, { value: "email@odoo.com\n@TestPartner " });
         await click(".o-mail-Composer-send:not(:disabled)");
         await contains(
             `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:contains("@TestPartner")`
@@ -801,14 +798,14 @@ QUnit.test(
 
 QUnit.test(
     "composer should be focused automatically after clicking on the send button",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "Dummy Message");
         await click(".o-mail-Composer-send:not(:disabled)");
-        assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+        await contains(".o-mail-Composer-input:focus");
     }
 );
 

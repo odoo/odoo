@@ -52,7 +52,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("add an emoji after a command", async (assert) => {
+QUnit.test("add an emoji after a command", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -60,18 +60,11 @@ QUnit.test("add an emoji after a command", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    assert.strictEqual((await contains(".o-mail-Composer-input")).val(), "");
+    await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "/");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await contains(".o-mail-Composer-suggestion", 0);
-    assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
-        "/who ",
-        "previous content + used command + additional whitespace afterwards"
-    );
-
+    await contains(".o-mail-Composer-input", 1, { value: "/who " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji:contains(😊)");
-    await contains(".o-Emoji", 0);
-    assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "/who 😊");
+    await contains(".o-mail-Composer-input", 1, { value: "/who 😊" });
 });

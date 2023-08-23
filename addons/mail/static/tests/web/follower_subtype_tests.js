@@ -40,9 +40,7 @@ QUnit.test("simplest layout of a followed subtype", async () => {
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] label:contains(TestSubtype)`
     );
     await contains(
-        $(
-            `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:checked`
-        )
+        `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId}] input[type='checkbox']:checked`
     );
 });
 

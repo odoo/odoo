@@ -44,7 +44,7 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
     await contains(".o-mail-Composer", 0);
 });
 
-QUnit.test("reply: discard on pressing escape", async (assert) => {
+QUnit.test("reply: discard on pressing escape", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         email: "testpartnert@odoo.com",
