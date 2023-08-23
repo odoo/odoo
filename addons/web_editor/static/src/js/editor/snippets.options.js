@@ -5924,6 +5924,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             // Convert to recommended format and width.
             img.dataset.mimetype = 'image/webp';
             img.dataset.resizeWidth = this.optimizedWidth;
+        } else if (img.dataset.shape) {
+            img.dataset.originalMimetype = "image/webp";
+            img.dataset.resizeWidth = this.optimizedWidth;
         }
         await this._applyOptions();
         await this.updateUI();
