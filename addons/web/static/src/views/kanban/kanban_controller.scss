@@ -606,6 +606,15 @@
         width: $o-kanban-color-border-width;
         z-index: 1; // show the title over kanban color
     }
+
+    .o_field_monetary, .o_kanban_monetary {
+        /*rtl:ignore*/
+        direction: ltr;
+    }
+
+    span.o_kanban_monetary {
+        display: inline-block;
+    }
 }
 
 // ------- Sample mode -------
