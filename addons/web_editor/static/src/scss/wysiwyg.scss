@@ -596,6 +596,8 @@ img.o_we_selected_image {
     background-color: rgba(128, 128, 128, 0.5);
     @include o-position-absolute(0, 0, 0, 0);
     z-index: 1024;
+    height: 100%;
+    overflow: auto;
 
     .o_we_cropper_wrapper {
         position: absolute;
@@ -605,7 +607,6 @@ img.o_we_selected_image {
         margin-top: 0.5rem;
         display: flex;
         flex-wrap: wrap;
-        bottom: 1rem;
 
         input[type=radio] {
             display: none;

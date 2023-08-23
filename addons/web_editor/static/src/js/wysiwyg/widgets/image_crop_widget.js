@@ -39,6 +39,7 @@ const ImageCropWidget = Widget.extend({
         this.aspectRatio = data.aspectRatio || "0/0";
         const mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
         this.mimetype = options.mimetype || mimetype;
+        this.clickopt = this._onCropOptionClick;
     },
     /**
      * @override
@@ -183,7 +184,8 @@ const ImageCropWidget = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onCropOptionClick(ev) {
-        const {action, value, scaleDirection} = ev.currentTarget.dataset;
+        let {action, value, scaleDirection} = {};
+        ev.currentTarget ? {action, value, scaleDirection} = ev.currentTarget.dataset : {action, value, scaleDirection} = ev;
         switch (action) {
             case 'ratio':
                 this.$cropperImage.cropper('reset');
@@ -192,6 +194,7 @@ const ImageCropWidget = Widget.extend({
                 break;
             case 'zoom':
             case 'reset':
+                this.$cropperImage.cropper('setAspectRatio',0);
                 this.$cropperImage.cropper(action, value);
                 break;
             case 'rotate':

@@ -585,6 +585,48 @@
                 Reset
             </we-button>
         </we-row>
+        <div id="cropTools" class="cropBtns">
+            <div class="cropTool">
+                <we-row class="cropBtns" string="└ Aspect Ratio">
+                        <we-button data-action="ratio" data-image-transform="" data-no-preview="true" data-value="0/0">Flexible</we-button>
+                </we-row>
+                <we-row class="cropBtns" string=" ">
+                        <we-button data-action="ratio" data-image-transform="" data-no-preview="true" data-value="16/9">16:9</we-button>
+                        <we-button data-action="ratio" data-image-transform="" data-no-preview="true" data-value="4/3" >4:3</we-button>
+                        <we-button data-action="ratio" data-image-transform="" data-no-preview="true" data-value="1/1" >1:1</we-button>
+                        <we-button data-action="ratio" data-image-transform="" data-no-preview="true" data-value="2/3" >2:3</we-button>
+                </we-row>
+            </div>
+            <div class="cropTool">
+                <we-row class="cropBtns" string="└ Zoom">
+                    <we-button class="fa fa-fw fa-search-plus" data-action="zoom" data-image-transform="" data-no-preview="true" data-value="0.1" title="Zoom In"/>
+                    <we-button class="fa fa-fw fa-search-minus" data-action="zoom"  data-image-transform="" data-no-preview="true" data-value="-0.1" title="Zoom Out"/>
+                </we-row>
+            </div>
+            <div class="cropTool">
+                <we-row class="cropBtns" string="└ Rotate">
+                    <we-button class="fa fa-fw fa-rotate-left" data-action="rotate" data-image-transform="" data-no-preview="true" data-value="-90" title="Rotate Left"/>
+                    <we-button class="fa fa-fw fa-rotate-right" data-action="rotate" data-image-transform="" data-no-preview="true" data-value="90" title="Rotate Right"/>
+                </we-row>
+            </div>
+            <div class="cropTool">
+                <we-row class="cropBtns" string="└ Flip">
+                    <we-button class="fa fa-fw fa-arrows-h" data-action="flip" data-image-transform="" data-no-preview="true" data-scale-direction="scaleX" title="Flip-Horizontal"/>
+                    <we-button class="fa fa-fw fa-arrows-v" data-action="flip" data-image-transform="" data-no-preview="true" data-scale-direction="scaleY" title="Flip-Vertical"/>
+                </we-row>
+            </div>
+            <div class="cropTool">
+                <we-row class="cropBtns" string="└ Reset">
+                    <we-button data-action="reset" data-image-transform="" data-no-preview="true" title="Reset Image">Reset</we-button>
+                </we-row>
+            </div>
+            <div class="cropTool">
+                <we-row class="cropBtns" string=" ">
+                    <we-button class="btn o_we_bg_brand_primary" data-action="apply" data-image-transform="" data-no-preview="true"  title="Apply">Apply</we-button>
+                    <we-button class="btn o_we_bg_danger" data-action="discard" data-image-transform="" data-no-preview="true" title="Discard">Discard</we-button>
+                </we-row>
+            </div>
+        </div>
 
         <we-button-group string="Width" data-css-property="width">
             <we-button data-select-style="" title="Resize Default">Default</we-button>
