@@ -3505,7 +3505,11 @@ class MailThread(models.AbstractModel):
         if additional_values:
             base_mail_values.update(additional_values)
 
-        headers = self._notify_by_email_get_headers()
+        # prepare headers (as sudo as accessing mail.alias.domain, restricted)
+        headers = {}
+        if message_sudo.record_alias_domain_id.bounce_email:
+            headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
+        headers = self._notify_by_email_get_headers(headers=headers)
         if headers:
             base_mail_values['headers'] = repr(headers)
         return base_mail_values
