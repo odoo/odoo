@@ -160,13 +160,14 @@ function clickOnElement(elementName, selector) {
  */
 function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
-        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_menu_systray .o_edit_website_container a",
         position: position,
     }, {
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-        run: () => null, // it's a check
+        auto: true, // Checking step only for automated tests
+        isCheck: true,
     }];
 }
 
@@ -357,15 +358,16 @@ function registerThemeHomepageTour(name, steps) {
     }
     return registerWebsitePreviewTour(name, {
         url: '/',
-        edition: true,
-        sequence: 1010,
+        sequence: 50,
         saveAs: "homepage",
         },
-        () =>
-            prepend_trigger(
+        () => [
+            ...clickOnEditAndWaitEditMode(),
+            ...prepend_trigger(
                 steps().concat(clickOnSave()),
-        ".o_website_preview[data-view-xmlid='website.homepage'] "
-    ));
+                ".o_website_preview[data-view-xmlid='website.homepage'] "
+            ),
+    ]);
 }
 
 function registerBackendAndFrontendTour(name, options, steps) {

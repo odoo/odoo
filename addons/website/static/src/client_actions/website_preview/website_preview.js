@@ -353,6 +353,10 @@ export class WebsitePreview extends Component {
             this.websiteService.context.showAceEditor = false;
             this.lastHiddenPageURL = undefined;
         }
+        if (this.props.action.context.params?.with_loader) {
+            this.websiteService.hideLoader();
+            this.props.action.context.params.with_loader = false;
+        }
         this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
         this._replaceBrowserUrl();
         this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
