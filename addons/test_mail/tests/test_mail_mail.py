@@ -294,7 +294,7 @@ class TestMailMail(MailCommon):
 
         # MailServer.build_email(): invalid from (missing)
         for default_from in [False, '']:
-            self.env['ir.config_parameter'].set_param('mail.default.from', default_from)
+            self.mail_alias_domain.default_from = default_from
             self._reset_data()
             with self.mock_mail_gateway(), mute_logger('odoo.addons.mail.models.mail_mail'):
                 mail.send(raise_exception=False)
@@ -311,8 +311,9 @@ class TestMailMail(MailCommon):
             self.assertEqual(notification.notification_status, 'exception')
 
         # MailServer.send_email(): _prepare_email_message: unexpected ASCII / Malformed 'Return-Path' or 'From' address
-        # Force catchall domain to void otherwise bounce is set to postmaster-odoo@domain
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', '')
+        # Force bounce alias to void, will force usage of email_from
+        self.mail_alias_domain.bounce_alias = False
+        self.env.company.invalidate_recordset(fnames={'bounce_email', 'bounce_formatted'})
         for email_from in ['strange@example¢¡.com', 'robert']:
             self._reset_data()
             mail.write({'email_from': email_from})
@@ -325,20 +326,6 @@ class TestMailMail(MailCommon):
             self.assertEqual(notification.failure_reason, f"Malformed 'Return-Path' or 'From' address: {email_from} - It should contain one valid plain ASCII email")
             self.assertEqual(notification.failure_type, 'mail_from_invalid')
             self.assertEqual(notification.notification_status, 'exception')
-
-        # MailServer.send_email(): _prepare_email_message: unexpected ASCII based on catchall domain in bounce
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'domain¢¡.com')
-        self._reset_data()
-        mail.write({'email_from': 'test.user@example.com'})
-        with self.mock_mail_gateway():
-            mail.send(raise_exception=False)
-        self.assertEqual(self._mails[0]['email_from'], 'test.user@example.com')
-        self.assertIn("Malformed 'Return-Path' or 'From' address: bounce.test@domain¢¡.com", mail.failure_reason)
-        self.assertEqual(mail.failure_type, 'mail_from_invalid')
-        self.assertEqual(mail.state, 'exception')
-        self.assertEqual(notification.failure_reason, "Malformed 'Return-Path' or 'From' address: bounce.test@domain¢¡.com - It should contain one valid plain ASCII email")
-        self.assertEqual(notification.failure_type, 'mail_from_invalid')
-        self.assertEqual(notification.notification_status, 'exception')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_recipients_emails(self):

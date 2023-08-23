@@ -25,8 +25,8 @@ class MailTestSimple(models.Model):
         _a = super()._notify_by_email_get_final_mail_values(*args, **kwargs)
         return _a
 
-    def _notify_by_email_get_headers(self):
-        headers = super()._notify_by_email_get_headers()
+    def _notify_by_email_get_headers(self, headers=None):
+        headers = super()._notify_by_email_get_headers(headers=headers)
         headers['X-Custom'] = 'Done'
         return headers
 

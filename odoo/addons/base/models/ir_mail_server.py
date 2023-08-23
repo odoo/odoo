@@ -363,8 +363,7 @@ class IrMailServer(models.Model):
             if mail_server:
                 from_filter = mail_server.from_filter
             else:
-                from_filter = self.env['ir.config_parameter'].sudo().get_param(
-                    'mail.default.from_filter', tools.config.get('from_filter'))
+                from_filter = self.env['ir.mail_server']._get_default_from_filter()
 
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
@@ -474,7 +473,7 @@ class IrMailServer(models.Model):
            :rtype: email.message.EmailMessage
            :return: the new RFC2822 email message
         """
-        email_from = email_from or self._get_default_from_address()
+        email_from = email_from or self.env.context.get('domain_notifications_email') or self._get_default_from_address()
         assert email_from, self.NO_FOUND_FROM
 
         headers = headers or {}         # need valid dict later
@@ -540,6 +539,19 @@ class IrMailServer(models.Model):
         """
         return tools.config.get("email_from")
 
+    @api.model
+    def _get_default_from_filter(self):
+        """ Computes the default from_filter. It is used when no specific
+        ir.mail_server is used when sending emails, hence having no value for
+        from_filter.
+
+        :return str/None: defaults to 'mail.default.from_filter', then
+          ``--from-filter`` CLI/config parameter.
+        """
+        return self.env['ir.config_parameter'].sudo().get_param(
+            'mail.default.from_filter', tools.config.get('from_filter')
+        )
+
     def _prepare_email_message(self, message, smtp_session):
         """Prepare the SMTP information (from, to, message) before sending.
 
@@ -554,7 +566,9 @@ class IrMailServer(models.Model):
         # Use the default bounce address **only if** no Return-Path was
         # provided by caller.  Caller may be using Variable Envelope Return
         # Path (VERP) to detect no-longer valid email addresses.
-        bounce_address = message['Return-Path'] or self._get_default_bounce_address() or message['From']
+        # context may force a value, e.g. mail.alias.domain usage
+        bounce_address = self.env.context.get('domain_bounce_address') or message['Return-Path'] or self._get_default_bounce_address() or message['From']
+
         smtp_from = message['From'] or bounce_address
         assert smtp_from, self.NO_FOUND_SMTP_FROM
 
@@ -579,11 +593,13 @@ class IrMailServer(models.Model):
             del message['To']           # avoid multiple To: headers!
             message['To'] = x_forge_to
 
-        # Try to not spoof the mail from headers
+        # Try to not spoof the mail from headers; fetch session-based or contextualized
+        # values for encapsulation computation
         from_filter = getattr(smtp_session, 'from_filter', False)
         smtp_from = getattr(smtp_session, 'smtp_from', False) or smtp_from
-
-        notifications_email = email_normalize(self._get_default_from_address())
+        notifications_email = email_normalize(
+            self.env.context.get('domain_notifications_email') or self._get_default_from_address()
+        )
         if notifications_email and smtp_from == notifications_email and message['From'] != notifications_email:
             smtp_from = encapsulate_email(message['From'], notifications_email)
 
@@ -699,7 +715,7 @@ class IrMailServer(models.Model):
         """
         email_from_normalized = email_normalize(email_from)
         email_from_domain = email_domain_extract(email_from_normalized)
-        notifications_email = email_normalize(self._get_default_from_address())
+        notifications_email = self.env.context.get('domain_notifications_email') or email_normalize(self._get_default_from_address())
         notifications_domain = email_domain_extract(notifications_email)
 
         if mail_servers is None:
@@ -741,8 +757,7 @@ class IrMailServer(models.Model):
             return mail_servers[0], email_from
 
         # 5: SMTP config in odoo-bin arguments
-        from_filter = self.env['ir.config_parameter'].sudo().get_param(
-            'mail.default.from_filter', tools.config.get('from_filter'))
+        from_filter = self.env['ir.mail_server']._get_default_from_filter()
 
         if self._match_from_filter(email_from, from_filter):
             return None, email_from
