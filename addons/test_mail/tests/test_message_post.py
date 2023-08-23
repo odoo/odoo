@@ -79,6 +79,11 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
 @tagged('mail_post')
 class TestMailNotifyAPI(TestMessagePostCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._activate_multi_company()
+
     @mute_logger('odoo.models.unlink')
     @users('employee')
     def test_email_notifiction_layouts(self):
@@ -233,9 +238,9 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         # employee: access button and link
         self.assertTrue(emp_info['has_button_access'])
         for param, value in link_vals.items():
-            self.assertIn('%s=%s' % (param, value), emp_info['button_access']['url'])
-        self.assertIn('model=%s' % base_record._name, emp_info['button_access']['url'])
-        self.assertIn('res_id=%s' % base_record.id, emp_info['button_access']['url'])
+            self.assertIn(f'{param}={value}', emp_info['button_access']['url'])
+        self.assertIn(f'model={base_record._name}', emp_info['button_access']['url'])
+        self.assertIn(f'res_id={base_record.id}', emp_info['button_access']['url'])
         self.assertNotIn('body', emp_info['button_access']['url'])
         self.assertNotIn('subject', emp_info['button_access']['url'])
 
@@ -284,6 +289,61 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
 
+    @users('employee_c2')
+    def test_notify_reply_to_computation_mc(self):
+        """ Test reply-to computation in multi company mode. Add notably tests
+        depending on user and records company_id / company_ids. """
+
+        # Test1: no company_id field: depends on current user browsing
+        test_record = self.test_record.with_env(self.env)
+        self.assertEqual(
+            test_record._notify_get_reply_to()[test_record.id],
+            formataddr((
+                f"{self.user_employee_c2.company_id.name} {test_record.name}",
+                f"{self.alias_catchall}@{self.alias_domain}"))
+        )
+        test_record_c1 = test_record.with_user(self.user_employee)
+        self.assertEqual(
+            test_record_c1._notify_get_reply_to()[test_record_c1.id],
+            formataddr((
+                f"{self.user_employee.company_id.name} {test_record_c1.name}",
+                f"{self.alias_catchall}@{self.alias_domain}"))
+        )
+
+        # Test2: MC environment get default value from env
+        self.user_employee_c2.write({'company_ids': [(4, self.user_employee.company_id.id)]})
+        test_records = self.env['mail.test.multi.company'].create([
+            {'name': 'Test',
+             'company_id': self.user_employee.company_id.id},
+            {'name': 'Test',
+             'company_id': self.user_employee_c2.company_id.id},
+        ])
+        res = test_records._notify_get_reply_to()
+        for test_record in test_records:
+            self.assertEqual(
+                res[test_record.id],
+                formataddr((
+                    f"{self.user_employee_c2.company_id.name} {test_record.name}",
+                    f"{self.alias_catchall}@{self.alias_domain}"))
+            )
+
+        # Test3: get company from record (company_id field)
+        self.user_employee_c2.write({'company_ids': [(4, self.company_3.id)]})
+        test_records = self.env['mail.test.multi.company'].create([
+            {'name': 'Test1',
+            'company_id': self.company_3.id},
+            {'name': 'Test2',
+            'company_id': self.company_3.id},
+        ])
+        res = test_records._notify_get_reply_to()
+        for test_record in test_records:
+            self.assertEqual(
+                res[test_record.id],
+                formataddr((
+                    f"{self.company_3.name} {test_record.name}",
+                    f"{self.alias_catchall}@{self.alias_domain}"))
+            )
+
 
 @tagged('mail_post', 'mail_notify')
 class TestMessageNotify(TestMessagePostCommon):
@@ -331,8 +391,8 @@ class TestMessageNotify(TestMessagePostCommon):
         self.assertTrue('model=' in admin_mail_body, 'The email sent to admin should contain an access link')
         admin_access_link = admin_mail_body[
             admin_mail_body.index('model='):admin_mail_body.index('/>', admin_mail_body.index('model=')) - 1]
-        self.assertIn('model=%s' % self.test_record._name, admin_access_link, 'The access link should contain a valid model argument')
-        self.assertIn('res_id=%d' % self.test_record.id, admin_access_link, 'The access link should contain a valid res_id argument')
+        self.assertIn(f'model={self.test_record._name}', admin_access_link, 'The access link should contain a valid model argument')
+        self.assertIn(f'res_id={self.test_record.id}', admin_access_link, 'The access link should contain a valid res_id argument')
 
         partner_mails = [x for x in self._mails if self.partner_1.name in x.get('email_to')[0]]
         self.assertEqual(len(partner_mails), 1, 'There should be exactly one email sent to partner')
@@ -397,38 +457,7 @@ class TestMessageNotify(TestMessagePostCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_from_user_id(self):
-        """ Test notify coming from user_id assignment. """
-        test_record = self.env['mail.test.track'].create({
-            'company_id': self.env.user.company_id.id,
-            'email_from': self.env.user.email_formatted,
-            'name': 'Test UserId Track',
-            'user_id': False,
-        })
-        self.flush_tracking()
-
-        with self.mock_mail_gateway(), self.mock_mail_app():
-            test_record.write({'user_id': self.user_employee_2.id})
-            self.flush_tracking()
-
-        self.assertEqual(len(self._new_msgs), 2, 'Should have 2 messages: tracking and assignment')
-        assign_notif = self._new_msgs.filtered(lambda msg: msg.message_type == 'user_notification')
-        self.assertTrue(assign_notif)
-        self.assertMessageFields(
-            assign_notif,
-            {'author_id': self.partner_employee,
-             'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
-             'model': test_record._name,
-             'notified_partner_ids': self.partner_employee_2,
-             'res_id': test_record.id,
-             'subtype_id': self.env.ref('mail.mt_note'),
-            }
-        )
-        self.assertIn('Dear %s' % self.partner_employee_2.name, assign_notif.body)
-
-    @users('employee')
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_notify_from_user_id_batch(self):
-        """ Test notify coming from user_id assignment. """
+        """ Test notify coming from user_id assignment (in batch) """
         test_records, _ = self._create_records_for_batch(
             'mail.test.track', 10, {
                 'company_id': self.env.user.company_id.id,
@@ -638,7 +667,6 @@ class TestMessageLog(TestMessagePostCommon):
                 partner_ids=self.test_partners[:5].ids,
             )
         for test_record, new_note in zip(test_records, new_notes):
-        for test_record, new_note in zip(test_records, new_notes):
             self.assertMailNotifications(
                 new_note,
                 [{
@@ -683,7 +711,7 @@ class TestMessageLog(TestMessagePostCommon):
                         'is_internal': True,
                         'model': test_record._name,
                         'notified_partner_ids': self.env['res.partner'],
-                        'reply_to': formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                        'reply_to': formataddr((self.company_admin.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                     },
                     'notif': [],
@@ -694,6 +722,11 @@ class TestMessageLog(TestMessagePostCommon):
 
 @tagged('mail_post')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._activate_multi_company()
 
     def test_assert_initial_values(self):
         """ Be sure of what we are testing """
@@ -719,7 +752,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'message_type': 'comment',
                         'model': test_record._name,
                         'notified_partner_ids': self.partner_employee_2,
-                        'reply_to': formataddr(("%s %s" % (self.company_admin.name, test_record.name), '%s@%s' % (self.alias_catchall, self.alias_domain))),
+                        'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
@@ -740,6 +773,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                  {'partner': self.partner_1, 'type': 'email'}],
                 message_info={
                     'content': 'NewBody',
+                    'email_values': {
+                        'headers': {
+                            'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+                        },
+                    },
                     'message_values': {
                         'notified_partner_ids': self.partner_1 + self.partner_employee_2,
                     },
@@ -869,7 +907,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     'record_name': test_record.name,
                     'reply_to': formataddr((f'{self.company_admin.name} {test_record.name}', f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
-                    'subject': f'Re: {test_record.name}',
+                    'subject': test_record.name,
                 },
                 'notif': [
                     {'partner': self.partner_employee_2, 'type': 'email',},
@@ -912,6 +950,57 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         # notifications emails should not have been deleted: one for customers, one for user
         self.assertEqual(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', msg.id)]), 2)
+
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('erp_manager')
+    def test_message_post_mc(self):
+        """ Test posting in multi-company environment, notably with aliases """
+        records = self.env['mail.test.ticket.mc'].create([
+            {
+                'name': 'No Specific Company',
+            }, {
+                'company_id': self.company_admin.id,
+                'name': 'Company1',
+            }, {
+                'company_id': self.company_2.id,
+                'name': 'Company2',
+            },
+        ])
+        expected_companies = [self.company_2, self.company_admin, self.company_2]
+        for record, expected_company in zip(records, expected_companies):
+            with self.subTest(record=record):
+                with self.assertSinglePostNotifications(
+                        [{'partner': self.partner_employee_2, 'type': 'email'}],
+                        message_info={
+                            'content': 'Body',
+                            'email_values': {
+                                'headers': {
+                                    'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+                                },
+                            },
+                            'mail_mail_values': {
+                                'headers': repr({
+                                    'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                }),
+                            },
+                            'message_values': {
+                                'author_id': self.user_erp_manager.partner_id,
+                                'email_from': formataddr((self.user_erp_manager.name, self.user_erp_manager.email_normalized)),
+                                'is_internal': False,
+                                'notified_partner_ids': self.partner_employee_2,
+                                'reply_to': formataddr(
+                                    (f'{expected_company.name} {record.name}', f'{self.alias_catchall}@{self.alias_domain}')
+                                ),
+                            },
+                        }
+                    ):
+                    _new_message = record.message_post(
+                        body='Body',
+                        message_type='comment',
+                        subtype_xmlid='mail.mt_comment',
+                        partner_ids=[self.partner_employee_2.id],
+                    )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_message_post_recipients_email_field(self):
@@ -1275,7 +1364,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             [self.partner_1],
             references_content='openerp-%d-mail.test.simple' % self.test_record.id,
             # references should be sorted from the oldest to the newest
-            references='%s %s' % (parent_msg.message_id, msg.message_id),
+            references=f'{parent_msg.message_id} {msg.message_id}',
         )
 
         # post a reply to the reply: check parent is the first one
@@ -1296,7 +1385,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             reply_to=msg.reply_to,
             subject=self.test_record.name,
             references_content='openerp-%d-mail.test.simple' % self.test_record.id,
-            references='%s %s' % (parent_msg.message_id, new_msg.message_id),
+            references=f'{parent_msg.message_id} {new_msg.message_id}',
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
@@ -1320,7 +1409,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.format_and_process(
             MAIL_TEMPLATE_PLAINTEXT, self.user_admin.email, 'not_my_businesss@example.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.example.com>',
-            extra='In-Reply-To:\r\n\t%s\n' % msg.message_id,
+            extra=f'In-Reply-To:\r\n\t{msg.message_id}\n',
             target_model='mail.test.simple')
         reply = test_record.message_ids - msg
         self.assertTrue(reply)
