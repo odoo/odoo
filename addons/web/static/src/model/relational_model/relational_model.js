@@ -408,7 +408,7 @@ export class RelationalModel extends Model {
                 groupData[config.groupBy[0]],
                 group.range
             );
-            group.rawValue = groupData[groupByField.name];
+            group.rawValue = groupData[config.groupBy];
             group.displayName = getDisplayNameFromGroupData(
                 groupByField,
                 groupData[config.groupBy[0]]
