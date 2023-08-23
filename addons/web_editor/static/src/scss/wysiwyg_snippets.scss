@@ -2050,19 +2050,22 @@ we-select.o_we_border_preview_aligned_select {
 // DROPZONES
 @keyframes dropZoneInsert {
     to {
-        background-color: rgba($o-brand-odoo, 0.3);
+        box-shadow: inset 0 0 $o-we-dropzone-size 0 rgba($o-we-handles-accent-color, .5);
     }
 }
 
 .oe_drop_zone {
-    background-color: rgba($o-brand-odoo, 0.15);
+    background: rgba(lighten($o-we-handles-accent-color, 50%), .95);
     animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
         position: relative;
-        z-index: $o-we-overlay-zindex;
         width: 100%;
-        border: 2px dashed $o-we-border-color;
+        border-radius: $border-radius-lg;
+        outline: $o-we-dropzone-border-width dashed $o-we-handles-accent-color;
+        outline-offset: -$o-we-dropzone-border-width;
+        backdrop-filter: blur(2px);
+        z-index: $o-we-overlay-zindex;
     }
 }
 
