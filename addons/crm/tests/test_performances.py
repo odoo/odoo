@@ -50,7 +50,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
             self.env['res.users'].has_group('base.group_user')  # warmup the cache to avoid inconsistency between community an enterprise
-            with self.assertQueryCount(user_sales_manager=1266):  # crm 1187
+            with self.assertQueryCount(user_sales_manager=1166):  # crm 1160 / com 1165
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -95,7 +95,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=585):  # crm 584
+            with self.assertQueryCount(user_sales_manager=583):  # crm 582
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -176,9 +176,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush_recordset()
 
-        # randomness
+        # randomness: add 2 queries
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6280):  # crm 6226 / com 6212 / ent 6214
+            with self.assertQueryCount(user_sales_manager=6066):  # crm 6048 / com 6052 / ent 6054
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign
