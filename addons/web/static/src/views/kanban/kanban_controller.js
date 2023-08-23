@@ -71,6 +71,7 @@ export class KanbanController extends Component {
                 if (this.useSampleModel) {
                     for (const group of this.root.groups) {
                         const list = group.list;
+                        group.count = 0;
                         list.count = 0;
                         if (list.records) {
                             list.records = [];
@@ -208,8 +209,8 @@ export class KanbanController extends Component {
     }
 
     evalViewModifier(modifier) {
-        return evaluateBooleanExpr(modifier, {context: this.props.context});
-    };
+        return evaluateBooleanExpr(modifier, { context: this.props.context });
+    }
 
     async openRecord(record, mode) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
