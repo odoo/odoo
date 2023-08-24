@@ -1004,7 +1004,8 @@ class HrExpenseSheet(models.Model):
     @api.depends('account_move_id.date')
     def _compute_accounting_date(self):
         for sheet in self:
-            sheet.accounting_date = sheet.account_move_id.date
+            if sheet.account_move_id:
+                sheet.accounting_date = sheet.account_move_id.date
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
