@@ -777,6 +777,66 @@ class TestFillTemporal(common.TransactionCase):
 
         self.assertEqual(groups, expected)
 
+    def test_with_bounds_groupby_week(self):
+        """Test data with weeks starting on Sunday and forced boundaries."""
+        self.Model.create([
+            {'date': '1916-08-19', 'value': 4},   # saturday W34
+            {'date': '1916-08-20', 'value': 13},  # sunday   W35
+            {'date': '1916-09-10', 'value': 5},   # sunday   W38
+            {'date': '1916-08-18', 'value': 3},   # friday   W34
+            {'date': '1916-09-11', 'value': 4},   # monday   W38
+            {'date': '1916-09-12', 'value': 11},  # tuesday  W38
+        ])
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-08-06'), ('date', '<', '1916-08-13')],
+            '__range': {'date:week': {'from': '1916-08-06', 'to': '1916-08-13'}},
+            'date:week': 'W33 1916',
+            'date_count': 0,
+            'value': 0,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-08-13'), ('date', '<', '1916-08-20')],
+            '__range': {'date:week': {'from': '1916-08-13', 'to': '1916-08-20'}},
+            'date:week': 'W34 1916',
+            'date_count': 2,
+            'value': 7,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-08-20'), ('date', '<', '1916-08-27')],
+            '__range': {'date:week': {'from': '1916-08-20', 'to': '1916-08-27'}},
+            'date:week': 'W35 1916',
+            'date_count': 1,
+            'value': 13,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-08-27'), ('date', '<', '1916-09-03')],
+            '__range': {'date:week': {'from': '1916-08-27', 'to': '1916-09-03'}},
+            'date:week': 'W36 1916',
+            'date_count': 0,
+            'value': 0,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-09-03'), ('date', '<', '1916-09-10')],
+            '__range': {'date:week': {'from': '1916-09-03', 'to': '1916-09-10'}},
+            'date:week': 'W37 1916',
+            'date_count': 0,
+            'value': 0,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-09-10'), ('date', '<', '1916-09-17')],
+            '__range': {'date:week': {'from': '1916-09-10', 'to': '1916-09-17'}},
+            'date:week': 'W38 1916',
+            'date_count': 3,
+            'value': 20,
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-09-17'), ('date', '<', '1916-09-24')],
+            '__range': {'date:week': {'from': '1916-09-17', 'to': '1916-09-24'}},
+            'date:week': 'W39 1916',
+            'date_count': 0,
+            'value': 0,
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"fill_from": '1916-08-10', "fill_to": '1916-09-20'})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date:week'])
+
+        self.assertEqual(groups, expected)
+
     def test_upper_bound(self):
         """Test the alternative dictionary format for the fill_temporal context key (fill_to).
 
