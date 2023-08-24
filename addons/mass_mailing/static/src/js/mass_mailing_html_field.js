@@ -378,7 +378,7 @@ export class MassMailingHtmlField extends HtmlField {
                 const document = this.wysiwyg.odooEditor.document;
                 const selection = document.getSelection();
                 const p = this.wysiwyg.odooEditor.editable.querySelector('p');
-                if (p) {
+                if (p && selection) {
                     const range = document.createRange();
                     range.setStart(p, 0);
                     range.setEnd(p, 0);
