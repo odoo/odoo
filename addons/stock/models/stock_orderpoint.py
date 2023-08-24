@@ -411,7 +411,7 @@ class StockWarehouseOrderpoint(models.Model):
                 location = self.env['stock.location'].browse(location_id)
                 orderpoint_values.update({
                     'name': _('Replenishment Report'),
-                    'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)]).id,
+                    'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)], limit=1).id,
                     'company_id': location.company_id.id,
                 })
                 orderpoint_values_list.append(orderpoint_values)

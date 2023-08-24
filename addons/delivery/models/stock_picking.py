@@ -234,7 +234,7 @@ class StockPicking(models.Model):
                 res['exact_price'] = 0.0
         self.carrier_price = res['exact_price'] * (1.0 + (self.carrier_id.margin / 100.0))
         if res['tracking_number']:
-            related_pickings = self
+            related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
             previous_moves = self.move_ids.move_orig_ids
             while previous_moves:
                 related_pickings |= previous_moves.picking_id

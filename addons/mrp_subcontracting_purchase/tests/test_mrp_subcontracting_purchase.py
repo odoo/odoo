@@ -193,6 +193,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         when our subcontracting location is also a replenish location.
         The test ensure that we can get those orderpoints without warehouse.
         """
+        # Create a second warehouse to check which one will be used
+        self.env['stock.warehouse'].create({'name': 'Second WH', 'code': 'WH02'})
+
         product = self.env['product.product'].create({
             'name': 'Product',
             'detailed_type': 'product',
@@ -233,4 +236,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po.button_confirm()
 
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
-        self.assertTrue(self.env['stock.warehouse.orderpoint'].search([('product_id', '=', component.id)]))
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', component.id)])
+        self.assertTrue(orderpoint)
+        self.assertEqual(orderpoint.warehouse_id, self.warehouse)

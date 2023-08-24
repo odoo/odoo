@@ -88,6 +88,7 @@ const Wysiwyg = Widget.extend({
         this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
+        this._onScroll = this._onScroll.bind(this);
         this.customizableLinksSelector = 'a'
             + ':not([data-bs-toggle="tab"])'
             + ':not([data-bs-toggle="collapse"])'
@@ -178,6 +179,12 @@ const Wysiwyg = Widget.extend({
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
+            getScrollContainerRect: () => {
+                if (!this.scrollContainer || !this.scrollContainer.getBoundingClientRect) {
+                    this.scrollContainer = document.querySelector('.o_action_manager');
+                }
+                return this.scrollContainer.getBoundingClientRect();
+            },
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
@@ -756,6 +763,7 @@ const Wysiwyg = Widget.extend({
             clearTimeout(timeout);
         }
         snippetsOptions.clearM2oRpcCache();
+        document.removeEventListener('scroll', this._onScroll, true);
         this._super();
     },
     /**
@@ -1632,18 +1640,10 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
-        // we need the Timeout to be sure the editable content is loaded
-        // before calculating the scrollParent() element.
-        setTimeout(() => {
-            const scrollableContainer = this.$el.scrollParent();
-            if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                    scrollableContainer[0],
-                    'scroll',
-                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
-            }
-        }, 0);
+        if (!options.snippets) {
+            // Scroll event does not bubble.
+            document.addEventListener('scroll', this._onScroll, true);
+        }
     },
     /**
      * @private
@@ -2503,6 +2503,12 @@ const Wysiwyg = Widget.extend({
             // todo: to remove when removing the legacy field_html
             this.trigger_up('wysiwyg_blur');
             this.options.onWysiwygBlur && this.options.onWysiwygBlur();
+        }
+    },
+    _onScroll: function(ev) {
+        if (ev.target.contains(this.$editable[0])) {
+            this.scrollContainer = ev.target;
+            this.odooEditor.updateToolbarPosition();
         }
     },
     _signalOffline: function () {

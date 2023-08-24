@@ -173,7 +173,36 @@ odoo.define('payment_adyen.payment_form', require => {
                             showPaymentMethods: true,
                             showPayButton: false,
                             setStatusAutomatically: true,
-                        },
+                            onSelect: component => {
+                                if (component.props.name === "PayPal") {
+                                    if (!this.paypalForm) {
+                                        // create div element to render PayPal component
+                                        this.paypalForm = document.createElement("div");
+                                        document.getElementById(
+                                            `o_adyen_dropin_container_${paymentOptionId}`
+                                        ).appendChild(this.paypalForm);
+                                        this.paypalForm.classList.add("mt-2");
+                                        // create and mount PayPal button in the component
+                                        checkout.create("paypal",
+                                            {
+                                                style: {
+                                                    disableMaxWidth: true
+                                                },
+                                                blockPayPalCreditButton: true,
+                                                blockPayPalPayLaterButton: true
+                                            }
+                                        ).mount(this.paypalForm).providerId = paymentOptionId;
+                                        this.txContext.tokenizationRequested = false;
+                                    }
+                                    // Hide Pay button and show PayPal component
+                                    this._hideInputs();
+                                    this.paypalForm.classList.remove('d-none');
+                                } else if (this.paypalForm) {
+                                    this.paypalForm.classList.add('d-none');
+                                    this._showInputs();
+                                }
+                            },
+                        }
                     ).mount(`#o_adyen_dropin_container_${paymentOptionId}`);
                     this.adyenDropin.providerId = paymentOptionId;
                 });
