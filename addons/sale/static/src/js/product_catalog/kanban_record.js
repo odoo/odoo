@@ -49,11 +49,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             product_id: this.env.productId,
             quantity: this.productCatalogData.quantity,
         });
-        // Force a reload of the page to remove a product from the view in the case a filter is
-        // applied.
-        if (this.productCatalogData.quantity === 0) {
-            this.props.record.model.load();
-        }
         this.productCatalogData.price = parseFloat(price);
     }
 
