@@ -175,7 +175,7 @@ export class Composer extends Component {
         );
         useEffect(
             (rThread, cThread) => {
-                if (cThread && rThread === cThread) {
+                if (cThread && cThread.eq(rThread)) {
                     this.state.autofocus++;
                 }
             },

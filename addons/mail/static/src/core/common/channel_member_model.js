@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 /**
@@ -9,7 +10,7 @@ import { createLocalId } from "@mail/utils/common/misc";
  * @property {string} personaLocalId
  * @property {number} threadId
  */
-export class ChannelMember {
+export class ChannelMember extends Record {
     /** @type {number} */
     id;
     personaLocalId;

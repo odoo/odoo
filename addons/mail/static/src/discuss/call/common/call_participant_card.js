@@ -49,7 +49,7 @@ export class CallParticipantCard extends Component {
         if (!this.rtcSession) {
             return false;
         }
-        return this.rtcSession?.id !== this.rtc.state.selfSession?.id;
+        return !this.rtcSession?.eq(this.rtc.state.selfSession);
     }
 
     get rtcSession() {
@@ -67,7 +67,7 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         return Boolean(
             this.isOfActiveCall &&
-                !(this.rtcSession.channelMember?.persona.localId === this.store.self?.localId) &&
+                !this.rtcSession.channelMember?.persona.eq(this.store.self) &&
                 !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         );
     }
@@ -97,7 +97,7 @@ export class CallParticipantCard extends Component {
         }
         if (this.rtcSession) {
             const channel = this.rtcSession.channel;
-            if (channel.activeRtcSession === this.rtcSession) {
+            if (this.rtcSession.eq(channel.activeRtcSession)) {
                 channel.activeRtcSession = undefined;
             } else {
                 channel.activeRtcSession = this.rtcSession;

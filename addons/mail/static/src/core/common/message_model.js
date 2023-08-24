@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
 
@@ -12,7 +13,7 @@ import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 
-export class Message {
+export class Message extends Record {
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/common/persona_model").Persona} */
@@ -114,7 +115,7 @@ export class Message {
     }
 
     get isSelfMentioned() {
-        return this.recipients.some((recipient) => recipient === this._store.self);
+        return this._store.self?.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -125,7 +126,7 @@ export class Message {
         if (!this.author || !this._store.self) {
             return false;
         }
-        return this.author.id === this._store.self.id && this.author.type === this._store.self.type;
+        return this.author.eq(this._store.self);
     }
 
     get isNeedaction() {

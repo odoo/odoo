@@ -273,10 +273,10 @@ export class ThreadService {
             // feed needactions
             // same for needaction messages, special case for mailbox:
             // kinda "fetch new/more" with needactions on many origin threads at once
-            if (thread === this.store.discuss.inbox) {
+            if (thread.eq(this.store.discuss.inbox)) {
                 for (const message of fetched) {
                     const thread = message.originThread;
-                    if (!thread.needactionMessages.includes(message)) {
+                    if (message.notIn(thread.needactionMessages)) {
                         thread.needactionMessages.unshift(message);
                     }
                 }
@@ -367,7 +367,7 @@ export class ThreadService {
                 });
                 if (!thread.isLoaded) {
                     thread.messages.push(message);
-                    if (message.isNeedaction && !thread.needactionMessages.includes(message)) {
+                    if (message.isNeedaction && message.notIn(thread.needactionMessages)) {
                         thread.needactionMessages.push(message);
                     }
                 }
@@ -741,9 +741,9 @@ export class ThreadService {
                             continue;
                         }
                         if (
-                            member.persona.id !== thread._store.user?.id ||
+                            member.persona.notEq(thread._store.user) ||
                             (serverData.channel.channelMembers[0][1].length === 1 &&
-                                member.persona.id === thread._store.user?.id)
+                                member.persona?.eq(thread._store.user))
                         ) {
                             thread.chatPartnerId = member.persona.id;
                         }
@@ -944,7 +944,7 @@ export class ThreadService {
         }
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
         if (thread.type !== "chatter") {
-            removeFromArrayWithPredicate(thread.messages, ({ id }) => id === tmpMsg.id);
+            removeFromArrayWithPredicate(thread.messages, (msg) => msg.eq(tmpMsg));
             delete this.store.messages[tmpMsg.id];
         }
         if (!data) {
@@ -961,7 +961,7 @@ export class ThreadService {
         const message = this.messageService.insert(
             Object.assign(data, { body: markup(data.body) })
         );
-        if (!thread.messages.some(({ id }) => id === message.id)) {
+        if (message.notIn(thread.messages)) {
             thread.messages.push(message);
         }
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {

@@ -118,10 +118,16 @@ export class MessagingMenu extends Component {
              *
              * In each group, thread with most recent message comes first
              */
-            if (a.correspondent === this.store.odoobot && b.correspondent !== this.store.odoobot) {
+            if (
+                a.correspondent?.eq(this.store.odoobot) &&
+                !b.correspondent?.eq(this.store.odoobot)
+            ) {
                 return 1;
             }
-            if (b.correspondent === this.store.odoobot && a.correspondent !== this.store.odoobot) {
+            if (
+                b.correspondent?.eq(this.store.odoobot) &&
+                !a.correspondent?.eq(this.store.odoobot)
+            ) {
                 return -1;
             }
             if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
@@ -233,7 +239,7 @@ export class MessagingMenu extends Component {
             });
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
-            this.store.chatWindows.find(({ thr }) => thr === thread)?.close();
+            this.store.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
         } else {
             this.threadService.open(thread);
         }

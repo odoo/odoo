@@ -29,8 +29,8 @@ partnerCompareRegistry.add(
     "discuss.members",
     (p1, p2, { thread }) => {
         if (thread?.model === "discuss.channel") {
-            const isMember1 = thread.channelMembers.some((member) => member.persona === p1);
-            const isMember2 = thread.channelMembers.some((member) => member.persona === p2);
+            const isMember1 = thread.channelMembers.some((member) => p1.eq(member.persona));
+            const isMember2 = thread.channelMembers.some((member) => p2.eq(member.persona));
             if (isMember1 && !isMember2) {
                 return -1;
             }

@@ -54,7 +54,7 @@ export class ChannelMemberService {
         switch (command) {
             case "insert":
                 {
-                    if (member.thread && !member.thread.channelMembers.includes(member)) {
+                    if (member.thread && member.notIn(member.thread.channelMembers)) {
                         member.thread.channelMembers.push(member);
                     }
                 }
