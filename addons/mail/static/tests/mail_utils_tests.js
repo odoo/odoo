@@ -62,7 +62,7 @@ QUnit.test("addLink: utility function and special entities", function (assert) {
     }
 });
 
-QUnit.test("addLink: linkify inside text node (1 occurrence)", function (assert) {
+QUnit.test("addLink: linkify inside text node (1 occurrence)", async (assert) => {
     const content = "<p>some text https://somelink.com</p>";
     const linkified = parseAndTransform(content, addLink);
     assert.ok(linkified.startsWith("<p>some text <a"));
@@ -76,7 +76,7 @@ QUnit.test("addLink: linkify inside text node (1 occurrence)", function (assert)
     fragment.appendChild(div);
     div.innerHTML = linkified;
     assert.strictEqual(div.textContent, "some text https://somelink.com");
-    assert.containsOnce(div, "a");
+    await contains("a", 1, { target: div });
     assert.strictEqual(div.querySelector(":scope a").textContent, "https://somelink.com");
 });
 

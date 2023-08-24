@@ -2,7 +2,7 @@
 
 import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { click } from "@web/../tests/helpers/utils";
 
@@ -12,11 +12,11 @@ import { click } from "@web/../tests/helpers/utils";
  * @param {object} assert the assert object passed by QUnit
  * @param {string} emojiComponentSelector unique selector to get the component template root (e.g. "o_field_text_emojis")
  */
-export async function testEmojiButtonVisible(assert, selector) {
-    assert.containsOnce($, ".o_form_editable");
-    assert.containsOnce($, selector);
-    assert.containsOnce($, `${selector} button`);
-    assert.containsOnce($, `${selector} button .fa-smile-o`);
+export async function testEmojiButtonVisible(selector) {
+    await contains(".o_form_editable");
+    await contains(selector);
+    await contains(`${selector} button`);
+    await contains(`${selector} button .fa-smile-o`);
 }
 
 /**
@@ -29,7 +29,7 @@ export async function testEmojiButtonVisible(assert, selector) {
 export async function testEmojiButton(assert, input, button) {
     // emoji picker opens
     await click(button);
-    assert.containsOnce($, ".o-EmojiPicker");
+    await contains(".o-EmojiPicker");
     // clicking an emoji adds it to the input field
     const emoji_1 = $(".o-EmojiPicker-content .o-Emoji")[0];
     const emojiChar_1 = emoji_1.textContent;
@@ -79,9 +79,9 @@ async function openTestView(model) {
 
 QUnit.module("Field char emojis");
 
-QUnit.test("emojis button is shown", async (assert) => {
+QUnit.test("emojis button is shown", async () => {
     await openTestView("fields.char.emojis.user");
-    await testEmojiButtonVisible(assert, ".o_field_char_emojis");
+    await testEmojiButtonVisible(".o_field_char_emojis");
 });
 
 QUnit.test("emojis button works", async (assert) => {
@@ -93,9 +93,9 @@ QUnit.test("emojis button works", async (assert) => {
 
 QUnit.module("Field text emojis");
 
-QUnit.test("emojis button is shown", async (assert) => {
+QUnit.test("emojis button is shown", async () => {
     await openTestView("fields.text.emojis.user");
-    await testEmojiButtonVisible(assert, ".o_field_text_emojis");
+    await testEmojiButtonVisible(".o_field_text_emojis");
 });
 
 QUnit.test("emojis button works", async (assert) => {

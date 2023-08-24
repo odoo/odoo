@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { url } from "@web/core/utils/urls";
+import { getOrigin } from "@web/core/utils/urls";
 import {
     editInput,
     makeDeferred,
@@ -591,7 +591,7 @@ QUnit.test("Add the same reaction twice from the emoji picker", async () => {
     await contains(".o-mail-MessageReaction:contains('😅')");
 });
 
-QUnit.test("basic rendering of message", async (assert) => {
+QUnit.test("basic rendering of message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -604,27 +604,17 @@ QUnit.test("basic rendering of message", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message:contains(body)");
-    const $message = $(".o-mail-Message:contains(body)");
-    assert.containsOnce($message, ".o-mail-Message-sidebar");
-    assert.containsOnce($message, ".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
-    assert.hasAttrValue(
-        $message.find(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img"),
-        "data-src",
-        url(`/discuss/channel/${channelId}/partner/${partnerId}/avatar_128`)
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message .o-mail-Message-content:contains(body)");
+    await contains(
+        `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128']`
     );
-    assert.containsOnce($message, ".o-mail-Message-header");
-    assert.containsOnce($message, ".o-mail-Message-header .o-mail-Message-author:contains(Demo)");
-    assert.containsOnce($message, ".o-mail-Message-header .o-mail-Message-date");
-    assert.hasAttrValue(
-        $message.find(".o-mail-Message-header .o-mail-Message-date"),
-        "title",
-        deserializeDateTime("2019-04-20 10:00:00").toLocaleString(
-            DateTime.DATETIME_SHORT_WITH_SECONDS
-        )
+    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author:contains(Demo)");
+    await contains(
+        `.o-mail-Message .o-mail-Message-header .o-mail-Message-date[title='${deserializeDateTime(
+            "2019-04-20 10:00:00"
+        ).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}']`
     );
-    assert.containsOnce($message, ".o-mail-Message-content");
-    assert.strictEqual($message.find(".o-mail-Message-content").text(), "body");
 });
 
 QUnit.test("should not be able to reply to temporary/transient messages", async () => {
@@ -638,7 +628,7 @@ QUnit.test("should not be able to reply to temporary/transient messages", async 
     await contains(".o-mail-Message [title='Reply']", 0);
 });
 
-QUnit.test("message comment of same author within 1min. should be squashed", async (assert) => {
+QUnit.test("message comment of same author within 1min. should be squashed", async () => {
     // messages are squashed when "close", e.g. less than 1 minute has elapsed
     // from messages of same author and same thread. Note that this should
     // be working in non-mailboxes
@@ -800,7 +790,7 @@ QUnit.test(
 
 QUnit.test(
     "Name of message author is not displayed in chat window for channel of type chat",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
         const partnerId = pyEnv["res.partner"].create({ name: "A" });
@@ -1503,7 +1493,7 @@ QUnit.test("Mark as unread", async () => {
     await contains(".o-mail-DiscussSidebarChannel .badge:contains(1)");
 });
 
-QUnit.test("Avatar of unknown author", async (assert) => {
+QUnit.test("Avatar of unknown author", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create({
         body: "<p>Want to know features and benefits of using the new software.</p>",

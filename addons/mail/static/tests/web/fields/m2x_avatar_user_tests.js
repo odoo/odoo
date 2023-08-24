@@ -82,7 +82,7 @@ QUnit.test("many2many_avatar_user in kanban view", async (assert) => {
         res_model: "m2x.avatar.user",
         views: [[false, "kanban"]],
     });
-    assert.containsOnce($, ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty");
+    await contains(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty");
     assert.strictEqual(
         $(
             ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty"
@@ -393,7 +393,7 @@ QUnit.test("avatar card preview", async (assert) => {
     // Open card
     await triggerEvent(document, ".o_m2o_avatar > img", "mouseover");
     assert.verifySteps(["setTimeout of 350ms", "setTimeout of 250ms", "user read"]);
-    assert.containsOnce(document.body, ".o_avatar_card");
+    await contains(".o_avatar_card");
     assert.deepEqual(getNodesTextContent(document.querySelectorAll(".o_card_user_infos > *")), [
         "Mario",
         " Mario@odoo.test",
@@ -402,7 +402,7 @@ QUnit.test("avatar card preview", async (assert) => {
     // Close card
     await triggerEvent(document, ".o_control_panel", "mouseover");
     assert.verifySteps(["setTimeout of 400ms"]);
-    assert.containsNone(document.body, ".o_avatar_card");
+    await contains(".o_avatar_card", 0);
 });
 
 QUnit.test(
@@ -447,7 +447,7 @@ QUnit.test("many2one_avatar_user widget in list view", async (assert) => {
         views: [[false, "list"]],
     });
     await click(document.body, ".o_data_cell .o_m2o_avatar > img");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
     assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Partner 1");
 });
 
@@ -469,6 +469,6 @@ QUnit.test("many2many_avatar_user widget in form view", async (assert) => {
         views: [[false, "form"]],
     });
     await click(document.body, ".o_field_many2many_avatar_user .o_avatar img");
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
     assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Partner 1");
 });

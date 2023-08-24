@@ -75,7 +75,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("Message post in chat window of chatter should log a note", async (assert) => {
+QUnit.test("Message post in chat window of chatter should log a note", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     const messageId = pyEnv["mail.message"].create({
@@ -135,7 +135,7 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
-    assert.containsOnce($(".o-mail-ChatWindow-header"), ".o-mail-ChatWindow-threadAvatar");
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar");
     await contains(".o-mail-ChatWindow-name:contains(General)");
     await contains(".o-mail-ChatWindow-command", 4);
     await contains("[title='Start a Call']");
@@ -841,7 +841,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("chat window: composer state conservation on toggle discuss", async (assert) => {
+QUnit.test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const { openDiscuss, openView } = await start();

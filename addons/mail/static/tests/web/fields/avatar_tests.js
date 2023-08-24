@@ -7,7 +7,7 @@ import { getFixture, mount } from "@web/../tests/helpers/utils";
 
 QUnit.module("avatar field");
 
-QUnit.test("basic rendering", async (assert) => {
+QUnit.test("basic rendering", async () => {
     const { env } = await start();
     await mount(Avatar, getFixture(), {
         env,
@@ -19,11 +19,10 @@ QUnit.test("basic rendering", async (assert) => {
     });
     await contains(".o-mail-Avatar");
     await contains(".o-mail-Avatar img");
-    assert.strictEqual($(".o-mail-Avatar img")[0].dataset.src, "/web/image/res.users/2/avatar_128");
+    await contains(".o-mail-Avatar img[data-src='/web/image/res.users/2/avatar_128']");
     await contains(".o-mail-Avatar span");
-    assert.strictEqual($(".o-mail-Avatar span")[0].innerText, "User display name");
-    assert.containsNone($, ".o-mail-ChatWindow");
-
+    await contains(".o-mail-Avatar span:contains(User display name)");
+    await contains(".o-mail-ChatWindow", 0);
     await click(".o-mail-Avatar img");
     await contains(".o-mail-ChatWindow");
 });
