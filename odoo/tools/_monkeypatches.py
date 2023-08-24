@@ -1,8 +1,10 @@
 import ast
 import os
 from shutil import copyfileobj
+from types import CodeType
 
 from werkzeug.datastructures import FileStorage
+from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
 
 from .json import scriptsafe
@@ -29,6 +31,14 @@ else:
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
 
 Request.json_module = Response.json_module = scriptsafe
+
+get_func_code = getattr(Rule, '_get_func_code', None)
+if get_func_code:
+    @staticmethod
+    def _get_func_code(code, name):
+        assert isinstance(code, CodeType)
+        return get_func_code(code, name)
+    Rule._get_func_code = _get_func_code
 
 orig_literal_eval = ast.literal_eval
 
