@@ -535,7 +535,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             async mockRPC(route, args) {
-                if (args.method === "create") {
+                if (args.method === "web_save") {
                     await def;
                 }
             },
@@ -632,7 +632,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target.querySelector(".modal"));
         await clickSave(target);
-        assert.verifySteps(["write", "web_read"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("one2many list editable with cell readonly modifier", async function (assert) {
@@ -656,7 +656,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.deepEqual(
                         args.args[1].p[0][2],
                         { foo: "ff", qux: 99, turtles: [] },
@@ -732,8 +732,8 @@ QUnit.module("Fields", (hooks) => {
                         await def;
                         assert.step("onchange");
                     }
-                    if (args.method === "write") {
-                        assert.step("write");
+                    if (args.method === "web_save") {
+                        assert.step("web_save");
                         assert.deepEqual(args.args[1].p, [
                             [1, 1, { int_field: 9 }],
                             [1, 2, { int_field: 10, qux: 99 }],
@@ -748,7 +748,7 @@ QUnit.module("Fields", (hooks) => {
             // resolve the onchange promise
             def.resolve();
             await nextTick();
-            assert.verifySteps(["onchange", "write"]);
+            assert.verifySteps(["onchange", "web_save"]);
         }
     );
 
@@ -1122,7 +1122,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     const expectedResultTurtles = [
                         [1, 1, { turtle_foo: "hop", partner_ids: [[4, 2]] }],
                     ];
@@ -1191,7 +1191,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, args) {
-                    if (args.method === "write") {
+                    if (args.method === "web_save") {
                         const expectedResultTurtles = [
                             [1, 1, { turtle_foo: "hop", partner_ids: [[4, 2]] }],
                             [
@@ -1259,7 +1259,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, args) {
-                    if (route === "/web/dataset/call_kw/partner/write") {
+                    if (route === "/web/dataset/call_kw/partner/web_save") {
                         var expectedResultTurtles = [
                             [
                                 1,
@@ -2546,7 +2546,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.step(args.method);
                     assert.deepEqual(args.args[1].p, [
                         [1, 2, { int_field: 0 }],
@@ -2584,7 +2584,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
 
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
             "blip",
             "My little Foo Value",
@@ -2734,8 +2734,8 @@ QUnit.module("Fields", (hooks) => {
                     readIDs = args.args[0];
                     checkRead = false;
                 }
-                if (args.method === "write") {
-                    assert.step("write");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     saveCount++;
                     const commands = args.args[1].p;
                     switch (saveCount) {
@@ -2896,7 +2896,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         await clickSave(target);
 
-        assert.verifySteps(["write", "write", "write"]);
+        assert.verifySteps(["web_save", "web_save", "web_save"]);
     });
 
     QUnit.test(
@@ -3729,7 +3729,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     const commands = args.args[1].p;
                     assert.deepEqual(commands, [[3, 1]], "should send a command 3 (unlink)");
                 }
@@ -3770,7 +3770,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     const commands = args.args[1].p;
                     assert.deepEqual(commands, [[2, 1]]);
                 }
@@ -3823,7 +3823,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     const commands = args.args[1].p;
                     assert.deepEqual(commands, [
                         [
@@ -4120,7 +4120,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC: function (route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     nbWrite++;
                     assert.deepEqual(args.args[1], {
                         p: [
@@ -4185,7 +4185,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     // Would be nice to assert this way, but we don't control the virtual ids index
                     // assert.deepEqual(args.args[1].p, [
                     //     [0, "virtual_2", { foo: "gemuse" }],
@@ -4361,7 +4361,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsNone(target, "tr.o_data_row");
 
-        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "web_save"]);
     });
 
     QUnit.test("discard O2M field with close button", async function (assert) {
@@ -4816,7 +4816,7 @@ QUnit.module("Fields", (hooks) => {
             "9"
         );
 
-        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "web_save"]);
     });
 
     QUnit.test("editable o2m, pressing ESC discard current changes", async function (assert) {
@@ -5118,7 +5118,7 @@ QUnit.module("Fields", (hooks) => {
         await click(getPickerCell("1").at(0));
         await clickSave(target);
 
-        assert.verifySteps(["get_views", "web_read", "onchange", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
     });
 
     QUnit.test("one2many and onchange only write modified field", async function (assert) {
@@ -5162,7 +5162,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             mockRPC: function (method, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].turtles,
                         [
@@ -5494,7 +5494,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1].p, [
                         [
                             0,
@@ -5936,10 +5936,10 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/turtle/create") {
+                if (route === "/web/dataset/call_kw/turtle/web_save") {
                     assert.ok(args.args, "should write on the turtle record");
                 }
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
                     assert.deepEqual(
                         args.args[1].turtles,
@@ -6037,7 +6037,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/turtle/write") {
+                if (route === "/web/dataset/call_kw/turtle/web_save") {
                     assert.strictEqual(args.args[0].length, 1, "should write on the turtle record");
                     assert.deepEqual(
                         args.args[1],
@@ -6045,7 +6045,7 @@ QUnit.module("Fields", (hooks) => {
                         "should write only the product_id on the turtle record"
                     );
                 }
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(args.args[0][0], 1, "should write on the partner record 1");
                     assert.strictEqual(
                         args.args[1].turtles[0][0],
@@ -6301,10 +6301,10 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    const virtualID = args.args[0][0].turtles[0][1];
+                if (args.method === "web_save") {
+                    const virtualID = args.args[1].turtles[0][1];
                     assert.deepEqual(
-                        args.args[0][0].turtles,
+                        args.args[1].turtles,
                         [[0, virtualID, { turtle_foo: "cat" }]],
                         "should send proper commands"
                     );
@@ -6478,7 +6478,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].turtles,
                         [
@@ -6872,7 +6872,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1].turtles, [
                         [
                             1,
@@ -6926,7 +6926,7 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/get_formview_id") {
                     return Promise.resolve(false);
                 }
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].timmy,
                         [[6, false, [12]]],
@@ -7330,7 +7330,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.step(args.method);
                     assert.strictEqual(args.args[1].p.length, 1);
                     const command = args.args[1].p[0];
@@ -7424,7 +7424,7 @@ QUnit.module("Fields", (hooks) => {
 
         // click all buttons
         await click(target, btn1Disabled);
-        assert.verifySteps(["write", "button_disabled_partner_4"]);
+        assert.verifySteps(["web_save", "button_disabled_partner_4"]);
         await click(target, btn1Warn);
         await click(target, btn2Disabled);
         await click(target, btn2Warn);
@@ -7504,7 +7504,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     const commands = args.args[1].turtles;
                     assert.deepEqual(commands, [
                         [0, commands[0][1], { turtle_foo: "default foo turtle" }],
@@ -7551,7 +7551,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     const commands = args.args[1].turtles;
                     assert.deepEqual(commands, [
                         [0, commands[0][1], { turtle_foo: "default foo turtle" }],
@@ -8133,7 +8133,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editable list: contexts are correctly sent", async function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         serverData.models.partner.records[0].timmy = [12];
 
@@ -8166,7 +8166,7 @@ QUnit.module("Fields", (hooks) => {
                     );
                     assert.deepEqual(args.kwargs.specification.timmy.context, { key2: "hello" });
                 }
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.kwargs.context,
                         {
@@ -8174,8 +8174,9 @@ QUnit.module("Fields", (hooks) => {
                             someKey: "some value",
                             uid: 7,
                         },
-                        "write context"
+                        "read partner context"
                     );
+                    assert.deepEqual(args.kwargs.specification.timmy.context, { key2: "hello" });
                 }
             },
             resId: 1,
@@ -8406,7 +8407,7 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </form>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1].p[0][2], {
                         p: [[1, 1, { display_name: "new name" }]],
                     });
@@ -8534,7 +8535,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing tabbed one2many (editable=bottom)", async function (assert) {
-        assert.expect(11);
+        assert.expect(10);
 
         serverData.models.partner.records[0].turtles = [];
         for (let i = 0; i < 42; i++) {
@@ -8560,7 +8561,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.strictEqual(
                         args.args[1].turtles[0][0],
                         0,
@@ -8578,7 +8579,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 40);
 
-        assert.verifySteps(["get_views", "web_read", "onchange", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
     });
 
     QUnit.test("editing tabbed one2many (editable=bottom), again...", async function (assert) {
@@ -8612,7 +8613,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing tabbed one2many (editable=top)", async function (assert) {
-        assert.expect(14);
+        assert.expect(13);
 
         serverData.models.partner.records[0].turtles = [];
         serverData.models.turtle.fields.turtle_foo.default = "default foo";
@@ -8639,7 +8640,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.strictEqual(args.args[1].turtles[0][0], 0);
                     assert.deepEqual(args.args[1].turtles[0][2], { turtle_foo: "rainbow dash" });
                 }
@@ -8657,7 +8658,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsN(target, "tr.o_data_row", 40);
 
-        assert.verifySteps(["get_views", "web_read", "web_read", "onchange", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "web_read", "onchange", "web_save"]);
     });
 
     QUnit.test(
@@ -8897,14 +8898,14 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, args) {
-                    if (args.method === "create") {
+                    if (args.method === "web_save") {
                         assert.strictEqual(
-                            args.args[0][0].p[0][0],
+                            args.args[1].p[0][0],
                             0,
                             "should send a command 0 (CREATE) for p"
                         );
                         assert.deepEqual(
-                            args.args[0][0].p[0][2],
+                            args.args[1].p[0][2],
                             { turtles: [[4, 1]] },
                             "should send the correct values"
                         );
@@ -8978,7 +8979,7 @@ QUnit.module("Fields", (hooks) => {
                         throw makeServerError({ type: "ValidationError" });
                     }
                 }
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].turtles[0],
                         [1, 2, { turtle_foo: "foo" }],
@@ -9008,7 +9009,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("propagate context to sub views without default_* keys", async function (assert) {
-        assert.expect(7);
+        assert.expect(6);
 
         await makeView({
             type: "form",
@@ -9138,8 +9139,8 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    const commands = args.args[0][0].p;
+                if (args.method === "web_save") {
+                    const commands = args.args[1].p;
                     assert.deepEqual(commands, [
                         [
                             0,
@@ -10595,8 +10596,7 @@ QUnit.module("Fields", (hooks) => {
                 "onchange", // main record
                 "onchange", // line 1
                 "onchange", // line 2
-                "create",
-                "web_read", // main record
+                "web_save",
             ]);
         }
     );
@@ -10620,7 +10620,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
                 }
             },
@@ -13033,8 +13033,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write"); // should not happen
+                if (args.method === "web_save") {
+                    assert.step("web_save"); // should not happen
                 }
             },
         });
@@ -13051,7 +13051,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
 
         await clickSave(target);
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("toggle boolean in o2m with the formView in edition", async function (assert) {
@@ -13082,7 +13082,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views partner", "web_read partner"]);
 
         await click(target, ".o_boolean_toggle");
-        assert.verifySteps(["onchange partner", "write turtle", "web_read turtle"]);
+        assert.verifySteps(["onchange partner", "web_save turtle"]);
     });
 
     QUnit.test("create a new record with an x2m invisible", async function (assert) {
@@ -13132,11 +13132,9 @@ QUnit.module("Fields", (hooks) => {
                         },
                     };
                 }
-                if (args.method === "create") {
-                    const commands = args.args[0][0].p;
+                if (args.method === "web_save") {
+                    const commands = args.args[1].p;
                     assert.deepEqual(commands, [[0, commands[0][1], { int_field: 4, trululu: 1 }]]);
-                }
-                if (args.method === "web_read") {
                     assert.deepEqual(args.kwargs.specification, {
                         display_name: {},
                         p: {},
@@ -13149,7 +13147,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "onchange"]);
 
         await click(target, ".o_form_button_save");
-        assert.verifySteps(["create", "web_read"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("edit a record with an x2m invisible", async function (assert) {
@@ -13176,9 +13174,14 @@ QUnit.module("Fields", (hooks) => {
                         turtles: {},
                     });
                 }
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1], {
                         foo: "plop",
+                    });
+                    assert.deepEqual(args.kwargs.specification, {
+                        display_name: {},
+                        foo: {},
+                        turtles: {},
                     });
                 }
             },
@@ -13190,7 +13193,7 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, "[name='foo'] input", "plop");
         await clickSave(target);
-        assert.verifySteps(["write partner", "web_read partner"]);
+        assert.verifySteps(["web_save partner"]);
     });
 
     QUnit.test("can't select a record in a one2many", async function (assert) {
@@ -13682,7 +13685,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal .o_form_button_save"));
         assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
         await click(target, ".o_form_button_save");
-        assert.verifySteps(["create: partner", "web_read: partner"]);
+        assert.verifySteps(["web_save: partner"]);
         assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
     });
 
@@ -13768,8 +13771,8 @@ QUnit.module("Fields", (hooks) => {
         };
 
         const mockRPC = async (route, args) => {
-            if (args.method === "write") {
-                assert.step("write");
+            if (args.method === "web_save") {
+                assert.step("web_save");
                 assert.deepEqual(args.args[1], {
                     p: [[0, args.args[1].p[0][1], { display_name: "a name" }]],
                 });
@@ -13792,7 +13795,7 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         doAction(webClient, 2);
         await nextTick();
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
 
         def.resolve();
         await nextTick();
@@ -13979,7 +13982,7 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1], {
                         int_field: 16,
                         p: [

@@ -364,7 +364,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="datetime"/></form>',
             mockRPC(route, { args }) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(
                         args[1].datetime,
                         false,

@@ -333,14 +333,14 @@ QUnit.module("Fields", (hooks) => {
                     </templates>
                 </kanban>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step(`write ${JSON.stringify(args.args)}`);
+                if (args.method === "web_save") {
+                    assert.step(`web_save ${JSON.stringify(args.args)}`);
                 }
             },
         });
         assert.containsNone(target, ".o_kanban_record .fa-star");
         await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"), null, true);
-        assert.verifySteps(['write [[1],{"selection":"1"}]']);
+        assert.verifySteps(['web_save [[1],{"selection":"1"}]']);
         assert.containsOnce(target, ".o_kanban_record .fa-star");
 
         await click(
@@ -349,7 +349,7 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(target, ".o_kanban_quick_create .o_kanban_add");
         await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"), null, true);
-        assert.verifySteps(['write [[6],{"selection":"1"}]']);
+        assert.verifySteps(['web_save [[6],{"selection":"1"}]']);
         assert.containsN(target, ".o_kanban_record .fa-star", 2);
     });
 
@@ -636,8 +636,8 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(_route, { method }) {
-                if (method === "write") {
-                    assert.step("write");
+                if (method === "web_save") {
+                    assert.step("web_save");
                 }
             },
         });
@@ -646,7 +646,7 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o"
         );
         await click(stars[stars.length - 1]);
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("PriorityField - prevent auto save with autosave option", async function (assert) {

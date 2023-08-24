@@ -107,6 +107,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("AceEditorField on html fields works", async function (assert) {
+        assert.expect(8);
         serverData.models.partner.fields.htmlField = {
             string: "HTML Field",
             type: "html",
@@ -129,7 +130,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (args.method) {
                     assert.step(args.method);
-                    if (args.method === "write") {
+                    if (args.method === "web_save") {
                         assert.deepEqual(args.args[1], { foo: "DEF" });
                     }
                     if (args.method === "onchange") {
@@ -154,7 +155,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] textarea", "DEF");
         await clickSave(target);
 
-        assert.verifySteps(["get_views", "web_read", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "web_save"]);
     });
 
     QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {
@@ -259,6 +260,6 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvents(textArea, null, ["blur"]);
         assert.verifySteps(['onchange: [[1],{"foo":"a"},["foo"],{"display_name":{},"foo":{}}]']);
         await click(target, ".o_form_button_save");
-        assert.verifySteps(['write: [[1],{"foo":"a"}]', "web_read: [[1]]"]);
+        assert.verifySteps(['web_save: [[1],{"foo":"a"}]']);
     });
 });

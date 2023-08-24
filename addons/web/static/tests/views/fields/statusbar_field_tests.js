@@ -611,8 +611,8 @@ QUnit.module("Fields", (hooks) => {
                     </header>
                 </form>`,
             mockRPC(_route, { method }) {
-                if (method === "write") {
-                    assert.step("write");
+                if (method === "web_save") {
+                    assert.step("web_save");
                 }
             },
         });
@@ -620,7 +620,7 @@ QUnit.module("Fields", (hooks) => {
             ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
         );
         await click(clickableButtons[clickableButtons.length - 1]);
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test(

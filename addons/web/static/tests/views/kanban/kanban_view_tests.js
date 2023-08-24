@@ -1880,7 +1880,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record with quick_create_view", async (assert) => {
-        assert.expect(20);
+        assert.expect(19);
 
         serverData.views["partner,some_view_ref,form"] =
             "<form>" +
@@ -1902,16 +1902,14 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 assert.step(args.method || route);
-                if (args.method === "create") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
-                        args.args[0],
-                        [
-                            {
-                                foo: "new partner",
-                                int_field: 4,
-                                state: "def",
-                            },
-                        ],
+                        args.args[1],
+                        {
+                            foo: "new partner",
+                            int_field: 4,
+                            state: "def",
+                        },
                         "should send the correct values"
                     );
                 }
@@ -1952,8 +1950,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
             "onchange", // quick create
-            "create", // should perform a create to create the record
-            "web_read",
+            "web_save", // should perform a web_save to create the record
             "web_read", // read the created record
             "onchange", // new quick create
         ]);
@@ -1985,16 +1982,14 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             groupBy: ["bar"],
             async mockRPC(route, args) {
-                if (args.method === "create") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
-                        args.args[0],
-                        [
-                            {
-                                foo: "new partner",
-                                int_field: 4,
-                                state: "def",
-                            },
-                        ],
+                        args.args[1],
+                        {
+                            foo: "new partner",
+                            int_field: 4,
+                            state: "def",
+                        },
                         "should send the correct values"
                     );
                 }
@@ -2233,7 +2228,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record in grouped on m2o (with quick_create_view)", async (assert) => {
-        assert.expect(16);
+        assert.expect(15);
 
         serverData.views["partner,some_view_ref,form"] =
             "<form>" +
@@ -2255,16 +2250,15 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
-                if (method === "create") {
+                if (method === "web_save") {
                     assert.deepEqual(
-                        args[0],
-                        [
-                            {
-                                foo: "new partner",
-                                int_field: 4,
-                                state: "def",
-                            },
-                        ],
+                        args[1],
+
+                        {
+                            foo: "new partner",
+                            int_field: 4,
+                            state: "def",
+                        },
                         "should send the correct values"
                     );
                     const { default_product_id, default_qux } = kwargs.context;
@@ -2296,8 +2290,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
             "onchange", // quick create
-            "create", // should perform a create to create the record
-            "web_read",
+            "web_save", // should perform a web_save to create the record
             "web_read", // read the created record
             "onchange", // reopen the quick create automatically
         ]);
@@ -2437,15 +2430,13 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["category_ids"],
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
-                if (method === "create") {
-                    assert.deepEqual(args[0], [
-                        {
-                            foo: "new partner",
-                        },
-                    ]);
+                if (method === "web_save") {
+                    assert.deepEqual(args[1], {
+                        foo: "new partner",
+                    });
                     const { default_category_ids } = kwargs.context;
                     assert.deepEqual(default_category_ids, [6]);
-                    return [5];
+                    return [{ id: 5 }];
                 }
                 if (method === "web_read" && args[0][0] === 5) {
                     return [{ id: 5, foo: "new partner", category_ids: [6] }];
@@ -2478,7 +2469,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "get_views", // get form view
             "onchange", // quick create
-            "create", // should perform a create to create the record
+            "web_save", // should perform a web_save to create the record
             "web_read", // read the created record
             "onchange", // reopen the quick create automatically
         ]);
@@ -2506,13 +2497,11 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["category_ids"],
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
-                if (method === "create") {
-                    assert.deepEqual(args[0], [
-                        {
-                            category_ids: [[4, 6]],
-                            foo: "new partner",
-                        },
-                    ]);
+                if (method === "web_save") {
+                    assert.deepEqual(args[1], {
+                        category_ids: [[4, 6]],
+                        foo: "new partner",
+                    });
                     const { default_category_ids } = kwargs.context;
                     assert.deepEqual(default_category_ids, [6]);
                 }
@@ -2552,7 +2541,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "get_views", // get form view
             "onchange", // quick create
-            "create", // should perform a create to create the record
+            "web_save", // should perform a web_save to create the record
             "web_read",
             "onchange",
         ]);
@@ -2725,9 +2714,9 @@ QUnit.module("Views", (hooks) => {
             </kanban>`,
             groupBy: ["bar"],
             async mockRPC(route, { method, args }) {
-                if (method === "create") {
+                if (method === "web_save") {
                     assert.notOk(
-                        "int_field" in args[0],
+                        "int_field" in args[1],
                         "readonly field shouldn't be sent in create"
                     );
                 }
@@ -2749,7 +2738,7 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput("foo", "new partner");
         assert.verifySteps(["onchange"]);
         await validateRecord();
-        assert.verifySteps(["create", "web_read", "onchange"]);
+        assert.verifySteps(["web_save", "web_read", "onchange"]);
     });
 
     QUnit.test("quick create record and change state in grouped mode", async (assert) => {
@@ -2957,8 +2946,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["bar"],
             async mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     await prom;
                 }
             },
@@ -3005,7 +2994,7 @@ QUnit.module("Views", (hooks) => {
             "quick create should be enabled"
         );
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("quick create record: prevent multiple adds with Add clicked", async (assert) => {
@@ -3025,8 +3014,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["bar"],
             async mockRPC(route, { method }) {
-                if (method === "create") {
-                    assert.step("create");
+                if (method === "web_save") {
+                    assert.step("web_save");
                     await prom;
                 }
             },
@@ -3067,7 +3056,7 @@ QUnit.module("Views", (hooks) => {
             "quick create should be enabled"
         );
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test(
@@ -3200,9 +3189,9 @@ QUnit.module("Views", (hooks) => {
                             }
                             break;
                         }
-                        case "create": {
+                        case "web_save": {
                             assert.step(method);
-                            const values = args[0][0];
+                            const values = args[1];
                             assert.strictEqual(values.foo, "new partner");
                             assert.strictEqual(values.int_field, 3);
                             break;
@@ -3268,7 +3257,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "onchange", // default_get
                 "onchange", // new partner
-                "create",
+                "web_save",
                 "onchange", // default_get
             ]);
         }
@@ -3307,9 +3296,9 @@ QUnit.module("Views", (hooks) => {
                             await prom;
                         }
                     }
-                    if (args.method === "create") {
-                        assert.step("create");
-                        assert.deepEqual(args.args[0][0], {
+                    if (args.method === "web_save") {
+                        assert.step("web_save");
+                        assert.deepEqual(args.args[1], {
                             foo: "new partner",
                             int_field: 3,
                         });
@@ -3367,7 +3356,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "onchange", // default_get
                 "onchange", // new partner
-                "create",
+                "web_save",
                 "onchange", // default_get
             ]);
         }
@@ -3934,8 +3923,8 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "name_create") {
                     throw makeServerError({ message: "This is a user error" });
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0][0], { foo: "blip" });
+                if (args.method === "web_save") {
+                    assert.deepEqual(args.args[1], { foo: "blip" });
                     assert.deepEqual(args.kwargs.context, {
                         default_foo: "blip",
                         default_name: "test",
@@ -3984,8 +3973,8 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "name_create") {
                     throw makeServerError({ message: "This is a user error" });
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0][0], { state: "abc" });
+                if (args.method === "web_save") {
+                    assert.deepEqual(args.args[1], { state: "abc" });
                     assert.deepEqual(args.kwargs.context, {
                         default_state: "abc",
                         default_name: "test",
@@ -4283,8 +4272,8 @@ QUnit.module("Views", (hooks) => {
                     "</kanban>",
                 groupBy: ["foo"],
                 async mockRPC(route, { method, args, kwargs }) {
-                    if (method === "create") {
-                        assert.deepEqual(args[0], [{ foo: "blip" }]);
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], { foo: "blip" });
                         assert.strictEqual(kwargs.context.default_foo, "blip");
                     }
                 },
@@ -4325,8 +4314,8 @@ QUnit.module("Views", (hooks) => {
                     "</kanban>",
                 groupBy: ["bar"],
                 async mockRPC(route, { method, args, kwargs }) {
-                    if (method === "create") {
-                        assert.deepEqual(args[0], [{ bar: true }]);
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], { bar: true });
                         assert.strictEqual(kwargs.context.default_bar, true);
                     }
                 },
@@ -4371,8 +4360,8 @@ QUnit.module("Views", (hooks) => {
                     "</kanban>",
                 groupBy: ["state"],
                 async mockRPC(route, { method, args, kwargs }) {
-                    if (method === "create") {
-                        assert.deepEqual(args[0], [{ state: "abc" }]);
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], { state: "abc" });
                         assert.strictEqual(kwargs.context.default_state, "abc");
                     }
                 },
@@ -4619,10 +4608,7 @@ QUnit.module("Views", (hooks) => {
         // Write on the record using the priority widget to trigger a re-render in readonly
         await click(target, ".o_kanban_record:first-child .o_priority_star:first-child");
 
-        assert.verifySteps([
-            "/web/dataset/call_kw/partner/write",
-            "/web/dataset/call_kw/partner/web_read",
-        ]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/web_save"]);
         assert.containsN(
             target,
             ".o_kanban_record:first-child .o_field_many2many_tags .o_tag",
@@ -4993,7 +4979,7 @@ QUnit.module("Views", (hooks) => {
                     assert.step("resequence");
                     return true;
                 }
-                if (args.model === "partner" && args.method === "write") {
+                if (args.model === "partner" && args.method === "web_save") {
                     assert.deepEqual(args.args[1], { state: "abc" });
                 }
             },
@@ -5443,7 +5429,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(route, { model, method }) {
-                if (model === "partner" && method === "write") {
+                if (model === "partner" && method === "web_save") {
                     return Promise.reject({});
                 }
             },
@@ -8683,7 +8669,7 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
             async mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.step(`write-color-${args[1].color}`);
                 }
             },
@@ -9918,18 +9904,15 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
             "web_search_read",
             "web_search_read",
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "/web/dataset/resequence",
             "read",
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "/web/dataset/resequence",
             "read",
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "/web/dataset/resequence",
             "read",
@@ -9989,8 +9972,7 @@ QUnit.module("Views", (hooks) => {
                 "read_progress_bar",
                 "web_search_read",
                 "web_search_read",
-                "write",
-                "web_read",
+                "web_save",
                 "read_progress_bar",
                 "web_read_group",
                 "/web/dataset/resequence",
@@ -10071,8 +10053,7 @@ QUnit.module("Views", (hooks) => {
                 "read_progress_bar",
                 "web_search_read",
                 "web_search_read",
-                "write",
-                "web_read",
+                "web_save",
                 "read_progress_bar",
                 "/web/dataset/resequence",
                 "read",
@@ -10289,7 +10270,7 @@ QUnit.module("Views", (hooks) => {
                 "web_search_read",
                 "get_views",
                 "onchange",
-                "create",
+                "web_save",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
@@ -10364,13 +10345,13 @@ QUnit.module("Views", (hooks) => {
                 "web_search_read",
                 "get_views",
                 "onchange",
-                "create",
+                "web_save",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
                 "web_read_group",
                 "onchange",
-                "create",
+                "web_save",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
@@ -10953,7 +10934,7 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
             async mockRPC(_route, { model, method, args }) {
-                if (model === "partner" && method === "write") {
+                if (model === "partner" && method === "web_save") {
                     assert.step(String(args[0][0]));
                 }
             },
@@ -11539,8 +11520,7 @@ QUnit.module("Views", (hooks) => {
                 "web_search_read",
                 "web_search_read",
                 "web_search_read",
-                "write",
-                "web_read",
+                "web_save",
                 "read_progress_bar",
                 "/web/dataset/resequence",
                 "read",
@@ -11625,8 +11605,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getTooltips(1), ["1 blip", "1 Other"]);
         assert.deepEqual(getCardTexts(1), ["2blip", "3gnap"]);
         assert.verifySteps([
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "web_search_read",
             "/web/dataset/resequence",
@@ -12482,8 +12461,7 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
             "web_search_read",
             "web_search_read",
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
@@ -13086,8 +13064,7 @@ QUnit.module("Views", (hooks) => {
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
-            "write",
-            "web_read",
+            "web_save",
             "read_progress_bar",
             "web_read_group",
         ]);
@@ -13176,7 +13153,7 @@ QUnit.module("Views", (hooks) => {
             "name_create", // should perform a name_create to create the record
             "get_views", // load views for form view dialog
             "onchange", // load of a virtual record in form view dialog
-            "create", // save virtual record
+            "web_save", // save virtual record
             "web_read", // read the created record to get foo value
             "onchange", // reopen the quick create automatically
         ]);
@@ -13455,7 +13432,7 @@ QUnit.module("Views", (hooks) => {
             prom.resolve();
             await nextTick();
 
-            assert.verifySteps(["write", "web_read", "/web/dataset/resequence", "read"]);
+            assert.verifySteps(["web_save", "/web/dataset/resequence", "read"]);
             assert.deepEqual(
                 [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),
                 ["hello", "hello", "hello", "xmo"]
@@ -13521,7 +13498,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             groupBy: ["product_id"],
             mockRPC: async (route, { method }) => {
-                if (method === "write") {
+                if (method === "web_save") {
                     await def;
                 }
             },

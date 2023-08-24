@@ -20,6 +20,8 @@ import {
     createPropertyActiveField,
     extractInfoFromGroupData,
     isRelational,
+    FetchRecordError,
+    getBasicEvalContext,
 } from "./utils";
 
 /**
@@ -44,6 +46,7 @@ import {
  * @property {Object} activeFields
  * @property {object} context
  * @property {boolean} isMonoRecord
+ * @property {number} currentCompanyId
  * @property {boolean} isRoot
  * @property {Array} [domain]
  * @property {Array} [groupBy]
@@ -86,12 +89,6 @@ const DEFAULT_HOOKS = {
     onRecordChanged: () => {},
 };
 
-export class FetchRecordError extends Error {
-    constructor(resIds) {
-        super(`Can't fetch record(s) ${resIds}. They might have been deleted.`);
-    }
-}
-
 export function fetchRecordErrorHandler(env, error, originalError) {
     if (originalError instanceof FetchRecordError) {
         env.services.notification.add(originalError.message, { sticky: true, type: "danger" });
@@ -119,7 +116,6 @@ export class RelationalModel extends Model {
      */
     setup(params, { action, company, dialog, notification, rpc, user }) {
         this.action = action;
-        this.company = company;
         this.dialog = dialog;
         this.notification = notification;
         this.rpc = rpc;
@@ -133,6 +129,7 @@ export class RelationalModel extends Model {
         /** @type {Config} */
         this.config = {
             isMonoRecord: false,
+            currentCompanyId: company.currentCompany.id,
             ...params.config,
             isRoot: true,
         };
@@ -257,6 +254,9 @@ export class RelationalModel extends Model {
         if (currentConfig.isMonoRecord) {
             config.resId = "resId" in params ? params.resId : config.resId;
             config.resIds = "resIds" in params ? params.resIds : config.resIds;
+            if (!config.resIds) {
+                config.resIds = config.resId ? [config.resId] : [];
+            }
             if (!config.resId && config.mode !== "edit") {
                 config.mode = "edit";
             }
@@ -308,13 +308,7 @@ export class RelationalModel extends Model {
             this.hooks.onWillLoadRoot(config);
         }
         if (config.isMonoRecord) {
-            const evalContext = {
-                ...config.context,
-                active_id: config.resId,
-                active_ids: [config.resId],
-                active_model: config.resModel,
-                current_company_id: this.company.currentCompany.id,
-            };
+            const evalContext = getBasicEvalContext(config);
             if (!config.resId) {
                 return this._loadNewRecord(config, { evalContext });
             }
@@ -348,7 +342,7 @@ export class RelationalModel extends Model {
             ...config,
             context: {
                 ...config.context,
-                current_company_id: this.company.currentCompany.id,
+                current_company_id: config.currentCompanyId,
             },
         });
     }

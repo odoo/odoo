@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC: (route, { args, method, model, kwargs }) => {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     var commands = args[1].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
                     assert.strictEqual(
@@ -208,7 +208,7 @@ QUnit.module("Fields", (hooks) => {
                     );
                     assert.deepEqual(commands[0][2], [12, 13], "new value should be [12, 13]");
                 }
-                if (method === "web_read" && model === "partner_type") {
+                if ((method === "web_read" || method === "web_save") && model === "partner_type") {
                     assert.deepEqual(
                         kwargs.specification,
                         { display_name: {}, color: {} },
@@ -585,8 +585,8 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC: (route, { args }) => {
-                if (route === "/web/dataset/call_kw/partner/create") {
-                    const commands = args[0][0].timmy;
+                if (route === "/web/dataset/call_kw/partner/web_save") {
+                    const commands = args[1].timmy;
                     assert.strictEqual(commands.length, 1, "should have generated one command");
                     assert.strictEqual(
                         commands[0][0],
@@ -639,7 +639,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </form>`,
             mockRPC: (route, { args, method }) => {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.step(JSON.stringify(args[1]));
                 }
             },
@@ -1570,8 +1570,8 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "name_create") {
                     throw makeServerError({ type: "ValidationError" });
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0][0], {
+                if (args.method === "web_save") {
+                    assert.deepEqual(args.args[1], {
                         color: 8,
                         name: "new partner",
                     });
@@ -1770,16 +1770,13 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "web_read") {
                     await def;
                 }
-            }
+            },
         });
         patchWithCleanup(form.env.services.notification, {
             add: () => assert.step("notification"),
         });
 
-        assert.verifySteps([
-            "get_views",
-            "onchange",
-        ]);
+        assert.verifySteps(["get_views", "onchange"]);
 
         assert.containsNone(target, ".o_tag");
 
@@ -1788,10 +1785,7 @@ QUnit.module("Fields", (hooks) => {
         await clickOpenedDropdownItem(target, "timmy", "gold");
         assert.containsNone(target, ".o_tag");
 
-        assert.verifySteps([
-            "name_search",
-            "web_read",
-        ]);
+        assert.verifySteps(["name_search", "web_read"]);
 
         await clickSave(target);
         assert.doesNotHaveClass(target, "[name='timmy']", "o_field_invalid");
@@ -1801,10 +1795,7 @@ QUnit.module("Fields", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.verifySteps([
-            "create",
-            "web_read",
-        ]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("Many2ManyTagsField with option 'no_quick_create' set to true", async (assert) => {

@@ -299,7 +299,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             };
             let reject = true;
             function mockRPC(route, args) {
-                if (args.method === "create" && reject) {
+                if (args.method === "web_save" && reject) {
                     return Promise.reject();
                 }
             }
@@ -357,7 +357,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         };
         const def = makeDeferred();
         async function mockRPC(route, args) {
-            if (args.method === "write") {
+            if (args.method === "web_save") {
                 await def;
             }
         }

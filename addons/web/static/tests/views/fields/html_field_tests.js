@@ -317,7 +317,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { args, method }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(args[1].txt, false, "the txt value should be false");
                     }
                 },

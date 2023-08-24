@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     // 48 / 60 = 0.8
                     assert.strictEqual(
                         args.args[1].qux,
@@ -89,7 +89,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="qux" widget="float_time"/>
                 </form>`,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(
                         args.args[1].qux,
                         9.5,

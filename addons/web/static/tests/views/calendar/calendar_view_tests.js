@@ -791,7 +791,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                 <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="month" />
             `,
             mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save" && args[0].length !== 0) {
                     assert.deepEqual(
                         args[1],
                         { name: "event 4 modified" },
@@ -1528,7 +1528,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                     </calendar>
                 `,
                 mockRPC(route, { args, kwargs, method }) {
-                    if (method === "create") {
+                    if (method === "web_save") {
                         assert.deepEqual(
                             kwargs.context,
                             {
@@ -1730,7 +1730,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                     </calendar>
                 `,
                 mockRPC(route, { args, kwargs, method }) {
-                    if (method === "create") {
+                    if (method === "web_save") {
                         assert.deepEqual(
                             kwargs.context,
                             {
@@ -4223,7 +4223,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                     <calendar event_open_popup="1" create="0" date_start="start" date_stop="stop" mode="month" />
                 `,
                 mockRPC(route, { args, method }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.deepEqual(
                             args[1],
                             { name: "event 4 modified" },

@@ -84,7 +84,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.deepEqual(
                         args[1],
                         { int_field: 999, float_field: 5, display_name: "new name" },
@@ -126,7 +126,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(
                             args[1].int_field,
                             69,
@@ -178,7 +178,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(
                             args[1].int_field,
                             69,
@@ -225,7 +225,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { method, args }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(
                             args[1].float_field,
                             69,
@@ -319,7 +319,7 @@ QUnit.module("Fields", (hooks) => {
                 </kanban>`,
             resId: 1,
             mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.strictEqual(args[1].int_field, 69, "New value of progress bar saved");
                 }
             },
@@ -378,7 +378,7 @@ QUnit.module("Fields", (hooks) => {
                 </kanban>`,
             resId: 1,
             mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     throw new Error("Not supposed to write");
                 }
             },
@@ -462,7 +462,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC: function (route, { method, args }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(
                             args[1].int_field,
                             1037,
