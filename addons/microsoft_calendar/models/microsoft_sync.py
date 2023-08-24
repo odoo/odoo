@@ -441,7 +441,7 @@ class MicrosoftSync(models.AbstractModel):
             if token:
                 self._ensure_attendees_have_email()
                 event_id, uid = microsoft_service.insert(values, token=token, timeout=timeout)
-                self.write({
+                self.with_context(dont_notify=True).write({
                     'microsoft_id': combine_ids(event_id, uid),
                     'need_sync_m': False,
                 })
