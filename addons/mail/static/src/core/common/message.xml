@@ -135,22 +135,23 @@
                 'flex-row-reverse': env.inChatWindow and isAlignedRight,
             }"
         >
-            <button t-if="canAddReaction and !isInInbox" class="btn px-1 py-0 rounded-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
-            <span t-else="" t-ref="emoji-picker"/> <!-- anchor of emoji picker when in dropdown -->
-            <button t-if="canReplyTo" class="btn px-1 py-0 rounded-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
-            <button t-if="canToggleStar" class="btn px-1 py-0 rounded-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
-            <button t-if="isInInbox" class="btn px-1 py-0 rounded-0" t-on-click.stop="() => messageService.setDone(props.message)" title="Mark as Read" aria-label="Mark as Read"><i class="fa fa-lg fa-check"/></button>
-            <Dropdown t-if="message.reactions.length or editable or deletable or (canAddReaction and isInInbox) or (props.thread?.model === 'discuss.channel' and store.user)" onStateChanged="state => this.state.expandOptions = state.open" position="props.message.eq(props.thread?.newestMessage)  ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
+            <t t-foreach="messageActions.actions.slice(0, quickActionCount)" t-as="action" t-key="action.id">
+                <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props"/>
+                <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick">
+                    <i class="fa fa-lg" t-att-class="action.icon"/>
+                </button>
+            </t>
+            <Dropdown t-if="messageActions.actions.length gt quickActionCount" onStateChanged="state => this.state.expandOptions = state.open" position="props.message.eq(props.thread?.newestMessage)  ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 rounded-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex rounded-0'" title="expandText">
                 <t t-set-slot="toggler">
                     <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                 </t>
                 <t t-set-slot="default">
-                    <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>View Reactions</DropdownItem>
-                    <DropdownItem t-if="canAddReaction and isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Add a Reaction'" onSelected="() => this.emojiPickerRef.el.click()"><i class="fa fa-lg fa-fw fa-smile-o pe-2"/>Add a Reaction</DropdownItem>
-                    <DropdownItem t-if="showUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-fw fa-user-times pe-2"/>Unfollow</DropdownItem>
-                    <DropdownItem t-if="props.thread.model === 'discuss.channel' and store.user" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-fw fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
-                    <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-fw fa-pencil pe-2"/>Edit</DropdownItem>
-                    <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-fw fa-trash pe-2"/>Delete</DropdownItem>
+                    <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
+                        <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" title="action.title" onSelected="action.onClick">
+                            <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
+                            <t t-esc="action.title"/>
+                        </DropdownItem>
+                    </t>
                 </t>
             </Dropdown>
         </div>

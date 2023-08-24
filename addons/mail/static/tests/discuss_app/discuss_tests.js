@@ -329,6 +329,7 @@ QUnit.test("reply to message from inbox (message linked to document) [REQUIRE FO
     openDiscuss();
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
@@ -614,17 +615,15 @@ QUnit.test("rendering of inbox message", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
     await contains(".o-mail-Message-actions i", { count: 4 });
-    await contains("[title='Reply']");
+    await contains("[title='Add a Reaction']");
     await contains("[title='Mark as Todo']");
     await contains("[title='Mark as Read']");
-    await contains("[title='Expand']");
     await click("[title='Expand']");
     await contains(".o-mail-Message-actions i", { count: 5 });
     await contains("[title='Reply']");
     await contains("[title='Mark as Todo']");
     await contains("[title='Mark as Read']");
     await contains("[title='Expand']");
-    await contains("[title='Add a Reaction']");
 });
 
 QUnit.test("Unfollow message", async function () {
