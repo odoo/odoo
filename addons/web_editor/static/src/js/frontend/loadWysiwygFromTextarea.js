@@ -49,11 +49,21 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
     // o_we_selected_image has not always been removed when
     // saving a post so we need the line below to remove it if it is present.
     $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
-    $form.on('click', 'button[type=submit]', (e) => {
-        $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
-        // float-start class messes up the post layout OPW 769721
-        $form.find('.note-editable').find('img.float-start').removeClass('float-start');
-        $textarea.html(wysiwyg.getValue());
+
+    let b64imagesPending = true;
+    $form.on('click', 'button[type=submit]', (ev) => {
+        if (b64imagesPending) {
+            ev.preventDefault();
+            wysiwyg.savePendingImages().finally(() => {
+                b64imagesPending = false;
+                ev.currentTarget.click();
+            });
+        } else {
+            $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+            // float-start class messes up the post layout OPW 769721
+            $form.find('.note-editable').find('img.float-start').removeClass('float-start');
+            $textarea.html(wysiwyg.getValue());
+        }
     });
 
     return wysiwyg;
