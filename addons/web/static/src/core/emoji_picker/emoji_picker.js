@@ -6,6 +6,7 @@ import {
     Component,
     onMounted,
     onPatched,
+    onWillDestroy,
     onWillPatch,
     onWillStart,
     onWillUnmount,
@@ -128,7 +129,6 @@ export class EmojiPicker extends Component {
     static props = ["onSelect", "className?", "close?", "onClose?", "storeScroll?"];
     static template = "web.EmojiPicker";
 
-    recent = [];
     categories = null;
     emojis = null;
     shouldScrollElem = null;
@@ -140,7 +140,19 @@ export class EmojiPicker extends Component {
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
+            recent: JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}"),
             searchStr: "",
+        });
+        const onStorage = (ev) => {
+            if (ev.key === "web.emoji.frequent") {
+                this.state.recent = ev.newValue ? JSON.parse(ev.newValue) : {};
+            } else if (ev.key === null) {
+                this.state.recent = {};
+            }
+        };
+        browser.addEventListener("storage", onStorage);
+        onWillDestroy(() => {
+            browser.removeEventListener("storage", onStorage);
         });
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
@@ -150,7 +162,6 @@ export class EmojiPicker extends Component {
                 this.emojis.map((emoji) => [emoji.codepoints, emoji])
             );
             this.state.categoryId = this.categories[0]?.sortId;
-            this.recent = JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}");
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -211,7 +222,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        return Object.entries(this.recent)
+        return Object.entries(this.state.recent)
             .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
             .slice(0, 42)
             .map(([codepoints]) => this.emojiByCodepoints[codepoints]);
@@ -289,9 +300,9 @@ export class EmojiPicker extends Component {
     selectEmoji(ev) {
         const codepoints = ev.currentTarget.dataset.codepoints;
         this.props.onSelect(codepoints);
-        this.recent[codepoints] ??= 0;
-        this.recent[codepoints]++;
-        browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(this.recent));
+        this.state.recent[codepoints] ??= 0;
+        this.state.recent[codepoints]++;
+        browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(this.state.recent));
         this.gridRef.el.scrollTop = 0;
         if (!ev.shiftKey) {
             this.props.close?.();
