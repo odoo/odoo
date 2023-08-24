@@ -3424,6 +3424,39 @@
         }
     }
 
+    function createActions(menuItems) {
+        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
+    }
+    const uuidGenerator$2 = new UuidGenerator();
+    function createAction(item) {
+        const name = item.name;
+        const children = item.children;
+        const description = item.description;
+        const icon = item.icon;
+        return {
+            id: item.id || uuidGenerator$2.uuidv4(),
+            name: typeof name === "function" ? name : () => name,
+            isVisible: item.isVisible ? item.isVisible : () => true,
+            isEnabled: item.isEnabled ? item.isEnabled : () => true,
+            isActive: item.isActive,
+            execute: item.execute,
+            children: children
+                ? (env) => {
+                    return children
+                        .map((child) => (typeof child === "function" ? child(env) : child))
+                        .flat()
+                        .map(createAction);
+                }
+                : () => [],
+            isReadonlyAllowed: item.isReadonlyAllowed || false,
+            separator: item.separator || false,
+            icon: typeof icon === "function" ? icon : () => icon || "",
+            description: typeof description === "function" ? description : () => description || "",
+            textColor: item.textColor,
+            sequence: item.sequence || 0,
+        };
+    }
+
     class ChartJsComponent extends owl.Component {
         static template = "o-spreadsheet-ChartJsComponent";
         canvas = owl.useRef("graphContainer");
@@ -6062,7 +6095,7 @@
             };
         }
         get childrenHaveIcon() {
-            return this.props.menuItems.some((menuItem) => !!menuItem.icon || !!menuItem.isActive);
+            return this.props.menuItems.some((menuItem) => !!this.getIconName(menuItem));
         }
         getIconName(menu) {
             if (menu.icon(this.env)) {
@@ -9256,7 +9289,7 @@
         }
         // Example continuation: matchingRows = {0, 2}
         // 4 - return for each database row corresponding, the cells corresponding to the field parameter
-        const fieldCol = database[index].map((col) => col);
+        const fieldCol = database[index];
         // Example continuation:: fieldCol = ["C", "j", "k", 7]
         const matchingCells = [...matchingRows].map((x) => fieldCol[x + 1]);
         // Example continuation:: matchingCells = ["j", 7]
@@ -15288,39 +15321,6 @@
         execute: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
     };
 
-    function createActions(menuItems) {
-        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
-    }
-    const uuidGenerator$2 = new UuidGenerator();
-    function createAction(item) {
-        const name = item.name;
-        const children = item.children;
-        const description = item.description;
-        const icon = item.icon;
-        return {
-            id: item.id || uuidGenerator$2.uuidv4(),
-            name: typeof name === "function" ? name : () => name,
-            isVisible: item.isVisible ? item.isVisible : () => true,
-            isEnabled: item.isEnabled ? item.isEnabled : () => true,
-            isActive: item.isActive,
-            execute: item.execute,
-            children: children
-                ? (env) => {
-                    return children
-                        .map((child) => (typeof child === "function" ? child(env) : child))
-                        .flat()
-                        .map(createAction);
-                }
-                : () => [],
-            isReadonlyAllowed: item.isReadonlyAllowed || false,
-            separator: item.separator || false,
-            icon: typeof icon === "function" ? icon : () => icon || "",
-            description: typeof description === "function" ? description : () => description || "",
-            textColor: item.textColor,
-            sequence: item.sequence || 0,
-        };
-    }
-
     /**
      * The class Registry is extended in order to add the function addChild
      *
@@ -15590,10 +15590,12 @@
         sheetId;
         title;
         getters;
+        extraData;
         constructor(definition, sheetId, getters) {
             this.title = definition.title;
             this.sheetId = sheetId;
             this.getters = getters;
+            this.extraData = definition.extraData;
         }
         /**
          * Validate the chart definition given as arguments. This function will be
@@ -16343,6 +16345,7 @@
                 title: this.title,
                 stacked: this.stacked,
                 aggregated: this.aggregated,
+                extraData: this.extraData,
             };
         }
         getDefinitionForExcel() {
@@ -16579,6 +16582,7 @@
                 dataRange: dataRange
                     ? this.getters.getRangeString(dataRange, targetSheetId || this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         getDefinitionForExcel() {
@@ -16835,8 +16839,6 @@
         return "year";
     }
 
-    // @ts-ignore
-    const Chart = window.Chart;
     class LineChart extends AbstractChart {
         dataSets;
         labelRange;
@@ -16899,6 +16901,7 @@
                 labelsAsText: this.labelsAsText,
                 stacked: this.stacked,
                 aggregated: this.aggregated,
+                extraData: this.extraData,
             };
         }
         getContextCreation() {
@@ -17013,7 +17016,9 @@
                 generateLabels(chart) {
                     // color the legend labels with the dataset color, without any transparency
                     const { data } = chart;
-                    const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                    /** @ts-ignore */
+                    const labels = window.Chart.defaults.plugins.legend.labels
+                        .generateLabels(chart);
                     for (const [index, label] of labels.entries()) {
                         label.fillStyle = data.datasets[index].borderColor;
                     }
@@ -17196,6 +17201,7 @@
                     : undefined,
                 title: this.title,
                 aggregated: this.aggregated,
+                extraData: this.extraData,
             };
         }
         copyForSheetId(sheetId) {
@@ -17391,6 +17397,7 @@
                 keyValue: keyValue
                     ? this.getters.getRangeString(keyValue, targetSheetId || this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         getDefinitionForExcel() {
@@ -46971,6 +46978,11 @@
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
             this.bindModelEvents();
+            owl.onWillUpdateProps((nextProps) => {
+                if (nextProps.model !== this.props.model) {
+                    throw new Error("Changing the props model is not supported at the moment.");
+                }
+            });
             owl.onMounted(() => {
                 this.checkViewportSize();
             });
@@ -50744,6 +50756,8 @@
         isDefined: isDefined$1,
         lazy,
         genericRepeat,
+        createAction,
+        createActions,
     };
     const links = {
         isMarkdownLink,
@@ -50768,6 +50782,7 @@
         ScorecardChartConfigPanel,
         ScorecardChartDesignPanel,
         FigureComponent,
+        Menu,
     };
     function addFunction(functionName, functionDescription) {
         functionRegistry.add(functionName, functionDescription);
@@ -50817,8 +50832,8 @@
 
 
     __info__.version = '16.5.0-alpha.5';
-    __info__.date = '2023-08-17T11:19:14.474Z';
-    __info__.hash = 'e0cb3aa';
+    __info__.date = '2023-08-24T09:06:41.814Z';
+    __info__.hash = '2ecbcd5';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
