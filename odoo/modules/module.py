@@ -46,6 +46,7 @@ _DEFAULT_MANIFEST = {
     'images_preview_theme': {},  # website themes
     #license, mandatory
     'live_test_url': '',  # website themes
+    'new_page_templates': {},  # website themes
     #name, mandatory
     'post_init_hook': '',
     'post_load': None,

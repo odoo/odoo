@@ -9,7 +9,8 @@ from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
-from odoo.tools import split_every
+from odoo.modules.module import get_manifest
+from odoo.tools import escape_psql, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -549,3 +550,230 @@ class IrModuleModule(models.Model):
             """, (default_menu.id,))
 
         return res
+
+    # ----------------------------------------------------------------
+    # New page templates
+    # ----------------------------------------------------------------
+
+    @api.model
+    def _create_model_data(self, views):
+        """ Creates model data records for newly created view records.
+
+            :param views: views for which model data must be created
+        """
+        self.env['ir.model.data'].create([{
+            'name': view.key.split('.')[1],
+            'module': view.key.split('.')[0],
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for view in views])
+
+    def _generate_primary_snippet_templates(self):
+        """ Generates snippet templates hierarchy based on manifest entries for
+            use in the configurator and when creating new pages from templates.
+        """
+        def split_key(snippet_key):
+            """ Snippets xmlid can be written without the module part, meaning
+                it is a shortcut for a website module snippet.
+
+                :param snippet_key: xmlid with or without the module part
+                    'website' is assumed to be the default module
+                :return: module and key extracted from the snippet_key
+            """
+            return snippet_key.split('.') if '.' in snippet_key else ('website', snippet_key)
+
+        def create_missing_views(create_values):
+            """ Creates the snippet primary view records that do not exist yet.
+
+                :param create_values: values of records to create
+                :return: number of created records
+            """
+            # Defensive code (low effort): `if values` should always be set
+            create_values = [values for values in create_values if values]
+
+            keys = [values['key'] for values in create_values]
+            existing_primary_template_keys = self.env['ir.ui.view'].search_fetch([
+                ('mode', '=', 'primary'), ('key', 'in', keys),
+            ], ['key']).mapped('key')
+            missing_create_values = [values for values in create_values if values['key'] not in existing_primary_template_keys]
+            missing_records = self.env['ir.ui.view'].with_context(no_cow=True).create(missing_create_values)
+            self._create_model_data(missing_records)
+
+            # Prevent deletion by _process_end
+            for values in create_values:
+                self.env['ir.model.data']._load_xmlid(values["key"])
+
+            return len(missing_records)
+
+        def get_create_vals(name, snippet_key, parent_wrap, new_wrap):
+            """ Returns the create values for the new primary template of the
+                snippet having snippet_key as its base key, having a new key
+                formatted with new_wrap, and extending a parent with the key
+                formatted with parent_wrap.
+
+                :param name: name
+                :param snippet_key: xmlid of the base block
+                :param parent_wrap: string pattern used to format the
+                    snippet_key's second part to reach the parent key
+                :param new_wrap: string pattern used to format the
+                    snippet_key's second part to reach the new key
+                :return: create values for the new record
+            """
+            module, xmlid = split_key(snippet_key)
+            parent_key = f'{module}.{parent_wrap % xmlid}'
+            # Equivalent to using an already cached ref, without failing on
+            # missing key - because the parent records have just been created.
+            parent_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(parent_key, False)
+            if not parent_id:
+                _logger.warning("No such snippet template: %r", parent_key)
+                return None
+            return {
+                'name': name,
+                'key': f'{module}.{new_wrap % xmlid}',
+                'inherit_id': parent_id[1],
+                'mode': 'primary',
+                'type': 'qweb',
+                'arch': '<t/>',
+            }
+
+        def get_distinct_snippet_names(structure):
+            """ Returns the distinct leaves of the structure (tree leaf's list
+                elements).
+
+                :param structure: dict or list or snippet names
+                :return: distinct snippet names
+            """
+            items = []
+            for value in structure.values():
+                if isinstance(value, list):
+                    items.extend(value)
+                else:
+                    items.extend(get_distinct_snippet_names(value))
+            return set(items)
+
+        create_count = 0
+        manifest = get_manifest(self.name)
+
+        # ------------------------------------------------------------
+        # Configurator
+        # ------------------------------------------------------------
+
+        configurator_snippets = manifest['snippet_lists']
+
+        # Generate general configurator snippet templates
+        create_values = []
+        # Every distinct snippet name across all configurator pages.
+        for snippet_name in get_distinct_snippet_names(configurator_snippets):
+            create_values.append(get_create_vals(
+                f"Snippet {snippet_name!r} for pages generated by the configurator",
+                snippet_name, '%s', 'configurator_%s'
+            ))
+        create_count += create_missing_views(create_values)
+
+        # Generate configurator snippet templates for specific pages
+        create_values = []
+        for page_name in configurator_snippets:
+            for snippet_name in configurator_snippets[page_name]:
+                create_values.append(get_create_vals(
+                    f"Snippet {snippet_name!r} for {page_name!r} pages generated by the configurator",
+                    snippet_name, 'configurator_%s', f'configurator_{page_name}_%s'
+                ))
+        create_count += create_missing_views(create_values)
+
+        # ------------------------------------------------------------
+        # New page templates
+        # ------------------------------------------------------------
+
+        templates = manifest['new_page_templates']
+
+        # Generate general new page snippet templates
+        create_values = []
+        # Every distinct snippet name across all new page templates.
+        for snippet_name in get_distinct_snippet_names(templates):
+            create_values.append(get_create_vals(
+                f"Snippet {snippet_name!r} for new page templates",
+                snippet_name, '%s', 'new_page_template_%s'
+            ))
+        create_count += create_missing_views(create_values)
+
+        # Generate new page snippet templates for new page template groups
+        create_values = []
+        for group in templates:
+            # Every distinct snippet name across all new page templates of group.
+            for snippet_name in get_distinct_snippet_names(templates[group]):
+                create_values.append(get_create_vals(
+                    f"Snippet {snippet_name!r} for new page {group!r} templates",
+                    snippet_name, 'new_page_template_%s', f'new_page_template_{group}_%s'
+                ))
+        create_count += create_missing_views(create_values)
+
+        # Generate new page snippet templates for specific new page templates within groups
+        create_values = []
+        for group in templates:
+            for template_name in templates[group]:
+                for snippet_name in templates[group][template_name]:
+                    create_values.append(get_create_vals(
+                        f"Snippet {snippet_name!r} for new page {group!r} template {template_name!r}",
+                        snippet_name, f'new_page_template_{group}_%s', f'new_page_template_{group}_{template_name}_%s'
+                    ))
+        create_count += create_missing_views(create_values)
+
+        if create_count:
+            _logger.info("Generated %s primary snippet templates for %r", create_count, self.name)
+
+        if self.name == 'website':
+            # Invoke for themes and website_* - otherwise on -u website, the
+            # additional primary snippets they require are deleted by _process_end.
+            for module in self.env['ir.module.module'].search([
+                ('state', '=', 'installed'),
+                '|',
+                ('name', '=like', f'{escape_psql("theme_")}%'),
+                ('name', '=like', f'{escape_psql("website_")}%'),
+            ]):
+                module._generate_primary_snippet_templates()
+
+    def _generate_primary_page_templates(self):
+        """ Generates page templates based on manifest entries. """
+        View = self.env['ir.ui.view']
+        manifest = get_manifest(self.name)
+        templates = manifest['new_page_templates']
+
+        # TODO Find a way to create theme and other module's template patches
+        # Create or update template views per group x key
+        create_values = []
+        for group in templates:
+            for template_name in templates[group]:
+                xmlid = f'{self.name}.new_page_template_sections_{group}_{template_name}'
+                wrapper = f'%s.new_page_template_{group}_{template_name}_%s'
+                calls = '\n    '.join([
+                    f'''<t t-snippet-call="{wrapper % (snippet_key.split('.') if '.' in snippet_key else ('website', snippet_key))}"/>'''
+                    for snippet_key in templates[group][template_name]
+                ])
+                create_values.append({
+                    'name': f"New page template: {template_name!r} in {group!r}",
+                    'type': 'qweb',
+                    'key': xmlid,
+                    'arch': f'<div id="wrap">\n    {calls}\n</div>',
+                })
+        keys = [values['key'] for values in create_values]
+        existing_primary_templates = View.search_read([('mode', '=', 'primary'), ('key', 'in', keys)], ['key'])
+        existing_primary_template_keys = {data['key']: data['id'] for data in existing_primary_templates}
+        missing_create_values = []
+        update_count = 0
+        for create_value in create_values:
+            if create_value['key'] in existing_primary_template_keys:
+                View.browse(existing_primary_template_keys[create_value['key']]).with_context(no_cow=True).write({
+                    'arch': create_value['arch'],
+                })
+                update_count += 1
+            else:
+                missing_create_values.append(create_value)
+        if missing_create_values:
+            missing_records = View.create(missing_create_values)
+            self._create_model_data(missing_records)
+            _logger.info('Generated %s primary page templates for %r', len(missing_create_values), self.name)
+        # Prevent deletion by _process_end
+        for values in create_values:
+            self.env['ir.model.data']._load_xmlid(values['key'])
+        if update_count:
+            _logger.info('Updated %s primary page templates for %r', update_count, self.name)
