@@ -91,7 +91,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         })
         leave.action_validate()
 
-        work_entries = self.richard_emp.contract_id._generate_work_entries(self.start, self.end)
+        work_entries = self.richard_emp.contract_id.generate_work_entries(self.start.date(), self.end.date())
         work_entries.action_validate()
         leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
         sum_hours = sum(leave_work_entry.mapped('duration'))
@@ -190,7 +190,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         leave.action_approve()
         leave.action_validate()
 
-        work_entries = contract._generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
+        work_entries = contract.generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
 
         self.assertEqual(len(work_entries), 0)
 
