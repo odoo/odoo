@@ -2,7 +2,7 @@
 {
     'name': 'Mongolia - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
-    'version': '1.0',
+    'version': '1.1',
     'icon': '/account/static/description/l10n.png',
     'countries': ['mn'],
     'category': 'Accounting/Localizations/Account Charts',
