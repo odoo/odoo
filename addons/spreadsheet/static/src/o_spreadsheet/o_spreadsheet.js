@@ -16306,6 +16306,7 @@
                 type: "bar",
                 verticalAxisPosition: "left",
                 labelRange: context.auxiliaryRange || undefined,
+                extraData: context.extraData,
             };
         }
         getContextCreation() {
@@ -16316,6 +16317,7 @@
                 auxiliaryRange: this.labelRange
                     ? this.getters.getRangeString(this.labelRange, this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         copyForSheetId(sheetId) {
@@ -16559,6 +16561,7 @@
                         value: "40",
                     },
                 },
+                extraData: context.extraData,
             };
         }
         copyForSheetId(sheetId) {
@@ -16596,6 +16599,7 @@
                 range: this.dataRange
                     ? [this.getters.getRangeString(this.dataRange, this.sheetId)]
                     : undefined,
+                extraData: this.extraData,
             };
         }
         updateRanges(applyChange) {
@@ -16881,6 +16885,7 @@
                 labelRange: context.auxiliaryRange || undefined,
                 stacked: false,
                 aggregated: false,
+                extraData: context.extraData,
             };
         }
         getDefinition() {
@@ -16912,6 +16917,7 @@
                 auxiliaryRange: this.labelRange
                     ? this.getters.getRangeString(this.labelRange, this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         updateRanges(applyChange) {
@@ -17174,6 +17180,7 @@
                 type: "pie",
                 labelRange: context.auxiliaryRange || undefined,
                 aggregated: false,
+                extraData: context.extraData,
             };
         }
         getDefinition() {
@@ -17187,6 +17194,7 @@
                 auxiliaryRange: this.labelRange
                     ? this.getters.getRangeString(this.labelRange, this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         getDefinitionWithSpecificDataSets(dataSets, labelRange, targetSheetId) {
@@ -17342,6 +17350,7 @@
                 baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
                 baselineColorDown: DEFAULT_SCORECARD_BASELINE_COLOR_DOWN,
                 baseline: context.auxiliaryRange || "",
+                extraData: context.extraData,
             };
         }
         static transformDefinition(definition, executed) {
@@ -17380,6 +17389,7 @@
                 auxiliaryRange: this.baseline
                     ? this.getters.getRangeString(this.baseline, this.sheetId)
                     : undefined,
+                extraData: this.extraData,
             };
         }
         getDefinitionWithSpecificRanges(baseline, keyValue, targetSheetId) {
@@ -50832,8 +50842,8 @@
 
 
     __info__.version = '16.5.0-alpha.5';
-    __info__.date = '2023-08-24T09:06:41.814Z';
-    __info__.hash = '2ecbcd5';
+    __info__.date = '2023-08-24T09:36:52.396Z';
+    __info__.hash = 'c0d4ceb';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
