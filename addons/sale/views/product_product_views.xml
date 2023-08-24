@@ -37,6 +37,7 @@
                                          class="d-flex flex-column"/>
                                     <field name="product_template_attribute_value_ids"
                                            widget="many2many_tags"
+                                           domain="[('id', 'in', parent.ids)]"
                                            groups="product.group_product_variant"
                                            options="{'color_field': 'color'}"/>
                                 </div>
