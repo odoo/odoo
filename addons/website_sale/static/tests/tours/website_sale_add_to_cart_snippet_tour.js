@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        wTourUtils.assertPathName('/shop/payment', 'iframe h3:contains("Pay with")'),
+        wTourUtils.assertPathName('/shop/payment', 'iframe a[href="/shop/cart"]'),
 
         wsTourUtils.goToCart({quantity: 4, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens', backend: true}),

@@ -31,30 +31,25 @@ registry.category("web_tour.tours").add('shop_buy_product', {
             tourUtils.goToCart(),
         {
             content: "add suggested",
-            extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',
-            trigger: '.oe_cart:has(tr:contains("Storage Box")) a:contains("Add to Cart")',
+            trigger: '.js_cart_lines:has(a:contains("Storage Box")) a:contains("Add to cart")',
         },
         {
             content: "add one more",
-            extra_trigger: '#cart_products tr:contains("Storage Box")',
-            trigger: '#cart_products tr:contains("Steel") a.js_add_cart_json:eq(1)',
+            extra_trigger: '#cart_products div>a>h6:contains("Storage Box")',
+            trigger: '#cart_products div:has(div>a>h6:contains("Steel")) a.js_add_cart_json:eq(1)',
         },
         {
             content: "remove Storage Box",
-            extra_trigger: '#cart_products tr:contains("Steel") input.js_quantity:propValue(2)',
-            trigger: '#cart_products tr:contains("Storage Box") a.js_add_cart_json:first',
+            extra_trigger: '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:propValue(2)',
+            trigger: '#cart_products div:has(div>a>h6:contains("Storage Box")) a.js_add_cart_json:first',
         },
         {
             content: "set one",
-            extra_trigger: '#wrap:not(:has(#cart_products tr:contains("Storage Box")))',
+            extra_trigger: '#wrap:not(:has(#cart_products div>a>h6:contains("Storage Box")))',
             trigger: '#cart_products input.js_quantity',
             run: 'text 1',
         },
-        {
-            content: "go to checkout",
-            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
-            trigger: 'a[href*="/shop/checkout"]',
-        },
+        tourUtils.goToCheckout(),
         ...tourUtils.payWithTransfer(true),
     ]
 });

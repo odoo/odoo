@@ -58,14 +58,14 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
-            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info_option').active,
+            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info').active,
             enabled_buy_now_button=self.env.ref('website_sale.product_buy_now').active,
         )
         return res
 
     def set_values(self):
         super().set_values()
-        extra_step_view = self.env.ref('website_sale.extra_info_option')
+        extra_step_view = self.env.ref('website_sale.extra_info')
         if extra_step_view.active != self.enabled_extra_checkout_step:
             extra_step_view.active = self.enabled_extra_checkout_step
         buy_now_view = self.env.ref('website_sale.product_buy_now')

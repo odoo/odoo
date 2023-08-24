@@ -25,11 +25,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
             tourUtils.goToCart({quantity: 2}),
         {
-            content: "click on 'I have a promo code'",
-            extra_trigger: '.show_coupon',
-            trigger: '.show_coupon',
-        },
-        {
             content: "insert promo code 'testcode'",
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
@@ -41,13 +36,13 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reward product",
-            trigger: '.td-product_name:contains("10.0% discount on total amount")',
+            trigger: 'div>strong:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: '.td-product_name:contains("10.0% discount on total amount")',
+            trigger: 'div>strong:contains("10.0% discount on total amount")',
             run: function () {
                 jsonrpc('/web/dataset/call_kw/account.tax/create', {
                     model: 'account.tax',
@@ -100,7 +95,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(.td-product_name:contains("Free Product - Small Cabinet"))',
+            trigger: '#wrap:has(div>strong:contains("Free Product - Small Cabinet"))',
             run: function () {}, // it's a check
         },
         {
@@ -110,7 +105,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(.td-product_name:contains("Free Product - Small Cabinet")))',
+            trigger: '#wrap:not(:has(div>strong:contains("Free Product - Small Cabinet")))',
             run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */

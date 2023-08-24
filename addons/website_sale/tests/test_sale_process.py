@@ -95,10 +95,12 @@ class TestUi(HttpCaseWithUserDemo):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
-        self.env.ref('payment.payment_provider_transfer').write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',

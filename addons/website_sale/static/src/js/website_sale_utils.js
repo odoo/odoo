@@ -107,7 +107,7 @@ function updateCartNavBar(data) {
         });
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-    $(".js_cart_summary").replaceWith(data['website_sale.short_cart_summary']);
+    $("#cart_total").replaceWith(data['website_sale.total']);
 }
 
 function showCartNotification(callService, props, options = {}) {

@@ -892,8 +892,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'suggested_products': order._cart_accessories()
             }
         )
-        values['website_sale.short_cart_summary'] = request.env['ir.ui.view']._render_template(
-            "website_sale.short_cart_summary", {
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            "website_sale.total", {
                 'website_sale_order': order,
             }
         )
@@ -1545,7 +1545,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
-        extra_step = request.website.viewref('website_sale.extra_info_option')
+        extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
 
@@ -1554,17 +1554,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # ------------------------------------------------------
     # Extra step
     # ------------------------------------------------------
-    def _extra_info_values(self, **post):
-        """
-        This method is a hook to pass additional values when rendering the 'website_sale.extra_info' template (e.g. add
-        a flag to trigger a style variation)
-        """
-        return {}
-
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
     def extra_info(self, **post):
         # Check that this option is activated
-        extra_step = request.website.viewref('website_sale.extra_info_option')
+        extra_step = request.website.viewref('website_sale.extra_info')
         if not extra_step.active:
             return request.redirect("/shop/payment")
 
@@ -1584,7 +1577,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order.partner_id.id,
             'order': order,
         }
-        values.update(self._extra_info_values(**post))
         return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------
@@ -1620,6 +1612,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'errors': [],
             'partner': order.partner_invoice_id,
             'order': order,
+            'submit_button_label': _("Pay now"),
             'payment_action_id': request.env.ref('payment.action_payment_provider').id,
             'action_activate_stripe_id': request.env.ref(
                 'website_payment.action_activate_stripe'
@@ -1756,6 +1749,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         return {
             'order': order,
+            'website_sale_order': order,
             'order_tracking_info': self.order_2_return_dict(order),
         }
 
