@@ -1,24 +1,5 @@
-.o_sale_product_configurator_ptal_name {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    padding-bottom: 0.5rem;
-
-    &:after {
-        content: '';
-        margin-left: $spacer;
-        flex-grow: 1;
-        border-bottom: 1px solid map-get($grays, '400');
-    }
-}
-
 .o_sale_product_configurator_ptav_color {
-    position: relative;
-    display: inline-block;
-    border: 5px solid $input-border-color;
-    border-radius: 50%;
-    text-align: center;
+    border: 5px solid $border-color;
     transition: $input-transition;
 
     @include o-field-pointer();
@@ -27,7 +8,7 @@
         content: "";
         display: block;
         @include o-position-absolute(-3px, -3px, -3px, -3px);
-        border: 4px solid white;
+        border: 4px solid $o-view-background-color;
         border-radius: 50%;
         box-shadow: inset 0 0 3px rgba(black, 0.3);
     }
@@ -66,27 +47,12 @@
     }
 }
 
-.o_sale_product_configurator_ptav_pills {
-    padding: $spacer/2 $spacer;
-    margin-right: 0.2rem;
-    border: none;
-    cursor: default !important;
-
-    &.btn.active {
-        color: $white;
-        background-color: map-get($theme-colors, 'primary');
-    }
-    &:not(.active) {
-        color: map-get($grays, '600');
-        background-color: map-get($grays, '200');
-    }
-
-    input {
-        -moz-appearance: none;
-        -webkit-appearance: none;
-        appearance: none;
-        opacity: 0;
-    }
+.o_sale_product_configurator_ptav_pills.active label {
+    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+    
+    background-color: map-get($-btn-secondary-design, active-background);
+    border-color: map-get($-btn-secondary-design, active-border);
+    color: map-get($-btn-secondary-design, active-color);
 }
 
 .css_not_available {
