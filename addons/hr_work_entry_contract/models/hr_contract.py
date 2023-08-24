@@ -262,8 +262,9 @@ class HrContract(models.Model):
                 _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
                     ', '.join(canceled_contracts.mapped('name'))))
         vals_list = []
-        date_start = fields.Datetime.to_datetime(date_start)
-        date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
+        tz = pytz.timezone(self.env.company.resource_calendar_id.tz or 'UTC')
+        date_start = tz.localize(fields.Datetime.to_datetime(date_start)).astimezone(pytz.utc).replace(tzinfo=None)
+        date_stop = tz.localize(datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())).astimezone(pytz.utc).replace(tzinfo=None)
         self.write({'last_generation_date': fields.Date.today()})
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.contract'])
@@ -275,9 +276,12 @@ class HrContract(models.Model):
             'date_generated_to': date_start,
         })
         for contract in self:
-            contract_start = fields.Datetime.to_datetime(contract.date_start)
+            contract_tz = pytz.timezone(contract.resource_calendar_id.tz or 'UTC')
+            contract_start = contract_tz.localize(fields.Datetime.to_datetime(contract.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
                                              datetime.max.time())
+            if contract.date_end:
+                contract_stop = contract_tz.localize(contract_stop).astimezone(pytz.utc).replace(tzinfo=None)
             if date_start > contract_stop or date_stop < contract_start:
                 continue
             date_start_work_entries = max(date_start, contract_start)

@@ -206,3 +206,48 @@ class TestWorkEntry(TestWorkEntryBase):
             with self.assertRaises(IntegrityError):
                 with self.cr.savepoint():
                     (work_entry_1 + work_entry_2).write({'state': 'validated'})
+
+    def test_work_entry_timezone(self):
+        """ Test work entries with different timezone """
+        hk_emp = self.env['hr.employee'].create({
+            'name': 'HK Employee',
+            'gender': 'male',
+            'birthday': '1984-05-01',
+            'country_id': self.env.ref('base.be').id,
+            'department_id': self.dep_rd.id,
+        })
+        # Need first weekday is working day
+        start = datetime(2015, 12, 1, 1, 0, 0)
+        end = datetime(2015, 12, 31, 23, 59, 59)
+        hk_resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'HK Calendar',
+            'tz': 'Asia/Hong_Kong',
+            'hours_per_day': 8,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 15, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 15, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 15, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 15, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 15, 'day_period': 'afternoon'})
+            ]
+        })
+        self.env.company.resource_calendar_id = hk_resource_calendar_id
+        contract = self.env['hr.contract'].create({
+            'date_start': start.date(),
+            'name': 'dodo',
+            'resource_calendar_id': hk_resource_calendar_id.id,
+            'wage': 1000,
+            'employee_id': hk_emp.id,
+            'state': 'open',
+            'date_generated_from': end.date() + relativedelta(days=5),
+        })
+        hk_emp.resource_calendar_id = hk_resource_calendar_id
+        hk_emp.contract_id = contract
+        hk_emp.generate_work_entries(start, end)
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_emp.id)])
+        self.assertEqual(next(iter(work_entries or []), None).date_start, datetime(2015, 11, 30, 23, 0), "Work entries should be generated in the correct timezone")
