@@ -1078,12 +1078,6 @@ class SaleOrderLine(models.Model):
                 **self.env.context,
                 **self._get_action_add_from_catalog_extra_context(order),
             },
-            'help': _("""<p class="o_view_nocontent_smiling_face">
-                Create a new product
-            </p><p>
-                You must define a product for everything you sell or purchase,
-                whether it's a storable product, a consumable or a service.
-            </p>"""),
         }
 
     #=== BUSINESS METHODS ===#
