@@ -206,3 +206,39 @@ class TestWorkEntry(TestWorkEntryBase):
             with self.assertRaises(IntegrityError):
                 with self.cr.savepoint():
                     (work_entry_1 + work_entry_2).write({'state': 'validated'})
+
+    def test_work_entry_timezone(self):
+        """ Test work entries with different timezone """
+        hk_resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'HK Calendar',
+            'tz': 'Asia/Hong_Kong',
+            'hours_per_day': 8,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ]
+        })
+        hk_employee = self.env['hr.employee'].create({
+            'name': 'HK Employee',
+            'resource_calendar_id': hk_resource_calendar_id.id,
+        })
+        self.env.company.resource_calendar_id = hk_resource_calendar_id
+        self.env['hr.contract'].create({
+            'date_start': datetime(2023, 8, 1),
+            'name': 'Test Contract',
+            'resource_calendar_id': hk_resource_calendar_id.id,
+            'wage': 1000,
+            'employee_id': hk_employee.id,
+            'state': 'open',
+        })
+        hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 1))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_employee.id)])
+        self.assertEqual(work_entries[0].date_start, datetime(2023, 7, 31, 23, 0))

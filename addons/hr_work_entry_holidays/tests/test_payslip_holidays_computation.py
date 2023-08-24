@@ -33,7 +33,7 @@ class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):
         })
         leave.action_approve()
 
-        work_entries = self.jules_emp.contract_ids._generate_work_entries(date(2015, 11, 10), date(2015, 11, 21))
+        work_entries = self.jules_emp.contract_ids.generate_work_entries(date(2015, 11, 10), date(2015, 11, 21))
         work_entries.action_validate()
         work_entries = work_entries.filtered(lambda we: we.work_entry_type_id in self.env.ref('hr_work_entry.work_entry_type_attendance'))
         sum_hours = sum(work_entries.mapped('duration'))
