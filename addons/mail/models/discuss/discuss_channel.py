@@ -271,7 +271,7 @@ class Channel(models.Model):
         if 'channel_type' in vals:
             failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
-                raise UserError(_('Cannot change the channel type of: %(channel_names)s'), channel_names=', '.join(failing_channels.mapped('name')))
+                raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
         result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
@@ -1033,7 +1033,8 @@ class Channel(models.Model):
         for channel in self:
             if not channel.message_ids.ids:
                 return
-            if channel.channel_type != 'chat':
+            # a bit not-modular but helps understanding code
+            if channel.channel_type not in {'chat', 'whatsapp'}:
                 return
             last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
             member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
