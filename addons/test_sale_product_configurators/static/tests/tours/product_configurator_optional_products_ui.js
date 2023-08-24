@@ -25,17 +25,17 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Office Chair Black")) button:has(i.fa-shopping-cart)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Office Chair Black")) button:has(i.fa-plus)',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk")) button:has(i.fa-plus)'
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) button:has(i.fa-plus)'
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Chair floor protection")) button:has(i.fa-shopping-cart)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Chair floor protection")) button:has(i.fa-plus)',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) button:has(i.fa-shopping-cart)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Conference Chair")) button:has(i.fa-plus)',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) a:has(i.fa-trash-o)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Conference Chair")) a:contains("Remove product")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Conference Chair")) button:has(i.fa-shopping-cart)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Conference Chair")) button:has(i.fa-plus)',
 }, {
     trigger: 'button:contains(Confirm)',
 }, {

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
+import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 
 let optionVariantImage;
 
@@ -27,48 +28,27 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     run: 'text Custo',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody span:contains("Custom")'
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input',
-    run: 'text Custom 1'
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>ul:nth-child(8) span:contains("PAV9")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>ul:nth-child(8) ~ input',
-    run: 'text Custom 2'
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>ul:nth-child(11) span:contains("PAV5")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>select:nth-child(15)',
-    run: function (){
-        let inputValue = $('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>select:nth-child(15) option:contains("PAV9")').val();
-        $('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>select:nth-child(15)').val(inputValue);
-        $('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>select:nth-child(15)')[0].dispatchEvent(new Event("change"));
-    }
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>select:nth-child(15) ~ input',
-    run: 'text Custom 3'
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1) strong:contains("Custom, White, PAV9, PAV5, PAV1")',
-    isCheck: true,
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(2):contains("Conference Chair (TEST) (Steel)")',
+},
+    ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "Legs", "Custom", "Custom 1"),
+    ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "PA1", "PAV9", "Custom 2"),
+    configuratorTourUtils.selectAttribute("Customizable Desk", "PA2", "PAV5"),
+    ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "PA4", "PAV9", "Custom 3", "select"),
+    configuratorTourUtils.assertProductNameContains("Custom, White, PAV9, PAV5, PAV1"),
+{
+    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Steel)"))',
     run: function () {
-        optionVariantImage = $('main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(1)>img').attr('src');
+        optionVariantImage = $('table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img').attr('src');
     }
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1) label:contains("Aluminium")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(2):contains("Conference Chair (TEST) (Aluminium)")',
+},
+    configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
+{
+    trigger: 'table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)"))',
     run: function () {
-        let newVariantImage = $('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(1)>img').attr('src');
+        let newVariantImage = $('table.o_sale_product_configurator_table_optional tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Conference Chair (TEST) (Aluminium)")) td[name="o_sale_product_configurator_img"]>img').attr('src');
         if (newVariantImage !== optionVariantImage) {
-            $('<p>').text('image variant option src changed').insertAfter('main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(2)>div>strong');
+            throw new TourError('image variant option src changed');
         }
     }
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(2)>div:contains("image variant option src changed")',
 }, {
     trigger: 'button:contains(Confirm)',
 }, {

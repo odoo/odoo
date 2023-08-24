@@ -36,7 +36,7 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     setup() {
-        this.title = _t("Configure");
+        this.title = _t("Configure your product");
         this.rpc = useService("rpc");
         this.state = useState({
             products: [],

@@ -1,47 +1,36 @@
+.table.o_sale_product_configurator_table {
+    & tr:first-child > td {
+        padding-top: 0 !important;
+    }
+
+    &.o_sale_product_configurator_table_optional > :not(caption) > *:last-child > * {
+        border-bottom: 0;
+    }
+}
+
 .o_sale_product_configurator_img {
-    width: 100px;
+    width: 120px;
     max-height: 240px;
 }
 
 .o_sale_product_configurator_qty {
-    width: 200px;
+    width: 160px;
 
-    .input-group {
-        display: inline-flex;
-    }
-
-    div {
-        width: initial; // We don't want the quantity form to be full-width
-
-        .btn, input {
-            border-color: $input-border-color;
+    input {
+        max-width: 4rem;
+        //removing input field=number arrows as their size might
+        //change depending on browser default styling and shift input's position
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
-
-        input {
-            // Needs !important because themes customize btns' padding directly
-            // rather than change '$input-btn-padding-X' (shared with inputs).
-            height: auto !important;
-            max-width: 4rem;
-            text-align: center;
-            //removing input field=number arrows as their size might
-            //change depending on browser default styling and shift input's position
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-            &[type=number] {
-                -moz-appearance: textfield;
-            }
+        &[type=number] {
+            -moz-appearance: textfield;
         }
     }
-}
-
-.o_sale_product_configurator_name {
-    word-wrap: break-word;
-    min-width: 140px;
 }
 
 .o_sale_product_configurator_price {
-    width: 120px;
+    width: 160px;
 }
