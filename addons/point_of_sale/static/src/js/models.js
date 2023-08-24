@@ -1613,15 +1613,6 @@ export class PosGlobalState extends PosModel {
         ]);
         this._loadProductProduct(product);
     }
-    async refreshTotalDueOfPartner(partner) {
-        const partnerWithUpdatedTotalDue = await this.orm.searchRead(
-            "res.partner",
-            [["id", "=", partner.id]],
-            ["total_due"]
-        );
-        this.db.update_partners(partnerWithUpdatedTotalDue);
-        return partnerWithUpdatedTotalDue;
-    }
     isOpenOrderShareable() {
         return this.config.trusted_config_ids.length > 0;
     }
