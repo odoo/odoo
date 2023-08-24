@@ -11109,7 +11109,7 @@ QUnit.module("Views", (hooks) => {
         const changesTable = document.querySelector(".modal-body .o_modal_changes");
         assert.strictEqual(
             changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
-            "Field:Date StartUpdate to:01/16/2017Field:Date EndUpdate to:02/12/2017"
+            "Field:Date StartUpdate to:01/16/201702/12/2017Field:Date EndUpdate to:02/12/2017"
         );
 
         // Valid the confirm dialog
@@ -11178,7 +11178,7 @@ QUnit.module("Views", (hooks) => {
             const changesTable = target.querySelector(".modal-body .o_modal_changes");
             assert.strictEqual(
                 changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
-                "Field:Date StartUpdate to:04/01/2021"
+                "Field:Date StartUpdate to:04/01/202101/26/2017"
             );
 
             // Valid the confirm dialog
@@ -19379,5 +19379,24 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         await click(target.querySelectorAll(".o_data_row [name=foo]")[0]);
+    });
+
+    QUnit.test("multisave passes the fieldInfo", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree multi_edit="1"><field name="foo" password="True"/></tree>',
+        });
+
+        await click(target, "thead .o_list_record_selector input");
+        await click(target.querySelector(".o_field_cell[name=foo]"));
+        await editInput(target, "[name=foo] input", "test");
+
+        const changesTable = target.querySelector(".modal-body .o_modal_changes");
+        assert.strictEqual(
+            changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
+            "Field:FooUpdate to:****"
+        );
     });
 });
