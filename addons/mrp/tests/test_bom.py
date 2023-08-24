@@ -158,14 +158,12 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
         })
-        test_bom_1_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_1.id,
+        test_bom_1.bom_line_ids = [(0, 0, {
             'product_id': self.product_3.id,
             'product_qty': 3,
-        })
+        })]
 
         test_bom_2 = self.env['mrp.bom'].create({
-            'product_id': self.product_7_3.id,
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
@@ -177,28 +175,25 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ]
         })
-        test_bom_2_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_2.id,
             'product_qty': 2,
-        })
-        test_bom_2_l2 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_5.id,
             'product_qty': 2,
             'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
-        })
-        test_bom_2_l3 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_5.id,
             'product_qty': 2,
             'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
-        })
-        test_bom_2_l4 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_4.id,
             'product_qty': 2,
-        })
+        })]
+        test_bom_2_l1, _test_bom_2_l2, _test_bom_2_l3, test_bom_2_l4 = test_bom_2.bom_line_ids
 
         # check product > product_tmpl
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
@@ -236,18 +231,15 @@ class TestBoM(TestMrpCommon):
             'consumption': 'flexible',
             'type': 'phantom'
         })
-        test_bom_3_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_3.id,
+        test_bom_3.bom_line_ids = [(0, 0, {
             'product_id': self.product_10.id,
             'product_qty': 1.0,
-        })
-        test_bom_4_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_4.id,
-            'product_id': self.product_9.id,
-            'product_qty': 1.0,
-        })
+        })]
         with self.assertRaises(exceptions.UserError):
-            test_bom_3.explode(self.product_9, 1)
+            test_bom_4.bom_line_ids = [(0, 0, {
+                'product_id': self.product_9.id,
+                'product_qty': 1.0,
+            })]
 
     def test_12_multi_level_variants2(self):
         """Test skip bom line with same attribute values in bom lines."""
@@ -1105,6 +1097,12 @@ class TestBoM(TestMrpCommon):
             # cycle:
             self.bom_1.bom_line_ids = [(0, 0, {'product_id': bom_2_finished_product.id, 'product_qty': 1.0},)]
 
+    def test_cycle_on_line_update(self):
+        lines = self.bom_1.bom_line_ids
+        bom_2_finished_product = self.bom_2.product_id
+        with self.assertRaises(exceptions.ValidationError):
+            self.bom_1.bom_line_ids = [(1, lines[0].id, {'product_id': bom_2_finished_product.id})]
+
     def test_cycle_on_bom_unarchive(self):
         finished_product = self.bom_1.product_id
         component = self.bom_1.bom_line_ids.product_id[0]
@@ -1222,3 +1220,33 @@ class TestBoM(TestMrpCommon):
         with self.assertRaises(exceptions.ValidationError):
             for i, record in enumerate(boms[0] | boms[1] | boms[5] | boms[3] | boms[2] | boms[4]):
                 record.write({'sequence': i})
+
+    def test_cycle_on_legit_apply_variants(self):
+        """ Should not raise anything """
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.product_7_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_1.id,
+                    'product_qty': 1.0
+                }),
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)]
+                }),
+            ],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_uom_id': self.product_2.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_7_1.id, 'product_qty': 1.0}),
+            ],
+        })
