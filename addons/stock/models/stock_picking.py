@@ -113,6 +113,9 @@ class PickingType(models.Model):
         ('zpl_lots', 'ZPL Labels - One per lot/SN'),
         ('zpl_units', 'ZPL Labels - One per unit')],
         string="Lot Label Format to auto-print", default='4x12_lots')
+    auto_print_reception_report = fields.Boolean(
+        "Auto Print Reception Report",
+        help="If this checkbox is ticked, Odoo will automatically print the reception report of a picking when it is validated and has assigned moves.")
     auto_print_reception_report_labels = fields.Boolean(
         "Auto Print Reception Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the reception report labels of a picking when it is validated.")
@@ -1768,6 +1771,15 @@ class Picking(models.Model):
             report_actions.append(action)
 
         if self.user_has_groups('stock.group_reception_report'):
+            reception_reports_to_print = self.filtered(
+                lambda p: p.picking_type_id.auto_print_reception_report
+                          and p.picking_type_id.code != 'outgoing'
+                          and p.move_ids.move_dest_ids
+            )
+            if reception_reports_to_print:
+                action = self.env.ref('stock.stock_reception_report_action').report_action(reception_reports_to_print, config=False)
+                clean_action(action, self.env)
+                report_actions.append(action)
             reception_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_reception_report_labels and p.picking_type_id.code != 'outgoing')
             if reception_labels_to_print:
                 moves_to_print = reception_labels_to_print.move_ids.move_dest_ids

@@ -141,6 +141,7 @@
                                         <label for="lot_label_format" string="Print label as:" invisible="not auto_print_lot_labels" class="fw-bold"/>
                                         <field name="lot_label_format" invisible="not auto_print_lot_labels"/>
                                     </div>
+                                    <field name="auto_print_reception_report" string="Reception Report" invisible="code == 'outgoing'" groups="stock.group_reception_report"/>
                                     <field name="auto_print_reception_report_labels" string="Reception Report Labels" invisible="code == 'outgoing'" groups="stock.group_reception_report"/>
                                     <field name="auto_print_packages" string="Package Content" groups="stock.group_tracking_lot"/>
                                 </group>
