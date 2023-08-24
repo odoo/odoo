@@ -35,9 +35,9 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         # Leave during second contract
         leave = self.create_leave(datetime(2015, 11, 17, 7, 0), datetime(2015, 11, 20, 18, 0))
         leave.action_approve()
-        start = datetime.strptime('2015-11-01', '%Y-%m-%d')
-        end_generate = datetime(2015, 11, 30, 23, 59, 59)
-        work_entries = self.jules_emp.contract_ids._generate_work_entries(start, end_generate)
+        start = date(2015, 11, 1)
+        end_generate = date(2015, 11, 30)
+        work_entries = self.jules_emp.contract_ids.generate_work_entries(start, end_generate)
         work_entries.action_validate()
         work_entries = work_entries.filtered(lambda we: we.contract_id == self.contract_cdi)
 
