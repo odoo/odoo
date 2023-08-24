@@ -2,17 +2,13 @@
 
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
-import concurrency from "@web/legacy/js/core/concurrency";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 
-// FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
-// > This might require thorough investigation on how _updateRewards work.
-// > If successful, we can fully get rid of the legacy concurrency module.
-const dropPrevious = new concurrency.MutexedDropPrevious(); // Used for queuing reward updates
 const mutex = new Mutex(); // Used for sequential cache updates
+const updateRewardsMutex = new Mutex();
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
@@ -150,9 +146,9 @@ patch(Order.prototype, {
 
     /** @override */
     getEmailItems() {
-        return super.getEmailItems(...arguments).concat(
-            this.has_pdf_gift_card ? [_t("the gift cards")] : []
-        );
+        return super
+            .getEmailItems(...arguments)
+            .concat(this.has_pdf_gift_card ? [_t("the gift cards")] : []);
     },
 
     export_as_JSON() {
@@ -300,15 +296,18 @@ patch(Order.prototype, {
         return orderLines[orderLines.length - 1];
     },
     set_pricelist(pricelist) {
-        const oldPricelist = this.pricelist
+        const oldPricelist = this.pricelist;
         super.set_pricelist(...arguments);
         if (this.couponPointChanges && oldPricelist !== pricelist) {
             // Remove couponPointChanges for cards in no longer available programs.
             // This makes sure that counting of points on loyalty and ewallet programs is updated after pricelist changes.
             const loyaltyProgramIds = new Set(
                 this.pos.programs
-                    .filter((program) => program.pricelist_ids.length > 0
-                        && (!pricelist || !program.pricelist_ids.includes(pricelist.id)))
+                    .filter(
+                        (program) =>
+                            program.pricelist_ids.length > 0 &&
+                            (!pricelist || !program.pricelist_ids.includes(pricelist.id))
+                    )
                     .map((program) => program.id)
             );
             for (const [key, pointChange] of Object.entries(this.couponPointChanges)) {
@@ -367,33 +366,30 @@ patch(Order.prototype, {
         if (this.pos.programs.length === 0) {
             return;
         }
-        dropPrevious
-            .exec(() => {
-                return this._updateLoyaltyPrograms().then(async () => {
-                    // Try auto claiming rewards
-                    const claimableRewards = this.getClaimableRewards(false, false, true);
-                    let changed = false;
-                    for (const { coupon_id, reward } of claimableRewards) {
-                        if (
-                            reward.program_id.rewards.length === 1 &&
-                            !reward.program_id.is_nominative &&
-                            (reward.reward_type !== "product" ||
-                                (reward.reward_type == "product" && !reward.multi_product))
-                        ) {
-                            this._applyReward(reward, coupon_id);
-                            changed = true;
-                        }
+
+        updateRewardsMutex.exec(() => {
+            return this._updateLoyaltyPrograms().then(async () => {
+                // Try auto claiming rewards
+                const claimableRewards = this.getClaimableRewards(false, false, true);
+                let changed = false;
+                for (const { coupon_id, reward } of claimableRewards) {
+                    if (
+                        reward.program_id.rewards.length === 1 &&
+                        !reward.program_id.is_nominative &&
+                        (reward.reward_type !== "product" ||
+                            (reward.reward_type == "product" && !reward.multi_product))
+                    ) {
+                        this._applyReward(reward, coupon_id);
+                        changed = true;
                     }
-                    // Rewards may impact the number of points gained
-                    if (changed) {
-                        await this._updateLoyaltyPrograms();
-                    }
-                    this._updateRewardLines();
-                });
-            })
-            .catch(() => {
-                /* catch the reject of dp when calling `add` to avoid unhandledrejection */
+                }
+                // Rewards may impact the number of points gained
+                if (changed) {
+                    await this._updateLoyaltyPrograms();
+                }
+                this._updateRewardLines();
             });
+        });
     },
     async _updateLoyaltyPrograms() {
         await this._checkMissingCoupons();
@@ -716,7 +712,10 @@ patch(Order.prototype, {
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
             return false;
         }
-        if (program.pricelist_ids.length > 0 && (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))) {
+        if (
+            program.pricelist_ids.length > 0 &&
+            (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))
+        ) {
             return false;
         }
         return true;
@@ -949,8 +948,10 @@ patch(Order.prototype, {
             : 0;
         for (const couponProgram of allCouponPrograms) {
             const program = this.pos.program_by_id[couponProgram.program_id];
-            if (program.pricelist_ids.length > 0
-                && (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))) {
+            if (
+                program.pricelist_ids.length > 0 &&
+                (!this.pricelist || !program.pricelist_ids.includes(this.pricelist.id))
+            ) {
                 continue;
             }
             if (program.trigger == "with_code") {
@@ -1165,7 +1166,7 @@ patch(Order.prototype, {
         let cheapestLine = false;
         for (const lines of Object.values(discountLinesPerReward)) {
             const lineReward = this.pos.reward_by_id[lines[0].reward_id];
-            if (lineReward.reward_type !== 'discount') {
+            if (lineReward.reward_type !== "discount") {
                 continue;
             }
             let discountedLines = orderLines;
@@ -1496,9 +1497,11 @@ patch(Order.prototype, {
         let claimableRewards = null;
         let coupon = null;
         if (rule) {
-            let program_pricelists = rule.program_id.pricelist_ids;
-            if (program_pricelists.length > 0
-                && (!this.pricelist || !program_pricelists.includes(this.pricelist.id))) {
+            const program_pricelists = rule.program_id.pricelist_ids;
+            if (
+                program_pricelists.length > 0 &&
+                (!this.pricelist || !program_pricelists.includes(this.pricelist.id))
+            ) {
                 return _t("That promo code program requires a specific pricelist.");
             }
             if (this.codeActivatedProgramRules.includes(rule.id)) {
@@ -1515,7 +1518,13 @@ patch(Order.prototype, {
             const { successful, payload } = await this.env.services.orm.call(
                 "pos.config",
                 "use_coupon_code",
-                [[this.pos.config.id], code, this.creation_date, customerId, this.pricelist ? this.pricelist.id : false]
+                [
+                    [this.pos.config.id],
+                    code,
+                    this.creation_date,
+                    customerId,
+                    this.pricelist ? this.pricelist.id : false,
+                ]
             );
             if (successful) {
                 // Allow rejecting a gift card that is not yet paid.

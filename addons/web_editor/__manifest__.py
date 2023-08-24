@@ -97,7 +97,6 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/ajax.js',
             'web/static/src/legacy/js/core/bus.js',
             'web/static/src/legacy/js/core/class.js',
-            'web/static/src/legacy/js/core/concurrency.js',
             'web/static/src/legacy/js/core/dialog.js',
             'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/dom.js',
