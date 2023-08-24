@@ -9,10 +9,12 @@ from . import product_template
 from . import product_product
 
 from . import decimal_precision
+from . import ir_attachment
 from . import product_attribute
 from . import product_attribute_custom_value
 from . import product_attribute_value
 from . import product_category
+from . import product_document
 from . import product_packaging
 from . import product_pricelist
 from . import product_pricelist_item

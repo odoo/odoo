@@ -35,6 +35,12 @@
                                     </span>
                                </div>
                         </button>
+                        <button class="oe_stat_button"
+                                name="action_open_documents"
+                                type="object"
+                                icon="fa-file-text-o">
+                            <field string="Documents" name="product_document_count" widget="statinfo"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="id" invisible="True"/>

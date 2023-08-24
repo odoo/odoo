@@ -483,6 +483,30 @@ class WebsiteSale(http.Controller):
     def product(self, product, category='', search='', **kwargs):
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
+    @http.route(
+        '/shop/<model("product.template"):product_template>/document/<int:document_id>',
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
+    def product_document(self, product_template, document_id):
+        product_template.check_access_rights('read')
+
+        document = request.env['product.document'].browse(document_id).sudo().exists()
+        if not document or not document.active:
+            return request.redirect('/shop')
+
+        if not document.shown_on_product_page or not (
+            document.res_id == product_template.id
+            and document.res_model == 'product.template'
+        ):
+            return request.redirect('/shop')
+
+        return request.env['ir.binary']._get_stream_from(
+            document.ir_attachment_id,
+        ).get_response(as_attachment=True)
+
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
     def old_product(self, product, category='', search='', **kwargs):
         # Compatibility pre-v14
