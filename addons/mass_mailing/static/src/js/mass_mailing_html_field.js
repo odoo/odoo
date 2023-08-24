@@ -141,6 +141,7 @@ export class MassMailingHtmlField extends HtmlField {
             const clonedBody = clonedHtmlNode.querySelector('body');
             const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
             clonedBody.replaceChildren(clonedIframeTarget);
+            clonedBody.querySelector('.iframe-utils-zone').remove();
             clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
             iframe.srcdoc = clonedHtmlNode.outerHTML;
             const iframePromise = new Promise((resolve) => {
