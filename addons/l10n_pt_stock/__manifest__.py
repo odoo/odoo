@@ -19,6 +19,7 @@
         'views/stock_picking_views.xml',
         'views/stock_picking_type_views.xml',
         'report/l10n_pt_stock_hash_integrity_templates.xml',
+        'report/stock_report_deliveryslip.xml',
     ],
     'demo': [
         'demo/demo_data.xml',
