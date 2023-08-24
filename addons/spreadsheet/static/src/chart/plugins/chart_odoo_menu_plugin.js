@@ -6,7 +6,6 @@ import { coreTypes, CorePlugin } from "@odoo/o-spreadsheet";
 export default class ChartOdooMenuPlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.odooMenuReference = {};
     }
 
     /**
@@ -17,7 +16,6 @@ export default class ChartOdooMenuPlugin extends CorePlugin {
         switch (cmd.type) {
             case "LINK_ODOO_MENU_TO_CHART":
                 {
-                    this.history.update("odooMenuReference", cmd.chartId, cmd.odooMenuId);
                     const definition = this.getters.getChartDefinition(cmd.chartId);
                     this.dispatch("UPDATE_CHART", {
                         definition: {
@@ -29,18 +27,6 @@ export default class ChartOdooMenuPlugin extends CorePlugin {
                     });
                 }
                 break;
-            case "CREATE_CHART":
-                if (cmd.definition.extraData && cmd.definition.extraData.odooMenuId) {
-                    this.history.update(
-                        "odooMenuReference",
-                        cmd.id,
-                        cmd.definition.extraData.odooMenuId
-                    );
-                }
-                break;
-            case "DELETE_FIGURE":
-                this.history.update("odooMenuReference", cmd.id, undefined);
-                break;
         }
     }
 
@@ -51,20 +37,18 @@ export default class ChartOdooMenuPlugin extends CorePlugin {
      * @returns {object | undefined}
      */
     getChartOdooMenu(chartId) {
-        const menuId = this.odooMenuReference[chartId];
-        return menuId ? this.getters.getIrMenu(menuId) : undefined;
-    }
-
-    import(data) {
-        if (data.chartOdooMenusReferences) {
-            this.odooMenuReference = data.chartOdooMenusReferences;
+        try {
+            const definition = this.getters.getChartDefinition(chartId);
+            if (definition.extraData && definition.extraData.odooMenuId) {
+                return this.getters.getIrMenu(definition.extraData.odooMenuId);
+            }
+        } catch {
+            // Ignore error if the chart doesn't exist anymore
+            return undefined;
         }
     }
-
-    export(data) {
-        data.chartOdooMenusReferences = this.odooMenuReference;
-    }
 }
+
 ChartOdooMenuPlugin.getters = ["getChartOdooMenu"];
 
 coreTypes.add("LINK_ODOO_MENU_TO_CHART");

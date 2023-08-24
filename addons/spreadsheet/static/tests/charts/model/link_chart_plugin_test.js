@@ -7,7 +7,9 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { actionService } from "@web/webclient/actions/action_service";
+import * as spreadsheet from "@odoo/o-spreadsheet";
 
+const { toZone } = spreadsheet.helpers;
 const chartId = "uuid1";
 
 QUnit.module(
@@ -125,11 +127,15 @@ QUnit.module(
                     odooMenuId: 1,
                 });
                 const exportedData = model.exportData();
-                assert.equal(
-                    exportedData.chartOdooMenusReferences[chartId],
-                    1,
-                    "Link to odoo menu is exported"
-                );
+                let chartMenuId = undefined;
+                for (const sheet of exportedData.sheets) {
+                    for (const figure of sheet.figures) {
+                        if (figure.id === chartId) {
+                            chartMenuId = figure.data.extraData.odooMenuId;
+                        }
+                    }
+                }
+                assert.equal(chartMenuId, 1, "Link to odoo menu is exported");
                 const importedModel = new Model(exportedData, { custom: { env } });
                 const chartMenu = importedModel.getters.getChartOdooMenu(chartId);
                 assert.equal(chartMenu.id, 1, "Link to odoo menu is imported");
@@ -165,6 +171,55 @@ QUnit.module(
                 id: chartId,
             });
             assert.equal(model.getters.getChartOdooMenu(chartId), undefined);
+        });
+
+        QUnit.test("link is kept when changing chart type", async function (assert) {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { custom: { env } });
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+            model.dispatch("UPDATE_CHART", {
+                sheetId: model.getters.getActiveSheetId(),
+                id: chartId,
+                definition: {
+                    ...model.getters.getChartDefinition(chartId),
+                    type: "line",
+                },
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+        });
+
+        QUnit.test("link is kept when copying chart", async (assert) => {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { custom: { env } });
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+            model.dispatch("UPDATE_CHART", {
+                sheetId: model.getters.getActiveSheetId(),
+                id: chartId,
+                definition: {
+                    ...model.getters.getChartDefinition(chartId),
+                    type: "line",
+                },
+            });
+            assert.equal(model.getters.getChartOdooMenu(chartId).id, 1);
+            const sheetId = model.getters.getActiveSheetId();
+            model.dispatch("SELECT_FIGURE", { id: chartId });
+            model.dispatch("COPY");
+            model.dispatch("PASTE", { target: [toZone("A1")] });
+            const chartIds = model.getters.getChartIds(sheetId);
+            assert.strictEqual(chartIds.length, 2);
+            for (const _chartId of chartIds) {
+                assert.equal(model.getters.getChartOdooMenu(_chartId).id, 1);
+            }
         });
     }
 );
