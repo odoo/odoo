@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, logout, go to login",
-        trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
+        trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
         run: function () {
             var orderId = $('.my_cart_quantity').data('order-id');
             browser.localStorage.setItem(orderIdKey, orderId);
@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "check product is in restored cart",
-        trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
+        trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
         run: function () {},
     },
 ]});

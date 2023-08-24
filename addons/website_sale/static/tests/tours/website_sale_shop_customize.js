@@ -119,7 +119,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         tourUtils.goToCart({backend: true}),
         {
             content: "click on shop",
-            trigger: "iframe a:contains(Continue Shopping)",
+            trigger: "iframe a:contains(Continue shopping)",
             extra_trigger: 'iframe body:not(:has(#products_grid_before .js_attributes))',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),

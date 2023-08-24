@@ -24,13 +24,13 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
         tourUtils.goToCart(),
     {
         content: "check no_variant value is present",
-        trigger: '.td-product_name:contains(No Variant Attribute: No Variant Value)',
+        trigger: 'div>span:contains(No Variant Attribute: No Variant Value)',
         extra_trigger: '#cart_products',
         run: function () {},
     },
     {
         content: "check price is correct",
-        trigger: '.td-price:contains(11.0)',
+        trigger: 'div[name="website_sale_cart_line_price"]:contains(11.0)',
         run: function () {},
     },
 ]});

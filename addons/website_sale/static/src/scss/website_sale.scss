@@ -116,21 +116,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     .address-inline address {
         display: inline-block;
     }
-    table#cart_products tr td, table#suggested_products tr td {
-        vertical-align: middle;
-    }
 
-    table#cart_products {
-        margin-bottom: 0;
-
-        td, th {
-            &:first-child {
-                padding-left: $grid-gutter-width*0.5;
-            }
-        }
-    }
-
-    h1[itemprop="name"], .td-product_name {
+    h1[itemprop="name"] {
         word-break: break-word;
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -141,15 +128,9 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         font-weight: $font-weight-bold;
     }
 
-    @include media-breakpoint-down(md) {
-        .td-img {
-            display: none;
-        }
-    }
-
     .toggle_summary_div {
         @include media-breakpoint-up(xl) {
-            max-width: 400px;
+            max-width: $o-wsale-input-max-width;
         }
     }
     input.js_quantity {
@@ -195,13 +176,15 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         }
     }
     .o_pricelist_dropdown, .o_sortby_dropdown {
-        min-width: fit-content;
+        //truncates the dropdown pricelist > 8rem
+        .o_pricelist_dropdown_span {
+            max-width: $o-wsale-dropdown-width-overflow;
+        }
     }
 }
 
-#product_detail ~ .oe_structure.oe_empty > section:first-child,
-.o_shop_discussion_rating {
-    border-top: 1px solid $border-color;
+#product_detail ~ .oe_structure.oe_empty > section:first-child {
+    border-top: $border-width solid $border-color;
 }
 
 .o_alternative_product {
@@ -266,7 +249,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
 // ==== THE GRID
 #products_grid {
-    .o_wsale_products_grid_table_wrapper .table {
+    .o_wsale_products_grid_table_wrapper .table:not(.o_wsale_modal_table) {
         table-layout: fixed;
 
         td {
@@ -363,9 +346,6 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 }
 
 .oe_cart {
-    table td:first-child {
-        min-width: 76px;
-    }
 
     > .oe_structure {
         clear: both;
@@ -381,87 +361,6 @@ div#payment_method {
         padding-top: 5px;
         padding-bottom: 5px;
     }
-}
-
-ul.wizard {
-    padding: 0;
-    margin-top: 20px;
-    list-style: none outside none;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065);
-
-    li {
-        border: 1px solid map-get($grays, '200');
-        border-right-width: 0;
-        position: relative;
-        float: left;
-        padding: 0 10px 0 20px;
-        margin: 0;
-        line-height: 38px;
-        background: #fbfbfb;
-
-        .chevron {
-            position: absolute;
-            top: 0;
-            right: -10px;
-            z-index: 1;
-            display: block;
-            border: 20px solid transparent;
-            border-right: 0;
-            border-left: 10px solid map-get($grays, '200');
-        }
-
-        .chevron:before {
-            position: absolute;
-            top: -20px;
-            right: 1px;
-            display: block;
-            border: 20px solid transparent;
-            border-right: 0;
-            border-left: 10px solid #fbfbfb;
-            content: "";
-        }
-
-        .o_link_disable {
-            text-decoration: none;
-            color: inherit;
-            cursor: text;
-        }
-
-        &.text-success {
-            background: #f3f4f5;
-        }
-
-        &.text-success .chevron:before {
-            border-left: 10px solid #f5f5f5;
-        }
-
-        &.text-primary {
-            background: #f1f6fc;
-        }
-
-        &.text-primary .chevron:before {
-            border-left: 10px solid #f1f6fc;
-        }
-
-        &:first-child {
-            padding-left: 15px;
-            border-radius: 4px 0 0 4px;
-        }
-
-        &:last-child {
-            border-radius: 0 4px 4px 0;
-            border-right-width: 1px;
-
-            .chevron {
-                display: none;
-            }
-        }
-    }
-}
-
-tr#empty {
-    display: none;
 }
 
 .js_change_shipping, .js_change_billing {
@@ -763,4 +662,100 @@ a.no-decoration {
 
 .o_product_tag_img {
     height: 2rem;
+}
+
+.o_wsale_share_menu {
+    min-width: 3em;
+}
+
+#cart_total {
+    @include media-breakpoint-down(lg) {
+        border-top: $border-width solid $border-color;
+        padding-top: map-get($spacers, 3);
+    }
+}
+
+.o_website_sale_checkout {
+    .o_total_border {
+        border: $border-width solid $border-color;
+
+        @include media-breakpoint-down(lg) {
+            border: 0;
+        }
+    }
+
+    .o_wsale_accordion {
+        .collapse:not(.show) {
+            display: block;
+
+            @include media-breakpoint-down(lg) {
+                display: none;
+            }
+        }
+
+        .o_wsale_scrollable_table {
+            @include media-breakpoint-up(lg) {
+                overflow-y: scroll;
+                height: 21rem;
+            }
+        }
+    }
+
+
+    span[itemprop='name'] {
+        font-size: $h6-font-size;
+        font-weight: $headings-font-weight;
+        line-height: $headings-line-height;
+    }
+
+    div[itemprop="address"] {
+        margin: map-get($spacers, 2) 0;
+        font-size: $font-size-sm;
+    }
+
+
+    .o_wsale_address_fill {
+        .col-form-label:not(.label-optional)::after {
+            content: " *";
+            font-weight: normal;
+        }
+    }
+
+    .all_shipping, .all_billing {
+        @include media-breakpoint-down(md) {
+            overflow-x: auto;
+
+            > div {
+                width: auto;
+            }
+        }
+
+        .o_wsale_add_address {
+            min-height: 8rem;
+        }
+    }
+
+    div[name="o_express_checkout_container"] {
+        margin-bottom: -#{map-get($spacers, 3)};
+        margin-top: map-get($spacers, 3);
+    }
+
+    button[name="o_payment_submit_button"] {
+        margin-left: 0 !important;
+    }
+
+    // We can't technically duplicate navigations CTA therefore we use
+    // an absolute positioning to move the CTA from the summary to the
+    // bottom of the page.
+    @include media-breakpoint-down(lg){
+        .o_cta_navigation_container {
+            padding: 0 calc(var(--gutter-x) * .5);
+        }
+    }
+
+
+    // TODO: This height is arbitrary and the calculation should be improved.
+    .o_cta_navigation_placeholder {
+        height: o-to-rem(111px) + map-get($spacers, 4) + 2rem;
+    }
 }
