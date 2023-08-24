@@ -9,7 +9,7 @@
               <CheckBox
                   t-if="element.type == 'switch'"
                   value="element.isChecked"
-                  className="'dropdown-item form-switch d-flex flex-row-reverse justify-content-between py-3 fs-4'"
+                  className="'dropdown-item form-switch d-flex flex-row-reverse justify-content-between py-3 fs-4 w-100'"
                   onChange="element.callback"
               >
                   <t t-out="element.description"/>
