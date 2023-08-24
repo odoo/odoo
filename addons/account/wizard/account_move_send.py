@@ -462,6 +462,9 @@ class AccountMoveSend(models.Model):
             if move_data.get('proforma_pdf_attachment'):
                 mail_params['attachment_ids'].append(move_data['proforma_pdf_attachment'].id)
 
+            # discard attachments that have been deleted before the cron runs
+            mail_params['attachment_ids'] = self.env['ir.attachment'].browse(mail_params['attachment_ids']).exists().ids
+
             mail_lang = self.mail_lang or self._get_default_lang(mail_template, move)
             email_from = self._get_default_email_from(mail_template, mail_lang, move)
             model_description = move.with_context(lang=mail_lang).type_name
