@@ -422,9 +422,9 @@
                             "widget": "contact",
                             "fields": ["address"]
                             }'/>
-                        <div itemprop="location" t-field="event.address_id" t-options='{
+                        <div itemprop="contactInfo" t-field="event.organizer_id" t-options='{
                             "widget": "contact",
-                            "fields": ["phone", "mobile", "email"]
+                            "fields": ["phone", "email", "mobile"]
                             }'/>
                     </div>
                     <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
