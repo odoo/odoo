@@ -576,6 +576,7 @@ class ResCompany(models.Model):
                 return None
 
             def verify_chain_pre_16_4(moves):
+                """:return: True if the chain is correct, False otherwise"""
                 corrupted_move = is_chain_correct(moves)
                 append_result(moves, corrupted_move)
                 return corrupted_move is None
@@ -613,7 +614,7 @@ class ResCompany(models.Model):
             moves_post_16_4 = all_moves - moves_prior_16_4
             corrupted = False
             if moves_prior_16_4:
-                corrupted = verify_chain_pre_16_4(moves_prior_16_4)
+                corrupted = not verify_chain_pre_16_4(moves_prior_16_4)
             if not corrupted and moves_post_16_4:
                 verify_chain_post_16_4(moves_post_16_4)
 

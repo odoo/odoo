@@ -43,7 +43,7 @@ class TestL10nPtStock(TestStockCommon):
         })
         cls.picking_type_out = cls.env['stock.picking.type'].create({
             'name': 'Picking Out',
-            'sequence_code': 'OUT',
+            'sequence_code': 'PT_OUT',
             'code': 'outgoing',
             'reservation_method': 'at_confirm',
             'company_id': cls.company.id,
@@ -52,7 +52,7 @@ class TestL10nPtStock(TestStockCommon):
         })
         cls.picking_type_in = cls.env['stock.picking.type'].create({
             'name': 'Picking In',
-            'sequence_code': 'IN',
+            'sequence_code': 'PT_IN',
             'code': 'incoming',
             'reservation_method': 'at_confirm',
             'company_id': cls.company.id,
