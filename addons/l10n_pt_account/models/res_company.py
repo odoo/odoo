@@ -50,7 +50,7 @@ class ResCompany(models.Model):
             # We have one chain per (move_type, sequence_prefix) pair.
             chains = all_moves.grouped(lambda m: (m.move_type, m.sequence_prefix))
 
-            for chain_prefix in chains.keys():
+            for chain_prefix in chains:
                 chain = chains[chain_prefix].sorted('sequence_number')
                 results.append(
                     L10nPtHashingUtils._l10n_pt_check_chain_hash_integrity(

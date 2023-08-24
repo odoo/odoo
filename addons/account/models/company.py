@@ -583,7 +583,7 @@ class ResCompany(models.Model):
 
             def verify_chain_post_16_4(moves):
                 chains = moves.grouped(key=lambda m: (m.move_type, m.sequence_prefix))
-                for chain_prefix in chains.keys():
+                for chain_prefix in chains:
                     chain = chains[chain_prefix].sorted('sequence_number')
                     corrupted_move = is_chain_correct(chain)
                     append_result(chain, corrupted_move, prefix=chain_prefix[1])
@@ -607,7 +607,7 @@ class ResCompany(models.Model):
                     results.append({
                         'name': name,
                         'status': 'corrupted',
-                        'msg': _("Corrupted data on journal entry with id %s.", corrupted_move.id),
+                        'msg': _("Corrupted data on journal entry with id %s (%s).", corrupted_move.id, corrupted_move.name),
                     })
 
             moves_prior_16_4 = all_moves.filtered(lambda m: m.secure_sequence_number).sorted(key=lambda m: m.secure_sequence_number)

@@ -101,7 +101,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # We need to bypass the write method of account.move to do so.
         Model.write(first_chain_moves[3], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][1]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {first_chain_moves[3].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {first_chain_moves[3].id} ({first_chain_moves[3].name}).')
 
         # Revert the previous change
         Model.write(first_chain_moves[3], {'date': fields.Date.from_string("2023-01-06")})
@@ -113,13 +113,13 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # Let's try with one of the subfields
         Model.write(second_chain_moves[-1].line_ids[0], {'name': 'coucou'})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {second_chain_moves[-1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {second_chain_moves[-1].id} ({second_chain_moves[-1].name}).')
 
         # Let's try with the inalterable_hash field itself
         Model.write(first_chain_moves[-1].line_ids[0], {'name': 'coucou'})  # Revert the previous change
         Model.write(second_chain_moves[-1], {'inalterable_hash': '$1$fake_hash'})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {second_chain_moves[-1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {second_chain_moves[-1].id} ({second_chain_moves[-1].name}).')
 
     def test_account_move_hash_versioning_1(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
@@ -142,7 +142,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # We need to bypass the write method of account.move to do so.
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id} ({moves[1].name}).')
 
     def test_account_move_hash_versioning_2(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
@@ -165,7 +165,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # We need to bypass the write method of account.move to do so.
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id} ({moves[1].name}).')
 
     def test_account_move_hash_versioning_v1_to_v2(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
@@ -199,7 +199,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # We need to bypass the write method of account.move to do so.
         Model.write(moves[4], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[4].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[4].id} ({moves[4].name}).')
 
         # Let's revert the change and make sure that we cannot use the v1 after the v2.
         # This means we don't simply check whether the move is correctly hashed with either algorithms,
@@ -212,7 +212,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         )
         moves_v1_bis.with_context(hash_version=1).action_post()
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves_v1_bis[0].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves_v1_bis[0].id} ({moves_v1_bis[0].name}).')
 
     def test_account_move_hash_versioning_3(self):
         """
@@ -264,7 +264,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id} ({moves[1].name}).')
 
     def test_account_move_hash_versioning_v3_to_v4(self):
         """
@@ -295,7 +295,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_accounting_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {moves[1].id} ({moves[1].name}).')
 
     def test_account_move_hash_with_cash_rounding(self):
         # Enable inalterable hash
@@ -337,12 +337,12 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         integrity_check = move4.company_id._check_accounting_hash_integrity()['results']
 
-        integrity_check_chain_INV = list(filter(lambda j: '[INV/]' in j.get('name'), integrity_check))[0]
+        integrity_check_chain_INV = next(filter(lambda j: '[INV/]' in j.get('name'), integrity_check))
         self.assertEqual(integrity_check_chain_INV['msg'], "Entries are correctly hashed")
         self.assertEqual(integrity_check_chain_INV['from_name'], move1.name)
         self.assertEqual(integrity_check_chain_INV['to_name'], move3.name)
 
-        integrity_check_chain_A_NEW_INV = list(filter(lambda j: '[A_NEW_INV/]' in j.get('name'), integrity_check))[0]
+        integrity_check_chain_A_NEW_INV = next(filter(lambda j: '[A_NEW_INV/]' in j.get('name'), integrity_check))
         self.assertEqual(integrity_check_chain_A_NEW_INV['msg'], "Entries are correctly hashed")
         self.assertEqual(integrity_check_chain_A_NEW_INV['from_name'], move2.name)
         self.assertEqual(integrity_check_chain_A_NEW_INV['to_name'], move5.name)
@@ -362,12 +362,12 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         (reverse1 | reverse2).action_post()
 
         integrity_check = move1.company_id._check_accounting_hash_integrity()['results']
-        integrity_check_chain_out_invoice = list(filter(lambda j: j.get('move_type') == 'out_invoice', integrity_check))[0]
+        integrity_check_chain_out_invoice = next(filter(lambda j: j.get('move_type') == 'out_invoice', integrity_check))
         self.assertEqual(integrity_check_chain_out_invoice['msg'], "Entries are correctly hashed")
         self.assertEqual(integrity_check_chain_out_invoice['from_name'], move1.name)
         self.assertEqual(integrity_check_chain_out_invoice['to_name'], move2.name)
 
-        integrity_check_chain_out_refund = list(filter(lambda j: j.get('move_type') == 'out_refund', integrity_check))[0]
+        integrity_check_chain_out_refund = next(filter(lambda j: j.get('move_type') == 'out_refund', integrity_check))
         self.assertEqual(integrity_check_chain_out_refund['msg'], "Entries are correctly hashed")
         self.assertEqual(integrity_check_chain_out_refund['from_name'], reverse1.name)
         self.assertEqual(integrity_check_chain_out_refund['to_name'], reverse2.name)
