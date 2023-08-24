@@ -136,7 +136,7 @@ class GoogleSync(models.AbstractModel):
             record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values())
 
     def _cancel(self):
-        self.google_id = False
+        self.with_context(dont_notify=True).write({'google_id': False})
         self.unlink()
 
     @api.model
