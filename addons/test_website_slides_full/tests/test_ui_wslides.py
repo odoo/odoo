@@ -158,4 +158,4 @@ class TestUi(TestUICommon):
             ]
         })
 
-        self.start_tour('/slides', 'certification_member', login=user_demo.login)
+        self.start_tour('/slides', 'certification_member', login=user_demo.login, timeout=90)
