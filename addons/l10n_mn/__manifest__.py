@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Mongolia - Accounting',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'BumanIT LLC, Odoo S.A.',
     'description': """
