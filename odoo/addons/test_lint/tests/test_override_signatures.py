@@ -12,6 +12,7 @@ POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
 VAR_POSITIONAL = inspect.Parameter.VAR_POSITIONAL
 KEYWORD_ONLY = inspect.Parameter.KEYWORD_ONLY
 VAR_KEYWORD = inspect.Parameter.VAR_KEYWORD
+EMPTY = inspect.Parameter.empty
 
 
 failure_message = """\
@@ -61,9 +62,18 @@ def assert_valid_override(parent_signature, child_signature):
     if pparams == cparams:
         return
 
-    # child overrides is exactly (self, *args, **kwargs)
-    if [cp.kind for cp in cparams.values()] == [VAR_POSITIONAL, VAR_KEYWORD]:
-        return
+    parent_is_annotated = any(p.annotation is not inspect._empty for p in pparams.values())
+    child_is_annotated = any(p.annotation is not inspect._empty for p in cparams.values())
+
+    # don't check annotations when one of the two methods is not annotated
+    if parent_is_annotated != child_is_annotated:
+        pparams = {name: param.replace(annotation=EMPTY) for name, param in pparams.items()}
+        cparams = {name: param.replace(annotation=EMPTY) for name, param in cparams.items()}
+        parent_is_annotated = child_is_annotated = False
+
+        # parent and child have exact same signature, modulo annotations
+        if pparams == cparams:
+            return
 
     # parent has *args/**kwargs: child can define new custom args/kwargs
     parent_has_varargs = any(pp.kind == VAR_POSITIONAL for pp in pparams.values())
@@ -120,11 +130,8 @@ class TestLintOverrideSignatures(LintCase):
                 parent_module = get_odoo_module_name(parent_class.__module__)
                 original_signature = inspect.signature(method)
 
-                iter_parent, iter_children = itertools.tee(reverse_mro)
-                iter_parent = itertools.chain([parent_class], iter_parent)
-
                 # Assert that all child classes correctly override the method
-                for parent_class, child_class in zip(iter_parent, iter_children):
+                for child_class in reverse_mro:
                     if method_name not in child_class.__dict__:
                         continue
                     override = getattr(child_class, method_name)
@@ -138,7 +145,7 @@ class TestLintOverrideSignatures(LintCase):
                             counter[method_name].hit += 1
                         except AssertionError as exc:
                             counter[method_name].miss += 1
-                            raise TypeError(failure_message.format(
+                            msg = failure_message.format(
                                 message=exc.args[0],
                                 model=model_name,
                                 method=method_name,
@@ -146,7 +153,8 @@ class TestLintOverrideSignatures(LintCase):
                                 parent_module=parent_module,
                                 original_signature=original_signature,
                                 override_signature=override_signature,
-                            )) from None
+                            )
+                            raise TypeError(msg) from None
 
         #with open('/tmp/odoo-override-signatures.md', 'w') as f:
         #    f.write('method|hit|miss|ratio\n')
