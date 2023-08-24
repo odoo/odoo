@@ -557,4 +557,36 @@ QUnit.module("Fields", (hooks) => {
             "should contain a number rounded to 1 decimal"
         );
     });
+
+    QUnit.test("float field try parse with wrong localization parameters", async function (assert) {
+        assert.expect(2);
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: '<form><field name="float_field"/></form>',
+        });
+
+        registry.category("services").remove("localization");
+        registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ thousandsSep: " ", decimalPoint: "." })
+            );
+
+        await editInput(target, 'div[name="float_field"] input', "108,245,193.85");
+        assert.strictEqual(
+            target.querySelector(".o_field_float input").value,
+            "108245193.85",
+            "should detect automatically that , are thousand separator and . is decimal separator"
+        );
+        await editInput(target, 'div[name="float_field"] input', "108 245 193,85");
+        assert.strictEqual(
+            target.querySelector(".o_field_float input").value,
+            "108245193.85",
+            "should detect automatically that ' ' are thousand separator and , is decimal separator"
+        );
+    });
 });

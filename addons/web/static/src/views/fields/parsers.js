@@ -34,29 +34,112 @@ function evaluateMathematicalExpression(expr, context = {}) {
  * @param {Object} options - additional options
  * @param {string|RegExp} options.thousandsSep - the thousands separator used in the value
  * @param {string|RegExp} options.decimalPoint - the decimal point used in the value
+ * @param {boolean} options.truncate
  * @returns {number}
  */
-function parseNumber(value, options = {}) {
+export function parseNumber(value, options = {}) {
+    const { thousandsSep, decimalPoint, truncate } = options;
+    let parsed = NaN;
     if (value.startsWith("=")) {
-        value = evaluateMathematicalExpression(value.substring(1));
-        if (options.truncate) {
-            value = Math.trunc(value);
+        parsed = evaluateMathematicalExpression(value.substring(1));
+        if (truncate) {
+            parsed = Math.trunc(parsed);
         }
     } else {
-        // A whitespace thousands separator is equivalent to any whitespace character.
-        // E.g. "1  000 000" should be parsed as 1000000 even if the
-        // thousands separator is nbsp.
+        if (!!thousandsSep || !!decimalPoint) {
+            parsed = strictParseNumber(value, options);
+        }
+        if (isNaN(parsed)) {
+            parsed = lenientParseNumber(value, options);
+        }
+    }
+    return Number(parsed);
+}
+
+function strictParseNumber(value, options) {
+    // A whitespace thousands separator is equivalent to any whitespace character.
+    // E.g. "1  000 000" should be parsed as 1000000 even if the
+    // thousands separator is nbsp.
+    if (options.thousandsSep) {
         const thousandsSepRegex = options.thousandsSep.match(/\s+/)
             ? /\s+/g
             : new RegExp(escapeRegExp(options.thousandsSep), "g") || ",";
 
         // a number can have the thousand separator multiple times. ex: 1,000,000.00
         value = value.replaceAll(thousandsSepRegex, "");
-        // a number only have one decimal separator
+    }
+    // a number only have one decimal separator
+    if (options.decimalPoint) {
         value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
     }
-
     return Number(value);
+}
+
+function lenientParseNumber(value, options) {
+    if (!value) {
+        return 0;
+    }
+    const { thousandsSep, decimalPoint } = options;
+    let decimalSeparator = decimalPoint?.length > 0 ? decimalPoint : null;
+    let thousandsSeparator = thousandsSep?.length > 0 ? thousandsSep : null;
+    const REGEX_SIGN_NUMBER = /^(?<sign>[+-]?)(?<number>[\de\-+., \u00A0]+)$/gm;
+    const REGEX_SPLIT_NUMBER = /([., \u00A0])/;
+    const REGEX_REPLACE_ALL = {
+        ".": /\./g,
+        " ": /\s+/g,
+        "\u00A0": /\s+/g,
+        ",": /,/g,
+    };
+    const matchedValue = REGEX_SIGN_NUMBER.exec(String(value));
+    if (!matchedValue) {
+        throw new Error(`No matched found for value ${value}`);
+    }
+    const sign = matchedValue.groups?.sign;
+    if (sign.length > 1) {
+        throw new Error("Invalid input. Can't have multiple signs.");
+    }
+    const number = matchedValue.groups?.number;
+    const separators = number
+        .split(REGEX_SPLIT_NUMBER)
+        .filter((value) => REGEX_SPLIT_NUMBER.test(value))
+        .map((value, index) => {
+            return { index, value };
+        })
+        .sort((a, b) => a.index - b.index);
+
+    if (separators?.length > 0) {
+        const suspectedDecimalSeparator = separators.at(-1).value;
+        const suspectedThousandSeparator = separators.at(0).value;
+        const checkSameSeparators = (compare) => {
+            return separators.filter((term) => term.value === compare).length;
+        };
+        //SET DECIMAL SEP
+        if (
+            !decimalSeparator &&
+            suspectedDecimalSeparator &&
+            checkSameSeparators(suspectedDecimalSeparator) <= 1
+        ) {
+            if (decimalPoint?.length > 0 && decimalPoint === suspectedDecimalSeparator) {
+                decimalSeparator = suspectedDecimalSeparator;
+            } else if ([".", ","].indexOf(suspectedDecimalSeparator) >= 0) {
+                decimalSeparator = suspectedDecimalSeparator;
+            }
+        }
+        //SET THOUSAND SEP
+        if (
+            !thousandsSeparator &&
+            suspectedThousandSeparator &&
+            checkSameSeparators(suspectedThousandSeparator) >= 1 &&
+            suspectedThousandSeparator !== decimalSeparator
+        ) {
+            thousandsSeparator = suspectedThousandSeparator;
+        }
+    }
+    const newValue = String(number)
+        .replace(REGEX_REPLACE_ALL[thousandsSeparator], "")
+        .replace(REGEX_REPLACE_ALL[decimalSeparator], ".");
+
+    return Number(`${sign}${newValue}`);
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +167,10 @@ export function parseFloat(value) {
             decimalPoint: ".",
         });
         if (isNaN(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
+            parsed = parseNumber(value);
+            if (isNaN(parsed)) {
+                throw new InvalidNumberError(`"${value}" is not a correct number`);
+            }
         }
     }
     return parsed;

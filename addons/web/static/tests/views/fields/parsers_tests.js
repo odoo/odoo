@@ -5,6 +5,7 @@ import {
     parseFloat,
     parseFloatTime,
     parseInteger,
+    parseNumber,
     parsePercentage,
     parseMonetary,
 } from "@web/views/fields/parsers";
@@ -36,7 +37,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseFloat("1,000.00"), 1000);
         assert.strictEqual(parseFloat("1,000,000.00"), 1000000);
         assert.strictEqual(parseFloat("1,234.567"), 1234.567);
-        expectInvalidNumberError(assert, parseFloat, "1.000.000");
+        assert.strictEqual(parseFloat("1.000.000"), 1e6);
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(parseFloat("1.234,567"), 1234.567);
@@ -95,6 +96,35 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: false });
         assert.strictEqual(parseInteger("1000000"), 1000000);
+    });
+
+    QUnit.test("parseNumber", function (assert) {
+        assert.strictEqual(parseNumber("123456"), 123456);
+        assert.strictEqual(parseNumber("1 234 56"), 123456);
+        assert.strictEqual(parseNumber("1234.56"), 1234.56);
+        assert.strictEqual(parseNumber("1234.56", { decimalPoint: "," }), 1234.56);
+        assert.strictEqual(parseNumber("1234,56"), 1234.56);
+        assert.strictEqual(parseNumber("1234,56", { decimalPoint: "," }), 1234.56);
+        assert.strictEqual(parseNumber("1.234.56"), 123456);
+        assert.strictEqual(parseNumber("1.234,56"), 1234.56);
+        assert.strictEqual(parseNumber(".56"), 0.56);
+        assert.strictEqual(parseNumber(",56"), 0.56);
+        assert.strictEqual(parseNumber("1,234.56"), 1234.56);
+        assert.strictEqual(parseNumber("123.456", { thousandsSep: "." }), 123456);
+        assert.strictEqual(parseNumber("123.456"), 123.456);
+        assert.strictEqual(parseNumber("123,456", { thousandsSep: "," }), 123456);
+        assert.strictEqual(parseNumber("123,456"), 123.456);
+        assert.strictEqual(parseNumber("12,34,567.89"), 1234567.89);
+        assert.strictEqual(parseNumber("0,809"), 0.809);
+        assert.strictEqual(parseNumber("10,809", { thousandsSep: "," }), 10809);
+        assert.strictEqual(parseNumber("10,809"), 10.809);
+        assert.strictEqual(parseNumber("123,456,789"), 123456789);
+        assert.strictEqual(parseNumber("1234."), 1234);
+        assert.strictEqual(parseNumber("1234,"), 1234);
+        assert.strictEqual(parseNumber("123,456."), 123456);
+        assert.strictEqual(parseNumber("123,456.78"), 123456.78);
+        assert.strictEqual(parseNumber("10 000,45"), 10000.45);
+        assert.strictEqual(parseNumber("9 876,543"), 9876.543);
     });
 
     QUnit.test("parsePercentage", function (assert) {
