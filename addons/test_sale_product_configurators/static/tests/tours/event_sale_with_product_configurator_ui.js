@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 
 registry.category("web_tour.tours").add('event_sale_with_product_configurator_tour', {
     url: '/web',
@@ -25,7 +26,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Memorabilia")) button:has(i.fa-shopping-cart)',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.fa-plus)',
 }, {
     trigger: 'button:contains(Confirm)',
 }, {
@@ -54,13 +55,13 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)")) label:contains("Adult")',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("Adult")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)"))>td:nth-child(3) input',
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
     run: 'text 5',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("150.00")',  // to be sure the correct variant is set
-}, {
+},
+    configuratorTourUtils.assertPriceTotal("150.00"),
+{
     trigger: 'button:contains(Confirm)',
 }, {
     trigger: '.o_input_dropdown input',
@@ -88,10 +89,10 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
-    trigger: 'tr:has(.o_sale_product_configurator_name:contains("Registration Event (TEST variants)")) label:contains("VIP")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("60.00")',  // to be sure the correct variant is set
-}, {
+    trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("VIP")',
+},
+    configuratorTourUtils.assertPriceTotal(60.00),
+{
     trigger: 'button:contains(Confirm)',
 }, {
     trigger: '.o_input_dropdown input',

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { stepUtils, TourError } from "@web_tour/tour_service/tour_utils";
+import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_single_custom_attribute_tour', {
     url: '/web',
@@ -18,32 +19,28 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
     run: 'text Custo',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)',
-    run: 'text great single custom value'
-}, {
+},
+    configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "product attribute", "great single custom value"),
+{
     trigger: 'button:contains(Confirm)',
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
-    run: function (){} // check custom value
+    isCheck: true,
 }, {
     trigger: 'div[name="product_template_id"]',
 }, {
     trigger: '.fa-pencil',
 }, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)',
+    trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]',
     run: function () {
         // check custom value initialized
-        if ($('main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(2)>input:nth-child(7)').val() === "great single custom value") {
-            $('main').addClass('tour_success_2');
+        if ($('table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]').val() !== "great single custom value") {
+            throw new TourError("The value of custom product attribute should be 'great single custom value'.");
         }
     }
 }, {
-    trigger: 'main.tour_success_2',
-    isCheck: true,
-}, {
-    trigger: 'button:contains(Back)',
+    trigger: 'button:contains("Cancel")',
 },
     ...stepUtils.discardForm()
 ]});
