@@ -22,6 +22,12 @@ class TestMailTools(MailCommon):
             'phone': '0456334455',
         })
 
+        cls.test_user = cls.env['res.users'].create({
+            'login': 'adam',
+            'name': 'Adam',
+            'partner_id': cls.test_partner.id,
+        })
+
         cls.sources = [
             # single email
             'alfred.astaire@test.example.com',
@@ -106,6 +112,12 @@ class TestMailTools(MailCommon):
             # test with wildcard "_"
             found = Partner._mail_find_partner_from_emails(['alfred_astaire@test.example.com'])
             self.assertEqual(found, [self.env['res.partner']])
+
+        # test users with same email, priority given to current user
+        # --------------------------------------------------------------
+        self.test_user.sudo().write({'email': '"Alfred Astaire" <%s>' % self.env.user.partner_id.email_normalized})
+        found = Partner._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
+        self.assertEqual(found, [self.env.user.partner_id])
 
     @users('employee')
     def test_tools_email_re(self):
