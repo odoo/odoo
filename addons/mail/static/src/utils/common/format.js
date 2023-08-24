@@ -107,7 +107,8 @@ function linkify(text) {
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
         result += _escapeEntities(text.slice(curIndex, match.index));
-        const url = match[0];
+        // Decode the url first, in case it's already an encoded url
+        const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
         result += `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
             url

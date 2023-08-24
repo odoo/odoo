@@ -52,6 +52,8 @@ QUnit.test("addLink: utility function and special entities", function (assert) {
         ":'(": ":'(",
         // special character in smileys should be escaped
         "&lt;3": "&lt;3",
+        // Already encoded url should not be encoded twice
+        "https://odoo.com/%5B%5D": `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
     };
 
     for (const [content, result] of Object.entries(testInputs)) {
