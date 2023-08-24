@@ -3,7 +3,7 @@
 import { Markup } from "@web/legacy/js/core/utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 
 import "@website_sale/js/website_sale";
 
@@ -65,11 +65,10 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         .remove();
     combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
     combination.out_of_stock_message = Markup(combination.out_of_stock_message);
-    const $message = $(renderToElement(
+    $('div.availability_messages').append(renderToFragment(
         'website_sale_stock.product_availability',
         combination
     ));
-    $('div.availability_messages').html($message);
 };
 
 publicWidget.registry.WebsiteSale.include({
