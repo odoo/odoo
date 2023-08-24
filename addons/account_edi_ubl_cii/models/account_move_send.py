@@ -153,7 +153,9 @@ class AccountMoveSend(models.Model):
             return
 
         # Read pdf content.
-        reader_buffer = io.BytesIO(invoice_data['pdf_attachment_values']['raw'])
+        pdf_report_key = 'pdf_attachment_values' if invoice_data.get(
+            'pdf_attachment_values') else 'proforma_pdf_attachment_values'
+        reader_buffer = io.BytesIO(invoice_data[pdf_report_key]['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
         # Post-process.
@@ -184,7 +186,7 @@ class AccountMoveSend(models.Model):
         # Replace the current content.
         writer_buffer = io.BytesIO()
         writer.write(writer_buffer)
-        invoice_data['pdf_attachment_values']['raw'] = writer_buffer.getvalue()
+        invoice_data[pdf_report_key]['raw'] = writer_buffer.getvalue()
         reader_buffer.close()
         writer_buffer.close()
 
