@@ -59,11 +59,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             trigger: '[name="body_arch"] iframe .o_editable h1',
             content: 'Verify that the title was inserted properly in the editor',
             run: () => {},
-        }, {
-            trigger: 'button.o_form_button_save',
-            content: 'Click on the "Save" button to save the changes.',
-            run: 'click',
         },
-        ...stepUtils.saveForm(),
+        ...stepUtils.discardForm(),
     ]
 });
