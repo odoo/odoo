@@ -185,10 +185,13 @@ odoo.define('payment_adyen.payment_form', require => {
                                         // create and mount PayPal button in the component
                                         checkout.create("paypal",
                                             {
+                                                style: {
+                                                    disableMaxWidth: true
+                                                },
                                                 blockPayPalCreditButton: true,
                                                 blockPayPalPayLaterButton: true
                                             }
-                                        ).mount(this.paypalForm).acquirerId = paymentOptionId;
+                                        ).mount(this.paypalForm).providerId = paymentOptionId;
                                         this.txContext.tokenizationRequested = false;
                                     }
                                     // Hide Pay button and show PayPal component
