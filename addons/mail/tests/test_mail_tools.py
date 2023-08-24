@@ -98,7 +98,7 @@ class TestMailTools(MailCommon):
         found = Partner._mail_search_on_partner(['alfred_astaire@test.example.com'])
         self.assertEqual(found, self.env['res.partner'])
 
-    @users('employee')
+    @users('admin')
     def test_mail_find_partner_from_emails_followers(self):
         """ Test '_mail_find_partner_from_emails' when dealing with records on
         which followers have to be found based on email. Check multi email
@@ -169,6 +169,12 @@ class TestMailTools(MailCommon):
                 )[0]
                 self.assertEqual(partner, expected,
                                 'Mail (FIXME): partial recognition of multi email through email_normalize')
+
+        # test users with same email, priority given to current user
+        # --------------------------------------------------------------
+        self.user_employee.sudo().write({'email': '"Alfred Astaire" <%s>' % self.env.user.partner_id.email_normalized})
+        found = self.env['res.partner']._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
+        self.assertEqual(found, [self.env.user.partner_id])
 
     @users('employee')
     def test_tools_email_re(self):
