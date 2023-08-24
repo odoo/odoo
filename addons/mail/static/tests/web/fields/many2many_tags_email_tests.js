@@ -48,20 +48,13 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     );
 
     assert.verifySteps([]);
-    assert.containsOnce(
-        $,
-        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
-    );
+    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
 
     // add an other existing tag
     await selectDropdownItem(document.body, "partner_ids", "silver");
-    assert.containsOnce(
-        $,
-        ".modal-content .o_form_view",
-        "there should be one modal opened to edit the empty email"
-    );
+    await contains(".modal-content .o_form_view");
     await contains(".modal-content .o_form_view .o_input#name_0", 1, { value: "silver" });
-    assert.containsOnce($, ".modal-content .o_form_view .o_input#email_0");
+    await contains(".modal-content .o_form_view .o_input#email_0");
 
     // set the email and save the modal (will rerender the form view)
     await insertText(".modal-content .o_form_view .o_input#email_0", "coucou@petite.perruche");
@@ -79,7 +72,7 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
 });
 
-QUnit.test("many2many_tags_email widget can load more than 40 records", async (assert) => {
+QUnit.test("many2many_tags_email widget can load more than 40 records", async () => {
     const pyEnv = await startServer();
     const partnerIds = [];
     for (let i = 100; i < 200; i++) {
@@ -97,10 +90,10 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async (a
         views: [[false, "form"]],
     });
 
-    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 100);
-    assert.containsOnce($, ".o_form_editable");
+    await contains('.o_field_widget[name="partner_ids"] .badge', 100);
+    await contains(".o_form_editable");
 
     // add a record to the relation
     await selectDropdownItem(document.body, "partner_ids", "Public user");
-    assert.containsN($, '.o_field_widget[name="partner_ids"] .badge', 101);
+    await contains('.o_field_widget[name="partner_ids"] .badge', 101);
 });

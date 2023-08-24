@@ -352,7 +352,7 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await contains(".o-mail-ChatWindow", 0);
 });
 
-QUnit.test("mark failure as read", async (assert) => {
+QUnit.test("mark failure as read", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
@@ -378,10 +378,7 @@ QUnit.test("mark failure as read", async (assert) => {
 
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem:contains(Channel)", 0);
-    assert.containsNone(
-        $,
-        ".o-mail-NotificationItem:contains(An error occurred when sending an email)"
-    );
+    await contains(".o-mail-NotificationItem:contains(An error occurred when sending an email)", 0);
 });
 
 QUnit.test("different discuss.channel are not grouped", async () => {
@@ -633,7 +630,7 @@ QUnit.test("filtered previews", async () => {
     await contains('.o-mail-NotificationItem:contains("channel1")');
 });
 
-QUnit.test("no code injection in message body preview", async (assert) => {
+QUnit.test("no code injection in message body preview", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -643,15 +640,13 @@ QUnit.test("no code injection in message body preview", async (assert) => {
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem");
-    assert.strictEqual(
-        $(".o-mail-NotificationItem-text").text().replace(/\s/g, ""),
-        "You:&shoulnotberaisedthrownewError('CodeInjectionError');"
+    await contains(
+        ".o-mail-NotificationItem-text:contains(You: &shoulnotberaisedthrow new Error('CodeInjectionError');)"
     );
-    assert.containsNone($(".o-mail-NotificationItem-text"), "script");
+    await contains(".o-mail-NotificationItem-text script", 0);
 });
 
-QUnit.test("no code injection in message body preview from sanitized message", async (assert) => {
+QUnit.test("no code injection in message body preview from sanitized message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -661,13 +656,10 @@ QUnit.test("no code injection in message body preview from sanitized message", a
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem-text");
-    assert.strictEqual(
-        $(".o-mail-NotificationItem-text").text().replace(/\s/g, ""),
-        "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>"
+    await contains(
+        ".o-mail-NotificationItem-text:contains(You: <em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script>)"
     );
-    assert.containsNone($(".o-mail-NotificationItem-text"), "script");
+    await contains(".o-mail-NotificationItem-text script", 0);
 });
 
 QUnit.test("<br/> tags in message body preview are transformed in spaces", async (assert) => {
