@@ -133,4 +133,15 @@ export class ProductTemplateAttributeLine extends Component {
             ptav => this.props.selected_attribute_value_ids.includes(ptav.id)
         )?.is_custom;
     }
+    
+    /**
+     * Check if the line has a custom ptav or not.
+     *
+     * @return {Boolean} - Whether the line has a custom ptav or not.
+     */
+    hasPTAVCustom() {
+        return this.props.attribute_values.some(
+            ptav => ptav.is_custom
+        );
+    }
  }
