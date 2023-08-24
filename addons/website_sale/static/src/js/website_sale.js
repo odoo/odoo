@@ -25,7 +25,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'click .show_coupon': '_onClickShowCoupon',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
@@ -604,14 +603,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {Event} ev
      */
-    _onClickShowCoupon: function (ev) {
-        $(".show_coupon").hide();
-        $('.coupon_form').removeClass('d-none');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
     _onSubmitSaleSearch: function (ev) {
         if (!this.$('.dropdown_sorty_by').length) {
             return;
@@ -813,12 +804,12 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         var $old = $('.all_shipping').find('.card.border.border-primary');
         $old.find('.btn-ship').toggle();
         $old.addClass('js_change_shipping');
-        $old.removeClass('border border-primary');
+        $old.removeClass('bg-primary border border-primary');
 
         var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
         $new.find('.btn-ship').toggle();
         $new.removeClass('js_change_shipping');
-        $new.addClass('border border-primary');
+        $new.addClass('bg-primary border border-primary');
 
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');
@@ -837,7 +828,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      */
     _onClickDeleteProduct: function (ev) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('tr').find('.js_quantity').val(0).trigger('change');
+        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
     },
 });
 

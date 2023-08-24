@@ -18,10 +18,10 @@
             <t t-if="tx_sudo.provider_id.custom_mode == 'onsite'">
                 <div class="card-body">
                     <div class="o_header_carrier_message">
-                        <b t-out="order.carrier_id.name"/><span class="text-muted"> (On site picking)</span>
+                        <b t-out="website_sale_order.carrier_id.name"/><span class="text-muted"> (On site picking)</span>
                     </div>
                     <div class="o_body_carrier_message">
-                        <t t-out="order.carrier_id.website_description"/>
+                        <t t-out="website_sale_order.carrier_id.website_description"/>
                     </div>
                 </div>
             </t>

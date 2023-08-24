@@ -34,8 +34,8 @@
     </template>
 
     <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
-    <template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.cart_summary" name="Event Cart right column">
-        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+    <template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.checkout_layout" name="Event Cart right column">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/h6" position="after">
             <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
         </xpath>
     </template>
@@ -74,7 +74,7 @@
                                 <div class="col-lg-8 p-4">
                                     <h3 t-esc="event.name" />
                                     <t t-set="attendee_ids" t-value="attendee_ids_per_event.get(event, [])"/>
-                                    <a t-if="order.state == 'sale' and attendee_ids" class="btn btn-primary text-white mb-2 me-2" target="_blank"
+                                    <a t-if="website_sale_order.state == 'sale' and attendee_ids" class="btn btn-primary text-white mb-2 me-2" target="_blank"
                                        t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendee_ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendee_ids) }}">
                                         Download Tickets <i class="ms-1 fa fa-download"/>
                                     </a>

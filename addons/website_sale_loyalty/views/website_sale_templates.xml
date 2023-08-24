@@ -10,7 +10,7 @@
     <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
-                <td colspan="3" class="text-center text-xl-end border-0">
+                <td colspan="3" class="text-center text-xl-end border-0 p-0">
                     <span class=''>
                         <t t-if="request.params.get('code_not_available')">
                             <div class="alert alert-danger text-start mt16" role="alert">
@@ -148,14 +148,12 @@
     <template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
         <xpath expr="//t[@t-set='force_coupon']" position="replace">
             <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available') or website_sale_order.get_promo_code_error(delete=False)"/>
-        </xpath>
-        <xpath expr="//a" position="replace">
-            <a href="#" class="show_coupon">Discount code or gift card</a>
+            <t t-set="_placeholder" t-value="'Discount code or gift card'"/>
         </xpath>
     </template>
 
-    <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_summary">
-        <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/child::*" position="attributes">
+    <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/child::*" position="attributes">
             <attribute name="t-att-style">'display: None;' if line.reward_id.reward_type == 'shipping' else ''</attribute>
         </xpath>
     </template>
@@ -170,14 +168,15 @@
         </xpath>
     </template>
 
-    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary">
-        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.checkout_layout">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/h6" position="after">
             <t t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
 
     <template id="website_sale_purchased_gift_card" inherit_id="website_sale.confirmation" >
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+            <t t-set="order" t-value="website_sale_order"/>
             <t t-call="sale_loyalty.sale_purchased_gift_card"/>
         </xpath>
     </template>
