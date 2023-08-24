@@ -228,6 +228,7 @@ class MetaKeywords extends Component {
     }
 
     addKeyword(keyword) {
+        keyword = keyword.trim();
         if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = '';
@@ -433,8 +434,10 @@ export class OptimizeSEODialog extends Component {
         }
         const el = this.pageDocumentElement.querySelector(query);
         if (name === 'keywords') {
-            const parsed = el && el.content.split(',');
-            return parsed && parsed[0] ? parsed : [];
+            // Keywords might contain spaces which makes them fail the content
+            // check. Trim the strings to prevent this from happening.
+            const parsed = el && el.content.split(',').map(kw => kw.trim());
+            return parsed && parsed[0] ? [...new Set(parsed)] : [];
         }
         return el && el.content;
     }
