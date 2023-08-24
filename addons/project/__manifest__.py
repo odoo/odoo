@@ -163,7 +163,6 @@
             'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
-            'web/static/src/legacy/js/core/registry.js',
             'web/static/src/legacy/js/core/rpc.js',
             'web/static/src/legacy/js/core/service_mixins.js',
             'web/static/src/legacy/js/core/session.js',
