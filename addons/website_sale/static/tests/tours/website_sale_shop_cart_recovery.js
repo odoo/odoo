@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import localStorage from "@web/legacy/js/core/local_storage";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
 
@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
         run: function () {
             var orderId = $('.my_cart_quantity').data('order-id');
-            localStorage.setItem(orderIdKey, orderId);
+            browser.localStorage.setItem(orderIdKey, orderId);
             window.location.href = "/web/session/logout?redirect=/web/login";
         },
     },
@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         content: "login as admin and go to the SO (backend)",
         trigger: '.oe_login_form',
         run: function () {
-            var orderId = localStorage.getItem(orderIdKey);
+            var orderId = browser.localStorage.getItem(orderIdKey);
             var url = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
             var $loginForm = $('.oe_login_form');
             $loginForm.find('input[name="login"]').val("admin");
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         trigger: '.o-mail-Message-body a:containsExact("Resume order")',
         run: function () {
             var link = $('.o-mail-Message-body a:containsExact("Resume order")').attr('href');
-            localStorage.setItem(recoveryLinkKey, link);
+            browser.localStorage.setItem(recoveryLinkKey, link);
             window.location.href = "/web/session/logout?redirect=/";
         }
     },
@@ -60,6 +60,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         content: "go to the recovery link",
         trigger: 'a[href="/web/login"]',
         run: function () {
+            const localStorage = browser.localStorage;
             window.location.href = localStorage.getItem(recoveryLinkKey);
         },
     },
