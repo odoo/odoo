@@ -294,7 +294,7 @@ class RecurrenceRule(models.Model):
 
     @api.model
     def _detach_events(self, events):
-        events.write({
+        events.with_context(dont_notify=True).write({
             'recurrence_id': False,
             'recurrency': False,
         })
