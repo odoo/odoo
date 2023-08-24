@@ -1078,6 +1078,21 @@
                                     </t>
                                 </table>
                             </div>
+                            <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
+                            <div id="product_documents" t-if="product_documents" class="row">
+                                <u class="h5">Documents</u>
+                                <t t-foreach="product_documents" t-as="document_sudo">
+                                    <t t-set="attachment_sudo" t-value="document_sudo.ir_attachment_id"/>
+                                    <t t-set="target" t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"/>
+                                    <t t-set="icon" t-value="attachment_sudo.type == 'url' and 'fa-link' or 'fa-download'"/>
+                                    <div class="d-flex mb-2 mt-2">
+                                        <a t-att-href="'/shop/' + slug(product) + '/document/' + str(document_sudo.id)" t-att-target="target">
+                                            <i t-att-class="'fa ' + icon"/>
+                                            <t t-out="attachment_sudo.name"/>
+                                        </a>
+                                    </div>
+                                </t>
+                            </div>
                             <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
                             </div>
                         </div>
