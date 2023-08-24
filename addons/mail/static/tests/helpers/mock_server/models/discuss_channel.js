@@ -264,6 +264,9 @@ patch(MockServer.prototype, {
         const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
+            if (partner.id === this.pyEnv.currentPartnerId) {
+                continue;  // adding 'yourself' to the conversation is handled below
+            }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
@@ -282,6 +285,14 @@ patch(MockServer.prototype, {
                 channel: this._mockDiscussChannelChannelInfo([channel.id])[0],
                 invited_by_user_id: this.pyEnv.currentUserId,
             });
+        }
+        const selfPartner = partners.find((partner) => partner.id === this.pyEnv.currentPartnerId);
+        if (selfPartner) {
+            // needs to be done after adding 'self' as a member
+            const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
+            const message_type = "notification";
+            const subtype_xmlid = "mail.mt_comment";
+            this._mockDiscussChannelMessagePost(channel.id, { body, message_type, subtype_xmlid });
         }
         const isSelfMember =
             this.pyEnv["discuss.channel.member"].searchCount([
