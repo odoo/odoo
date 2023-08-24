@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="pos_config_view_form" model="ir.ui.view">
+            <field name="name">pos.config.l10n_eg_pos_edi_eta.form.view</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <field name="country_code" invisible="1"/>
+                    <h2>ETA Configuration</h2>
+                    <div class="row mt16 o_settings_container" id="l10n_eg_pos_eta_config">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">POS Serial Number</span>
+                                <div class="text-muted">
+                                    Serial number of the POS system used for authentication
+                                </div>
+                                <field name="l10n_eg_pos_serial" attrs="{'required': [('country_code', '=', 'EG')]}"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">POS Version</span>
+                                <div class="text-muted">
+                                    Version of the POS system used for authentication
+                                </div>
+                                <field name="l10n_eg_pos_version" attrs="{'required': [('country_code', '=', 'EG')]}"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Model Framework</span>
+                                <div class="text-muted">
+                                    Model Framework of the POS system used for authentication
+                                </div>
+                                <field name="l10n_eg_pos_model_framework" attrs="{'required': [('country_code', '=', 'EG')]}"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Pre-Shared Key</span>
+                                <div class="text-muted">
+                                    Pre-Shared Key of the POS system used for authentication
+                                </div>
+                                <field name="l10n_eg_pos_pre_shared_key" attrs="{'required': [('country_code', '=', 'EG')]}"/>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

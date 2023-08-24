@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_submit_ereceipts" model="ir.actions.server">
+            <field name="name">Submit to ETA</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">
+records_to_submit = records.filtered(lambda r: r.l10n_eg_pos_eta_state == 'pending')
+records_to_submit.l10n_eg_pos_eta_process_receipts()
+            </field>
+        </record>
+
+    </data>
+</odoo>
