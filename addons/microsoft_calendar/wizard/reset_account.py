@@ -24,26 +24,31 @@ class ResetMicrosoftAccount(models.TransientModel):
     ], string="Next Synchronization", required=True, default='new')
 
     def reset_account(self):
-        microsoft = self.env["calendar.event"]._get_microsoft_service()
-
+        # We don't update recurring events to prevent spam
         events = self.env['calendar.event'].search([
             ('user_id', '=', self.user_id.id),
             ('ms_universal_event_id', '!=', False)])
-        if self.delete_policy in ('delete_microsoft', 'delete_both'):
-            with microsoft_calendar_token(self.user_id) as token:
-                for event in events:
-                    microsoft.delete(event.ms_universal_event_id, token=token)
+        non_recurring_events = self.env['calendar.event'].search([
+            ('user_id', '=', self.user_id.id),
+            ('recurrence_id', '=', False),
+            ('ms_universal_event_id', '!=', False)])
 
-        if self.delete_policy in ('delete_odoo', 'delete_both'):
-            events.microsoft_id = False
-            events.unlink()
+        if self.delete_policy in ('delete_microsoft', 'delete_both'):
+            for event in non_recurring_events:
+                event._microsoft_delete(event._get_organizer(), event.ms_organizer_event_id, timeout=3)
 
         if self.sync_policy == 'all':
-            events.write({
+            events.with_context(dont_notify=True).update({
                 'microsoft_id': False,
                 'need_sync_m': True,
             })
 
+        if self.delete_policy in ('delete_odoo', 'delete_both'):
+            events.with_context(dont_notify=True).microsoft_id = False
+            events.unlink()
+
+        # We commit to make sure the _microsoft_delete are called when we still have a token on the user.
+        self.env.cr.commit()
         self.user_id._set_microsoft_auth_tokens(False, False, 0)
         self.user_id.write({
             'microsoft_calendar_sync_token': False,
