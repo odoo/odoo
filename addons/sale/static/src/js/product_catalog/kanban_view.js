@@ -1,18 +1,20 @@
 /** @odoo-module **/
-import { registry } from "@web/core/registry";
-import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { kanbanView } from "@web/views/kanban/kanban_view";
-import { ProductCatalogKanbanModel } from "./kanban_model";
-import { ProductCatalogKanbanRecord } from "./kanban_record";
 
-export class ProductCatalogKanbanRenderer extends KanbanRenderer {
-    static components = {...KanbanRenderer.components, KanbanRecord: ProductCatalogKanbanRecord};
-}
+import { kanbanView } from "@web/views/kanban/kanban_view";
+import { registry } from "@web/core/registry";
+
+import { ProductCatalogKanbanController } from "./kanban_controller";
+import { ProductCatalogKanbanModel } from "./kanban_model";
+import { ProductCatalogKanbanRenderer } from "./kanban_renderer";
+import { ProductCatalogSearchPanel} from "./search_panel";
+
 
 export const productCatalogKanbanView = {
     ...kanbanView,
+    Controller: ProductCatalogKanbanController,
     Model: ProductCatalogKanbanModel,
     Renderer: ProductCatalogKanbanRenderer,
+    SearchPanel: ProductCatalogSearchPanel,
 };
 
 registry.category("views").add("sale_product_kanban", productCatalogKanbanView);
