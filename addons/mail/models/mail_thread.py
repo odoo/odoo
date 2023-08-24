@@ -565,7 +565,7 @@ class MailThread(models.AbstractModel):
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
         }
 
-        return model_fields and set(self.fields_get(model_fields))
+        return model_fields and set(self.fields_get(model_fields, attributes=()))
 
     def _track_subtype(self, initial_values):
         """ Give the subtypes triggered by the changes on the record according
@@ -594,7 +594,7 @@ class MailThread(models.AbstractModel):
         if not fields_iter:
             return {}
 
-        tracked_fields = self.fields_get(fields_iter)
+        tracked_fields = self.fields_get(fields_iter, attributes=('string', 'type', 'selection', 'currency_field'))
         tracking = dict()
         for record in self:
             try:
