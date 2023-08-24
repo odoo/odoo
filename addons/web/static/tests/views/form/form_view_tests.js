@@ -13504,4 +13504,47 @@ QUnit.module("Views", (hooks) => {
 
         assert.equal(target.querySelectorAll(".o_data_cell")[0].innerText, "updated");
     });
+
+    QUnit.test("search_default_ context keys are not passed to fields", async function (assert) {
+        assert.expect(1);
+        serverData.models.partner.records[0].foo = `[("display_name", "=", "xphone")]`;
+        Object.assign(serverData.actions[1], {
+            context: { search_default_display_name: "first record" },
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            res_id: 1,
+            res_ids: [1],
+        });
+
+        serverData.views = {
+            "product,false,list": `<tree><field name="display_name"/></tree>`,
+            "product,false,search": `<search>
+                <field name="display_name"/>
+            </search>`,
+            "partner,false,form": `<form>
+                <field name="foo" widget="domain" options="{'model': 'product'}"/>
+            </form>`,
+            "partner,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner,false,search": `<search>
+                <field name="display_name"/>
+            </search>`,
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC: (route, args) => {
+                if (args.model === "product" && args.method === "web_search_read") {
+                    assert.deepEqual(args.kwargs.domain, [["display_name", "=", "xphone"]]);
+                }
+            },
+        });
+        await doAction(webClient, 1);
+
+        // Switch to the form view. This will reload the search_model state
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+
+        await click(target, ".o_domain_show_selection_button");
+    });
 });
