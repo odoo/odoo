@@ -2349,6 +2349,12 @@ class BaseModel(metaclass=MetaModel):
             return data
 
         granularity = first_group.split(':')[1] if ':' in first_group else 'month'
+        days_offset = 0
+        if granularity == 'week':
+            # _read_group_process_groupby week groups are dependent on the
+            # locale, so filled groups should be too to avoid overlaps.
+            first_week_day = int(get_lang(self.env).week_start) - 1
+            days_offset = first_week_day and 7 - first_week_day
         interval = READ_GROUP_TIME_GRANULARITY[granularity]
         tz = False
         if field.type == 'datetime' and self._context.get('tz') in pytz.all_timezones_set:
@@ -2362,14 +2368,14 @@ class BaseModel(metaclass=MetaModel):
         existing_from, existing_to = existing[0], existing[-1]
         if fill_from:
             fill_from = odoo.fields.Datetime.to_datetime(fill_from) if isinstance(fill_from, datetime.datetime) else odoo.fields.Date.to_date(fill_from)
-            fill_from = date_utils.start_of(fill_from, granularity)
+            fill_from = date_utils.start_of(fill_from, granularity) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_from = tz.localize(fill_from)
         elif existing_from:
             fill_from = existing_from
         if fill_to:
             fill_to = odoo.fields.Datetime.to_datetime(fill_to) if isinstance(fill_to, datetime.datetime) else odoo.fields.Date.to_date(fill_to)
-            fill_to = date_utils.start_of(fill_to, granularity)
+            fill_to = date_utils.start_of(fill_to, granularity) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_to = tz.localize(fill_to)
         elif existing_to:
