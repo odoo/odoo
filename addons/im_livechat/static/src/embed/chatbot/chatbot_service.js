@@ -261,7 +261,7 @@ export class ChatBotService {
             channel_uuid: this.livechatService.thread.uuid,
         });
         this.currentStep.isEmailValid = success;
-        if (msg && !this.livechatService.thread.hasMessage(msg)) {
+        if (msg && !this.livechatService.thread.messages.some((m) => m.id === msg.id)) {
             this.livechatService.thread.messages.push(
                 this.messageService.insert({ ...msg, body: markup(msg.body) })
             );

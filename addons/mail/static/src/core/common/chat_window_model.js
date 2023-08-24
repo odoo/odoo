@@ -1,10 +1,12 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
+
 import { _t } from "@web/core/l10n/translation";
 
 /** @typedef {{ thread?: import("@mail/core/common/thread_model").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
-export class ChatWindow {
+export class ChatWindow extends Record {
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
 
@@ -20,6 +22,7 @@ export class ChatWindow {
      * @returns {ChatWindow}
      */
     constructor(store, data) {
+        super();
         Object.assign(this, {
             thread: data.thread,
             _store: store,

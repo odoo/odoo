@@ -64,9 +64,8 @@ export class MessageService {
     async delete(message) {
         if (message.isStarred) {
             this.store.discuss.starred.counter--;
-            removeFromArrayWithPredicate(
-                this.store.discuss.starred.messages,
-                ({ id }) => id === message.id
+            removeFromArrayWithPredicate(this.store.discuss.starred.messages, (msg) =>
+                msg.eq(message)
             );
         }
         message.body = "";
@@ -201,12 +200,12 @@ export class MessageService {
         const starred = this.store.discuss.starred;
         if (isStarred) {
             starred.counter++;
-            if (!starred.messages.includes(message)) {
+            if (message.notIn(starred.messages)) {
                 starred.messages.push(message);
             }
         } else {
             starred.counter--;
-            removeFromArrayWithPredicate(starred.messages, ({ id }) => id === message.id);
+            removeFromArrayWithPredicate(starred.messages, (msg) => msg.eq(message));
         }
     }
 
@@ -458,7 +457,7 @@ export class MessageService {
                   })
                 : undefined,
         });
-        if (notification.message.author !== this.store.self) {
+        if (!notification.message.author?.eq(this.store.self)) {
             return;
         }
         const thread = notification.message.originThread;
@@ -487,7 +486,7 @@ export class MessageService {
         }
         this.updateNotificationGroup(group, data);
         if (group.notifications.length === 0) {
-            removeFromArrayWithPredicate(this.store.notificationGroups, (gr) => gr.id === group.id);
+            removeFromArrayWithPredicate(this.store.notificationGroups, (gr) => gr.eq(group));
         }
         return group;
     }

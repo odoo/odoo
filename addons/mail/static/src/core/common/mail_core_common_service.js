@@ -54,9 +54,8 @@ export class MailCoreCommon {
                     }
                     delete this.store.messages[messageId];
                     if (message.originThread) {
-                        removeFromArrayWithPredicate(
-                            message.originThread.messages,
-                            ({ id }) => id === message.id
+                        removeFromArrayWithPredicate(message.originThread.messages, (msg) =>
+                            msg.eq(message)
                         );
                     }
                     this.env.bus.trigger("mail.message/delete", { message });

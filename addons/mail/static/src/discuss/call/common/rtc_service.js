@@ -349,7 +349,7 @@ export class Rtc {
      */
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSessionId = undefined;
-        if (this.state.channel === channel) {
+        if (channel.eq(this.state.channel)) {
             this.clear();
             this.soundEffectsService.play("channel-leave");
         }
@@ -539,7 +539,7 @@ export class Rtc {
             return;
         }
         this.state.hasPendingRequest = true;
-        const isActiveCall = Boolean(this.state.channel && this.state.channel === channel);
+        const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
             await this.leaveCall(this.state.channel);
         }
@@ -623,7 +623,7 @@ export class Rtc {
             return;
         }
         for (const session of Object.values(this.state.channel.rtcSessions)) {
-            if (session.peerConnection || session.id === this.state.selfSession.id) {
+            if (session.peerConnection || session.eq(this.state.selfSession)) {
                 continue;
             }
             this.log(session, "init call", { step: "init call" });
@@ -788,7 +788,7 @@ export class Rtc {
         this.state.logs.set("selfSessionId", this.state.selfSession?.id);
         this.state.logs.set("hasTURN", hasTurn(this.state.iceServers));
         const channelProxy = reactive(this.state.channel, () => {
-            if (channel !== this.state.channel) {
+            if (channel.notEq(this.state.channel)) {
                 throw new Error("channel has changed");
             }
             if (this.state.channel) {
@@ -1150,7 +1150,7 @@ export class Rtc {
             }
         }
         for (const session of Object.values(this.state.channel.rtcSessions)) {
-            if (session.id === this.state.selfSession.id) {
+            if (session.eq(this.state.selfSession)) {
                 continue;
             }
             await this.updateRemote(session, "video");
@@ -1353,7 +1353,7 @@ export class Rtc {
             this.state.audioTrack = audioTrack;
             await this.linkVoiceActivation();
             for (const session of Object.values(this.state.channel.rtcSessions)) {
-                if (session.id === this.state.selfSession.id) {
+                if (session.eq(this.state.selfSession)) {
                     continue;
                 }
                 await this.updateRemote(session, "audio");
@@ -1438,7 +1438,7 @@ export class Rtc {
     deleteSession(id) {
         const session = this.store.rtcSessions[id];
         if (session) {
-            if (this.state.selfSession && session.id === this.state.selfSession.id) {
+            if (this.state.selfSession && session.eq(this.state.selfSession)) {
                 this.endCall();
             }
             delete this.store.threads[createLocalId("discuss.channel", session.channelId)]

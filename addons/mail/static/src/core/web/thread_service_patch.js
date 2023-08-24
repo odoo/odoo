@@ -5,7 +5,7 @@ import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 import { createLocalId } from "@mail/utils/common/misc";
 
-import { markup, toRaw } from "@odoo/owl";
+import { markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -93,7 +93,7 @@ patch(ThreadService.prototype, {
                     followedThread: thread,
                     ...followerData,
                 });
-                if (toRaw(follower) !== toRaw(thread.selfFollower)) {
+                if (follower.notEq(thread.selfFollower)) {
                     thread.followers.add(follower);
                 }
             }
@@ -195,7 +195,7 @@ patch(ThreadService.prototype, {
                 followedThread: thread,
                 ...data,
             });
-            if (toRaw(follower) !== toRaw(thread.selfFollower)) {
+            if (follower.notEq(thread.selfFollower)) {
                 thread.followers.add(follower);
             }
         }
@@ -229,7 +229,7 @@ patch(ThreadService.prototype, {
             [follower.partner.id],
         ]);
         const thread = follower.followedThread;
-        if (toRaw(follower) === toRaw(thread.selfFollower)) {
+        if (follower.eq(thread.selfFollower)) {
             thread.selfFollower = undefined;
         } else {
             thread.followers.delete(follower);

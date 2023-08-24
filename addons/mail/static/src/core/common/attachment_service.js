@@ -63,7 +63,7 @@ export class AttachmentService {
             });
             attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
             const thread = attachment.originThread;
-            if (!thread.attachments.includes(attachment)) {
+            if (attachment.notIn(thread.attachments)) {
                 thread.attachments.push(attachment);
                 thread.attachments.sort((a1, a2) => (a1.id < a2.id ? 1 : -1));
             }
@@ -81,25 +81,20 @@ export class AttachmentService {
         }
         delete this.store.attachments[attachment.id];
         if (attachment.originThread) {
-            removeFromArrayWithPredicate(
-                attachment.originThread.attachments,
-                ({ id }) => id === attachment.id
+            removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
+                att.eq(attachment)
             );
         }
         for (const message of Object.values(this.store.messages)) {
-            removeFromArrayWithPredicate(message.attachments, ({ id }) => id === attachment.id);
+            removeFromArrayWithPredicate(message.attachments, (att) => att.eq(attachment));
             if (message.composer) {
-                removeFromArrayWithPredicate(
-                    message.composer.attachments,
-                    ({ id }) => id === attachment.id
+                removeFromArrayWithPredicate(message.composer.attachments, (att) =>
+                    att.eq(attachment)
                 );
             }
         }
         for (const thread of Object.values(this.store.threads)) {
-            removeFromArrayWithPredicate(
-                thread.composer.attachments,
-                ({ id }) => id === attachment.id
-            );
+            removeFromArrayWithPredicate(thread.composer.attachments, (att) => att.eq(attachment));
         }
     }
 

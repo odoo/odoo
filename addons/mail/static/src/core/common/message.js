@@ -107,7 +107,7 @@ export class Message extends Component {
         });
         useEffect(
             (editingMessage) => {
-                if (editingMessage === this.props.message) {
+                if (this.props.message.eq(editingMessage)) {
                     this.enterEditMode();
                 }
             },
@@ -125,7 +125,7 @@ export class Message extends Component {
                     const reaction = this.message.reactions.find(
                         ({ content, personas }) =>
                             content === emoji &&
-                            personas.find((persona) => persona === this.store.self)
+                            personas.find((persona) => persona.eq(this.store.self))
                     );
                     if (!reaction) {
                         this.messageService.react(this.message, emoji);
@@ -260,7 +260,7 @@ export class Message extends Component {
         if (!this.props.thread) {
             return false;
         }
-        return this.message.originThread === this.props.thread;
+        return this.props.thread.eq(this.message.originThread);
     }
 
     get isInInbox() {

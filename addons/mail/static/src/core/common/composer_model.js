@@ -1,10 +1,12 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
+
 /**
  * @typedef {{partnerIds: Set<number>, threadIds: Set<number>}} RawMentions
  */
 
-export class Composer {
+export class Composer extends Record {
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {import("@mail/core/common/message_model").Message} */
@@ -33,6 +35,7 @@ export class Composer {
     isFocused = false;
 
     constructor(store, data) {
+        super();
         const { message, thread } = data;
         if (thread) {
             this.thread = thread;

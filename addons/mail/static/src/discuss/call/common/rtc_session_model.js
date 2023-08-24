@@ -1,8 +1,9 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
-export class RtcSession {
+export class RtcSession extends Record {
     // Server data
     channelId;
     channelMemberId;

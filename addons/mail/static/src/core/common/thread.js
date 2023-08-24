@@ -159,7 +159,7 @@ export class Thread extends Component {
             }
         });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread !== this.props.thread) {
+            if (nextProps.thread.notEq(this.props.thread)) {
                 this.lastJumpPresent = nextProps.jumpPresent;
             }
             this.threadService.fetchNewMessages(nextProps.thread);
@@ -217,7 +217,7 @@ export class Thread extends Component {
             return false;
         }
 
-        if (msg.author !== prevMsg.author) {
+        if (!msg.author?.eq(prevMsg.author)) {
             return false;
         }
         if (msg.resModel !== prevMsg.resModel || msg.resId !== prevMsg.resId) {
