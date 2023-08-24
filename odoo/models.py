@@ -1894,6 +1894,12 @@ class BaseModel(metaclass=MetaModel):
             return data
         interval = first_a_gby['interval']
         granularity = first_a_gby['granularity']
+        days_offset = 0
+        if granularity == 'week':
+            # _read_group_process_groupby week groups are dependent on the
+            # locale, so filled groups should be too to avoid overlaps.
+            first_week_day = int(get_lang(self.env).week_start) - 1
+            days_offset = first_week_day and 7 - first_week_day
         tz = pytz.timezone(self._context['tz']) if first_a_gby["tz_convert"] else False
         groupby_name = groupby[0]
 
@@ -1903,13 +1909,19 @@ class BaseModel(metaclass=MetaModel):
         existing_from, existing_to = existing[0], existing[-1]
 
         if fill_from:
-            fill_from = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_from), granularity)
+            fill_from = date_utils.start_of(
+                odoo.fields.Datetime.to_datetime(fill_from),
+                granularity
+            ) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_from = tz.localize(fill_from)
         elif existing_from:
             fill_from = existing_from
         if fill_to:
-            fill_to = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_to), granularity)
+            fill_to = date_utils.start_of(
+                odoo.fields.Datetime.to_datetime(fill_to),
+                granularity
+            ) - datetime.timedelta(days=days_offset)
             if tz:
                 fill_to = tz.localize(fill_to)
         elif existing_to:
