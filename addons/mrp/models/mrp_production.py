@@ -2640,6 +2640,16 @@ class MrpProduction(models.Model):
                 clean_action(action, self.env)
                 report_actions.append(action)
         if self.user_has_groups('mrp.group_mrp_reception_report'):
+            reception_reports_to_print = self.filtered(
+                lambda p: p.picking_type_id.auto_print_mrp_reception_report
+                          and p.picking_type_id.code == 'mrp_operation'
+                          and p.move_finished_ids.move_dest_ids
+            )
+            if reception_reports_to_print:
+                action = self.env.ref('stock.stock_reception_report_action').report_action(reception_reports_to_print, config=False)
+                action['context'] = dict({'default_production_ids': reception_reports_to_print.ids}, **self.env.context)
+                clean_action(action, self.env)
+                report_actions.append(action)
             reception_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_mrp_reception_report_labels and p.picking_type_id.code == 'mrp_operation')
             if reception_labels_to_print:
                 moves_to_print = reception_labels_to_print.move_finished_ids.move_dest_ids
