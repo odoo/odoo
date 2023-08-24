@@ -4,10 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
-import localStorage from '@web/legacy/js/core/local_storage';
+import { browser } from "@web/core/browser/browser";
 
 const { useEffect, useRef, Component, xml } = owl;
-
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
 export class AttributeTranslateDialog extends Component {
@@ -86,7 +85,7 @@ export class TranslatorInfoDialog extends Component {
     }
 
     onStrongOkClick() {
-        localStorage.setItem(localStorageNoDialogKey, true);
+        browser.localStorage.setItem(localStorageNoDialogKey, true);
     }
 }
 TranslatorInfoDialog.components = { WebsiteDialog };
@@ -250,7 +249,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             ev.preventDefault();
         });
 
-        if (!localStorage.getItem(localStorageNoDialogKey)) {
+        if (!browser.localStorage.getItem(localStorageNoDialogKey)) {
             this.dialogService.add(TranslatorInfoDialog);
         }
 

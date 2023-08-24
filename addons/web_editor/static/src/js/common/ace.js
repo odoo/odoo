@@ -5,7 +5,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
-import localStorage from "@web/legacy/js/core/local_storage";
+import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
@@ -329,10 +329,10 @@ var ViewEditor = Widget.extend({
             }
         }
         function storeEditorWidth() {
-            localStorage.setItem('ace_editor_width', this.$el.width());
+            browser.localStorage.setItem('ace_editor_width', this.$el.width());
         }
         function readEditorWidth() {
-            var width = localStorage.getItem('ace_editor_width');
+            var width = browser.localStorage.getItem('ace_editor_width');
             return parseInt(width || 720, 10);
         }
         function startResizing(e) {
