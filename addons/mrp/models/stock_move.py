@@ -361,6 +361,14 @@ class StockMove(models.Model):
         res.append('mrp_operation')
         return res
 
+    def _filter_by_product(self, prod):
+        res = super()._filter_by_product(prod)
+        for sm in self:
+            bom = sm.bom_line_id.bom_id
+            if bom.type == 'phantom' and (bom.product_id == prod or (not bom.product_id and bom.product_tmpl_id == prod.product_tmpl_id)):
+                res |= sm
+        return res
+
     def _get_backorder_move_vals(self):
         self.ensure_one()
         return {
