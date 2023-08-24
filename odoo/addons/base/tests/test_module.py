@@ -56,6 +56,7 @@ class TestModuleManifest(BaseCase):
             'license': 'MIT',
             'live_test_url': '',
             'name': f'Temp {self.module_name}',
+            'new_page_templates': {},
             'post_init_hook': '',
             'post_load': None,
             'pre_init_hook': '',

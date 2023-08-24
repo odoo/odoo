@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Using `function` so that it is called during both module install and update -->
+<!-- Generate primary snippet templates that are not predefined -->
+<function model="ir.module.module" name="_generate_primary_snippet_templates">
+    <value eval="[ref('base.module_website')]"/>
+</function>
+<!-- Generate primary page templates from manifest -->
+<function model="ir.module.module" name="_generate_primary_page_templates">
+    <value eval="[ref('base.module_website')]"/>
+</function>
+
+</odoo>
