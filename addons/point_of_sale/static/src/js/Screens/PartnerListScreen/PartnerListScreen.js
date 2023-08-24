@@ -6,6 +6,7 @@ import Registries from "@point_of_sale/js/Registries";
 import { debounce } from "@web/core/utils/timing";
 import { useListener } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/js/custom_hooks";
+import { session } from "@web/session";
 
 const { onWillUnmount, useRef } = owl;
 
@@ -153,10 +154,11 @@ class PartnerListScreen extends PosComponent {
         this.activateEditMode();
     }
     createPartner() {
-        // initialize the edit screen with default details about country & state
+        // initialize the edit screen with default details about country, state & lang
         this.state.editModeProps.partner = {
             country_id: this.env.pos.company.country_id,
             state_id: this.env.pos.company.state_id,
+            lang: session.user_context.lang,
         };
         this.activateEditMode();
     }
