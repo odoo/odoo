@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
-from odoo import _
+from odoo import _, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -185,3 +185,35 @@ class L10nPtHashingUtils:
             # binascii.Error: the hash is not base64 encoded
             # ValueError: the hash does not have the correct format (with $)
             return False
+
+    @staticmethod
+    def _l10n_pt_check_chain_hash_integrity(name, records, hash_field, date_field, verify_method, public_key_string):
+        if not records:
+            return {
+                'name': name,
+                'status': 'no_data',
+                'msg': _('There is no entry flagged for data inalterability yet.'),
+            }
+
+        previous_hash = ''
+        for record in records:
+            if not verify_method(record, previous_hash, public_key_string):
+                return {
+                    'name': name,
+                    'status': 'corrupted',
+                    'msg': _("Corrupted data on %s with id %s (%s).", record._name, record.id, record.name),
+                }
+            previous_hash = record[hash_field]
+
+        return {
+            'name': name,
+            'status': 'verified',
+            'msg': _("Entries are correctly hashed"),
+            'from_name': records[0].name,
+            'from_hash': records[0][hash_field],
+            'from_date': fields.Date.to_string(records[0][date_field]),
+            'to_name': records[-1].name,
+            'to_hash': records[-1][hash_field],
+            'to_date': fields.Date.to_string(records[-1][date_field]),
+        }
+

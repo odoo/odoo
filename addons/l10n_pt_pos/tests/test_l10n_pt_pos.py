@@ -79,14 +79,14 @@ class TestL10nPtPos(TestPoSCommon):
         Model.write(order3, {'date_order': fields.Date.from_string('2022-01-07')})
         integrity_check = list(filter(lambda r: r['name'] == order1.config_id.name, self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))[0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on record with id {order3.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on pos.order with id {order3.id} ({order3.name}).')
 
         # Let's try with the l10n_pt_pos_inalterable_hash field itself
         Model.write(order3, {'date_order': fields.Date.from_string("2023-01-03")})  # Revert the previous change
         Model.write(order4, {'l10n_pt_pos_inalterable_hash': '$1$fake_hash'})
         integrity_check = list(filter(lambda r: r['name'] == order1.config_id.name, self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))[0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on record with id {order4.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on pos.order with id {order4.id} ({order4.name}).')
 
     def test_l10n_pt_pos_dont_hash_linked_stock_pickings(self):
         """Test that creating a POS order (which creates a stock picking) doesn't hash this created stock picking"""

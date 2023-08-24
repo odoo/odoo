@@ -3,6 +3,7 @@ from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
 from odoo.addons.l10n_pt_account.utils.hashing import L10nPtHashingUtils
+from odoo.addons.l10n_pt_stock.models.stock_picking import StockPicking
 
 
 class ResCompany(models.Model):
@@ -23,47 +24,19 @@ class ResCompany(models.Model):
             ('code', '=', 'outgoing'),
             ('l10n_pt_stock_official_series_id', '!=', False),
         ])
+        public_key_string = L10nPtHashingUtils._l10n_pt_get_last_public_key(self.env)
 
         for picking_type in picking_types:
             pickings = self.env['stock.picking'].sudo().search([
                 ('picking_type_id', '=', picking_type.id),
                 ('l10n_pt_stock_inalterable_hash', '!=', False),
             ], order='l10n_pt_stock_secure_sequence_number')
-            if not pickings:
-                results.append({
-                    'name': picking_type.name,
-                    'status': 'no_data',
-                    'msg': _('There is no entry flagged for data inalterability yet.'),
-                })
-                continue
-
-            public_key_string = L10nPtHashingUtils._l10n_pt_get_last_public_key(self.env)
-
-            hash_corrupted = False
-            previous_hash = ""
-            for picking in pickings:
-                if not picking._l10n_pt_stock_verify_integrity(previous_hash, public_key_string):
-                    results.append({
-                        'name': picking_type.name,
-                        'status': 'corrupted',
-                        'msg': _("Corrupted data on record %s with id %s.", picking.name, picking.id),
-                    })
-                    hash_corrupted = True
-                    break
-                previous_hash = picking.l10n_pt_stock_inalterable_hash
-
-            if not hash_corrupted:
-                results.append({
-                    'name': picking_type.name,
-                    'status': 'verified',
-                    'msg': _("Entries are correctly hashed"),
-                    'from_name': pickings[0].name,
-                    'from_hash': pickings[0].l10n_pt_stock_inalterable_hash,
-                    'from_date': fields.Date.to_string(pickings[0].date_done),
-                    'to_name': pickings[-1].name,
-                    'to_hash':  pickings[-1].l10n_pt_stock_inalterable_hash,
-                    'to_date': fields.Date.to_string(pickings[-1].date_done),
-                })
+            results.append(
+                L10nPtHashingUtils._l10n_pt_check_chain_hash_integrity(
+                    picking_type.name, pickings, 'l10n_pt_stock_inalterable_hash',
+                    'date_done', StockPicking._l10n_pt_stock_verify_integrity, public_key_string
+                )
+            )
 
         return {
             'results': results,

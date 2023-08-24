@@ -166,14 +166,14 @@ class TestL10nPtAccount(AccountTestInvoicingCommon):
         Model.write(out_invoice3, {'invoice_date': fields.Date.from_string('2022-01-07')})
         integrity_check = self.company_pt._check_accounting_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {out_invoice3.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on account.move with id {out_invoice3.id} ({out_invoice3.name}).')
 
         # Let's try with the inalterable_hash field itself
         Model.write(out_invoice3, {'invoice_date': fields.Date.from_string("2022-01-03")})  # Revert the previous change
         Model.write(out_invoice4, {'inalterable_hash': '$1$fake_hash'})
         integrity_check = self.company_pt._check_accounting_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on journal entry with id {out_invoice4.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on account.move with id {out_invoice4.id} ({out_invoice4.name}).')
 
     def test_l10n_pt_account_inalterable_hash_computation_optimization(self):
         """

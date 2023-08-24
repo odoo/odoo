@@ -167,11 +167,11 @@ class TestL10nPtStock(TestStockCommon):
         Model.write(picking3, {'date_done': fields.Date.from_string('2022-01-07')})
         integrity_check = self.company._l10n_pt_stock_check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on record {picking3.name} with id {picking3.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on stock.picking with id {picking3.id} ({picking3.name}).')
 
         # Let's try with the l10n_pt_stock_inalterable_hash field itself
         Model.write(picking3, {'date_done': fields.Date.from_string("2023-01-03")})  # Revert the previous change
         Model.write(picking4, {'l10n_pt_stock_inalterable_hash': '$1$fake_hash'})
         integrity_check = self.company._l10n_pt_stock_check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg'], f'Corrupted data on record {picking4.name} with id {picking4.id}.')
+        self.assertEqual(integrity_check['msg'], f'Corrupted data on stock.picking with id {picking4.id} ({picking4.name}).')
