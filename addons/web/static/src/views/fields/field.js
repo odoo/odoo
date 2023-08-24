@@ -140,7 +140,11 @@ export class Field extends Component {
 
                         const context = {};
                         for (const key in record.context) {
-                            if (!key.startsWith("default_") && !key.endsWith("_view_ref")) {
+                            if (
+                                !key.startsWith("default_") &&
+                                !key.startsWith("search_default_") &&
+                                !key.endsWith("_view_ref")
+                            ) {
                                 context[key] = record.context[key];
                             }
                         }
