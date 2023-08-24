@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
+import { getAdjacentPreviousSiblings, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 
 //--------------------------------------------------------------------------
 // Constants
@@ -340,10 +340,11 @@ function bootstrapToTable(editable) {
  * @param {Element} editable
  */
 function cardToTable(editable) {
+    // card-body is flex 1 1 auto and that makes it fill its parent vertically.
+    // Just like card-img-top actually...
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
-        const cardImgTopSuperRows = [];
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
@@ -377,17 +378,18 @@ function cardToTable(editable) {
                     node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
                 ));
                 if (hasImgTop) {
-                    // Collect .card-img-top superRows to manipulate their heights.
-                    cardImgTopSuperRows.push(superRow);
+                    superRow.style.height = 0;
+                }
+                const hasCardBody = [child, ...child.querySelectorAll('.card-body')].some(node => (
+                    node.classList && node.classList.contains('card-body') && node.closest && node.closest('.card') === table
+                ));
+                if (hasCardBody) {
+                    superRow.style.height = 0;
+                    superCol.style.height = '100%';
+                    subTable.style.height = '100%';
+                    subTable.setAttribute('height', '100%');
                 }
             }
-        }
-        // We expect successive .card-img-top to have the same height so the
-        // bodies of the cards are aligned. This achieves that without flexboxes
-        // by forcing the height of the smallest card:
-        const smallestCardImgRow = Math.min(0, ...cardImgTopSuperRows.map(row => row.clientHeight));
-        for (const row of cardImgTopSuperRows) {
-            row.style.height = smallestCardImgRow + 'px';
         }
         card.before(table);
         card.remove();
@@ -1004,22 +1006,51 @@ function formatTables($editable) {
     }
     // Align items doesn't work on table rows.
     for (const row of editable.querySelectorAll('tr')) {
-        const alignItems = row.style.alignItems;
-        if (alignItems === 'flex-start') {
-            row.style.verticalAlign = 'top';
-        } else if (alignItems === 'center') {
-            row.style.verticalAlign = 'middle';
-        } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
-            row.style.verticalAlign = 'bottom';
-        } else if (alignItems === 'stretch') {
-            const columns = [...row.querySelectorAll('td.o_converted_col')];
-            if (columns.length > 1) {
-                const commonAncestor = commonParentGet(columns[0], columns[1]);
-                const biggestHeight = commonAncestor.clientHeight;
-                for (const column of columns) {
-                    column.style.height = biggestHeight + 'px';
+        const alignItems = _getStylePropertyValue(row, 'align-items');
+        const alignment = {
+            'flex-start': 'top',
+            'center': 'middle',
+            'flex-end': 'bottom',
+            'baseline': 'bottom',
+            'stretch': 'top',
+        }
+        // What's missing for Outlook:
+        // 1. Just before the stacking wrapper there's an mso td with valign="top".
+        // 2. valign=alignment[alignItems] should be applied to the concerned
+        //    tds.
+        // IT WORKS :-)
+        // Then check the height 0 for Firefox.
+        if (alignItems in alignment) {
+            const wrappers = [...row.querySelectorAll('div.o_stacking_wrapper')];
+            for (const wrapper of wrappers) {
+                const parentWrapper = wrapper.parentElement && wrapper.parentElement.closest('div.o_stacking_wrapper');
+                if (!(parentWrapper && wrappers.includes(parentWrapper))) { // Go only one level down.
+                    wrapper.style.height = '100%';
+                    if (!wrapper.parentElement.style.height) {
+                        wrapper.parentElement.style.height = _getHeight(wrapper.parentElement) + 'px'; // So the pc height works.
+                    }
+                    if (wrapper.previousSibling && wrapper.previousSibling.nodeType === Node.COMMENT_NODE) {
+                        wrapper.previousSibling.textContent = wrapper.previousSibling.textContent.replaceAll(
+                            '<td valign="top"',
+                            `<td valign="${alignment[alignItems]}"`,
+                        ); // that's 1.
+                        // TODO: make it less ad-hoc (preferably fix before mso
+                        // gets added?)
+                    }
+                    const table = wrapper.querySelector('table.o_stacking_wrapper');
+                    table.style.height = '100%';
+                    table.setAttribute('height', '100%');
+                    const tds = [...table.querySelectorAll('td')];
+                    for (const td of tds) {
+                        const parentTd = td.parentElement && td.parentElement.closest('td');
+                        if (!(parentTd && tds.includes(parentTd))) { // Go only one level down.
+                            td.style.verticalAlign = alignment[alignItems];
+                            td.setAttribute('valign', alignment[alignItems]); // that's 2.
+                        }
+                    }
                 }
             }
+            row.style.alignItems = '';
         }
     }
     // Tables don't properly inherit certain styles from their ancestors in Outlook.
