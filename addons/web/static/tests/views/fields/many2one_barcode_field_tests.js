@@ -10,7 +10,6 @@ import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 let serverData;
 let target;
 
-const CREATE = "create";
 const NAME_SEARCH = "name_search";
 const PRODUCT_PRODUCT = "product.product";
 const SALE_ORDER_LINE = "sale_order_line";
@@ -133,8 +132,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
             async mockRPC(route, args, performRPC) {
-                if (args.method === CREATE && args.model === SALE_ORDER_LINE) {
-                    const selectedId = args.args[0][0][PRODUCT_FIELD_NAME];
+                if (args.method === "web_save" && args.model === SALE_ORDER_LINE) {
+                    const selectedId = args.args[1][PRODUCT_FIELD_NAME];
                     assert.equal(
                         selectedId,
                         selectedRecordTest.id,
@@ -172,8 +171,8 @@ QUnit.module("Fields", (hooks) => {
                     <field name="${PRODUCT_FIELD_NAME}" options="{'can_scan_barcode': True}"/>
                 </form>`,
             async mockRPC(route, args, performRPC) {
-                if (args.method === CREATE && args.model === SALE_ORDER_LINE) {
-                    const selectedId = args.args[0][0][PRODUCT_FIELD_NAME];
+                if (args.method === "web_save" && args.model === SALE_ORDER_LINE) {
+                    const selectedId = args.args[1][PRODUCT_FIELD_NAME];
                     assert.equal(
                         selectedId,
                         selectedRecordTest.id,

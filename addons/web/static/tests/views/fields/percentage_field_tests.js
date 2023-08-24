@@ -41,7 +41,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="float_field" widget="percentage"/>
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.strictEqual(
                         args[1].float_field,
                         0.24,

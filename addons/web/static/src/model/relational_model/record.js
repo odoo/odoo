@@ -10,7 +10,13 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
-import { getFieldContext, parseServerValue } from "./utils";
+import {
+    FetchRecordError,
+    getBasicEvalContext,
+    getFieldContext,
+    getFieldsSpec,
+    parseServerValue,
+} from "./utils";
 
 export class Record extends DataPoint {
     static type = "Record";
@@ -439,6 +445,7 @@ export class Record extends DataPoint {
             resIds: data.map((r) => r.id),
             orderBy: defaultOrderBy || [],
             limit: limit || Number.MAX_SAFE_INTEGER,
+            currentCompanyId: this.currentCompanyId,
             context: {}, // will be set afterwards, see "_updateContext" in "_setEvalContext"
         };
         const options = {
@@ -838,39 +845,56 @@ export class Record extends DataPoint {
         if (canProceed === false) {
             return false;
         }
-        const kwargs = { context: this.context };
-        let resId = this.resId;
+        let fieldSpec = {};
+        if (!noReload) {
+            fieldSpec = getFieldsSpec(
+                this.activeFields,
+                this.fields,
+                getBasicEvalContext(this.config)
+            );
+        }
+        const kwargs = {
+            context: this.context,
+            specification: fieldSpec,
+        };
+        let records = [];
         try {
-            if (creation) {
-                [resId] = await this.model.orm.create(this.resModel, [changes], kwargs);
-            } else {
-                await this.model.orm.write(this.resModel, [resId], changes, kwargs);
-            }
+            records = await this.model.orm.webSave(
+                this.resModel,
+                this.resId ? [this.resId] : [],
+                changes,
+                kwargs
+            );
         } catch (e) {
             if (onError) {
                 return onError(e, { discard: () => this._discard() });
             }
             if (!this.isInEdition) {
-                const nextConfig = {};
-                if (creation) {
-                    nextConfig.resId = resId;
-                }
-                await this._load(nextConfig);
+                await this._load({});
             }
             throw e;
         }
+        if (creation && records.length) {
+            const resId = records[0].id;
+            const resIds = this.resIds.concat([resId]);
+            this.model._updateConfig(this.config, { resId, resIds }, { noReload: true });
+        }
         if (!noReload) {
-            const nextConfig = {};
-            if (creation) {
-                nextConfig.resId = resId;
-                nextConfig.resIds = this.resIds.concat([resId]);
+            if (!records.length) {
+                throw new FetchRecordError(records.map((r) => r.id));
             }
-            await this._load(nextConfig);
+            this.model._applyProperties(records, this.config);
+            if (this.resId) {
+                this.model._updateSimilarRecords(this, records[0]);
+            }
+            if (this.config.isRoot) {
+                this.model.hooks.onWillLoadRoot(this.config);
+            }
+            this._setData(records[0]);
         } else {
-            this.model._updateConfig(this.config, { resId }, { noReload: true });
             this._values = { ...this._values, ...this._changes };
             if ("id" in this.activeFields) {
-                this._values.id = resId;
+                this._values.id = records[0].id;
             }
             this._changes = {};
             this.data = { ...this._values };
@@ -887,13 +911,7 @@ export class Record extends DataPoint {
      * be uselessly re-rendered if we replace it by a brand new object.
      */
     _setEvalContext() {
-        const evalContext = {
-            ...this.context,
-            active_id: this.resId || false,
-            active_ids: this.resId ? [this.resId] : [],
-            active_model: this.resModel,
-            current_company_id: this.model.company.currentCompany.id,
-        };
+        const evalContext = getBasicEvalContext(this.config);
         const dataContext = this._computeDataContext();
         Object.assign(this.evalContext, evalContext, dataContext.withoutVirtualIds);
         Object.assign(this.evalContextWithVirtualIds, evalContext, dataContext.withVirtualIds);

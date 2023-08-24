@@ -317,7 +317,7 @@ QUnit.module("Fields", (hooks) => {
                     assert.deepEqual(args[0], [4], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-                if (method === "write") {
+                if (method === "web_save") {
                     throw new Error("should not call write");
                 }
             },
@@ -385,8 +385,8 @@ QUnit.module("Fields", (hooks) => {
                     if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    if (method === "write") {
-                        assert.step("write");
+                    if (method === "web_save") {
+                        assert.step("web_save");
                     }
                 },
             });
@@ -402,7 +402,7 @@ QUnit.module("Fields", (hooks) => {
 
             // save and close modal
             await clickSave(target.querySelectorAll(".modal")[1]);
-            assert.verifySteps(["write"]);
+            assert.verifySteps(["web_save"]);
             // save form
             await clickSave(target);
             assert.verifySteps([]);
@@ -682,7 +682,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" />
                 </tree>`,
                 mockRPC(route, args) {
-                    if (args.method === "create" || args.method === "write") {
+                    if (args.method === "web_save") {
                         assert.step(`${args.method}: ${JSON.stringify(args.args)}`);
                     }
                 },
@@ -696,14 +696,14 @@ QUnit.module("Fields", (hooks) => {
             await selectDropdownItem(target, "trululu", "Create and edit...");
 
             await clickSave(target.querySelector(".modal"));
-            assert.verifySteps([`create: [[{"name":"yy"}]]`]);
+            assert.verifySteps([`web_save: [[],{"name":"yy"}]`]);
             assert.strictEqual(
                 target.querySelector(".o_field_widget[name=trululu] input").value,
                 "yy"
             );
 
             await click(target);
-            assert.verifySteps([`write: [[1],{"trululu":5}]`]);
+            assert.verifySteps([`web_save: [[1],{"trululu":5}]`]);
             assert.strictEqual(
                 target.querySelector(".o_data_cell[name=trululu]").textContent,
                 "yy"
@@ -827,7 +827,7 @@ QUnit.module("Fields", (hooks) => {
                 "get_formview_id",
                 "get_views",
                 "web_read",
-                "write",
+                "web_save",
                 "read",
                 "onchange",
             ]);
@@ -907,7 +907,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu"/>
                 </tree>`,
             mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.step(method);
                     assert.deepEqual(args[1], { trululu: false });
                 }
@@ -924,7 +924,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_list_view");
         assert.strictEqual(target.querySelector(".o_data_row").textContent, "");
 
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("focus tracking on a many2one in a list", async function (assert) {
@@ -1117,7 +1117,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args }) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     assert.strictEqual(args[1].trululu, 20, "should write the correct id");
                 }
             },
@@ -1372,7 +1372,7 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(method);
                     return Object.keys(namegets).map((id) => [parseInt(id), namegets[id]]);
                 }
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.step(method);
                     assert.deepEqual(args[1], {
                         trululu: 2,
@@ -1411,7 +1411,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        assert.verifySteps(["write", "web_read"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("many2one search with trailing and leading spaces", async function (assert) {
@@ -1603,10 +1603,10 @@ QUnit.module("Fields", (hooks) => {
                     assert.step("name_create");
                     await def;
                 }
-                if (method === "create") {
-                    assert.step("create");
+                if (method === "web_save") {
+                    assert.step("web_save");
                     assert.strictEqual(
-                        args[0][0].trululu,
+                        args[1].trululu,
                         newRecordId,
                         "should create with the correct m2o id"
                     );
@@ -1626,7 +1626,7 @@ QUnit.module("Fields", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test(
@@ -1675,9 +1675,9 @@ QUnit.module("Fields", (hooks) => {
                     assert.step("name_create");
                     await def;
                 }
-                if (method === "create") {
-                    assert.step("create");
-                    const [values] = args[0];
+                if (method === "web_save") {
+                    assert.step("web_save");
+                    const values = args[1];
                     assert.strictEqual(values.trululu, newRecordId);
                 }
             },
@@ -1706,7 +1706,7 @@ QUnit.module("Fields", (hooks) => {
         def.resolve();
         await nextTick();
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
         assert.containsN(target, ".o_data_row", 4);
         assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").textContent, "b");
     });
@@ -1736,10 +1736,10 @@ QUnit.module("Fields", (hooks) => {
                     assert.step("name_create");
                     await def;
                 }
-                if (method === "create") {
-                    assert.step("create");
+                if (method === "web_save") {
+                    assert.step("web_save");
                     assert.strictEqual(
-                        args[0][0].p[0][2].trululu,
+                        args[1].p[0][2].trululu,
                         newRecordId,
                         "should create with the correct m2o id"
                     );
@@ -1762,7 +1762,7 @@ QUnit.module("Fields", (hooks) => {
         await def.resolve();
         await nextTick();
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
         assert.strictEqual(
             target.querySelector(".o_data_row .o_data_cell").textContent,
             "b",
@@ -1836,8 +1836,8 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "name_create") {
                     await def;
                 }
-                if (method === "create") {
-                    assert.deepEqual(args[0][0].p[0][2].trululu, newRecordId);
+                if (method === "web_save") {
+                    assert.deepEqual(args[1].p[0][2].trululu, newRecordId);
                 }
             },
         });
@@ -2419,12 +2419,12 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (method === "create") {
+                if (method === "web_save") {
                     assert.deepEqual(
-                        args[0][0],
+                        args[1],
                         {
                             int_field: 1,
-                            timmy: [[0, args[0][0].timmy[0][1], { display_name: "new value" }]],
+                            timmy: [[0, args[1].timmy[0][1], { display_name: "new value" }]],
                         },
                         "should send the correct values to create"
                     );
@@ -2477,9 +2477,9 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, { args, method }) {
-                    if (method === "create") {
+                    if (method === "web_save") {
                         assert.deepEqual(
-                            args[0][0].turtles,
+                            args[1].turtles,
                             [
                                 [4, 2],
                                 [4, 3],
@@ -2647,8 +2647,8 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner_type/get_formview_id") {
                     return false;
                 }
-                if (route === "/web/dataset/call_kw/partner_type/write") {
-                    assert.step("partner_type write");
+                if (route === "/web/dataset/call_kw/partner_type/web_save") {
+                    assert.step("partner_type web_save");
                 }
             },
         });
@@ -2676,7 +2676,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target.querySelectorAll(".modal")[1]);
         await clickSave(target);
 
-        assert.verifySteps(["onchange sequence", "partner_type write"]);
+        assert.verifySteps(["onchange sequence", "partner_type web_save"]);
     });
 
     QUnit.test("autocompletion in a many2one, in form view with a domain", async function (assert) {
@@ -2932,8 +2932,8 @@ QUnit.module("Fields", (hooks) => {
                     if (method === "name_create") {
                         throw makeServerError({ type: "ValidationError" });
                     }
-                    if (method === "create") {
-                        assert.deepEqual(args[0][0], { name: "xyz" });
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], { name: "xyz" });
                     }
                 },
             });
@@ -2984,7 +2984,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "failing quick create on a many2one inside a one2many  because ValidationError",
+        "failing quick create on a many2one inside a one2many because ValidationError",
         async function (assert) {
             assert.expect(4);
 
@@ -3005,8 +3005,8 @@ QUnit.module("Fields", (hooks) => {
                     if (method === "name_create") {
                         throw makeServerError({ type: "ValidationError" });
                     }
-                    if (method === "create") {
-                        assert.deepEqual(args[0][0], { name: "xyz" });
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], { name: "xyz" });
                     }
                 },
             });
@@ -3590,8 +3590,7 @@ QUnit.module("Fields", (hooks) => {
                 "web_search_read", // to display results in the dialog
                 "name_search",
                 "onchange",
-                "write",
-                "web_read",
+                "web_save",
             ]);
         }
     );
@@ -3640,8 +3639,7 @@ QUnit.module("Fields", (hooks) => {
                 "web_search_read", // to display results in the dialog
                 "name_search",
                 "onchange",
-                "write",
-                "web_read",
+                "web_save",
             ]);
         }
     );
@@ -4394,8 +4392,8 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "get_formview_id") {
                     return 98;
                 }
-                if (method === "write") {
-                    assert.step("write");
+                if (method === "web_save") {
+                    assert.step("web_save");
                 }
             },
         });
@@ -4416,7 +4414,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name=foo] input").value,
             "some value"
         );
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("create and edit, save and then discard", async function (assert) {

@@ -84,7 +84,14 @@ function validateArray(name, array) {
     }
 }
 
-export const UPDATE_METHODS = ["unlink", "create", "write", "action_archive", "action_unarchive"];
+export const UPDATE_METHODS = [
+    "unlink",
+    "create",
+    "write",
+    "web_save",
+    "action_archive",
+    "action_unarchive",
+];
 
 export class ORM {
     constructor(rpc, user) {
@@ -291,6 +298,21 @@ export class ORM {
         validatePrimitiveList("ids", "number", ids);
         validateObject("data", data);
         return this.call(model, "write", [ids, data], kwargs);
+    }
+
+    /**
+     * @param {string} model
+     * @param {number[]} ids
+     * @param {any} data
+     * @param {any} [kwargs={}]
+     * @param {Object} [kwargs.specification]
+     * @param {Object} [kwargs.context]
+     * @returns {Promise<any[]>}
+     */
+    webSave(model, ids, data, kwargs = {}) {
+        validatePrimitiveList("ids", "number", ids);
+        validateObject("data", data);
+        return this.call(model, "web_save", [ids, data], kwargs);
     }
 }
 

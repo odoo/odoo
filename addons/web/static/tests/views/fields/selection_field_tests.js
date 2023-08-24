@@ -225,7 +225,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="trululu" widget="selection" /></form>',
             mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.strictEqual(
                         args[1].trululu,
                         false,

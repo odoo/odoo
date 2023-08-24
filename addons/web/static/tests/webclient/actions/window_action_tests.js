@@ -1202,7 +1202,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test('save when leaving a "dirty" view', async function (assert) {
         assert.expect(4);
         const mockRPC = async (route, { args, method, model }) => {
-            if (model === "partner" && method === "write") {
+            if (model === "partner" && method === "web_save") {
                 assert.deepEqual(args, [[1], { foo: "pinkypie" }]);
             }
         };
@@ -1665,7 +1665,7 @@ QUnit.module("ActionManager", (hooks) => {
             "web_search_read",
             "onchange",
             "get_formview_action",
-            "create", // FIXME: to check with mcm
+            "web_save", // FIXME: to check with mcm
             "get_views",
             "web_read",
             "web_read",
@@ -1923,7 +1923,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.expect(4);
             let writeCalls = 0;
             const mockRPC = async (route, { method }) => {
-                if (method === "write") {
+                if (method === "web_save") {
                     writeCalls += 1;
                 }
             };

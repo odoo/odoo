@@ -194,7 +194,7 @@ QUnit.module('favorite filter widget', (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === 'unlink' && args.model === 'mailing.filter') {
                     assert.deepEqual(args.args[0], [1], "should pass correct filter ID for deletion");
-                } else if (args.method === 'write' && args.model === 'mailing.mailing') {
+                } else if (args.method === 'web_save' && args.model === 'mailing.mailing') {
                     assert.strictEqual(args.args[1].mailing_filter_id,
                         false, "filter id should be");
                     assert.strictEqual(args.args[1].mailing_domain,

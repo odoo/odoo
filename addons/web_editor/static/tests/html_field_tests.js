@@ -173,7 +173,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "write" && args.model === 'partner') {
+                if (args.method === "web_save" && args.model === 'partner') {
                     assert.equal(args.args[1].txt, htmlDocumentTextTemplate('Hi', 'blue'));
                     writePromise.resolve();
                 }
@@ -355,7 +355,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const newImageSrc = "/web/image/1234/cropped_transparent.png";
         const mockRPC = async function (route, args) {
             if (
-                route === '/web/dataset/call_kw/partner/write' &&
+                route === '/web/dataset/call_kw/partner/web_save' &&
                 args.model === 'partner'
             ) {
                 if (writeCount === 0) {

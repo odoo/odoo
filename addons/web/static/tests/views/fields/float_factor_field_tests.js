@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args }) {
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
                     // 2.3 / 0.5 = 4.6
                     assert.strictEqual(args[1].qux, 4.6, "the correct float value should be saved");
                 }

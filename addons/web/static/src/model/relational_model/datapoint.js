@@ -79,6 +79,10 @@ export class DataPoint extends Reactive {
         return this.config.context;
     }
 
+    get currentCompanyId() {
+        return this.config.currentCompanyId;
+    }
+
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------

@@ -1296,7 +1296,7 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "check_access_rights") {
                     return true;
                 }
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.deepEqual(args[1].properties, [
                         {
                             name: "property_1",
@@ -1345,7 +1345,7 @@ QUnit.module("Fields", (hooks) => {
         // save
         assert.verifySteps([]);
         await clickSave(target);
-        assert.verifySteps(["write", "web_read"]);
+        assert.verifySteps(["web_save"]);
     });
 
     /**
@@ -1875,7 +1875,7 @@ QUnit.module("Fields", (hooks) => {
 
             // We open the property popover
             await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-            assert.containsOnce(target,".o_field_property_definition");
+            assert.containsOnce(target, ".o_field_property_definition");
 
             // Trying to delete the property should have closed its definition popover
             // We click on delete button

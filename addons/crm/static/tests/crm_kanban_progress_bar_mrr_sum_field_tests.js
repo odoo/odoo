@@ -209,7 +209,7 @@ QUnit.module('Crm Kanban Progressbar', {
                     </templates>
                 </kanban>`,
             async mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     await def;
                 }
             }

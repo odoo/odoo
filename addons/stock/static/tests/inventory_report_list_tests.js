@@ -19,9 +19,9 @@ const arch =
 const setup_date = DateTime.fromISO('2022-01-03T08:03:44+00:00').toSQL();
 
 function mockRPC(route, { args }) {
-    if (route === '/web/dataset/call_kw/person/create') {
+    if (route === '/web/dataset/call_kw/person/web_save' && args[0].length === 0) {
         // simulate 'stock.quant' create function which can return existing record
-        const [values] = args[0];
+        const values = args[1];
         values.create_date = DateTime.now().toSQL();
         values.write_date = values.create_date;
         var name = values.name;
@@ -32,7 +32,7 @@ function mockRPC(route, { args }) {
                 d.age = age;
                 d.job = job;
                 d.write_date = values.write_date;
-                return Promise.resolve([d.id]);
+                return Promise.resolve([{ id: d.id, name: d.name, age: d.age, job: d.job, create_date: d.create_date, write_date: d.write_date }]);
             }
         }
     }

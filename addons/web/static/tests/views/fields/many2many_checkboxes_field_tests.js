@@ -63,8 +63,8 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     assert.deepEqual(args.args[1].timmy, commands.shift());
                 }
             },
@@ -91,7 +91,7 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(checkboxes[0].checked);
         assert.ok(checkboxes[1].checked);
 
-        assert.verifySteps(["write", "write"]);
+        assert.verifySteps(["web_save", "web_save"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField (readonly)", async function (assert) {
@@ -175,7 +175,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(target, "div.o_field_widget div.form-check input:checked");
 
-        assert.verifySteps(["get_views", "web_read", "name_search", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
     });
 
     QUnit.test(
@@ -272,7 +272,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_checkboxes" />
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     const expectedIds = records.map((r) => r.id);
                     expectedIds.pop();
                     assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
@@ -327,11 +327,11 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_checkboxes" />
                 </form>`,
             async mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     const expectedIds = records.map((r) => r.id);
                     expectedIds.shift();
                     assert.deepEqual(args[1].timmy, [[6, false, expectedIds]]);
-                    assert.step("write");
+                    assert.step("web_save");
                 }
                 if (method === "name_search") {
                     assert.step("name_search");
@@ -356,7 +356,7 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(
             target.querySelector(".o_field_widget[name='timmy'] input[type='checkbox']").checked
         );
-        assert.verifySteps(["name_search", "write"]);
+        assert.verifySteps(["name_search", "web_save"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField in a one2many", async function (assert) {
@@ -379,7 +379,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1], {
                         p: [[1, 1, { timmy: [[6, false, [15, 12]]] }]],
                     });
@@ -418,9 +418,9 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many_checkboxes"/>
                 </form>`,
             mockRPC: function (route, args) {
-                if (args.method === "create") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
-                        args.args[0][0].timmy,
+                        args.args[1].timmy,
                         [[6, false, [12]]],
                         "correct values should have been sent to create"
                     );
@@ -541,7 +541,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "web_read", "name_search"]);
         // save
         await clickSave(target);
-        assert.verifySteps(["onchange", "write", "web_read"]);
+        assert.verifySteps(["onchange", "web_save"]);
     });
 
     QUnit.test("Many2ManyCheckBoxesField in a notebook tab", async function (assert) {
@@ -586,6 +586,6 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, "div.o_field_widget[name=int_field]");
         // save
         await clickSave(target);
-        assert.verifySteps(["get_views", "web_read", "name_search", "write", "web_read"]);
+        assert.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
     });
 });

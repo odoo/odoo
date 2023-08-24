@@ -141,7 +141,7 @@ QUnit.module("Barcodes", (hooks) => {
             serverData,
             arch: '<form><field name="display_name"/></form>',
             mockRPC: function (route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.step("save");
                 }
             },

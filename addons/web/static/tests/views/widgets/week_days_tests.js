@@ -66,7 +66,7 @@ QUnit.module("Widgets", ({ beforeEach }) => {
                 </form>
             `,
             mockRPC(route, { args, method }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     writeCall++;
                     if (writeCall === 1) {
                         assert.ok(args[1].sun, "value of sunday should be true");

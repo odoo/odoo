@@ -627,6 +627,8 @@ export class MockServer {
                 return this.mockUnlink(args.model, args.args);
             case "web_read":
                 return this.mockWebRead(args.model, args.args, args.kwargs);
+            case "web_save":
+                return this.mockWebSave(args.model, args.args, args.kwargs);
             case "read_group":
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
@@ -1903,6 +1905,16 @@ export class MockServer {
             context: kwargs.context,
         });
         return this.mockRead(modelName, [records.map((r) => r.id), fieldNames]);
+    }
+
+    mockWebSave(modelName, args, kwargs) {
+        const ids = args[0];
+        if (ids.length === 0) {
+            args[0] = this.mockCreate(modelName, args[1], kwargs);
+        } else {
+            this.mockWrite(modelName, args);
+        }
+        return this.mockWebRead(modelName, args, kwargs);
     }
 
     mockWebRead(modelName, args, kwargs) {

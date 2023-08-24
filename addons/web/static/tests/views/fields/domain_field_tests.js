@@ -738,7 +738,7 @@ QUnit.module("Fields", (hooks) => {
         const webClient = await createWebClient({
             serverData,
             mockRPC(route, { method, args }) {
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.strictEqual(args[1].foo, rawDomain);
                 }
                 if (route === "/web/domain/validate") {
@@ -827,7 +827,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Save
         await clickSave(target);
-        assert.verifySteps(["write", "web_read", "search_count"]);
+        assert.verifySteps(["web_save", "search_count"]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
     });
 

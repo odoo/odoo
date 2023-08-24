@@ -258,21 +258,30 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner_type/write") {
+                if (
+                    route === "/web/dataset/call_kw/partner_type/web_save" &&
+                    args.args[0].length !== 0
+                ) {
                     assert.strictEqual(
                         args.args[1].display_name,
                         "new name",
                         "should write 'new_name'"
                     );
                 }
-                if (route === "/web/dataset/call_kw/partner_type/create") {
+                if (
+                    route === "/web/dataset/call_kw/partner_type/web_save" &&
+                    args.args[0].length === 0
+                ) {
                     assert.strictEqual(
-                        args.args[0][0].display_name,
+                        args.args[1].display_name,
                         "A new type",
                         "should create 'A new type'"
                     );
                 }
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (
+                    route === "/web/dataset/call_kw/partner/web_save" &&
+                    args.args[0].length !== 0
+                ) {
                     const commands = args.args[1].timmy;
                     // get the created type's id
                     const createdType = serverData.models.partner_type.records.find((record) => {
@@ -620,7 +629,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "many2many list (non editable): create a new record and click on action button",
+        "many2many list (non editable): create a new record and click on action button 1",
         async function (assert) {
             serverData.views = {
                 "partner_type,false,list": '<tree><field name="display_name"/></tree>',
@@ -647,8 +656,8 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
                 mockRPC: async (route, args) => {
                     assert.step(args.method);
-                    if (args.method === "create") {
-                        assert.deepEqual(args.args[0][0], { display_name: "Hello" });
+                    if (args.method === "web_save") {
+                        assert.deepEqual(args.args[1], { display_name: "Hello" });
                     }
                 },
             });
@@ -674,12 +683,12 @@ QUnit.module("Fields", (hooks) => {
 
             await click(modal, ".o_statusbar_buttons [name='myaction']");
             assert.strictEqual(modal.querySelector("[name='display_name'] input").value, "Hello");
-            assert.verifySteps(["create", "web_read", "action: myaction"]);
+            assert.verifySteps(["web_save", "action: myaction"]);
         }
     );
 
     QUnit.test(
-        "many2many list (non editable): create a new record and click on action button",
+        "many2many list (non editable): create a new record and click on action button 2",
         async function (assert) {
             serverData.views = {
                 "partner_type,false,list": '<tree><field name="display_name"/></tree>',
@@ -706,8 +715,8 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
                 mockRPC: async (route, args) => {
                     assert.step(args.method);
-                    if (args.method === "create") {
-                        assert.deepEqual(args.args[0][0], { display_name: "Hello" });
+                    if (args.method === "web_save" && args.args[0].length === 0) {
+                        assert.deepEqual(args.args[1], { display_name: "Hello" });
                     }
                 },
             });
@@ -752,14 +761,7 @@ QUnit.module("Fields", (hooks) => {
                 ["Hello (edited)"]
             );
 
-            assert.verifySteps([
-                "create",
-                "web_read",
-                "action: myaction",
-                "write",
-                "web_read",
-                "web_read",
-            ]);
+            assert.verifySteps(["web_save", "action: myaction", "web_save", "web_read"]);
         }
     );
 
@@ -948,8 +950,7 @@ QUnit.module("Fields", (hooks) => {
             "get_views", // list view in dialog
             "web_search_read", // list view in dialog
             "web_read", // relational field (updated)
-            "write", // save main record
-            "web_read", // main record
+            "web_save", // save main record
         ]);
     });
 
@@ -1055,10 +1056,16 @@ QUnit.module("Fields", (hooks) => {
                     <field name="timmy" widget="many2many" can_create="false" can_write="false"/>
                 </form>`,
             mockRPC(route, args) {
-                if (route === "/web/dataset/call_kw/partner/create") {
-                    assert.deepEqual(args.args[0][0], { timmy: [[6, false, [12]]] });
+                if (
+                    route === "/web/dataset/call_kw/partner/web_save" &&
+                    args.args[0].length === 0
+                ) {
+                    assert.deepEqual(args.args[1], { timmy: [[6, false, [12]]] });
                 }
-                if (route === "/web/dataset/call_kw/partner/write") {
+                if (
+                    route === "/web/dataset/call_kw/partner/web_save" &&
+                    args.args[0].length !== 0
+                ) {
                     assert.deepEqual(args.args[1], { timmy: [[3, 12]] });
                 }
             },
@@ -1581,7 +1588,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".modal-body input[type=checkbox]"));
         await click(target.querySelector(".modal .modal-footer .btn-primary"));
-        assert.verifySteps(["write", "web_read"]);
+        assert.verifySteps(["web_save"]);
 
         // there is nothing left to save -> should not do a 'write' RPC
         await clickSave(target);
@@ -1649,7 +1656,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
         // commands than the limit of the dataPoint (40 for x2many kanban)
-        assert.expect(21);
+        assert.expect(20);
 
         // create a lot of partner_types that will be linked by the onchange
         const commands = [];
@@ -1685,7 +1692,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 assert.step(args.method);
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(
                         args.args[1].timmy,
                         commands.map((c) => [c[0], c[1]]),
@@ -1761,7 +1768,7 @@ QUnit.module("Fields", (hooks) => {
             "there should be 40 records displayed on page 1"
         );
 
-        assert.verifySteps(["write", "web_read", "web_read"]);
+        assert.verifySteps(["web_save", "web_read"]);
     });
 
     QUnit.test("default_get, onchange, onchange on m2m", async function (assert) {

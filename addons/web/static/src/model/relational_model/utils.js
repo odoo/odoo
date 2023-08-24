@@ -48,6 +48,12 @@ export function makeActiveField({
 
 const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 
+export class FetchRecordError extends Error {
+    constructor(resIds) {
+        super(`Can't fetch record(s) ${resIds}. They might have been deleted.`);
+    }
+}
+
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
     for (const field of fieldDependencies) {
         if (!("readonly" in field)) {
@@ -271,6 +277,16 @@ export function getFieldContext(
         ...context,
         ...record.fields[fieldName].context,
         ...makeContext([rawContext], record.evalContext),
+    };
+}
+
+export function getBasicEvalContext(config) {
+    return {
+        ...config.context,
+        active_id: config.resId || false,
+        active_ids: config.resId ? [config.resId] : [],
+        active_model: config.resModel,
+        current_company_id: config.currentCompanyId,
     };
 }
 

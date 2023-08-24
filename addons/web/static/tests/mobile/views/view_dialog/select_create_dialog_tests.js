@@ -76,8 +76,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="linked_sale_order_line" widget="many2many_tags"/>
                 </form>`,
             async mockRPC(route, args) {
-                if (args.method === "create" && args.model === "sale_order_line") {
-                    const { product_id: selectedId } = args.args[0][0];
+                if (args.method === "web_save" && args.model === "sale_order_line") {
+                    const { product_id: selectedId } = args.args[1];
                     assert.strictEqual(selectedId, false, `there should be no product selected`);
                 }
             },
@@ -132,8 +132,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="linked_sale_order_line" widget="many2many_tags"/>
                 </form>`,
             async mockRPC(route, args) {
-                if (args.method === "create" && args.model === "sale_order_line") {
-                    const { product_id: selectedId } = args.args[0][0];
+                if (args.method === "web_save" && args.model === "sale_order_line") {
+                    const { product_id: selectedId } = args.args[1];
                     assert.strictEqual(selectedId, 111, `the product should be selected`);
                 }
                 if (args.method === "some_action") {
