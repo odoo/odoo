@@ -3453,9 +3453,9 @@ QUnit.module("Search", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_search_panel_empty_state p",
-            3,
-            "Empty state container has 3 paragraphs"
+            ".o_search_panel_empty_state button",
+            1,
+            "Empty state has the All button"
         );
     });
 
