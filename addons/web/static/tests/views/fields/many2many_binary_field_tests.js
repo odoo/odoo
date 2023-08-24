@@ -51,7 +51,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("Many2ManyBinaryField");
 
     QUnit.test("widget many2many_binary", async function (assert) {
-        assert.expect(22);
+        assert.expect(21);
 
         const fakeHTTPService = {
             start() {
@@ -96,6 +96,17 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(route);
                 }
                 if (args.method === "web_read" && args.model === "turtle") {
+                    assert.deepEqual(args.kwargs.specification, {
+                        display_name: {},
+                        picture_ids: {
+                            fields: {
+                                mimetype: {},
+                                name: {},
+                            },
+                        },
+                    });
+                }
+                if (args.method === "web_save" && args.model === "turtle") {
                     assert.deepEqual(args.kwargs.specification, {
                         display_name: {},
                         picture_ids: {
@@ -193,8 +204,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.verifySteps([
             "/web/dataset/call_kw/ir.attachment/web_read",
-            "/web/dataset/call_kw/turtle/write",
-            "/web/dataset/call_kw/turtle/web_read",
+            "/web/dataset/call_kw/turtle/web_save",
         ]);
     });
 

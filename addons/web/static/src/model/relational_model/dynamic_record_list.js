@@ -124,6 +124,7 @@ export class DynamicRecordList extends DynamicList {
                 resId: data.id || false,
                 resIds: data.id ? [data.id] : [],
                 isMonoRecord: true,
+                currentCompanyId: this.currentCompanyId,
                 mode,
             },
             data,

@@ -554,8 +554,8 @@ QUnit.module("Fields", (hooks) => {
                     </templates>
                 </kanban>`,
             mockRPC: (route, args, performRPC) => {
-                if (route === "/web/dataset/call_kw/partner/write") {
-                    assert.step("write");
+                if (route === "/web/dataset/call_kw/partner/web_save") {
+                    assert.step("web_save");
                 }
                 return performRPC(route, args);
             },
@@ -566,7 +566,7 @@ QUnit.module("Fields", (hooks) => {
         const doneItem = target.querySelectorAll(".dropdown-item")[2]; // item "done";
         await click(doneItem);
 
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
         assert.hasClass(target.querySelector(".o_field_state_selection span"), "o_status_green");
     });
 
@@ -587,15 +587,15 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(_route, { method }) {
-                    if (method === "write") {
-                        assert.step("write");
+                    if (method === "web_save") {
+                        assert.step("web_save");
                     }
                 },
             });
 
             await click(target, ".o_field_widget.o_field_state_selection .o_status");
             await click(target, ".dropdown-menu .dropdown-item:last-child");
-            assert.verifySteps(["write"]);
+            assert.verifySteps(["web_save"]);
         }
     );
 

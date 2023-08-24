@@ -1186,8 +1186,7 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "get_views",
                 "web_search_read",
-                "write",
-                "web_read",
+                "web_save",
                 "toDo",
                 "web_search_read",
             ]);
@@ -1575,8 +1574,8 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             mockRPC(_, { args, method }) {
                 assert.step(method);
-                if (method === "create") {
-                    assert.deepEqual(args[0], [{ int_field: 1, foo: false }]);
+                if (method === "web_save") {
+                    assert.deepEqual(args[1], { int_field: 1, foo: false });
                 }
             },
         });
@@ -1588,7 +1587,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_list_view");
         assert.containsN(target, ".o_data_row", 5);
         assert.strictEqual(target.querySelector(".o_data_row [name='int_field']").textContent, "1");
-        assert.verifySteps(["onchange", "create", "web_read"]);
+        assert.verifySteps(["onchange", "web_save"]);
     });
 
     QUnit.test("multi_edit: edit a required field with an invalid value", async function (assert) {
@@ -2405,7 +2404,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["m2m"],
                 domain: [["m2o", "=", 1]],
                 mockRPC(route, args) {
-                    if (args.method === "write") {
+                    if (args.method === "web_save") {
                         assert.deepEqual(args.args[0], [1], "should write on the correct record");
                         assert.deepEqual(
                             args.args[1],
@@ -2636,8 +2635,8 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>',
                 mockRPC: async (route, args) => {
-                    if (args.method === "write") {
-                        assert.step(`write ${args.args[0]}`);
+                    if (args.method === "web_save") {
+                        assert.step(`web_save ${args.args[0]}`);
                     }
                 },
             });
@@ -2649,7 +2648,7 @@ QUnit.module("Views", (hooks) => {
 
             await editInput(target, "[name='foo'] input", "YOLO");
             await click(target, ".o_list_view");
-            assert.verifySteps(["onWillSaveRecord 1", "write 1", "onRecordSaved 1"]);
+            assert.verifySteps(["onWillSaveRecord 1", "web_save 1", "onRecordSaved 1"]);
         }
     );
 
@@ -2678,8 +2677,8 @@ QUnit.module("Views", (hooks) => {
                 arch: '<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>',
                 groupBy: ["bar"],
                 mockRPC: async (route, args) => {
-                    if (args.method === "write") {
-                        assert.step(`write ${args.args[0]}`);
+                    if (args.method === "web_save") {
+                        assert.step(`web_save ${args.args[0]}`);
                     }
                 },
             });
@@ -2691,7 +2690,7 @@ QUnit.module("Views", (hooks) => {
 
             await editInput(target, "[name='foo'] input", "YOLO");
             await click(target, ".o_list_view");
-            assert.verifySteps(["onWillSaveRecord 4", "write 4", "onRecordSaved 4"]);
+            assert.verifySteps(["onWillSaveRecord 4", "web_save 4", "onRecordSaved 4"]);
         }
     );
 
@@ -2856,7 +2855,7 @@ QUnit.module("Views", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
+                if (args.method === "web_save") {
                     assert.deepEqual(args.args[1], { grosminet: false });
                 }
             },
@@ -2927,8 +2926,8 @@ QUnit.module("Views", (hooks) => {
                     <field name="bar" widget="boolean_toggle"/>
                 </tree>`,
             mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write: " + args.args[1].bar);
+                if (args.method === "web_save") {
+                    assert.step("web_save: " + args.args[1].bar);
                 }
             },
         });
@@ -2939,14 +2938,14 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_boolean_toggle input"));
         assert.notOk(target.querySelector(".o_data_row .o_boolean_toggle input").checked);
         assert.containsNone(target, ".o_selected_row");
-        assert.verifySteps(["write: false"]);
+        assert.verifySteps(["web_save: false"]);
 
         // toggle the boolean value after switching the row in edition
         assert.containsNone(target, ".o_selected_row");
         await click(target.querySelector(".o_data_row .o_data_cell .o_field_boolean_toggle div"));
         assert.containsOnce(target, ".o_selected_row");
         await click(target.querySelector(".o_selected_row .o_field_boolean_toggle div"));
-        assert.verifySteps(["write: true"]);
+        assert.verifySteps(["web_save: true"]);
     });
 
     QUnit.test("basic operations for editable list renderer", async function (assert) {
@@ -3086,7 +3085,7 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: '<tree editable="bottom"><field name="foo"/></tree>',
                 mockRPC(route, args) {
-                    if (args.method === "write") {
+                    if (args.method === "web_save") {
                         assert.deepEqual(
                             args.args,
                             [[1], { foo: "xyz" }],
@@ -8270,8 +8269,8 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             noContentHelp: "click to add a partner",
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                 }
             },
         });
@@ -8322,7 +8321,7 @@ QUnit.module("Views", (hooks) => {
             false,
             "buttons should not be disabled once the record is created"
         );
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("list view, editable, with a button", async function (assert) {
@@ -8337,8 +8336,8 @@ QUnit.module("Views", (hooks) => {
                     <button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>
                 </tree>`,
             mockRPC(route, { method }) {
-                if (method === "create") {
-                    assert.step("create");
+                if (method === "web_save") {
+                    assert.step("web_save");
                 } else if (route === "/web/dataset/call_button") {
                     assert.step("call_button");
                     return true;
@@ -8360,7 +8359,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, "table button");
         assert.verifySteps(
-            ["create", "call_button"],
+            ["web_save", "call_button"],
             "clicking the button should save the record and then execute the action"
         );
     });
@@ -8436,8 +8435,8 @@ QUnit.module("Views", (hooks) => {
                     <field name="int_field" sum="Sum"/>
                 </tree>`,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                 }
             },
         });
@@ -8445,17 +8444,17 @@ QUnit.module("Views", (hooks) => {
         await click($(".o_list_button_add:visible").get(0));
         await editInput(target, ".o_field_widget[name=foo] input", "new value");
         await click(target.querySelector(".o_list_renderer"));
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
 
         await click($(".o_list_button_add:visible").get(0));
         await editInput(target, ".o_field_widget[name=foo] input", "new value");
         await click(target.querySelector("tfoot"));
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
 
         await click($(".o_list_button_add:visible").get(0));
         await editInput(target, ".o_field_widget[name=foo] input", "new value");
         await click(target.querySelectorAll("tbody tr")[2].querySelector(".o_data_cell"));
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("editable list view, should refocus date field", async (assert) => {
@@ -9424,8 +9423,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "/web/dataset/call_kw/foo/get_views",
             "/web/dataset/call_kw/foo/web_search_read",
-            "/web/dataset/call_kw/foo/write",
-            "/web/dataset/call_kw/foo/web_read",
+            "/web/dataset/call_kw/foo/web_save",
             "/web/dataset/call_kw/foo/onchange",
         ]);
     });
@@ -9442,7 +9440,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, args, performRPC) {
                 assert.step(args.method);
                 const result = performRPC(route, args);
-                if (args.method === "web_read") {
+                if (args.method === "web_save") {
                     return readPromise.then(function () {
                         return result;
                     });
@@ -9486,7 +9484,7 @@ QUnit.module("Views", (hooks) => {
             "5th row should be selected"
         );
 
-        assert.verifySteps(["get_views", "web_search_read", "write", "web_read", "onchange"]);
+        assert.verifySteps(["get_views", "web_search_read", "web_save", "onchange"]);
     });
 
     QUnit.test("display toolbar", async function (assert) {
@@ -10097,7 +10095,7 @@ QUnit.module("Views", (hooks) => {
                 1,
                 "should have the new value visible in dom"
             );
-            assert.verifySteps(["get_views", "web_search_read", "write", "web_read"]);
+            assert.verifySteps(["get_views", "web_search_read", "web_save"]);
         }
     );
 
@@ -11626,7 +11624,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal");
 
         await clickSave(target);
-        assert.verifySteps(["create", "web_read"]);
+        assert.verifySteps(["web_save"]);
 
         // edit a field
         await click(rows[0].querySelector("[name=int_field]"));
@@ -12063,7 +12061,7 @@ QUnit.module("Views", (hooks) => {
                 "gnap",
                 "blip",
             ]);
-            assert.verifySteps(["get_views", "web_search_read", "write", "web_read"]);
+            assert.verifySteps(["get_views", "web_search_read", "web_save"]);
         }
     );
 
@@ -14280,11 +14278,9 @@ QUnit.module("Views", (hooks) => {
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "write",
-            "web_read",
+            "web_save",
             "onchange",
-            "create",
-            "web_read",
+            "web_save",
             "onchange",
         ]);
     });
@@ -14331,8 +14327,7 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "web_search_read",
-                "write",
-                "web_read",
+                "web_save",
             ]);
         }
     );
@@ -17110,7 +17105,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </tree>`,
             mockRPC(route, { args, method, model }) {
-                if (model === "foo" && method === "write") {
+                if (model === "foo" && method === "web_save") {
                     assert.step("save"); // should be called
                     assert.deepEqual(args, [[1], { foo: "test" }]);
                 }
@@ -17138,7 +17133,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </tree>`,
             mockRPC(route, { args, method, model }) {
-                if (model === "foo" && method === "write") {
+                if (model === "foo" && method === "web_save") {
                     assert.deepEqual(args, [[1], { foo: "test" }]);
                 }
             },
@@ -17206,7 +17201,7 @@ QUnit.module("Views", (hooks) => {
                     if (model === "foo" && method === "onchange") {
                         return def;
                     }
-                    if (model === "foo" && method === "write") {
+                    if (model === "foo" && method === "web_save") {
                         assert.deepEqual(args, [[1], { int_field: 2021 }]);
                     }
                 },
@@ -17242,7 +17237,7 @@ QUnit.module("Views", (hooks) => {
                 if (model === "foo" && method === "onchange") {
                     return def;
                 }
-                if (model === "foo" && method === "write") {
+                if (model === "foo" && method === "web_save") {
                     assert.deepEqual(args, [[1], { foo: "test", int_field: 2021 }]);
                 }
             },
@@ -17680,8 +17675,8 @@ QUnit.module("Views", (hooks) => {
                 </list>`,
             serverData,
             mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step("write");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     assert.deepEqual(args.args, [[1], { display_name: "test" }]);
                 }
             },
@@ -17694,7 +17689,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Tab");
         await nextTick();
 
-        assert.verifySteps(["write"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("edit a field with a slow onchange in a new row", async function (assert) {
@@ -17747,7 +17742,7 @@ QUnit.module("Views", (hooks) => {
 
         // check the current line is added with the correct content
         assert.strictEqual(target.querySelector(".o_data_row [name=int_field]").innerText, value);
-        assert.verifySteps(["create", "web_read"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("create a record with the correct context", async (assert) => {
@@ -17763,8 +17758,8 @@ QUnit.module("Views", (hooks) => {
                     </list>`,
             serverData,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     const { context } = args.kwargs;
                     assert.strictEqual(context.default_text, "yop");
                     assert.strictEqual(context.test, true);
@@ -17788,7 +17783,7 @@ QUnit.module("Views", (hooks) => {
             ]
         );
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test("create a record with the correct context in a group", async (assert) => {
@@ -17804,8 +17799,8 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             serverData,
             mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.step("create");
+                if (args.method === "web_save") {
+                    assert.step("web_save");
                     const { context } = args.kwargs;
                     assert.strictEqual(context.default_bar, true);
                     assert.strictEqual(context.default_text, "yop");
@@ -17832,7 +17827,7 @@ QUnit.module("Views", (hooks) => {
             ]
         );
 
-        assert.verifySteps(["create"]);
+        assert.verifySteps(["web_save"]);
     });
 
     QUnit.test(
@@ -18185,7 +18180,7 @@ QUnit.module("Views", (hooks) => {
                         <field name="foo"/>
                     </tree>`,
                 mockRPC(route, args) {
-                    if (args.method === "write") {
+                    if (args.method === "web_save") {
                         throw new Error("Can't write");
                     }
                 },
@@ -18274,6 +18269,8 @@ QUnit.module("Views", (hooks) => {
             mockRPC(_, args) {
                 if (args.method === "web_read") {
                     assert.step(`web_read ${args.args[0]}`);
+                } else if (args.method === "web_save") {
+                    assert.step(`web_save ${args.args[0]}`);
                 }
             },
         });
@@ -18298,7 +18295,7 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_data_row td[name=m2o]")].map((el) => el.innerText),
             ["Value 3", "Value 2", "Value 1", "Value 1"]
         );
-        assert.verifySteps(["web_read 1"]);
+        assert.verifySteps(["web_save 1"]);
     });
 
     QUnit.test("view's context is passed down as evalContext", async (assert) => {

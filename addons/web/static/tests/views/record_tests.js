@@ -273,8 +273,7 @@ QUnit.module("Record Component", (hooks) => {
             "fields_get",
             "web_read",
             "onWillSaveRecord",
-            "write",
-            "web_read",
+            "web_save",
             "onRecordSaved",
         ]);
     });

@@ -109,8 +109,7 @@ QUnit.module('Subtask Kanban List tests', {
         assert.containsOnce(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .fa-check-circle.text-success", "The state of the subtask should be Done");
         assert.verifySteps([
             "project.task/search_read",
-            "project.task/write",
-            "project.task/web_read",
+            "project.task/web_save",
             "project.task/search_read",
             "project.task/web_read", // read the parent task to recompute the subtask count
         ]);

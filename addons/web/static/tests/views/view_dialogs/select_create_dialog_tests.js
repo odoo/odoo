@@ -305,13 +305,13 @@ QUnit.module("ViewDialogs", (hooks) => {
                 if (route === "/web/dataset/call_kw/instrument/get_formview_id") {
                     return Promise.resolve(false);
                 }
-                if (route === "/web/dataset/call_kw/instrument/create") {
+                if (route === "/web/dataset/call_kw/instrument/web_save") {
                     assert.deepEqual(
-                        args.args[0],
-                        [{ badassery: [[6, false, [1]]], name: "ABC" }],
+                        args.args[1],
+                        { badassery: [[6, false, [1]]], name: "ABC" },
                         "The method create should have been called with the right arguments"
                     );
-                    return Promise.resolve([90]);
+                    return [{ id: 90 }];
                 }
             },
         });

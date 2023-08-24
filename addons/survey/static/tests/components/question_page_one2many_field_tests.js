@@ -158,7 +158,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 </form>
             `,
             mockRPC(route, args) {
-                if (args.method === "write" && args.model === "survey") {
+                if (args.method === "web_save" && args.model === "survey") {
                     assert.step("save parent form");
                 }
             },
@@ -196,7 +196,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 </form>
             `,
             mockRPC(route, args) {
-                if (args.method === "write" && args.model === "survey") {
+                if (args.method === "web_save" && args.model === "survey") {
                     assert.step("save parent form");
                     throw makeServerError({
                         description: "This isn't right!",

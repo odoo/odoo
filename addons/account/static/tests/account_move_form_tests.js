@@ -32,7 +32,7 @@ QUnit.module("Views", {}, function () {
                 account_move: accountMoveService,
             },
             async mockRPC(route) {
-                if (route === "/web/dataset/call_kw/account.move/write") {
+                if (route === "/web/dataset/call_kw/account.move/web_save") {
                     assert.step("tab saved");
                     def.resolve();
                 }

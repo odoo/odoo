@@ -357,7 +357,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "settings views does not read existing id when coming back in breadcrumbs",
         async function (assert) {
-            assert.expect(11);
+            assert.expect(10);
 
             serverData.actions = {
                 1: {
@@ -413,8 +413,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.verifySteps([
                 "get_views", // initial setting action
                 "onchange", // this is a setting view => new record transient record
-                "create", // create the record before doing the action
-                "web_read", // read the created record
+                "web_save", // create the record before doing the action
                 "get_views", // for other action in breadcrumb,
                 "web_search_read", // with a searchread
                 "onchange", // when we come back, we want to restart from scratch
@@ -556,16 +555,14 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelector("button[name='4']"));
 
         assert.verifySteps([
-            "create", // settings: create the record before doing the action
-            "web_read", // settings: read the created record
+            "web_save", // settings: create the record before doing the action
             "get_views", // dialog: get views
             "onchange", // dialog: onchange
         ]);
 
         await click(target, ".modal button.btn.btn-primary.o_form_button_save");
         assert.verifySteps([
-            "create", // dialog: create the record before doing back to the settings
-            "web_read", // dialog: read the created record
+            "web_save", // dialog: create the record before doing back to the settings
             "onchange", // settings: when we come back, we want to restart from scratch
         ]);
     });
@@ -970,9 +967,9 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (args.method === "create") {
+            if (args.method === "web_save") {
                 assert.deepEqual(
-                    args.args[0][0],
+                    args.args[1],
                     { foo: true },
                     "should create a record with foo=true"
                 );
@@ -1039,8 +1036,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target, ".myBtn");
         await click(target, ".modal .btn-primary");
         assert.verifySteps([
-            "create",
-            "web_read",
+            "web_save",
             'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
         ]);
     });
@@ -1080,8 +1076,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target, ".myBtn");
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
         assert.verifySteps([
-            "create",
-            "web_read",
+            "web_save",
             'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
     });
@@ -1228,7 +1223,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 resModel: "res.config.settings",
                 serverData,
                 mockRPC: function (route, args) {
-                    if (args.method === "create" && !self.alreadySavedOnce) {
+                    if (args.method === "web_save" && !self.alreadySavedOnce) {
                         self.alreadySavedOnce = true;
                         //fail on first create
                         return Promise.reject({});
@@ -1308,7 +1303,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
             let def;
             const mockRPC = async (route, args) => {
-                if (args.method === "web_read") {
+                if (args.method === "web_save") {
                     await def; // slow down reload of settings view
                 }
             };
@@ -1406,8 +1401,8 @@ QUnit.module("SettingsFormView", (hooks) => {
                 if (route === "/web/dataset/call_button" && args.method === "execute") {
                     assert.step("execute");
                     return true;
-                } else if (args.method === "create") {
-                    assert.step("create");
+                } else if (args.method === "web_save") {
+                    assert.step("web_save");
                 }
             };
 
@@ -1432,7 +1427,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
             await click(target.querySelector(".modal-footer .btn-primary"));
             assert.verifySteps([
-                "create", // saveRecord from modal
+                "web_save", // saveRecord from modal
                 "execute", // execute_action
             ]);
         }

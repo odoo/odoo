@@ -190,7 +190,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { args, method }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         assert.strictEqual(args[1].foo, false, "the foo value should be false");
                     }
                 },

@@ -313,7 +313,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="document" widget="image" />
                     </form>`,
                 mockRPC(_route, { method, args }) {
-                    if (method === "write") {
+                    if (method === "web_save") {
                         args[1].write_date = lastUpdates[index];
                         args[1].document = "4 kb";
                         index++;

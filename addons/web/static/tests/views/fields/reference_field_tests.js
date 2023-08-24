@@ -252,8 +252,7 @@ QUnit.module("Fields", (hooks) => {
                 "name_search", // for the select
                 "name_search", // for the spawned many2one
                 "name_create",
-                "create",
-                "web_read",
+                "web_save",
             ],
             "The name_create method should have been called"
         );
@@ -437,7 +436,7 @@ QUnit.module("Fields", (hooks) => {
                         "the name_search should be done on the newly set model"
                     );
                 }
-                if (method === "write") {
+                if (method === "web_save") {
                     assert.strictEqual(model, "partner", "should write on the current model");
                     assert.deepEqual(
                         args,
@@ -527,13 +526,11 @@ QUnit.module("Fields", (hooks) => {
                     <field name="reference_char" widget="reference"/>
                 </form>`,
                 mockRPC(route, { args, method }) {
-                    if (method === "create") {
-                        assert.deepEqual(args[0], [
-                            {
-                                bar: false,
-                                reference_char: "False,0",
-                            },
-                        ]);
+                    if (method === "web_save") {
+                        assert.deepEqual(args[1], {
+                            bar: false,
+                            reference_char: "False,0",
+                        });
                     }
                 },
             });
@@ -566,13 +563,11 @@ QUnit.module("Fields", (hooks) => {
                     <field name="reference"/>
                 </form>`,
             mockRPC(route, { args, method }) {
-                if (method === "create") {
-                    assert.deepEqual(args[0], [
-                        {
-                            bar: false,
-                            reference: "partner,4",
-                        },
-                    ]);
+                if (method === "web_save") {
+                    assert.deepEqual(args[1], {
+                        bar: false,
+                        reference: "partner,4",
+                    });
                 }
             },
         });
@@ -849,7 +844,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("Reference field with default value in list view", async function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         await makeView({
             type: "list",
@@ -870,9 +865,8 @@ QUnit.module("Fields", (hooks) => {
                             },
                         },
                     };
-                } else if (method === "create") {
-                    assert.strictEqual(args.length, 1);
-                    assert.strictEqual(args[0][0].reference, "partner,2");
+                } else if (method === "web_save") {
+                    assert.strictEqual(args[1].reference, "partner,2");
                 }
             },
         });
