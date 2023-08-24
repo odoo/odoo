@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, go to backend",
-        trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
+        trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
         run: function () {
             var orderId = $('.my_cart_quantity').data('order-id');
             window.location.href = "/web#action=sale.action_orders&view_type=form&id=" + orderId;
