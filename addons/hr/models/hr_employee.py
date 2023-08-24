@@ -326,10 +326,9 @@ class HrEmployeePrivate(models.Model):
 
     @api.onchange('user_id')
     def _onchange_user(self):
-        if self.user_id:
-            self.update(self._sync_user(self.user_id, (bool(self.image_1920))))
-            if not self.name:
-                self.name = self.user_id.name
+        self.update(self._sync_user(self.user_id, (bool(self.image_1920))))
+        if not self.name:
+            self.name = self.user_id.name
 
     @api.onchange('resource_calendar_id')
     def _onchange_timezone(self):
