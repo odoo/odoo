@@ -21,30 +21,29 @@
 // ------- SearchPanel -------
 
 .o_search_panel {
+    --treeEntry-padding-h: #{map-get($spacers, 3)};
+
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
-    
+
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }
 
-    .o_search_panel_category_value,
-    .o_search_panel_filter_value input,
-    .o_search_panel_filter_value .o_search_panel_label_title,
-    .o_search_panel_group_header input,
-    .o_search_panel_group_header .o_search_panel_label_title
-    {
-        cursor: pointer;
+    .o_toggle_fold {
+        width: map-get($spacers, 3);
     }
 
-    .o_toggle_fold {
-        width: map-get($spacers, 4);
+    .o_search_panel_counter {
+        font-variant-numeric: tabular-nums;
     }
 }
 
 .o_mobile_search_content {
     --SearchPanel-width: 100%;
     --SearchPanel-fontSize: 1.1em;
+
+    --treeEntry-padding-v: #{$list-group-item-padding-y * 2};
 }
 
 @include media-breakpoint-down(md) {
