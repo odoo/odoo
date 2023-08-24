@@ -582,16 +582,19 @@ export class ListController extends Component {
                     isDomainSelected,
                     fields: Object.keys(editedRecord.getChanges()).map((fieldName) => {
                         const activeField = editedRecord.activeFields[fieldName];
+                        const fieldNode = Object.values(this.archInfo.fieldNodes).find(
+                            (fieldNode) => fieldNode.name === fieldName
+                        );
                         return {
                             name: fieldName,
                             label: activeField.string || editedRecord.fields[fieldName].string,
                             widget: activeField.widget,
+                            fieldNode,
                         };
                     }),
                     nbRecords: selection.length,
                     nbValidRecords: validSelectedRecords.length,
                     record: editedRecord,
-                    fieldNodes: this.archInfo.fieldNodes,
                 };
 
                 const focusedCellBeforeDialog = document.activeElement.closest(".o_data_cell");
