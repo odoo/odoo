@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { ProductCatalogKanbanController } from "./kanban_controller";
 import { ProductCatalogKanbanModel } from "./kanban_model";
 import { ProductCatalogKanbanRenderer } from "./kanban_renderer";
-import { ProductCatalogSearchPanel} from "./search_panel";
+import { ProductCatalogSearchPanel} from "./search/search_panel";
 
 
 export const productCatalogKanbanView = {
