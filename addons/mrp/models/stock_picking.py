@@ -41,6 +41,9 @@ class StockPickingType(models.Model):
     done_mrp_lot_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Lot/SN Label to Print", default='pdf')
+    auto_print_mrp_reception_report = fields.Boolean(
+        "Auto Print Allocation Report",
+        help="If this checkbox is ticked, Odoo will automatically print the allocation report of a MO when it is done and has assigned moves.")
     auto_print_mrp_reception_report_labels = fields.Boolean(
         "Auto Print Allocation Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the allocation report labels of a MO when it is done.")
