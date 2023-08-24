@@ -3,8 +3,8 @@
 
 <t t-name="mail.NotificationItem" owl="1">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
-            <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
+        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'text-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
+            <div class="position-relative  m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
