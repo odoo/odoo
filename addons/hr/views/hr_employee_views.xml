@@ -165,7 +165,8 @@
                                         <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="children"/>
-                                        <separator name="emergency" string="Emergency"/>
+                                    </group>
+                                    <group string="Emergency" name="emergency">
                                         <field name="emergency_contact"/>
                                         <field name="emergency_phone" class="o_force_ltr"/>
                                     </group>
