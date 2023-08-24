@@ -129,18 +129,9 @@ export class Composer extends Component {
         });
         this.suggestion = this.store.user ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
+        this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef && this.allowUpload) {
-            useDropzone(
-                this.props.dropzoneRef,
-                (ev) => {
-                    if (isDragSourceExternalFile(ev.dataTransfer)) {
-                        for (const file of ev.dataTransfer.files) {
-                            this.attachmentUploader.uploadFile(file);
-                        }
-                    }
-                },
-                "o-mail-Composer-dropzone"
-            );
+            useDropzone(this.props.dropzoneRef, this.onDropFile, "o-mail-Composer-dropzone");
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
@@ -364,6 +355,14 @@ export class Composer extends Component {
                 };
             default:
                 return props;
+        }
+    }
+
+    onDropFile(ev) {
+        if (isDragSourceExternalFile(ev.dataTransfer)) {
+            for (const file of ev.dataTransfer.files) {
+                this.attachmentUploader.uploadFile(file);
+            }
         }
     }
 
