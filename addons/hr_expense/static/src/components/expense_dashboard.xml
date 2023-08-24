@@ -7,7 +7,7 @@
                 <t t-set="data" t-value="expense[1]"/>
                 <div t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center"
                      t-att-data-tooltip="data['tooltip']">
-                    <span t-esc="renderMonetaryField(data['amount'], data['currency'])" class="h2 m-0 text-odoo"/>
+                    <span t-esc="renderMonetaryField(data['amount'], data['currency'])" class="h2 m-0 text-primary"/>
                     <b class="mx-2" t-esc="data['description']"/>
                 </div>
                 <div t-if="name !== 'approved'" t-attf-class="o_expense_card o_arrow_button flex-grow-1 d-flex flex-column p-3 border-bottom text-center">
