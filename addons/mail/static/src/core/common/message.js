@@ -2,7 +2,6 @@
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { ImStatus } from "@mail/core/common/im_status";
 import { LinkPreviewList } from "@mail/core/common/link_preview_list";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
@@ -34,6 +33,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+import { useMessageActions } from "./message_actions";
 
 /**
  * @typedef {Object} Props
@@ -91,6 +91,7 @@ export class Message extends Component {
         this.root = useRef("root");
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
+        this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.rpc = useService("rpc");
         this.threadService = useState(useService("mail.thread"));
@@ -116,21 +117,6 @@ export class Message extends Component {
                 this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
         });
-        this.emojiPickerRef = useRef("emoji-picker");
-        if (this.props.hasActions && this.canAddReaction) {
-            this.emojiPicker = useEmojiPicker(this.emojiPickerRef, {
-                onSelect: (emoji) => {
-                    const reaction = this.message.reactions.find(
-                        ({ content, personas }) =>
-                            content === emoji &&
-                            personas.find((persona) => persona.eq(this.store.self))
-                    );
-                    if (!reaction) {
-                        this.messageService.react(this.message, emoji);
-                    }
-                },
-            });
-        }
         onMounted(() => {
             if (this.messageBody.el) {
                 $(this.messageBody.el).find(".o-mail-read-more-less").remove();
@@ -187,6 +173,10 @@ export class Message extends Component {
 
     get message() {
         return this.props.message;
+    }
+
+    get quickActionCount() {
+        return this.env.inChatter ? 2 : 3;
     }
 
     get showSubtypeDescription() {

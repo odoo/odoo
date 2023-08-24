@@ -26,8 +26,10 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
     openDiscuss();
     await contains(".o-mail-Message");
 
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { count: 0 });
 });
@@ -54,7 +56,7 @@ QUnit.test("reply: discard on pressing escape", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-Message");
-
+    await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Reply']");
     await contains(".o-mail-Composer");
 
@@ -107,6 +109,7 @@ QUnit.test(
         });
         openDiscuss();
         await contains(".o-mail-Message");
+        await click("[title='Expand']");
         await click("[title='Reply']");
         await contains(".o-mail-Composer [placeholder='Log an internal note…']");
         await insertText(".o-mail-Composer-input", "Test");
@@ -146,6 +149,7 @@ QUnit.test(
         });
         openDiscuss();
         await contains(".o-mail-Message");
+        await click("[title='Expand']");
         await click("[title='Reply']");
         await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
         await insertText(".o-mail-Composer-input", "Test");
@@ -552,6 +556,7 @@ QUnit.test("reply: stop replying button click", async () => {
     openDiscuss();
     await contains(".o-mail-Message");
 
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     await contains("i[title='Stop replying']");
