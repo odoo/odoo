@@ -541,7 +541,7 @@ export async function editInput(el, selector, value) {
         throw new Error("Only 'input' and 'textarea' elements can be edited with 'editInput'.");
     }
     if (
-        !["text", "textarea", "email", "search", "color", "number", "file", "tel"].includes(
+        !["text", "textarea", "email", "search", "color", "number", "file", "tel", "password"].includes(
             input.type
         )
     ) {
