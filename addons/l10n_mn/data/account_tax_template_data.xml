@@ -273,39 +273,6 @@
             }),
         ]"/>
     </record>
-    <record id="account_tax_sale_vat8" model="account.tax.template">
-        <field name="name">НӨАТ нотариат үйлчилгээ</field>
-        <field name="amount">10.0</field>
-        <field name="price_include" eval="1"/>
-        <field name="sequence">20</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="description">10%</field>
-        <field name="tax_group_id" ref="account_tax_group2"/>
-        <field name="chart_template_id" ref="mn_chart_1"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag11')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('account_template_3401_0201'),
-                'tag_ids': [ref('vat_report_tag11')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag11')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('account_template_3401_0201'),
-                'tag_ids': [ref('vat_report_tag11')],
-            }),
-        ]"/>
-    </record>
     <record id="account_tax_sale_vat9" model="account.tax.template">
         <field name="name">НӨАТ өрийн төлбөрт өгсөн үйлчилгээ</field>
         <field name="amount">10.0</field>
@@ -918,7 +885,7 @@
         ]"/>
     </record>
     <record id="account_tax_purchase_vat6" model="account.tax.template">
-        <field name="name">НӨАТ автомашин, эд анги худалдан авалт</field>
+        <field name="name">НӨАТ автомашин, эд анги худалдан авалт (дотоодын)</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -930,7 +897,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -941,7 +908,7 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -951,7 +918,7 @@
         ]"/>
     </record>
     <record id="account_tax_purchase_vat7" model="account.tax.template">
-        <field name="name">НӨАТ ажлын хэрэгцээнд авсан бараа</field>
+        <field name="name">НӨАТ ажлын хэрэгцээнд авсан бараа (дотоодын)</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -963,7 +930,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -974,7 +941,7 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -984,7 +951,7 @@
         ]"/>
     </record>
     <record id="account_tax_purchase_vat8" model="account.tax.template">
-        <field name="name">НӨАТ импортоор авсан үндсэн хөрөнгө</field>
+        <field name="name">НӨАТ Машин, тоног төхөөрөмж бэлтгэхэд зориулж импортоор худалдан авсан</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -996,28 +963,26 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag37b')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
-                'tag_ids': [ref('vat_report_tag43')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag37b')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
-                'tag_ids': [ref('vat_report_tag43')],
             }),
         ]"/>
     </record>
     <record id="account_tax_purchase_vat9" model="account.tax.template">
-        <field name="name">НӨАТ чөлөөлөгдөх үйлдвэрлэлд зориулсан бараа, үйлчилгээ</field>
+        <field name="name">НӨАТ чөлөөлөгдөх үйлдвэрлэлд зориулсан бараа, үйлчилгээ (дотоодын)</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -1029,7 +994,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1040,7 +1005,7 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1050,7 +1015,7 @@
         ]"/>
     </record>
     <record id="account_tax_purchase_vat10" model="account.tax.template">
-        <field name="name">НӨАТ хайгуулд зориулсан импортын бараа, үйлчилгээ</field>
+        <field name="name">НӨАТ хайгуулын үнэлгээний хөрөнгө бэлтгэхэд зориулсан импортын бараа, үйлчилгээ</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -1083,7 +1048,7 @@
         ]"/>
     </record>
     <record id="account_tax_purchase_vat11" model="account.tax.template">
-        <field name="name">НӨАТ импортын бусад хамааралгүй бараа, үйлчилгээ</field>
+        <field name="name">НӨАТ импортын бусад хамааралгүй бараа, үйлчилгээ (дотоодын)</field>
         <field name="amount">10.0</field>
         <field name="price_include" eval="1"/>
         <field name="sequence">40</field>
@@ -1095,7 +1060,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1106,7 +1071,7 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag33')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag36')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1194,7 +1159,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag51')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag51')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1205,7 +1170,7 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag51')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag51')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1227,7 +1192,7 @@
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag52')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag52')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -1238,12 +1203,105 @@
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('vat_report_tag52')],
+                'tag_ids': [ref('vat_report_tag33'), ref('vat_report_tag52')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag52')],
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_purchase_vat14" model="account.tax.template">
+        <field name="name">НӨАТ Барилга байгууламж бэлтгэхэд зориулж импортоор худалдан авсан</field>
+        <field name="amount">10.0</field>
+        <field name="price_include" eval="1"/>
+        <field name="sequence">40</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="account_tax_group4"/>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37a')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37a')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_purchase_vat15" model="account.tax.template">
+        <field name="name">НӨАТ Бусад үндсэн хөрөнгө бэлтгэхэд зориулж импортоор худалдан авсан</field>
+        <field name="amount">10.0</field>
+        <field name="price_include" eval="1"/>
+        <field name="sequence">40</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="account_tax_group4"/>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37c')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37c')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_purchase_vat16" model="account.tax.template">
+        <field name="name">НӨАТ Ашиглалтын ажиллагаанд зориулж импортоор худалдан авсан</field>
+        <field name="amount">10.0</field>
+        <field name="price_include" eval="1"/>
+        <field name="sequence">40</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="account_tax_group4"/>
+        <field name="chart_template_id" ref="mn_chart_1"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37d')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37d')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('account_template_1204_0301'),
             }),
         ]"/>
     </record>
