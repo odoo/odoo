@@ -34,7 +34,7 @@
             <field name="name">account.online.sync.res.partner.bank.setup.form</field>
             <field name="model">account.setup.bank.manual.config</field>
             <field name="arch" type="xml">
-                <form>
+                <form js_class="setup_bank_manual_config_form">
                     <field name="num_journals_without_account" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
