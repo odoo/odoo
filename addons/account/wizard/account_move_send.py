@@ -440,7 +440,7 @@ class AccountMoveSend(models.Model):
 
         mail_attachments = [
             (attachment.name, attachment.raw)
-            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids))
+            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
         ]
 
         return {
