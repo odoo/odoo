@@ -40,7 +40,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-mail-ActivityButton i.text-muted");
+    await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary:eq(0):contains()");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
@@ -92,12 +92,12 @@ QUnit.test("list activity widget with activities", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($(".o_data_row:eq(0)"), ".o-mail-ActivityButton i.text-warning.fa-phone");
+    await contains(".o_data_row:eq(0) .o-mail-ActivityButton i.text-warning.fa-phone");
     assert.strictEqual(
         $(".o_data_row:eq(0) .o-mail-ListActivity-summary")[0].innerText,
         "Call with Al"
     );
-    assert.containsOnce($(".o_data_row:eq(1)"), ".o-mail-ActivityButton i.text-success.fa-clock-o");
+    await contains(".o_data_row:eq(1) .o-mail-ActivityButton i.text-success.fa-clock-o");
     assert.strictEqual($(".o_data_row:eq(1) .o-mail-ListActivity-summary")[0].innerText, "Type 2");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
@@ -140,7 +140,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce($, ".o-mail-ActivityButton i.text-warning.fa-warning");
+    await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
     await contains(".o-mail-ListActivity-summary:eq(0):contains(Warning)");
     assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
 });
@@ -229,7 +229,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     assert.verifySteps(["unity_web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 
-QUnit.test("list activity exception widget with activity", async (assert) => {
+QUnit.test("list activity exception widget with activity", async () => {
     const pyEnv = await startServer();
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
@@ -275,13 +275,7 @@ QUnit.test("list activity exception widget with activity", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsN($, ".o_data_row", 2);
-    assert.containsNone(
-        $(".o_data_row .o_activity_exception_cell")[0],
-        ".o-mail-ActivityException"
-    );
-    assert.containsOnce(
-        $(".o_data_row .o_activity_exception_cell")[1],
-        ".o-mail-ActivityException"
-    );
+    await contains(".o_data_row", 2);
+    await contains(".o_data_row .o_activity_exception_cell:eq(0) .o-mail-ActivityException", 0);
+    await contains(".o_data_row .o_activity_exception_cell:eq(1) .o-mail-ActivityException");
 });

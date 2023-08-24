@@ -31,7 +31,7 @@ QUnit.test("simplest layout", async (assert) => {
     await contains(".o-mail-AttachmentCard-image");
     assert.hasClass($(".o-mail-AttachmentCard-image"), "o_image"); // required for mimetype.scss style
     assert.hasAttrValue($(".o-mail-AttachmentCard-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
-    assert.containsN($, ".o-mail-AttachmentCard-aside button", 2);
+    await contains(".o-mail-AttachmentCard-aside button", 2);
     await contains(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");
 });

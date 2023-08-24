@@ -20,21 +20,16 @@ import { makeDeferred } from "@web/../tests/helpers/utils";
 
 QUnit.module("chat window: new message");
 
-QUnit.test("basic rendering", async (assert) => {
+QUnit.test("basic rendering", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(New Message)");
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-name");
-    assert.strictEqual(
-        $(".o-mail-ChatWindow-header .o-mail-ChatWindow-name").text(),
-        "New message"
-    );
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-name:contains(New message)");
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", 2);
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Fold']");
-    assert.containsOnce(
-        $,
+    await contains(
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']"
     );
     await contains("span:contains('To :')");

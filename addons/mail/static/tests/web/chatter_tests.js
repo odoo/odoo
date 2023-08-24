@@ -221,7 +221,7 @@ QUnit.test("chatter: drop attachments", async (assert) => {
     await contains(".o-mail-AttachmentCard", 0);
 
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 2);
+    await contains(".o-mail-AttachmentCard", 2);
 
     await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
     files = [
@@ -232,7 +232,7 @@ QUnit.test("chatter: drop attachments", async (assert) => {
         }),
     ];
     await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
-    assert.containsN($, ".o-mail-AttachmentCard", 3);
+    await contains(".o-mail-AttachmentCard", 3);
 });
 
 QUnit.test("should display subject when subject isn't infered from the record", async () => {
@@ -307,7 +307,7 @@ QUnit.test("base rendering when chatter has no attachment", async (assert) => {
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-AttachmentBox", 0);
     await contains(".o-mail-Thread");
-    assert.containsN($, ".o-mail-Message", 30);
+    await contains(".o-mail-Message", 30);
 });
 
 QUnit.test("base rendering when chatter has no record", async (assert) => {
@@ -620,7 +620,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("basic chatter rendering without followers", async (assert) => {
+QUnit.test("basic chatter rendering without followers", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
@@ -632,6 +632,7 @@ QUnit.test("basic chatter rendering without followers", async (assert) => {
                 <div class="oe_chatter">
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
+                    <!-- no message_follower_ids field -->
                 </div>
             </form>`,
     };
@@ -645,15 +646,11 @@ QUnit.test("basic chatter rendering without followers", async (assert) => {
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
     await contains("button:contains(Activities)");
-    assert.containsNone(
-        $,
-        ".o-mail-Followers",
-        "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
-    );
     await contains(".o-mail-Chatter .o-mail-Thread");
+    await contains(".o-mail-Followers", 0);
 });
 
-QUnit.test("basic chatter rendering without messages", async (assert) => {
+QUnit.test("basic chatter rendering without messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
     const views = {
@@ -665,6 +662,7 @@ QUnit.test("basic chatter rendering without messages", async (assert) => {
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
+                    <!-- no message_ids field -->
                 </div>
             </form>`,
     };
@@ -679,14 +677,10 @@ QUnit.test("basic chatter rendering without messages", async (assert) => {
     await contains("button[aria-label='Attach files']");
     await contains("button:contains(Activities)");
     await contains(".o-mail-Followers");
-    assert.containsNone(
-        $,
-        ".o-mail-Chatter .o-mail-Thread",
-        "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
-    );
+    await contains(".o-mail-Chatter .o-mail-Thread", 0);
 });
 
-QUnit.test("chatter updating", async (assert) => {
+QUnit.test("chatter updating", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -795,5 +789,5 @@ QUnit.test("upload attachment on draft record", async () => {
 QUnit.test("Follower count of draft record is set to 0", async (assert) => {
     const { openView } = await start();
     await openView({ res_model: "res.partner", views: [[false, "form"]] });
-    assert.containsOnce($, ".o-mail-Followers:contains(0)");
+    await contains(".o-mail-Followers:contains(0)");
 });

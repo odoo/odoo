@@ -217,7 +217,7 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
     await contains(".o-mail-DiscussSidebarChannel", 0);
 });
 
-QUnit.test("sidebar: basic chat rendering", async (assert) => {
+QUnit.test("sidebar: basic chat rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
@@ -229,16 +229,13 @@ QUnit.test("sidebar: basic chat rendering", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(Demo)");
-    const $chat = $(".o-mail-DiscussSidebarChannel:contains(Demo)");
-    assert.containsOnce($chat, "img[data-alt='Thread Image']");
-    assert.containsOnce($chat, "span:contains(Demo)");
-    assert.containsOnce($chat, ".o-mail-DiscussSidebarChannel-commands");
-    assert.containsOnce(
-        $chat,
-        ".o-mail-DiscussSidebarChannel-commands div[title='Unpin Conversation']"
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel span:contains(Demo)");
+    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands div[title='Unpin Conversation']"
     );
-    assert.containsNone($chat, ".badge");
+    await contains(".o-mail-DiscussSidebarChannel .badge", 0);
 });
 
 QUnit.test("sidebar: show pinned channel", async () => {
@@ -249,7 +246,7 @@ QUnit.test("sidebar: show pinned channel", async () => {
     await contains(".o-mail-DiscussSidebarChannel:contains(General)");
 });
 
-QUnit.test("sidebar: open pinned channel", async (assert) => {
+QUnit.test("sidebar: open pinned channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
@@ -937,7 +934,7 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
     await contains(`img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`);
 });
 
-QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async (assert) => {
+QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const [demo_id, yoshi_id] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "Yoshi" }]);
     pyEnv["res.users"].create([{ partner_id: demo_id }, { partner_id: yoshi_id }]);

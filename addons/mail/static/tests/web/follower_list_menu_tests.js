@@ -279,7 +279,7 @@ QUnit.test("Load 100 recipients at once", async (assert) => {
 
 QUnit.test(
     'Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
             { name: "Partner1" },
@@ -317,11 +317,10 @@ QUnit.test(
 
         await click(".o-mail-Followers-button");
         await contains("a:contains(Add Followers)");
-        const $followers = $(".o-mail-Follower");
-        assert.containsOnce($followers[0], "button[title='Edit subscription']");
-        assert.containsOnce($followers[0], "button[title='Remove this follower']");
-        assert.containsOnce($followers[1], "button[title='Edit subscription']");
-        assert.containsOnce($followers[1], "button[title='Remove this follower']");
+        await contains(".o-mail-Follower:eq(0) button[title='Edit subscription']");
+        await contains(".o-mail-Follower:eq(0) button[title='Remove this follower']");
+        await contains(".o-mail-Follower:eq(1) button[title='Edit subscription']");
+        await contains(".o-mail-Follower:eq(1) button[title='Remove this follower']");
     }
 );
 

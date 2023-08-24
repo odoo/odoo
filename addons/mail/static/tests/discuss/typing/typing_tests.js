@@ -3,20 +3,13 @@
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    afterNextRender,
-    click,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("typing");
 
-QUnit.test('receive other member typing status "is typing"', async (assert) => {
+QUnit.test('receive other member typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Demo" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
@@ -29,23 +22,20 @@ QUnit.test('receive other member typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-discuss-Typing").text(), "");
-
+    await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
     // simulate receive typing notification from demo
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
+    await contains(".o-discuss-Typing:contains(Demo is typing...)");
 });
 
 QUnit.test(
     'receive other member typing status "is typing" then "no longer is typing"',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Demo" });
         const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
@@ -58,35 +48,30 @@ QUnit.test(
         });
         const { env, openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
 
         // simulate receive typing notification from demo "is typing"
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/discuss/channel/notify_typing", {
-                    channel_id: channelId,
-                    is_typing: true,
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/discuss/channel/notify_typing", {
+                channel_id: channelId,
+                is_typing: true,
+            })
         );
-        assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
-
+        await contains(".o-discuss-Typing:contains(Demo is typing...)");
         // simulate receive typing notification from demo "is no longer typing"
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/discuss/channel/notify_typing", {
-                    channel_id: channelId,
-                    is_typing: false,
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/discuss/channel/notify_typing", {
+                channel_id: channelId,
+                is_typing: false,
+            })
         );
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
     }
 );
 
 QUnit.test(
     'assume other member typing status becomes "no longer is typing" after long without any updated typing status',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Demo" });
         const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
@@ -100,27 +85,24 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
 
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
 
         // simulate receive typing notification from demo "is typing"
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/discuss/channel/notify_typing", {
-                    channel_id: channelId,
-                    is_typing: true,
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/discuss/channel/notify_typing", {
+                channel_id: channelId,
+                is_typing: true,
+            })
         );
-        assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
-
-        await afterNextRender(() => advanceTime(OTHER_LONG_TYPING));
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:contains(Demo is typing...)");
+        advanceTime(OTHER_LONG_TYPING);
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
     }
 );
 
 QUnit.test(
     'other member typing status "is typing" refreshes of assuming no longer typing',
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const userId = pyEnv["res.users"].create({ name: "Demo" });
         const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
@@ -133,18 +115,16 @@ QUnit.test(
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
 
         // simulate receive typing notification from demo "is typing"
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/discuss/channel/notify_typing", {
-                    channel_id: channelId,
-                    is_typing: true,
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/discuss/channel/notify_typing", {
+                channel_id: channelId,
+                is_typing: true,
+            })
         );
-        assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
+        await contains(".o-discuss-Typing:contains(Demo is typing...)");
 
         // simulate receive typing notification from demo "is typing" again after long time.
         await advanceTime(LONG_TYPING);
@@ -156,14 +136,13 @@ QUnit.test(
         );
         await nextTick();
         await advanceTime(LONG_TYPING);
-        await nextAnimationFrame();
-        assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
-        await afterNextRender(() => advanceTime(OTHER_LONG_TYPING - LONG_TYPING));
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:contains(Demo is typing...)");
+        advanceTime(OTHER_LONG_TYPING - LONG_TYPING);
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
     }
 );
 
-QUnit.test('receive several other members typing status "is typing"', async (assert) => {
+QUnit.test('receive several other members typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const [userId_1, userId_2, userId_3] = pyEnv["res.users"].create([
         { name: "Other 10" },
@@ -186,70 +165,48 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-discuss-Typing").text(), "");
+    await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
 
     // simulate receive typing notification from other 10 (is typing)
-    await afterNextRender(() =>
-        pyEnv.withUser(userId_1, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId_1, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.strictEqual($(".o-discuss-Typing").text(), "Other 10 is typing...");
-
+    await contains(".o-discuss-Typing:contains(Other 10 is typing...)");
     // simulate receive typing notification from other 11 (is typing)
-    await afterNextRender(() =>
-        pyEnv.withUser(userId_2, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId_2, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.strictEqual(
-        $(".o-discuss-Typing").text(),
-        "Other 10 and Other 11 are typing...",
-        "Should display longer typer named first"
-    );
-
+    await contains(".o-discuss-Typing:contains(Other 10 and Other 11 are typing...)");
     // simulate receive typing notification from other 12 (is typing)
-    await afterNextRender(() =>
-        pyEnv.withUser(userId_3, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId_3, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.strictEqual($(".o-discuss-Typing").text(), "Other 10, Other 11 and more are typing...");
-
+    await contains(".o-discuss-Typing:contains(Other 10, Other 11 and more are typing...)");
     // simulate receive typing notification from other 10 (no longer is typing)
-    await afterNextRender(() =>
-        pyEnv.withUser(userId_1, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: false,
-            })
-        )
+    pyEnv.withUser(userId_1, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: false,
+        })
     );
-    assert.strictEqual($(".o-discuss-Typing").text(), "Other 11 and Other 12 are typing...");
-
+    await contains(".o-discuss-Typing:contains(Other 11 and Other 12 are typing...)");
     // simulate receive typing notification from other 10 (is typing again)
-    await afterNextRender(() =>
-        pyEnv.withUser(userId_1, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId_1, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.strictEqual(
-        $(".o-discuss-Typing").text(),
-        "Other 11, Other 12 and more are typing...",
-        "Should order by longer typer ('Other 10' just recently restarted typing)"
-    );
+    await contains(".o-discuss-Typing:contains(Other 11, Other 12 and more are typing...)");
 });
 
 QUnit.test("current partner notify is typing to other thread members", async (assert) => {
@@ -334,13 +291,11 @@ QUnit.test(
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "a");
         assert.verifySteps(["notify_typing:true"]);
-
-        await nextAnimationFrame();
-        assert.strictEqual($(".o-discuss-Typing").text(), "");
+        await contains(".o-discuss-Typing:not(:contains(Demo is typing...))");
     }
 );
 
-QUnit.test("chat: correspondent is typing", async (assert) => {
+QUnit.test("chat: correspondent is typing", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Demo" });
     const partnerId = pyEnv["res.partner"].create({
@@ -357,37 +312,27 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(
-        $(".o-mail-DiscussSidebarChannel"),
-        ".o-mail-DiscussSidebarChannel-threadIcon"
-    );
-    assert.containsOnce($, ".fa-circle.text-success");
-
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-threadIcon");
+    await contains(".fa-circle.text-success");
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.containsOnce($, ".o-discuss-Typing-icon");
-    assert.strictEqual($(".o-discuss-Typing-icon")[0].title, "Demo is typing...");
-
+    await contains(".o-discuss-Typing-icon[title='Demo is typing...']");
     // simulate receive typing notification from demo "no longer is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: false,
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: false,
+        })
     );
-    assert.containsOnce($, ".fa-circle.text-success");
+    await contains(".fa-circle.text-success");
 });
 
-QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
+QUnit.test("chat: correspondent is typing in chat window", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Demo" });
     const partnerId = pyEnv["res.partner"].create({
@@ -405,25 +350,21 @@ QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsNone($, "[title='Demo is typing...']");
+    await contains("[title='Demo is typing...']", 0);
     // simulate receive typing notification from demo "is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: true,
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
     );
-    assert.containsOnce($, "[title='Demo is typing...']");
+    await contains("[title='Demo is typing...']");
     // simulate receive typing notification from demo "no longer is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/discuss/channel/notify_typing", {
-                channel_id: channelId,
-                is_typing: false,
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: false,
+        })
     );
-    assert.containsNone($, "[title='Demo is typing...']");
+    await contains("[title='Demo is typing...']", 0);
 });

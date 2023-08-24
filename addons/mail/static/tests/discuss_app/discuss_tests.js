@@ -451,7 +451,6 @@ QUnit.test("sidebar: Inbox should have icon", async () => {
 QUnit.test("sidebar: default active inbox", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button:contains(Inbox)");
     await contains("button:contains(Inbox).o-active");
 });
 
