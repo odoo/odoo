@@ -5,7 +5,7 @@ import itertools
 import pytz
 
 from collections import defaultdict
-from datetime import datetime, date
+from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -254,7 +254,38 @@ class HrContract(models.Model):
         self.ensure_one()
         return self.work_entry_source == 'calendar'
 
+    def generate_work_entries(self, date_start, date_stop, force=False):
+        # Generate work entries between 2 dates (datetime.date)
+        # To correctly englobe the period, the start and end periods are converted
+        # using the calendar timezone.
+        assert not isinstance(date_start, datetime)
+        assert not isinstance(date_stop, datetime)
+
+        date_start = datetime.combine(fields.Datetime.to_datetime(date_start), datetime.min.time())
+        date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
+
+        contracts_by_company_tz = defaultdict(lambda: self.env['hr.contract'])
+        for contract in self:
+            contracts_by_company_tz[(
+                contract.company_id,
+                (contract.resource_calendar_id or contract.employee_id.resource_calendar_id).tz
+            )] += contract
+        utc = pytz.timezone('UTC')
+        new_work_entries = self.env['hr.work.entry']
+        for (company, contract_tz), contracts in contracts_by_company_tz.items():
+            tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+            date_start_tz = tz.localize(date_start).astimezone(utc).replace(tzinfo=None)
+            date_stop_tz = tz.localize(date_stop).astimezone(utc).replace(tzinfo=None)
+            new_work_entries += contracts.with_company(company).sudo()._generate_work_entries(
+                date_start_tz, date_stop_tz, force=force)
+        return new_work_entries
+
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        # Generate work entries between 2 dates (datetime.datetime)
+        # This method considers that the dates are correctly localized
+        # based on the target timezone
+        assert isinstance(date_start, datetime)
+        assert isinstance(date_stop, datetime)
         self = self.with_context(tracking_disable=True)
         canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
         if canceled_contracts:
@@ -262,8 +293,6 @@ class HrContract(models.Model):
                 _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
                     ', '.join(canceled_contracts.mapped('name'))))
         vals_list = []
-        date_start = fields.Datetime.to_datetime(date_start)
-        date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
         self.write({'last_generation_date': fields.Date.today()})
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.contract'])
@@ -274,10 +303,15 @@ class HrContract(models.Model):
             'date_generated_from': date_start,
             'date_generated_to': date_start,
         })
+        utc = pytz.timezone('UTC')
         for contract in self:
-            contract_start = fields.Datetime.to_datetime(contract.date_start)
+            contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id).tz
+            tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+            contract_start = tz.localize(fields.Datetime.to_datetime(contract.date_start)).astimezone(utc).replace(tzinfo=None)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
                                              datetime.max.time())
+            if contract.date_end:
+                contract_stop = tz.localize(contract_stop).astimezone(utc).replace(tzinfo=None)
             if date_start > contract_stop or date_stop < contract_start:
                 continue
             date_start_work_entries = max(date_start, contract_start)
@@ -381,12 +415,12 @@ class HrContract(models.Model):
     def _cron_generate_missing_work_entries(self):
         # retrieve contracts for the current month
         today = fields.Date.today()
-        start = today + relativedelta(day=1, hour=0)
-        stop = today + relativedelta(months=1, day=31, hour=23, minute=59, second=59)
-        contracts = self.env['hr.employee']._get_all_contracts(
+        start = datetime.combine(today + relativedelta(day=1), time.min)
+        stop = datetime.combine(today + relativedelta(months=1, day=31), time.max)
+        all_contracts = self.env['hr.employee']._get_all_contracts(
             start, stop, states=['open', 'close'])
         # determine contracts to do (the ones whose generated dates have open periods this month)
-        contracts_todo = contracts.filtered(lambda c:\
+        contracts_todo = all_contracts.filtered(lambda c:\
             (c.date_generated_from > start or c.date_generated_to < stop) and\
             (not c.last_generation_date or c.last_generation_date < today))
         if not contracts_todo:
@@ -405,7 +439,8 @@ class HrContract(models.Model):
         # It is more interesting for batching to process statically generated work entries first
         # since we get benefits from having multiple contracts on the same calendar
         contracts_todo = contracts_todo.sorted(key=lambda c: 1 if c.has_static_work_entries() else 100)
-        contracts_todo[:BATCH_SIZE]._generate_work_entries(start, stop, False)
+        contracts_todo = contracts_todo[:BATCH_SIZE].generate_work_entries(
+            start.date(), stop.date(), False)
         # if necessary, retrigger the cron to generate more work entries
         if countract_todo_count > BATCH_SIZE:
             self.env.ref('hr_work_entry_contract.ir_cron_generate_missing_work_entries')._trigger()
