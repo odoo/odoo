@@ -213,6 +213,12 @@ class EventRegistration(models.Model):
     # ACTIONS / BUSINESS
     # ------------------------------------------------------------
 
+    def action_previous_state(self):
+        if self.state == 'open':
+            self.write({'state': 'draft'})
+        elif self.state == 'done':
+            self.write({'state': 'open'})
+
     def action_set_draft(self):
         self.write({'state': 'draft'})
 
