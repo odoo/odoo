@@ -7,6 +7,7 @@ from . import delivery_carrier
 from . import digest
 from . import ir_http
 from . import product_attribute
+from . import product_document
 from . import product_image
 from . import product_pricelist
 from . import product_product

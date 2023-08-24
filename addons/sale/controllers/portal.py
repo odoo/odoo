@@ -148,6 +148,7 @@ class CustomerPortal(portal.CustomerPortal):
                       f'&view_type=form'
         values = {
             'sale_order': order_sudo,
+            'product_documents': order_sudo._get_product_documents(),
             'message': message,
             'report_type': 'html',
             'backend_url': backend_url,
@@ -278,6 +279,24 @@ class CustomerPortal(portal.CustomerPortal):
             redirect_url = order_sudo.get_portal_url(query_string="&message=cant_reject")
 
         return request.redirect(redirect_url)
+
+    @http.route('/my/orders/<int:order_id>/document/<int:document_id>', type='http', auth='public')
+    def portal_quote_document(self, order_id, document_id, access_token):
+        try:
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        document = request.env['product.document'].browse(document_id).sudo().exists()
+        if not document or not document.active:
+            return request.redirect('/my')
+
+        if document not in order_sudo._get_product_documents():
+            return request.redirect('/my')
+
+        return request.env['ir.binary']._get_stream_from(
+            document.ir_attachment_id,
+        ).get_response(as_attachment=True)
 
 
 class PaymentPortal(payment_portal.PaymentPortal):

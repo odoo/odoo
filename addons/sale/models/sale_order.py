@@ -1649,6 +1649,18 @@ class SaleOrder(models.Model):
         del context
         return down_payments_section_line
 
+    def _get_product_documents(self):
+        self.ensure_one()
+
+        return (
+            self.order_line.product_id.product_document_ids
+            | self.order_line.product_template_id.product_document_ids
+        ).filtered(
+            lambda document:
+                document.attached_on == 'quotation'
+                or (self.state == 'sale' and document.attached_on == 'sale_order')
+        ).sorted()
+
     #=== HOOKS ===#
 
     def add_option_to_order_with_taxcloud(self):
