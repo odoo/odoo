@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_pricelist_tour', {
     url: '/web',
@@ -44,29 +45,22 @@ stepUtils.showAppsMenuItem(),
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
     content: "check price is correct (USD)",
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) span:contains("750.00")',
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) h5:contains("750.00")',
     isCheck: true,
 }, {
     content: "add one more",
     trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(3)>div>button:has(i.fa-plus)',
 }, {
     content: "check price for 2",
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) span:contains("600.00")',
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) h5:contains("600.00")',
     isCheck: true,
-}, {
-    content: "add conference chair",
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td:nth-child(3)>div>button:has(i.fa-plus)',
-}, {
-    content: "add chair floor protection",
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(3)>td:nth-child(3)>div>button:has(i.fa-plus)',
-}, {
-    content: "verify configurator final price", // tax excluded
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(4)>td>span:contains("1,257.00")',
-}, {
+},
+    configuratorTourUtils.addOptionalProduct("Conference Chair"),
+    configuratorTourUtils.increaseProductQuantity("Conference Chair"),
+    configuratorTourUtils.addOptionalProduct("Chair floor protection"),
+    configuratorTourUtils.increaseProductQuantity("Chair floor protection"),
+    configuratorTourUtils.assertPriceTotal("1,257.00"),
+{
     content: "add to SO",
     trigger: 'button:contains(Confirm)',
 }, {

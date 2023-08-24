@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import configuratorTourUtils from "@test_sale_product_configurators/js/tour_utils";
 
 // Note: please keep this test without pricelist for maximum coverage.
 // The pricelist is tested on the other tours.
@@ -28,12 +29,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1) label:contains("Steel")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Steel")',
     isCheck: true,
 }, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1) label:contains("Aluminium")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Aluminium")',
 }, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4)>span:contains("800.40")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td[name="price"] h5:contains("800.40")',
     isCheck: true, // check updated price
 }, {
     trigger: 'label[style="background-color:#000000"] input'
@@ -48,11 +49,10 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     isCheck: true, // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
-}, {
-    trigger: 'main.modal-body>table:nth-child(2)>tbody>tr:nth-child(1)>td:nth-child(3)>button',
-}, {
+},
+    configuratorTourUtils.addOptionalProduct("Conference Chair"),
+    configuratorTourUtils.addOptionalProduct("Chair floor protection"),
+{
     trigger: 'button:contains(Confirm)',
     id: 'quotation_product_selected',
 },
