@@ -46,7 +46,7 @@ class TestMailTools(MailCommon):
             '',
         ]
 
-    @users('employee')
+    @users('admin')
     def test_find_partner_from_emails(self):
         Partner = self.env['res.partner']
         test_partner = Partner.browse(self.test_partner.ids)
@@ -106,6 +106,12 @@ class TestMailTools(MailCommon):
             # test with wildcard "_"
             found = Partner._mail_find_partner_from_emails(['alfred_astaire@test.example.com'])
             self.assertEqual(found, [self.env['res.partner']])
+
+        # test users with same email, priority given to current user
+        # --------------------------------------------------------------
+        self.user_employee.sudo().write({'email': '"Alfred Astaire" <%s>' % self.env.user.partner_id.email_normalized})
+        found = self.env['res.partner']._mail_find_partner_from_emails([self.env.user.partner_id.email_formatted])
+        self.assertEqual(found, [self.env.user.partner_id])
 
     @users('employee')
     def test_tools_email_re(self):
