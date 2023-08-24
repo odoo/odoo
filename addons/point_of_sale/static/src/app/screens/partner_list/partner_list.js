@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { session } from "@web/session";
 
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
@@ -159,9 +160,9 @@ export class PartnerListScreen extends Component {
         this.activateEditMode();
     }
     createPartner() {
-        // initialize the edit screen with default details about country & state
+        // initialize the edit screen with default details about country, state, and lang
         const { country_id, state_id } = this.pos.company;
-        this.state.editModeProps.partner = { country_id, state_id };
+        this.state.editModeProps.partner = { country_id, state_id, lang: session.user_context.lang };
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
