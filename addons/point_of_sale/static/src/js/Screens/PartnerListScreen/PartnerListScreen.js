@@ -8,6 +8,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
     const { useAsyncLockedMethod } = require("point_of_sale.custom_hooks");
+    const { session } = require("@web/session");
 
     const { onWillUnmount, useRef } = owl;
 
@@ -151,10 +152,11 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             this.activateEditMode();
         }
         createPartner() {
-            // initialize the edit screen with default details about country & state
+            // initialize the edit screen with default details about country, state & lang
             this.state.editModeProps.partner = {
                 country_id: this.env.pos.company.country_id,
                 state_id: this.env.pos.company.state_id,
+                lang: session.user_context.lang,
             }
             this.activateEditMode();
         }
