@@ -245,7 +245,7 @@ export function useMessageHighlight(duration = 2000) {
          * @param {import("@mail/core/thread_model").Thread} thread
          */
         async highlightMessage(message, thread) {
-            if (message.originThread.localId !== thread.localId) {
+            if (thread.notEq(message.originThread)) {
                 return;
             }
             await threadService.loadAround(thread, message.id);
@@ -407,7 +407,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isNotSelected(thread, message) {
-            return this.thread === thread && this.message !== message;
+            return thread.eq(this.thread) && message.notEq(this.message);
         },
         /**
          * @param {import("@mail/core/common/thread_model").Thread} thread
@@ -415,7 +415,7 @@ export function useMessageToReplyTo() {
          * @returns {boolean}
          */
         isSelected(thread, message) {
-            return this.thread === thread && this.message === message;
+            return thread.eq(this.thread) && message.eq(this.message);
         },
         /** @type {import("@mail/core/common/message_model").Message|null} */
         message: null,
@@ -426,7 +426,7 @@ export function useMessageToReplyTo() {
          * @param {import("@mail/core/common/message_model").Message} message
          */
         toggle(thread, message) {
-            if (this.message === message) {
+            if (message.eq(this.message)) {
                 this.cancel();
             } else {
                 Object.assign(this, { message, thread });

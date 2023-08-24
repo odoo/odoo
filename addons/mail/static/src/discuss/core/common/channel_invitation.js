@@ -79,7 +79,7 @@ export class ChannelInvitation extends Component {
     }
 
     onClickSelectablePartner(partner) {
-        if (this.state.selectedPartners.includes(partner)) {
+        if (partner.in(this.state.selectedPartners)) {
             const index = this.state.selectedPartners.indexOf(partner);
             if (index !== -1) {
                 this.state.selectedPartners.splice(index, 1);

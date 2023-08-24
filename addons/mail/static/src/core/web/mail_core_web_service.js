@@ -73,12 +73,12 @@ export class MailCoreWeb {
                 const data = Object.assign(payload, { body: markup(payload.body) });
                 const message = this.messageService.insert(data);
                 const inbox = this.store.discuss.inbox;
-                if (!inbox.messages.includes(message)) {
+                if (message.notIn(inbox.messages)) {
                     inbox.messages.push(message);
                     inbox.counter++;
                 }
                 const thread = message.originThread;
-                if (!thread.needactionMessages.includes(message)) {
+                if (message.notIn(thread.needactionMessages)) {
                     thread.needactionMessages.push(message);
                     thread.message_needaction_counter++;
                 }
@@ -112,7 +112,7 @@ export class MailCoreWeb {
                     removeFromArray(message.needaction_partner_ids, partnerIndex);
                     removeFromArrayWithPredicate(inbox.messages, ({ id }) => id === messageId);
                     const history = this.store.discuss.history;
-                    if (!history.messages.includes(message)) {
+                    if (message.notIn(history.messages)) {
                         history.messages.push(message);
                     }
                 }

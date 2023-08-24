@@ -158,7 +158,7 @@ export class ChatWindowService {
             swaped.hidden = false;
             swaped.folded = false;
         }
-        const index = this.store.chatWindows.findIndex((c) => c === chatWindow);
+        const index = this.store.chatWindows.findIndex((c) => c.eq(chatWindow));
         if (index > -1) {
             this.store.chatWindows.splice(index, 1);
         }

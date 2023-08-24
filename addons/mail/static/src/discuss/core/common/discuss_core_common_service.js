@@ -240,7 +240,7 @@ export class DiscussCoreCommon {
             res_id: channel.id,
             model: channel.model,
         });
-        if (!channel.messages.includes(message)) {
+        if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.messages.push(message);
             } else if (channel.state === "loading") {
@@ -254,13 +254,13 @@ export class DiscussCoreCommon {
                 }
                 if (message.isNeedaction) {
                     const inbox = this.store.discuss.inbox;
-                    if (!inbox.messages.includes(message)) {
+                    if (message.notIn(inbox.messages)) {
                         inbox.messages.push(message);
                         if (notif.id > this.store.initBusId) {
                             inbox.counter++;
                         }
                     }
-                    if (!channel.needactionMessages.includes(message)) {
+                    if (message.notIn(channel.needactionMessages)) {
                         channel.needactionMessages.push(message);
                         if (notif.id > this.store.initBusId) {
                             channel.message_needaction_counter++;
@@ -288,9 +288,8 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            channel.newestPersistentMessage &&
             !this.store.guest &&
-            channel.newestPersistentMessage === channel.newestMessage
+            channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
             this.threadService.markAsRead(channel);
         }

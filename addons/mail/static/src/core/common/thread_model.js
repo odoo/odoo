@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
 import { createLocalId } from "@mail/utils/common/misc";
 
@@ -20,7 +21,7 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {boolean} checked
  */
 
-export class Thread {
+export class Thread extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
@@ -135,6 +136,7 @@ export class Thread {
     is_editable;
 
     constructor(store, data) {
+        super();
         Object.assign(this, {
             id: data.id,
             model: data.model,
@@ -194,7 +196,7 @@ export class Thread {
     get allowCalls() {
         return (
             ["chat", "channel", "group"].includes(this.type) &&
-            this.correspondent !== this._store.odoobot
+            !this.correspondent?.eq(this._store.odoobot)
         );
     }
 
@@ -317,8 +319,8 @@ export class Thread {
     }
 
     get hasSelfAsMember() {
-        return this.channelMembers.some(
-            (channelMember) => channelMember.persona === this._store.self
+        return this.channelMembers.some((channelMember) =>
+            channelMember.persona?.eq(this._store.self)
         );
     }
 
@@ -326,7 +328,7 @@ export class Thread {
      * @param {import("@mail/core/common/message_model").Message} message
      */
     hasMessage(message) {
-        return this.messages.some(({ id }) => id === message.id);
+        return message.in(this.messages);
     }
 
     get invitationLink() {
@@ -377,7 +379,7 @@ export class Thread {
         }
         const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
         const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
-            return message.author === this._store.self && message.id <= lastMessageSeenByAllId;
+            return message.author?.eq(this._store.self) && message.id <= lastMessageSeenByAllId;
         });
         if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {
             return false;

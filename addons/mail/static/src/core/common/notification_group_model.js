@@ -1,9 +1,11 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
+
 import { _t } from "@web/core/l10n/translation";
 
 let nextId = 1;
-export class NotificationGroup {
+export class NotificationGroup extends Record {
     /** @type {import("@mail/core/common/notification_model").Notification[]} */
     notifications = [];
     /** @type {string} */
@@ -20,11 +22,12 @@ export class NotificationGroup {
     _store;
 
     constructor(store) {
+        super();
         this._store = store;
         this._store.notificationGroups.push(this);
         this.id = nextId++;
         // return reactive
-        return store.notificationGroups.find((group) => group === this);
+        return store.notificationGroups.find((group) => group.eq(this));
     }
 
     get iconSrc() {

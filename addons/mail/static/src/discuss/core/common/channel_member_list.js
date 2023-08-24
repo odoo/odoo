@@ -31,7 +31,7 @@ export class ChannelMemberList extends Component {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (member.persona === this.store.self) {
+        if (member.persona?.eq(this.store.self)) {
             return false;
         }
         if (member.persona.type === "guest") {

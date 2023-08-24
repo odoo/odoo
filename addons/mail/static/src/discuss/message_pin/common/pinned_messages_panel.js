@@ -28,7 +28,7 @@ export class PinnedMessagesPanel extends Component {
             this.messagePinService.fetchPinnedMessages(this.props.thread);
         });
         onWillUpdateProps(async (nextProps) => {
-            if (nextProps.thread.id !== this.props.thread.id) {
+            if (nextProps.thread.notEq(this.props.thread)) {
                 this.messagePinService.fetchPinnedMessages(nextProps.thread);
             }
         });

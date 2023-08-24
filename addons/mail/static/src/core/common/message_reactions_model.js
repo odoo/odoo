@@ -1,6 +1,8 @@
 /* @odoo-module */
 
-export class MessageReactions {
+import { Record } from "@mail/core/common/record";
+
+export class MessageReactions extends Record {
     /** @type {string} */
     content;
     /** @type {number} */

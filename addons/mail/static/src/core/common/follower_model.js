@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { Record } from "@mail/core/common/record";
+
 /**
  * @typedef Data
  * @property {import("@mail/core/common/thread_model").Thread} followedThread
@@ -8,7 +10,7 @@
  * @property {import("@mail/core/common/partner_model").Data} partner
  */
 
-export class Follower {
+export class Follower extends Record {
     /** @type {import("@mail/core/common/thread_model").Thread} */
     followedThread;
     /** @type {number} */
@@ -25,7 +27,7 @@ export class Follower {
      */
     get isEditable() {
         const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-        return this._store.user === this.partner
+        return this.partner.eq(this._store.user)
             ? this.followedThread.hasReadAccess
             : hasWriteAccess;
     }

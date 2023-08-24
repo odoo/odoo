@@ -228,7 +228,7 @@ export class Chatter extends Component {
         }
         allFollowers.push(...this.state.thread.followers);
         const followers = allFollowers.slice(0, 5).map(({ partner }) => {
-            if (partner === this.store.self) {
+            if (partner.eq(this.store.self)) {
                 return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
             }
             const text = partner.email ? partner.emailWithoutDomain : partner.name;
