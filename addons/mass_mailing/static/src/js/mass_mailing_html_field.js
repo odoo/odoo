@@ -251,6 +251,8 @@ export class MassMailingHtmlField extends HtmlField {
 
             if ($codeview.hasClass('d-none')) {
                 this.wysiwyg.setValue($codeview.val());
+                this.wysiwyg.odooEditor.sanitize();
+                this.wysiwyg.odooEditor.historyStep(true);
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
