@@ -10,17 +10,17 @@ FormEditorRegistry.add('create_task', {
         type: 'char',
         modelRequired: true,
         name: 'name',
-        string: 'Task Title',
+        string: _t('Task Title'),
     }, {
         type: 'email',
         modelRequired: true,
         fillWith: 'email',
         name: 'email_from',
-        string: 'Your Email',
+        string: _t('Your Email'),
     }, {
         type: 'char',
         name: 'description',
-        string: 'Description',
+        string: _t('Description'),
     }],
     fields: [{
         name: 'project_id',
