@@ -108,6 +108,9 @@ export class ChatWindowService {
             );
             return this.store.chatWindows[index]; // return reactive version
         }
+        if (chatWindow.hidden) {
+            this.makeVisible(chatWindow);
+        }
         assignDefined(chatWindow, data);
         return chatWindow;
     }
