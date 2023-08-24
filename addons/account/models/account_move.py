@@ -2851,8 +2851,9 @@ class AccountMove(models.Model):
                 'credit': credit,
             })
 
-            if not is_refund or self.tax_cash_basis_origin_move_id:
-                # We don't map tax repartition for non-refund operations, nor for cash basis entries.
+            if not is_refund or self.tax_cash_basis_origin_move_id or self._context.get('reverse_move_type'):
+                # We don't map tax repartition for non-refund operations, for cash basis entries,
+                # nor when reversing the move_type
                 # Indeed, cancelling a cash basis entry usually happens when unreconciling and invoice,
                 # in which case we always want the reverse entry to totally cancel the original one, keeping the same accounts,
                 # tags and repartition lines
@@ -3422,11 +3423,12 @@ class AccountMove(models.Model):
         }
 
     def action_switch_invoice_into_refund_credit_note(self):
-        if any(move.move_type not in ('in_invoice', 'out_invoice') for move in self):
-            raise ValidationError(_("This action isn't available for this document."))
-
         for move in self:
-            reversed_move = move._reverse_move_vals({}, False)
+            if move.posted_before:
+                raise ValidationError(_("You cannot switch the type of a posted document."))
+            if move.move_type == 'entry':
+                raise ValidationError(_("This action isn't available for this document."))
+            reversed_move = move.with_context(reverse_move_type=True)._reverse_move_vals({}, False)
             new_invoice_line_ids = []
             for cmd, virtualid, line_vals in reversed_move['line_ids']:
                 if not line_vals['exclude_from_invoice_tab']:
@@ -3438,8 +3440,11 @@ class AccountMove(models.Model):
                         'quantity': -line_vals['quantity'],
                         'amount_currency': -line_vals['amount_currency'],
                     })
+            in_out, old_move_type = move.move_type.split('_')
+            new_move_type = f"{in_out}_{'invoice' if old_move_type == 'refund' else 'refund'}"
+            move.name = False
             move.write({
-                'move_type': move.move_type.replace('invoice', 'refund'),
+                'move_type': new_move_type,
                 'invoice_line_ids' : [(5, 0, 0)],
                 'partner_bank_id': False,
             })
