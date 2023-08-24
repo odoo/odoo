@@ -5,8 +5,7 @@ import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt
 import { patch } from "@web/core/utils/patch";
 
 patch(ReceiptScreen.prototype, "l10n_pt_pos.ReceiptScreen", {
-    async printReceipt() {
-        const _super = this._super;
+    async l10n_pt_pos_retrieve_and_display_qr_code() {
         if (this.pos.isPortugueseCountry() && !this.currentOrder.getL10nPtPosQrCodeStr()) {
             const values = await this.pos.l10nPtPosComputeMissingHashes();
             debugger;
@@ -22,6 +21,15 @@ patch(ReceiptScreen.prototype, "l10n_pt_pos.ReceiptScreen", {
             await new Promise((resolve) => window.requestAnimationFrame(resolve));
             await new Promise((resolve) => setTimeout(resolve));
         }
+    },
+    async printReceipt() {
+        const _super = this._super;
+        await this.l10n_pt_pos_retrieve_and_display_qr_code();
         return _super(...arguments);
     },
+    async _sendReceiptToCustomer() {
+        const _super = this._super;
+        await this.l10n_pt_pos_retrieve_and_display_qr_code();
+        return _super(...arguments);
+    }
 });
