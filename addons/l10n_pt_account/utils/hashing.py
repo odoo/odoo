@@ -216,4 +216,3 @@ class L10nPtHashingUtils:
             'to_hash': records[-1][hash_field],
             'to_date': fields.Date.to_string(records[-1][date_field]),
         }
-

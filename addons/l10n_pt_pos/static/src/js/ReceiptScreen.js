@@ -8,7 +8,6 @@ patch(ReceiptScreen.prototype, "l10n_pt_pos.ReceiptScreen", {
     async l10n_pt_pos_retrieve_and_display_qr_code() {
         if (this.pos.isPortugueseCountry() && !this.currentOrder.getL10nPtPosQrCodeStr()) {
             const values = await this.pos.l10nPtPosComputeMissingHashes();
-            debugger;
             if (values) {
                 this.currentOrder.setL10nPtPosInalterableHash(values.hash);
                 this.currentOrder.setL10nPtPosInalterableHashShort(values.hash_short);
