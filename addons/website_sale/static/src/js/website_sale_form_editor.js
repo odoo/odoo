@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import FormEditorRegistry from "@website/js/form_editor_registry";
 
 FormEditorRegistry.add('create_customer', {
@@ -8,22 +9,22 @@ FormEditorRegistry.add('create_customer', {
         modelRequired: true,
         name: 'name',
         fillWith: 'name',
-        string: 'Your Name',
+        string: _t('Your Name'),
     }, {
         type: 'email',
         required: true,
         fillWith: 'email',
         name: 'email',
-        string: 'Your Email',
+        string: _t('Your Email'),
     }, {
         type: 'tel',
         fillWith: 'phone',
         name: 'phone',
-        string: 'Phone Number',
+        string: _t('Phone Number'),
     }, {
         type: 'char',
         name: 'company_name',
         fillWith: 'commercial_company_name',
-        string: 'Company Name',
+        string: _t('Company Name'),
     }],
 });
