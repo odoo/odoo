@@ -910,7 +910,7 @@ export class ThreadService {
             partner_ids?.push(...recipientIds);
         }
         const tmpId = this.messageService.getNextTemporaryId();
-        const params = {
+        let params = {
             context: {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
                 temporary_id: tmpId,
@@ -974,6 +974,7 @@ export class ThreadService {
             thread.messages.push(tmpMsg);
             thread.seen_message_id = tmpMsg.id;
         }
+        params = this.applyAdditionalParams(params, thread);
         const data = await this.rpc("/mail/message/post", params);
         if (data.parentMessage) {
             data.parentMessage.body = data.parentMessage.body
@@ -997,6 +998,14 @@ export class ThreadService {
             delete this.store.messages[tmpMsg.id];
         }
         return message;
+    }
+
+    /**
+     * Hook method to allow override and custom parameters in other modules
+     * TODO awa: replace this by "getMessagePostParams" when reaching master
+     */
+    applyAdditionalParams(params, thread) {
+        return params;
     }
 
     /**
