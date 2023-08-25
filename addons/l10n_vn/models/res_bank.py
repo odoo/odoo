@@ -47,7 +47,7 @@ class ResPartnerBank(models.Model):
 
     def _get_additional_data_field(self, comment):
         if self.country_code == 'VN':
-            return self._serialize(1, comment)
+            return self._serialize(8, comment)
         return super()._get_additional_data_field(comment)
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
