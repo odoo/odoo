@@ -1,10 +1,10 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/web/discuss_sidebar_categories";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -17,7 +17,7 @@ export class DiscussSidebarCallIndicator extends Component {
     static components = {};
 
     setup() {
-        this.rtc = useRtc();
+        this.rtc = useState(useService("discuss.rtc"));
     }
 }
 

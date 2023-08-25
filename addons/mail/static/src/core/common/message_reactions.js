@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
-
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -13,7 +11,7 @@ export class MessageReactions extends Component {
 
     setup() {
         this.user = useService("user");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
         this.messageService = useState(useService("mail.message"));
     }

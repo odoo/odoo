@@ -1,9 +1,10 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { createLocalId } from "@mail/utils/common/misc";
 
-import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+
+import { Component, useState } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
@@ -21,7 +22,7 @@ export class ThreadIcon extends Component {
     };
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
     }
 
     get chatPartner() {

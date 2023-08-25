@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
-
 import { Component, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -12,7 +10,7 @@ export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.rpc = useService("rpc");
         this.personaService = useService("mail.persona");
         this.state = useState({

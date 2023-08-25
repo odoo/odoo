@@ -1,12 +1,11 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { CallInvitation } from "@mail/discuss/call/common/call_invitation";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitations extends Component {
     static props = [];
@@ -14,8 +13,8 @@ export class CallInvitations extends Component {
     static template = "discuss.CallInvitations";
 
     setup() {
-        this.rtc = useRtc();
-        this.store = useStore();
+        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useState(useService("mail.store"));
     }
 }
 

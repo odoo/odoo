@@ -1,9 +1,7 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -30,7 +28,7 @@ export class Call extends Component {
     setup() {
         this.grid = useRef("grid");
         this.notification = useService("notification");
-        this.rtc = useRtc();
+        this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -39,7 +37,7 @@ export class Call extends Component {
             columnCount: 0,
             overlay: false,
         });
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.userSettings = useState(useService("mail.user_settings"));
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());

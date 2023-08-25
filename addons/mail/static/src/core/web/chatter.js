@@ -4,7 +4,6 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
-import { useStore } from "@mail/core/common/messaging_hook";
 import { Thread } from "@mail/core/common/thread";
 import { Activity } from "@mail/core/web/activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
@@ -93,7 +92,7 @@ export class Chatter extends Component {
         this.attachmentBox = useRef("attachment-box");
         this.activityService = useState(useService("mail.activity"));
         this.threadService = useService("mail.thread");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
