@@ -95,8 +95,6 @@ class FleetVehicle(models.Model):
         string='Has Contracts to renew')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
         string='Has Contracts Overdue')
-    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon')
-    contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one')
     contract_state = fields.Selection(
         [('futur', 'Incoming'),
          ('open', 'In Progress'),
@@ -196,40 +194,36 @@ class FleetVehicle(models.Model):
     def _compute_contract_reminder(self):
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
-        for record in self:
-            overdue = False
-            due_soon = False
-            total = 0
-            name = ''
-            state = ''
-            for element in record.log_contracts:
-                if element.state in ('open', 'expired') and element.expiration_date:
-                    current_date_str = fields.Date.context_today(record)
-                    due_time_str = element.expiration_date
-                    current_date = fields.Date.from_string(current_date_str)
-                    due_time = fields.Date.from_string(due_time_str)
-                    diff_time = (due_time - current_date).days
-                    if diff_time < 0:
-                        overdue = True
-                        total += 1
-                    if diff_time < delay_alert_contract:
-                        due_soon = True
-                        total += 1
-                    if overdue or due_soon:
-                        log_contract = self.env['fleet.vehicle.log.contract'].search([
-                            ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'expired'))
-                            ], limit=1, order='expiration_date asc')
-                        if log_contract:
-                            # we display only the name of the oldest overdue/due soon contract
-                            name = log_contract.name
-                            state = log_contract.state
+        current_date = fields.Date.context_today(self)
+        data = self.env['fleet.vehicle.log.contract']._read_group(
+            domain=[('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
+            groupby=['vehicle_id', 'state'],
+            aggregates=['expiration_date:max'])
 
-            record.contract_renewal_overdue = overdue
-            record.contract_renewal_due_soon = due_soon
-            record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
-            record.contract_renewal_name = name
-            record.contract_state = state
+        prepared_data = {}
+        for vehicle_id, state, expiration_date in data:
+            if prepared_data.get(vehicle_id.id):
+                if prepared_data[vehicle_id.id]['expiration_date'] < expiration_date:
+                    prepared_data[vehicle_id.id]['expiration_date'] = expiration_date
+                if prepared_data[vehicle_id.id]['state'] == 'futur' and state == 'open':
+                    prepared_data[vehicle_id.id]['state'] = state
+            else:
+                prepared_data[vehicle_id.id] = {
+                    'state': state,
+                    'expiration_date': expiration_date,
+                }
+
+        for record in self:
+            vehicle_data = prepared_data.get(record.id)
+            if vehicle_data:
+                diff_time = (vehicle_data['expiration_date'] - current_date).days
+                record.contract_renewal_overdue = diff_time < 0
+                record.contract_renewal_due_soon = not record.contract_renewal_overdue and (diff_time < delay_alert_contract)
+                record.contract_state = vehicle_data['state']
+            else:
+                record.contract_renewal_overdue = False
+                record.contract_renewal_due_soon = False
+                record.contract_state = ""
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
