@@ -83,7 +83,7 @@ export function getConsumeEventType(element, runCommand) {
     const tag = tagName.toLowerCase();
 
     // Many2one
-    if (classList.contains("o_field_many2one") || classList.contains("o_field_many2manytags")) {
+    if (classList.contains("o_field_many2one")) {
         return "autocompleteselect";
     }
 

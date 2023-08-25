@@ -292,13 +292,6 @@
                     pointer-events: auto;
                 }
             }
-            &.o_many2many_avatar_user_cell {
-                .o_field_many2manytags {
-                    > span {
-                        margin-right: 2px;
-                    }
-                }
-            }
         }
 
         .o_data_row:not(.o_selected_row) {
@@ -341,10 +334,6 @@
                 &.o_field_monetary input {
                     width: 0; // override width: 100px and let flex makes this input grow
                     margin: 0 4px;
-                }
-                &.o_field_many2manytags > .o_field_many2one {
-                    // reduce basis to prevent many2one input from going to the next line to often
-                    flex-basis: 40px;
                 }
                 .o_field_many2one_avatar {
                     display: flex;
