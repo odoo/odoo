@@ -9,7 +9,7 @@ patch(ThreadService.prototype, {
     update(thread, data) {
         super.update(thread, data);
         if (data?.visitor) {
-            thread.visitor = this.personaService.insert({
+            thread.visitor = this.store.Persona.insert({
                 ...data.visitor,
                 type: "visitor",
             });

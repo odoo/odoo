@@ -140,7 +140,7 @@ export class Chatter extends Component {
         onPatched(this.scrollPosition.restore);
         onWillStart(() => {
             if (this.props.threadId) {
-                this.state.thread = this.threadService.insert({
+                this.state.thread = this.store.Thread.insert({
                     id: this.props.threadId,
                     model: this.props.threadModel,
                     name: this.props.webRecord?.data?.display_name || undefined,

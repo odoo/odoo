@@ -174,7 +174,7 @@ export class Rtc {
             "RTC-SERVICE:UPDATE_RTC_SESSIONS",
             ({ detail: { commands = [], record, thread } }) => {
                 if (record) {
-                    const session = this.insertSession(record);
+                    const session = this.store.RtcSession.insert(record);
                     thread.rtcSessions[session.id] = session;
                 }
                 for (const command of commands) {
@@ -187,7 +187,7 @@ export class Rtc {
                             break;
                         case "insert":
                             for (const rtcSessionData of sessionsData) {
-                                const session = this.insertSession(rtcSessionData);
+                                const session = this.store.RtcSession.insert(rtcSessionData);
                                 thread.rtcSessions[session.id] = session;
                             }
                             break;
@@ -898,7 +898,7 @@ export class Rtc {
         if (this.state.channel && rtcSessions) {
             const activeSessionsData = rtcSessions[0][1];
             for (const sessionData of activeSessionsData) {
-                const session = this.insertSession(sessionData);
+                const session = this.store.RtcSession.insert(sessionData);
                 this.state.channel.rtcSessions[session.id] = session;
             }
             const outdatedSessionsData = rtcSessions[1][1];
@@ -1420,7 +1420,7 @@ export class Rtc {
             session.channelId = channelMember.channel.id;
         }
         if (channelMember) {
-            const channelMemberRecord = this.channelMemberService.insert(channelMember);
+            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
             channelMemberRecord.rtcSessionId = session.id;
             session.channelMemberId = channelMemberRecord.id;
             if (channelMemberRecord.thread) {
@@ -1520,7 +1520,7 @@ export class Rtc {
                 break;
             case "insert":
                 for (const sessionData of sessionsData) {
-                    const session = this.insertSession(sessionData);
+                    const session = this.store.RtcSession.insert(sessionData);
                     channel.rtcSessions[session.id] = session;
                 }
                 break;
@@ -1583,7 +1583,7 @@ export const rtcService = {
         });
         services["bus_service"].subscribe("mail.record/insert", (payload) => {
             if (payload.RtcSession) {
-                rtc.insertSession(payload.RtcSession);
+                rtc.store.RtcSession.insert(payload.RtcSession);
             }
             const { "res.users.settings.volumes": volumeSettings } = payload;
             if (volumeSettings) {

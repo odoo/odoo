@@ -57,7 +57,7 @@ patch(ThreadService.prototype, {
                 if (activity.note) {
                     activity.note = markup(activity.note);
                 }
-                existingIds.add(this.activityService.insert(activity).id);
+                existingIds.add(this.store.Activity.insert(activity).id);
             }
             for (const activity of thread.activities) {
                 if (!existingIds.has(activity.id)) {
@@ -74,7 +74,7 @@ patch(ThreadService.prototype, {
         }
         if ("mainAttachment" in result) {
             thread.mainAttachment = result.mainAttachment.id
-                ? this.attachmentService.insert(result.mainAttachment)
+                ? this.store.Attachment.insert(result.mainAttachment)
                 : undefined;
         }
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
@@ -82,14 +82,14 @@ patch(ThreadService.prototype, {
         }
         if ("followers" in result) {
             if (result.selfFollower) {
-                thread.selfFollower = this.insertFollower({
+                thread.selfFollower = this.store.Follower.insert({
                     followedThread: thread,
                     ...result.selfFollower,
                 });
             }
             thread.followersCount = result.followersCount;
             for (const followerData of result.followers) {
-                const follower = this.insertFollower({
+                const follower = this.store.Follower.insert({
                     followedThread: thread,
                     ...followerData,
                 });
@@ -128,7 +128,7 @@ patch(ThreadService.prototype, {
                 res_id: thread.id,
                 model: thread.model,
             };
-            const message = this.messageService.insert(tmpData);
+            const message = this.store.Message.insert(tmpData);
             thread.messages.push(message);
         }
         return thread;
@@ -147,7 +147,7 @@ patch(ThreadService.prototype, {
             followedThread: data.followedThread,
             id: data.id,
             isActive: data.is_active,
-            partner: this.personaService.insert({ ...data.partner, type: "partner" }),
+            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
             _store: this.store,
         });
         return follower;
@@ -168,7 +168,7 @@ patch(ThreadService.prototype, {
                 lang,
                 reason,
                 persona: partner_id
-                    ? this.personaService.insert({
+                    ? this.store.Persona.insert({
                           type: "partner",
                           id: partner_id,
                       })
@@ -193,7 +193,7 @@ patch(ThreadService.prototype, {
             Array.from(thread.followers).at(-1).id,
         ]);
         for (const data of followers) {
-            const follower = this.insertFollower({
+            const follower = this.store.Follower.insert({
                 followedThread: thread,
                 ...data,
             });
@@ -248,7 +248,7 @@ patch(ThreadService.prototype, {
         super.unpin(...arguments);
     },
     _openChatWindow(thread, replaceNewMessageChatWindow) {
-        const chatWindow = this.chatWindowService.insert({
+        const chatWindow = this.store.ChatWindow.insert({
             folded: false,
             thread,
             replaceNewMessageChatWindow,
