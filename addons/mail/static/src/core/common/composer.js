@@ -5,7 +5,7 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { EmojiPicker, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { escapeAndCompactTextContent } from "@mail/utils/common/format";
@@ -87,7 +87,6 @@ export class Composer extends Component {
             NONE: "None",
             EMOJI: "Emoji",
         };
-        this.messaging = useMessaging();
         this.store = useStore();
         if (this.allowUpload) {
             this.attachmentUploader = useAttachmentUploader(
@@ -96,7 +95,6 @@ export class Composer extends Component {
             );
         }
         this.messageService = useState(useService("mail.message"));
-        this.personaService = useState(useService("mail.persona"));
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.rpc = useService("rpc");

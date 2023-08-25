@@ -27,8 +27,6 @@ export class MessageService {
         this.rpc = services.rpc;
         this.orm = services.orm;
         this.userService = services.user;
-        this.personaService = services["mail.persona"];
-        this.attachmentService = services["mail.attachment"];
     }
 
     async edit(message, body, attachments = [], rawMentions) {
@@ -535,7 +533,7 @@ export class MessageService {
 }
 
 export const messageService = {
-    dependencies: ["mail.store", "rpc", "orm", "user", "mail.persona", "mail.attachment"],
+    dependencies: ["mail.store", "rpc", "orm", "user"],
     start(env, services) {
         return new MessageService(env, services);
     },

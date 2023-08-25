@@ -33,7 +33,7 @@ patch(Composer.prototype, {
      */
     notifyIsTyping(is_typing = true) {
         if (["chat", "channel", "group"].includes(this.thread?.type)) {
-            this.messaging.rpc(
+            this.rpc(
                 "/discuss/channel/notify_typing",
                 {
                     channel_id: this.thread.id,

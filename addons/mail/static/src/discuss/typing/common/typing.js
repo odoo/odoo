@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { useMessaging } from "@mail/core/common/messaging_hook";
 import { useTypingService } from "@mail/discuss/typing/common/typing_service";
 
 import { Component } from "@odoo/owl";
@@ -23,7 +22,6 @@ export class Typing extends Component {
     static template = "discuss.Typing";
 
     setup() {
-        this.messaging = useMessaging();
         this.typingService = useTypingService();
     }
 

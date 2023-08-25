@@ -18,8 +18,6 @@ export class AttachmentUploadService {
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.notificationService = services["notification"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
 
@@ -182,7 +180,7 @@ export class AttachmentUploadService {
 }
 
 export const attachmentUploadService = {
-    dependencies: ["file_upload", "mail.attachment", "mail.store", "mail.thread", "notification"],
+    dependencies: ["file_upload", "mail.attachment", "mail.store", "notification"],
     start(env, services) {
         return new AttachmentUploadService(env, services);
     },

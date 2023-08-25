@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 
 import { Component } from "@odoo/owl";
 
@@ -12,7 +12,6 @@ export class MessageInReply extends Component {
     static template = "mail.MessageInReply";
 
     setup() {
-        this.messaging = useMessaging();
         this.store = useStore();
         this.user = useService("user");
         this.threadService = useService("mail.thread");

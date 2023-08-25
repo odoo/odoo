@@ -13,8 +13,6 @@ export const OTHER_LONG_TYPING = 60000;
 
 export class MessagePin {
     busService;
-    /** @type {import("@mail/core/common/message_service").MessageService} */
-    messageService;
     /** @type {Map<number, string>} */
     loadStateByChannelId = new Map();
     /** @type {Map<number, Set<number>>} */
@@ -34,7 +32,6 @@ export class MessagePin {
         this.env = env;
         this.busService = services.bus_service;
         this.dialogService = services.dialog;
-        this.messageService = services["mail.message"];
         this.ormService = services.orm;
         this.rpcService = services.rpc;
         this.storeService = services["mail.store"];
@@ -219,7 +216,7 @@ export class MessagePin {
 }
 
 export const messagePinService = {
-    dependencies: ["bus_service", "dialog", "mail.message", "mail.store", "orm", "rpc"],
+    dependencies: ["bus_service", "dialog", "mail.store", "orm", "rpc"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

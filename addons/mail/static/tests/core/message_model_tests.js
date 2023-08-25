@@ -7,13 +7,13 @@ QUnit.module("message model test", {});
 
 QUnit.test("Message model properties", async (assert) => {
     const { env } = await start();
-    env.services["mail.thread"].insert({
+    env.services["mail.store"].Thread.insert({
         id: 3,
         model: "res.partner",
         name: "general",
     });
     /** @type {import("@mail/core/common/message_model").Message} */
-    const message = env.services["mail.message"].insert({
+    const message = env.services["mail.store"].Message.insert({
         attachment_ids: [
             {
                 filename: "test.txt",
@@ -35,10 +35,7 @@ QUnit.test("Message model properties", async (assert) => {
     assert.ok(message);
     assert.ok(message.isNeedaction);
     assert.strictEqual(message.body, "<p>Test</p>");
-    assert.strictEqual(
-        serializeDateTime(message.date),
-        "2019-05-05 10:00:00"
-    );
+    assert.strictEqual(serializeDateTime(message.date), "2019-05-05 10:00:00");
     assert.strictEqual(message.id, 4000);
 
     assert.ok(message.attachments);

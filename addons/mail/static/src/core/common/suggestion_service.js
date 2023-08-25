@@ -14,9 +14,6 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
-        this.threadService = services["mail.thread"];
-        this.personaService = services["mail.persona"];
-        this.channelMemberService = services["discuss.channel.member"];
     }
 
     getSupportedDelimiters(thread) {
@@ -250,7 +247,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store", "mail.thread", "mail.persona", "discuss.channel.member"],
+    dependencies: ["orm", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

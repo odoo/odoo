@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 import {
     useAutoScroll,
     useScrollPosition,
@@ -56,7 +56,6 @@ export class Thread extends Component {
 
     setup() {
         this.escape = escape;
-        this.messaging = useMessaging();
         this.store = useStore();
         this.state = useState({ isReplyingTo: false, showJumpPresent: false });
         this.threadService = useState(useService("mail.thread"));
