@@ -10990,9 +10990,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_data_row", 4, "should contain 4 records");
 
-        // click on Add twice, and delay the onchange
+        // click on Add and delay the onchange (check that the button is correctly disabled)
         click($(".o_list_button_add:visible").get(0));
-        click($(".o_list_button_add:visible").get(0));
+        assert.ok($(".o_list_button_add:visible").get(0).disabled);
 
         prom.resolve();
         await nextTick();
