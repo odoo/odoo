@@ -107,7 +107,7 @@ class MrpBom(models.Model):
     def _check_bom_cycle(self):
         subcomponents_dict = dict()
 
-        def _get_cycle(components, finished_product_ids):
+        def _check_cycle(components, finished_products):
             """
             Check whether the components are part of the finished products (-> cycle). Then, if
             these components have a BoM, repeat the operation with the subcomponents (recursion).
@@ -116,9 +116,10 @@ class MrpBom(models.Model):
             products_to_find = self.env['product.product']
 
             for component in components:
-                if component.id in finished_product_ids:
-                    # cycle
-                    return finished_product_ids
+                if component in finished_products:
+                    names = finished_products.mapped('display_name')
+                    raise ValidationError(_("The current configuration is incorrect because it would create a cycle "
+                                            "between these products: %s.") % ', '.join(names))
                 if component not in subcomponents_dict:
                     products_to_find |= component
 
@@ -126,14 +127,11 @@ class MrpBom(models.Model):
             for component in components:
                 if component not in subcomponents_dict:
                     bom = bom_find_result[component]
-                    subcomponents_dict[component] = bom.bom_line_ids.product_id
+                    subcomponents = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(component)).product_id
+                    subcomponents_dict[component] = subcomponents
                 subcomponents = subcomponents_dict[component]
                 if subcomponents:
-                    cycle = _get_cycle(subcomponents, finished_product_ids + component.ids)
-                    if cycle:
-                        return cycle
-
-            return []
+                    _check_cycle(subcomponents, finished_products | component)
 
         boms_to_check = self
         domain = []
@@ -145,15 +143,16 @@ class MrpBom(models.Model):
         for bom in boms_to_check:
             if not bom.active:
                 continue
-            components = bom.bom_line_ids.product_id
-            finished_product_ids = bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
-            cycle = _get_cycle(components, finished_product_ids)
-            if len(cycle) == 1:
-                raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
-            elif len(cycle) > 1:
-                names = self.env['product.product'].browse(cycle).mapped('display_name')
-                raise ValidationError(_("The current configuration is incorrect because it would create a cycle "
-                                        "between these products: %s.") % ', '.join(names))
+            finished_products = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            if bom.bom_line_ids.bom_product_template_attribute_value_ids:
+                grouped_by_components = defaultdict(lambda: self.env['product.product'])
+                for finished in finished_products:
+                    components = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(finished)).product_id
+                    grouped_by_components[components] |= finished
+                for components, finished in grouped_by_components.items():
+                    _check_cycle(components, finished)
+            else:
+                _check_cycle(bom.bom_line_ids.product_id, finished_products)
 
     def write(self, vals):
         res = super().write(vals)
