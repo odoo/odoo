@@ -117,6 +117,10 @@ export class Product extends PosModel {
         let draftPackLotLines, weight, description, packLotLinesToEdit;
         let quantity = 1;
 
+        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
+            quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
+        }
+
         if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
             const attributes = this.attribute_line_ids
                 .map((id) => this.pos.attributes_by_ptal_id[id])
@@ -126,15 +130,14 @@ export class Product extends PosModel {
                 {
                     product: this,
                     attributes: attributes,
+                    quantity: quantity,
                 }
             );
 
             if (confirmed) {
                 description = payload.selected_attributes.join(", ");
                 price_extra += payload.price_extra;
-                if (payload.quantity) {
-                    quantity = payload.quantity;
-                }
+                quantity = payload.quantity;
             } else {
                 return;
             }
@@ -215,10 +218,6 @@ export class Product extends PosModel {
             } else {
                 await this._onScaleNotAvailable();
             }
-        }
-
-        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
-            weight = this.pos.db.product_packaging_by_barcode[code.code].qty;
         }
 
         return { draftPackLotLines, quantity, weight, description, price_extra };
