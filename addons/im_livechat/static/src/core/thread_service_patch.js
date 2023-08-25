@@ -8,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
     insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
+        const isUnknown = !(createLocalId(data.model, data.id) in this.store.Thread.records);
         const thread = super.insert(data);
         if (thread.type === "livechat") {
             if (data?.channel) {
@@ -68,8 +68,8 @@ patch(ThreadService.prototype, {
         super.sortChannels();
         // Live chats are sorted by most recent interest date time in the sidebar.
         this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-            const thread1 = this.store.threads[localId_1];
-            const thread2 = this.store.threads[localId_2];
+            const thread1 = this.store.Thread.records[localId_1];
+            const thread2 = this.store.Thread.records[localId_2];
             return thread2.lastInterestDateTime?.ts - thread1.lastInterestDateTime?.ts;
         });
     },
@@ -79,13 +79,13 @@ patch(ThreadService.prototype, {
      */
     goToOldestUnreadLivechatThread() {
         const oldestUnreadThread =
-            this.store.threads[
+            this.store.Thread.records[
                 Object.values(this.store.discuss.livechat.threads)
-                    .filter((localId) => this.store.threads[localId].isUnread)
+                    .filter((localId) => this.store.Thread.records[localId].isUnread)
                     .sort(
                         (localId_1, localId_2) =>
-                            this.store.threads[localId_1].lastInterestDateTime?.ts -
-                            this.store.threads[localId_2].lastInterestDateTime?.ts
+                            this.store.Thread.records[localId_1].lastInterestDateTime?.ts -
+                            this.store.Thread.records[localId_2].lastInterestDateTime?.ts
                     )[0]
             ];
         if (!oldestUnreadThread) {

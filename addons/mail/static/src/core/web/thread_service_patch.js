@@ -105,12 +105,12 @@ patch(ThreadService.prototype, {
     },
     getThread(resModel, resId) {
         const localId = createLocalId(resModel, resId);
-        if (localId in this.store.threads) {
+        if (localId in this.store.Thread.records) {
             if (resId === false) {
-                return this.store.threads[localId];
+                return this.store.Thread.records[localId];
             }
             // to force a reload
-            this.store.threads[localId].status = "new";
+            this.store.Thread.records[localId].status = "new";
         }
         const thread = this.insert({
             id: resId,
@@ -138,10 +138,10 @@ patch(ThreadService.prototype, {
      * @returns {import("@mail/core/common/follower_model").Follower}
      */
     insertFollower(data) {
-        let follower = this.store.followers[data.id];
+        let follower = this.store.Follower.records[data.id];
         if (!follower) {
-            this.store.followers[data.id] = new Follower();
-            follower = this.store.followers[data.id];
+            this.store.Follower.records[data.id] = new Follower();
+            follower = this.store.Follower.records[data.id];
         }
         Object.assign(follower, {
             followedThread: data.followedThread,
@@ -179,7 +179,9 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === channel.localId);
+        const chatWindow = this.store.ChatWindow.records.find(
+            (c) => c.threadLocalId === channel.localId
+        );
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -234,10 +236,12 @@ patch(ThreadService.prototype, {
         } else {
             thread.followers.delete(follower);
         }
-        delete this.store.followers[follower.id];
+        delete this.store.Follower.records[follower.id];
     },
     unpin(thread) {
-        const chatWindow = this.store.chatWindows.find((c) => c.threadLocalId === thread.localId);
+        const chatWindow = this.store.ChatWindow.records.find(
+            (c) => c.threadLocalId === thread.localId
+        );
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -256,7 +260,7 @@ patch(ThreadService.prototype, {
         this.chatWindowService.notifyState(chatWindow);
     },
     getRecentChannels() {
-        return Object.values(this.store.threads)
+        return Object.values(this.store.Thread.records)
             .filter((thread) => thread.model === "discuss.channel")
             .sort((a, b) => {
                 if (!a.lastInterestDateTime && !b.lastInterestDateTime) {

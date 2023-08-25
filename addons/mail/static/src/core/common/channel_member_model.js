@@ -20,7 +20,7 @@ export class ChannelMember extends Record {
     _store;
 
     get persona() {
-        return this._store.personas[this.personaLocalId];
+        return this._store.Persona.records[this.personaLocalId];
     }
 
     set persona(persona) {
@@ -28,11 +28,11 @@ export class ChannelMember extends Record {
     }
 
     get rtcSession() {
-        return this._store.rtcSessions[this.rtcSessionId];
+        return this._store.RtcSession.records[this.rtcSessionId];
     }
 
     get thread() {
-        return this._store.threads[createLocalId("discuss.channel", this.threadId)];
+        return this._store.Thread.records[createLocalId("discuss.channel", this.threadId)];
     }
 
     /**

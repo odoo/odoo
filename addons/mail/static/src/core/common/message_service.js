@@ -82,7 +82,7 @@ export class MessageService {
      * @returns {number}
      */
     getLastMessageId() {
-        return Object.values(this.store.messages).reduce(
+        return Object.values(this.store.Message.records).reduce(
             (lastMessageId, message) => Math.max(lastMessageId, message.id),
             0
         );
@@ -103,7 +103,7 @@ export class MessageService {
         const rawMentionedPartnerIds = rawMentions.partnerIds || [];
         const rawMentionedThreadIds = rawMentions.threadIds || [];
         for (const partnerId of rawMentionedPartnerIds) {
-            const partner = this.store.personas[createLocalId("partner", partnerId)];
+            const partner = this.store.Persona.records[createLocalId("partner", partnerId)];
             const index = body.indexOf(`@${partner.name}`);
             if (index === -1) {
                 continue;
@@ -111,7 +111,7 @@ export class MessageService {
             partners.push(partner);
         }
         for (const threadId of rawMentionedThreadIds) {
-            const thread = this.store.threads[createLocalId("discuss.channel", threadId)];
+            const thread = this.store.Thread.records[createLocalId("discuss.channel", threadId)];
             const index = body.indexOf(`#${thread.displayName}`);
             if (index === -1) {
                 continue;
@@ -222,13 +222,13 @@ export class MessageService {
                 id: data.res_id,
             });
         }
-        if (data.id in this.store.messages) {
-            message = this.store.messages[data.id];
+        if (data.id in this.store.Message.records) {
+            message = this.store.Message.records[data.id];
         } else {
             message = new Message();
             message._store = this.store;
-            this.store.messages[data.id] = message;
-            message = this.store.messages[data.id];
+            this.store.Message.records[data.id] = message;
+            message = this.store.Message.records[data.id];
         }
         this.update(message, data);
         // return reactive version
@@ -389,7 +389,7 @@ export class MessageService {
      * @returns {MessageReactions}
      */
     insertReactions(data) {
-        let reaction = this.store.messages[data.message.id]?.reactions.find(
+        let reaction = this.store.Message.records[data.message.id]?.reactions.find(
             ({ content }) => content === data.content
         );
         if (!reaction) {
@@ -434,10 +434,10 @@ export class MessageService {
      * @returns {Notification}
      */
     insertNotification(data) {
-        let notification = this.store.notifications[data.id];
+        let notification = this.store.Notification.records[data.id];
         if (!notification) {
-            this.store.notifications[data.id] = new Notification(this.store, data);
-            notification = this.store.notifications[data.id];
+            this.store.Notification.records[data.id] = new Notification(this.store, data);
+            notification = this.store.Notification.records[data.id];
         }
         this.updateNotification(notification, data);
         return notification;
@@ -474,7 +474,7 @@ export class MessageService {
     }
 
     insertNotificationGroups(data) {
-        let group = this.store.notificationGroups.find((group) => {
+        let group = this.store.NotificationGroup.records.find((group) => {
             return (
                 group.resModel === data.resModel &&
                 group.type === data.type &&
@@ -486,7 +486,9 @@ export class MessageService {
         }
         this.updateNotificationGroup(group, data);
         if (group.notifications.length === 0) {
-            removeFromArrayWithPredicate(this.store.notificationGroups, (gr) => gr.eq(group));
+            removeFromArrayWithPredicate(this.store.NotificationGroup.records, (gr) =>
+                gr.eq(group)
+            );
         }
         return group;
     }

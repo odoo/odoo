@@ -29,7 +29,7 @@ export class Notification extends Record {
     }
 
     get message() {
-        return this._store.messages[this.messageId];
+        return this._store.Message.records[this.messageId];
     }
 
     get isFailure() {

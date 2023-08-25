@@ -143,8 +143,8 @@ export class Thread extends Record {
             type: data.type,
             _store: store,
         });
-        store.threads[this.localId] = this;
-        return store.threads[this.localId];
+        store.Thread.records[this.localId] = this;
+        return store.Thread.records[this.localId];
     }
 
     get accessRestrictedToGroupText() {
@@ -157,7 +157,7 @@ export class Thread extends Record {
     }
 
     get activeRtcSession() {
-        return this._store.rtcSessions[this.activeRtcSessionId];
+        return this._store.RtcSession.records[this.activeRtcSessionId];
     }
 
     set activeRtcSession(session) {
@@ -224,7 +224,8 @@ export class Thread extends Record {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.personas[createLocalId("partner", this.chatPartnerId)].nameOrDisplayName
+                this._store.Persona.records[createLocalId("partner", this.chatPartnerId)]
+                    .nameOrDisplayName
             );
         }
         if (this.type === "group" && !this.name) {
@@ -420,7 +421,7 @@ export class Thread extends Record {
     }
 
     get rtcInvitingSession() {
-        return this._store.rtcSessions[this.invitingRtcSessionId];
+        return this._store.RtcSession.records[this.invitingRtcSessionId];
     }
 
     get hasNeedactionMessages() {
@@ -428,7 +429,9 @@ export class Thread extends Record {
     }
 
     get videoCount() {
-        return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
+        return Object.values(this._store.RtcSession.records).filter(
+            (session) => session.videoStream
+        ).length;
     }
 
     get lastInterestDateTime() {
@@ -451,6 +454,6 @@ export class Thread extends Record {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.messages[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
     }
 }
