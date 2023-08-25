@@ -15,7 +15,7 @@ class StockScrap(models.Model):
 
     name = fields.Char(
         'Reference',  default=lambda self: _('New'),
-        copy=False, required=True)
+        copy=False, readonly=True, required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
