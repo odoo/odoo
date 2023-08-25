@@ -112,7 +112,6 @@ class PosSession(models.Model):
             cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
             if cash_payment_method:
                 total_cash_payment = 0.0
-                last_session = session.search([('config_id', '=', session.config_id.id), ('id', '<', session.id)], limit=1)
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
                 total_cash_payment = result[0][0] or 0.0
                 if session.state == 'closed':
@@ -120,7 +119,7 @@ class PosSession(models.Model):
                 else:
                     session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
 
-                session.cash_register_balance_end = last_session.cash_register_balance_end_real + session.cash_register_total_entry_encoding
+                session.cash_register_balance_end = session.config_id.last_session_closing_cash + session.cash_register_total_entry_encoding
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
             else:
                 session.cash_register_total_entry_encoding = 0.0
@@ -245,8 +244,7 @@ class PosSession(models.Model):
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
             if session.config_id.cash_control and not session.rescue:
-                last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
-                session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
+                session.cash_register_balance_start = session.config_id.last_session_closing_cash # defaults to 0 if lastsession is empty
             else:
                 values['state'] = 'opened'
             session.write(values)
@@ -552,7 +550,6 @@ class PosSession(models.Model):
         cash_in_count = 0
         cash_out_count = 0
         cash_in_out_list = []
-        last_session = self.search([('config_id', '=', self.config_id.id), ('id', '!=', self.id)], limit=1)
         for cash_move in self.sudo().statement_line_ids.sorted('create_date'):
             if cash_move.amount > 0:
                 cash_in_count += 1
@@ -573,10 +570,10 @@ class PosSession(models.Model):
             'opening_notes': self.opening_notes,
             'default_cash_details': {
                 'name': default_cash_payment_method_id.name,
-                'amount': last_session.cash_register_balance_end_real
+                'amount': self.config_id.last_session_closing_cash
                           + total_default_cash_payment_amount
                           + sum(self.sudo().statement_line_ids.mapped('amount')),
-                'opening': last_session.cash_register_balance_end_real,
+                'opening': self.config_id.last_session_closing_cash,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
                 'id': default_cash_payment_method_id.id
