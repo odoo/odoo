@@ -906,6 +906,25 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'chrome_without_cash_move_permission', login="accountman")
 
+    def test_09_pos_barcodes_scan_product_pacaging(self):
+        product = self.env['product.product'].create({
+            'name': 'Packaging Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '12345601',
+        })
+
+        self.env['product.packaging'].create({
+            'name': 'Product Packaging 10 Products',
+            'qty': 10,
+            'product_id': product.id,
+            'barcode': '12345610',
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
