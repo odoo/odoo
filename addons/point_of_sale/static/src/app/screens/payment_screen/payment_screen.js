@@ -270,7 +270,7 @@ export class PaymentScreen extends Component {
 
         try {
             // 2. Invoice.
-            if (this.currentOrder.is_to_invoice()) {
+            if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                 if (syncOrderResult[0]?.account_move) {
                     await this.report.download("account.account_invoices", [
                         syncOrderResult[0].account_move,
@@ -364,6 +364,24 @@ export class PaymentScreen extends Component {
         }
 
         this.pos.showScreen(nextScreen);
+    }
+    /**
+     * This method is meant to be overriden by localization that do not want to print the invoice pdf
+     * every time they create an account move. For example, it can be overriden like this:
+     * ```
+     * shouldDownloadInvoice() {
+     *     const currentCountry = ...
+     *     if (currentCountry.code === 'FR') {
+     *         return false;
+     *     } else {
+     *         return super.shouldDownloadInvoice(); // or this._super(...arguments) depending on the odoo version.
+     *     }
+     * }
+     * ```
+     * @returns {boolean} true if the invoice pdf should be downloaded
+     */
+    shouldDownloadInvoice() {
+        return true;
     }
     get nextScreen() {
         return !this.error ? "ReceiptScreen" : "ProductScreen";
