@@ -27,11 +27,23 @@ export class SuggestionService {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
+<<<<<<< HEAD
                 await this.fetchPartners(cleanedSearchTerm, thread);
+||||||| parent of 50cea1d8427 (temp)
+                this.fetchPartners(cleanedSearchTerm, thread).then(onFetched);
+=======
+                await this.fetchPartners(cleanedSearchTerm, thread).then(onFetched);
+>>>>>>> 50cea1d8427 (temp)
                 break;
             }
             case "#":
+<<<<<<< HEAD
                 await this.fetchThreads(cleanedSearchTerm);
+||||||| parent of 50cea1d8427 (temp)
+                this.fetchThreads(cleanedSearchTerm).then(onFetched);
+=======
+                await this.fetchThreads(cleanedSearchTerm).then(onFetched);
+>>>>>>> 50cea1d8427 (temp)
                 break;
         }
     }
