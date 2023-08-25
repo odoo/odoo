@@ -1830,8 +1830,18 @@ QUnit.test(
         await Promise.resolve();
         assert.verifySteps(["First RPC"]);
         deferred2.resolve();
+<<<<<<< HEAD
         await contains(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
         await contains(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
         assert.verifySteps(["Second RPC"]);
+||||||| parent of eacab43b4f5 (temp)
+        assert.verifySteps(["Second RPC"]);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+=======
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
+        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+        assert.verifySteps(["Second RPC"]);
+>>>>>>> eacab43b4f5 (temp)
     }
 );
