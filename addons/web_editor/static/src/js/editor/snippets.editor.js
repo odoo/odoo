@@ -2241,16 +2241,18 @@ var SnippetsMenu = Widget.extend({
         // It still make sense for potential editable areas though. Although it
         // should be reviewed if we are to handle more hierarchy of nodes being
         // editable despite their non editable environment.
-        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable :not([contenteditable="true"])`;
+        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
         let filterFunc = function () {
-            if (!$(this).is(exclude)) {
-                return true;
+            // Exclude what it is asked to exclude.
+            if ($(this).is(exclude)) {
+                return false;
             }
+            // `o_editable_media` bypasses the `o_not_editable` class.
             if (this.classList.contains('o_editable_media')) {
                 return shouldEditableMediaBeEditable(this);
             }
-            return false;
+            return !$(this).is('.o_not_editable :not([contenteditable="true"])');
         };
         if (target) {
             const oldFilter = filterFunc;
