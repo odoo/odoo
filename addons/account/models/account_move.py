@@ -391,6 +391,20 @@ class AccountMove(models.Model):
         required=True,
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
     )
+    exchange_rate = fields.Float(
+        tracking=True,
+        compute='_compute_exchange_rate', store=True, readonly=False,
+        inverse='_inverse_exchange_rate',
+        help="Currency rate from company currency to document currency. Used to set a specific rate on the document.",
+    )
+    system_exchange_rate = fields.Float(
+        compute='_compute_system_exchange_rate',
+        help="Expected currency rate based on document invoice date, company, and currency"
+    )
+    uses_custom_rate = fields.Boolean(
+        compute='_compute_uses_custom_rate', store=True,
+        # default=False,
+    )
 
     # === Amount fields === #
     direction_sign = fields.Integer(
@@ -896,6 +910,27 @@ class AccountMove(models.Model):
                 or invoice.journal_id.company_id.currency_id
             )
             invoice.currency_id = currency
+
+    @api.depends('company_id', 'currency_id', 'invoice_date')
+    def _compute_system_exchange_rate(self):
+        draft_moves = self.filtered(lambda m: m.state == 'draft' and m.move_type != 'entry')
+        for move in draft_moves:
+            move.system_exchange_rate = self.env['res.currency']._get_conversion_rate(
+                from_currency=move.company_currency_id,
+                to_currency=move.currency_id,
+                company=move.company_id,
+                date=move.invoice_date or move.date or fields.Date.context_today(move),
+            ) if move.currency_id != move.company_currency_id else 1.0
+        (self - draft_moves).system_exchange_rate = 0.0
+
+    @api.depends('system_exchange_rate', 'uses_custom_rate')
+    def _compute_exchange_rate(self):
+        for move in self.filtered(lambda m: not m.uses_custom_rate and m.system_exchange_rate):
+            move.exchange_rate = move.system_exchange_rate
+
+    @api.depends('company_id', 'currency_id')
+    def _compute_uses_custom_rate(self):
+        self.uses_custom_rate = False
 
     @api.depends('move_type')
     def _compute_direction_sign(self):
@@ -1693,6 +1728,27 @@ class AccountMove(models.Model):
             l.move_id.is_invoice(True)
             and l.move_id.currency_id != l.currency_id
         ))
+
+    @api.onchange('exchange_rate')
+    def _inverse_exchange_rate(self):
+        for move in self:
+            move.uses_custom_rate = move.exchange_rate and move.exchange_rate != move.system_exchange_rate
+            if move._origin.exchange_rate and move.uses_custom_rate:
+                # Display this warning only on manual edits that are not resetting to system rate
+                diff = (move._origin.exchange_rate - move.exchange_rate) / move._origin.exchange_rate
+                if abs(diff) > 0.2:
+                    return {
+                        'warning': {
+                            'title': _("Warning for %s", self.currency_id.name),
+                            'message': _(
+                                "The new rate is quite far from the previous rate.\n"
+                                "Incorrect currency rates may cause critical problems, make sure the rate is correct!\n"
+                                "The previous rate was %s",
+                                self._origin.exchange_rate,
+                            )
+                        }
+                    }
+        # (self.line_ids | self.invoice_line_ids)._conditional_add_to_compute('currency_id', lambda l: True)
 
     @api.onchange('journal_id')
     def _inverse_journal_id(self):

@@ -1244,6 +1244,25 @@
                                                invisible="auto_post in ('no', 'at_date')"
                                                readonly="state != 'draft'"/>
                                         <field name="to_check"/>
+                                        <field name="system_exchange_rate" invisible="True"/>
+                                        <field name="uses_custom_rate" invisible="True"/>
+                                        <label for="exchange_rate" invisible="currency_id == company_currency_id"/>
+                                        <div class="d-flex" invisible="currency_id == company_currency_id">
+                                            <span class="me-1">1</span>
+                                            <field name="company_currency_id"
+                                                   class="w-auto"
+                                                   nolabel="True"
+                                                   options="{'no_open': True}"/>
+                                            <span class="mx-1">=</span>
+                                            <field name="exchange_rate"
+                                                   digits="[12,6]"
+                                                   nolabel="True"/>
+                                            <field name="currency_id"
+                                                   class="w-100 ms-1"
+                                                   nolabel="True"
+                                                   readonly="True"
+                                                   options="{'no_open': True}"/>
+                                        </div>
                                     </group>
                                 </group>
                             </page>

@@ -634,7 +634,7 @@ class AccountMoveLine(models.Model):
                 line.debit = line.balance if line.balance < 0.0 else 0.0
                 line.credit = -line.balance if line.balance > 0.0 else 0.0
 
-    @api.depends('currency_id', 'company_id', 'move_id.date')
+    @api.depends('currency_id', 'company_id', 'move_id.date', 'move_id.uses_custom_rate')
     def _compute_currency_rate(self):
         @lru_cache()
         def get_rate(from_currency, to_currency, company, date):
@@ -651,7 +651,7 @@ class AccountMoveLine(models.Model):
                     to_currency=line.currency_id,
                     company=line.company_id,
                     date=line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
-                )
+                ) if not line.move_id.uses_custom_rate else line.move_id.exchange_rate
             else:
                 line.currency_rate = 1
 

@@ -1088,6 +1088,75 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 208.01,
         })
 
+    def test_in_invoice_manual_currency_rate(self):
+        move_form = Form(self.invoice)
+        self.assertTrue(move_form._get_modifier('exchange_rate', 'invisible'))
+
+        move_form.currency_id = self.currency_data['currency']
+        move_form.save()
+
+        # Exchange rate is visible when using a foreign currency
+        self.assertFalse(move_form._get_modifier('exchange_rate', 'invisible'))
+
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 2.0 }
+            for _ in self.invoice.line_ids
+        ])
+
+        # Changing the date sets a new rate
+        with Form(self.invoice) as move_form:
+            move_form.invoice_date = fields.Date.from_string('2016-01-01')
+
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 3.0 }
+            for _ in self.invoice.line_ids
+        ])
+
+        # Fix the rate (difference greater than 20%)
+        with Form(self.invoice) as move_form:
+            with self.assertLogs('odoo.tests.form', level="WARNING") as log_catcher:
+                move_form.exchange_rate = 2.2
+
+        self.assertIn('The previous rate was 3.0', log_catcher.output[0])
+
+        # Fix the rate (difference less than 20%)
+        with Form(self.invoice) as move_form:
+            with self.assertNoLogs('odoo.tests.form', level='WARNING'):
+                move_form.exchange_rate = 2.5
+
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 2.5 }
+            for _ in self.invoice.line_ids
+        ])
+        self.assertTrue(self.invoice.uses_custom_rate)
+
+        # Changing the date should not change the fixed rate
+        with Form(self.invoice) as move_form:
+            move_form.invoice_date = fields.Date.from_string('2019-01-01')
+
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 2.5 }
+            for _ in self.invoice.line_ids
+        ])
+
+        forex_data = self.setup_multi_currency_data(
+            default_values={
+                'name': "World Coin",
+            },
+            rate2016=4.0,
+            rate2017=5.0,
+        )
+
+        # Changing the currency should change the rates (even though they've been fixed on another currency)
+        with Form(self.invoice) as move_form:
+            move_form.currency_id = forex_data['currency']
+
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 5.0 }
+            for _ in self.invoice.line_ids
+        ])
+        self.assertFalse(self.invoice.uses_custom_rate)
+
     def test_in_invoice_onchange_past_invoice_1(self):
         if self.env.ref('purchase.group_purchase_manager', raise_if_not_found=False):
             # `purchase` adds a view which makes `invoice_vendor_bill_id` invisible
