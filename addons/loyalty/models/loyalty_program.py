@@ -81,6 +81,14 @@ class LoyaltyProgram(models.Model):
     is_nominative = fields.Boolean(compute='_compute_is_nominative')
     is_payment_program = fields.Boolean(compute='_compute_is_payment_program')
 
+    payment_program_discount_product_id = fields.Many2one(
+        'product.product',
+        string='Discount Product',
+        compute='_compute_payment_program_discount_product_id',
+        readonly=True,
+        help="Product used in the sales order to apply the discount."
+    )
+
     # Technical field used for a label
     available_on = fields.Boolean("Available On", store=False,
         help="""
@@ -154,6 +162,14 @@ class LoyaltyProgram(models.Model):
     def _compute_is_payment_program(self):
         for program in self:
             program.is_payment_program = program.program_type in ('gift_card', 'ewallet')
+
+    @api.depends('reward_ids.discount_line_product_id')
+    def _compute_payment_program_discount_product_id(self):
+        for program in self:
+            if program.is_payment_program:
+                program.payment_program_discount_product_id = program.reward_ids[0].discount_line_product_id
+            else:
+                program.payment_program_discount_product_id = False
 
     @api.model
     def _program_items_name(self):
