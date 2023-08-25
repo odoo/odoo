@@ -1,13 +1,11 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
-import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -23,8 +21,8 @@ export class CallParticipantCard extends Component {
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.popover = usePopover(CallContextMenu);
         this.rpc = useService("rpc");
-        this.rtc = useRtc();
-        this.store = useStore();
+        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useState(useService("mail.store"));
         this.rootHover = useHover("root");
         this.threadService = useService("mail.thread");
         onMounted(() => {

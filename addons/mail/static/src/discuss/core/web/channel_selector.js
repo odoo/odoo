@@ -1,8 +1,6 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 import { cleanTerm } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
 
@@ -22,8 +20,8 @@ export class ChannelSelector extends Component {
     static template = "discuss.ChannelSelector";
 
     setup() {
-        this.discussCoreCommonService = useDiscussCoreCommon();
-        this.store = useStore();
+        this.discussCoreCommonService = useState(useService("discuss.core.common"));
+        this.store = useState(useService("mail.store"));
         this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");

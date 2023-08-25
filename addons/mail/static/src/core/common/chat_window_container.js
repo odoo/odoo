@@ -6,7 +6,6 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/core/common/chat_window_service";
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 
 import {
     Component,
@@ -42,8 +41,8 @@ export class ChatWindowContainer extends Component {
     }
 
     setup() {
-        this.messaging = useMessaging();
-        this.store = useStore();
+        this.messaging = useState(useService("mail.messaging"));
+        this.store = useState(useService("mail.store"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.ui = useState(useService("ui"));
         this.hiddenMenuRef = useRef("hiddenMenu");

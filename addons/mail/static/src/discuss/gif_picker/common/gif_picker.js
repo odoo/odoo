@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -76,7 +75,7 @@ export class GifPicker extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.orm = useService("orm");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.userService = useService("user");
         this.sequential = useSequential();
         useAutofocus();

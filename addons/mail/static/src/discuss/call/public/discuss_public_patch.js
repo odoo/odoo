@@ -1,15 +1,16 @@
 /* @odoo-module */
 
 import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
+import { useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussPublic.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rtc = useRtc();
+        this.rtc = useState(useService("discuss.rtc"));
     },
     async displayChannel() {
         super.displayChannel();

@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Discuss } from "@mail/core/common/discuss";
-import { useStore } from "@mail/core/common/messaging_hook";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
 
 import { Component, useEffect, useState } from "@odoo/owl";
@@ -15,7 +14,7 @@ export class DiscussPublic extends Component {
 
     setup() {
         this.threadService = useService("mail.thread");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.state = useState({
             welcome: this.props.data.discussPublicViewData.shouldDisplayWelcomeViewInitially,
         });

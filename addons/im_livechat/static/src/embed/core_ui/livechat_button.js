@@ -2,8 +2,6 @@
 
 import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
-import { useStore } from "@mail/core/common/messaging_hook";
-
 import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +12,7 @@ export class LivechatButton extends Component {
     static DEBOUNCE_DELAY = 500;
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         /** @type {import('@im_livechat/embed/core/livechat_service').LivechatService} */
         this.livechatService = useState(useService("im_livechat.livechat"));
         /** @type {import('@mail/core/common/thread_service').ThreadService} */

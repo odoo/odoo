@@ -1,13 +1,12 @@
 /* @odoo-module */
 
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
-
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class CallActionList extends Component {
     static components = { Dropdown, DropdownItem };
@@ -15,7 +14,7 @@ export class CallActionList extends Component {
     static template = "discuss.CallActionList";
 
     setup() {
-        this.rtc = useRtc();
+        this.rtc = useState(useService("discuss.rtc"));
     }
 
     get MORE() {

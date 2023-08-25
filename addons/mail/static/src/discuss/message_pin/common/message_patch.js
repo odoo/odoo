@@ -1,9 +1,10 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
+import { useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 patch(Message, {
@@ -13,7 +14,7 @@ patch(Message, {
 patch(Message.prototype, {
     setup() {
         super.setup();
-        this.messagePinService = useMessagePinService();
+        this.messagePinService = useState(useService("discuss.message.pin"));
     },
     onClickPin() {
         const isPinned = Boolean(this.messagePinService.getPinnedAt(this.message.id));

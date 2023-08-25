@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { reactive, useState } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 export class GifPickerService {
     hasGifPickerFeature = false;
@@ -35,9 +34,5 @@ export const gifPickerService = {
         return gifPickerService;
     },
 };
-
-export function useGifPickerService() {
-    return useState(useService("discuss.gifPicker"));
-}
 
 registry.category("services").add("discuss.gifPicker", gifPickerService);

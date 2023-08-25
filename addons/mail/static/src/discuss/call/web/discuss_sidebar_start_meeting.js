@@ -1,11 +1,9 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
-import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -17,9 +15,9 @@ export class DiscussSidebarStartMeeting extends Component {
     static components = {};
 
     setup() {
-        this.discussCoreCommonService = useDiscussCoreCommon();
-        this.rtc = useRtc();
-        this.store = useStore();
+        this.discussCoreCommonService = useState(useService("discuss.core.common"));
+        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useState(useService("mail.store"));
     }
 
     async onClickStartMeeting() {

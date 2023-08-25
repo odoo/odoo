@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { reactive, useState } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 export const OTHER_LONG_TYPING = 60000;
 
@@ -103,7 +102,3 @@ export const discussTypingService = {
 };
 
 registry.category("services").add("discuss.typing", discussTypingService);
-
-export function useTypingService() {
-    return useState(useService("discuss.typing"));
-}

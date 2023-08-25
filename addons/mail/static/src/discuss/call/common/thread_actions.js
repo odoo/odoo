@@ -2,11 +2,11 @@
 
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
-import { useComponent } from "@odoo/owl";
+import { useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 threadActionsRegistry
     .add("call", {
@@ -26,7 +26,7 @@ threadActionsRegistry
         sequence: 10,
         setup() {
             const component = useComponent();
-            component.rtc = useRtc();
+            component.rtc = useState(useService("discuss.rtc"));
         },
     })
     .add("settings", {
@@ -49,7 +49,7 @@ threadActionsRegistry
         },
         setup() {
             const component = useComponent();
-            component.rtc = useRtc();
+            component.rtc = useState(useService("discuss.rtc"));
         },
         toggle: true,
     });
