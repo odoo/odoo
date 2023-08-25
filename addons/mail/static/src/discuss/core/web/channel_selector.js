@@ -66,10 +66,7 @@ export class ChannelSelector extends Component {
         );
         useEffect(
             () => {
-                this.state.navigableListProps.isLoading = true;
-                this.fetchSuggestions().then(
-                    () => (this.state.navigableListProps.isLoading = false)
-                );
+                this.fetchSuggestions();
             },
             () => [this.state.value]
         );
@@ -84,11 +81,14 @@ export class ChannelSelector extends Component {
                     ["name", "ilike", cleanedTerm],
                 ];
                 const fields = ["name"];
-                const results = await this.sequential(() =>
-                    this.orm.searchRead("discuss.channel", domain, fields, {
+                const results = await this.sequential(async () => {
+                    this.state.navigableListProps.isLoading = true;
+                    const res = await this.orm.searchRead("discuss.channel", domain, fields, {
                         limit: 10,
-                    })
-                );
+                    });
+                    this.state.navigableListProps.isLoading = false;
+                    return res;
+                });
                 if (!results) {
                     this.state.navigableListProps.options = [];
                     return;
@@ -109,13 +109,16 @@ export class ChannelSelector extends Component {
                 return;
             }
             if (this.props.category.id === "chats") {
-                const results = await this.sequential(() =>
-                    this.orm.call("res.partner", "im_search", [
+                const results = await this.sequential(async () => {
+                    this.state.navigableListProps.isLoading = true;
+                    const res = await this.orm.call("res.partner", "im_search", [
                         cleanedTerm,
                         10,
                         this.state.selectedPartners,
-                    ])
-                );
+                    ]);
+                    this.state.navigableListProps.isLoading = false;
+                    return res;
+                });
                 if (!results) {
                     this.state.navigableListProps.options = [];
                     return;
