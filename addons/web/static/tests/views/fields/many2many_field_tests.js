@@ -1053,7 +1053,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="timmy" widget="many2many" can_create="false" can_write="false"/>
+                    <field name="timmy" widget="many2many" can_create="False" can_write="False"/>
                 </form>`,
             mockRPC(route, args) {
                 if (

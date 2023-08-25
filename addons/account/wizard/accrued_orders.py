@@ -14,12 +14,6 @@ class AccruedExpenseRevenue(models.TransientModel):
     _description = 'Accrued Orders Wizard'
     _check_company_auto = True
 
-    def _get_account_domain(self):
-        if self.env.context.get('active_model') == 'purchase.order':
-            return [('account_type', '=', 'liability_current')]
-        else:
-            return [('account_type', '=', 'asset_current')]
-
     def _get_default_company(self):
         if not self._context.get('active_model'):
             return
@@ -56,7 +50,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         required=True,
         string='Accrual Account',
         check_company=True,
-        domain=_get_account_domain,
+        domain="[('account_type', '=', 'liability_current')] if context.get('active_model') == 'purchase.order' else [('account_type', '=', 'asset_current')]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')

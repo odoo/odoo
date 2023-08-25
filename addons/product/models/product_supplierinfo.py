@@ -18,14 +18,6 @@ class SupplierInfo(models.Model):
                 product_id = self.env[model].browse(active_id).exists()
         return product_id
 
-    def _domain_product_id(self):
-        domain = "product_tmpl_id and [('product_tmpl_id', '=', product_tmpl_id)] or []"
-        if self.env.context.get('base_model_name') == 'product.template':
-            domain = "[('product_tmpl_id', '=', parent.id)]"
-        elif self.env.context.get('base_model_name') == 'product.product':
-            domain = "[('product_tmpl_id', '=', parent.product_tmpl_id)]"
-        return domain
-
     partner_id = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
@@ -58,7 +50,10 @@ class SupplierInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant', check_company=True,
-        domain=_domain_product_id, default=_default_product_id,
+        domain="[('product_tmpl_id', '=', parent.id)] if context.get('base_model_name') == 'product.template' else"
+            " [('product_tmpl_id', '=', parent.product_tmpl_id)] if context.get('base_model_name') == 'product.product' else"
+            " [('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
+        default=_default_product_id,
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', check_company=True,

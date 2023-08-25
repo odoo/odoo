@@ -36,13 +36,6 @@ class Board(models.AbstractModel):
         return res
 
     @api.model
-    def get_views(self, views, options=None):
-        res = super().get_views(views, options)
-        for view in res['views'].values():
-            view['toolbar'] = {'print': [], 'action': [], 'relate': []}
-        return res
-
-    @api.model
     def _arch_preprocessing(self, arch):
         from lxml import etree
 

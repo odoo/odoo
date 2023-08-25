@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { nbsp } from "@web/core/utils/strings";
-
 /**
  * XML document to create new elements from. The fact that this is a "text/xml"
  * document ensures that tagNames and attribute names are case sensitive.
  */
+const serializer = new XMLSerializer();
 const parser = new DOMParser();
 const xmlDocument = parser.parseFromString("<templates/>", "text/xml");
 
@@ -13,13 +12,29 @@ function hasParsingError(parsedDocument) {
     return parsedDocument.getElementsByTagName("parsererror").length > 0;
 }
 
-export class XMLParser {
-    /**
-     * to override. Should return the parsed content of the arch.
-     * It can call the visitArch function if desired
-     */
-    parse() {}
+/**
+ * @param {string} str
+ * @returns {Element}
+ */
+export function parseXML(str) {
+    const xml = parser.parseFromString(str, "text/xml");
+    if (hasParsingError(xml)) {
+        throw new Error(
+            `An error occured while parsing ${str}: ${xml.getElementsByTagName("parsererror")}`
+        );
+    }
+    return xml.documentElement;
+}
 
+/**
+ * @param {Element} xml
+ * @returns {string}
+ */
+export function serializeXML(xml) {
+    return serializer.serializeToString(xml);
+}
+
+export class XMLParser {
     /**
      * @param {Element | string} xml
      * @param {(el: Element, visitChildren: () => any) => any} callback
@@ -45,18 +60,11 @@ export class XMLParser {
     }
 
     /**
-     * @param {string} arch
+     * @param {string} str
      * @returns {Element}
      */
-    parseXML(arch) {
-        const cleanedArch = arch.replace(/&amp;nbsp;/g, nbsp);
-        const xml = parser.parseFromString(cleanedArch, "text/xml");
-        if (hasParsingError(xml)) {
-            throw new Error(
-                `An error occured while parsing ${arch}: ${xml.getElementsByTagName("parsererror")}`
-            );
-        }
-        return xml.documentElement;
+    parseXML(str) {
+        return parseXML(str);
     }
 }
 

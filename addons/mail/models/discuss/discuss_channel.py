@@ -68,7 +68,7 @@ class Channel(models.Model):
     channel_member_ids = fields.One2many(
         'discuss.channel.member', 'channel_id', string='Members',
         groups='base.group_user')
-    pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=lambda self: [('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
+    pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=[('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)

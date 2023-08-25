@@ -5,6 +5,8 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
+import { nbsp } from "@web/core/utils/strings";
+import { parseXML, serializeXML } from "@web/core/utils/xml";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
@@ -159,6 +161,7 @@ const STANDARD_PROPS = [
     "searchModel",
 ];
 
+const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
 export class View extends Component {
     setup() {
         const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
@@ -274,9 +277,13 @@ export class View extends Component {
             actionMenus = viewDescription.actionMenus;
         }
 
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(arch, "text/xml");
-        const rootNode = xml.documentElement;
+        const rootNode = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
+        for (const action of ACTIONS) {
+            if (action in this.props.context && !this.props.context[action]) {
+                rootNode.setAttribute(action, "0");
+            }
+        }
+        arch = serializeXML(rootNode);
 
         let subType = rootNode.getAttribute("js_class");
         const bannerRoute = rootNode.getAttribute("banner_route");

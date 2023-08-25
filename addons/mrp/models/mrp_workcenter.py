@@ -350,7 +350,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     name = fields.Char('Blocking Reason', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
-    loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
+    loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=[('loss_type', 'in', ['quality', 'availability'])], string='Category')
     loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', store=True, readonly=False)
 
     def _convert_to_duration(self, date_start, date_stop, workcenter=False):

@@ -148,7 +148,7 @@ class TestACL(TransactionCaseWithUserDemo):
 
         # demo not part of the group_system, create edit and delete must be False
         for method in methods:
-            self.assertEqual(view_arch.get(method), 'false')
+            self.assertEqual(view_arch.get(method), 'False')
 
         # demo part of the group_system, create edit and delete must not be specified
         company = self.env['res.company'].with_user(self.env.ref("base.user_admin"))
@@ -168,14 +168,14 @@ class TestACL(TransactionCaseWithUserDemo):
         field_node = view_arch.xpath("//field[@name='currency_id']")
         self.assertTrue(len(field_node), "currency_id field should be in company from view")
         for method in methods:
-            self.assertEqual(field_node[0].get('can_' + method), 'false')
+            self.assertEqual(field_node[0].get('can_' + method), 'False')
 
         company = self.env['res.company'].with_user(self.env.ref("base.user_admin"))
         company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
         field_node = view_arch.xpath("//field[@name='currency_id']")
         for method in methods:
-            self.assertEqual(field_node[0].get('can_' + method), 'true')
+            self.assertEqual(field_node[0].get('can_' + method), 'True')
 
     def test_get_views_fields(self):
         """ Tests fields restricted to group_system are not passed when calling `get_views` as demo
