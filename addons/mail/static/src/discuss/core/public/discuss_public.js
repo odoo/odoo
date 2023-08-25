@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Discuss } from "@mail/core/common/discuss";
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
 
 import { Component, useEffect, useState } from "@odoo/owl";
@@ -14,7 +14,6 @@ export class DiscussPublic extends Component {
     static template = "mail.DiscussPublic";
 
     setup() {
-        this.messaging = useMessaging();
         this.threadService = useService("mail.thread");
         this.store = useStore();
         this.state = useState({

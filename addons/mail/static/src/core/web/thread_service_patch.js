@@ -20,7 +20,6 @@ patch(ThreadService.prototype, {
     setup(env, services) {
         super.setup(env, services);
         this.action = services.action;
-        this.attachmentService = services["mail.attachment"];
         this.activityService = services["mail.activity"];
         this.chatWindowService = services["mail.chat_window"];
     },
@@ -281,11 +280,5 @@ patch(ThreadService.prototype, {
 });
 
 patch(threadService, {
-    dependencies: [
-        ...threadService.dependencies,
-        "action",
-        "mail.activity",
-        "mail.attachment",
-        "mail.chat_window",
-    ],
+    dependencies: [...threadService.dependencies, "action", "mail.activity", "mail.chat_window"],
 });

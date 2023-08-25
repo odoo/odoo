@@ -13,7 +13,6 @@ export class MessageReactions extends Component {
 
     setup() {
         this.user = useService("user");
-        this.messaging = useService("mail.messaging");
         this.store = useStore();
         this.ui = useService("ui");
         this.messageService = useState(useService("mail.message"));

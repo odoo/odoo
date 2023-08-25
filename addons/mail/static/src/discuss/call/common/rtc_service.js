@@ -99,11 +99,8 @@ export class Rtc {
         this.store = services["mail.store"];
         this.notification = services.notification;
         this.rpc = services.rpc;
-        this.channelMemberService = services["discuss.channel.member"];
         this.soundEffectsService = services["mail.sound_effects"];
         this.userSettingsService = services["mail.user_settings"];
-        this.threadService = services["mail.thread"];
-        this.personaService = services["mail.persona"];
         this.state = reactive({
             hasPendingRequest: false,
             selfSession: undefined,
@@ -1536,11 +1533,8 @@ export class Rtc {
 export const rtcService = {
     dependencies: [
         "bus_service",
-        "discuss.channel.member",
-        "mail.persona",
         "mail.sound_effects",
         "mail.store",
-        "mail.thread",
         "mail.user_settings",
         "notification",
         "rpc",

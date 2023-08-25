@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { useMessaging } from "@mail/core/common/messaging_hook";
-
 import { Component, onMounted, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -18,7 +16,6 @@ export class ActivityMarkAsDone extends Component {
     }
 
     setup() {
-        this.messaging = useMessaging();
         this.threadService = useState(useService("mail.thread"));
         this.textArea = useRef("textarea");
         onMounted(() => {
