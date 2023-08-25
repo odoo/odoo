@@ -39,3 +39,29 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add("BarcodeScanningProductPackagingTour", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+
+            // Add the product with its barcode
+            ProductScreen.do.scan_barcode('12345601');
+            ProductScreen.check.selectedOrderlineHas('Packaging Product', 1);
+            ProductScreen.do.scan_barcode('12345601');
+            ProductScreen.check.selectedOrderlineHas('Packaging Product', 2);
+
+            // Add the product packaging with its barcode
+            ProductScreen.do.scan_barcode('12345610');
+            ProductScreen.check.selectedOrderlineHas('Packaging Product', 12);
+            ProductScreen.do.scan_barcode('12345610');
+            ProductScreen.check.selectedOrderlineHas('Packaging Product', 22);
+
+            return getSteps();
+        }
+    });
