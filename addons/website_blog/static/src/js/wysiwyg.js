@@ -25,7 +25,7 @@ Wysiwyg.include({
      */
     async startEdition() {
         await this._super(...arguments);
-        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+        this.options.document.defaultView.$('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },
 
     //--------------------------------------------------------------------------
