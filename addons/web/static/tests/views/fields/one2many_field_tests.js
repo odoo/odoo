@@ -12043,7 +12043,6 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_data_cell").innerText, "leonardo");
 
         await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
-        await click(target.querySelector(".o_field_widget[name=turtles] .o_pager_next"));
         assert.ok(target.querySelector(".o_field_widget[name=turtles] .o_pager_next").disabled);
 
         readDefs[1].resolve();

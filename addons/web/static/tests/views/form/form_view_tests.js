@@ -9688,7 +9688,8 @@ QUnit.module("Views", (hooks) => {
 
         click(target.querySelector(".modal-footer button.btn-primary"));
         await Promise.resolve();
-        await click(target.querySelector(".modal-footer button.btn-primary"));
+        assert.ok(target.querySelector(".modal-footer button.btn-primary").disabled);
+        await nextTick();
         assert.verifySteps(["create", "web_read", "execute_action"]);
     });
 
@@ -10557,7 +10558,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector('.o-tooltip--technical > li[data-item="invisible"]').lastChild
                 .textContent,
-            'product_id == 33',
+            "product_id == 33",
             "invisible should be properly stringified"
         );
 
@@ -11172,10 +11173,9 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
+            assert.ok(target.querySelector(".o_form_view button.mybutton").disabled);
             await click(target.querySelector(".o_form_view .o_content button.btn-primary"));
             assert.verifySteps(["doActionButton"]);
-            await click(target.querySelector(".o_form_view button.mybutton"));
-            assert.verifySteps([]);
         }
     );
 
@@ -13780,7 +13780,9 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
         serverData.models.partner_type.records.push({
-            id: 3, display_name: 'very'.repeat(30) + '_long_name', color: 10,
+            id: 3,
+            display_name: "very".repeat(30) + "_long_name",
+            color: 10,
         });
 
         const record = serverData.models.partner.records[0];
@@ -13809,11 +13811,11 @@ QUnit.module("Views", (hooks) => {
             </form>`,
         });
 
-        const table = target.querySelector('table');
-        const group = target.querySelector('.o_inner_group:last-child');
+        const table = target.querySelector("table");
+        const group = target.querySelector(".o_inner_group:last-child");
 
         assert.equal(group.clientWidth, group.scrollWidth);
-        table.style.tableLayout = 'auto';
+        table.style.tableLayout = "auto";
         assert.ok(group.clientWidth < group.scrollWidth);
     });
 });

@@ -446,6 +446,9 @@ export async function triggerScroll(
 }
 
 export function click(el, selector, skipVisibilityCheck = false) {
+    if (el.disabled) {
+        throw new Error("Can't click on a disabled button");
+    }
     return triggerEvents(
         el,
         selector,

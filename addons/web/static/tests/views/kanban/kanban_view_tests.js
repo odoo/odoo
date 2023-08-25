@@ -8217,7 +8217,8 @@ QUnit.module("Views", (hooks) => {
             },
         });
         click(target.querySelector("button.a1"));
-        await click(target.querySelector("button.a1"));
+        assert.ok(target.querySelector("button.a1").disabled);
+        await nextTick();
 
         assert.strictEqual(count, 1, "should have triggered an execute action only once");
         assert.verifySteps(
