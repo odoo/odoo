@@ -28,11 +28,11 @@ export class SuggestionService {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                this.fetchPartners(cleanedSearchTerm, thread).then(onFetched);
+                await this.fetchPartners(cleanedSearchTerm, thread).then(onFetched);
                 break;
             }
             case "#":
-                this.fetchThreads(cleanedSearchTerm).then(onFetched);
+                await this.fetchThreads(cleanedSearchTerm).then(onFetched);
                 break;
         }
     }
