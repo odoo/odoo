@@ -2,7 +2,8 @@
 
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { useTypingService } from "@mail/discuss/typing/common/typing_service";
+import { useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -16,6 +17,6 @@ patch(ThreadIcon.prototype, {
      */
     setup() {
         super.setup();
-        this.typingService = useTypingService();
+        this.typingService = useState(useService("discuss.typing"));
     },
 });

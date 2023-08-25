@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { useTypingService } from "@mail/discuss/typing/common/typing_service";
+import { useService } from "@web/core/utils/hooks";
 
 export class ImStatus extends Component {
     static props = ["persona", "className?", "style?", "thread?"];
@@ -10,6 +10,6 @@ export class ImStatus extends Component {
     static defaultProps = { className: "", style: "" };
     static components = { Typing };
     setup() {
-        this.typingService = useTypingService();
+        this.typingService = useState(useService("discuss.typing"));
     }
 }

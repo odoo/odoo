@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 
@@ -19,7 +18,7 @@ export class DiscussSidebarMailboxes extends Component {
     static components = { ThreadIcon };
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.threadService = useState(useService("mail.thread"));
     }
 

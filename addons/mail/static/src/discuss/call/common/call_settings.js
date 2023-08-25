@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
@@ -17,7 +16,7 @@ export class CallSettings extends Component {
     setup() {
         this.notification = useService("notification");
         this.userSettings = useState(useService("mail.user_settings"));
-        this.rtc = useRtc();
+        this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({
             userDevices: [],
         });

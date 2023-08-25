@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
-
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export const discussSidebarItemsRegistry = registry.category("mail.discuss_sidebar_items");
 
@@ -18,7 +17,7 @@ export class DiscussSidebar extends Component {
     static components = {};
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
     }
 
     get discussSidebarItems() {

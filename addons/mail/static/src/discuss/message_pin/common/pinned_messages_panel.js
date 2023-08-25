@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
@@ -21,7 +20,7 @@ export class PinnedMessagesPanel extends Component {
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
         this.ui = useState(useService("ui"));
-        this.messagePinService = useMessagePinService();
+        this.messagePinService = useState(useService("discuss.message.pin"));
         onWillStart(() => {
             this.messagePinService.fetchPinnedMessages(this.props.thread);
         });

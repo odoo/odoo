@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { useStore } from "@mail/core/common/messaging_hook";
 import {
     useAutoScroll,
     useScrollPosition,
@@ -56,7 +55,7 @@ export class Thread extends Component {
 
     setup() {
         this.escape = escape;
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.state = useState({ isReplyingTo: false, showJumpPresent: false });
         this.threadService = useState(useService("mail.thread"));
         if (!this.env.inChatter || !this.props.hasScrollAdjust) {

@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { GifPicker, useGifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
-import { useGifPickerService } from "@mail/discuss/gif_picker/common/gif_picker_service";
 import { Composer } from "@mail/core/common/composer";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -19,7 +18,7 @@ const composerPatch = {
         Object.assign(this.KEYBOARD, { GIF: "Gif" });
         onExternalClick("gif-picker", () => (this.state.keyboard = this.KEYBOARD.NONE));
         this.ui = useState(useService("ui"));
-        this.gifPickerService = useGifPickerService();
+        this.gifPickerService = useState(useService("discuss.gifPicker"));
         this.gifPicker = useGifPicker("gif-button", {
             onSelected: this.sendGifMessage.bind(this),
         });

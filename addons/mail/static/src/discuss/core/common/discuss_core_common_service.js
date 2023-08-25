@@ -3,11 +3,10 @@
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { createLocalId } from "@mail/utils/common/misc";
 
-import { markup, reactive, useState } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 export class DiscussCoreCommon {
     /**
@@ -323,9 +322,5 @@ export const discussCoreCommon = {
         return discussCoreCommon;
     },
 };
-
-export function useDiscussCoreCommon() {
-    return useState(useService("discuss.core.common"));
-}
 
 registry.category("services").add("discuss.core.common", discussCoreCommon);

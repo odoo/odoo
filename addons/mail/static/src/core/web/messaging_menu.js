@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { ImStatus } from "@mail/core/common/im_status";
-import { useStore } from "@mail/core/common/messaging_hook";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { createLocalId } from "@mail/utils/common/misc";
@@ -20,7 +19,7 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.hasTouch = hasTouch;
         this.notification = useState(useService("mail.notification.permission"));
         this.chatWindowService = useState(useService("mail.chat_window"));

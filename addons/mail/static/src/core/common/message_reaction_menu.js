@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { useStore } from "@mail/core/common/messaging_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
 import {
@@ -24,7 +23,7 @@ export class MessageReactionMenu extends Component {
     setup() {
         this.threadService = useService("mail.thread");
         this.root = useRef("root");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.messageService = useService("mail.message");
         this.state = useState({

@@ -3,11 +3,10 @@
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 
-import { markup, reactive, useState } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 export const OTHER_LONG_TYPING = 60000;
 
@@ -229,7 +228,3 @@ export const messagePinService = {
 };
 
 registry.category("services").add("discuss.message.pin", messagePinService);
-
-export function useMessagePinService() {
-    return useState(useService("discuss.message.pin"));
-}

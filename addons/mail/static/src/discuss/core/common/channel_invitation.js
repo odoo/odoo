@@ -2,8 +2,6 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { useStore } from "@mail/core/common/messaging_hook";
-import { useDiscussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
 
 import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 
@@ -18,9 +16,9 @@ export class ChannelInvitation extends Component {
     static template = "discuss.ChannelInvitation";
 
     setup() {
-        this.discussCoreCommonService = useDiscussCoreCommon();
+        this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.orm = useService("orm");
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");

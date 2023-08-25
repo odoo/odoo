@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { useMessaging } from "@mail/core/common/messaging_hook";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import { deserializeDateTime, formatDate, formatDateTime } from "@web/core/l10n/dates";
@@ -15,13 +14,14 @@ import {
 } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { useState } from "@odoo/owl";
 
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
         this.action = useService("action");
         this.userService = useService("user");
-        this.messaging = useMessaging();
+        this.messaging = useState(useService("mail.messaging"));
     },
     getAuthorText() {
         return this.hasAuthorClickable() ? _t("Open profile") : undefined;

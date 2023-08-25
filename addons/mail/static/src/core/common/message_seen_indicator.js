@@ -1,8 +1,7 @@
 /* @odoo-module */
 
-import { useStore } from "@mail/core/common/messaging_hook";
-
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -15,7 +14,7 @@ export class MessageSeenIndicator extends Component {
     static props = ["message", "thread", "className?"];
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
     }
 
     get hasEveryoneSeen() {

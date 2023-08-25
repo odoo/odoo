@@ -2,7 +2,6 @@
 
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
-import { useStore } from "@mail/core/common/messaging_hook";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -42,7 +41,7 @@ export class ChatWindow extends Component {
     static template = "mail.ChatWindow";
 
     setup() {
-        this.store = useStore();
+        this.store = useState(useService("mail.store"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.threadService = useState(useService("mail.thread"));
         this.messageEdition = useMessageEdition();
