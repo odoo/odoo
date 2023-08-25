@@ -248,6 +248,10 @@
                             <field name="employee_ids" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
+                        <field name="leave_type_increases_duration" invisible="True"/>
+                        <div name="duration_warning" invisible="not leave_type_increases_duration" class="alert alert-warning mb-0" role="alert">
+                            <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
+                        </div><br />
                         <group name="col_left">
                             <field name="employee_company_id" invisible="1"/>
                             <field name="holiday_status_id" force_save="1"

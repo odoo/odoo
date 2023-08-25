@@ -10,6 +10,7 @@ from collections import namedtuple, defaultdict
 
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
+from math import ceil
 from pytz import timezone, UTC
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -292,6 +293,7 @@ class HolidaysRequest(models.Model):
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
     has_mandatory_day = fields.Boolean(compute='_compute_has_mandatory_day')
+    leave_type_increases_duration = fields.Boolean(compute='_compute_leave_type_increases_duration')
 
     _sql_constraints = [
         ('type_value',
@@ -496,7 +498,13 @@ class HolidaysRequest(models.Model):
         else:
             self.has_mandatory_day = False
 
-    def _get_duration(self, resource_calendar=None):
+    @api.depends('leave_type_request_unit', 'number_of_days')
+    def _compute_leave_type_increases_duration(self):
+        for holiday in self:
+            days = holiday._get_duration(check_leave_type=False)[0]
+            holiday.leave_type_increases_duration = holiday.leave_type_request_unit == 'day' and days < holiday.number_of_days
+
+    def _get_duration(self, check_leave_type=True, resource_calendar=None):
         """
         This method is factored out into a separate method from
         _compute_duration so it can be hooked and called without necessarily
@@ -516,8 +524,14 @@ class HolidaysRequest(models.Model):
                       # When searching for resource leave intervals, we exclude the one that
                       # is related to the leave we're currently trying to compute for.
                       ('holiday_id', '!=', self.id)]
-            work_days_data = self.employee_id._get_work_days_data_batch(self.date_from, self.date_to, domain=domain, calendar=resource_calendar)[self.employee_id.id]
-            hours, days = work_days_data['hours'], work_days_data['days']
+            if self.leave_type_request_unit == 'day' and check_leave_type:
+                # list of tuples (day, hours)
+                work_time_per_day_list = self.employee_id.list_work_time_per_day(self.date_from, self.date_to, calendar=resource_calendar, domain=domain)
+                days = len(work_time_per_day_list)
+                hours = sum(map(lambda t: t[1], work_time_per_day_list))
+            else:
+                work_days_data = self.employee_id._get_work_days_data_batch(self.date_from, self.date_to, domain=domain, calendar=resource_calendar)[self.employee_id.id]
+                hours, days = work_days_data['hours'], work_days_data['days']
         else:
             today_hours = resource_calendar.get_work_hours_count(
                 datetime.combine(self.date_from.date(), time.min),
@@ -525,10 +539,12 @@ class HolidaysRequest(models.Model):
                 False)
             hours = resource_calendar.get_work_hours_count(self.date_from, self.date_to)
             days = hours / (today_hours or HOURS_PER_DAY)
+        if self.leave_type_request_unit == 'day' and check_leave_type:
+            days = ceil(days)
         return (days, hours)
 
 
-    @api.depends('date_from', 'date_to', 'resource_calendar_id')
+    @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit')
     def _compute_duration(self):
         for holiday in self:
             days, hours = holiday._get_duration()
