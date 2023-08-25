@@ -35,6 +35,7 @@ export class Record extends DataPoint {
         this._onUpdate = options.onUpdate || (() => {});
         this._parentRecord = options.parentRecord;
         this._virtualId = options.virtualId || false;
+        this._isEvalContextReady = false;
 
         // Be careful that pending changes might not have been notified yet, so the "dirty" flag may
         // be false even though there are changes in a field. Consider calling "isDirty()" instead.
@@ -73,6 +74,7 @@ export class Record extends DataPoint {
     }
 
     _setData(data) {
+        this._isEvalContextReady = false;
         if (this.resId) {
             this._values = this._parseServerValues(data);
             this._changes = markRaw({});
@@ -915,14 +917,10 @@ export class Record extends DataPoint {
         const dataContext = this._computeDataContext();
         Object.assign(this.evalContext, evalContext, dataContext.withoutVirtualIds);
         Object.assign(this.evalContextWithVirtualIds, evalContext, dataContext.withVirtualIds);
+        this._isEvalContextReady = true;
 
-        for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
-            if (
-                this.fields[fieldName].type === "one2many" ||
-                this.fields[fieldName].type === "many2many"
-            ) {
-                value._updateContext(getFieldContext(this, fieldName));
-            }
+        if (!this._parentRecord || this._parentRecord._isEvalContextReady) {
+            this._updateChildrenContext();
         }
     }
 
@@ -1030,6 +1028,14 @@ export class Record extends DataPoint {
         }
         if (save) {
             return this._save();
+        }
+    }
+
+    _updateChildrenContext() {
+        for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
+            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                value._updateContext(getFieldContext(this, fieldName));
+            }
         }
     }
 }

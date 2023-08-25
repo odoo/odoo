@@ -14087,4 +14087,44 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, "[name='display_name'].o_readonly_modifier");
         assert.containsNone(target, "[name='int_field'].o_required_modifier");
     });
+
+    QUnit.test(
+        "add record in nested x2many with context depending on parent",
+        async function (assert) {
+            assert.expect(1);
+
+            serverData.models.partner.records[0].p = [1];
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="turtles" widget="many2many_tags" context="{'x': parent.int_field, 'y': 2}"/>
+                        </tree>
+                    </field>
+                </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_read" && args.model === "turtle") {
+                        assert.deepEqual(args.kwargs.context, {
+                            bin_size: true,
+                            lang: "en",
+                            tz: "taht",
+                            uid: 7,
+                            x: 10,
+                            y: 2,
+                        });
+                    }
+                },
+                resId: 1,
+            });
+
+            await click(target, ".o_data_cell");
+            await click(target.querySelector("div[name=turtles] .o-autocomplete.dropdown input"));
+            await click(target.querySelector(".o-autocomplete--dropdown-menu li a"));
+        }
+    );
 });
