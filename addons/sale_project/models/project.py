@@ -471,7 +471,7 @@ class Project(models.Model):
                 total_invoiced += downpayment_amount_invoiced
                 total_to_invoice -= downpayment_amount_invoiced
             product_read_group = self.env['product.product'].sudo()._read_group(
-                [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
+                [('id', 'in', list(sols_per_product))],
                 ['invoice_policy', 'service_type', 'type'],
                 ['id:array_agg'],
             )
