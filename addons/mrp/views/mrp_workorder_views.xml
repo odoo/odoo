@@ -90,7 +90,7 @@
                   invisible="production_state == 'draft'"
                   readonly="is_user_working" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
-                  column_invisible="parent.state == 'draft'"
+                  column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working"/>
