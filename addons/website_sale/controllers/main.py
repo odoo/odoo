@@ -1532,14 +1532,17 @@ class WebsiteSale(http.Controller):
            did go to a payment.provider website but closed the tab without
            paying / canceling
         """
-        carrier_id = post.get('carrier_id')
-        keep_carrier = post.get('keep_carrier', False)
-        if keep_carrier:
-            keep_carrier = bool(int(keep_carrier))
-        if carrier_id:
-            carrier_id = int(carrier_id)
         order = request.website.sale_get_order()
-        if order:
+
+        if order and (request.httprequest.method == 'POST' or not order.carrier_id):
+            # Update order's carrier_id (will be the one of the partner if not defined)
+            # If a carrier_id is (re)defined, redirect to "/shop/payment" (GET method to avoid infinite loop)
+            carrier_id = post.get('carrier_id')
+            keep_carrier = post.get('keep_carrier', False)
+            if keep_carrier:
+                keep_carrier = bool(int(keep_carrier))
+            if carrier_id:
+                carrier_id = int(carrier_id)
             order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
             if carrier_id:
                 return request.redirect("/shop/payment")
