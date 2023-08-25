@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import OrderedDict
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import fields, http, _
 from odoo.http import request
 from odoo.tools import date_utils, groupby as groupbyelem
-from odoo.osv.expression import AND, OR
+from odoo.osv.expression import AND, FALSE_DOMAIN
 
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
@@ -26,11 +25,11 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_inputs(self):
         return {
-            'all': {'input': 'all', 'label': _('Search in All')},
-            'employee': {'input': 'employee', 'label': _('Search in Employee')},
-            'project': {'input': 'project', 'label': _('Search in Project')},
-            'task': {'input': 'task', 'label': _('Search in Task')},
-            'name': {'input': 'name', 'label': _('Search in Description')},
+            'name': {'input': 'name', 'label': _('Search in Description'), 'sequence': 10},
+            'employee_id': {'input': 'employee_id', 'label': _('Search in Employee'), 'sequence': 20},
+            'project_id': {'input': 'project_id', 'label': _('Search in Project'), 'sequence': 30},
+            'task_id': {'input': 'task_id', 'label': _('Search in Task'), 'sequence': 40},
+            'parent_task_id': {'input': 'parent_task_id', 'label': _('Search in Parent Task'), 'sequence': 70},
         }
 
     def _task_get_searchbar_sortings(self, milestones_allowed, project=False):
@@ -40,42 +39,27 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     def _get_searchbar_groupby(self):
         return {
-            'none': {'input': 'none', 'label': _('None')},
-            'project': {'input': 'project', 'label': _('Project')},
-            'task': {'input': 'task', 'label': _('Task')},
-            'date': {'input': 'date', 'label': _('Date')},
-            'employee': {'input': 'employee', 'label': _('Employee')}
+            'none': {'label': _('None'), 'sequence': 10},
+            'date': {'label': _('Date'), 'sequence': 20},
+            'project_id': {'label': _('Project'), 'sequence': 30},
+            'parent_task_id': {'label': _('Parent Task'), 'sequence': 40},
+            'task_id': {'label': _('Task'), 'sequence': 50},
+            'employee_id': {'label': _('Employee'), 'sequence': 70},
         }
 
     def _get_search_domain(self, search_in, search):
-        search_domains = []
-        if search_in in ('project', 'all'):
-            search_domains.append([('project_id', 'ilike', search)])
-        if search_in in ('name', 'all'):
-            search_domains.append([('name', 'ilike', search)])
-        if search_in in ('employee', 'all'):
-            search_domains.append([('employee_id', 'ilike', search)])
-        if search_in in ('task', 'all'):
-            search_domains.append([('task_id', 'ilike', search)])
-        if search_in == 'parent_task_id':
-            search_domains.append([('parent_task_id', '=', int(search))])
-        return OR(search_domains) if search_domains else []
-
-    def _get_groupby_mapping(self):
-        return {
-            'project': 'project_id',
-            'task': 'task_id',
-            'employee': 'employee_id',
-            'date': 'date'
-        }
+        if search_in in self._get_searchbar_inputs():
+            return [(search_in, 'ilike', search)]
+        else:
+            return FALSE_DOMAIN
 
     def _get_searchbar_sortings(self):
         return {
-            'date': {'label': _('Newest'), 'order': 'date desc'},
-            'employee': {'label': _('Employee'), 'order': 'employee_id'},
-            'project': {'label': _('Project'), 'order': 'project_id'},
-            'task': {'label': _('Task'), 'order': 'task_id'},
-            'name': {'label': _('Description'), 'order': 'name'},
+            'date desc': {'label': _('Newest')},
+            'employee_id': {'label': _('Employee')},
+            'project_id': {'label': _('Project')},
+            'task_id': {'label': _('Task')},
+            'name': {'label': _('Description')},
         }
 
     def _project_get_page_view_values(self, project, access_token, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kwargs):
@@ -94,39 +78,43 @@ class TimesheetCustomerPortal(CustomerPortal):
 
         searchbar_sortings = self._get_searchbar_sortings()
 
-        searchbar_inputs = self._get_searchbar_inputs()
+        searchbar_inputs = dict(sorted(self._get_searchbar_inputs().items(), key=lambda item: item[1]['sequence']))
 
-        searchbar_groupby = self._get_searchbar_groupby()
+        searchbar_groupby = dict(sorted(self._get_searchbar_groupby().items(), key=lambda item: item[1]['sequence']))
 
         today = fields.Date.today()
         quarter_start, quarter_end = date_utils.get_quarter(today)
+        last_quarter_date = date_utils.subtract(quarter_start, weeks=1)
+        last_quarter_start, last_quarter_end = date_utils.get_quarter(last_quarter_date)
         last_week = today + relativedelta(weeks=-1)
         last_month = today + relativedelta(months=-1)
         last_year = today + relativedelta(years=-1)
 
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
+            'last_year': {'label': _('Last Year'), 'domain': [('date', '>=', date_utils.start_of(last_year, 'year')), ('date', '<=', date_utils.end_of(last_year, 'year'))]},
+            'last_quarter': {'label': _('Last Quarter'), 'domain': [('date', '>=', last_quarter_start), ('date', '<=', last_quarter_end)]},
+            'last_month': {'label': _('Last Month'), 'domain': [('date', '>=', date_utils.start_of(last_month, 'month')), ('date', '<=', date_utils.end_of(last_month, 'month'))]},
+            'last_week': {'label': _('Last Week'), 'domain': [('date', '>=', date_utils.start_of(last_week, "week")), ('date', '<=', date_utils.end_of(last_week, 'week'))]},
             'today': {'label': _('Today'), 'domain': [("date", "=", today)]},
-            'week': {'label': _('This week'), 'domain': [('date', '>=', date_utils.start_of(today, "week")), ('date', '<=', date_utils.end_of(today, 'week'))]},
-            'month': {'label': _('This month'), 'domain': [('date', '>=', date_utils.start_of(today, 'month')), ('date', '<=', date_utils.end_of(today, 'month'))]},
-            'year': {'label': _('This year'), 'domain': [('date', '>=', date_utils.start_of(today, 'year')), ('date', '<=', date_utils.end_of(today, 'year'))]},
+            'week': {'label': _('This Week'), 'domain': [('date', '>=', date_utils.start_of(today, "week")), ('date', '<=', date_utils.end_of(today, 'week'))]},
+            'month': {'label': _('This Month'), 'domain': [('date', '>=', date_utils.start_of(today, 'month')), ('date', '<=', date_utils.end_of(today, 'month'))]},
             'quarter': {'label': _('This Quarter'), 'domain': [('date', '>=', quarter_start), ('date', '<=', quarter_end)]},
-            'last_week': {'label': _('Last week'), 'domain': [('date', '>=', date_utils.start_of(last_week, "week")), ('date', '<=', date_utils.end_of(last_week, 'week'))]},
-            'last_month': {'label': _('Last month'), 'domain': [('date', '>=', date_utils.start_of(last_month, 'month')), ('date', '<=', date_utils.end_of(last_month, 'month'))]},
-            'last_year': {'label': _('Last year'), 'domain': [('date', '>=', date_utils.start_of(last_year, 'year')), ('date', '<=', date_utils.end_of(last_year, 'year'))]},
+            'year': {'label': _('This Year'), 'domain': [('date', '>=', date_utils.start_of(today, 'year')), ('date', '<=', date_utils.end_of(today, 'year'))]},
         }
         # default sort by value
         if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
+            sortby = 'date desc'
         # default filter by value
         if not filterby:
             filterby = 'all'
         domain = AND([domain, searchbar_filters[filterby]['domain']])
 
-        if search:
-            search_in = search_in or 'all' # search_in could be '' and we want the 'all' filter in this case
-            domain += self._get_search_domain(search_in, search)
+        if search and search_in:
+            domain = AND([domain, self._get_search_domain(search_in, search)])
+
+        if parent_task_id := kw.get('parent_task_id'):
+            domain = AND([domain, [('parent_task_id', '=', int(parent_task_id))]])
 
         timesheet_count = Timesheet_sudo.search_count(domain)
         # pager
@@ -139,9 +127,8 @@ class TimesheetCustomerPortal(CustomerPortal):
         )
 
         def get_timesheets():
-            groupby_mapping = self._get_groupby_mapping()
-            field = groupby_mapping.get(groupby, None)
-            orderby = '%s, %s' % (field, order) if field else order
+            field = None if groupby == 'none' else groupby
+            orderby = '%s, %s' % (field, sortby) if field else sortby
             timesheets = Timesheet_sudo.search(domain, order=orderby, limit=_items_per_page, offset=pager['offset'])
             if field:
                 if groupby == 'date':
@@ -172,12 +159,12 @@ class TimesheetCustomerPortal(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'search_in': search_in,
-            'search': '' if search_in == 'parent_task_id' else search,
+            'search': search,
             'sortby': sortby,
             'groupby': groupby,
             'searchbar_inputs': searchbar_inputs,
             'searchbar_groupby': searchbar_groupby,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'searchbar_filters': searchbar_filters,
             'filterby': filterby,
             'is_uom_day': request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
         })
