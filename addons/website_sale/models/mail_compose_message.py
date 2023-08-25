@@ -10,7 +10,7 @@ class MailComposeMessage(models.TransientModel):
     def _action_send_mail(self, auto_commit=False):
         context = self._context
         # TODO TDE: clean that brole one day
-        if context.get('website_sale_send_recovery_email') and self.model == 'sale.order' and context.get('active_ids'):
+        if context.get('website_sale_send_recovery_email') and ((len(self) == 1 and self.model == 'sale.order') or all(wizard.model == 'sale.order' for wizard in self)) and context.get('active_ids'):
             self.env['sale.order'].search([
                 ('id', 'in', context.get('active_ids')),
                 ('cart_recovery_email_sent', '=', False),
