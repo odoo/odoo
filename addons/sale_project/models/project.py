@@ -403,7 +403,7 @@ class Project(models.Model):
                 )
                 sols_per_product[product.id] = tuple(reduce(lambda x, y: x + y, pair) for pair in zip(sols_total_amounts, sols_current_amounts))
             product_read_group = self.env['product.product'].sudo()._read_group(
-                [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
+                [('id', 'in', list(sols_per_product))],
                 ['invoice_policy', 'service_type', 'type'],
                 ['id:array_agg'],
             )
