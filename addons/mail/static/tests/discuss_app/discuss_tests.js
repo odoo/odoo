@@ -1917,12 +1917,13 @@ QUnit.test(
                 if (route === "/web/dataset/call_kw/res.partner/im_search") {
                     const { args } = params;
                     if (args[0] === "m") {
-                        assert.step("First RPC");
                         await deferred1;
-                    }
-                    if (args[0] === "mar") {
-                        assert.step("Second RPC");
+                        assert.step("First RPC");
+                    } else if (args[0] === "mar") {
                         await deferred2;
+                        assert.step("Second RPC");
+                    } else {
+                        throw Error(`Unexpected search term: ${args[0]}`);
                     }
                 }
             },
@@ -1934,12 +1935,11 @@ QUnit.test(
         await insertText(".o-discuss-ChannelSelector input", "a");
         await insertText(".o-discuss-ChannelSelector input", "r");
         deferred1.resolve();
+        await Promise.resolve();
         assert.verifySteps(["First RPC"]);
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
-        await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)");
         deferred2.resolve();
-        assert.verifySteps(["Second RPC"]);
         await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mama)", 0);
         await waitUntil(".o-discuss-ChannelSelector-suggestion:contains(Mario)");
+        assert.verifySteps(["Second RPC"]);
     }
 );
