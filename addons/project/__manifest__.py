@@ -230,7 +230,6 @@
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/core/dates.js',
             'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/js/widgets/date_picker.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 
