@@ -147,7 +147,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/model_field_selector.scss',
             'web/static/src/legacy/scss/dropdown.scss',
             'web/static/src/legacy/scss/fields.scss',
-            'web/static/src/legacy/scss/fields_extra.scss',
             'web/static/src/legacy/scss/color_picker.scss',
             'base/static/src/scss/res_partner.scss',
 
