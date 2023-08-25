@@ -180,7 +180,7 @@ function applyBinaryOp(ast, context) {
                 }
             }
             if (left instanceof Array && right instanceof Array) {
-                return [...left, ...right]
+                return [...left, ...right];
             }
 
             return left + right;
@@ -376,10 +376,10 @@ export function evaluate(ast, context = {}) {
                     // this is a dictionary => need to apply dict methods
                     return DICT[ast.key](left);
                 }
-                if (typeof left === 'string') {
+                if (typeof left === "string") {
                     return STRING[ast.key](left);
                 }
-                if (ast.key == 'get' && typeof left === 'object') {
+                if (ast.key == "get" && typeof left === "object") {
                     return DICT[ast.key](toPyDict(left));
                 }
                 const result = left[ast.key];

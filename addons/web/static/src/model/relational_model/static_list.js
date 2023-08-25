@@ -940,5 +940,8 @@ export class StaticList extends DataPoint {
 
     _updateContext(context) {
         Object.assign(this.context, context);
+        for (const record of Object.values(this._cache)) {
+            record._updateChildrenContext();
+        }
     }
 }
