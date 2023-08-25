@@ -16,7 +16,7 @@ patch(WysiwygAdapterComponent.prototype, {
      */
     async startEdition() {
         await super.startEdition(...arguments);
-        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+        this.options.document.defaultView.$('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },
 
     //--------------------------------------------------------------------------
