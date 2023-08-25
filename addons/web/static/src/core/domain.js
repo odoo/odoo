@@ -139,7 +139,7 @@ export class Domain {
             try {
                 rawAST = typeof descr === "string" ? parseExpr(descr) : toAST(descr);
             } catch (error) {
-                throw new InvalidDomainError(`Invalid domain representation`, {
+                throw new InvalidDomainError(`Invalid domain representation: ${descr.toString()}`, {
                     cause: error,
                 });
             }

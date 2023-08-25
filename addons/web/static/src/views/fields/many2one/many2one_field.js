@@ -352,12 +352,12 @@ export const many2OneField = {
     supportedTypes: ["many2one"],
     extractProps({ attrs, context, decorations, options, string }, dynamicInfo) {
         const canCreate =
-            attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
+            attrs.can_create && evaluateBooleanExpr(attrs.can_create) && !options.no_create;
         return {
             placeholder: attrs.placeholder,
             canOpen: !options.no_open,
             canCreate,
-            canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
+            canWrite: attrs.can_write && evaluateBooleanExpr(attrs.can_write),
             canQuickCreate: canCreate && !options.no_quick_create,
             canCreateEdit: canCreate && !options.no_create_edit,
             context: context,

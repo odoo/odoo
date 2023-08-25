@@ -5858,9 +5858,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "one2many list not editable, the context is properly evaluated and sent",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
             serverData.views = {
-                "turtle,false,form": '<form><field name="turtle_foo"/></form>',
+                "turtle,false,form":
+                    '<form><field name="turtle_foo"/><field name="turtle_int" readonly="context.get(\'abc\') == 10"/></form>',
             };
 
             await makeView({
@@ -5870,7 +5871,7 @@ QUnit.module("Fields", (hooks) => {
                 arch: `
                     <form>
                         <field name="int_field"/>
-                        <field name="turtles" context="{'hello': 'world', 'abc': int_field}">
+                        <field name="turtles" context="{'hello': 'world', 'abc': int_field, 'default_turtle_int': 5}">
                             <tree>
                                 <field name="turtle_foo"/>
                             </tree>
@@ -5880,14 +5881,19 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, args) {
                     if (args.method === "get_views" && args.model === "turtle") {
                         const context = args.kwargs.context;
-                        assert.strictEqual(context.hello, "world");
-                        assert.strictEqual(context.abc, 10);
+                        assert.deepEqual(context, {
+                            lang: "en",
+                            tz: "taht",
+                            uid: 7,
+                        });
                     }
                 },
             });
 
             await addRow(target);
             assert.containsOnce(target, ".modal");
+            assert.containsOnce(target, ".o_readonly_modifier");
+            assert.equal(target.querySelector(".o_readonly_modifier").textContent, 5);
         }
     );
 
@@ -9007,7 +9013,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("propagate context to sub views without default_* keys", async function (assert) {
-        assert.expect(6);
+        assert.expect(4);
 
         await makeView({
             type: "form",
@@ -9024,12 +9030,12 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
-                assert.strictEqual(
-                    args.kwargs.context.flutter,
-                    "shy",
-                    "view context key should be used for every rpcs"
-                );
                 if (args.method === "onchange") {
+                    assert.strictEqual(
+                        args.kwargs.context.flutter,
+                        "shy",
+                        "view context key should be used for every rpcs"
+                    );
                     if (args.model === "partner") {
                         assert.strictEqual(
                             args.kwargs.context.default_flutter,

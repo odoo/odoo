@@ -51,19 +51,11 @@ class StorageCategoryProductCapacity(models.Model):
     _check_company_auto = True
     _order = "storage_category_id"
 
-    @api.model
-    def _domain_product_id(self):
-        domain = "('type', '=', 'product')"
-        if self.env.context.get('active_model') == 'product.template':
-            product_template_id = self.env.context.get('active_id', False)
-            domain = f"('product_tmpl_id', '=', {product_template_id})"
-        elif self.env.context.get('default_product_id', False):
-            product_id = self.env.context.get('default_product_id', False)
-            domain = f"('id', '=', {product_id})"
-        return f"[{domain}]"
-
     storage_category_id = fields.Many2one('stock.storage.category', ondelete='cascade', required=True, index=True)
-    product_id = fields.Many2one('product.product', 'Product', domain=lambda self: self._domain_product_id(), ondelete='cascade', check_company=True)
+    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', check_company=True,
+        domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+            " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
+            " [('type', '=', 'product')]"))
     package_type_id = fields.Many2one('stock.package.type', 'Package Type', ondelete='cascade', check_company=True)
     quantity = fields.Float('Quantity', required=True)
     product_uom_id = fields.Many2one(related='product_id.uom_id')

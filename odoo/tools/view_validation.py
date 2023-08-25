@@ -54,10 +54,10 @@ def get_domain_value_names(domain):
             (1, '=', 1),
             bool(context.get('c')),
         ]
-        returns {'parent', 'parent.truc', 'context'}
+        returns {'id', 'field_a', 'field_b'}, {'parent', 'parent.truc', 'context'}
 
     :param domain: list(tuple) or str
-    :return: set(str)
+    :return: set(str), set(str)
     """
     contextual_values = set()
     field_names = set()

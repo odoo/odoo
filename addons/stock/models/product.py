@@ -1014,6 +1014,7 @@ class ProductCategory(models.Model):
         ('partial', 'Reserve Partial Packagings'),], string="Reserve Packagings", default='partial',
         help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
              "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
+    filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
 
     def _compute_total_route_ids(self):
         for category in self:
@@ -1024,6 +1025,17 @@ class ProductCategory(models.Model):
                 routes |= base_cat.route_ids
             category.total_route_ids = routes
 
+    def _search_filter_for_stock_putaway_rule(self, operator, value):
+        assert operator == '='
+        assert value
+
+        active_model = self.env.context.get('active_model')
+        if active_model in ('product.template', 'product.product') and self.env.context.get('active_id'):
+            product = self.env[active_model].browse(self.env.context.get('active_id'))
+            product = product.exists()
+            if product:
+                return [('id', '=', product.categ_id.id)]
+        return []
 
 class ProductPackaging(models.Model):
     _inherit = "product.packaging"

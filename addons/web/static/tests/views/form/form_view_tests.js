@@ -1025,8 +1025,8 @@ QUnit.module("Views", (hooks) => {
                 if (args.model === "partner_type") {
                     assert.strictEqual(
                         context.base_model_name,
-                        "product",
-                        "The correct base_model_name should have been sent to the server for the subview"
+                        undefined,
+                        "The correct base_model_name should be removed from the context before sent to the server for the subview"
                     );
                     assert.strictEqual(
                         context.tree_view_ref,
@@ -1061,7 +1061,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector('.o_field_widget[name="product_id"] .o_external_button'));
     });
 
-    QUnit.test("Form and subsubview with default_ or _view_ref contexts", async function (assert) {
+    QUnit.test("Form and subsubview with only _view_ref contexts", async function (assert) {
         serverData.models.partner_type.fields.company_ids = {
             string: "one2many field",
             type: "one2many",
@@ -1091,8 +1091,13 @@ QUnit.module("Views", (hooks) => {
         const expectedContexts = new Map();
 
         // Make main form view
-        expectedContexts.set("partner", { ...userContext });
-        expectedContexts.set("partner_type", {
+        expectedContexts.set("view:partner", { ...userContext });
+        expectedContexts.set("onchange:partner", { ...userContext });
+        expectedContexts.set("view:partner_type", {
+            ...userContext,
+            form_view_ref: "foo_partner_type_form_view",
+        });
+        expectedContexts.set("onchange:partner_type", {
             ...userContext,
             base_model_name: "partner",
             form_view_ref: "foo_partner_type_form_view",
@@ -1110,10 +1115,15 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             resId: 2,
             mockRPC: (route, { method, model, kwargs }) => {
-                if (["get_views", "onchange"].includes(method)) {
+                if (method === "get_views") {
                     const { context } = kwargs;
                     assert.step(`${method} (${model})`);
-                    assert.deepEqual(context, expectedContexts.get(model));
+                    assert.deepEqual(context, expectedContexts.get("view:" + model));
+                }
+                if (method === "onchange") {
+                    const { context } = kwargs;
+                    assert.step(`${method} (${model})`);
+                    assert.deepEqual(context, expectedContexts.get("onchange:" + model));
                 }
             },
         });
@@ -1121,7 +1131,11 @@ QUnit.module("Views", (hooks) => {
 
         // Add a line in the x2many timmy field
         expectedContexts.clear();
-        expectedContexts.set("partner_type", {
+        expectedContexts.set("view:partner_type", {
+            ...userContext,
+            form_view_ref: "foo_partner_type_form_view",
+        });
+        expectedContexts.set("onchange:partner_type", {
             ...userContext,
             default_partner_id: 2,
             form_view_ref: "foo_partner_type_form_view",
@@ -1135,7 +1149,11 @@ QUnit.module("Views", (hooks) => {
 
         // Create a new company
         expectedContexts.clear();
-        expectedContexts.set("res.company", {
+        expectedContexts.set("view:res.company", {
+            ...userContext,
+            form_view_ref: "bar_rescompany_form_view",
+        });
+        expectedContexts.set("onchange:res.company", {
             ...userContext,
             default_color: 2,
             form_view_ref: "bar_rescompany_form_view",
@@ -7669,8 +7687,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.verifySteps([
-            "354", // main get_views
-            "354", // x2many get_views
+            "undefined", // main get_views
+            "undefined", // x2many get_views
             "module.tree_view_ref", // x2many get_views
             "354", // read
         ]);

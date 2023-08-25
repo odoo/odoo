@@ -23,17 +23,6 @@ class StockWarehouseOrderpoint(models.Model):
     _check_company_auto = True
     _order = "location_id,company_id,id"
 
-    @api.model
-    def _domain_product_id(self):
-        domain = "('type', '=', 'product')"
-        if self.env.context.get('active_model') == 'product.template':
-            product_template_id = self.env.context.get('active_id', False)
-            domain = f"('product_tmpl_id', '=', {product_template_id})"
-        elif self.env.context.get('default_product_id', False):
-            product_id = self.env.context.get('default_product_id', False)
-            domain = f"('id', '=', {product_id})"
-        return f"[{domain}]"
-
     name = fields.Char(
         'Name', copy=False, required=True, readonly=True,
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
@@ -54,7 +43,9 @@ class StockWarehouseOrderpoint(models.Model):
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=lambda self: self._domain_product_id(),
+        domain=("[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+            " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
+            " [('type', '=', 'product')]"),
         ondelete='cascade', required=True, check_company=True)
     product_category_id = fields.Many2one('product.category', name='Product Category', related='product_id.categ_id', store=True)
     product_uom = fields.Many2one(

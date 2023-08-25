@@ -70,22 +70,34 @@ export const viewService = {
          * @returns {Promise<ViewDescriptions>}
          */
         async function loadViews(params, options = {}) {
+            const { context, resModel, views } = params;
             const loadViewsOptions = {
                 action_id: options.actionId || false,
                 load_filters: options.loadIrFilters || false,
-                toolbar: options.loadActionMenus || false,
+                toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
             };
+            for (const key in options) {
+                if (!["actionId", "loadIrFilters", "loadActionMenus"].includes(key)) {
+                    loadViewsOptions[key] = options[key];
+                }
+            }
             if (env.isSmall) {
                 loadViewsOptions.mobile = true;
             }
-            const { context, resModel, views } = params;
             const filteredContext = Object.fromEntries(
-                Object.entries(context || {}).filter((k, v) => !String(k).startsWith("default_"))
+                Object.entries(context || {}).filter(
+                    ([k, v]) => k == "lang" || k.endsWith("_view_ref")
+                )
             );
+
             const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);
             if (!cache[key]) {
                 cache[key] = orm
-                    .call(resModel, "get_views", [], { context, views, options: loadViewsOptions })
+                    .call(resModel, "get_views", [], {
+                        context: filteredContext,
+                        views,
+                        options: loadViewsOptions,
+                    })
                     .then((result) => {
                         const { models, views } = result;
                         const viewDescriptions = {

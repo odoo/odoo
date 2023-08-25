@@ -25,40 +25,19 @@ class HrExpense(models.Model):
             raise ValidationError(_('The current user has no related employee. Please, create one.'))
         return employee
 
-    @api.model
-    def _get_employee_id_domain(self):
-        res = [('id', '=', 0)] # Nothing accepted by domain, by default
-        if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
-            res = "['|', ('company_id', '=', False), ('company_id', '=', company_id)]"  # Then, domain accepts everything
-        elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
-            user = self.env.user
-            employee = self.env.user.employee_id
-            res = [
-                '|', '|', '|',
-                ('department_id.manager_id', '=', employee.id),
-                ('parent_id', '=', employee.id),
-                ('id', '=', employee.id),
-                ('expense_manager_id', '=', user.id),
-                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
-            ]
-        elif self.env.user.employee_id:
-            employee = self.env.user.employee_id
-            res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
-        return res
-
     name = fields.Char('Description', compute='_compute_name', readonly=False, store=True, precompute=True, required=True, copy=True)
     date = fields.Date(default=fields.Date.context_today, string="Expense Date")
     accounting_date = fields.Date(string="Accounting Date", related='sheet_id.accounting_date', store=True, groups='account.group_account_invoice,account.group_account_readonly')
     employee_id = fields.Many2one('hr.employee', compute='_compute_employee_id', string="Employee",
         store=True, required=True, readonly=False, tracking=True,
-        default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
+        default=_default_employee_id, domain=[('filter_for_expense', '=', True)], check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one(
         'product.product',
         string='Category',
         tracking=True,
         check_company=True,
-        domain="[('can_be_expensed', '=', True)]",
+        domain=[('can_be_expensed', '=', True)],
         ondelete='restrict',
     )
     product_description = fields.Html(compute='_compute_product_description')
@@ -1003,7 +982,7 @@ class HrExpenseSheet(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     company_currency_id = fields.Many2one(comodel_name='res.currency', string="Report Company Currency", related='company_id.currency_id')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, tracking=True, default=_default_employee_id, check_company=True, domain=lambda self: self.env['hr.expense']._get_employee_id_domain())
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, tracking=True, default=_default_employee_id, check_company=True, domain=[('filter_for_expense', '=', True)])
     address_id = fields.Many2one('res.partner', compute='_compute_from_employee_id', store=True, readonly=False, copy=True, string="Employee Home Address", check_company=True)
     department_id = fields.Many2one('hr.department', compute='_compute_from_employee_id', store=True, readonly=False, copy=False, string='Department')
     user_id = fields.Many2one('res.users', 'Manager', compute='_compute_from_employee_id', store=True, readonly=False, copy=False, tracking=True, domain=lambda self: [('groups_id', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)])

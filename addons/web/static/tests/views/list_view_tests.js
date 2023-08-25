@@ -11445,9 +11445,11 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree editable="top"><field name="foo"/></tree>',
             mockRPC(route, args) {
-                const context = args.kwargs.context;
-                assert.strictEqual(context.active_field, 2, "context should be correct");
-                assert.strictEqual(context.someKey, "some value", "context should be correct");
+                if (args.method !== "get_views") {
+                    const context = args.kwargs.context;
+                    assert.strictEqual(context.active_field, 2, "context should be correct");
+                    assert.strictEqual(context.someKey, "some value", "context should be correct");
+                }
             },
             context: { active_field: 2 },
         });
@@ -19508,7 +19510,7 @@ QUnit.module("Views", (hooks) => {
         const wc = await createWebClient({ serverData, mockRPC });
         await doAction(wc, 1);
         assert.verifySteps([
-            `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref","search_default_bar":true}`,
+            `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref"}`,
             `foo: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true,"tree_view_ref":"foo_view_ref"}`,
         ]);
 

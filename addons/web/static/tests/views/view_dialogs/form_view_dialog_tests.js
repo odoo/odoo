@@ -234,7 +234,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                     assert.deepEqual(
                         args.kwargs.context,
                         {
-                            base_model_name: "instrument",
                             lang: "en",
                             tree_view_ref: "some_other_tree_view",
                             tz: "taht",

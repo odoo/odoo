@@ -26,7 +26,9 @@ class StockLot(models.Model):
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
-        domain=lambda self: self._domain_product_id(), required=True, check_company=True)
+        domain=("[('tracking', '!=', 'none'), ('type', '=', 'product')] +"
+            " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"),
+        required=True, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
@@ -87,17 +89,6 @@ class StockLot(models.Model):
             error_message_lines.append(_(" - Product: %s, Serial Number: %s", product.display_name, name))
         if error_message_lines:
             raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
-
-    def _domain_product_id(self):
-        domain = [
-            "('tracking', '!=', 'none')",
-            "('type', '=', 'product')",
-        ]
-        if self.env.context.get('default_product_tmpl_id'):
-            domain.insert(0,
-                ("('product_tmpl_id', '=', %s)" % self.env.context['default_product_tmpl_id'])
-            )
-        return '[' + ', '.join(domain) + ']'
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)

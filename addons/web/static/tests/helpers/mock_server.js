@@ -331,16 +331,6 @@ export class MockServer {
         const editableView = editable && this._editableNode(doc, modelName);
         const onchangeAbleView = this._onchangeAbleView(doc);
         const inFormView = doc.tagName === "form";
-        // mock _postprocess_access_rights
-        const isBaseModel = !context.base_model_name || modelName === context.base_model_name;
-        const views = ["kanban", "tree", "form", "gantt", "activity"];
-        if (isBaseModel && views.indexOf(doc.tagName) !== -1) {
-            for (const action of ["create", "delete", "edit", "write"]) {
-                if (!doc.getAttribute(action) && action in context && !context[action]) {
-                    doc.setAttribute(action, "false");
-                }
-            }
-        }
 
         traverseElementTree(doc, (node) => {
             if (node.nodeType === Node.TEXT_NODE) {
