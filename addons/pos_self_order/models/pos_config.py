@@ -203,17 +203,17 @@ class PosConfig(models.Model):
                 }
                 for floor in self.floor_ids]
             )
-
-        # Here we use "range" to determine the number of QR codes to generate from
-        # this list, which will then be inserted into a PDF.
-        table_qr_code.extend([{
-            'name': 'Generic',
-            'type': 'default',
-            'tables': [{
-                'id': i,
-                'url': self._get_self_order_url(),
-            } for i in range(0, 11)]
-        }])
+        else:
+            # Here we use "range" to determine the number of QR codes to generate from
+            # this list, which will then be inserted into a PDF.
+            table_qr_code.extend([{
+                'name': 'Generic',
+                'type': 'default',
+                'tables': [{
+                    'id': i,
+                    'url': self._get_self_order_url(),
+                } for i in range(0, 6)]
+            }])
 
         return table_qr_code
 
