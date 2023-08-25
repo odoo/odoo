@@ -1223,7 +1223,7 @@ class SaleOrderLine(models.Model):
             order = order_line.order_id
             return {
                 'readOnly': True,
-                'price': order.pricelist._get_product_price(
+                'price': order.pricelist_id._get_product_price(
                     product=order_line.product_id,
                     quantity=1.0,
                     currency=order.currency_id,
