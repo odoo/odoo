@@ -432,7 +432,7 @@ export class Composer extends Component {
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
-                    const persona = this.personaService.insert({ ...partnerData, type: "partner" });
+                    const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
                     const email = emailsWithoutPartners[index];
                     const recipient = this.props.composer.thread.suggestedRecipients.find(
                         (recipient) => recipient.email === email

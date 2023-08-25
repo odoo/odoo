@@ -54,9 +54,9 @@ export class SuggestionService {
             kwargs
         );
         suggestedPartners.map((data) => {
-            this.personaService.insert({ ...data, type: "partner" });
+            this.store.Persona.insert({ ...data, type: "partner" });
             if (data.persona?.channelMembers) {
-                this.channelMemberService.insert(...data.persona.channelMembers);
+                this.store.ChannelMember.insert(...data.persona.channelMembers);
             }
         });
     }
@@ -72,7 +72,7 @@ export class SuggestionService {
             { search: term }
         );
         suggestedThreads.map((data) => {
-            this.threadService.insert({
+            this.store.Thread.insert({
                 model: "discuss.channel",
                 ...data,
             });

@@ -30,7 +30,7 @@ export class Typing {
 
     setup() {
         this.busService.subscribe("discuss.channel.member/typing_status", (payload) => {
-            const member = this.channelMemberService.insert(payload);
+            const member = this.storeService.ChannelMember.insert(payload);
             if (payload.isTyping) {
                 this.addTypingMember(member);
             } else {
@@ -61,7 +61,7 @@ export class Typing {
      */
     getTypingMembers(channel) {
         return [...(this.memberIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.channelMemberService.insert({ id }))
+            .map((id) => this.storeService.ChannelMember.insert({ id }))
             .filter((member) => !member.persona?.eq(this.storeService.self));
     }
 

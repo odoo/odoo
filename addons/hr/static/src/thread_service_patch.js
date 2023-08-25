@@ -34,7 +34,7 @@ const threadServicePatch = {
                     user = this.store.users[employee.user_id];
                 }
                 user.partner_id = employeeData.user_partner_id[0];
-                this.personaService.insert({
+                this.store.Persona.insert({
                     displayName: employeeData.user_partner_id[1],
                     id: employeeData.user_partner_id[0],
                     type: "partner",

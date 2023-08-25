@@ -87,7 +87,7 @@ export class MessagePin {
                     messageData.parentMessage.body = markup(messageData.parentMessage.body);
                 }
                 messageData.body = markup(messageData.body);
-                this.messageService.insert(messageData);
+                this.storeService.Message.insert(messageData);
             });
             this.loadStateByChannelId.set(channel.id, "loaded");
         } catch (e) {
@@ -111,7 +111,7 @@ export class MessagePin {
      */
     getPinnedMessages(channel) {
         return [...(this.messageIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.messageService.insert({ id }))
+            .map((id) => this.storeService.Message.insert({ id }))
             .sort((a, b) => {
                 const aPinnedAt = this.pinnedAtByMessageId.get(a.id);
                 const bPinnedAt = this.pinnedAtByMessageId.get(b.id);

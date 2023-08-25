@@ -36,7 +36,7 @@ export class ChannelMemberService {
         const [command, memberData] = Array.isArray(data) ? data : ["insert", data];
         member.id = memberData.id;
         if ("persona" in memberData) {
-            member.persona = this.personaService.insert({
+            member.persona = this.store.Persona.insert({
                 ...(memberData.persona.partner ?? memberData.persona.guest),
                 type: memberData.persona.guest ? "guest" : "partner",
                 country: memberData.persona.partner?.country,
@@ -45,8 +45,7 @@ export class ChannelMemberService {
         }
         member.threadId = memberData.threadId ?? member.threadId ?? memberData.channel?.id;
         if (member.threadId && !member.thread) {
-            // this prevents cyclic dependencies between mail.thread and discuss.channel.member
-            this.env.bus.trigger("mail.thread/insert", {
+            this.store.Thread.insert({
                 id: member.threadId,
                 model: "discuss.channel",
             });

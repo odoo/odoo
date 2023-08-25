@@ -333,7 +333,7 @@ export class Message extends Component {
         const id = Number(ev.target.dataset.oeId);
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
-            const thread = this.threadService.insert({ model, id });
+            const thread = this.store.Thread.insert({ model, id });
             this.threadService.open(thread);
             return;
         }

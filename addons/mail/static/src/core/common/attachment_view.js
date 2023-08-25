@@ -18,6 +18,7 @@ export class AttachmentView extends Component {
 
     setup() {
         this.threadService = useService("mail.thread");
+        this.store = useState(useService("mail.store"));
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
             /** @type {import("@mail/core/common/thread_model").Thread|undefined} */
@@ -53,7 +54,7 @@ export class AttachmentView extends Component {
     }
 
     updateFromProps(props) {
-        this.state.thread = this.threadService.insert({
+        this.state.thread = this.store.Thread.insert({
             id: props.threadId,
             model: props.threadModel,
         });

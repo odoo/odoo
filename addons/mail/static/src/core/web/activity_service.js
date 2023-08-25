@@ -111,7 +111,7 @@ export class ActivityService {
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "insert":
-                this.insert(data.payload, { broadcast: false });
+                this.store.Activity.insert(data.payload, { broadcast: false });
                 break;
             case "delete":
                 this.delete(data.payload, { broadcast: false });

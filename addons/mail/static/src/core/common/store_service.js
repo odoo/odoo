@@ -12,48 +12,113 @@ export class Store {
     Activity = {
         /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
         records: {},
+        /**
+         * @param {import("@mail/core/web/activity_model").Data} data
+         * @param {Object} [param1]
+         * @param {boolean} param1.broadcast
+         * @returns {import("@mail/core/web/activity_model").Activity}
+         */
+        insert: (data, { broadcast = true } = {}) =>
+            this.env.services["mail.activity"].insert(data, { broadcast }),
     };
     Attachment = {
         /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
         records: {},
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/attachment_model").Attachment}
+         */
+        insert: (data) => this.env.services["mail.attachment"].insert(data),
     };
     CannedResponse = {
-        records: [],
+        /** @type {Object.<number, import("@mail/core/common/canned_response_model").CannedResponse>} */
+        records: {},
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/canned_response_model").CannedResponse}
+         */
+        insert: (data) => this.env.services["mail.messaging"].insertCannedResponse(data),
     };
     ChannelMember = {
         /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
         records: {},
+        /**
+         * @param {Object|Array} data
+         * @returns {import("@mail/core/common/channel_member_model").ChannelMember}
+         */
+        insert: (data) => this.env.services["discuss.channel.member"].insert(data),
     };
     ChatWindow = {
         /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
         records: [],
+        /**
+         * @param {ChatWindowData} [data]
+         * @returns {import("@mail/core/common/chat_window_model").ChatWindow}
+         */
+        insert: (data = {}) => this.env.services["mail.chat_window"].insert(data),
     };
     Follower = {
         /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
         records: {},
+        /**
+         * @param {import("@mail/core/common/follower_model").Data} data
+         * @returns {import("@mail/core/common/follower_model").Follower}
+         */
+        insert: (data) => this.env.services["mail.thread"].insertFollower(data),
     };
     Message = {
         /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
         records: {},
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/message_model").Message}
+         */
+        insert: (data) => this.env.services["mail.message"].insert(data),
     };
     Notification = {
         /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
         records: {},
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/notification_model").Notification}
+         */
+        insert: (data) => this.env.services["mail.message"].insertNotification(data),
     };
     NotificationGroup = {
+        /** @type {import("@mail/core/common/notification_group_model").NotificationGroup[]} */
         records: [],
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/notification_group_model").NotificationGroup}
+         */
+        insert: (data) => this.env.services["mail.message"].insertNotificationGroups(data),
     };
     Persona = {
         /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
         records: {},
+        /**
+         * @param {import("@mail/core/common/persona_model").Data} data
+         * @returns {import("@mail/core/common/persona_model").Persona}
+         */
+        insert: (data) => this.env.services["mail.persona"].insert(data),
     };
     RtcSession = {
         /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
         records: {},
+        /**
+         * @param {Object} data
+         * @returns {number, import("@mail/discuss/call/common/rtc_session_model").RtcSession}
+         */
+        insert: (data) => this.env.services["discuss.rtc"].insertSession(data),
     };
     Thread = {
         /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
         records: {},
+        /**
+         * @param {Object} data
+         * @returns {import("@mail/core/common/thread_model").Thread}
+         */
+        insert: (data) => this.env.services["mail.thread"].insert(data),
     };
 
     /**

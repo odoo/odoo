@@ -15,7 +15,7 @@ patch(ThreadService.prototype, {
                 assignDefined(thread, data.channel, ["anonymous_name"]);
             }
             if (data?.operator_pid) {
-                thread.operator = this.personaService.insert({
+                thread.operator = this.store.Persona.insert({
                     type: "partner",
                     id: data.operator_pid[0],
                     displayName: data.operator_pid[1],
@@ -95,7 +95,7 @@ patch(ThreadService.prototype, {
             this.setDiscussThread(oldestUnreadThread);
             return true;
         }
-        const chatWindow = this.chatWindowService.insert({ thread: oldestUnreadThread });
+        const chatWindow = this.store.ChatWindow.insert({ thread: oldestUnreadThread });
         if (chatWindow.hidden) {
             this.chatWindowService.makeVisible(chatWindow);
         } else if (chatWindow.folded) {
