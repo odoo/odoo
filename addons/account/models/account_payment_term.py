@@ -237,10 +237,8 @@ class AccountPaymentTermLine(models.Model):
             if term_line.discount_percentage and (term_line.discount_percentage < 0.0 or term_line.discount_percentage > 100.0):
                 raise ValidationError(_('Discount percentages on the Payment Terms lines must be between 0 and 100.'))
 
-    @api.constrains('months', 'days', 'days_after', 'discount_days')
+    @api.constrains('discount_days')
     def _check_positive(self):
         for term_line in self:
-            if term_line.months < 0 or term_line.days < 0:
-                raise ValidationError(_('The Months and Days of the Payment Terms lines must be positive.'))
             if term_line.discount_days < 0:
                 raise ValidationError(_('The discount days of the Payment Terms lines must be positive.'))
