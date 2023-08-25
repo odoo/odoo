@@ -104,6 +104,15 @@ class Company(models.Model):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
 
+    def _get_first_company_having(self, predicate):
+        """ Find the first company of the hierarchy matching the given predicate.
+
+        :param predicate: A function returning True if the company can be returned, False if we need to fallback on the parent.
+        :return: A res.company
+        """
+        self.ensure_one()
+        return self.parent_ids[::-1].filtered(predicate)[:1]
+
     @api.depends('parent_path')
     def _compute_parent_ids(self):
         for company in self:
