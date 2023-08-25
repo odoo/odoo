@@ -354,7 +354,11 @@ export function compileStepAuto(stepIndex, step, options) {
                     const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                     actionHelper[m[1]](m[2]);
                 } else if (!step.isCheck) {
-                    actionHelper.auto();
+                    if (stepIndex === tour.steps.length - 1) {
+                        console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
+                    } else {
+                        actionHelper.auto();
+                    }
                 }
 
                 return result;
