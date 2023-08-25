@@ -147,7 +147,7 @@
                     <tr t-if="!group.list.isGrouped and props.editable and canCreate">
                         <td t-if="hasSelectors"/>
                         <td
-                            t-att-colspan="hasSelector ? nbCols - 1 : nbCols"
+                            t-att-colspan="hasSelectors ?  nbCols - 1 : nbCols"
                             class="o_group_field_row_add"
                         >
                             <a href="#"
