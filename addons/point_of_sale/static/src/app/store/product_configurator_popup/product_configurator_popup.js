@@ -67,7 +67,7 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
         super.setup();
         useSubEnv({ attribute_components: [] });
         this.state = useState({
-            quantity: 1,
+            quantity: this.props.quantity || 1,
         });
         this.ui = useService("ui");
     }
@@ -83,17 +83,10 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
             price_extra += extra;
         });
 
-        if (quantity > 1) {
-            return {
-                selected_attributes,
-                price_extra,
-                quantity,
-            };
-        }
-
         return {
             selected_attributes,
             price_extra,
+            quantity,
         };
     }
     get imageUrl() {
