@@ -355,7 +355,7 @@ class Product(models.Model):
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
             raise UserError(_('Invalid domain operator %s', operator))
         if not isinstance(value, (float, int)):
-            raise UserError(_('Invalid domain right operand %s', value))
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
@@ -368,6 +368,11 @@ class Product(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
+        if operator not in ('<', '>', '=', '!=', '<=', '>='):
+            raise UserError(_('Invalid domain operator %s', operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
