@@ -25,7 +25,7 @@ export class HardwareProxy extends EventBus {
         this.useDebugWeight = false;
         this.host = "";
         this.keptalive = false;
-        this.connectionInfo = reactive({ status: "disconnected", drivers: {} });
+        this.connectionInfo = reactive({ status: "init", drivers: {} });
         effect(
             (info) => {
                 if (info.status === "connected" && this.printer) {
@@ -191,7 +191,11 @@ export class HardwareProxy extends EventBus {
         return this.message("log", { arguments: [...arguments] });
     }
     async openCashbox(action = false) {
-        if (this.pos.config.iface_cashdrawer && this.connectionInfo.status === "connected") {
+        if (
+            this.pos.config.iface_cashdrawer &&
+            this.printer &&
+            ["connected", "init"].includes(this.connectionInfo.status)
+        ) {
             this.printer.openCashbox();
             if (action) {
                 this.pos.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
