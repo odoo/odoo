@@ -24,29 +24,33 @@
             a different page then the qr code itself -->
         <t t-set="qr_code_size" t-value="190"/>
         <t t-call="web.basic_layout">
-            <div style="display: flex; align-items: center; padding: 0 20px; margin-bottom: 35px;  padding-left: 0; margin-left: 0;">
-                <img src="/pos_self_order/static/img/default_qrcode_odoo.png" style="width: 100px; height: 100px; margin-right: 25px;"/>
-                <h2 stlye="color: #714C67;">Place the QR codes on your tables,<br/>
-                    so your customer scan it to order</h2>
+            <div class="w-100" style="text-align: right">
+                <span class="fs-4">Point of sale: <t t-esc="pos_name" /></span><span class="fs-4" style="margin-left:20px">Self Order: <t t-if="table_mode">Yes</t><t t-else="">No</t></span>
+            </div>
+            <div class="mb-5" style="border-bottom: 1px solid black;">
+                <h2 t-if="table_mode">Make it easy for your customers to explore your menu
+                online or order with the QR codes on your tables</h2>
+                <h2 t-else="">Make it easy for your customers to explore your menu
+                online with the QR codes on your tables</h2>
             </div>
 
             <div>
-                <h3 style="color: #0C7285">How to use</h3>
-                <p>The below QR codes are predefined with a table number. One per table configured in your floor plan.</p>
-                <p>Want to customise table stand ? Either use any of the below QR codes as-is in your composition
-                or generate new ones with the online tool of your choice. Retrieve a URL by scanning the related QR code.</p>
+                <h3>How to use</h3>
+                <t t-if="table_mode">
+                    <p>Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,
+                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:.</p>
+                    <p class="mt-2">Table: <span t-if="table_example" t-esc="table_example['name']" /><br/>
+                    URL: <span t-if="table_example" t-esc="table_example['decoded_url']" /></p>
+                </t>
+                <t t-else="">
+                    <p>Feel free to use and print this QR code as many times as needed according to your requirements.</p>
+                    <p>URL: <span t-if="table_example" t-esc="table_example['decoded_url']" /></p>
+                </t>
             </div>
 
             <!-- Table with access token -->
             <t t-if="floors" t-foreach="floors" t-as="floor">
-                <div t-att-style="'page-break-before: always;' if floor.get('type') == 'default' else ''">
-                    <div t-if="floor.get('type') == 'default'" class="margin-bottom: 50px; page-break-before: always;">
-                        <h3 style="color: #0C7285">Generic QR codes</h3>
-                        <p>When one QR code is enough everywhere. If used in self-ordering, customer will be asked to enter the
-                        table number before he can place an order.</p>
-                        <p>Want to customise table stand ? Either use any of the below QR codes as-is in your composition
-                        or generate new ones with the online tool of your choice. Retrieve a URL by scanning the related QR code.</p>
-                    </div>
+                <div class="mb-5">
                     <h4 t-if="floor.get('name')" t-out="floor['name']" class="mb-3 mt-5"/>
                     <table style="border: none; border-collapse: collapse; width: 100%;">
                         <tbody style="border: none;">
@@ -54,7 +58,7 @@
                                 <td t-foreach="row" t-as="table" style="width: 33%; text-align:center; border: none;">
                                     <div class="mb-3" style="page-break-inside: avoid">
                                         <h4 class="fw-bold text-center" t-if="table.get('name')">
-                                            Table: <t t-esc="table['name']"/>
+                                            <t t-esc="table['name']"/>
                                         </h4>
                                         <div class="mt-1 mb-1 position-relative top-0 start-0">
                                             <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" class="position-relative top-0 start-0" />
@@ -69,9 +73,6 @@
                                                 </g>
                                             </svg>
                                         </div>
-                                        <h6 class="fw-bold text-center mb-3" t-if="table.get('identifier')">
-                                            (<t t-esc="table['identifier']"/>)
-                                        </h6>
                                     </div>
                                 </td>
                             </tr>
@@ -79,6 +80,12 @@
                     </table>
                 </div>
             </t>
+
+            <div>
+                <h3>How to customize</h3>
+                <p>If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make
+                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com</p>
+            </div>
         </t>
     </template>
 </odoo>
