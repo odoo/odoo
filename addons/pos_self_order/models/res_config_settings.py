@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import split_every
+from werkzeug.urls import url_unquote
 
 
 class ResConfigSettings(models.TransientModel):
@@ -19,30 +20,11 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_kiosk_image_brand_name = fields.Char(related="pos_config_id.self_order_kiosk_image_brand_name", readonly=False)
     pos_self_order_kiosk_available_language_ids = fields.Many2many(related="pos_config_id.self_order_kiosk_available_language_ids", readonly=False)
     pos_self_order_kiosk_default_language = fields.Many2one(related="pos_config_id.self_order_kiosk_default_language", readonly=False)
-    pos_self_order_view_mode = fields.Boolean(
-        compute="_compute_pos_module_pos_self_order", store=True, readonly=False
-    )
-    pos_self_order_table_mode = fields.Boolean(
-        compute="_compute_pos_module_pos_self_order", store=True, readonly=False
-    )
-    pos_self_order_pay_after = fields.Selection(
-        [("each", "Each Order (mobile payment only)"), ("meal", "Meal (mobile payment or cashier)")],
-        string="Pay After:",
-        default="meal",
-        help="Choose when the customer will pay",
-        readonly=False,
-        required=True,
-    )
-    pos_self_order_image = fields.Image(
-        compute="_compute_pos_module_pos_self_order",
-        store=True,
-        readonly=False,
-        max_width=1920,
-        max_height=1080,
-    )
-    pos_self_order_image_name = fields.Char(
-        compute="_compute_pos_module_pos_self_order", store=True, readonly=False
-    )
+    pos_self_order_view_mode = fields.Boolean(related="pos_config_id.self_order_view_mode", readonly=False)
+    pos_self_order_table_mode = fields.Boolean(related="pos_config_id.self_order_table_mode", readonly=False)
+    pos_self_order_pay_after = fields.Selection(related="pos_config_id.self_order_pay_after", readonly=False)
+    pos_self_order_image = fields.Image(related="pos_config_id.self_order_image", readonly=False)
+    pos_self_order_image_name = fields.Char(related="pos_config_id.self_order_image_name", readonly=False)
 
     @api.onchange("pos_self_order_kiosk_default_language", "pos_self_order_kiosk_available_language_ids")
     def _onchange_pos_self_order_kiosk_default_language(self):
@@ -60,30 +42,6 @@ class ResConfigSettings(models.TransientModel):
                 record.pos_config_id.self_order_view_mode = False
                 record.pos_config_id.self_order_table_mode = False
 
-    @api.depends("pos_config_id")
-    def _compute_pos_module_pos_self_order(self):
-        for res_config in self:
-            if not res_config.pos_config_id.self_order_view_mode:
-                res_config.update(
-                    {
-                        "pos_self_order_view_mode": False,
-                        "pos_self_order_table_mode": False,
-                        "pos_self_order_pay_after": "meal",
-                        "pos_self_order_image": False,
-                        "pos_self_order_image_name": False,
-                    }
-                )
-            else:
-                res_config.update(
-                    {
-                        "pos_self_order_view_mode": res_config.pos_config_id.self_order_view_mode,
-                        "pos_self_order_table_mode": res_config.pos_config_id.self_order_table_mode,
-                        "pos_self_order_pay_after": res_config.pos_config_id.self_order_pay_after,
-                        "pos_self_order_image": res_config.pos_config_id.self_order_image,
-                        "pos_self_order_image_name": res_config.pos_config_id.self_order_image_name,
-                    }
-                )
-
     # self_order_table_mode is only available if self_order_view_mode is True
     @api.onchange("pos_self_order_view_mode")
     def _onchange_pos_self_order_view_mode(self):
@@ -99,15 +57,35 @@ class ResConfigSettings(models.TransientModel):
         """
         Generate the data needed to print the QR codes page
         """
+        if self.pos_self_order_table_mode:
+            table_ids = self.pos_config_id.floor_ids.table_ids
+
+            if not table_ids:
+                raise UserError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
+
+            url = url_unquote(self.pos_config_id._get_self_order_url(table_ids[0].id))
+            name = table_ids[0].name
+        else:
+            url = url_unquote(self.pos_config_id._get_self_order_url())
+            name = ""
+
         return self.env.ref("pos_self_order.report_self_order_qr_codes_page").report_action(
-            [], data={'floors': [
-                {
-                    "name": floor.get("name"),
-                    "type": floor.get("type"),
-                    "table_rows": list(split_every(3, floor["tables"], list)),
+            [], data={
+                'pos_name': self.pos_config_id.name,
+                'floors': [
+                    {
+                        "name": floor.get("name"),
+                        "type": floor.get("type"),
+                        "table_rows": list(split_every(3, floor["tables"], list)),
+                    }
+                    for floor in self.pos_config_id._get_qr_code_data()
+                ],
+                'table_mode': self.pos_self_order_table_mode,
+                'table_example': {
+                    'name': name,
+                    'decoded_url': url or "",
                 }
-                for floor in self.pos_config_id._get_qr_code_data()
-            ]}
+            }
         )
 
     def preview_self_order_app(self):
