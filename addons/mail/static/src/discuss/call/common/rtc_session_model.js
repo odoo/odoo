@@ -45,11 +45,11 @@ export class RtcSession extends Record {
     logStep;
 
     get channelMember() {
-        return this._store.channelMembers[this.channelMemberId];
+        return this._store.ChannelMember.records[this.channelMemberId];
     }
 
     get channel() {
-        return this._store.threads[createLocalId("discuss.channel", this.channelId)];
+        return this._store.Thread.records[createLocalId("discuss.channel", this.channelId)];
     }
 
     get isMute() {

@@ -101,7 +101,7 @@ export class Activity extends Record {
             id,
             _store: store,
         });
-        store.activities[id] = this;
-        return store.activities[id];
+        store.Activity.records[id] = this;
+        return store.Activity.records[id];
     }
 }

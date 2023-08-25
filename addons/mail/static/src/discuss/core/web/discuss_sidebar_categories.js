@@ -82,7 +82,7 @@ export class DiscussSidebarCategories extends Component {
 
     filteredThreads(category) {
         return category.threads.filter((threadLocalId) => {
-            const thread = this.store.threads[threadLocalId];
+            const thread = this.store.Thread.records[threadLocalId];
             return (
                 (thread.is_pinned || thread.group_based_subscription) &&
                 (!this.state.quickSearchVal || thread.name.includes(this.state.quickSearchVal))
@@ -92,7 +92,7 @@ export class DiscussSidebarCategories extends Component {
 
     get hasQuickSearch() {
         return (
-            Object.values(this.store.threads).filter(
+            Object.values(this.store.Thread.records).filter(
                 (thread) => thread.is_pinned && thread.model === "discuss.channel"
             ).length > 19
         );

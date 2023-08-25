@@ -25,10 +25,10 @@ export class AttachmentService {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        let attachment = this.store.attachments[data.id];
+        let attachment = this.store.Attachment.records[data.id];
         if (!attachment) {
-            this.store.attachments[data.id] = new Attachment();
-            attachment = this.store.attachments[data.id];
+            this.store.Attachment.records[data.id] = new Attachment();
+            attachment = this.store.Attachment.records[data.id];
             Object.assign(attachment, { _store: this.store, id: data.id });
         }
         this.update(attachment, data);
@@ -79,13 +79,13 @@ export class AttachmentService {
         if (attachment.tmpUrl) {
             URL.revokeObjectURL(attachment.tmpUrl);
         }
-        delete this.store.attachments[attachment.id];
+        delete this.store.Attachment.records[attachment.id];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
                 att.eq(attachment)
             );
         }
-        for (const message of Object.values(this.store.messages)) {
+        for (const message of Object.values(this.store.Message.records)) {
             removeFromArrayWithPredicate(message.attachments, (att) => att.eq(attachment));
             if (message.composer) {
                 removeFromArrayWithPredicate(message.composer.attachments, (att) =>
@@ -93,7 +93,7 @@ export class AttachmentService {
                 );
             }
         }
-        for (const thread of Object.values(this.store.threads)) {
+        for (const thread of Object.values(this.store.Thread.records)) {
             removeFromArrayWithPredicate(thread.composer.attachments, (att) => att.eq(attachment));
         }
     }

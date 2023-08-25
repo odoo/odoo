@@ -9,7 +9,7 @@ patch(Thread.prototype, {
      * @returns {import("@mail/core/web/activity_model").Activity[]}
      */
     get activities() {
-        return Object.values(this._store.activities)
+        return Object.values(this._store.Activity.records)
             .filter((activity) => {
                 return activity.res_model === this.model && activity.res_id === this.id;
             })

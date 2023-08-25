@@ -22,10 +22,10 @@ export class ChannelMemberService {
      */
     insert(data) {
         const memberData = Array.isArray(data) ? data[1] : data;
-        let member = this.store.channelMembers[memberData.id];
+        let member = this.store.ChannelMember.records[memberData.id];
         if (!member) {
-            this.store.channelMembers[memberData.id] = new ChannelMember();
-            member = this.store.channelMembers[memberData.id];
+            this.store.ChannelMember.records[memberData.id] = new ChannelMember();
+            member = this.store.ChannelMember.records[memberData.id];
             member._store = this.store;
         }
         this.update(member, data);
@@ -60,7 +60,7 @@ export class ChannelMemberService {
                 }
                 break;
             case "unlink":
-                removeFromArray(this.store.channelMembers, member);
+                removeFromArray(this.store.ChannelMember.records, member);
             // eslint-disable-next-line no-fallthrough
             case "insert-and-unlink":
                 if (member.thread) {

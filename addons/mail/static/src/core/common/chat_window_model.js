@@ -30,7 +30,7 @@ export class ChatWindow extends Record {
     }
 
     get thread() {
-        return this._store.threads[this.threadLocalId];
+        return this._store.Thread.records[this.threadLocalId];
     }
 
     set thread(thread) {

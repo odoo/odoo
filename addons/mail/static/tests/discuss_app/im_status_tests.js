@@ -93,7 +93,7 @@ QUnit.test("Can handle im_status of unknown partner", async (assert) => {
         Partner: { im_status: "online", id: partnerId },
     });
     await nextTick();
-    const persona = env.services["mail.store"].personas[createLocalId("partner", partnerId)];
+    const persona = env.services["mail.store"].Persona.records[createLocalId("partner", partnerId)];
     assert.ok(persona);
     assert.ok(persona.im_status === "online");
 });

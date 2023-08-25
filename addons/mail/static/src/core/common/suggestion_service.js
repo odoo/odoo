@@ -123,7 +123,7 @@ export class SuggestionService {
                 .map((member) => member.persona)
                 .filter((persona) => persona.type === "partner");
         } else {
-            partners = Object.values(this.store.personas).filter(
+            partners = Object.values(this.store.Persona.records).filter(
                 (persona) => persona.type === "partner"
             );
         }
@@ -197,7 +197,7 @@ export class SuggestionService {
             // channel.
             threads = [thread];
         } else {
-            threads = Object.values(this.store.threads);
+            threads = Object.values(this.store.Thread.records);
         }
         const suggestionList = threads.filter(
             (thread) =>

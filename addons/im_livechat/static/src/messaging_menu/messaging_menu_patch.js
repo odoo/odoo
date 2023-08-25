@@ -24,7 +24,7 @@ patch(MessagingMenu.prototype, {
      */
     get tabs() {
         const items = super.tabs;
-        const hasLivechats = Object.values(this.store.threads).some(
+        const hasLivechats = Object.values(this.store.Thread.records).some(
             ({ type }) => type === "livechat"
         );
         if (hasLivechats) {
