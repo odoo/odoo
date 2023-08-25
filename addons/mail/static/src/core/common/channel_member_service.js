@@ -13,7 +13,6 @@ export class ChannelMemberService {
     constructor(env, services) {
         this.env = env;
         this.store = services["mail.store"];
-        this.personaService = services["mail.persona"];
     }
 
     /**
@@ -79,7 +78,7 @@ export class ChannelMemberService {
 }
 
 export const channelMemberService = {
-    dependencies: ["mail.store", "mail.persona"],
+    dependencies: ["mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

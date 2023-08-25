@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useMessaging } from "@mail/core/common/messaging_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
@@ -31,7 +30,6 @@ export class Activity extends Component {
     closePopover;
 
     setup() {
-        this.messaging = useMessaging();
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });

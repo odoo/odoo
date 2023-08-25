@@ -24,8 +24,6 @@ export class Messaging {
         this.rpc = services.rpc;
         this.orm = services.orm;
         this.userSettingsService = services["mail.user_settings"];
-        this.threadService = services["mail.thread"];
-        this.personaService = services["mail.persona"];
         this.router = services.router;
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
@@ -183,11 +181,11 @@ export const messagingService = {
         "user",
         "router",
         "im_status",
-        "mail.attachment",
+        "mail.attachment", // FIXME: still necessary until insert is managed by this service
         "mail.user_settings",
-        "mail.thread",
-        "mail.message",
-        "mail.persona",
+        "mail.thread", // FIXME: still necessary until insert is managed by this service
+        "mail.message", // FIXME: still necessary until insert is managed by this service
+        "mail.persona", // FIXME: still necessary until insert is managed by this service
     ],
     /**
      * @param {import("@web/env").OdooEnv} env

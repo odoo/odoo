@@ -2,7 +2,7 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 
 import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
 
@@ -15,7 +15,6 @@ export class ChannelMemberList extends Component {
     static template = "discuss.ChannelMemberList";
 
     setup() {
-        this.messaging = useMessaging();
         this.store = useStore();
         this.channelMemberService = useService("discuss.channel.member");
         this.threadService = useState(useService("mail.thread"));

@@ -18,8 +18,6 @@ export class PinnedMessagesPanel extends Component {
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {
-        this.threadService = useService("mail.thread");
-        this.messageService = useService("mail.message");
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
         this.ui = useState(useService("ui"));

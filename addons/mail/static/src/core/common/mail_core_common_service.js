@@ -18,9 +18,7 @@ export class MailCoreCommon {
         this.attachmentService = services["mail.attachment"];
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
-        this.personaService = services["mail.persona"];
         this.store = services["mail.store"];
-        this.threadService = services["mail.thread"];
         this.userSettingsService = services["mail.user_settings"];
     }
 
@@ -134,9 +132,7 @@ export const mailCoreCommon = {
         "mail.attachment",
         "mail.message",
         "mail.messaging",
-        "mail.persona",
         "mail.store",
-        "mail.thread",
         "mail.user_settings",
     ],
     /**

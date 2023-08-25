@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { useMessaging } from "@mail/core/common/messaging_hook";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -38,7 +37,6 @@ export class ActivityController extends Component {
 
         this.dialog = useService("dialog");
         this.action = useService("action");
-        this.messaging = useMessaging();
         this.activity = useService("mail.activity");
         this.ui = useState(useService("ui"));
     }

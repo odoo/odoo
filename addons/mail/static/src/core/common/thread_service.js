@@ -43,15 +43,12 @@ export class ThreadService {
      */
     setup(env, services) {
         this.env = env;
-        this.channelMemberService = services["discuss.channel.member"];
-        this.attachmentsService = services["mail.attachment"];
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.rpc = services.rpc;
         this.notificationService = services.notification;
         this.router = services.router;
         this.ui = services.ui;
-        this.personaService = services["mail.persona"];
         this.messageService = services["mail.message"];
     }
 
@@ -687,7 +684,7 @@ export class ThreadService {
             replaceArrayWithCompare(
                 thread.attachments,
                 attachmentsData.map((attachmentData) =>
-                    this.attachmentsService.insert(attachmentData)
+                    this.store.Attachment.insert(attachmentData)
                 )
             );
         }
@@ -1151,18 +1148,7 @@ export class ThreadService {
 }
 
 export const threadService = {
-    dependencies: [
-        "discuss.channel.member",
-        "mail.attachment",
-        "mail.store",
-        "orm",
-        "rpc",
-        "notification",
-        "router",
-        "mail.persona",
-        "mail.message",
-        "ui",
-    ],
+    dependencies: ["mail.store", "orm", "rpc", "notification", "router", "mail.message", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

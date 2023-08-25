@@ -1,8 +1,10 @@
 /* @odoo-module */
 
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 threadActionsRegistry
     .add("mark-all-read", {
@@ -29,6 +31,10 @@ threadActionsRegistry
             component.messageService.unstarAll();
         },
         sequence: 2,
+        setup() {
+            const component = useComponent();
+            component.messageService = useState(useService("mail.message"));
+        },
         text: _t("Unstar all"),
     })
     .add("expand-form", {

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { useStore } from "@mail/core/common/messaging_hook";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
@@ -29,7 +29,6 @@ export class Call extends Component {
 
     setup() {
         this.grid = useRef("grid");
-        this.messaging = useMessaging();
         this.notification = useService("notification");
         this.rtc = useRtc();
         this.state = useState({
