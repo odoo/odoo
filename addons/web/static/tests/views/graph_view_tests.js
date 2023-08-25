@@ -3621,7 +3621,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.doesNotHaveClass(target, "o_view_sample_data");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
-        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsOnce(target, ".o_view_nocontent");
+    });
+
+    QUnit.test("empty graph view without sample data after filter", async function (assert) {
+        await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph>
+                    <field name="date"/>
+                </graph>
+            `,
+            domain: Domain.FALSE.toList(),
+            noContentHelp: '<p class="abc">click to add a foo</p>',
+        });
+        assert.containsOnce(target, ".o_graph_canvas_container canvas");
+        assert.containsOnce(target, ".o_view_nocontent");
     });
 
     QUnit.test("reload chart with switchView button keep internal state", async function (assert) {
