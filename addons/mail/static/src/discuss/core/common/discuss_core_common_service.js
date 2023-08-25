@@ -36,7 +36,7 @@ export class DiscussCoreCommon {
             this.threadService.sortChannels();
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
-                const thread = this.threadService.insert({
+                const thread = this.store.Thread.insert({
                     ...channel,
                     model: "discuss.channel",
                     channel: channel.channel,
@@ -60,7 +60,7 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
-                const thread = this.threadService.insert({
+                const thread = this.store.Thread.insert({
                     ...payload,
                     model: "discuss.channel",
                 });
@@ -73,7 +73,7 @@ export class DiscussCoreCommon {
                 });
             });
             this.busService.subscribe("discuss.channel/legacy_insert", (payload) => {
-                this.threadService.insert({
+                this.store.Thread.insert({
                     id: payload.channel.id,
                     model: "discuss.channel",
                     type: payload.channel.channel_type,
@@ -157,7 +157,7 @@ export class DiscussCoreCommon {
             });
             this.busService.subscribe("mail.record/insert", (payload) => {
                 if (payload.Channel) {
-                    this.threadService.insert({
+                    this.store.Thread.insert({
                         id: payload.Channel.id,
                         model: "discuss.channel",
                         channel: payload.Channel,
@@ -168,12 +168,12 @@ export class DiscussCoreCommon {
     }
 
     /**
-     * todo: merge this with ThreadService.insert() (?)
+     * todo: merge this with store.Thread.insert() (?)
      *
      * @returns {Thread}
      */
     createChannelThread(serverData) {
-        const thread = this.threadService.insert({
+        const thread = this.store.Thread.insert({
             ...serverData,
             model: "discuss.channel",
             type: serverData.channel.channel_type,
@@ -220,7 +220,7 @@ export class DiscussCoreCommon {
         let channel = this.store.Thread.records[createLocalId("discuss.channel", id)];
         if (!channel || !channel.type) {
             const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
-            channel = this.threadService.insert({
+            channel = this.store.Thread.insert({
                 model: "discuss.channel",
                 type: channelData.channel.channel_type,
                 ...channelData,
@@ -238,7 +238,7 @@ export class DiscussCoreCommon {
         const data = Object.assign(messageData, {
             body: markup(messageData.body),
         });
-        const message = this.messageService.insert({
+        const message = this.store.Message.insert({
             ...data,
             res_id: channel.id,
             model: channel.model,

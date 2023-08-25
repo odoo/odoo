@@ -23,8 +23,8 @@ patch(FormRenderer.prototype, {
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
         });
-        if (this.env.services["mail.thread"]) {
-            this.threadService = useService("mail.thread");
+        if (this.env.services["mail.store"]) {
+            this.mailStore = useService("mail.store");
         }
         this.uiService = useService("ui");
 
@@ -36,10 +36,10 @@ patch(FormRenderer.prototype, {
      * @returns {boolean}
      */
     hasFileViewer() {
-        if (!this.threadService || this.uiService.size < SIZES.XXL || !this.props.record.resId) {
+        if (!this.mailStore || this.uiService.size < SIZES.XXL || !this.props.record.resId) {
             return false;
         }
-        this.messagingState.thread = this.threadService.insert({
+        this.messagingState.thread = this.mailStore.Thread.insert({
             id: this.props.record.resId,
             model: this.props.record.resModel,
             type: "chatter",

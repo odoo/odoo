@@ -39,12 +39,12 @@ export class AttachmentUploadService {
                 const threadId = parseInt(upload.data.get("thread_id"));
                 const threadModel = upload.data.get("thread_model");
                 const tmpUrl = upload.data.get("tmp_url");
-                const originThread = this.threadService.insert({
+                const originThread = this.store.Thread.insert({
                     model: threadModel,
                     id: threadId,
                 });
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
-                const attachment = this.attachmentService.insert(
+                const attachment = this.store.Attachment.insert(
                     this._makeAttachmentData(
                         upload,
                         tmpId,
@@ -87,7 +87,7 @@ export class AttachmentUploadService {
                 const threadModel = upload.data.get("thread_model");
                 const originThread =
                     this.store.Thread.records[createLocalId(threadModel, threadId)];
-                const attachment = this.attachmentService.insert({
+                const attachment = this.store.Attachment.insert({
                     ...response,
                     extension: upload.title.split(".").pop(),
                     originThread: hooker.composer ? undefined : originThread,

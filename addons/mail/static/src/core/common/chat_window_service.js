@@ -32,7 +32,7 @@ export class ChatWindowService {
     }
 
     open(thread, replaceNewMessageChatWindow) {
-        const chatWindow = this.insert({
+        const chatWindow = this.store.ChatWindow.insert({
             folded: false,
             thread,
             replaceNewMessageChatWindow,
@@ -49,7 +49,7 @@ export class ChatWindowService {
             // New message chat window is already opened.
             return;
         }
-        this.insert();
+        this.store.ChatWindow.insert();
     }
 
     closeNewMessage() {
