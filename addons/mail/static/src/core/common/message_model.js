@@ -169,7 +169,7 @@ export class Message extends Record {
     }
 
     get originThread() {
-        return this._store.threads[createLocalId(this.resModel, this.resId)];
+        return this._store.Thread.records[createLocalId(this.resModel, this.resId)];
     }
 
     get resUrl() {

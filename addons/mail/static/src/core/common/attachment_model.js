@@ -28,7 +28,7 @@ export class Attachment extends Record {
 
     /** @type {import("@mail/core/common/thread_model").Thread} */
     get originThread() {
-        return this._store.threads[this.originThreadLocalId];
+        return this._store.Thread.records[this.originThreadLocalId];
     }
 
     get isDeletable() {

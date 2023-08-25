@@ -16,6 +16,6 @@ export class MessageReactions extends Record {
 
     /** @type {import("@mail/core/common/persona_model").Persona[]} */
     get personas() {
-        return this.personaLocalIds.map((localId) => this._store.personas[localId]);
+        return this.personaLocalIds.map((localId) => this._store.Persona.records[localId]);
     }
 }

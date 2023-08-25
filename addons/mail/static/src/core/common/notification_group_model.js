@@ -24,10 +24,10 @@ export class NotificationGroup extends Record {
     constructor(store) {
         super();
         this._store = store;
-        this._store.notificationGroups.push(this);
+        this._store.NotificationGroup.records.push(this);
         this.id = nextId++;
         // return reactive
-        return store.notificationGroups.find((group) => group.eq(this));
+        return store.NotificationGroup.records.find((group) => group.eq(this));
     }
 
     get iconSrc() {
@@ -39,7 +39,7 @@ export class NotificationGroup extends Record {
     }
 
     get lastMessage() {
-        return this._store.messages[this.lastMessageId];
+        return this._store.Message.records[this.lastMessageId];
     }
 
     get datetime() {

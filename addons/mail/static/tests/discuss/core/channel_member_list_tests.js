@@ -174,7 +174,8 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
-    const thread = env.services["mail.store"].threads[createLocalId("discuss.channel", channelId)];
+    const thread =
+        env.services["mail.store"].Thread.records[createLocalId("discuss.channel", channelId)];
     assert.strictEqual(thread.memberCount, 2);
     await pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])

@@ -51,7 +51,7 @@ export class DiscussCoreCommon {
             });
             this.busService.subscribe("discuss.channel/last_interest_dt_changed", (payload) => {
                 const { id, last_interest_dt } = payload;
-                const channel = this.store.threads[createLocalId("discuss.channel", id)];
+                const channel = this.store.Thread.records[createLocalId("discuss.channel", id)];
                 if (channel) {
                     this.threadService.update(channel, { last_interest_dt });
                     if (channel.type !== "channel") {
@@ -98,7 +98,7 @@ export class DiscussCoreCommon {
             });
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const channel =
-                    this.store.threads[createLocalId("discuss.channel", payload.res_id)];
+                    this.store.Thread.records[createLocalId("discuss.channel", payload.res_id)];
                 const message = this.messageService.createTransient(
                     Object.assign(payload, { body: markup(payload.body) })
                 );
@@ -106,7 +106,8 @@ export class DiscussCoreCommon {
                 channel.transientMessages.push(message);
             });
             this.busService.subscribe("discuss.channel/unpin", (payload) => {
-                const thread = this.store.threads[createLocalId("discuss.channel", payload.id)];
+                const thread =
+                    this.store.Thread.records[createLocalId("discuss.channel", payload.id)];
                 if (thread) {
                     thread.is_pinned = false;
                     this.notificationService.add(
@@ -117,7 +118,8 @@ export class DiscussCoreCommon {
             });
             this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
                 const { channel_id, last_message_id, partner_id } = payload;
-                const channel = this.store.threads[createLocalId("discuss.channel", channel_id)];
+                const channel =
+                    this.store.Thread.records[createLocalId("discuss.channel", channel_id)];
                 if (channel) {
                     const seenInfo = channel.seenInfos.find(
                         (seenInfo) => seenInfo.partner.id === partner_id
@@ -129,7 +131,8 @@ export class DiscussCoreCommon {
             });
             this.busService.subscribe("discuss.channel.member/seen", (payload) => {
                 const { channel_id, last_message_id, partner_id } = payload;
-                const channel = this.store.threads[createLocalId("discuss.channel", channel_id)];
+                const channel =
+                    this.store.Thread.records[createLocalId("discuss.channel", channel_id)];
                 if (!channel) {
                     // for example seen from another browser, the current one has no
                     // knowledge of the channel
@@ -214,7 +217,7 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(notif) {
         const { id, message: messageData } = notif.payload;
-        let channel = this.store.threads[createLocalId("discuss.channel", id)];
+        let channel = this.store.Thread.records[createLocalId("discuss.channel", id)];
         if (!channel || !channel.type) {
             const [channelData] = await this.rpc("/discuss/channel/info", { channel_id: id });
             channel = this.threadService.insert({
@@ -227,7 +230,7 @@ export class DiscussCoreCommon {
             this.threadService.pin(channel);
         }
         removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
-        delete this.store.messages[messageData.temporary_id];
+        delete this.store.Message.records[messageData.temporary_id];
         messageData.temporary_id = null;
         if ("parentMessage" in messageData && messageData.parentMessage.body) {
             messageData.parentMessage.body = markup(messageData.parentMessage.body);

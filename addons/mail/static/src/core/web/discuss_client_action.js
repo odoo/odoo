@@ -58,7 +58,7 @@ export class DiscussClientAction extends Component {
         const activeThreadLocalId = createLocalId(model, id);
         if (activeThreadLocalId !== this.store.discuss.threadLocalId) {
             const thread =
-                this.store.threads[createLocalId(model, id)] ??
+                this.store.Thread.records[createLocalId(model, id)] ??
                 (await this.threadService.fetchChannel(parseInt(id)));
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);

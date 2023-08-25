@@ -234,7 +234,7 @@ export class ChannelSelector extends Component {
     get tagsList() {
         const res = [];
         for (const partnerId of this.state.selectedPartners) {
-            const partner = this.store.personas[createLocalId("partner", partnerId)];
+            const partner = this.store.Persona.records[createLocalId("partner", partnerId)];
             res.push({
                 id: partner.id,
                 text: partner.name,

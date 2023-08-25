@@ -9,6 +9,53 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 
 export class Store {
+    Activity = {
+        /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
+        records: {},
+    };
+    Attachment = {
+        /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
+        records: {},
+    };
+    CannedResponse = {
+        records: [],
+    };
+    ChannelMember = {
+        /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
+        records: {},
+    };
+    ChatWindow = {
+        /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
+        records: [],
+    };
+    Follower = {
+        /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
+        records: {},
+    };
+    Message = {
+        /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
+        records: {},
+    };
+    Notification = {
+        /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
+        records: {},
+    };
+    NotificationGroup = {
+        records: [],
+    };
+    Persona = {
+        /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
+        records: {},
+    };
+    RtcSession = {
+        /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
+        records: {},
+    };
+    Thread = {
+        /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
+        records: {},
+    };
+
     /**
      * @param {import("@web/env").OdooEnv} env
      */
@@ -28,9 +75,9 @@ export class Store {
 
     updateBusSubscription() {
         const channelIds = [];
-        const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
+        const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
-            const thread = this.threads[id];
+            const thread = this.Thread.records[id];
             if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
                 channelIds.push(id);
             }
@@ -77,25 +124,11 @@ export class Store {
      */
     inPublicPage = false;
 
-    /** @type {Object.<number, import("@mail/core/common/channel_member_model").ChannelMember>} */
-    channelMembers = {};
     companyName = "";
-
-    /** @type {Object.<number, import("@mail/core/common/notification_model").Notification>} */
-    notifications = {};
-    notificationGroups = [];
-
-    /** @type {Object.<number, import("@mail/core/common/follower_model").Follower>} */
-    followers = {};
 
     /** @type {import("@mail/core/common/persona_model").Persona} */
     odoobot = null;
     odoobotOnboarding;
-    /** @type {Object.<number, import("@mail/core/common/persona_model").Persona>} */
-    personas = {};
-
-    /** @type {Object.<number, import("@mail/discuss/call/common/rtc_session_model").RtcSession>} */
-    rtcSessions = {};
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
@@ -145,22 +178,8 @@ export class Store {
         /** @type {import("@mail/core/common/thread_model").Thread} */
         history: null,
     };
-    cannedResponses = [];
 
-    /** @type {Object.<number, import("@mail/core/web/activity_model").Activity>} */
-    activities = {};
     activityCounter = 0;
-    /** @type {Object.<number, import("@mail/core/common/attachment_model").Attachment>} */
-    attachments = {};
-
-    /** @type {import("@mail/core/common/chat_window_model").ChatWindow[]} */
-    chatWindows = [];
-
-    /** @type {Object.<number, import("@mail/core/common/message_model").Message>} */
-    messages = {};
-
-    /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
-    threads = {};
 
     isMessagingReady = false;
 }
@@ -173,12 +192,13 @@ export const storeService = {
      */
     start(env, services) {
         const res = reactive(new Store(env, services));
-        onChange(res, "threads", () => res.updateBusSubscription());
+        onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";
             } else {
-                res.discuss.activeTab = res.threads[res.discuss.threadLocalId]?.type ?? "all";
+                res.discuss.activeTab =
+                    res.Thread.records[res.discuss.threadLocalId]?.type ?? "all";
             }
         });
         return res;
