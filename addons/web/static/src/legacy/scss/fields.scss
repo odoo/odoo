@@ -384,3 +384,74 @@ button.o_field_float_toggle {
 select.o_field_widget.o_input {
     padding: 1px;  // Other inputs get a 1px padding automatically added by the browsers but selects do not
 }
+
+.o_field_widget.o_legacy_field_widget {
+    .o_field_many2one {
+        .o_input_dropdown .o_input {
+            transform: translateY($input-border-width + $dropdown-border-width);
+        }
+    }
+
+    // HTML fields
+    &.o_field_html.o_field_html { // Make rules more important
+        .note-editor {
+            border-color: map-get($grays, '400');
+        }
+        .note-editable {
+            border-radius: 0;
+        }
+        :not(.oe-bordered-editor).note-editable {
+            border: 0;
+            padding: 3px 40px 5px 0px;
+        }
+        .note-toolbar.panel-heading, .popover-body {
+            border-color: map-get($grays, '400');
+            background: map-get($grays, '100');
+
+            .btn-secondary {
+                background: transparent;
+                border-color: transparent;
+                @include o-hover-text-color($body-color, $link-color);
+            }
+            .show .btn-secondary, .btn-secondary.active, .btn-secondary:focus {
+                background: white !important;
+                color: $body-color !important;
+                border-color: map-get($grays, '400');
+            }
+            .dropdown-menu {
+                margin-top: 0;
+                border-top: none;
+                border-color: map-get($grays, '400');
+                background-color: white;
+                box-shadow: none;
+
+                a {
+                    background-color: transparent;
+                    color: $body-color;
+
+                    &:hover {
+                        background-color: map-get($grays, '200');
+                    }
+                }
+                &.show .btn-secondary, .btn-secondary.active, .btn-secondary:focus {
+                    border: none;
+                }
+            }
+            .btn-group.show::after {
+                @include o-position-absolute(auto, 1px, -1px, 1px);
+                height: 1px;
+                background-color: white;
+            }
+        }
+    }
+}
+
+.ui-autocomplete .ui-menu-item {
+    &.o_m2o_dropdown_option > a {
+        color: $o-brand-primary;
+
+        &.ui-state-active {
+            color: $o-brand-primary;
+        }
+    }
+}
