@@ -333,7 +333,7 @@ export function serializeDateTime(value) {
  *  returned value will always be set at the start of the day)
  */
 export function parseDate(value, options = {}) {
-    const parsed = parseDateTime(value, { format: localization.dateFormat, ...options });
+    const parsed = parseDateTime(value, { ...options, format: options.format || localization.dateFormat });
     return parsed && parsed.startOf("day");
 }
 

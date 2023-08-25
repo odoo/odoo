@@ -548,6 +548,21 @@ QUnit.module(
             );
         });
 
+        QUnit.test("parseDate with textual month notation", async function (assert) {
+            Object.assign(localization, {
+                dateFormat: "MMM/dd/yyyy",
+            });
+            assert.strictEqual(parseDate("Jan/05/1997").toISO(), "1997-01-05T00:00:00.000+01:00");
+            assert.strictEqual(
+                parseDate("Jan/05/1997", { format: undefined }).toISO(),
+                "1997-01-05T00:00:00.000+01:00"
+            );
+            assert.strictEqual(
+                parseDate("Jan/05/1997", { format: "MMM/dd/yyyy" }).toISO(),
+                "1997-01-05T00:00:00.000+01:00"
+            );
+        });
+
         // -----------------------------------------------------------------------------------------
         // -- Date utils legacy comparison -> TESTS in the below module will get removed someday! --
         // -----------------------------------------------------------------------------------------
