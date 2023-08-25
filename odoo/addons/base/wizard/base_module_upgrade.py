@@ -28,9 +28,6 @@ class BaseModuleUpgrade(models.TransientModel):
         if view_type != 'form':
             return res
 
-        if not(self._context.get('active_model') and self._context.get('active_id')):
-            return res
-
         if not self.get_module_list():
             res['arch'] = '''<form string="Upgrade Completed">
                                 <separator string="Upgrade Completed" colspan="4"/>

@@ -2892,7 +2892,7 @@ class _Relational(Field):
             else:
                 cid = "id" if self.model_name == "res.company" else "company_id"
             company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cid))
-            return f"({cid} and {company_domain} or []) + ({domain})"
+            return f"({cid} and {company_domain} or []) + ({domain or []})"
         return domain
 
 
@@ -2904,7 +2904,8 @@ class Many2one(_Relational):
         ``Mandatory`` except for related or extended fields.
 
     :param domain: an optional domain to set on candidate values on the
-        client side (domain or string)
+        client side (domain or a python expression that will be evaluated
+        to provide domain)
 
     :param dict context: an optional context to use on the client side when
         handling that field
@@ -4313,7 +4314,8 @@ class One2many(_RelationalMulti):
         ``comodel_name``
 
     :param domain: an optional domain to set on candidate values on the
-        client side (domain or string)
+        client side (domain or a python expression that will be evaluated
+        to provide domain)
 
     :param dict context: an optional context to use on the client side when
         handling that field
@@ -4617,7 +4619,8 @@ class Many2many(_RelationalMulti):
     - at least one field belongs to a model with ``_auto = False``.
 
     :param domain: an optional domain to set on candidate values on the
-        client side (domain or string)
+        client side (domain or a python expression that will be evaluated
+        to provide domain)
 
     :param dict context: an optional context to use on the client side when
         handling that field

@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import {
     Many2XAutocomplete,
@@ -280,7 +281,7 @@ export const many2ManyTagsField = {
     },
     extractProps({ attrs, options, string }, dynamicInfo) {
         const noCreate = Boolean(options.no_create);
-        const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
+        const canCreate = attrs.can_create && evaluateBooleanExpr(attrs.can_create) && !noCreate;
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {

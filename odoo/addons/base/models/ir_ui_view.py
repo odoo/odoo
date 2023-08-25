@@ -1030,25 +1030,21 @@ actual arch.
             if node.tag == 'field':
                 can_create = model.check_access_rights('create', raise_exception=False)
                 can_write = model.check_access_rights('write', raise_exception=False)
-                node.set('can_create', 'true' if can_create else 'false')
-                node.set('can_write', 'true' if can_write else 'false')
+                node.set('can_create', str(bool(can_create)))
+                node.set('can_write', str(bool(can_write)))
             else:
                 is_base_model = base_model == model._name
                 for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                    if (not node.get(action) and
-                            not model.check_access_rights(operation, raise_exception=False) or
-                            not self._context.get(action, True) and is_base_model):
-                        node.set(action, 'false')
+                    if not node.get(action) and not model.check_access_rights(operation, raise_exception=False):
+                        node.set(action, 'False')
                 if node.tag == 'kanban':
                     group_by_name = node.get('default_group_by')
                     group_by_field = model._fields.get(group_by_name)
                     if group_by_field and group_by_field.type == 'many2one':
                         group_by_model = model.env[group_by_field.comodel_name]
                         for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                            if (not node.get(action) and
-                                    not group_by_model.check_access_rights(operation, raise_exception=False) or
-                                    not self._context.get(action, True) and is_base_model):
-                                node.set(action, 'false')
+                            if not node.get(action) and not group_by_model.check_access_rights(operation, raise_exception=False):
+                                node.set(action, 'False')
 
         return tree
 
@@ -1864,18 +1860,14 @@ actual arch.
             self._raise_view_error(msg, node, from_exception=e)
         name_manager.must_have_fields(node, fnames, f"{use} ({py_expression})")
 
-    def _validate_domain_identifiers(self, node, name_manager, domain, use, model=None):
+    def _validate_domain_identifiers(self, node, name_manager, domain, use, target_model):
         try:
             fnames, vnames = get_domain_value_names(domain)
         except (SyntaxError, ValueError, AttributeError) as e:
             msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=domain, error=e)
             self._raise_view_error(msg, node, from_exception=e)
 
-        if model:
-            self._check_field_paths(node, fnames, model, f"{use} ({domain})")
-        else:
-            name_manager.must_have_fields(node, fnames, f"{use} ({domain})")
-
+        self._check_field_paths(node, fnames, target_model, f"{use} ({domain})")
         name_manager.must_have_fields(node, vnames, f"{use} ({domain})")
 
     def _check_field_paths(self, node, field_paths, model_name, use):
@@ -2413,6 +2405,14 @@ class Model(models.AbstractModel):
         """ Returns the fields_views of given views, along with the fields of
         the current model, and optionally its filters for the given action.
 
+        The return of the method can only depend on the requested view types,
+        access rights (views or other records), view access rules, options,
+        context lang and TYPE_view_ref (other context values cannot be used).
+
+        Python expressions contained in views or representing domains (on
+        python fields) will be evaluated by the client with all the context
+        values as well as the record values it has.
+
         :param views: list of [view_id, view_type]
         :param dict options: a dict optional boolean flags, set to enable:
 
@@ -2476,9 +2476,7 @@ class Model(models.AbstractModel):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        """_get_view([view_id | view_type='form'])
-
-        Get the model view combined architecture (the view along all its inheriting views).
+        """Get the model view combined architecture (the view along all its inheriting views).
 
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
@@ -2488,8 +2486,7 @@ class Model(models.AbstractModel):
         :return: architecture of the view as an etree node, and the browse record of the view used
         :rtype: tuple
         :raise AttributeError:
-
-            * if no view exists for that model, and no method `_get_default_[view_type]_view` exists for the view type
+            if no view exists for that model, and no method `_get_default_[view_type]_view` exists for the view type
 
         """
         View = self.env['ir.ui.view'].sudo()
@@ -2596,7 +2593,11 @@ class Model(models.AbstractModel):
     def get_view(self, view_id=None, view_type='form', **options):
         """ get_view([view_id | view_type='form'])
 
-        Get the detailed composition of the requested view like model, view architecture
+        Get the detailed composition of the requested view like model, view architecture.
+
+        The return of the method can only depend on the requested view types,
+        access rights (views or other records), view access rules, options,
+        context lang and TYPE_view_ref (other context values cannot be used).
 
         :param int view_id: id of the view or None
         :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)

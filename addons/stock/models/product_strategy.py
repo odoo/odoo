@@ -41,26 +41,13 @@ class StockPutawayRule(models.Model):
         elif self.env.context.get('active_model') == 'product.product':
             return self.env.context.get('active_id')
 
-    def _domain_category_id(self):
-        active_model = self.env.context.get('active_model')
-        if active_model in ('product.template', 'product.product') and self.env.context.get('active_id'):
-            product = self.env[active_model].browse(self.env.context.get('active_id'))
-            product = product.exists()
-            if product:
-                return [('id', '=', product.categ_id.id)]
-        return []
-
-    def _domain_product_id(self):
-        domain = "[('type', '!=', 'service')]"
-        if self.env.context.get('active_model') == 'product.template':
-            return [('product_tmpl_id', '=', self.env.context.get('active_id'))]
-        return domain
-
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        default=_default_product_id, domain=_domain_product_id, ondelete='cascade')
+        default=_default_product_id,
+        domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
+        ondelete='cascade')
     category_id = fields.Many2one('product.category', 'Product Category',
-        default=_default_category_id, domain=_domain_category_id, ondelete='cascade')
+        default=_default_category_id, domain=[('filter_for_stock_putaway_rule', '=', True)], ondelete='cascade')
     location_in_id = fields.Many2one(
         'stock.location', 'When product arrives in', check_company=True,
         domain="[('child_ids', '!=', False)]",

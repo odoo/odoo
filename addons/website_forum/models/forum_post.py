@@ -74,7 +74,7 @@ class Post(models.Model):
     self_reply = fields.Boolean('Reply to own question', compute='_compute_self_reply', store=True)
     child_ids = fields.One2many(
         'forum.post', 'parent_id', string='Post Answers',
-        domain=lambda self: [('forum_id', 'in', self.forum_id.ids)])
+        domain="[('forum_id', '=', forum_id)]")
     child_count = fields.Integer('Answers', compute='_compute_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_compute_uid_has_answered')
     has_validated_answer = fields.Boolean(

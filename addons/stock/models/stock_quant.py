@@ -23,32 +23,24 @@ class StockQuant(models.Model):
     _rec_name = 'product_id'
 
     def _domain_location_id(self):
-        if not self._is_inventory_mode():
-            return
-        return [('usage', 'in', ['internal', 'transit'])]
+        if self.user_has_groups('stock.group_stock_user'):
+            return "[('usage', 'in', ['internal', 'transit'])] if context.get('inventory_mode') else []"
+        return "[]"
 
     def _domain_lot_id(self):
-        if not self._is_inventory_mode():
-            return
-        domain = []
-        if self.env.context.get('active_model') == 'product.product':
-            domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
-        elif self.env.context.get('active_model') == 'product.template':
-            product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
-            if product_template.exists():
-                domain.insert(0, "('product_id', 'in', %s)" % product_template.product_variant_ids.ids)
-        else:
-            domain.insert(0, "('product_id', '=', product_id)")
-        return '[' + ', '.join(domain) + ']'
+        if self.user_has_groups('stock.group_stock_user'):
+            return ("[] if not context.get('inventory_mode') else"
+                " [('product_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.product' else"
+                " [('product_id.product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+                " [('product_id', '=', product_id)]")
+        return "[]"
 
     def _domain_product_id(self):
-        if not self._is_inventory_mode():
-            return
-        domain = [('type', '=', 'product')]
-        if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
-            products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
-            domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
-        return domain
+        if self.user_has_groups('stock.group_stock_user'):
+            return ("[] if not context.get('inventory_mode') else"
+                " [('type', '=', 'product'), ('product_tmpl_id', 'in', context.get('product_tmpl_ids', []) + [context.get('product_tmpl_id', 0)])] if context.get('product_tmpl_ids') or context.get('product_tmpl_id') else"
+                " [('type', '=', 'product')]")
+        return "[]"
 
     product_id = fields.Many2one(
         'product.product', 'Product',
