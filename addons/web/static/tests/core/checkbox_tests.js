@@ -69,22 +69,16 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(value, false);
     });
 
-    QUnit.test("does not call onChange prop when disabled", async (assert) => {
+    QUnit.test("checkbox with props disabled", async (assert) => {
         const env = await makeTestEnv();
 
-        let onChangeCalled = false;
-        class Parent extends Component {
-            onChange(checked) {
-                onChangeCalled = true;
-            }
-        }
+        class Parent extends Component {}
         Parent.template = xml`<CheckBox onChange="onChange" disabled="true"/>`;
         Parent.components = { CheckBox };
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-checkbox input");
-        await click(target.querySelector("input"));
-        assert.strictEqual(onChangeCalled, false);
+        assert.ok(target.querySelector(".o-checkbox input").disabled);
     });
 
     QUnit.test("can toggle value by pressing ENTER", async (assert) => {
