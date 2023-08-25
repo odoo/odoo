@@ -213,7 +213,6 @@
             <search string="Event Registration">
                 <field name="id" string="Registration ID"/>
                 <field name="event_id"/>
-                <field name="event_user_id" string="Responsible"/>
                 <field name="event_organizer_id" string="Organizer"/>
                 <field name="name" string="Participant" filter_domain="['|', ('name', 'ilike', self), ('email', 'ilike', self)]"/>
                 <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
@@ -268,7 +267,6 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='event_id']" position="replace"/>
-            <xpath expr="//search/field[@name='event_user_id']" position="replace"/>
             <xpath expr="//search/field[@name='event_organizer_id']" position="replace"/>
             <xpath expr="//search/filter[@name='filter_is_ongoing']" position="replace"/>
             <xpath expr="//search/group/filter[@name='group_event']" position="replace"/>
