@@ -359,6 +359,7 @@ structure.
 
 """
 
+import contextlib
 import fnmatch
 import io
 import logging
@@ -613,10 +614,16 @@ class IrQWeb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
-            profile_options = {
-                'ref': options.get('ref') and int(options['ref']) or None,
-                'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
-            } if self.env.context.get('profile') else None
+            if self.env.context.get('profile'):
+                ref_value = None
+                with contextlib.suppress(ValueError, TypeError):
+                    ref_value = int(options.get('ref'))
+                profile_options = {
+                    'ref': ref_value,
+                    'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
+                }
+            else:
+                profile_options = None
             code = '\n'.join([
                 "def generate_functions():",
                 "    template_functions = {}",
