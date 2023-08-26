@@ -309,7 +309,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr "Eine Nummernfolge die automatisch mit jedem Auftrag hochzählt"
+msgstr "Eine Sequenznummer, die automatisch mit jedem Auftrag hochzählt"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -334,7 +334,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
 msgid "A session-unique sequence number for the order"
-msgstr "Eine sitzungsspezifische Nummernfolge für den Auftrag"
+msgstr "Eine sitzungsspezifische Sequenznummer für den Auftrag"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -2044,7 +2044,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
 msgid "Digest"
-msgstr "Zusammenfassung"
+msgstr "Übersicht"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2141,7 +2141,7 @@ msgstr "Anzeigename"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
-"Zusammenfassung des Benutzers."
+"Übersicht des Benutzers."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2166,7 +2166,7 @@ msgstr "Möchten Sie die Kundenliste öffnen, um einen Kunden auszuwählen?"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "Möchten Sie mit dem Webdrucker drucken?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2415,6 +2415,13 @@ msgid "Fiscal Position"
 msgstr "Steuerposition"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "Steuerposition nicht gefunden"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2490,7 +2497,7 @@ msgstr "Erzwingen erledigt"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr "Erzwungenes Konto für ausstehende Zahlungen"
+msgstr "Erzwungenes Konto für offene Rechnungen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -3147,7 +3154,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "Leer lassen, um das Standardkonto aus der Unternehmenseinstellung zu verwenden.\n"
-"Konto, das als ausstehendes Konto bei der Erstellung von Zahlungseinträgen verwendet wird."
+"Konto, das als Konto für offene Rechnungen bei der Erstellung von Zahlungseinträgen verwendet wird."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -3175,7 +3182,7 @@ msgstr ""
 "Leer lassen, um das Debitorenkonto des Kunden zu verwenden.\n"
 "Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ Wahr ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
 "Beim Kassenjournal wird über die Auszugszeilen direkt auf das Standardkonto im Journal geschrieben.\n"
-"Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für ausstehende Zahlungen geschrieben.\n"
+"Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für offene geschrieben.\n"
 "Es sind nur Bar- und Bankjournale zulässig."
 
 #. module: point_of_sale
@@ -3293,7 +3300,7 @@ msgstr "Hauptanhang"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
-msgstr "Zahlung erfassen"
+msgstr "Zahlung tätigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
@@ -4000,7 +4007,7 @@ msgstr "Auftragsref."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
-msgstr "Auftragsnummernfolge"
+msgstr "Auftragssequenznummer"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4075,7 +4082,7 @@ msgstr "Andere"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Ausstehendes Konto"
+msgstr "Konten für offene Rechnungen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -5589,7 +5596,7 @@ msgstr "Via Proxy scannen"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
 #, python-format
 msgid "Scanner"
-msgstr "Lesegerät"
+msgstr "Scanner"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6398,6 +6405,18 @@ msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr ""
 "Beim Empfang Ihres Auftrags ist ein Fehler im Steuerdatenmodul aufgetreten."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"Die im ursprünglichen Auftrag verwendete Steuerposition ist nicht geladen. "
+"Stellen Sie sicher, dass sie geladen ist, indem Sie sie in der Kassensystem-"
+"Konfiguration hinzufügen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7386,12 +7405,12 @@ msgstr "Wandregaleinheit"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Warehouse"
-msgstr "Lager"
+msgstr "Lagerhaus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr "Lager (Kassensystem)"
+msgstr "Lagerhaus (Kassensystem)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids

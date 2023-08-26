@@ -974,6 +974,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Conto analitico al quale sono legati il progetto, le sotto-attività e i rispettivi fogli ore. \n"
+"Traccia i costi e i ricavi del tuo progetto inserendo il conto analitico nei vari documenti (ad es. ordini di vendita, fatture, ordini di acquisto, fatture fornitore, note spese ecc.).\n"
+"Il conto analitico può essere modificato su ogni attività se necessario.\n"
+"Il conto analitico è necessario per l'utilizzo dei fogli ore."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -2370,7 +2374,7 @@ msgstr "Minimizzata nel kanban"
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr ""
+msgstr "Le fasi Kanban minimizzate sono fasi di chiusura."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3130,6 +3134,13 @@ msgstr "Lascia un commento"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -3141,6 +3152,13 @@ msgstr "Creiamo il primo <b>progetto</b>."
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Creiamo il primo <b>lavoro</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -4407,7 +4425,7 @@ msgstr "Immagine ultima valutazione"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_text
 msgid "Rating Last Text"
-msgstr ""
+msgstr "Valutazione ultimo testo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value

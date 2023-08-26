@@ -5,7 +5,6 @@
 # Translators:
 # Wolfgang Taferner, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Michael Hofer, 2022
 # Mr Tob, 2022
 # Thomas, 2023
 # Chris Egal <sodaswed@web.de>, 2023
@@ -43,7 +42,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"<p class=\"o_view_nocontent_smiling_face\">Hinzufügen von Adressen zur Berechtigungsliste</p><p>  Um Sie vor Spam und Antwortschleifen zu schützen, blockiert Odoo automatisch E-Mails E-Mails, die an Ihrem Gateway ankommen, ab einer bestimmten Anzahl von E-Mails %ipro Minuten%i. Wenn es Adressen gibt, von denen Sie sehr häufig Nachrichten erhalten möchten, können Sie diese unten hinzufügen, und Odoo wird sie dann weiterleiten.</p>"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                Fügen Sie der Berechtigungsliste Adressen hinzu.\n"
+"            </p><p>\n"
+"                Um Sie vor Spam und Antwortschleifen zu schützen, blockiert Odoo automatisch E-Mails,\n"
+"                die mit einer Häufigkeit von <b>%i</b> E-Mails pro <b>%i</b>\n"
+"                Minuten an Ihrem Gateway ankommen. Wenn es Adressen gibt, von denen Sie sehr häufig Nachrichten erhalten müssen,\n"
+"                können Sie diese unten hinzufügen, und Odoo wird sie dann nicht blockieren.\n"
+"            </p>\n"
+"        "
 
 #. module: mail
 #. odoo-python
@@ -814,7 +821,7 @@ msgstr "<span class=\"o_form_label\">Benutzerdefinierte ICE-Server-Liste</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Email Templates</span>"
-msgstr "<span class=\"o_form_label\">E-Mail Vorlagen</span>"
+msgstr "<span class=\"o_form_label\">E-Mail-Vorlagen</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2812,7 +2819,7 @@ msgstr "Kunde ist für Posteingang/E-Mail-Benachrichtigung erforderlich"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
-msgstr "Aussehen der automatisierten E-Mails anpassen"
+msgstr "Passen Sie das Aussehen der automatisierten E-Mails an"
 
 #. module: mail
 #. odoo-javascript
@@ -4119,7 +4126,7 @@ msgstr "Outlook-API-Anmeldedaten erhalten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
-msgstr "G-Mail Zugangsdaten"
+msgstr "Gmail-Anmeldedaten"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group

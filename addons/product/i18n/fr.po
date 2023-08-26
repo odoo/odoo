@@ -83,7 +83,7 @@ msgstr "'Étiquettes de produits - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Emballage des produits - %s' % (object.name)"
+msgstr "'Conditionnement des produits - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -225,7 +225,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr "Un code-barres ne peut être attribué qu'à un seul emballage."
+msgstr "Un code-barres ne peut être attribué qu'à un seul conditionnement."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -244,7 +244,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr "Un emballage utilise déjà le code-barres"
+msgstr "Un conditionnement utilise déjà le code-barres"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -502,9 +502,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Code à barres utilisé pour l'identification de l'emballage. Scannez ce code-"
-"barres d'emballage à partir d'un transfert dans l'application Code-barres "
-"pour déplacer toutes les unités contenues"
+"Code à barres utilisé pour l'identification du conditionnement. Scannez ce "
+"code-barres du conditionnement à partir d'un transfert dans l'application "
+"Code-barres pour déplacer toutes les unités contenues"
 
 #. module: product
 #. odoo-python
@@ -2126,19 +2126,19 @@ msgstr "Nom du produit"
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
 #: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
-msgstr "Emballages des produits"
+msgstr "Colis des produits"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Emballage des produits"
+msgstr "Conditionnement des produits"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Emballage des produits (PDF)"
+msgstr "Conditionnement des produits (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -2350,7 +2350,7 @@ msgstr "La quantité est déjà présente (%d)."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "Quantité de produits contenus dans l'emballage."
+msgstr "Quantité de produits contenus dans le conditionnement."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
