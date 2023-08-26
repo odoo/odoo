@@ -2052,7 +2052,7 @@ msgstr "Möchten Sie die Kundenliste öffnen um einen Kunden auszuwählen?"
 #: code:addons/point_of_sale/static/src/js/Misc/AbstractReceiptScreen.js:0
 #, python-format
 msgid "Do you want to print using the web printer?"
-msgstr ""
+msgstr "Möchten Sie mit dem Webdrucker drucken?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2308,6 +2308,13 @@ msgstr "Auftragsimport abgeschlossen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
 msgstr "Steuerzuordnung"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "Steuerposition nicht gefunden"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6049,6 +6056,18 @@ msgid ""
 msgstr ""
 "Beim Empfang Ihrer Bestellung ist ein Fehler im Steuerdatenmodul "
 "aufgetreten."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"Die im ursprünglichen Auftrag verwendete Steuerposition ist nicht geladen. "
+"Stellen Sie sicher, dass sie geladen ist, indem Sie sie in der Kassensystem-"
+"Konfiguration hinzufügen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip

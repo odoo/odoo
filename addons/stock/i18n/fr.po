@@ -940,7 +940,7 @@ msgstr "Emplacement autorisé"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
-msgstr "Jour et mois d'inventaire annuel"
+msgstr "Jour et mois de l'inventaire annuel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
@@ -3599,7 +3599,7 @@ msgstr "Nom de l'ajustement"
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model:ir.model,name:stock.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr "Référence/raison de l'ajustement"
+msgstr "Référence/motif de l'ajustement"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_warning
@@ -3662,7 +3662,7 @@ msgstr "Quantité comptée enregistrée"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Inventory Reference / Reason"
-msgstr "Référence/Raison d'Inventaire"
+msgstr "Référence/motif d'Inventaire"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
@@ -6434,7 +6434,7 @@ msgstr "Analyse"
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "Demander un Comptage"
+msgstr "Demander un inventaire"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -9372,8 +9372,10 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Vous ne pouvez pas diviser un mouvement de stock  l'état est \"Terminé."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Vous ne pouvez pas diviser un mouvement de stock qui est défini sur 'Fait' "
+"ou 'Annuler'."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0

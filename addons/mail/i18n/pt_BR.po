@@ -4905,7 +4905,7 @@ msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
 " action deadline."
 msgstr ""
-"Número de dias / semana / mês antes de executar a ação. Permite planejar o "
+"Número de dias/semanas/meses antes de executar a ação. Permite planejar o "
 "prazo da ação."
 
 #. module: mail
@@ -5182,7 +5182,7 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"Opcional Servidor preferido para os e-mails de saída. Se não for definido o "
+"Servidor preferido opcional para enviar e-mails. Se não for definido, o "
 "servidor com maior prioridade será usado."
 
 #. module: mail
@@ -5328,9 +5328,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"Subtipo pai, usado para a subscrição automática. Este campo não está "
-"corretamente identificado. Por exemplo, em um projeto, o parent_id dos "
-"subtipos do projeto refere-se a subtipos relacionados a tarefas."
+"Subtipo principal, usado para inscrição automática. Este campo não está "
+"identificado corretamente. Por exemplo, em um projeto, o parent_id dos "
+"subtipos de projeto refere-se a subtipos relacionados a tarefas."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__partner_id
@@ -5899,7 +5899,7 @@ msgstr "Remover"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr "Remover e-mail do assistente da Lista Negra"
+msgstr "Remover e-mail do assistente de lista de bloqueio"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5951,8 +5951,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Responder endereço de e-mail. Definir o reply_to ignora a criação de linha "
-"automático."
+"Endereço de e-mail de resposta. Definir o reply_to ignora a criação "
+"automática de thread."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
@@ -5996,7 +5996,7 @@ msgstr "Reenviar para selecionado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
 msgid "Resend wizard"
-msgstr "Reenviar assistente"
+msgstr "Assistente de reenvio"
 
 #. module: mail
 #. openerp-web
@@ -6333,7 +6333,7 @@ msgstr "Enviar mensagem"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
 msgid "Sender address"
-msgstr "Endereço de envio"
+msgstr "Endereço do remetente"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_from
@@ -6341,8 +6341,8 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
-"Endereço do remetente (espaços reservados podem ser usados ​​aqui). Se não "
-"for definido, o valor padrão será o apelido de e-mail do autor, se "
+"Endereço do remetente (marcadores de posição podem ser usados ​​aqui). Se "
+"não for definido, o valor padrão será o alias de e-mail do autor se "
 "configurado, ou o endereço de e-mail."
 
 #. module: mail
@@ -6370,7 +6370,7 @@ msgstr "Ação de Servidor"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr "Defina a atividade como falsa para ocultar o canal sem removê-lo"
+msgstr "Defina 'ativo' como 'falso' para ocultar o canal sem removê-lo."
 
 #. module: mail
 #. openerp-web
@@ -6988,8 +6988,9 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"A operação solicitada não pode ser concluída devido a restrições de segurança. Por favor, contacte o administrador do sistema. \n"
-"(Tipo de documento: %s, Operation: %s)"
+"A operação solicitada não pode ser concluída devido a restrições de segurança. Contate o administrador do sistema. \n"
+"\n"
+"(Tipo de documento: %s, Operação: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__source
@@ -7081,9 +7082,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"Esta opção remove permanentemente qualquer trilha de e-mail após o seu "
-"envio, incluindo a partir do menu Técnico nas Definições, a fim de preservar"
-" o espaço de armazenamento de seu banco de dados Odoo."
+"Esta opção remove permanentemente qualquer rastro de e-mail após o seu "
+"envio, inclusive do menu técnico nas Definições, a fim de preservar o espaço"
+" de armazenamento da sua base de dados Odoo."
 
 #. module: mail
 #. openerp-web
@@ -7493,8 +7494,8 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Use 'Usuário específico' para atribuir sempre o mesmo usuário na próxima "
-"atividade. Use 'Usuário genérico do registro' para especificar o nome do "
+"Use 'usuário específico' para atribuir sempre o mesmo usuário na próxima "
+"atividade. Use 'usuário genérico do registro' para especificar o nome de "
 "campo do usuário a ser escolhido no registro."
 
 #. module: mail
@@ -7824,7 +7825,7 @@ msgstr "Nome de operação incorreto (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr "YYYY-MM-DD HH:MM:SS"
+msgstr "DD-MM-AAAA HH:MM:SS"
 
 #. module: mail
 #. openerp-web

@@ -6,7 +6,7 @@
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2021
 # baaska sh <sh.baaskash@gmail.com>, 2021
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2021
-# BATKHUYAG Ganbold <gbatkhuyag@gmail.com>, 2021
+# BATKHUYAG Ganbold, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2021
 # Onii Onii <onii0223@yahoo.com>, 2021
@@ -3696,6 +3696,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Боловсруулсан тоог өөрчилж болох эсэх"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9104,8 +9112,8 @@ msgstr "Ноорог хөдөлгөөнийг хуваах боломжгүй. �
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "'Дууссан' төлөвтэй барааны хөдөлгөөний хуваах боломжгүй."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9451,12 +9459,4 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""

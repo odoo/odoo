@@ -3,7 +3,6 @@
 # 	* stock
 # 
 # Translators:
-# Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2021
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2021
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2021
 # Piotr Strębski <strebski@gmail.com>, 2021
@@ -37,6 +36,7 @@
 # Tadeusz Karpiński, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Janusz Harkot <jh@trilab.pl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Janusz Harkot <jh@trilab.pl>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,7 +161,7 @@ msgstr "%(warehouse)s: Dostarcz produkt od %(supplier)s"
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kopiuj)"
+msgstr "%s (kopia)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -189,7 +189,7 @@ msgstr "'Arkusz spisowy'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Potwierdzenie dostawy - %s -  %s' % (object.partner_id.name lub '', "
+"'Potwierdzenie dostawy - %s -  %s' % (object.partner_id.name or '', "
 "object.name)"
 
 #. module: stock
@@ -299,7 +299,7 @@ msgstr "1 tydzień"
 #: code:addons/stock/models/stock_scrap.py:0
 #, python-format
 msgid ": Insufficient Quantity To Scrap"
-msgstr ": Niewystarczająca ilość do scrapowania"
+msgstr ": Niewystarczająca ilość do utylizacji odpadów"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -1456,7 +1456,7 @@ msgstr "Zaznacz to pole, jeśli ta strefa ma być stosowana do zwrotów."
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
-"Zaznacz tę opcję, aby ta strefa mogła zawierać uszkodzone/wybrakowane "
+"Zaznacz tę opcję, aby ta strefa mogła zawierać odpady czy uszkodzone "
 "produkty."
 
 #. module: stock
@@ -3072,7 +3072,7 @@ msgstr "Ma Opakowania"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr "Zawiera przesunięcia odpadów"
+msgstr "Zawiera utylizację odpadów"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -3703,7 +3703,7 @@ msgstr "Jest strefą zwrotów?"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Czy jest strefą odrzutów?"
+msgstr "Czy jest strefą odpadów?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -6786,7 +6786,7 @@ msgstr "Przeszukuj zapotrzebowania."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr "Szukaj Odpadów"
+msgstr "Szukaj odpadów"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__product_categ_id
@@ -8856,7 +8856,7 @@ msgstr "Ostrzeż o niewystarczającej ilości"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr "Ostrzeż o niedostatecznej ilości odpadów"
+msgstr "Ostrzegaj o niedostatecznej ilości odpadów"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -9306,10 +9306,8 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Nie można podzielić przesunięcia magazynowego, które zostało ustawione na "
-"„Gotowe”."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0

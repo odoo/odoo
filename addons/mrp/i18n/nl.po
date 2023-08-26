@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Wil Odoo, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -4542,6 +4543,23 @@ msgstr ""
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr "De capaciteit kan alleen positief zijn."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "The component %s should not be the same as the product to produce."
+msgstr ""
+"Het onderdeel %s mag niet hetzelfde zijn als het te produceren product."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"De huidige configuratie is onjuist omdat er dan een cyclus ontstaat tussen "
+"deze producten: %s."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
