@@ -541,7 +541,12 @@ export class ListRenderer extends Component {
             }
             const { rawAttrs, widget } = this.props.list.activeFields[fieldName];
             let currencyId;
-            if (type === "monetary" || widget === "monetary") {
+            const func =
+                (rawAttrs.sum && "sum") ||
+                (rawAttrs.avg && "avg") ||
+                (rawAttrs.max && "max") ||
+                (rawAttrs.min && "min");
+            if (func && (type === "monetary" || widget === "monetary")) {
                 const currencyField =
                     this.props.list.activeFields[fieldName].options.currency_field ||
                     this.fields[fieldName].currency_field ||
@@ -563,11 +568,6 @@ export class ListRenderer extends Component {
                     }
                 }
             }
-            const func =
-                (rawAttrs.sum && "sum") ||
-                (rawAttrs.avg && "avg") ||
-                (rawAttrs.max && "max") ||
-                (rawAttrs.min && "min");
             if (func) {
                 let aggregateValue = 0;
                 if (func === "max") {
