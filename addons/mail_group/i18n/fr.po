@@ -73,7 +73,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Bonjour,<br><br>\n"
-"                Vous avez demandé à être désinscrit de la liste de diffusion <strong t-out=\"object.name or ''\"></strong>.\n"
+"                Vous avez demandé à être désabonné de la liste de diffusion <strong t-out=\"object.name or ''\"></strong>.\n"
 "                <br><br>\n"
 "                Pour confirmer, veuillez cliquer sur le lien suivant : <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
 "                <br><br>\n"
@@ -420,7 +420,7 @@ msgstr "Confirmer l'inscription à {{ object.name }}"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr "Confirmer la désinscription de {{ object.name }}"
+msgstr "Confirmer le désabonnement de {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
@@ -735,7 +735,7 @@ msgstr "Groupe de messagerie : Inscription à la liste de diffusion"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "Groupe de messagerie : Désinscription de la liste de diffusion"
+msgstr "Groupe de messagerie : Désabonnement de la liste de diffusion"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -958,7 +958,7 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
-"Voulez-vous vous désinscrire ? <br/>C'est par ici ! <span class=\"fa fa-2x "
+"Voulez-vous vous désabonner ? <br/>C'est par ici ! <span class=\"fa fa-2x "
 "fa-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Lisez ceci "
 "!\"/>"
 
@@ -1265,8 +1265,7 @@ msgstr ""
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
-"Envoyé aux personnes qui se sont désinscrites d'un groupe de diffusion"
+msgstr "Envoyé aux personnes qui se sont désabonnées d'un groupe de diffusion"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1458,12 +1457,12 @@ msgstr "À vérifier"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Unsubscribe"
-msgstr "Se désinscrire"
+msgstr "Se désabonner"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr "Se désinscrire :"
+msgstr "Se désabonner :"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
@@ -1575,7 +1574,7 @@ msgstr "la liste"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr "désinscrit de"
+msgstr "désabonné de"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

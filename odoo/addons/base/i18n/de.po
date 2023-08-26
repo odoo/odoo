@@ -1285,7 +1285,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Einige öffentliche Einrichtungen in Luxemburg haben keine Ust-IdNr, sondern haben eine willkürliche Nummer erhalten \n"
+"    Einige öffentliche Einrichtungen in Luxemburg haben keine MwSt.-Nummer, sondern haben eine willkürliche Nummer erhalten \n"
 "    (siehe: https://pch.gouvernement.lu/fr/peppol.html). Daher fügt dieses Modul das Feld „Peppol-Kennung“ in der \n"
 "    Formularansicht account.move hinzu. Wenn dieses Feld gesetzt ist, wird es beim Export von elektronischen Rechnungsformaten gelesen.\n"
 "    "
@@ -1443,7 +1443,7 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"Fügen Sie ein neues Modell mit dem Namen „Identifikationsart“ hinzu, das die Funktionalität des Umsatzsteuerfeldes im Partner erweitert und es dem Benutzer ermöglicht, sich nicht nur mit seiner Steuer-ID (MwSt.), sondern auch mit anderen Arten von Identifikationen wie nationalen Dokumenten, Pässen, ausländischen IDs usw. zu identifizieren (eventuell eine Rechnung). Wenn dieses Modul installiert ist, sehen Sie jetzt in der Partnerformularansicht zwei Felder:\n"
+"Fügen Sie ein neues Modell mit dem Namen „Identifikationsart“ hinzu, das die Funktionalität des Umsatzsteuerfeldes im Partner erweitert und es dem Benutzer ermöglicht, sich nicht nur mit seiner Ust-IdNr. (MwSt.), sondern auch mit anderen Arten von Identifikationen wie nationalen Dokumenten, Pässen, ausländischen IDs usw. zu identifizieren (eventuell eine Rechnung). Wenn dieses Modul installiert ist, sehen Sie jetzt in der Partnerformularansicht zwei Felder:\n"
 "\n"
 "* Identifikationsart\n"
 "* Identifikationsnummer\n"
@@ -1458,14 +1458,14 @@ msgstr ""
 "* Beschreibung: könnte der gleiche Kurzname oder ein langer Name sein\n"
 "* country_id: das Land, in das diese Kennung gehört\n"
 "* is_vat: Dieser Datensatz ist als die entsprechende MwSt. für das jeweilige Land zu identifizieren.\n"
-"* Reihenfolge: Sortieren Sie die Identifikationsarten nach den am häufigsten verwendeten.\n"
+"* Seqeunz: Sortieren Sie die Identifikationsarten nach den am häufigsten verwendeten.\n"
 "* aktiv: wir können die Identifikationen aktivieren/deaktivieren, um es unseren Kunden leichter zu machen\n"
 "\n"
 "Um dieses Modul für Mehrfirmenumgebungen kompatibel zu machen, in denen wir Unternehmen haben, die diese Anforderung nicht benötigen/unterstützen, haben wir generische Identifikationsarten und generische Regeln hinzugefügt, um die Kontaktinformationen zu verwalten und sie für den Benutzer transparent zu machen, wenn nur die Mehrwertsteuer, wie wir sie früher kannten, verwendet wird.\n"
 "\n"
 "Generische Identifikationen:\n"
 "\n"
-"* MwSt.: Die Steuer-IdNr. oder Ust.-IdNr wird standardmäßig als Identifikationsart ausgewählt, sodass der Benutzer nur die zugehörige Umsatzsteuer-Identifikationsnummer hinzufügen muss.\n"
+"* MwSt.: Die Ust-IdNr. oder MwSt.-Nummer wird standardmäßig als Identifikationsart ausgewählt, sodass der Benutzer nur die zugehörige Umsatzsteuer-Identifikationsnummer hinzufügen muss.\n"
 "* Reisepass\n"
 "* Ausländische ID (Ausländisches Dokument)\n"
 "\n"
@@ -1479,7 +1479,7 @@ msgstr ""
 "\n"
 "Alle definierten Identifikationsarten können im Menü „Kontakte / Konfiguration / Identifikationsart“ überprüft und aktiviert/deaktiviert werden.\n"
 "\n"
-"Dieses Modul ist mit dem Modul base_vat kompatibel, um die Ust.-IdNr. für jedes Land zu validieren, das die Möglichkeit hat, mehrere Identifikationsarten zu verwalten oder nicht.\n"
+"Dieses Modul ist mit dem Modul base_vat kompatibel, um die MwSt.-Nummer für jedes Land zu validieren, das die Möglichkeit hat, mehrere Identifikationsarten zu verwalten oder nicht.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -3501,7 +3501,7 @@ msgstr ""
 "\n"
 "* Versand: Lieferung des Gesamtauftrages oder Teillieferungen\n"
 "* Rechnungserstellung: Auswahl der Zahlungsart\n"
-"* Incoterms: Allgemeine Geschäftsbedingungen\n"
+"* Incoterms: Allgemeine Lieferbedingungen\n"
 "\n"
 "\n"
 "Mit diesem Modul können Sie den Verkaufsauftrags- und Rechnungsbericht\n"
@@ -4189,7 +4189,7 @@ msgid ""
 "=============================\n"
 msgstr ""
 "\n"
-"Senden Sie regelmäßige KPI-Zusammenfassungen\n"
+"Senden Sie regelmäßige KPI-Übersichten\n"
 "============================\n"
 
 #. module: base
@@ -5029,7 +5029,7 @@ msgid ""
 "    - SARS VAT Ready Structure"
 msgstr ""
 "\n"
-"Dies ist die neueste grundlegende südafrikanische Lokalisierung, die für den Betrieb von Odoo in ZA erforderlich ist:\n"
+"Dies ist die neueste grundlegende südafrikanische Lokalisierung, die für den Betrieb von Odoo in Südafrika erforderlich ist:\n"
 "================================================================================\n"
 "    - ein allgemeiner Kontenplan\n"
 "    - Struktur SARS VAT Ready"
@@ -5799,9 +5799,9 @@ msgid ""
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
 "\n"
-"Dieses Modul stellt die Verbindung zwischen den Apps der Batch-Kommissionierung und den Transportunternehmen her.\n"
+"Dieses Modul stellt die Verbindung zwischen den Apps der Stapelkommissionierung und den Transportunternehmen her.\n"
 "\n"
-"Ermöglicht die Vorbereitung von Chargen in Abhängigkeit von ihrem Transportunternehmen\n"
+"Ermöglicht die Vorbereitung von Stapeln in Abhängigkeit von ihrem Transportunternehmen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -6144,14 +6144,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Umsatzsteuervalidierung für die Umsatzsteuer-Identifikationsnummern der Partner\n"
+"MwSt.-Validierung für MwSt.-Nummerm der Partner\n"
 "===================================================================\n"
 "\n"
-"Nach der Installation dieses Moduls werden die eingegebenen Umsatzsteuern der Partner für alle unterstützten Ländern validiert. Das Land\n"
-"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der der USt-IdNr.\n"
+"Nach der Installation dieses Moduls werden die eingegebenen Mehrwertsteuern der Partner für alle unterstützten Ländern validiert. Das Land\n"
+"wird abgeleitetet von dem 2-Buchstaben-Ländercode, der der MwSt.-Nummer\n"
 "vorangestellt ist, z. B. wird BE0477472701 nach dem belgischen Format validiert.\n"
 "\n"
-"Es gibt zwei verschiedene Ebenen der Validierung der Umsatzsteuer-Identifikationsnummer:\n"
+"Es gibt zwei verschiedene Ebenen der Validierung der MwSt.-Nummer:\n"
 "--------------------------------------------------------------------------------------------------------------------------\n"
 "  * Standardmäßig wird eine einfache Offline-Prüfung durchgeführt, unter Verwendung der\n"
 "      bekannten Validierungsregeln für das Land, in der Regel eine einfache Prüfziffer. Das geht schnell\n"
@@ -6159,7 +6159,7 @@ msgstr ""
 "      oder nicht mehr gültig sind.\n"
 "      \n"
 "       * Wenn die „MwSt.-MIAS-Prüfung“-Option aktiviert ist (in der Konfiguration des Unternehmens des\n"
-"      Benutzers) wird die USt-IdNr. an die Online-EU-MIAS-Datenbank\n"
+"      Benutzers) wird die MwSt.-Nummer an die Online-EU-MIAS-Datenbank\n"
 "       übermittelt werden, die sicherstellt, dass die Zahl gültig und aktuell\n"
 "       einem EU-Unternehmen zugeordnet ist. Das ist ein wenig langsamer als die einfache\n"
 "       Offline-Prüfung, erfordert eine Internet-Verbindung und steht möglicherweise nicht jederzeit zur   \n"
@@ -8764,7 +8764,7 @@ msgstr "Nach Betrag"
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_helpdesk
 msgid "After-sales services"
-msgstr "Kundenbetreuung"
+msgstr "After-Sales-Services"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -9297,7 +9297,7 @@ msgstr "Bewertung Ihrer Mitarbeiter"
 #. module: base
 #: model:ir.model,name:base.model_ir_asset
 msgid "Asset"
-msgstr "Aktiva"
+msgstr "Asset"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_asset
@@ -9306,7 +9306,7 @@ msgstr "Aktiva"
 #: model_terms:ir.ui.view,arch_db:base.asset_view_search
 #: model_terms:ir.ui.view,arch_db:base.asset_view_tree
 msgid "Assets"
-msgstr "Assets"
+msgstr "Vermögensgegenstände"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -11553,7 +11553,7 @@ msgstr "Ein neues Unternehmen erstellen"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 msgid "Create a new customer in your address book"
-msgstr "Erstellen Sie einen neuen Kunden in Ihrem Adressbuch"
+msgstr "Einen neuen Kunden in Ihrem Adressbuch erstellen"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -12426,7 +12426,7 @@ msgstr "Lieferkosten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_stock_picking_batch
 msgid "Delivery Stock Picking Batch"
-msgstr "Lieferung Batch-Kommissionierung"
+msgstr "Lieferung Stapelkommissionierung"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -13317,6 +13317,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Fehler bei der Analyse der Ansicht:\n"
+"\n"
+"%s"
 
 #. module: base
 #. odoo-python
@@ -15520,8 +15523,8 @@ msgid ""
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
 "Wenn aktiviert, wird der vollständige Datenaustausch der SMTP-Sitzungen in "
-"das Serverprotokoll im DEBUG-Modus geschrieben (das ist sehr ausführlich und"
-" kann sensible Daten enthalten!)"
+"das Serverprotokoll im Fehlerbeseitigungsmodus geschrieben (das ist sehr "
+"ausführlich und kann sensible Daten enthalten!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment_use
@@ -15780,7 +15783,7 @@ msgstr "Importieren"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
-msgstr "Import/Export"
+msgstr "Importieren/Exportieren"
 
 #. module: base
 #. odoo-python
@@ -16651,7 +16654,7 @@ msgstr "K - FINANZ- UND KREDITWESEN"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
-msgstr "KPI-Zusammenfassungen"
+msgstr "KPI-Übersichten"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__kanban
@@ -16774,7 +16777,7 @@ msgstr "Einstandskosten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
 msgid "Landed Costs On MO"
-msgstr "Wareneinstandskosten bei Fertigungsauftrag"
+msgstr "Einstandskosten bei Fertigungsauftrag"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subonctracting_landed_costs
@@ -16784,7 +16787,7 @@ msgstr "Einstandskosten mit Subunternehmerauftrag"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
 msgid "Landed Costs on Manufacturing Order"
-msgstr "Wareneinstandskosten beim Fertigungsauftrag"
+msgstr "Einstandskosten beim Fertigungsauftrag"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
@@ -23548,7 +23551,7 @@ msgstr "Bezugsfeld"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
 msgid "Related Model"
-msgstr "Verknüpftes Modell"
+msgstr "Zugehöriges Modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
@@ -23683,7 +23686,7 @@ msgstr "Bericht"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Aktion melden"
+msgstr "Berichtsaktion"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -24460,7 +24463,7 @@ msgstr ""
 "Ausgewählte Kontakte können zusammengefasst werden.\n"
 "                                Alle Dokumente, die mit einem dieser Kontakte verknüpft sind,\n"
 "                                werden zum Zielkontakt umgeleitet.\n"
-"                                ie können einzelne Kontakte entfernen, um eine Zusammenführung zu vermeiden."
+"                                Sie können einzelne Kontakte entfernen, um eine Zusammenführung zu vermeiden."
 
 #. module: base
 #. odoo-python
@@ -25747,7 +25750,7 @@ msgstr "Test Aktionsbindungen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Test Connection"
-msgstr "Verbindung testen"
+msgstr "Testverbindung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full
@@ -27974,7 +27977,7 @@ msgstr "Verwenden Sie das Format „%s“"
 #: model:ir.model.fields,help:base.field_res_country__vat_label
 msgid "Use this field if you want to change vat label."
 msgstr ""
-"Verwenden Sie dieses Feld, wenn Sie die USt.-Bezeichnung ändern wollen."
+"Verwenden Sie dieses Feld, wenn Sie die MwSt.-Bezeichnung ändern wollen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_view_id
@@ -28210,7 +28213,7 @@ msgstr "Usbekistan"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "USt."
+msgstr "MwSt."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -28297,7 +28300,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "USt.-Bezeichnung"
+msgstr "MwSt.-Bezeichnung"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
@@ -29782,7 +29785,7 @@ msgstr "o_onboarding_confetti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr "auf"
+msgstr "am"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many

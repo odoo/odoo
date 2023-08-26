@@ -7442,6 +7442,13 @@ msgid "Sequence return"
 msgstr "Послідовність повернення"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr "Послідовності %s вже існують."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Серійні номери"
@@ -10039,8 +10046,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Неможливо розбити складське переміщення, встановлене на \"Готово\"."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Ви не можете розділити складське переміщення, для якого встановлено значення"
+" «Виконано» або «Скасовано»."
 
 #. module: stock
 #. odoo-python

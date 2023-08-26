@@ -7402,6 +7402,13 @@ msgid "Sequence return"
 msgstr "Sıralama dönüşü"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Seri Numaraları"
@@ -9965,8 +9972,8 @@ msgstr "Onaysız satırı bölemezsiniz. Öncelikle onaylayınız."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "'Tamamlandı' olarak ayarlanmış bir stok hareketini bölemezsiniz."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #. odoo-python
