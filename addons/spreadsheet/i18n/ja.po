@@ -31,21 +31,21 @@ msgstr ""
 msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
-msgstr ""
+msgstr "文字列は、空または有効な文字列への参照が可能です。空の場合、テキストは単に連結されます。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/ir_ui_menu/index.js:0
 #, python-format
 msgid "#LINK"
-msgstr ""
+msgstr "リンク数"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "%s %s and %s"
-msgstr ""
+msgstr "%s %s と %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -80,7 +80,7 @@ msgstr "下に %s 行"
 #: code:addons/spreadsheet/static/src/assets_backend/spreadsheet_action_loader.js:0
 #, python-format
 msgid "%s couldn't be loaded"
-msgstr ""
+msgstr "%sはロードできませんでした。 "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -89,7 +89,7 @@ msgstr ""
 msgid ""
 "(0) Exact match. (-1) Return next smaller item if no match. (1) Return next "
 "greater item if no match."
-msgstr ""
+msgstr "(0) 完全な一致 (-1) 一致がない場合は次に小さい項目に戻って下さい。(1) い一致がない場合は次に大きい項目に戻って下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -102,27 +102,32 @@ msgid ""
 "      (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\n"
 "      "
 msgstr ""
+"(1) 最初の項目から検索します。 \n"
+"      (-1) 最後の項目から検索します。 \n"
+"      (2)lookup_array が昇順にソートされていることを前提としたバイナリ検索を実行。ソートされていない場合は、無効な結果が返されます。 \n"
+"      (-2) Pookup_array が降順にソートされていることを前提としたバイナリ検索を実行。ソートされていない場合は、無効な結果が返されます。\n"
+"      "
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "(Blanks)"
-msgstr ""
+msgstr "(空欄)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "+ Add another rule"
-msgstr ""
+msgstr "+ 規則を1つ追加"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "- [optional]"
-msgstr ""
+msgstr "- [任意]"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -134,20 +139,24 @@ msgid ""
 " *  https://fontawesome.com/license\n"
 " */"
 msgstr ""
+"/** Font Awesome by Dave Gandy\n"
+" *  http://fontawesome.io/\n"
+" *  https://fontawesome.com/license\n"
+" */"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "1 column"
-msgstr ""
+msgstr "1列"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "1 row"
-msgstr ""
+msgstr "1行"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -161,7 +170,7 @@ msgstr "2列"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "2 rows"
-msgstr ""
+msgstr "2行"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -170,7 +179,7 @@ msgstr ""
 msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
-msgstr ""
+msgstr "ブール値:TRUE の場合、テキスト引数で選択された空のセルは結果に含まれません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -191,21 +200,21 @@ msgstr "範囲全体の条件付き合計。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A filter can only be created on a continuous selection."
-msgstr ""
+msgstr "連続した選択でのみフィルターを作成できます。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A maximum range limit value is needed"
-msgstr ""
+msgstr "限界値の最大幅が必要です。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A minimum range limit value is needed"
-msgstr ""
+msgstr "限界値の最小幅が必要です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -214,7 +223,7 @@ msgstr ""
 msgid ""
 "A number indicating which numbering system to use to represent weekdays. By "
 "default, counts starting with Sunday = 1."
-msgstr ""
+msgstr "平日を表すためにどの番号体系を使用するかを示す数字。デフォルトでは、日曜日 = 1 で始まります。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -224,7 +233,7 @@ msgstr ""
 msgid ""
 "A number or string representing which days of the week are considered "
 "weekends."
-msgstr ""
+msgstr "どの曜日を週末とみなすかを表す数字または文字列。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -239,7 +248,7 @@ msgstr "累乗された数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A number representing the day that a week starts on. Sunday = 1."
-msgstr ""
+msgstr "週の始まりの日を表す数字。日曜日＝1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -262,14 +271,14 @@ msgstr "0を含み1を除く0から1の間の乱数。"
 msgid ""
 "A range containing the income or payments associated with the investment. "
 "The array should contain bot payments and incomes."
-msgstr ""
+msgstr "投資に関連する収入または支払を含む範囲。この配列には、ボットの支払および収入を含みます。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A range needs to be defined"
-msgstr ""
+msgstr "範囲を定義して下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -278,7 +287,7 @@ msgstr ""
 msgid ""
 "A range or array constant containing the date serial numbers to consider "
 "holidays."
-msgstr ""
+msgstr "休日を考慮する日付シリアル番号を含む範囲または配列定数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -286,7 +295,7 @@ msgstr ""
 #, python-format
 msgid ""
 "A range or array constant containing the dates to consider as holidays."
-msgstr ""
+msgstr "休日とみなす日付を含む範囲または配列定数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -294,28 +303,28 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A range or array constant containing the dates to consider holidays."
-msgstr ""
+msgstr "休日とみなす日付を含む範囲または配列定数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A segment of a string."
-msgstr ""
+msgstr "文字列のセグメント。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A series of interest rates to compound against the principal."
-msgstr ""
+msgstr "元本に対して複利で支払う一連の金利。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "A sheet with the name %s already exists. Please select another name."
-msgstr ""
+msgstr "シート名 %sがすでに存在します。別の名前を選んで下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -336,28 +345,28 @@ msgstr "指定された文字列の末尾からの部分文字列。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "ABOUT"
-msgstr ""
+msgstr "およそ"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "AVERAGE"
-msgstr ""
+msgstr "平均"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Absolute value"
-msgstr ""
+msgstr "絶対値"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Absolute value of a number."
-msgstr ""
+msgstr "数字の絶対値"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -366,21 +375,21 @@ msgstr ""
 msgid ""
 "Access to the clipboard denied by the browser. Please enable clipboard "
 "permission for this page in your browser settings."
-msgstr ""
+msgstr "ブラウザによってクリップボードへのアクセスが拒否されました。ブラウザの設定でこのページのクリップボード許可を有効にして下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Accrued interest of security paying at maturity."
-msgstr ""
+msgstr "満期時に支払う担保の未払い利息。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
-msgstr ""
+msgstr "有効なフィルタ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -394,14 +403,14 @@ msgstr "追加"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Add range"
-msgstr ""
+msgstr "範囲を追加"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional conditions to be evaluated if the previous ones are FALSE."
-msgstr ""
+msgstr "前の条件がFALSEの場合に評価される追加条件。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -409,28 +418,28 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional criteria to check."
-msgstr ""
+msgstr "その他のチェック基準"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional criteria_range and criterion to check."
-msgstr ""
+msgstr "追加のcriteria_rangeと確認基準。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional future cash flows."
-msgstr ""
+msgstr "追加の今後のキャッシュフロー"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional numbers or ranges to add to value1."
-msgstr ""
+msgstr "値1に追加する追加の番号または範囲"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -443,35 +452,35 @@ msgid ""
 "Additional ranges over which to evaluate the additional criteria. The "
 "filtered set will be the intersection of the sets produced by each "
 "criterion-range pair."
-msgstr ""
+msgstr "追加の基準を評価するための追加の範囲。フィルタリングされた集合は、各基準範囲ペアによって生成された集合の交点となります。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional ranges to check."
-msgstr ""
+msgstr "追加の範囲要チェック"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional text item(s)."
-msgstr ""
+msgstr "追加テキスト項目"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges in which to count the number of blanks."
-msgstr ""
+msgstr "空白の数を数えるための追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to consider for uniqueness."
-msgstr ""
+msgstr "一意性を考慮するための追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -480,7 +489,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the average value."
-msgstr ""
+msgstr "平均値を計算する際に考慮すべき追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -489,7 +498,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the maximum value."
-msgstr ""
+msgstr "最大値を計算する際に考慮すべき追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -497,7 +506,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the median value."
-msgstr ""
+msgstr "中央値を計算する際に考慮すべき追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -506,7 +515,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values or ranges to consider when calculating the minimum value."
-msgstr ""
+msgstr "最小値を計算する際に考慮すべき追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -514,7 +523,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to consider when counting."
-msgstr ""
+msgstr "カウントする際に考慮すべき追加の値や範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -526,7 +535,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to include in the population."
-msgstr ""
+msgstr "母集団に含める追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -539,14 +548,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values or ranges to include in the sample."
-msgstr ""
+msgstr "サンプルに含める追加の値または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional values to average."
-msgstr ""
+msgstr "平均化する追加値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -554,14 +563,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
-msgstr ""
+msgstr "対応する条件が TRUE の場合に返される追加値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional weights."
-msgstr ""
+msgstr "追加重量"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -593,14 +602,14 @@ msgstr "全て"
 msgid ""
 "All the dates should be greater or equal to the first date in cashflow_dates"
 " (%s)."
-msgstr ""
+msgstr "全ての日付は cashflow_dates (%s)の最初の日付以上である必要があります。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Amount received at maturity for a security."
-msgstr ""
+msgstr "証券の満期時に受け取る金額。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -609,7 +618,7 @@ msgstr ""
 msgid ""
 "An array or range containing the income or payments associated with the "
 "investment."
-msgstr ""
+msgstr "投資に関する収入または支払を含む配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -625,7 +634,7 @@ msgstr "操作前に、データベースの値をフィルタリングするた
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An estimate for what the interest rate will be."
-msgstr ""
+msgstr "金利がいくらになるかの見積。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -633,7 +642,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An estimate for what the internal rate of return will be."
-msgstr ""
+msgstr "内部収益率がいくらになるかの見積。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -645,7 +654,7 @@ msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE, or an expression that can"
 " be coerced to a logical value."
-msgstr ""
+msgstr "論理値、すなわちTRUEまたはFALSEを表す式、または論理値に変換できる式を含むセルへの式または参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -654,7 +663,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE."
-msgstr ""
+msgstr "ある論理値、すなわちTRUEまたはFALSEを表す式を含むセルへの式または参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -663,7 +672,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
-msgstr ""
+msgstr "ある論理値を表す式を保持するセルへの式または参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -684,7 +693,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An indicator of what day count method to use."
-msgstr ""
+msgstr "どのような日数カウント方法を使用するかの指標。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -693,7 +702,7 @@ msgstr ""
 msgid ""
 "An indicator of what day count method to use. (0) US NASD method (1) "
 "European method"
-msgstr ""
+msgstr "どの日付カウント方式を使用するかの指標。(0) 米国 NASD 方式 (1) 欧州方式"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -702,7 +711,7 @@ msgstr ""
 #, python-format
 msgid ""
 "An range containing the income or payments associated with the investment."
-msgstr ""
+msgstr "投資に関する収入または支払を含む範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -711,14 +720,14 @@ msgstr ""
 #, python-format
 msgid ""
 "An range with dates corresponding to the cash flows in cashflow_amounts."
-msgstr ""
+msgstr "cashflow_amounts のキャッシュフローに対応する日付の範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "An unexpected error occurred during the image transfer"
-msgstr ""
+msgstr "画像転送中に予期せぬエラーが発生しました"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -732,35 +741,35 @@ msgstr "X軸から点(x、y)までのラジアン角度。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual effective interest rate."
-msgstr ""
+msgstr "年間実効金利"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual nominal interest rate."
-msgstr ""
+msgstr "名目年利率"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual yield of a discount security."
-msgstr ""
+msgstr "割引証券の年間利回り"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual yield of a security paying interest at maturity."
-msgstr ""
+msgstr "満期利息を支払う証券の年間利回り"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Annual yield of a security paying periodic interest."
-msgstr ""
+msgstr "定期的に利息を支払う証券の年間利回り"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -774,42 +783,42 @@ msgstr "匿名"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosecant of."
-msgstr ""
+msgstr "以下の双曲コセカントを計算するための任意の実数値:"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosine of."
-msgstr ""
+msgstr "その双曲線コサインを計算するための任意の実数値"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cotangent of."
-msgstr ""
+msgstr "そのハイパボリックコタンジェントを計算するための任意の実数値"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic secant of."
-msgstr ""
+msgstr "そのハイパボリックセカントを計算するための任意の実数値"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic sine of."
-msgstr ""
+msgstr "そのハイパボリックサインを計算するための任意の実数値"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic tangent of."
-msgstr ""
+msgstr "そのハイパボリックタンジェントを計算するための任意の実数値"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -817,7 +826,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Any text item. This could be a string, or an array of strings in a range."
-msgstr ""
+msgstr "任意のテキスト項目。文字列、または範囲内の文字列の配列です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -838,14 +847,14 @@ msgstr "適用"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Apply a large number format"
-msgstr ""
+msgstr "大きな数字のフォーマットを適用します"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Apply to range"
-msgstr ""
+msgstr "範囲に適用"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -867,14 +876,14 @@ msgstr "このシートを削除してもよろしいですか？"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Argument must be a reference to a cell or range."
-msgstr ""
+msgstr "引数はセルまたは範囲への参照である必要があります。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Array or range containing the dataset to consider."
-msgstr ""
+msgstr "考慮するデータセットを含む配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -932,7 +941,7 @@ msgstr "複数の基準に応じた値の平均。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Avg"
-msgstr ""
+msgstr "平均"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -951,7 +960,7 @@ msgstr "背景色"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bad zone format"
-msgstr ""
+msgstr "不正なゾーンフォーマット"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -966,35 +975,35 @@ msgstr "バー"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline color"
-msgstr ""
+msgstr "ベースラインカラー"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline configuration"
-msgstr ""
+msgstr "ベースラインカラー設定"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline description"
-msgstr ""
+msgstr "ベースラインカラー説明"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline format"
-msgstr ""
+msgstr "ベースラインカラーフォーマット"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Baseline value"
-msgstr ""
+msgstr "ベースラインカラー値"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1016,7 +1025,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Borders"
-msgstr ""
+msgstr "枠線"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1033,14 +1042,14 @@ msgstr "下"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "COUNT"
-msgstr ""
+msgstr "数"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Calculates effective interest rate."
-msgstr ""
+msgstr "実効金利を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1049,7 +1058,7 @@ msgstr ""
 msgid ""
 "Calculates the price of a security paying interest at maturity, based on "
 "expected yield."
-msgstr ""
+msgstr "予想利回りに基づき、満期時に利息を支払う証券の価格を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1065,14 +1074,14 @@ msgstr "キャンセル"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot do a special paste of a figure."
-msgstr ""
+msgstr "図形の特殊な貼り付けはできません。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot find workbook relations file"
-msgstr ""
+msgstr "ワークブック関係ファイルが見つかりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1086,7 +1095,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cannot paste merged cells over a frozen pane."
-msgstr ""
+msgstr "フリーズしたペイン上にマージしたセルを貼り付けることはできません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1095,14 +1104,14 @@ msgstr ""
 msgid ""
 "Cannot sort. To sort, select only cells or only merges that have the same "
 "size."
-msgstr ""
+msgstr "ソートできません。ソートするには、同じサイズのセルまたはマージのみを選択して下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Capitalizes each word in a specified string."
-msgstr ""
+msgstr "指定した文字列の各単語を大文字にします。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1118,7 +1127,7 @@ msgstr "カテゴリ / ラベル"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Cell values"
-msgstr ""
+msgstr "セル値"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1140,7 +1149,7 @@ msgstr "チャート"
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 #, python-format
 msgid "Chart - %s"
-msgstr ""
+msgstr "チャート - %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1183,7 +1192,7 @@ msgstr "%s 列目をクリア"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear columns"
-msgstr ""
+msgstr "列をクリア"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1197,7 +1206,7 @@ msgstr "%s - %s 列目をクリア"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear formatting"
-msgstr ""
+msgstr "フォーマッティングをクリア"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1211,7 +1220,7 @@ msgstr "%s 行目をクリア"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clear rows"
-msgstr ""
+msgstr "行をクリア"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1226,7 +1235,7 @@ msgstr "%s - %s 行目をクリア"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Clip"
-msgstr ""
+msgstr "クリップ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1240,14 +1249,14 @@ msgstr "コード"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color on value decrease"
-msgstr ""
+msgstr "値減少時の色"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color on value increase"
-msgstr ""
+msgstr "値上昇時の色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1255,7 +1264,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Color scale"
-msgstr ""
+msgstr "カラースケール"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1269,7 +1278,7 @@ msgstr "左の列"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Column number of a specified cell."
-msgstr ""
+msgstr "指定したセルの列番号。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1290,7 +1299,7 @@ msgstr "複数の文字列や配列からのテキストを結合します。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Compare two numeric values, returning 1 if they're equal."
-msgstr ""
+msgstr "2つの数値を比較し、等しければ1を返します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1298,7 +1307,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Computes the number of periods needed for an investment to reach a value."
-msgstr ""
+msgstr "投資額が目標額に達するまでに必要な期間数を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1307,7 +1316,7 @@ msgstr ""
 msgid ""
 "Computes the rate needed for an investment to reach a specific value within "
 "a specific number of periods."
-msgstr ""
+msgstr "ある投資が特定の期間内に特定の価値に到達するのに必要な率を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1361,14 +1370,14 @@ msgstr "含む"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Convert a decimal fraction to decimal value."
-msgstr ""
+msgstr "小数を10進数に変換します。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Convert a decimal value to decimal fraction."
-msgstr ""
+msgstr "10進数値を10進小数値に変換します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1382,7 +1391,7 @@ msgstr "日付文字列を日付値に変換します。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Converts a number to text according to a specified format."
-msgstr ""
+msgstr "指定された書式に従って数値をテキストに変換します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1449,14 +1458,14 @@ msgstr "コピー"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Copy of %s"
-msgstr ""
+msgstr " %sのコピー"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Copy/Paste is not supported in this browser."
-msgstr ""
+msgstr "コピー/ペーストはこのブラウザではサポートされていません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1492,7 +1501,7 @@ msgstr "カウント"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Count Numbers"
-msgstr ""
+msgstr "番号を数える"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1542,14 +1551,14 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Create filter"
-msgstr ""
+msgstr "フィルタを作成"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Creates a hyperlink in a cell."
-msgstr ""
+msgstr "セル内にハイパーリンクを作成します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1563,7 +1572,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cumulative principal paid over a set of periods."
-msgstr ""
+msgstr "一定の期間にわたって支払われる元本の累計額。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5809,7 +5818,7 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a number."
-msgstr ""
+msgstr "関数[[FUNCTION_NAME]]は、ブール値であるべきですが、 '%s' はテキストであり、数値にすることはできません。"
 
 #. module: spreadsheet
 #. odoo-javascript

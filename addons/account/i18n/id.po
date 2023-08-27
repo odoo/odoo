@@ -109,7 +109,7 @@ msgstr "%(amount)s jatuh tempo %(date)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr ""
+msgstr "%(partner_name)s telah mencapai batas kredit untuk: %(credit_limit)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -200,6 +200,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s mencapai status tidak valid mengenai baris statement yang terkait.\n"
+"Agar konsisten, entri jurnal harus selalu memiliki tepat satu baris suspense."
 
 #. module: account
 #. odoo-python
@@ -4530,7 +4532,7 @@ msgstr "Catatan Kredit"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only send sales documents"
-msgstr ""
+msgstr "Anda hanya dapat mengirimkan dokumen sales"
 
 #. module: account
 #. odoo-python
@@ -6495,21 +6497,21 @@ msgstr "Akun pajak asing (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "Advanced payment akun pajak asing (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "Akun hutang pajak asing (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "Akun piutang pajak asing (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -8542,7 +8544,7 @@ msgstr "Baris"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "Baris \"%s\" mendefinisikan dirinya sebagai induk."
 
 #. module: account
 #. odoo-python
@@ -8552,6 +8554,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"Baris \"%s\" mendefinisikan baris \"%s\" sebagai induknya, tapi muncul "
+"sebelum induknya di laporan. Induk harus selalu muncul terlebih dahulu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -8585,7 +8589,7 @@ msgstr "Load More Limit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "Pesan Tanggal Kunci"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9188,7 +9192,7 @@ msgstr "Tidak ada Bank yang Cocok"
 #: code:addons/account/controllers/download_edi_docs.py:0
 #, python-format
 msgid "No EDI documents found for export."
-msgstr ""
+msgstr "Tidak ada dokumen EDI yang ditemukan untuk ekspor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9950,7 +9954,7 @@ msgstr "File PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13346,6 +13350,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Tanggal ditetapkan sebelum tanggal kunci %(lock_type)s, %(lock_date)s. Entri"
+" Jurnal akan dihitung pada %(invoice_date)s saat posting."
 
 #. module: account
 #. odoo-python
@@ -13606,6 +13612,7 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
+"Pergerakkan tidak dapat diposting karena alasan berikut: %(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -14383,7 +14390,7 @@ msgstr "Pergerakan ini akan dipost pada tanggal akuntansi: %(date)s"
 #: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "Operasi ini akan membuat gap di sequence."
 
 #. module: account
 #. odoo-python
@@ -14628,6 +14635,8 @@ msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk sale order dan dokumen ini): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14635,6 +14644,7 @@ msgstr ""
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk sale order): %(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14642,13 +14652,14 @@ msgstr ""
 #, python-format
 msgid "Total amount due (including this document): %(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk dokumen ini): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "Total jumlah yang belum dibayar: %(total_credit)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -15015,7 +15026,7 @@ msgstr "Unggah"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "Unggah Faktur"
 
 #. module: account
 #. odoo-python
@@ -15373,7 +15384,7 @@ msgstr "Peringatan untuk %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Peringatan untuk Metode Pembulatan Kas: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15953,6 +15964,9 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Anda tidak dapat menghapus entri ini, karena sudah menggunakan nomor "
+"sequence dan bukan merupakan yang terakhir di rantai. Anda sebaiknya "
+"mengembalikkan hal tersebut terlebih dahulu."
 
 #. module: account
 #. odoo-python
@@ -16311,7 +16325,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Anda harus menentukan Profit Account (company dependent)"
 
 #. module: account
 #. odoo-python
