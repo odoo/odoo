@@ -259,6 +259,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'profile_id': 'reporting:1.0',
             'invoice_type_code_attrs': {'name': self._l10n_sa_get_invoice_transaction_code(invoice)},
             'invoice_type_code': self._l10n_sa_get_invoice_type(invoice),
+            'tax_currency_code': invoice.company_currency_id.name,
             'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
                                                             invoice.l10n_sa_confirmation_datetime),
             'previous_invoice_hash': self._l10n_sa_get_previous_invoice_hash(invoice),
