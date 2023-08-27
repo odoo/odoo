@@ -240,13 +240,6 @@
                 </t>
             </xpath>
 
-            <!-- Add Tax Currency Code in compliance with rules BR-KSA-EN16931-02 and BR-KSA-68 -->
-            <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
-                <cbc:TaxCurrencyCode xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                                     xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-                                     t-esc="invoice.company_currency_id.name"/>
-            </xpath>
-
             <!-- Add Previous Invoice Hash & Invoice Counter Value -->
             <xpath expr="//*[local-name()='BillingReference']" position="after">
                 <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
