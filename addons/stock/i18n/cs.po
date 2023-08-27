@@ -8,6 +8,7 @@
 # Jiří Podhorecký, 2023
 # Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Tomáš Píšek, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Tomáš Píšek, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4116,16 +4117,6 @@ msgstr "Je provedeno upravitelné množství"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Není povoleno importovat rezervované množství, musíte použít množství přímo."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5273,8 +5264,8 @@ msgstr "Počet příchozích pohybů zásob za posledních 12 měsíců"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet zpráv, které vyžadují akci"
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -7560,6 +7551,13 @@ msgstr "Sekvenční balení"
 #, python-format
 msgid "Sequence picking"
 msgstr "Sekvenční vychystávání"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -10123,8 +10121,10 @@ msgstr "Nelze rozdělit návrh přesunu. Nejprve je třeba ho potvrdit."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Nemůžete rozdělit rezervaci u změn ve skladu, která byla nastavena na "
+"\"Hotovo\" nebo \"Zrušit\"."
 
 #. module: stock
 #. odoo-python

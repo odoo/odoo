@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.4+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 10:18+0000\n"
+"POT-Creation-Date: 2023-08-25 07:43+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -24,6 +24,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr "- cierre"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr "- apertura"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1076,6 +1092,13 @@ msgstr "Cancelado"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr "No puede modificar una propina"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1832,11 +1855,19 @@ msgstr "La pantalla de cliente no es compatible. Actualice la caja IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "Se requiere el cliente para el método de pago %s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr "Propinas de los clientes, no se pueden modificar directamente"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2234,6 +2265,13 @@ msgstr "¿Desea abrir la lista de clientes para seleccionar un cliente? "
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/abstract_receipt_screen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr "¿Desea imprimir usando la impresora web?"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_receipt_template.xml:0
 #, python-format
 msgid "Done by"
@@ -2475,6 +2513,13 @@ msgstr "Importación de órdenes finalizada"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "No se encontró la posición fiscal "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4099,8 +4144,8 @@ msgstr ""
 " de orden."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4262,8 +4307,8 @@ msgid "Pay Order"
 msgstr "Pagar orden"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4944,7 +4989,6 @@ msgstr "Con la tecnología de"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "Pantalla de preparación"
@@ -6647,6 +6691,17 @@ msgstr ""
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr "El módulo de datos fiscales encontró un error al recibir su orden."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"La posición fiscal que se uso en la orden original no se cargó. Asegúrese de"
+" que cargue antes de añadirla en la configuración pos. "
 
 #. module: point_of_sale
 #. odoo-python

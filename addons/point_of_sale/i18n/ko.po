@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.4+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 10:18+0000\n"
+"POT-Creation-Date: 2023-08-25 07:43+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -21,6 +21,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1029,6 +1045,13 @@ msgstr "취소됨"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1775,11 +1798,19 @@ msgstr "고객 화면이 지원되지 않습니다. IoT 박스를 업그레이�
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "고객에게 %s 결제 방법이 필수입니다."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2055,7 +2086,7 @@ msgstr "할인율 :"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Discard"
-msgstr "작성 취소"
+msgstr "취소"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2163,6 +2194,13 @@ msgstr "결제 차액 승인 후 손익 전표입력을 발행하시겠습니까
 #, python-format
 msgid "Do you want to open the customer list to select customer?"
 msgstr "고객 목록을 열어서 고객을 선택하시겠습니까?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/abstract_receipt_screen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2406,6 +2444,13 @@ msgstr "주문 가져오기 완료됨"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "재정 상태"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -2852,7 +2897,7 @@ msgstr "잘못된 이메일입니다"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/orderline/orderline.xml:0
 #, python-format
 msgid "Invalid product lot"
-msgstr "잘못된 제품 로트"
+msgstr "잘못된 제품 LOT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3200,7 +3245,7 @@ msgstr "현지 고객용 디스플레이"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
 msgid "Login Sequence Number"
-msgstr "로그인 일련 번호"
+msgstr "로그인 일련번호"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3215,7 +3260,7 @@ msgstr "로고"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr "로트 네임"
+msgstr "LOT명"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3223,12 +3268,12 @@ msgstr "로트 네임"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr "로트/일련번호 필요"
+msgstr "LOT/일련번호 필요"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr "로트/일련번호"
+msgstr "LOT/일련번호"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
@@ -3346,7 +3391,7 @@ msgstr "기타"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "Mobile"
-msgstr "모바일"
+msgstr "휴대폰 번호"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -3746,7 +3791,7 @@ msgstr "현금에만 반올림 적용"
 #, python-format
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
-msgstr ""
+msgstr "'현금' 또는 '은행 계좌' 유형의 전표만 결제 수단으로 사용할 수 있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3990,8 +4035,8 @@ msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr "이 필드의 주문 내역은 해당 주문을 환불한 내용입니다."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4153,8 +4198,8 @@ msgid "Pay Order"
 msgstr "지불 주문"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4823,7 +4868,6 @@ msgstr "저작권자"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "준비 표시"
@@ -5797,14 +5841,14 @@ msgstr "순서"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
 msgid "Sequence Number"
-msgstr "일련 번호"
+msgstr "일련번호"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
 #, python-format
 msgid "Serial/Lot Number"
-msgstr "일련번호/로트 번호"
+msgstr "일련번호/LOT 번호"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6058,7 +6102,7 @@ msgstr "작은 선반"
 #: code:addons/point_of_sale/static/src/app/store/models.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr "일부 일련번호/로트번호가 누락되었습니다."
+msgstr "일부 일련번호/LOT 번호가 누락되었습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6099,7 +6143,7 @@ msgstr "특정 경로"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr "POS 주문 내역에 제품 로트/일련번호 지정"
+msgstr "POS 주문 내역에 제품 LOT/일련번호 지정"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
@@ -6489,6 +6533,15 @@ msgstr "기본 도움말 품목이 없습니다. 도움말 품목을 수동으�
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
 msgstr "주문을 받는 중 재무 데이터 모듈에 오류가 발생했습니다."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7360,7 +7413,7 @@ msgstr "VAT :"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/orderline/orderline.xml:0
 #, python-format
 msgid "Valid product lot"
-msgstr "유효한 상품 로트"
+msgstr "유효한 품목 LOT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7495,7 +7548,7 @@ msgstr "수량을 변경할 권한이 없습니다."
 msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
-msgstr "판매하려는 품목 중 일련번호/로트번호가 설정되지 않은 품목이 있습니다. 계속 진행하시겠습니까?"
+msgstr "판매하려는 품목 중 일련번호/LOT 번호가 설정되지 않은 품목이 있습니다. 계속 진행하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -5,8 +5,8 @@
 # Translators:
 # Benson <Benson.Dr@Gmail.com>, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -4032,15 +4032,6 @@ msgstr "完成數量是否可以編輯"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -4065,7 +4056,7 @@ msgstr "一月"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "John Doe"
-msgstr ""
+msgstr "陳大文"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
@@ -4866,7 +4857,7 @@ msgstr "我的調撥作業"
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__product_display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__name
 msgid "Name"
-msgstr "名称"
+msgstr "名稱"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -5177,8 +5168,8 @@ msgstr "過去 12 個月的進貨庫存變動次數"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要處理的消息數量"
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -7449,6 +7440,13 @@ msgstr "打包序列"
 #, python-format
 msgid "Sequence picking"
 msgstr "揀貨序列"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -9964,8 +9962,8 @@ msgstr "不能拆分一個移動草稿. 您需要先確認它."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "您無法拆分狀態已標記為「完成」的庫存移動."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #. odoo-python

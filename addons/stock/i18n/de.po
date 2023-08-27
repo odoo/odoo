@@ -2992,7 +2992,7 @@ msgid ""
 msgstr ""
 "Genießen Sie zügige Abläufe mit der Odoo-Barcode-App. Sie ist blitzschnell "
 "und funktioniert auch ohne stabile Internetverbindung. Sie unterstützt alle "
-"Abläufe: Bestandsaufnahme, Batch-Kommissionierung, Verschieben von Losen "
+"Abläufe: Bestandsaufnahme, Stapelkommissionierung, Verschieben von Losen "
 "oder Paletten, Überprüfung von niedrigem Bestand usw. Rufen Sie das Menü "
 "„Apps“ auf, um die Barcode-Schnittstelle zu aktivieren."
 
@@ -3431,7 +3431,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
-msgstr "Gibt die Reihenfolge dieser Zeile bei der Anzeige der Lagerhäuser an."
+msgstr "Gibt die Sequenz dieser Zeile bei der Anzeige der Lagerhäuser an."
 
 #. module: stock
 #. odoo-python
@@ -4234,17 +4234,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Ist die erledigte Menge bearbeitbar"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Es ist nicht möglich, reservierte Mengen zu importieren. Sie müssen die "
-"Menge direkt verwenden."
 
 #. module: stock
 #. odoo-python
@@ -5411,8 +5400,8 @@ msgstr "Anzahl der Eingangsbuchungen in den letzten 12 Monaten"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -7012,7 +7001,7 @@ msgstr "Referenz"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_id
 msgid "Reference Sequence"
-msgstr "Nummernfolge"
+msgstr "Sequenz"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
@@ -7360,7 +7349,7 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Wiederverwendbare Boxen werden für die Batch-Kommissionierung verwendet und anschließend geleert, um wiederverwendet zu werden. Wenn in der Barcode-Anwendung eine Mehrwegbox gescannt wird, werden die Produkte in dieser Box hinzugefügt.\n"
+"Wiederverwendbare Boxen werden für die Stapelkommissionierung verwendet und anschließend geleert, um wiederverwendet zu werden. Wenn in der Barcode-Anwendung eine Mehrwegbox gescannt wird, werden die Produkte in dieser Box hinzugefügt.\n"
 "Einwegboxen werden nicht wiederverwendet. Wenn Sie eine Einwegbox in der Barcode-Anwendung scannen, werden die darin enthaltenen Produkte dem Transfer hinzugefügt."
 
 #. module: stock
@@ -7392,7 +7381,7 @@ msgstr "Route des Unternehmen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
 msgid "Route Sequence"
-msgstr "Routenreihenfolge"
+msgstr "Routensequenz"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -7708,35 +7697,42 @@ msgstr "Sequenz-Präfix"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence in"
-msgstr "Nummernfolge Eingänge"
+msgstr "Sequenz Eingänge"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence internal"
-msgstr "Nummernfolge Intern"
+msgstr "Sequenz Intern"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence out"
-msgstr "Nummernfolge Ausgänge"
+msgstr "Sequenz Ausgänge"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence packing"
-msgstr "Nummernfolge Verpackung"
+msgstr "Sequenz Verpackung"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "Nummernfolge Kommissionierung"
+msgstr "Sequenz Kommissionierung"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr "Sequenzen %s bestehen bereits."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8596,7 +8592,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
 msgid "The first in the sequence is the default one."
-msgstr "Der Erste der Reihenfolge gilt als Standard."
+msgstr "Der Erste der Sequenz gilt als Standard."
 
 #. module: stock
 #. odoo-javascript
@@ -9713,7 +9709,7 @@ msgstr "Diagramm ansehen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Ansichtslagerort"
+msgstr "Lagerort ansehen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10151,7 +10147,7 @@ msgid ""
 "in this location. That leads to a negative stock."
 msgstr ""
 "Sie werden Produkte kommissionieren, die sich nicht an diesem Lagerort "
-"befinden. Dies führt zu einem negatigen Bestand."
+"befinden. Dies führt zu einem negativen Bestand."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10476,8 +10472,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Sie können eine auf „Erledigt“ gesetzte Lagerbuchung nicht aufteilen."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Sie können eine auf „Erledigt“ oder „Abgebrochen“ gesetzte Lagerbuchung "
+"nicht aufteilen."
 
 #. module: stock
 #. odoo-python

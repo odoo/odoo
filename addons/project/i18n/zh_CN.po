@@ -824,7 +824,7 @@ msgstr "你确定你要继续吗？"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "您确定要删除这些阶段吗？"
 
 #. module: project
 #. odoo-javascript
@@ -2287,12 +2287,12 @@ msgstr "邀请人"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "受邀内部用户（非公开）"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "受邀门户用户和所有内部用户（公开）"
 
 #. module: project
 #. odoo-javascript
@@ -2460,6 +2460,13 @@ msgstr "留下评论"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -2471,6 +2478,13 @@ msgstr "让我们创建您的第一个<b>项目</b>。"
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "让我们创建您的第一个<b>任务</b>。"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -2961,8 +2975,8 @@ msgstr "错误数量"
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要采取操作的消息数量"
+msgid "Number of messages requiring action"
+msgstr "需要采取行动的消息数量"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -4282,7 +4296,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "任务取消"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count

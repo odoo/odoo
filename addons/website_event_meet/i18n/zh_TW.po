@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:11+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,16 +36,18 @@ msgid ""
 "<i class=\"fa fa-spin fa-circle-o-notch me-3\"/>\n"
 "                        <span>Loading your room...</span>"
 msgstr ""
+"<i class=\"fa fa-spin fa-circle-o-notch me-3\"/>\n"
+"                        <span>正在載入房間中...</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "<span class=\"badge text-bg-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-danger\">未發佈</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
 msgid "<span class=\"h5 m-3\">Other Rooms</span>"
-msgstr ""
+msgstr "<span class=\"h5 m-3\">其他房間</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
@@ -61,7 +64,7 @@ msgstr "<span>加入房間</span>"
 msgid ""
 "<span>Oops! This room is full!</span><br/>Come back later to have a chat "
 "with us!"
-msgstr ""
+msgstr "<span>哎呀！ 這個房間已滿了！</span><br/>稍後回來和我們聊聊！"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -73,7 +76,7 @@ msgstr "<span>這個房間現在不開放！</span><br/>加入我們"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "A chat among"
-msgstr ""
+msgstr "聊天的人包括"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__active
@@ -96,14 +99,14 @@ msgstr "允許創建房間"
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to close this room?"
-msgstr ""
+msgstr "確定要關閉此房間嗎？"
 
 #. module: website_event_meet
 #. odoo-javascript
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to duplicate this room?"
-msgstr ""
+msgstr "確定要複製這個房間嗎？"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__target_audience
@@ -226,7 +229,7 @@ msgstr "活動會議室選單"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "活動頁面"
 
 #. module: website_event_meet
 #: model:ir.actions.act_window,name:website_event_meet.action_meeting_room_from_event
@@ -272,7 +275,7 @@ msgstr "下次再加入我們，一起討論"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "Join us there to chat about"
-msgstr "加入我們來討論"
+msgstr "加入我們討論"
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -365,7 +368,7 @@ msgstr "峰值參與者"
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_1
 msgid "Reducing the ecological footprint with wood?"
-msgstr ""
+msgstr "利用木材減少生態足跡？"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
@@ -375,7 +378,7 @@ msgstr "報告"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.snippet_options
 msgid "Room Creation (Specific)"
-msgstr ""
+msgstr "建立房間（特定）"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_is_full
@@ -459,6 +462,8 @@ msgid ""
 "The event %s starts on %s (%s). \n"
 "Join us there to chat about \"%s\"!"
 msgstr ""
+"活動 %s 將於 %s (%s) 開始。 \n"
+"加入我們討論「%s」吧！"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
@@ -474,7 +479,7 @@ msgstr "主題"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_tree
 msgid "Total Participant Count"
-msgstr ""
+msgstr "參與人數"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
@@ -501,7 +506,7 @@ msgstr "Vos meubles préférés ?"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
-msgstr ""
+msgstr "想建立自己的討論房間嗎？"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_website_event_menu
@@ -511,12 +516,12 @@ msgstr "網站活動功能表"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_url
 msgid "Website URL"
-msgstr "網站URL"
+msgstr "網站網址"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "a few seconds"
-msgstr ""
+msgstr "數秒"
 
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_2

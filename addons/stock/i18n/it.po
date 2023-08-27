@@ -4200,17 +4200,6 @@ msgstr "Quantità completata modificabile"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Non è consentito importare quantità prenotate, la quantità deve essere "
-"utilizzata direttamente."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5372,7 +5361,7 @@ msgstr "Numero di movimenti di stock in entrata negli ultimi 12 mesi"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: stock
@@ -7690,6 +7679,13 @@ msgstr "Sequenza di imballaggio"
 #, python-format
 msgid "Sequence picking"
 msgstr "Sequenza di prelievo"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -10391,9 +10387,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Impossibile suddividere un movimento di magazzino con stato \"Completato\"."
 
 #. module: stock
 #. odoo-python

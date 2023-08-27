@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-25 11:23+0000\n"
+"POT-Creation-Date: 2023-08-19 08:03+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Jumlah:</b>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -116,6 +116,38 @@ msgstr "Batal"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, python-format
+msgid "Cannot edit a POS online payment essential data."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Could not create an online payment method (company_id=%d, pos_config_id=%d)"
 msgstr ""
 
 #. module: pos_online_payment
@@ -284,7 +316,7 @@ msgstr "Sesi Point of Sale"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
-msgstr ""
+msgstr "Diproses oleh"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -403,7 +435,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
+msgstr "Pembayaran harus langsung, dengan pengalihan, atau dibuat oleh token."
 
 #. module: pos_online_payment
 #. odoo-python

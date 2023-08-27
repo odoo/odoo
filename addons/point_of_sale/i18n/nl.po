@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.4+e\n"
+"Project-Id-Version: Odoo Server saas~16.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 10:18+0000\n"
+"POT-Creation-Date: 2023-08-25 07:43+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -21,6 +21,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - closing"
+msgstr " - afsluiting"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid " - opening"
+msgstr " - opening"
 
 #. module: point_of_sale
 #. odoo-python
@@ -636,7 +652,7 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Alle betaalmtehodes moeten dezelfde valuta hebben als het dagboek of het "
+"Alle betaalmethodes moeten dezelfde valuta hebben als het dagboek of het "
 "bedrijfsvaluta wanneer dat niet ingesteld is."
 
 #. module: point_of_sale
@@ -1067,6 +1083,13 @@ msgstr "Annuleer betaalaanvraag"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__cancel
 msgid "Cancelled"
 msgstr "Geannuleerd"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Cannot modify a tip"
+msgstr "Kan een fooi niet wijzigen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1824,11 +1847,19 @@ msgstr "Klantscherm niet ondersteund. Gelieve de IoT Box te upgraden"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Customer is required for %s payment method."
 msgstr "Klant is vereist voor %s betaalmethode."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+#, python-format
+msgid "Customer tips, cannot be modified directly"
+msgstr "Fooien van klanten, kunnen niet direct worden gewijzigd"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2224,6 +2255,13 @@ msgstr "Wil je de klantenlijst openen om een klant te selecteren?"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/abstract_receipt_screen.js:0
+#, python-format
+msgid "Do you want to print using the web printer?"
+msgstr "Wil je afdrukken met de webprinter?"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_receipt_template.xml:0
 #, python-format
 msgid "Done by"
@@ -2466,6 +2504,13 @@ msgstr "Importeren van orders is voltooid"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 msgid "Fiscal Position"
 msgstr "Fiscale positie"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid "Fiscal Position not found"
+msgstr "Fiscale positie niet gevonden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -4085,8 +4130,8 @@ msgstr ""
 "teruggenomen."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4248,8 +4293,8 @@ msgid "Pay Order"
 msgstr "Betaal order"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4927,7 +4972,6 @@ msgstr "Aangeboden door"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "Keukenscherm"
@@ -6630,6 +6674,18 @@ msgid ""
 msgstr ""
 "Er is een fout opgetreden in de fiscale gegevensmodule bij het ontvangen van"
 " je bestelling."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#, python-format
+msgid ""
+"The fiscal position used in the original order is not loaded. Make sure it "
+"is loaded by adding it in the pos configuration."
+msgstr ""
+"De fiscale positie die gebruikt wordt in de oorspronkelijke order is niet "
+"geladen. Zorg ervoor dat deze wordt geladen door deze toe te voegen in de "
+"kassa-configuratie."
 
 #. module: point_of_sale
 #. odoo-python

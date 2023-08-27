@@ -131,17 +131,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
-msgstr "Frachtführer"
+msgstr "Transportunternehmen"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr "Versandcode"
+msgstr "Code des Transportunternehmens"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr "Transporteur Name"
+msgstr "Name des Transportunternehmens"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -204,7 +204,7 @@ msgstr "Anzeigename"
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Links zur Sendungsverfolgung anzeigen"
+msgstr "Sendungsverfolgungslinks anzeigen"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -255,7 +255,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "Keine Frachtführerintegration"
+msgstr "Keine Integration des Transportunternehmens"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -347,8 +347,8 @@ msgid ""
 "Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
-"Die Herkunftsregeln bestimmen, woher die Waren stammen, d.h. nicht, woher sie verschifft wurden, sondern wo sie produziert oder hergestellt wurden.\n"
-"Der 'Ursprung' ist somit die 'wirtschaftliche Nationalität' der im Handel befindlichen Waren."
+"Die Ursprungsregeln bestimmen, woher die Waren stammen, d. h. nicht, woher sie versandt wurden, sondern wo sie produziert oder hergestellt wurden.\n"
+"Der „Ursprung“ ist somit die „wirtschaftliche Nationalität“ der im Handel befindlichen Waren."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -373,7 +373,7 @@ msgstr "Speichern"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "An Versender liefern"
+msgstr "An Zusteller senden"
 
 #. module: stock_delivery
 #. odoo-python
@@ -551,12 +551,12 @@ msgstr "Verfolgungs-URL"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr "Tracking-Links für Sendung:"
+msgstr "Sendungsverfolgungslinks für Sendung:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 msgid "Tracking:"
-msgstr "Tracking:"
+msgstr "Sendungsverfolgung:"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
@@ -606,8 +606,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Ihre Liefermethode bietet keine Angabe zur Website des Frachtführers zur "
-"einfachen Rückverfolgung durch einen Link-Tracker."
+"Ihre Liefermethode bietet keine Angabe zur Website des "
+"Versanddienstleisters, um Ihre Bestellung zu verfolgen."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix

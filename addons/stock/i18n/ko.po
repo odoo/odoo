@@ -129,7 +129,7 @@ msgstr ""
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
-msgstr " - 품목: %s, 시리얼번호: %s"
+msgstr " - 품목: %s, 일련번호: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -246,7 +246,7 @@ msgstr "(품목 바코드)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr "(시리얼 바코드)"
+msgstr "(일련번호 바코드)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -672,7 +672,7 @@ msgstr "<strong>위치</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>로트/일련번호</strong>"
+msgstr "<strong>LOT/일련번호</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -886,7 +886,7 @@ msgstr "상품 추가"
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
-msgstr "로트/일련번호 추가하기"
+msgstr "LOT/일련번호 추가하기"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -1605,7 +1605,7 @@ msgstr "라벨 인쇄용 시트 레이아웃 선택"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr "품목이나 로트/일련번호 라벨 인쇄 여부 선택"
+msgstr "품목이나 LOT/일련번호 라벨 인쇄 여부 선택"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1742,7 +1742,7 @@ msgstr "승인"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__confirmed
 msgid "Confirmed"
-msgstr "확인됨"
+msgstr "확인 완료"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -1840,7 +1840,7 @@ msgstr "요청한 모든 품목을 예약할 수 없습니다. '할 일로 표�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
-msgstr "수"
+msgstr "수량"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -1914,7 +1914,7 @@ msgstr "새로 만들기"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "새 로트/일련번호 만들기"
+msgstr "새 LOT/일련번호 만들기"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -1945,7 +1945,7 @@ msgstr "새 꾸러미 상품 만들기"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr "품질 검사를 위한 맞춤형 워크시트 생성"
+msgstr "품질 검사를 위한 맞춤형 워크시트를 생성합니다."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -2480,7 +2480,7 @@ msgstr "배송 유형"
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
-msgstr "출고 리드타임, 일 단위입니다. 판매 주문 확인에서 출고까지 소요되는 고객에게 약속한 날짜입니다."
+msgstr "일 단위의 배송 리드타임입니다. 판매 주문 확인에서 배송까지 고객에게 약속된 날짜수입니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -2680,7 +2680,7 @@ msgstr "차액"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
-msgstr "작성 취소"
+msgstr "취소"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -3632,7 +3632,7 @@ msgstr ""
 msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
-msgstr "이 항목만 선택하면 새 LOT/시리얼 번호를 작성하여, 텍스트 필드에 입력 할 수 있다고 가정합니다. "
+msgstr "이 항목을 선택하면 새 LOT/일련번호를 생성하려는 것으로 간주하여 텍스트 필드에 입력할 수 있게됩니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -3643,8 +3643,8 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"이 항목을 선택되어 있으면 LOT/시리얼 번호를 선택할 수 있습니다. 이 조작 유형에 LOT를 넣지 않기로 결정할 수도 있습니다. 즉, "
-"LOT가 없는 재고를 만들거나 가져간 LOT에 제한을 두지 않을 것임을 의미합니다. "
+"이 항목을 선택하면 LOT/일련번호를 선택할 수 있으며, 또한 이 작업 유형에 LOT를 넣지 않기로 결정할 수도 있습니다. 즉, LOT가"
+" 없는 재고를 만들거나 가져간 LOT에 제한을 두지 않습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -3875,7 +3875,7 @@ msgstr "하위 항목 간의 내부 위치"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
-msgstr "제조자의 로트/일련번호와 다른 경우의 내부 참조 번호"
+msgstr "제조자의 LOT/일련번호와 다른 경우의 내부 참조 번호"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
@@ -4087,15 +4087,6 @@ msgstr "마감일 및 예정일에 따라서 지연되었거나 지연될 예정
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "완료된 수량 편집 가능 여부"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr "예약된 수량은 가져올 수 없으며, 수량은 바로 사용해야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -4508,7 +4499,7 @@ msgstr "잠금/잠금 해제"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Logistics"
-msgstr "물류 센터"
+msgstr "물류"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
@@ -4523,18 +4514,18 @@ msgstr "Lot 속성"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 msgid "Lot/SN Labels"
-msgstr "로트/일련번호 라벨"
+msgstr "LOT/일련번호 라벨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr "로트/일련번호:"
+msgstr "LOT/일련번호:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__lot_id
 msgid "Lot/Serial"
-msgstr "로트/일련번호"
+msgstr "LOT/일련번호"
 
 #. module: stock
 #. odoo-javascript
@@ -4575,7 +4566,7 @@ msgstr "LOT/일련번호 이름"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial:"
-msgstr "로트/일련번호:"
+msgstr "LOT/일련번호:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_import_lot__lots
@@ -4590,7 +4581,7 @@ msgstr "LOT 및 일련번호"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr "로트 및 일련 번호가 배송 전표에 표시됩니다."
+msgstr "로트 및 일련번호가 배송 전표에 표시됩니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5238,7 +5229,7 @@ msgstr "지난 12개월 동안의 재고 입고 이동 수"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: stock
@@ -5304,7 +5295,7 @@ msgstr "보유 :"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr "로트/일련번호 당 하나"
+msgstr "LOT/일련번호 당 하나"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
@@ -5830,8 +5821,8 @@ msgid ""
 "                contain a lot/SN plus optional quantity and/or expiry\n"
 "                date, separated by space or semicolon."
 msgstr ""
-"일련번호/로트번호를 여기에 붙여넣으십시오. 각 줄에는\n"
-"               로트/일련번호와 함께 스페이스나 세미콜론으로\n"
+"일련번호/LOT를 여기에 붙여넣으십시오. 각 줄에는\n"
+"               LOT일련번호와 함께 스페이스나 세미콜론으로\n"
 "               구분하여 선택 수량 및/또는 만료일을 기재합니다. "
 
 #. module: stock
@@ -7378,8 +7369,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"품목을 폐기하면 재고에서 제거됩니다. 이 품목은 보고 목적으로 \n"
-"사용할 수 있는 폐기 공간에 있게 됩니다."
+"품목을 폐기하면 재고에서 해당 품목이 제거됩니다. 이 품목은 보고 목적으로 \n"
+"사용할 수 있는 폐기 공간으로 이동합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7517,6 +7508,13 @@ msgstr "포장 순서"
 #, python-format
 msgid "Sequence picking"
 msgstr "선별 순서"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8137,7 +8135,7 @@ msgstr "재고 관리 품목"
 msgid ""
 "Storable products are physical items for which you manage the inventory "
 "level."
-msgstr "보관 가능 품목이란 재고 수준을 관리하기 위한 물리적인 항목입니다."
+msgstr "재고 관리 품목이란 창고에 물리적으로 보관이 가능하여 재고 수준을 관리할 수 있는 항목입니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -8639,7 +8637,7 @@ msgstr "이 %(lot_name)s Lot은 이 %(product_name)s품목과 호환되지 않�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "This lot/serial number is already in another location"
-msgstr "이 로트/일련번호는 이미 다른 위치에 있습니다"
+msgstr "이 LOT/일련번호는 이미 다른 위치에 있습니다"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -8678,7 +8676,7 @@ msgstr "이 노트는 내부용 재고 이동에 추가됩니다(예 : 창고의
 msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
-msgstr "이 노트는 입고 주문에 추가됩니다(예 : 제품을 창고에 보관하는 위치)."
+msgstr "이 노트는 입고 주문에 추가됩니다 (예. 창고에 품목을 보관하는 위치)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -8764,7 +8762,7 @@ msgstr "이 재고 공간는 제조 주문에 의해 생선 된 재고 이동의
 msgid ""
 "This user will be responsible of the next activities related to logistic "
 "operations for this product."
-msgstr "이 사용자는 이 제품의 물류 작업과 관련된 다음 활동을 담당합니다."
+msgstr "이 사용자는 이 품목의 물류 작업과 관련된 활동을 담당합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -8777,7 +8775,7 @@ msgid ""
 "Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
-"추가한 품목은 추적이 되지만 로트/일련번호는 설정되지 않았습니다. 일단 적용이 완료되면 변경할 수 없습니다.<br/>\n"
+"추가한 품목은 추적이 되지만 LOT/일련번호는 설정되지 않았습니다. 일단 적용이 완료되면 변경할 수 없습니다.<br/>\n"
 "                    적용하시겠습니까?"
 
 #. module: stock
@@ -8820,7 +8818,7 @@ msgstr "계산하기"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
-msgstr "할 일"
+msgstr "To Do"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
@@ -8918,8 +8916,8 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
-"LOT & 시리얼 번호에 대한 다음 날짜를 추적하십시오. 이전, 제거, 수명 종료, 경고.\n"
-" 이러한 날짜는 품목에 설정된 값 (일)을 기준으로 LOT/시리얼 번호 생성시 자동으로 설정됩니다."
+"LOT & 일련번호에서 다음 날짜를 추적합니다: 유통기한, 제거, 생산중단단계, 경고.\n"
+" 이러한 날짜는 품목에 설정된 값 (일)을 기준으로 LOT/일련번호 생성시 자동으로 설정됩니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8928,8 +8926,8 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
-"LOT & 시리얼 번호에 대한 다름 날짜를 추적하십시오. 이전, 제거, 수명 종료, 경고. 이러한 날짜는 품목에 설정된 값 (일)을 "
-"기준으로 LOT/시리얼 번호 생성시 자동으로 설정됩니다."
+"LOT & 일련번호에서 다음 날짜를 추적합니다: 유통기한, 제거, 생산중단단계, 경고. 이러한 날짜는 품목에 설정된 값 (일)을 기준으로"
+" LOT/일련번호 생성시 자동으로 설정됩니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9124,7 +9122,7 @@ msgstr "펼치기"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__name
 msgid "Unique Lot/Serial Number"
-msgstr "고유한 LOT/시리얼 번호"
+msgstr "고유한 LOT/일련번호"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9265,7 +9263,7 @@ msgstr "긴급"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_existing_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "기존 로트/일련번호 사용"
+msgstr "기존 LOT/일련번호 사용"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -9815,8 +9813,8 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
-"이 작업 유형으로 로트 또는 일련번호를 만들 수 없습니다. 이를 변경하려면 작업 유형으로 이동하여 \"새 로트/일련번호 만들기\" 상자를"
-" 선택하십시오."
+"이 작업 유형으로 로트 또는 일련번호를 만들 수 없습니다. 이를 변경하려면 작업 유형으로 이동하여 \"새 LOT/일련번호 만들기\" "
+"상자를 선택하십시오."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -10004,7 +10002,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot create lot/serial numbers in this operation type."
-msgstr "이 작업 유형에서는 로트/일련번호를 생성할 수 없습니다."
+msgstr "이 작업 유형에서는 LOT/일련번호를 생성할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10067,8 +10065,8 @@ msgstr "임시 이동을 분할할 수 없습니다. 먼저 확인해야 합니�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "'완료'로 설정된 재고 이동을 분할할 수 없습니다."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10094,7 +10092,7 @@ msgstr "'완료'로 설정된 재고 이동을 예약 해제할 수 없습니다
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
-msgstr "동일한 시리얼 번호를 두 번 사용할 수 없습니다. 인코딩 된 시리얼 번호를 수정하십시오."
+msgstr "동일한 일련번호를 두 번 사용할 수 없습니다. 인코딩 된 일련번호를 수정하십시오."
 
 #. module: stock
 #. odoo-python

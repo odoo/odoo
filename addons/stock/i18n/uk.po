@@ -4179,17 +4179,6 @@ msgstr "Чи є величина редагованою"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Заборонено імпортувати зарезервовану кількість, її потрібно безпосередньо "
-"використовувати."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5347,8 +5336,8 @@ msgstr "Кількість вхідних переміщень за останн
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Кількість повідомлень, які потебують дії"
+msgid "Number of messages requiring action"
+msgstr "Кількість повідомлень, які вимагають дії"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -7657,6 +7646,13 @@ msgstr "Послідовність пакування"
 #, python-format
 msgid "Sequence picking"
 msgstr "Послідовність комплектування"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr "Послідовності %s вже існують."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -10350,8 +10346,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Неможливо розбити складське переміщення, встановлене на \"Готово\"."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
+"Ви не можете розділити складське переміщення, для якого встановлено значення"
+" «Виконано» або «Скасовано»."
 
 #. module: stock
 #. odoo-python

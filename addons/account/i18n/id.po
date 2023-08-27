@@ -105,7 +105,7 @@ msgstr "%(amount)s jatuh tempo %(date)s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr ""
+msgstr "%(partner_name)s telah mencapai batas kredit untuk: %(credit_limit)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -210,6 +210,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"%s mencapai status tidak valid mengenai baris statement yang terkait.\n"
+"Agar konsisten, entri jurnal harus selalu memiliki tepat satu baris suspense."
 
 #. module: account
 #. odoo-python
@@ -377,7 +379,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
@@ -4621,7 +4623,7 @@ msgstr "Catatan Kredit"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only send sales documents"
-msgstr ""
+msgstr "Anda hanya dapat mengirimkan dokumen sales"
 
 #. module: account
 #. odoo-python
@@ -4859,7 +4861,7 @@ msgstr "Pembayaran Pelanggan"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr "Syarat Pembayaran Pelanggan"
+msgstr "Termin Pembayaran Pelanggan"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments
@@ -5901,7 +5903,7 @@ msgstr "Mode Diskon Pembayaran Awal"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
-msgstr "Diskon Pembayaran Awal diberikan untuk periode pembayaran ini"
+msgstr "Diskon Pembayaran Awal diberikan untuk termin pembayaran ini"
 
 #. module: account
 #. odoo-python
@@ -6604,21 +6606,21 @@ msgstr "Akun pajak asing (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "Advanced payment akun pajak asing (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "Akun hutang pajak asing (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "Akun piutang pajak asing (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -7155,7 +7157,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Jika kolom aktif diatur menjadi Salah, Anda dapat menyembunyikan syarat "
+"Jika kolom aktif diatur menjadi Salah, Anda dapat menyembunyikan termin "
 "pembayaran tanpa menghapusnya."
 
 #. module: account
@@ -8026,7 +8028,7 @@ msgstr "Is Valid"
 #: model:ir.model.fields,help:account.field_account_move__is_being_sent
 #: model:ir.model.fields,help:account.field_account_payment__is_being_sent
 msgid "Is the move being sent asynchronously"
-msgstr ""
+msgstr "Apakah pergerakkan dikirim secara asinkron"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
@@ -8664,7 +8666,7 @@ msgstr "Baris"
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "Baris \"%s\" mendefinisikan dirinya sebagai induk."
 
 #. module: account
 #. odoo-python
@@ -8674,6 +8676,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
+"Baris \"%s\" mendefinisikan baris \"%s\" sebagai induknya, tapi muncul "
+"sebelum induknya di laporan. Induk harus selalu muncul terlebih dahulu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -8707,7 +8711,7 @@ msgstr "Load More Limit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr ""
+msgstr "Pesan Tanggal Kunci"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9344,7 +9348,7 @@ msgstr "Tidak ada Bank yang Cocok"
 #: code:addons/account/controllers/download_edi_docs.py:0
 #, python-format
 msgid "No EDI documents found for export."
-msgstr ""
+msgstr "Tidak ada dokumen EDI yang ditemukan untuk ekspor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9733,7 +9737,7 @@ msgstr "Langkah Onboarding"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_setup_bill
 msgid "Onboarding Step Image"
-msgstr ""
+msgstr "Gambar Langkah Onboarding"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
@@ -10150,7 +10154,7 @@ msgstr "File PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10471,14 +10475,14 @@ msgstr "Status Pembayaran"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__payment_term
 msgid "Payment Term"
-msgstr "Jangka Waktu Pembayaran"
+msgstr "Termin Pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_term_details
 msgid "Payment Term Details"
-msgstr "Detail Jangka Waktu Pembayaran"
+msgstr "Detail Termin Pembayaran"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -10495,12 +10499,12 @@ msgstr "Detail Jangka Waktu Pembayaran"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
 msgid "Payment Terms"
-msgstr "Syarat Pembayaran"
+msgstr "Termin Pembayaran"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Terms Line"
-msgstr "Baris Syarat Pembayaran"
+msgstr "Baris Termin Pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
@@ -10524,59 +10528,58 @@ msgstr "Tipe Pembayaran"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Payment terms"
-msgstr "Jangka Waktu Pembayaran"
+msgstr "Termin pembayaran"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 10 Days after End of Next Month"
-msgstr "Periode pembayaran: 10 Hari setelah Akhir Bulan Depan"
+msgstr "Termin pembayaran: 10 Hari setelah Akhir Bulan Depan"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr "Syarat pembayaran: 15 Hari"
+msgstr "Termin pembayaran: 15 Hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
-msgstr "Payment terms: 21 Days"
+msgstr "Termin pembayaran: 21 Hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr "Payment terms: 30 Days"
+msgstr "Termin pembayaran: 30 Hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
-msgstr ""
-"Jangka Waktu Pembayaran: 30 Hari, 2% Early Payment Discount di bawah 7 hari"
+msgstr "Termin pembayaran: 30 Hari, 2% Diskon Pembayaran Awal di bawah 7 hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Syarat pembayaran: 30% Di Muka pada Akhir Bulan Berikutnya"
+msgstr "Termin pembayaran: 30% Di Muka pada Akhir Bulan Berikutnya"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Payment terms: 30% Now, Balance 60 Days"
+msgstr "Termin pembayaran: 30% Sekarang, Balance 60 Hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
-msgstr "Payment terms: 45 Days"
+msgstr "Termin pembayaran: 45 Hari"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
-msgstr "Syarat pembayaran: Akhir Bulan Berikutnya"
+msgstr "Termin pembayaran: Akhir Bulan Berikutnya"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Syarat pembayaran: Tunai"
+msgstr "Termin pembayaran: Pembayaran Secepatnya"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10663,7 +10666,7 @@ msgstr "Persentase dari setiap statement line"
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
-msgstr "Percentages on the Payment Terms lines must be between 0 and 100."
+msgstr "Persentase pada baris Termin Pembayaran harus di antara 0 dan 100."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11995,7 +11998,7 @@ msgstr "Pilih mitra pertama"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
 msgid "Select here the kind of valuation related to this payment terms line."
 msgstr ""
-"Pilih di sini jenis penilaian yang terkait dengan baris syarat pembayaran "
+"Pilih di sini jenis penilaian yang terkait dengan baris termin pembayaran "
 "ini."
 
 #. module: account
@@ -12388,7 +12391,7 @@ msgstr "Show Partner Bank Account"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_payment__show_payment_term_details
 msgid "Show Payment Term Details"
-msgstr "Tunjukkan Detail Syarat Pembayaran"
+msgstr "Tunjukkan Detail Termin Pembayaran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -13257,7 +13260,7 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms"
 " using a single 100% line. "
 msgstr ""
-"Fungsionalitas Diskon Pembayaran Awal hanya dapat digunakan dengan periode "
+"Fungsionalitas Diskon Pembayaran Awal hanya dapat digunakan dengan termin "
 "pembayaran menggunakan baris tunggal 100%."
 
 #. module: account
@@ -13302,7 +13305,7 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "Bulan dan Hari untuk baris Jangka Waktu Pembayaran harus positif."
+msgstr "Bulan dan Hari untuk baris Termin Pembayaran harus positif."
 
 #. module: account
 #. odoo-python
@@ -13312,8 +13315,8 @@ msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
 msgstr ""
-"Periode Pembayaran harus memiliki setidaknya baris satu persen dan total "
-"dari persen harus 100%."
+"Termin Pembayaran harus memiliki setidaknya satu baris persen dan total dari"
+" persen harus 100%."
 
 #. module: account
 #. odoo-python
@@ -13539,6 +13542,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Tanggal ditetapkan sebelum tanggal kunci %(lock_type)s, %(lock_date)s. Entri"
+" Jurnal akan dihitung pada %(invoice_date)s saat posting."
 
 #. module: account
 #. odoo-python
@@ -13794,6 +13799,7 @@ msgstr ""
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
 msgstr ""
+"Pergerakkan tidak dapat diposting karena alasan berikut: %(error_message)s"
 
 #. module: account
 #. odoo-javascript
@@ -14519,7 +14525,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "This invoice is being sent in the background."
-msgstr ""
+msgstr "Faktur ini sedang dikirim di latar belakang."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -14586,7 +14592,7 @@ msgstr "Pergerakan ini akan dipost pada tanggal akuntansi: %(date)s"
 #: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "Operasi ini akan membuat gap di sequence."
 
 #. module: account
 #. odoo-python
@@ -14602,8 +14608,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Jangka waktu pembayaran ini akan digunakan sebagai pengganti jangka waktu "
-"standar pada order pembelian dan tagihan pemasok"
+"Termin pembayaran ini akan digunakan alih-alih termin pembayaran default  "
+"pada purchase order dan tagihan vendor"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -14612,8 +14618,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Syarat pembayaran ini digunakan dan bukan yang standar untuk order penjualan"
-" dan faktur pelanggan"
+"Termin pembayaran ini akan digunakan alih-alih termin pembayaran default  "
+"pada sales order dan faktur pelanggan"
 
 #. module: account
 #. odoo-python
@@ -14831,6 +14837,8 @@ msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk sale order dan dokumen ini): "
+"%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14838,6 +14846,7 @@ msgstr ""
 #, python-format
 msgid "Total amount due (including sales orders): %(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk sale order): %(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14845,13 +14854,14 @@ msgstr ""
 #, python-format
 msgid "Total amount due (including this document): %(total_credit)s"
 msgstr ""
+"Total jumlah yang belum dibayar (termasuk dokumen ini): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "Total jumlah yang belum dibayar: %(total_credit)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -15234,7 +15244,7 @@ msgstr "Unggah"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "Unggah Faktur"
 
 #. module: account
 #. odoo-python
@@ -15525,7 +15535,7 @@ msgstr "Pembayaran Vendor"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Syarat Pembayaran Vendor"
+msgstr "Termin Pembayaran Vendor"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_payable
@@ -15587,7 +15597,7 @@ msgstr "Peringatan untuk %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Peringatan untuk Metode Pembulatan Kas: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15808,8 +15818,8 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
-"You can not delete payment terms as other records still reference it. "
-"However, you can archive it."
+"Anda tidak dapat menghapus termin pembayaran karena record lain masih "
+"mereferensikannya. Namun, Anda dapat mengarsip termin pembayaran tersebut."
 
 #. module: account
 #. odoo-python
@@ -16131,7 +16141,7 @@ msgid ""
 "with the payment terms"
 msgstr ""
 "Anda tidak dapat menghapus baris hutang/piutang karena itu tidak akan "
-"konsisten dengan syarat pembayaran"
+"konsisten dengan termin pembayaran"
 
 #. module: account
 #. odoo-python
@@ -16157,6 +16167,9 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Anda tidak dapat menghapus entri ini, karena sudah menggunakan nomor "
+"sequence dan bukan merupakan yang terakhir di rantai. Anda sebaiknya "
+"mengembalikkan hal tersebut terlebih dahulu."
 
 #. module: account
 #. odoo-python
@@ -16534,7 +16547,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Anda harus menentukan Profit Account (company dependent)"
 
 #. module: account
 #. odoo-python
@@ -16749,7 +16762,7 @@ msgstr "contohnya INV"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "e.g. Payment terms: 30 days after invoice date"
-msgstr "misalnya periode Pembayaran: 30 hari setelah tanggal faktur"
+msgstr "contoh Termin pembayaran: 30 hari setelah tanggal faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16968,7 +16981,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "units"
 
 #. module: account
 #. odoo-python

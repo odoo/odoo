@@ -23,7 +23,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" per convalidare la tua azione."
 
 #. module: portal
 #. odoo-javascript
@@ -36,6 +36,7 @@ msgstr "%s giorni di ritardo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
 msgstr ""
+"1. Inserisci la password per confermare che sei il proprietario dell'account"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -43,21 +44,23 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. Conferma di voler eliminare l'account\n"
+"                                        copiando il login ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> Il mio account"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-muted\"/> Logout"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Apps"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-th me-1 small text-muted\"/> Applicazioni"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -99,7 +102,7 @@ msgstr "<option value=\"\">Nazione...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">seleziona...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -116,17 +119,17 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Filtra per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Raggruppa per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">Ordina per:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -223,7 +226,7 @@ msgstr "Descrizione chiave API"
 #: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "Chiave API pronta"
 
 #. module: portal
 #. odoo-javascript
@@ -248,7 +251,7 @@ msgstr "Sicurezza account"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr ""
+msgstr "Account eliminato!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -280,12 +283,12 @@ msgstr "Aggiunto il"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
+msgstr "Già registrato"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "Sei sicuro di volerlo fare?"
 
 #. module: portal
 #. odoo-javascript
@@ -486,7 +489,7 @@ msgstr "Elimina"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "Elimina account"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -513,6 +516,11 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Disattiva il tuo account per prevenire ogni altro accesso.<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            L'azione non può essere annullata.\n"
+"                                        </b>"
 
 #. module: portal
 #. odoo-javascript
@@ -556,7 +564,7 @@ msgstr "E-mail"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "Indirizzo e-mail preso da un altro utente"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -613,6 +621,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Ecco la tua nuova chiave API, utilizzala al posto di una password per l'accesso RPC.\n"
+"                Il login è ancora necessario per l'utilizzo interattivo."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -655,12 +665,12 @@ msgstr "Le note interne vengono visualizzate solo dagli utenti interni."
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
 msgid "Invalid"
-msgstr ""
+msgstr "Non valido"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "Indirizzo e-mail non valido"
 
 #. module: portal
 #. odoo-python
@@ -774,7 +784,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "I rendiconti per aziende multiple non sono supportati."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -813,7 +823,7 @@ msgstr "Succ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "Nessun documento da mostrare"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -831,6 +841,7 @@ msgstr "Logo Odoo"
 #, python-format
 msgid "Only internal and portal users can create API keys"
 msgstr ""
+"Le chiavi API possono essere create solo da utenti interni e del portale"
 
 #. module: portal
 #. odoo-javascript
@@ -939,6 +950,8 @@ msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
 msgstr ""
+"Inserisci il mio indirizzo e-mail e numero di telefono in una lista di "
+"blocco per essere sicuro di non essere più contattato"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1119,7 +1132,7 @@ msgstr "Il contatto \"%s\" non ha un indirizzo e-mail valido."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "Il contatto \"%s\" ha la stessa e-mail di un utente già esistente"
 
 #. module: portal
 #. odoo-python
@@ -1134,7 +1147,7 @@ msgstr "Il documento non esiste o mancano i diritti di accesso."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "La chiave non può essere recuperata più tardi e fornisce"
 
 #. module: portal
 #. odoo-python
@@ -1164,7 +1177,7 @@ msgstr "Il partner \"%s\" ha già accesso al portale."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Il partner \"%s\" non ha accesso al portale o è interno."
 
 #. module: portal
 #. odoo-python
@@ -1253,7 +1266,7 @@ msgstr "Valido"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "Indirizzo e-mail valido"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1379,7 +1392,7 @@ msgstr "Annota la tua chiave"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "Password errata."
 
 #. module: portal
 #. odoo-javascript
@@ -1420,7 +1433,7 @@ msgstr "Devi essere"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Dovresti inserire \""
 
 #. module: portal
 #. odoo-python
@@ -1470,7 +1483,7 @@ msgstr "commenti"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "accesso completo"
 
 #. module: portal
 #. odoo-javascript
@@ -1480,6 +1493,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"sarà l'unico modo per\n"
+"                individuare la chiave una volta creata"
 
 #. module: portal
 #. odoo-javascript
@@ -1514,3 +1529,4 @@ msgstr "per inviare un commento."
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
+"per il tuo account utente, è molto importante custodirlo in sicurezza."

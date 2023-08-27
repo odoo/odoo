@@ -4018,15 +4018,6 @@ msgstr "数量は編集可能か"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5160,8 +5151,8 @@ msgstr "過去12ヶ月の間に入庫した在庫移動の数"
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "アクションが必要なメッセージの数"
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -5752,7 +5743,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
-msgstr ""
+msgstr "実地棚卸"
 
 #. module: stock
 #. odoo-python
@@ -7427,6 +7418,13 @@ msgid "Sequence picking"
 msgstr "ピッキング採番"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "シリアルナンバー"
@@ -7476,7 +7474,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Set Draft"
-msgstr ""
+msgstr "下書きを設定"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7783,7 +7781,7 @@ msgstr "移動元ロケーション"
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_usage
 msgid "Source Location Type"
-msgstr ""
+msgstr "ロケーションタイプソース"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -9146,7 +9144,7 @@ msgstr ""
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
-msgstr "ロット番号やシリアル番号のバーコードを印刷する場合は、GS1表現規則データマトリックスを使用"
+msgstr "ロット番号やシリアル番号のバーコードを印刷する場合は、GS1表現規則データマトリクスを使用"
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9348,7 +9346,7 @@ msgstr "倉庫ドメイン"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Warehouse Location"
-msgstr ""
+msgstr "倉庫ロケーション"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -9919,8 +9917,8 @@ msgstr "ドラフトの移動を分割することはできません。 最初�
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "完了'に設定されている在庫移動を分割することはできません。"
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10182,7 +10180,7 @@ msgstr "[例] PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Physical Locations"
-msgstr ""
+msgstr "例: 物理的ロケーション"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form

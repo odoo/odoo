@@ -783,6 +783,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Conto analitico al quale sono legati il progetto, le sotto-attività e i rispettivi fogli ore. \n"
+"Traccia i costi e i ricavi del tuo progetto inserendo il conto analitico nei vari documenti (ad es. ordini di vendita, fatture, ordini di acquisto, fatture fornitore, note spese ecc.).\n"
+"Il conto analitico può essere modificato su ogni attività se necessario.\n"
+"Il conto analitico è necessario per l'utilizzo dei fogli ore."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -2541,6 +2545,13 @@ msgstr "Lascia un commento"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -2552,6 +2563,13 @@ msgstr "Creiamo il primo <b>progetto</b>."
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Creiamo il primo <b>lavoro</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3048,7 +3066,7 @@ msgstr "Numero di errori"
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: project
