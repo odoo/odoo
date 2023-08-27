@@ -277,6 +277,9 @@
             <cbc:DocumentCurrencyCode
                     t-att="vals.get('document_currency_code_attrs', {})"
                     t-out="invoice.currency_id.name.upper()"/>
+            <cbc:TaxCurrencyCode
+                    t-att="vals.get('tax_currency_code_attrs', {})"
+                    t-out="vals.get('tax_currency_code')"/>
             <t t-foreach="vals.get('invoice_period_vals_list', [])" t-as="foreach_vals">
                 <cac:InvoicePeriod>
                     <cbc:StartDate t-out="foreach_vals.get('start_date')"/>
