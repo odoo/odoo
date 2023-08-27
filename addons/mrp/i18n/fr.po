@@ -4596,6 +4596,16 @@ msgid "The component %s should not be the same as the product to produce."
 msgstr "Le composant %s ne doit pas être le même que le produit à fabriquer."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"La configuration actuelle est incorrecte, parce qu'elle crée un cycle entre "
+"ces produits : %s."
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
 msgid "The database object this attachment will be attached to."
 msgstr "L'objet de la base de données auquel cette pièce-jointe sera liée."
