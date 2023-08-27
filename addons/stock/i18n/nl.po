@@ -4106,17 +4106,6 @@ msgstr "Is de hoeveelheid gereed te bewerken"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Het is niet mogelijk een gereserveerde hoeveelheid te importeren, je moet "
-"het aantal onmiddellijk gebruiken."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7531,6 +7520,13 @@ msgid "Sequence return"
 msgstr "Reeks retour"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr "Volgnummers %s bestaan reeds."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Serienummers"
@@ -10176,10 +10172,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Het is niet mogelijk een voorraadverplaatsing te splitsen welke in de "
-"'Gereed' fase is."
+"Je kan een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren' "
+"niet splitsen."
 
 #. module: stock
 #. odoo-python

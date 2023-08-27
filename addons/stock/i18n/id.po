@@ -762,8 +762,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Produk yang bisa disimpan adalah produk yang mana Anda mengelola stoknya. Aplikasi Inventaris harus diinstal.\n"
-"Produk yang bisa dipakai adalah produk yang stoknya tidak akan dikelola.\n"
+"Produk storable adalah produk yang bisa disimpan yang mana Anda kelola stoknya. Aplikasi Inventaris harus diinstal.\n"
+"Produk consumable adalah produk yang akan digunakan dan stoknya tidak akan dikelola.\n"
 "Layanan adalah produk non-material yang Anda sediakan."
 
 #. module: stock
@@ -4082,17 +4082,6 @@ msgstr "Apakah kuantitas sudah selesai dapat diubah"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allowed to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Tidak dapat mengimpor kuantitas yang direservasi, Anda harus menggunakan "
-"kuantitas langsung."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -6639,7 +6628,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quants cannot be created for consumables or services."
-msgstr "Kuant tidak dapat dibuat dari produk konsumsi atau jasa."
+msgstr "Quants tidak dapat dibuat untuk produk consumable atau layanan."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
@@ -7485,6 +7474,13 @@ msgstr "Sequence picking"
 #, python-format
 msgid "Sequence return"
 msgstr "Sequence return"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Sequences %s already exist."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -10111,10 +10107,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You cannot split a stock move that has been set to 'Done'."
+msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Anda tidak dapat membelah pergerakkan stok yang sudah ditetapkan sebagai "
-"'Selesai'."
 
 #. module: stock
 #. odoo-python

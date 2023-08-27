@@ -136,7 +136,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Dies ist eine Erinnerung daran, dass die Lieferung des Einkaufsauftrags <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        dies ist eine Erinnerung daran, dass die Lieferung des Einkaufsauftrags <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
@@ -193,7 +193,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        In der Anlage erhalten Sie einen Einkaufsauftrag <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        in der Anlage erhalten Sie einen Einkaufsauftrag <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            mit der Referenz: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -246,13 +246,13 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        In der Anlage erhalten Sie eine Angebotsanfrage <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        in der Anlage erhalten Sie eine Angebotsanfrage <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            mit der Referenz: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
-"        Sollten Sie hierzu Fragen haben, kommen Sie gerne auf uns zu..\n"
+"        Sollten Sie hierzu Fragen haben, kommen Sie gerne auf uns zu.\n"
 "        <br><br>\n"
 "        Mit freundlichen Grüßen\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -721,7 +721,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr "Zeitspanne zwischen Kaufgenehmigung und Auftragsdatum."
+msgstr "Zeitspanne zwischen Einkaufsbestätigung und Auftragsdatum."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -1145,7 +1145,7 @@ msgstr "Tage vor Eingang"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
 msgid "Days to Confirm"
-msgstr "Tage zur Bestätigung"
+msgstr "Tage bis Bestätigung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1627,13 +1627,13 @@ msgstr "Nachrichten"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
-msgstr "Mindestmenge"
+msgstr "Mindestbetrag"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr "Mindestbestellwert, ab dem eine doppelte Validierung erforderlich ist"
+msgstr "Mindestbetrag, ab dem eine doppelte Validierung erforderlich ist"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
@@ -2125,7 +2125,7 @@ msgstr "Einkaufsauftrag #"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr "Bestellbestätigung"
+msgstr "Einkaufsbestätigung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count

@@ -288,9 +288,9 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Hallo,<br><br>\n"
 "            </t>\n"
-"            Bitte nehmen Sie sich einen Moment Zeit und bewerten Sie unsere Dienste im Zusammenhang mit der Aufgabe „<strong t-out=\"object.name or ''\">Planung und Budget</strong>“,\n"
+"            bitte nehmen Sie sich einen Moment Zeit und bewerten Sie unsere Dienste im Zusammenhang mit der Aufgabe „<strong t-out=\"object.name or ''\">Planung und Budget</strong>“,\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                das <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> zugewiesen war.<br>\n"
+"                die <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> zugewiesen war.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br>\n"
@@ -355,7 +355,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Hallo <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
-"    Es ist mir eine Freude, Ihnen mitzuteilen, dass wir das Projekt „<strong t-out=\"object.name or ''\">Renovierungen</strong>“ erfolgreich abgeschlossen haben.\n"
+"    es ist mir eine Freude, Ihnen mitzuteilen, dass wir das Projekt „<strong t-out=\"object.name or ''\">Renovierungen</strong>“ erfolgreich abgeschlossen haben.\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -382,10 +382,10 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Hallo <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
-"    Danke für Ihre Anfrage.<br>\n"
+"    danke für Ihre Anfrage.<br>\n"
 "    Sollten Sie Fragen haben, lassen Sie es uns bitte wissen.\n"
 "    <br><br>\n"
-"    Vielen Dank,\n"
+"    Vielen Dank\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
 "        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -1852,7 +1852,7 @@ msgstr "Entwicklung"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr "Zusammenfassung"
+msgstr "Übersicht"
 
 #. module: project
 #. odoo-javascript
@@ -1912,7 +1912,7 @@ msgstr "Schaltfläche „Übergeordnete Aufgabe“ anzeigen"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
-"Zusammenfassung des Benutzers."
+"Übersicht des Benutzers."
 
 #. module: project
 #. odoo-javascript
@@ -2634,6 +2634,13 @@ msgstr "Kommentar hinterlassen"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Erstellen Sie Ihre erste <b>Phase</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
@@ -2645,6 +2652,13 @@ msgstr "Erstellen Sie Ihr erstes <b>Projekt</b>."
 #, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Erstellen Sie Ihre erste <b>Aufgabe</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Erstellen Sie Ihre zweite <b>Phase</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3326,7 +3340,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Prozentsatz der glücklichen Bewertungen"
+msgstr "Prozentsatz der zufriedenen Bewertungen"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -3361,8 +3375,8 @@ msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
 msgstr ""
-"Planen Sie die Ressourcenzuweisung für Projekte und Aufgaben und schätzen "
-"Sie Fristen genauer ein."
+"Planen Sie die Ressourcenzuweisung für mehrere Projekte und schätzen Sie "
+"Fristen genauer ein."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4055,7 +4069,7 @@ msgstr "In Zugewiesen an suchen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr "Kunden durchsuchen"
+msgstr "In Kunde suchen"
 
 #. module: project
 #. odoo-python
