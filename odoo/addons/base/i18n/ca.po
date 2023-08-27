@@ -22,10 +22,10 @@
 # Pete M, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
-# jabelchi, 2022
 # Guspy12, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # martioodo hola, 2023
+# Josep Anton Belchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: martioodo hola, 2023\n"
+"Last-Translator: Josep Anton Belchi, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13341,7 +13341,7 @@ msgstr "Calcula"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Compute method cannot depend on field 'id'"
-msgstr ""
+msgstr "El mètode de càlcul no pot dependre del camp 'id'"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
@@ -15762,6 +15762,15 @@ msgstr "Error"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "S'ha retornat un missatge d'error quan es viola la restricció."
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18836,6 +18845,12 @@ msgstr ""
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Paràmetre 'group by' no vàlid"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "Format JSON no vàlid en camp de valor per defecte."
 
 #. module: base
 #: code:addons/models.py:0
@@ -30801,6 +30816,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "No pots desactivar l'usuari amb el que estas loguejat."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "No podeu esborrar el registre %s."
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -30821,6 +30842,12 @@ msgstr "No podeu suprimir l'idioma que és l'idioma preferit de l'usuari."
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "No es pot combinar un contacte amb un dels seus pares."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
