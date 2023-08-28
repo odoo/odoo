@@ -1501,7 +1501,7 @@ patch(Order.prototype, {
                 [
                     [this.pos.config.id],
                     code,
-                    this.creation_date,
+                    this.date_order,
                     customerId,
                     this.pricelist ? this.pricelist.id : false,
                 ]

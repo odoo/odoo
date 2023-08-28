@@ -1,9 +1,7 @@
 /** @odoo-module */
 
 import { Order, Orderline, Payment } from "@point_of_sale/app/store/models";
-import { parseDateTime } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
-const { DateTime } = luxon;
 
 // New orders are now associated with the current table, if any.
 patch(Order.prototype, {
@@ -31,8 +29,6 @@ patch(Order.prototype, {
         super.init_from_JSON(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             this.tableId = json.table_id;
-            const creationDate = parseDateTime(json.creation_date) || DateTime.now(); //ex : json.creation_date = "2023-08-25 13:24:16+02:00"
-            this.validation_date = creationDate.toJSDate();
             this.customerCount = json.customer_count;
         }
     },

@@ -35,7 +35,7 @@ class PosSelfOrderController(http.Controller):
                 'pos_session_id': pos_session.id,
                 'table_id': table.id if table else False,
                 'partner_id': False,
-                'creation_date': str(fields.Datetime.now()),
+                'date_order': str(fields.Datetime.now()),
                 'fiscal_position_id': pos_config.default_fiscal_position_id.id,
                 'statement_ids': [],
                 'lines': [],
