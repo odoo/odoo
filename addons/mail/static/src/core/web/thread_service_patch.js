@@ -147,8 +147,11 @@ patch(ThreadService.prototype, {
     async insertSuggestedRecipients(thread, dataList) {
         const recipients = [];
         for (const data of dataList) {
-            const [partner_id, emailInfo, lang, reason] = data;
-            const [name, email] = emailInfo && parseEmail(emailInfo);
+            const [partner_id, emailInfo, lang, reason, customerInfo] = data;
+            let [name, email] = emailInfo ? parseEmail(emailInfo) : [];
+            if ((!name || name === email) && customerInfo?.name) {
+                name = customerInfo.name;
+            }
             recipients.push({
                 id: nextId++,
                 name,

@@ -71,7 +71,7 @@ QUnit.test(
         });
         await click("button", { text: "Send message" });
         await contains(".o-mail-SuggestedRecipient", {
-            text: "john@test.be (john@test.be)",
+            text: "john@test.be",
             contains: ["input[type=checkbox]:checked"],
         });
         await contains(".o-mail-SuggestedRecipient", {
@@ -111,7 +111,7 @@ QUnit.test(
         });
         await click("button", { text: "Send message" });
         await contains(".o-mail-SuggestedRecipient", {
-            text: "john@test.be (john@test.be)",
+            text: "john@test.be",
             contains: ["input[type=checkbox]:checked"],
         });
         await contains(".o-mail-SuggestedRecipient", {
