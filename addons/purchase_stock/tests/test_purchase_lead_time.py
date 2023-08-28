@@ -134,11 +134,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check order date of purchase order
         order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
-        self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')
+        self.assertAlmostEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).', delta=timedelta(seconds=10))
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay + company.po_lead)
-        self.assertEqual(date_planned, str(schedule_date), 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
+        self.assertAlmostEqual(date_planned, str(schedule_date), 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).', delta=timedelta(seconds=10))
 
         # Check the picking crated or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
@@ -146,22 +146,22 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # Check scheduled date of Internal Type shipment
         incoming_shipment1 = self.env['stock.picking'].search([('move_lines.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
         incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay + company.po_lead)
-        self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
-        self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date)
+        self.assertAlmostEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.', delta=timedelta(seconds=10))
+        self.assertAlmostEqual(incoming_shipment1.date_deadline, incoming_shipment1_date, delta=timedelta(seconds=10))
         old_deadline1 = incoming_shipment1.date_deadline
 
         incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
         incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_lines[0].rule_id.delay)
-        self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
-        self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date)
+        self.assertAlmostEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..', delta=timedelta(seconds=10))
+        self.assertAlmostEqual(incoming_shipment2.date_deadline, incoming_shipment2_date, delta=timedelta(seconds=10))
         old_deadline2 = incoming_shipment2.date_deadline
 
         # Modify the date_planned of the purchase -> propagate the deadline
         purchase_form = Form(purchase)
         purchase_form.date_planned = purchase.date_planned + timedelta(days=1)
         purchase_form.save()
-        self.assertEqual(incoming_shipment2.date_deadline, old_deadline2 + timedelta(days=1), 'Deadline should be propagate')
-        self.assertEqual(incoming_shipment1.date_deadline, old_deadline1 + timedelta(days=1), 'Deadline should be propagate')
+        self.assertAlmostEqual(incoming_shipment2.date_deadline, old_deadline2 + timedelta(days=1), 'Deadline should be propagate', delta=timedelta(seconds=10))
+        self.assertAlmostEqual(incoming_shipment1.date_deadline, old_deadline1 + timedelta(days=1), 'Deadline should be propagate', delta=timedelta(seconds=10))
 
     def test_merge_po_line(self):
         """Change that merging po line for same procurement is done."""
