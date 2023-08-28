@@ -22,7 +22,7 @@ export class MessageInReply extends Component {
     get authorAvatarUrl() {
         if (
             this.message.type === "email" &&
-            !["partner", "guest"].includes(this.props.message.author.type)
+            !["partner", "guest"].includes(this.props.message.author?.type)
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
