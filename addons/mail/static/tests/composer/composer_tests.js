@@ -12,6 +12,7 @@ import {
     dropFiles,
     insertText,
     pasteFiles,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -196,33 +197,33 @@ QUnit.test(
     }
 );
 
-QUnit.test("keep emoji picker scroll value when re-opening it", async (assert) => {
+QUnit.test("keep emoji picker scroll value when re-opening it", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-carsurfing" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    (await contains(".o-EmojiPicker-content"))[0].scrollTop = 150;
+    await scroll(".o-EmojiPicker-content", 150);
     await click("button[aria-label='Emojis']");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual((await contains(".o-EmojiPicker-content"))[0].scrollTop, 150);
+    await contains(".o-EmojiPicker-content", 1, { scroll: 150 });
 });
 
-QUnit.test("reset emoji picker scroll value after an emoji is picked", async (assert) => {
+QUnit.test("reset emoji picker scroll value after an emoji is picked", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "roblox-fingerskating" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    (await contains(".o-EmojiPicker-content"))[0].scrollTop = 150;
+    await scroll(".o-EmojiPicker-content", 150);
     await click(".o-Emoji:contains(😎)");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual((await contains(".o-EmojiPicker-content"))[0].scrollTop, 0);
+    await contains(".o-EmojiPicker-content", 1, { scroll: 0 });
 });
 
 QUnit.test(
     "keep emoji picker scroll value independent if two or more different emoji pickers are used",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ name: "roblox-jaywalking" });
         const { openDiscuss } = await start();
@@ -235,22 +236,18 @@ QUnit.test(
             res_id: channelId,
         });
         openDiscuss(channelId);
-
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        (await contains(".o-EmojiPicker-content"))[0].scrollTop = 150;
-
+        await scroll(".o-EmojiPicker-content", 150);
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        (await contains(".o-EmojiPicker-content"))[0].scrollTop = 200;
-
+        await scroll(".o-EmojiPicker-content", 200);
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        assert.strictEqual((await contains(".o-EmojiPicker-content"))[0].scrollTop, 150);
-
+        await contains(".o-EmojiPicker-content", 1, { scroll: 150 });
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        assert.strictEqual((await contains(".o-EmojiPicker-content"))[0].scrollTop, 200);
+        await contains(".o-EmojiPicker-content", 1, { scroll: 200 });
     }
 );
 

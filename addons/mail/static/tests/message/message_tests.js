@@ -287,10 +287,10 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     await click(".o-mail-Message [title='Edit']");
     const $textarea = await contains(".o-mail-Message .o-mail-Composer-input");
     assert.ok($textarea[0].scrollHeight > $textarea[0].clientHeight);
-    assert.strictEqual($textarea[0].scrollTop, 0);
+    await contains(".o-mail-Message .o-mail-Composer-input", 1, { scroll: 0 });
 });
 
-QUnit.test("mentions are kept when editing message", async (assert) => {
+QUnit.test("mentions are kept when editing message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",

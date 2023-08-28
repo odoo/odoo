@@ -599,8 +599,6 @@ export {
     afterNextRender,
     dragenterFiles,
     dropFiles,
-    isScrolledToBottom,
-    isScrolledTo,
     nextAnimationFrame,
     nextTick,
     pasteFiles,
@@ -620,6 +618,19 @@ export async function click(selector, { target = document.body } = {}) {
     await contains(selector, 1, { click: true, target });
 }
 
+/**
+ * Waits until exactly one element matching the given selector is present in
+ * `options.target` and then sets its `scrollTop` to the given value.
+ *
+ * @param {string} selector
+ * @param {number|"bottom"} scrollTop
+ * @param {Object} [options={}]
+ * @param {HTMLElement} [options.target=document.body]
+ */
+export async function scroll(selector, scrollTop, { target = document.body } = {}) {
+    await contains(selector, 1, { setScroll: scrollTop, target });
+}
+
 let hasUsedContainsPositively = false;
 QUnit.testStart(() => (hasUsedContainsPositively = false));
 /**
@@ -630,12 +641,21 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  * @param {number} [count=1]
  * @param {Object} [options={}]
  * @param {boolean} [options.click] if provided, clicks on the found element
+ * @param {number|"bottom"} [options.scroll] if provided, the scrollTop of the found element(s)
+ *  must match.
+ *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
+ *  to change soon, by checking with a preceding contains that all the expected elements are in DOM.
+ * @param {number|"bottom"} [options.setScroll] if provided, set the scrollTop on the found element
  * @param {HTMLElement} [options.target=document.body]
  * @param {string} [options.value] if provided, the input value of the found element(s) must match.
  *  Note: value changes are not observed directly, another mutation must happen to catch them.
  * @returns {Promise<JQuery<HTMLElement>>}
  */
-export function contains(selector, count = 1, { click, target = document.body, value } = {}) {
+export function contains(
+    selector,
+    count = 1,
+    { click, scroll, setScroll, target = document.body, value } = {}
+) {
     if (count) {
         hasUsedContainsPositively = true;
     } else if (!hasUsedContainsPositively) {
@@ -644,9 +664,13 @@ export function contains(selector, count = 1, { click, target = document.body, v
         );
     }
     return new Promise((resolve, reject) => {
+        const scrollListeners = new Set();
         let selectorMessage = `${count} of "${selector}"`;
         if (value !== undefined) {
             selectorMessage = `${selectorMessage} with value "${value}"`;
+        }
+        if (scroll !== undefined) {
+            selectorMessage = `${selectorMessage} with scroll "${scroll}"`;
         }
         const $res = select();
         if ($res.length === count) {
@@ -682,9 +706,33 @@ export function contains(selector, count = 1, { click, target = document.body, v
                 reject(new Error(message));
             }
         });
+        function onScroll(ev) {
+            const $res = select();
+            if ($res.length === count) {
+                clean();
+                execute($res, "after scroll");
+            }
+        }
         function select() {
             const $res = $(target).find(selector);
-            return value === undefined ? $res : $res.filter((i, el) => el.value === value);
+            const $filteredRes = $res.filter(
+                (i, el) =>
+                    (value === undefined || el.value === value) &&
+                    (scroll === undefined ||
+                        (scroll === "bottom" ? isScrolledToBottom(el) : isScrolledTo(el, scroll)))
+            );
+            if (
+                scroll !== undefined &&
+                !scrollListeners.size &&
+                $res.length === count &&
+                $filteredRes.length !== count
+            ) {
+                for (const el of $res) {
+                    scrollListeners.add(el);
+                    el.addEventListener("scroll", onScroll);
+                }
+            }
+            return $filteredRes;
         }
         function execute($res, whenMessage) {
             let message = `Found ${selectorMessage} (${whenMessage})`;
@@ -692,12 +740,19 @@ export function contains(selector, count = 1, { click, target = document.body, v
                 message = `${message} and clicked it`;
                 $res[0].click();
             }
+            if (setScroll !== undefined) {
+                message = `${message} and set scroll to "${setScroll}"`;
+                $res[0].scrollTop = setScroll === "bottom" ? $res[0].scrollHeight : setScroll;
+            }
             QUnit.assert.ok(true, message);
             resolve($res);
         }
         function clean() {
             observer.disconnect();
             clearTimeout(timer);
+            for (const el of scrollListeners) {
+                el.removeEventListener("scroll", onScroll);
+            }
             done = true;
         }
     });

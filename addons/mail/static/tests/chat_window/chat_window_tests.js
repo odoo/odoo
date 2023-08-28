@@ -8,13 +8,11 @@ import {
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
-    afterNextRender,
     click,
     contains,
     createFile,
     insertText,
-    isScrolledToBottom,
-    nextAnimationFrame,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -774,7 +772,7 @@ QUnit.test("chat window should not open when receiving a new DM from odoobot", a
 
 QUnit.test(
     "chat window should scroll to the newly posted message just after posting it",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
@@ -797,9 +795,11 @@ QUnit.test(
             });
         }
         await start();
+        await contains(".o-mail-Message", 10);
         await insertText(".o-mail-Composer-input", "WOLOLO");
         triggerHotkey("Enter");
-        assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+        await contains(".o-mail-Message", 11);
+        await contains(".o-mail-Thread", 1, { scroll: "bottom" });
     }
 );
 
@@ -967,7 +967,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("chat window: scroll conservation on toggle discuss", async (assert) => {
+QUnit.test("chat window: scroll conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     for (let i = 0; i < 100; i++) {
@@ -979,26 +979,24 @@ QUnit.test("chat window: scroll conservation on toggle discuss", async (assert) 
     }
     const { openDiscuss, openView } = await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    /**
-     * The afterNextRender is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await afterNextRender(async () => await click(".o-mail-NotificationItem"));
-    (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message", 31);
+    await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     openDiscuss(null, { waitUntilMessagesLoaded: false });
     await contains(".o-mail-ChatWindow", 0);
-
     openView({
         res_id: channelId,
         res_model: "discuss.channel",
         views: [[false, "list"]],
     });
-    assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
+    await contains(".o-mail-Message", 31);
+    await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: 142 });
 });
 
 QUnit.test(
     "chat window with a thread: keep scroll position in message list on folded",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({});
         for (let i = 0; i < 100; i++) {
@@ -1010,25 +1008,24 @@ QUnit.test(
         }
         await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        /**
-         * The afterNextRender is necessary because otherwise useAutoScroll would
-         * set the scroll to bottom after the manually set value from this test.
-         */
-        await afterNextRender(async () => await click(".o-mail-NotificationItem"));
-        (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
-
+        await click(".o-mail-NotificationItem");
+        await contains(".o-mail-Message", 31);
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: "bottom" });
+        await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
+        await contains(".o-mail-Message", 0);
         await contains(".o-mail-ChatWindow .o-mail-Thread", 0);
         // unfold chat window
         await click(".o-mail-ChatWindow-command[title='Open']");
-        assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
+        await contains(".o-mail-Message", 31);
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: 142 });
     }
 );
 
 QUnit.test(
     "chat window with a thread: keep scroll position in message list on toggle discuss when folded",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({});
         for (let i = 0; i < 100; i++) {
@@ -1040,18 +1037,14 @@ QUnit.test(
         }
         const { openDiscuss, openView } = await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-        /**
-         * The afterNextRender is necessary because otherwise useAutoScroll would
-         * set the scroll to bottom after the manually set value from this test.
-         */
-        await afterNextRender(async () => await click(".o-mail-NotificationItem"));
-        (await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop = 142;
-
+        await click(".o-mail-NotificationItem");
+        await contains(".o-mail-Message", 31);
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: "bottom" });
+        await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
         openDiscuss(null, { waitUntilMessagesLoaded: false });
         await contains(".o-mail-ChatWindow", 0);
-
         openView({
             res_id: channelId,
             res_model: "discuss.channel",
@@ -1059,7 +1052,8 @@ QUnit.test(
         });
         // unfold chat window
         await click(".o-mail-ChatWindow-command[title='Open']");
-        assert.strictEqual((await contains(".o-mail-ChatWindow .o-mail-Thread"))[0].scrollTop, 142);
+        await contains(".o-mail-ChatWindow .o-mail-Message", 31);
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: 142 });
     }
 );
 
@@ -1102,8 +1096,7 @@ QUnit.test("Chat window in mobile are not foldable", async () => {
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow-header.cursor-pointer", 0);
-    click(".o-mail-ChatWindow-header").catch(() => {});
-    await nextAnimationFrame();
+    await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatWindow-content"); // content => non-folded
 });
 

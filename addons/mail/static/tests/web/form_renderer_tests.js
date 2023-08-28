@@ -1,11 +1,11 @@
 /* @odoo-module */
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Form renderer");
 
-QUnit.test("Form view not scrolled when switching record", async (assert) => {
+QUnit.test("Form view not scrolled when switching record", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         {
@@ -16,8 +16,9 @@ QUnit.test("Form view not scrolled when switching record", async (assert) => {
     ]);
     const messages = [...Array(60).keys()].map((id) => {
         return {
+            body: "not empty",
             model: "res.partner",
-            res_id: id % 2 ? partnerId_1 : partnerId_2,
+            res_id: id < 29 ? partnerId_1 : partnerId_2,
         };
     });
     pyEnv["mail.message"].create(messages);
@@ -43,16 +44,16 @@ QUnit.test("Form view not scrolled when switching record", async (assert) => {
         },
         { resIds: [partnerId_1, partnerId_2] }
     );
-    await contains(".o_breadcrumb .active:contains(Partner 1)");
-    assert.strictEqual($(".o_content")[0].scrollTop, 0);
-    $(".o_content")[0].scrollTop = 150;
-
+    await contains(".o-mail-Message", 29);
+    await contains(".o_content", 1, { scroll: 0 });
+    await scroll(".o_content", 150);
     await click(".o_pager_next");
-    await contains(".o_breadcrumb .active:contains(Partner 2)");
-    assert.strictEqual($(".o_content")[0].scrollTop, 0);
-
+    await contains(".o-mail-Message", 30);
+    await contains(".o_content", 1, { scroll: 150 });
+    await scroll(".o_content", 0);
     await click(".o_pager_previous");
-    assert.strictEqual($(".o_content")[0].scrollTop, 0);
+    await contains(".o-mail-Message", 29);
+    await contains(".o_content", 1, { scroll: 0 });
 });
 
 QUnit.test(
