@@ -217,11 +217,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             background: var(--o-we-toolbar-border, #{$o-we-toolbar-border});
             transform: scaleY(.6)
         }
-
-        // Adjust dropdown-menu position, but not when already handled in js
-        .o-dropdown-menu:not([x-placement]) {
-            margin-left: $o-we-toolbar-entries-gap;
-        }
     }
 
     // Main layout of buttons
