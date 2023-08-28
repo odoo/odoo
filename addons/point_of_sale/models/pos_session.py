@@ -1453,7 +1453,8 @@ class PosSession(models.Model):
         # And yes, we are only concern for split bank payment methods.
         diff_lines_ref = [self._get_diff_account_move_ref(pm) for pm in self.payment_method_ids if pm.type == 'bank' and pm.split_transactions]
         diff_lines_ref.append("Opening Balance difference for %s" % (self.name))
-        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref)]).mapped('move_id')
+        cost_move_lines = ['pos_order_'+str(rec.id) for rec in self.order_ids]
+        return self.env['account.move.line'].search([('ref', 'in', diff_lines_ref + cost_move_lines)]).mapped('move_id')
 
     def _get_related_account_moves(self):
         pickings = self.picking_ids | self.order_ids.mapped('picking_ids')
