@@ -4432,7 +4432,7 @@ Fields:
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         if self.env.context.get('import_file'):
-            existing_modules = self.env['ir.module.module'].search([]).mapped('name')
+            existing_modules = self.env['ir.module.module'].sudo().search([]).mapped('name')
             for data in to_create:
                 xml_id = data.get('xml_id')
                 if xml_id:
