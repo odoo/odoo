@@ -423,7 +423,7 @@ class account_journal(models.Model):
         late_query_results = group_by_journal(self.env.cr.dictfetchall())
 
         to_check_vals = {
-            vals['journal_id']: vals
+            vals['journal_id'][0]: vals
             for vals in self.env['account.move'].read_group(
                 domain=[('journal_id', 'in', sale_purchase_journals.ids), ('to_check', '=', True)],
                 fields=['amount_total_signed'],
@@ -440,7 +440,7 @@ class account_journal(models.Model):
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
             to_check = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
-                'number_to_check': to_check.get('__count', 0),
+                'number_to_check': to_check.get('journal_id_count', 0),
                 'to_check_balance': to_check.get('amount_total_signed', 0),
                 'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
                 'number_draft': number_draft,
@@ -459,7 +459,7 @@ class account_journal(models.Model):
         if not general_journals:
             return
         to_check_vals = {
-            vals['journal_id']: vals
+            vals['journal_id'][0]: vals
             for vals in self.env['account.move'].read_group(
                 domain=[('journal_id', 'in', general_journals.ids), ('to_check', '=', True)],
                 fields=['amount_total_signed'],
@@ -468,7 +468,7 @@ class account_journal(models.Model):
             )
         }
         for journal in general_journals:
-            vals = to_check_vals.get('journal_id', {})
+            vals = to_check_vals.get(journal.id, {})
             dashboard_data[journal.id].update({
                 'number_to_check': vals.get('__count', 0),
                 'to_check_balance': vals.get('amount_total_signed', 0),
