@@ -242,7 +242,7 @@ QUnit.test("Load 100 followers at once", async () => {
     await contains(".o-mail-Followers-dropdown span:contains(Load more)", 0);
 });
 
-QUnit.test("Load 100 recipients at once", async (assert) => {
+QUnit.test("Load 100 recipients at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
         [...Array(210).keys()].map((i) => ({

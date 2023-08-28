@@ -7,9 +7,7 @@ import {
     contains,
     dragenterFiles,
     insertText,
-    isScrolledTo,
-    isScrolledToBottom,
-    nextAnimationFrame,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -54,12 +52,9 @@ QUnit.test("load more messages from channel (auto-load on scroll)", async () => 
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains("button:contains(Load More) ~ .o-mail-Message", 30);
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    $(".o-mail-Thread")[0].scrollTop = 0;
+    await contains(".o-mail-Message", 30);
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", 60);
 });
 
@@ -100,7 +95,7 @@ QUnit.test("do not show message subject when subject is the same as the thread n
     await contains(".o-mail-Message:not(:contains(Salutations, voyageur))");
 });
 
-QUnit.test("auto-scroll to bottom of thread on load", async (assert) => {
+QUnit.test("auto-scroll to bottom of thread on load", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     for (let i = 1; i <= 25; i++) {
@@ -113,7 +108,7 @@ QUnit.test("auto-scroll to bottom of thread on load", async (assert) => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message", 25);
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });
 
 QUnit.test("display day separator before first message of the day", async () => {
@@ -150,53 +145,42 @@ QUnit.test("do not display day separator if all messages of the day are empty", 
     await contains(".o-mail-Thread-date", 0);
 });
 
-QUnit.test(
-    "scroll position is kept when navigating from one channel to another",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId_1 = pyEnv["discuss.channel"].create({ name: "channel-1" });
-        const channelId_2 = pyEnv["discuss.channel"].create({ name: "channel-2" });
-        // Fill both channels with random messages in order for the scrollbar to
-        // appear.
-        pyEnv["mail.message"].create(
-            Array(40)
-                .fill(0)
-                .map((_, index) => ({
-                    body: "Non Empty Body ".repeat(25),
-                    message_type: "comment",
-                    model: "discuss.channel",
-                    res_id: index & 1 ? channelId_1 : channelId_2,
-                }))
-        );
-        const { openDiscuss } = await start();
-        openDiscuss(channelId_1);
-        await contains(".o-mail-Thread");
-        /**
-         * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-         * set the scroll to bottom after the manually set value from this test.
-         */
-        await nextAnimationFrame();
-        const scrolltop_1 = $(".o-mail-Thread")[0].scrollHeight / 2;
-        $(".o-mail-Thread")[0].scrollTo({ top: scrolltop_1 });
-        await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
-        await contains(".o-mail-DiscussSidebarChannel:contains(channel-2).o-active");
-        /**
-         * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-         * set the scroll to bottom after the manually set value from this test.
-         */
-        await nextAnimationFrame();
-        const scrolltop_2 = $(".o-mail-Thread")[0].scrollHeight / 3;
-        $(".o-mail-Thread")[0].scrollTo({ top: scrolltop_2 });
-        await click(".o-mail-DiscussSidebarChannel:contains(channel-1)");
-        await contains(".o-mail-DiscussSidebarChannel:contains(channel-1).o-active");
-        assert.ok(isScrolledTo($(".o-mail-Thread")[0], scrolltop_1));
-        await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
-        await contains(".o-mail-DiscussSidebarChannel:contains(channel-2).o-active");
-        assert.ok(isScrolledTo($(".o-mail-Thread")[0], scrolltop_2));
-    }
-);
+QUnit.test("scroll position is kept when navigating from one channel to another", async () => {
+    const pyEnv = await startServer();
+    const channelId_1 = pyEnv["discuss.channel"].create({ name: "channel-1" });
+    const channelId_2 = pyEnv["discuss.channel"].create({ name: "channel-2" });
+    // Fill both channels with random messages in order for the scrollbar to
+    // appear.
+    pyEnv["mail.message"].create(
+        Array(50)
+            .fill(0)
+            .map((_, index) => ({
+                body: "Non Empty Body ".repeat(25),
+                message_type: "comment",
+                model: "discuss.channel",
+                res_id: index < 20 ? channelId_1 : channelId_2,
+            }))
+    );
+    const { openDiscuss } = await start();
+    openDiscuss(channelId_1);
+    await contains(".o-mail-Message", 20);
+    const scrollValue1 = $(".o-mail-Thread")[0].scrollHeight / 2;
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", scrollValue1);
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
+    await contains(".o-mail-Message", 30);
+    const scrollValue2 = $(".o-mail-Thread")[0].scrollHeight / 3;
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", scrollValue2);
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-1)");
+    await contains(".o-mail-Message", 20);
+    await contains(".o-mail-Thread", 1, { scroll: scrollValue1 });
+    await click(".o-mail-DiscussSidebarChannel:contains(channel-2)");
+    await contains(".o-mail-Message", 30);
+    await contains(".o-mail-Thread", 1, { scroll: scrollValue2 });
+});
 
-QUnit.test("thread is still scrolling after scrolling up then to bottom", async (assert) => {
+QUnit.test("thread is still scrolling after scrolling up then to bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel-1" });
     pyEnv["mail.message"].create(
@@ -211,19 +195,14 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     );
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Thread");
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
-    $(".o-mail-Thread")[0].scrollTo({ top: $(".o-mail-Thread")[0].scrollHeight / 2 });
-    $(".o-mail-Thread")[0].scrollTo({ top: $(".o-mail-Thread")[0].scrollHeight });
+    await contains(".o-mail-Message", 20);
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", $(".o-mail-Thread")[0].scrollHeight / 2);
+    await scroll(".o-mail-Thread", "bottom");
     await insertText(".o-mail-Composer-input", "123");
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(".o-mail-Message", 21);
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });
 
 QUnit.test("mention a channel with space in the name", async () => {
@@ -279,17 +258,19 @@ QUnit.test(
                 }
             },
         });
+        await contains(".o_menu_systray i[aria-label='Messages']");
         pyEnv.withUser(userId, () =>
             env.services.rpc("/mail/message/post", {
-                post_data: { body: "new message", message_type: "comment" },
+                post_data: { body: "Hello!", message_type: "comment" },
                 thread_id: channelId,
                 thread_model: "discuss.channel",
             })
         );
         await contains(".o-mail-Message");
         assert.verifySteps(["rpc:channel_fetch"]);
+        await contains("hr + span:contains(New messages)");
         $(".o-mail-Composer-input")[0].focus();
-        await contains("span:contains(New messages)", 0);
+        await contains("hr + span:contains(New messages)", 0);
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -338,7 +319,7 @@ QUnit.test(
 
 QUnit.test(
     "should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
         const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
@@ -358,25 +339,24 @@ QUnit.test(
         const { env } = await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        assert.ok(isScrolledToBottom((await contains(".o-mail-Thread"))[0]));
-
+        await contains(".o-mail-Message", 11);
+        await contains(".o-mail-Thread", 1, { scroll: "bottom" });
         // simulate receiving a message
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "hello", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hello", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+        await contains(".o-mail-Message", 12);
+        await contains(".o-mail-Thread", 1, { scroll: "bottom" });
     }
 );
 
 QUnit.test(
     "should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
         const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
@@ -395,24 +375,20 @@ QUnit.test(
         }
         const { env } = await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        /**
-         * The afterNextRender is necessary because otherwise useAutoScroll would
-         * set the scroll to bottom after the manually set value from this test.
-         */
-        await afterNextRender(() => click(".o-mail-NotificationItem"));
-        assert.ok(isScrolledToBottom((await contains(".o-mail-Thread"))[0]));
-        $(".o-mail-Thread").scrollTop(0);
+        await click(".o-mail-NotificationItem");
+        await contains(".o-mail-Message", 11);
+        await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+        await scroll(".o-mail-Thread", 0);
         // simulate receiving a message
-        await afterNextRender(() =>
-            pyEnv.withUser(userId, () =>
-                env.services.rpc("/mail/message/post", {
-                    post_data: { body: "hello", message_type: "comment" },
-                    thread_id: channelId,
-                    thread_model: "discuss.channel",
-                })
-            )
+        pyEnv.withUser(userId, () =>
+            env.services.rpc("/mail/message/post", {
+                post_data: { body: "hello", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
         );
-        assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 0);
+        await contains(".o-mail-Message", 12);
+        await contains(".o-mail-ChatWindow .o-mail-Thread", 1, { scroll: 0 });
     }
 );
 
@@ -437,7 +413,7 @@ QUnit.test("show empty placeholder when thread contains only empty messages", as
 
 QUnit.test(
     "message list with a full page of empty messages should load more messages until there are some non-empty",
-    async (assert) => {
+    async () => {
         // Technical assumptions :
         // - /discuss/channel/messages fetching exactly 30 messages,
         // - empty messages not being displayed
@@ -462,40 +438,37 @@ QUnit.test(
     }
 );
 
-QUnit.test(
-    "no new messages separator on posting message (some message history)",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_member_ids: [
-                Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
-            ],
-            channel_type: "channel",
-            name: "General",
-        });
-        const messageId = pyEnv["mail.message"].create({
-            body: "first message",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        const [memberId] = pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["partner_id", "=", pyEnv.currentPartnerId],
-        ]);
-        pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-        const { openDiscuss } = await start();
-        openDiscuss(channelId);
-        await contains(".o-mail-Message");
-        await contains("hr + span:contains(New messages)", 0);
+QUnit.test("no new messages separator on posting message (some message history)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "first message",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await contains("hr + span:contains(New messages)", 0);
 
-        await insertText(".o-mail-Composer-input", "hey!");
-        // need to remove focus from text area to avoid set_last_seen_message
-        (await contains(".o-mail-Composer-send:not(:disabled)"))[0].focus();
-        await click(".o-mail-Composer-send:not(:disabled)");
-        await contains(".o-mail-Message", 2);
-        await contains("hr + span:contains(New messages)", 0);
-    }
-);
+    await insertText(".o-mail-Composer-input", "hey!");
+    // need to remove focus from text area to avoid set_last_seen_message
+    (await contains(".o-mail-Composer-send:not(:disabled)"))[0].focus();
+    await click(".o-mail-Composer-send:not(:disabled)");
+    await contains(".o-mail-Message", 2);
+    await contains("hr + span:contains(New messages)", 0);
+});
 
 QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", async () => {
     patchWithCleanup(transitionConfig, { disabled: true });

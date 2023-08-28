@@ -1,15 +1,9 @@
 /* @odoo-module */
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
-import {
-    click,
-    contains,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("jump to present");
 
@@ -22,11 +16,6 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        body: "Hello world!",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
     for (let i = 0; i < 20; i++) {
         pyEnv["mail.message"].create({
             body: "Non Empty Body ".repeat(100),
@@ -37,24 +26,17 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     }
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    await contains(".o-mail-Message", 20);
     assert.ok(
         (await contains(".o-mail-Thread"))[0].scrollHeight > PRESENT_THRESHOLD,
         "should have enough scroll height to trigger jump to present"
     );
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    $(".o-mail-Thread").scrollTop(0);
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
     await click(".o-mail-Thread-jumpPresent");
-    await nextTick();
     await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
-    assert.ok(
-        $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
-            $(".o-mail-Thread")[0].clientHeight
-    );
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });
 
 QUnit.test("Jump to old reply should prompt jump to presence", async (assert) => {
@@ -94,8 +76,9 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
+    await contains(".o-mail-Message", 30);
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await nextAnimationFrame(); // wait for scroll into view
+    await contains(".o-mail-Message", 46);
     assert.isVisible((await contains(".o-mail-Message:contains(Hello world!):eq(0)"))[0]);
     assert.strictEqual(
         $(".o-mail-Message-body:contains(Hello world!):eq(0)").text(),
@@ -105,8 +88,6 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
     await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
     await click(".o-mail-Thread-jumpPresent");
     await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
-    assert.ok(
-        $(".o-mail-Thread")[0].scrollHeight - $(".o-mail-Thread")[0].scrollTop <=
-            $(".o-mail-Thread")[0].clientHeight
-    );
+    await contains(".o-mail-Message", 30);
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });

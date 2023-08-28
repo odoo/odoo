@@ -8,8 +8,7 @@ import {
     dragenterFiles,
     dropFiles,
     insertText,
-    isScrolledTo,
-    nextAnimationFrame,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -456,7 +455,7 @@ QUnit.test("should not display subject when subject is the same as the thread na
     await contains(".o-mail-Message:not(:contains(Salutations, voyageur))");
 });
 
-QUnit.test("scroll position is kept when navigating from one record to another", async (assert) => {
+QUnit.test("scroll position is kept when navigating from one record to another", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Harry Potter" });
@@ -464,48 +463,30 @@ QUnit.test("scroll position is kept when navigating from one record to another",
     // Fill both channels with random messages in order for the scrollbar to
     // appear.
     pyEnv["mail.message"].create(
-        Array(40)
+        Array(50)
             .fill(0)
             .map((_, index) => ({
                 body: "Non Empty Body ".repeat(25),
                 model: "res.partner",
-                res_id: index & 1 ? partnerId_1 : partnerId_2,
+                res_id: index < 20 ? partnerId_1 : partnerId_2,
             }))
     );
     const { openFormView } = await start();
     openFormView("res.partner", partnerId_1);
-    await contains(".o_breadcrumb:contains(Harry Potter)");
-    await contains(".o-mail-Chatter");
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    const scrolltop_1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
-    $(".o-mail-Chatter")[0].scrollTo({ top: scrolltop_1 });
+    await contains(".o-mail-Message", 20);
+    const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
+    await contains(".o-mail-Chatter", 1, { scroll: 0 });
+    await scroll(".o-mail-Chatter", scrollValue1);
     openFormView("res.partner", partnerId_2);
-    await contains(".o_breadcrumb:contains(Ron Weasley)");
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    const scrolltop_2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
-    $(".o-mail-Chatter")[0].scrollTo({ top: scrolltop_2 });
+    await contains(".o-mail-Message", 30);
+    const scrollValue2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
+    await scroll(".o-mail-Chatter", scrollValue2);
     openFormView("res.partner", partnerId_1);
-    await contains(".o_breadcrumb:contains(Harry Potter)");
-    /**
-     * The nextAnimationFrame is necessary to give time for scroll to be restored.
-     */
-    await nextAnimationFrame();
-    assert.ok(isScrolledTo($(".o-mail-Chatter")[0], scrolltop_1));
+    await contains(".o-mail-Message", 20);
+    await contains(".o-mail-Chatter", 1, { scroll: scrollValue1 });
     openFormView("res.partner", partnerId_2);
-    await contains(".o_breadcrumb:contains(Ron Weasley)");
-    /**
-     * The nextAnimationFrame is necessary to give time for scroll to be restored.
-     */
-    await nextAnimationFrame();
-    assert.ok(isScrolledTo($(".o-mail-Chatter")[0], scrolltop_2));
+    await contains(".o-mail-Message", 30);
+    await contains(".o-mail-Chatter", 1, { scroll: scrollValue2 });
 });
 
 QUnit.test("basic chatter rendering", async () => {
