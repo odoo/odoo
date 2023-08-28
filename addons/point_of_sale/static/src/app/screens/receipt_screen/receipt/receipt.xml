@@ -203,7 +203,7 @@
                         <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
                     </t>
                     <t t-else="">
-                        <t t-esc="env.utils.formatCurrency(line.price, false)"/>
+                        <t t-esc="env.utils.formatCurrency(line.unitDisplayPriceBeforeDiscount, false)"/>
                     </t>
                 </div>
             </t>
