@@ -447,12 +447,16 @@ QUnit.test("closing hidden chat window", async (assert) => {
     await start();
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Ch_1)");
+    await contains(".o-mail-ChatWindow");
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await contains(".o-mail-ChatWindow", 2);
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Ch_3)");
+    await contains(".o-mail-ChatWindowHiddenToggler:contains(1)");
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(Ch_4)");
+    await contains(".o-mail-ChatWindowHiddenToggler:contains(2)");
     await click(".o-mail-ChatWindowHiddenToggler");
     await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
     await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_2)");
