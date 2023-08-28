@@ -4044,7 +4044,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Test whether the value has changed
         assert.strictEqual(
-            target.querySelectorAll(".o_data_cell")[1].textContent,
+            target.querySelectorAll(".o_data_cell .o_input")[1].value,
             "test",
             "the partner name should have been updated to 'test'"
         );
