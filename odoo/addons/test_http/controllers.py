@@ -87,6 +87,10 @@ class TestHttp(http.Controller):
     def echo_json(self, **kwargs):
         return kwargs
 
+    @http.route('/test_http/echo-json-get', type='json', auth='none', methods=['GET'], csrf=False)
+    def echo_json(self, **kwargs):
+        return kwargs
+
     @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False)
     def echo_json_context(self, **kwargs):
         return request.env.context
