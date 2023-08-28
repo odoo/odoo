@@ -24,7 +24,7 @@ const { onMounted, onPatched, onWillPatch, onWillUnmount, useComponent } = owl;
 // -----------------------------------------------------------------------------
 
 /**
- * Focus a given selector as soon as it appears in the DOM and if it was not
+ * Focus a given selector as soon as it appears in the active element and if it was not
  * displayed before. If the selected target is an input|textarea, set the selection
  * at the end.
  *
@@ -39,12 +39,14 @@ export function useAutofocus(params = {}) {
     if (comp.env.isSmall) {
         return () => {};
     }
+
+    const uiService = useService("ui");
     const selector = params.selector || "[autofocus]";
     let forceFocusCount = 0;
     useEffect(
         function autofocus() {
             const target = comp.el.querySelector(selector);
-            if (target) {
+            if (target && uiService.activeElement.contains(target)) {
                 target.focus();
                 if (["INPUT", "TEXTAREA"].includes(target.tagName) && target.type !== 'number') {
                     const inputEl = target;

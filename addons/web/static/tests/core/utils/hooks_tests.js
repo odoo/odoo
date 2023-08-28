@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { uiService } from "@web/core/ui/ui_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
 import {
     useAutofocus,
     useBus,
@@ -13,6 +14,8 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
+import { CommandPaletteDialog } from "@web/core/commands/command_palette_dialog";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
 const { Component, mount, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -109,6 +112,48 @@ QUnit.module("utils", () => {
             comp.render();
             await nextTick();
             assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.destroy();
+        });
+
+        QUnit.test("useAutofocus: autofocus outside of active element doesn't work (CommandPalette)", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    this.forceFocus = useAutofocus();
+                }
+                get DialogContainer() {
+                    return registry.category("main_components").get("DialogContainer");
+                }
+            }
+            MyComponent.template = xml`
+                <div>
+                    <input type="text" autofocus="" />
+                    <div class="o_dialog_container"/>
+                    <t t-component="DialogContainer.Component" t-props="DialogContainer.props" />
+                </div>
+            `;
+
+            registry.category("services").add("ui", uiService);
+            registry.category("services").add("dialog", dialogService);
+            registry.category("services").add("hotkey", hotkeyService);
+
+            const config = { providers: [] };
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            env.services.dialog.add(CommandPaletteDialog, { config });
+            await nextTick();
+            assert.containsOnce(target, ".o_command_palette");
+            assert.notStrictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.forceFocus();
+            comp.render();
+            await nextTick();
+            assert.notStrictEqual(document.activeElement, comp.el.querySelector("input"));
 
             comp.destroy();
         });
