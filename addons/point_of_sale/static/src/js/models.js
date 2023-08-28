@@ -2535,6 +2535,7 @@ exports.Orderline = Backbone.Model.extend({
             product_description_sale: this.get_product().description_sale,
             pack_lot_lines:      this.get_lot_lines(),
             customer_note:      this.get_customer_note(),
+            unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
         };
     },
     generate_wrapped_product_name: function() {
