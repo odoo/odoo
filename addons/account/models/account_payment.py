@@ -680,6 +680,11 @@ class AccountPayment(models.Model):
             payment.move_id._compute_journal_id()
         return payment
 
+    @api.onchange('available_journal_ids')
+    def _onchange_available_journal_ids(self):
+        if not self.journal_id or self.journal_id not in self.available_journal_ids._origin:
+            self.journal_id = self.available_journal_ids._origin[:1]
+
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
