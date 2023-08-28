@@ -7,6 +7,7 @@ import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
 import { escape, sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
+import session from "web.session";
 
 Model({
     name: "ComposerView",
@@ -620,6 +621,7 @@ Model({
                 ) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                params.context = Object.assign(params.context || {}, session.user_context);
                 const { threadView = {} } = this;
                 const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
