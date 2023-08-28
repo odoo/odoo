@@ -3,6 +3,7 @@
 
 from .common import TestSaleCommon
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -322,6 +323,14 @@ class TestSaleToInvoice(TestSaleCommon):
                     self.assertEqual(len(line.invoice_lines), 3, "The line 'ordered service' is invoiced, so it should be linked to 2 invoice lines (invoice and refund), even after validation")
 
     def test_refund_invoice_with_downpayment(self):
+        """
+            Flow:
+            - Create and confirm the SO
+            - Create and post downpayment
+            - Create and post so invoice
+            - Create and post credit note
+        """
+        # Create and confirm the SO
         sale_order_refund = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -337,6 +346,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'order_id': sale_order_refund.id,
             'tax_id': False,
         })
+        sol_product_total_amount = sol_product.price_unit * 5
 
         sale_order_refund.action_confirm()
         so_context = {
@@ -346,15 +356,39 @@ class TestSaleToInvoice(TestSaleCommon):
             'default_journal_id': self.company_data['default_journal_sale'].id,
         }
 
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "The quantity to invoice is the ordered quantity since not invoiced yet")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "The quantity to invoice is zero since not invoiced yet")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "The amount to invoice is the ordered quantity * unit price since not invoiced yet")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "The amount invoiced should be zero since not invoiced yet")
+        self.assertEqual(len(sol_product.invoice_lines), 0, "The product line should not be invoiced yet")
+
+        # Create and post downpayment
+        downpayment_percentage = 50
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
             'advance_payment_method': 'percentage',
-            'amount': 50,
+            'amount': downpayment_percentage,
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
-        sale_order_refund.invoice_ids[0].action_post()
+        downpayment_invoice = sale_order_refund.invoice_ids[0]
+        downpayment_invoice.action_post()
+        downpayment_line_price_unit = (downpayment_percentage / 100) * sol_product_total_amount
         sol_downpayment = sale_order_refund.order_line[1]
 
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "Since only a downpayment was invoiced, the quantity to invoice is the ordered quantity")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "Since only a downpayment was invoiced, the quantity invoiced should be zero")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "Since only a downpayment was invoiced, the amount to invoice is the ordered quantity * unit price")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "Since only a downpayment was invoiced, the amount invoiced should be zero")
+        self.assertEqual(len(sol_product.invoice_lines), 0, "The product line should not be invoiced yet")
+
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should be set to the amount to invoice * downpayment pourcentage")
+        self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As the downpayment was invoiced, it will have to be deducted from the total invoice (hence -1.0)")
+        self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be set to 1.0 (from the posted downpayment invoice)")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -downpayment_line_price_unit, "Amount to invoice should be set as half of all products total amount to invoice")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, downpayment_line_price_unit, "Amount invoiced should be set as half of all products total amount to invoice")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 1, "The dowpayment should be invoiced")
+
+        # Create and post so invoice
         payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
             'deposit_account_id': self.company_data['default_account_revenue'].id
         })
@@ -366,6 +400,20 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(so_invoice.amount_total, sale_order_refund.amount_total - sol_downpayment.price_unit, 'Downpayment should be applied')
         so_invoice.action_post()
 
+        self.assertEqual(sol_product.qty_to_invoice, 0.0, "Since the product line was invoiced, the quantity to invoice is zero")
+        self.assertEqual(sol_product.qty_invoiced, 5.0, "Since the product line was invoiced, the quantity invoiced should be the ordered quantity")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, 0.0, "Since the product line was invoiced, the amount invoiced should be zero")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, sol_product_total_amount, "Since the product line was invoiced, the amount to invoice is the ordered quantity * unit price")
+        self.assertEqual(len(sol_product.invoice_lines), 1, "The product line should be invoiced")
+
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should not have changed")
+        self.assertEqual(sol_downpayment.qty_to_invoice, 0.0, "As the downpayment was invoiced and deducted from so invoice, it should be set to 0")
+        self.assertEqual(sol_downpayment.qty_invoiced, 0.0, "As the downpayment was invoiced and deducted from so invoice, it should be set to 0")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, 0.0, "Amount to invoice should be set to 0 since no more amount to invoice")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, 0.0, "Amount invoiced should be set to 0 since amound invoiced and deducted from so invoice")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 2, "The dowpayment should be invoiced in the downpayment and the invoice")
+
+        # Create and post credit note
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [so_invoice.id], 'active_id': so_invoice.id, 'active_model': 'account.move'}).create({
             'refund_method': 'refund',
             'reason': 'reason test refund with downpayment',
@@ -377,12 +425,132 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(sol_product.qty_to_invoice, 5.0, "As the refund still exists, the quantity to invoice is the ordered quantity")
         self.assertEqual(sol_product.qty_invoiced, 0.0, "The qty invoiced should be zero as, with the refund, the quantities cancel each other")
-        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product.price_unit * 5, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, as refund is validated")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, as refund is validated")
         self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "Amount invoiced decreased as the refund is now confirmed")
         self.assertEqual(len(sol_product.invoice_lines), 2, "The product line is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
 
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should not have changed")
         self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As the downpayment was invoiced separately, it will still have to be deducted from the total invoice (hence -1.0), after the refund.")
         self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be 1 as, with the refund, the products are not invoiced anymore, but the downpayment still is")
-        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -(sol_product.price_unit * 5)/2, "Amount to invoice decreased as the refund is now confirmed")
-        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, (sol_product.price_unit * 5)/2, "Amount invoiced is now set as half of all products' total amount to invoice, as refund is validated")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -(sol_product_total_amount)/2, "Amount to invoice decreased as the refund is now confirmed")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, (sol_product_total_amount)/2, "Amount invoiced is now set as half of all products' total amount to invoice, as refund is validated")
         self.assertEqual(len(sol_downpayment.invoice_lines), 3, "The product line is invoiced, so it should be linked to 3 invoice lines (downpayment invoice, partial invoice and refund)")
+
+    def test_refund_downpayment_invoice(self):
+        """
+            Flow:
+            - Create and confirm the SO
+            - Create and post downpayment
+            - Create and post credit note on downpayment
+            - Create and post final invoice
+        """
+        # Create and confirm the SO
+        sale_order_refund = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        sol_product = self.env['sale.order.line'].create({
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
+            'product_uom_qty': 5,
+            'product_uom': self.company_data['product_order_no'].uom_id.id,
+            'price_unit': self.company_data['product_order_no'].list_price,
+            'order_id': sale_order_refund.id,
+            'tax_id': False,
+        })
+        sol_product_total_amount = sol_product.price_unit * 5
+
+        sale_order_refund.action_confirm()
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order_refund.id],
+            'active_id': sale_order_refund.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "The quantity to invoice is the ordered quantity since not invoiced yet")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "The quantity to invoice is zero since not invoiced yet")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "The amount to invoice is the ordered quantity * unit price since not invoiced yet")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "The amount invoiced should be zero since not invoiced yet")
+        self.assertEqual(len(sol_product.invoice_lines), 0, "The product line should not be invoiced yet")
+
+        # Create and post downpayment
+        downpayment_percentage = 50
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'advance_payment_method': 'percentage',
+            'amount': downpayment_percentage,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        downpayment_invoice = sale_order_refund.invoice_ids[0]
+        downpayment_invoice.action_post()
+        downpayment_line_price_unit = (downpayment_percentage / 100) * sol_product_total_amount
+        self.assertEqual(downpayment_invoice.invoice_line_ids.price_unit, downpayment_line_price_unit, 'Downpayment should be half of ordered quantity * unit price')
+        sol_downpayment = sale_order_refund.order_line[1]
+
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "Since only a downpayment was invoiced, the quantity to invoice is the ordered quantity")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "Since only a downpayment was invoiced, the quantity invoiced should be zero")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "Since only a downpayment was invoiced, the amount to invoice is the ordered quantity * unit price")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "Since only a downpayment was invoiced, the amount invoiced should be zero")
+        self.assertEqual(len(sol_product.invoice_lines), 0, "The product line should not be invoiced yet")
+
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should be set to the amount to invoice * downpayment pourcentage")
+        self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As the downpayment was invoiced, it will have to be deducted from the total invoice (hence -1.0)")
+        self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be set to 1.0 (from the posted downpayment invoice)")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -downpayment_line_price_unit, "Amount to invoice should be set as half of all products total amount to invoice")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, downpayment_line_price_unit, "Amount invoiced should be set as half of all products total amount to invoice")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 1, "The dowpayment should be invoiced")
+
+        # Create and post credit note on downpayment
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [downpayment_invoice.id], 'active_id': downpayment_invoice.id, 'active_model': 'account.move'}).create({
+            'refund_method': 'refund',
+            'reason': 'reason test refund with downpayment',
+            'journal_id': downpayment_invoice.journal_id.id,
+        })
+        credit_note_wizard.reverse_moves()
+        invoice_refund = sale_order_refund.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
+        invoice_refund_line = invoice_refund.invoice_line_ids.filtered(lambda l: l.price_unit == downpayment_line_price_unit)
+        invoice_refund_line_price_unit = downpayment_line_price_unit / 10
+        downpayment_line_price_unit = downpayment_line_price_unit - invoice_refund_line_price_unit
+        invoice_refund.write({'invoice_line_ids': [
+            Command.update(invoice_refund_line.id, {'price_unit': invoice_refund_line_price_unit})
+        ]})
+        invoice_refund.action_post()
+
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "Since only a downpayment was invoiced, the quantity to invoice is the ordered quantity")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "Since only a downpayment was invoiced, the quantity invoiced should be zero")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product_total_amount, "Since only a downpayment was invoiced, the amount to invoice is the ordered quantity * unit price")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "Since only a downpayment was invoiced, the amount invoiced should be zero")
+        self.assertEqual(len(sol_product.invoice_lines), 0, "The product line should not be invoiced yet")
+
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should be set to the downpayment amount invoiced - the refund amount")
+        self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As it was a partial refund of the downpayment, it still will have to be deducted from the total invoice (hence -1.0)")
+        self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be set to 1.0 (from the posted downpayment invoice)")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -downpayment_line_price_unit, "Amount to invoice should be set to the downpayment amount invoiced - the refund amount")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, downpayment_line_price_unit, "Amount to invoice should be set to the downpayment amount invoiced - the refund amount")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 2, "The dowpayment should be invoiced but also linked to the refund invoice")
+
+        # Create and post final invoice
+        payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        payment.create_invoices()
+        so_invoice = max(sale_order_refund.invoice_ids)
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(sale_order_refund.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
+        self.assertEqual(so_invoice.amount_total, sale_order_refund.amount_total - downpayment_line_price_unit, 'Downpayment should be applied')
+        so_invoice.action_post()
+
+        self.assertEqual(sol_product.qty_to_invoice, 0.0, "Since the product line was invoiced, the quantity to invoice is zero")
+        self.assertEqual(sol_product.qty_invoiced, 5.0, "Since the product line was invoiced, the quantity invoiced should be the ordered quantity")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, 0.0, "Since the product line was invoiced, the amount invoiced should be zero")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, sol_product_total_amount, "Since the product line was invoiced, the amount to invoice is the ordered quantity * unit price")
+        self.assertEqual(len(sol_product.invoice_lines), 1, "The product line should be invoiced")
+
+        self.assertEqual(sol_downpayment.price_unit, downpayment_line_price_unit, "The price unit should not have changed")
+        self.assertEqual(sol_downpayment.qty_to_invoice, 0.0, "As the downpayment was invoiced and deducted from so invoice, it should be set to 0")
+        self.assertEqual(sol_downpayment.qty_invoiced, 0.0, "As the downpayment was invoiced and deducted from so invoice, it should be set to 0")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, 0.0, "Amount to invoice should be set to 0 since no more amount to invoice")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, 0.0, "Amount invoiced should be set to 0 since amound invoiced and deducted from so invoice")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 3, "The product line is invoiced, so it should be linked to 3 invoice lines (downpayment, refund, and invoice)")

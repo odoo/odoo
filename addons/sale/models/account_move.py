@@ -78,7 +78,12 @@ class AccountMove(models.Model):
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
-                line.sale_line_ids.price_unit = line.price_unit
+                all_lines = line._get_downpayment_lines()
+                # The price unit on the sol is equal to the sum of the price unit of;
+                # linked downpayment move lines - linked credit note move lines
+                refund_lines = all_lines.filtered(lambda line: line.move_id.move_type in ('in_refund', 'out_refund'))
+                invoice_lines = all_lines - refund_lines
+                line.sale_line_ids.price_unit = sum(invoice_lines.mapped('price_unit')) - sum(refund_lines.mapped('price_unit'))
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking

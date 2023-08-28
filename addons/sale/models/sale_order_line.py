@@ -106,7 +106,11 @@ class SaleOrderLine(models.Model):
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                        # If it's a downpayment in a credit note, we should decrease the quantity only if
+                        # the amount left to invoice on the sale order line is equal to the amount invoice line
+                        # on the credit note
+                        if not line.is_downpayment or line.untaxed_amount_to_invoice == invoice_line.price_subtotal:
+                            qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
     def _get_invoice_lines(self):
