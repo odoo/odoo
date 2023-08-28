@@ -346,10 +346,10 @@ export class MockServer {
             if (node.nodeType === Node.TEXT_NODE) {
                 return false;
             }
-            ['required', 'readonly', 'invisible', 'column_invisible'].forEach((attr) => {
+            ["required", "readonly", "invisible", "column_invisible"].forEach((attr) => {
                 const value = node.getAttribute(attr);
-                if (value === '1' || value === 'true') {
-                    node.setAttribute(attr, 'True');
+                if (value === "1" || value === "true") {
+                    node.setAttribute(attr, "True");
                 }
             });
             const isField = node.tagName === "field";
@@ -488,7 +488,11 @@ export class MockServer {
             case "field": {
                 const fname = node.getAttribute("name");
                 const field = this.models[modelName].fields[fname];
-                return !field.readonly && node.getAttribute("readonly") !== "True" && node.getAttribute("readonly") !== "1";
+                return (
+                    !field.readonly &&
+                    node.getAttribute("readonly") !== "True" &&
+                    node.getAttribute("readonly") !== "1"
+                );
             }
             default:
                 return false;
@@ -575,8 +579,6 @@ export class MockServer {
                 return this.mockLoadMenus();
             case "/web/action/load":
                 return this.mockLoadAction(args);
-            case "/web/dataset/search_read":
-                return this.mockSearchReadController(args);
             case "/web/dataset/resequence":
                 return this.mockResequence(args);
         }
@@ -1893,7 +1895,7 @@ export class MockServer {
     }
 
     mockSearchRead(modelName, args, kwargs) {
-        const result = this.mockSearchReadController({
+        const { fieldNames, records } = this.mockSearchController({
             model: modelName,
             domain: kwargs.domain || args[0],
             fields: kwargs.fields || args[1],
@@ -1902,7 +1904,7 @@ export class MockServer {
             sort: kwargs.order || args[4],
             context: kwargs.context,
         });
-        return result.records;
+        return this.mockRead(modelName, [records.map((r) => r.id), fieldNames]);
     }
 
     mockWebRead(modelName, args, kwargs) {
@@ -1919,7 +1921,7 @@ export class MockServer {
     }
 
     mockWebSearchRead(modelName, args, kwargs) {
-        const result = this.mockSearchReadController({
+        const { fieldNames, length, records } = this.mockSearchController({
             model: modelName,
             domain: kwargs.domain || args[0],
             fields: kwargs.fields || args[1],
@@ -1928,6 +1930,10 @@ export class MockServer {
             sort: kwargs.order || args[4],
             context: kwargs.context,
         });
+        const result = {
+            length,
+            records: this.mockRead(modelName, [records.map((r) => r.id), fieldNames]),
+        };
         const countLimit = kwargs.count_limit || args[5];
         if (countLimit) {
             result.length = Math.min(result.length, countLimit);
@@ -1968,14 +1974,6 @@ export class MockServer {
             fieldNames,
             length: nbRecords,
             records,
-        };
-    }
-
-    mockSearchReadController(params) {
-        const { fieldNames, length, records } = this.mockSearchController(params);
-        return {
-            length,
-            records: this.mockRead(params.model, [records.map((r) => r.id), fieldNames]),
         };
     }
 

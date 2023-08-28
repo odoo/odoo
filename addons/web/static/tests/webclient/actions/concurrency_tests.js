@@ -377,8 +377,8 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("open a record while reloading the list view", async function (assert) {
         assert.expect(10);
         let def;
-        const mockRPC = async function (route) {
-            if (route === "/web/dataset/search_read") {
+        const mockRPC = async function (route, args) {
+            if (args.method === "unity_web_search_read") {
                 await def;
             }
         };

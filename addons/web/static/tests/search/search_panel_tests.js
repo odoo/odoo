@@ -985,11 +985,6 @@ QUnit.module("Search", (hooks) => {
         });
         await makeWithSearch({
             serverData,
-            async mockRPC(route) {
-                if (route === "/web/dataset/search_read") {
-                    await promise;
-                }
-            },
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
