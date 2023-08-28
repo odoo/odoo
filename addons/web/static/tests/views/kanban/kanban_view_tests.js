@@ -1738,6 +1738,50 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".thisisdeletable", 4, "records should be deletable");
     });
 
+    QUnit.test("kanban grouped by many2one: false column is folded by default", async (assert) => {
+        serverData.models.partner.records[0].product_id = false;
+
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 3);
+        assert.containsOnce(target, ".o_column_folded");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_header")), [
+            "None1",
+            "hello",
+            "xmo",
+        ]);
+
+        await click(target.querySelector(".o_kanban_header"));
+        assert.containsNone(target, ".o_column_folded");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_header")), [
+            "None",
+            "hello",
+            "xmo",
+        ]);
+
+        // reload -> None column should remain open
+        await reload(kanban, { groupBy: ["product_id"] });
+        assert.containsNone(target, ".o_column_folded");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_header")), [
+            "None",
+            "hello",
+            "xmo",
+        ]);
+    });
+
     QUnit.test("quick created records in grouped kanban are on displayed top", async (assert) => {
         await makeView({
             type: "kanban",

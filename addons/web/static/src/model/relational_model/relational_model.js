@@ -410,7 +410,7 @@ export class RelationalModel extends Model {
                 groupData[config.groupBy[0]],
                 group.range
             );
-            group.rawValue = groupData[config.groupBy];
+            group.rawValue = groupData[config.groupBy[0]];
             group.displayName = getDisplayNameFromGroupData(
                 groupByField,
                 groupData[config.groupBy[0]]
@@ -429,6 +429,10 @@ export class RelationalModel extends Model {
                         groupBy,
                     },
                 };
+                if (isRelational(config.fields[firstGroupByName]) && !group.value) {
+                    // fold the "unset" group by default when grouped by many2one
+                    config.groups[group.value].isFolded = true;
+                }
                 if (groupRecordConfig) {
                     config.groups[group.value].record = {
                         ...groupRecordConfig,
@@ -463,9 +467,6 @@ export class RelationalModel extends Model {
                 group.groups = [];
             } else {
                 group.records = [];
-            }
-            if (isRelational(config.fields[firstGroupByName]) && !group.value) {
-                groupConfig.isFolded = true;
             }
             if (!groupConfig.isFolded) {
                 nbOpenGroups++;
