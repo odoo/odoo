@@ -11,8 +11,7 @@ import {
     contains,
     createFile,
     insertText,
-    isScrolledToBottom,
-    nextAnimationFrame,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -261,7 +260,7 @@ QUnit.test("No load more when fetch below fetch limit of 30", async (assert) => 
     });
     openDiscuss(channelId);
     await contains(".o-mail-Message", 29);
-    await contains("button:contains(Load more)", 0);
+    await contains("button:contains(Load More)", 0);
 });
 
 QUnit.test("show date separator above mesages of similar date", async (assert) => {
@@ -796,17 +795,13 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
     }
     const { openDiscuss } = await start();
     openDiscuss();
+    await contains(".o-mail-Message", 30);
     await click("button:contains(Mark all read)");
     await contains(".o-mail-Message", 0);
-
-    /**
-     * The afterNextRender is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await afterNextRender(async () => await click("button:contains(History)"));
+    await click("button:contains(History)");
     await contains(".o-mail-Message", 30);
-
-    $(".o-mail-Thread")[0].scrollTop = 0;
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", 0);
     await contains(".o-mail-Message", 40);
 });
 
@@ -1439,27 +1434,23 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async () => {
     openDiscuss(channelId);
     await contains(".o-mail-Message", 25);
     await contains("hr + span:contains(New messages)", 0);
-
-    $(".o-mail-Discuss-content .o-mail-Thread")[0].scrollTop = 0;
+    await contains(".o-mail-Discuss-content .o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Discuss-content .o-mail-Thread", 0);
     // composer is focused by default, we remove that focus
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
-    await afterNextRender(async () =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
-                post_data: { body: "hu", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "hu", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
     );
     await contains(".o-mail-Message", 26);
     await contains("hr + span:contains(New messages)");
-    const messageList = $(".o-mail-Discuss-content .o-mail-Thread")[0];
-    messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
+    await scroll(".o-mail-Discuss-content .o-mail-Thread", "bottom");
     await contains("hr + span:contains(New messages)");
-
-    await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
+    $(".o-mail-Composer-input")[0].focus();
     await contains("hr + span:contains(New messages)", 0);
 });
 
@@ -1654,7 +1645,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("restore thread scroll position", async (assert) => {
+QUnit.test("restore thread scroll position", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel1" },
@@ -1677,30 +1668,17 @@ QUnit.test("restore thread scroll position", async (assert) => {
     const { openDiscuss } = await start();
     openDiscuss(channelId_1);
     await contains(".o-mail-Message", 25);
-    /**
-     * The nextAnimationFrame is necessary because otherwise useAutoScroll would
-     * set the scroll to bottom after the manually set value from this test.
-     */
-    await nextAnimationFrame();
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
-    $(".o-mail-Thread")[0].scrollTop = 0;
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await scroll(".o-mail-Thread", 0);
     await click("button:contains(Channel2)");
     await contains(".o-mail-Message", 24);
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
     await click("button:contains(Channel1)");
-    /**
-     * The nextAnimationFrame is necessary because otherwise the scroll position
-     * would not be restored yet.
-     */
-    await nextAnimationFrame();
-    assert.strictEqual($(".o-mail-Thread")[0].scrollTop, 0);
+    await contains(".o-mail-Message", 25);
+    await contains(".o-mail-Thread", 1, { scroll: 0 });
     await click("button:contains(Channel2)");
-    /**
-     * The nextAnimationFrame is necessary because otherwise the scroll position
-     * would not be restored yet.
-     */
-    await nextAnimationFrame();
-    assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
+    await contains(".o-mail-Message", 24);
+    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });
 
 QUnit.test("Message shows up even if channel data is incomplete", async () => {

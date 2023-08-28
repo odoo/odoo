@@ -1,13 +1,7 @@
 /* @odoo-module */
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import {
-    click,
-    contains,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, scroll, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("attachment box");
 
@@ -177,9 +171,11 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    $(".o-mail-Chatter").scrollTop(10 * 1000); // to bottom
+    await contains(".o-mail-Message", 30);
+    await scroll(".o-mail-Chatter", "bottom");
     await click("button[aria-label='Attach files']");
-    await nextAnimationFrame();
+    await contains(".o-mail-AttachmentBox");
+    await contains(".o-mail-Chatter", 1, { scroll: 0 });
     assert.isVisible($(".o-mail-AttachmentBox"));
 });
 
