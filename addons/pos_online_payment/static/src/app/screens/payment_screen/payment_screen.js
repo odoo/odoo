@@ -68,7 +68,7 @@ patch(PaymentScreen.prototype, {
             // online payments to the order.
             // The validation process will be done by the server directly after a successful
             // online payment that makes the order fully paid.
-            this.currentOrder.initialize_validation_date();
+            this.currentOrder.date_order = luxon.DateTime.now();
             this.currentOrder.save_to_db();
             this.pos.addOrderToUpdateSet();
 

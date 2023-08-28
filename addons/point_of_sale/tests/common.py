@@ -545,7 +545,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'amount_return': 0,
                 'amount_tax': total_amount_incl - total_amount_base,
                 'amount_total': total_amount_incl,
-                'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
                 'fiscal_position_id': fiscal_position.id,
                 'pricelist_id': self.config.pricelist_id.id,
                 'lines': order_lines,
