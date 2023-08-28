@@ -182,8 +182,6 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_bootstrap_frontend'),
 
-            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
-            'web/static/lib/tempusdominus/tempusdominus.scss',
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -234,7 +232,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
-            'web/static/lib/tempusdominus/tempusdominus.js',
             'web/static/lib/select2/select2.js',
             'web/static/lib/clipboard/clipboard.js',
             'web/static/lib/jSignature/jSignatureCustom.js',
@@ -268,6 +265,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/public/error_notifications.js',
+            'web/static/src/public/datetime_picker_widget.js',
             'web/static/src/libs/pdfjs.js',
 
             'web/static/src/legacy/utils.js',
@@ -512,7 +510,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/tests/webclient/**/helpers.js'),
 
             # Legacy
-            'web/static/lib/tempusdominus/tempusdominus.js',
             'web/static/tests/legacy/**/*.js',
             ('remove', 'web/static/tests/legacy/helpers/**/*.js'),
             ('remove', 'web/static/tests/legacy/legacy_setup.js'),

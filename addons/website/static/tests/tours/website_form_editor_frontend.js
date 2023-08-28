@@ -87,8 +87,13 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         trigger:  "input[name=Products][value='Wiko Stairway']"
     },
     {
+        content:  "Open datetime picker",
+        trigger:  ".s_website_form_datetime input",
+        run:      "click",
+    },
+    {
         content:  "Complete Date field",
-        trigger:  ".s_website_form_datetime [data-toggle='datetimepicker']",
+        trigger:  ".o_date_picker .o_today",
     },
     {
         content:  "Check another product",

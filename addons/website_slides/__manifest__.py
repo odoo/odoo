@@ -130,8 +130,6 @@ Featuring
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
-            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
-            'web/static/lib/tempusdominus/tempusdominus.scss',
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -184,7 +182,6 @@ Featuring
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
-            'web/static/lib/tempusdominus/tempusdominus.js',
             'web/static/lib/select2/select2.js',
             'web/static/lib/clipboard/clipboard.js',
             'web/static/lib/jSignature/jSignatureCustom.js',

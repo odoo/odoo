@@ -31,6 +31,7 @@ import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 import { nameService } from "@web/core/name_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { browser } from "@web/core/browser/browser";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
 let serverData;
 let target;
@@ -159,6 +160,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("field", fieldService);
         registry.category("services").add("name", nameService);
         registry.category("services").add("dialog", dialogService);
+        registry.category("services").add("datetime_picker", datetimePickerService);
 
         target = getFixture();
     });

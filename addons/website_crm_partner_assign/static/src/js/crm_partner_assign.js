@@ -2,8 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import time from "@web/legacy/js/core/time";
-import { parseDate, formatDate } from "@web/core/l10n/dates";
+import { parseDate, formatDate, serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
@@ -18,7 +17,6 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'click .edit_opp_confirm': '_onEditOppConfirm',
         'change .edit_opp_form .next_activity': '_onChangeNextActivity',
         'change #new-opp-dialog .contact_name': '_onChangeContactName',
-        'click div.input-group.date[data-target-input="nearest"]': '_onCalendarInputGroupClick',
     },
 
     //--------------------------------------------------------------------------
@@ -259,32 +257,11 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             $('.edit_opp_form .activity_date_deadline').val( formatDate(date) );
         }
     },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCalendarInputGroupClick: function (ev) {
-        const $calendarInputGroup = $(ev.currentTarget);
-        const calendarOptions = {
-            format : time.getLangDateFormat(),
-            icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'oi oi-chevron-up',
-                down: 'oi oi-chevron-down',
-            },
-        };
-        $calendarInputGroup.datetimepicker(calendarOptions);
-    },
-
     _parse_date: function (value) {
-        console.log(value);
         var date = parseDate(value);
-        if (date.isValid && date.year >= 1900) {
-            return formatDate(date);
-        }
-        else {
+        if (!date.isValid || date.year < 1900) {
             return false;
         }
+        return serializeDate(date);
     },
 });
