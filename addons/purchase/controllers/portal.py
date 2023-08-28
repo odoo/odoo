@@ -167,7 +167,7 @@ class CustomerPortal(portal.CustomerPortal):
             return request.render("purchase.portal_my_purchase_order_update_date", values)
         return request.render("purchase.portal_my_purchase_order", values)
 
-    @http.route(['/my/purchase/<int:order_id>/update'], type='http', methods=['POST'], auth="public", website=True)
+    @http.route(['/my/purchase/<int:order_id>/update'], type='json', auth="public", website=True)
     def portal_my_purchase_order_update_dates(self, order_id=None, access_token=None, **kw):
         """User update scheduled date on purchase order line.
         """

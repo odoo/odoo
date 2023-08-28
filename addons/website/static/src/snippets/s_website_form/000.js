@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-    import time from "@web/legacy/js/core/time";
     import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
     import { session } from "@web/session";
     import ajax from "@web/legacy/js/core/ajax";
@@ -10,8 +9,15 @@
     import { debounce } from "@web/core/utils/timing";
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
-    import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-    const { DateTime } = luxon;
+import {
+    formatDate,
+    formatDateTime,
+    parseDate,
+    parseDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -97,32 +103,18 @@
             this._onFieldInputDebounced = debounce(this._onFieldInput.bind(this), 400);
             this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
 
-            // Initialize datetimepickers
-            var datepickers_options = {
-                minDate: moment({y: 1000}),
-                maxDate: moment({y: 9999, M: 11, d: 31}),
-                calendarWeeks: true,
-                icons: {
-                    time: 'fa fa-clock-o',
-                    date: 'fa fa-calendar',
-                    next: 'oi oi-chevron-right',
-                    previous: 'oi oi-chevron-left',
-                    up: 'oi oi-chevron-up',
-                    down: 'oi oi-chevron-down',
-                },
-                locale: moment.locale(),
-                format: time.getLangDatetimeFormat(),
-                extraFormats: ['X'],
-            };
-            const $datetimes = this.$el.find('.s_website_form_datetime, .o_website_form_datetime'); // !compatibility
-            $datetimes.datetimepicker(datepickers_options);
-
-            // Adapt options to date-only pickers
-            datepickers_options.format = time.getLangDateFormat();
-            const $dates = this.$el.find('.s_website_form_date, .o_website_form_date'); // !compatibility
-            $dates.datetimepicker(datepickers_options);
-
-            this.$allDates = $datetimes.add($dates);
+            this.$allDates = this.$el.find('.s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date');
+            for (const field of this.$allDates) {
+                const input = field.querySelector("input");
+                const defaultValue = input.getAttribute("value");
+                this.call("datetime_picker", "create", {
+                    target: input,
+                    pickerProps: {
+                        type: field.matches('.s_website_form_date, .o_website_form_date') ? 'date' : 'datetime',
+                        value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                    },
+                }).enable();
+            }
             this.$allDates.addClass('s_website_form_datepicker_initialized');
 
             // Display form values from tag having data-for attribute
@@ -339,20 +331,14 @@
             this.$el.find('.s_website_form_field:not(.s_website_form_custom)')
             .find('.s_website_form_date, .s_website_form_datetime').each(function () {
                 const inputEl = this.querySelector('input');
-
-                // Datetimepicker('viewDate') will return `new Date()` if the
-                // input is empty but we want to keep the empty value
-                if (!inputEl.value) {
+                const { value } = inputEl;
+                if (!value) {
                     return;
                 }
 
-                var date = $(this).datetimepicker('viewDate').clone().locale('en');
-                var format = 'YYYY-MM-DD';
-                if ($(this).hasClass('s_website_form_datetime')) {
-                    date = date.utc();
-                    format = 'YYYY-MM-DD HH:mm:ss';
-                }
-                form_values[inputEl.getAttribute('name')] = date.format(format);
+                form_values[inputEl.getAttribute("name")] = this.matches(".s_website_form_date")
+                    ? serializeDate(parseDate(value))
+                    : serializeDateTime(parseDateTime(value));
             });
 
             if (this._recaptchaLoaded) {
@@ -524,11 +510,13 @@
                     // consider checking the date inputs are not disabled before
                     // saying they are invalid (see checkValidity used here))
                     } else if ($(input).hasClass('s_website_form_date') || $(input).hasClass('o_website_form_date')) { // !compatibility
-                        if (!self.is_datetime_valid(input.value, 'date')) {
+                        const date = parseDate(input.value);
+                        if (!date || !date.isValid) {
                             return true;
                         }
                     } else if ($(input).hasClass('s_website_form_datetime') || $(input).hasClass('o_website_form_datetime')) { // !compatibility
-                        if (!self.is_datetime_valid(input.value, 'datetime')) {
+                        const date = parseDateTime(input.value);
+                        if (!date || !date.isValid) {
                             return true;
                         }
                     } else if (input.type === "file" && !self.isFileInputValid(input)) {
@@ -565,42 +553,6 @@
                 }
             });
             return form_valid;
-        },
-
-        is_datetime_valid: function (value, type_of_date) {
-            if (value === "") {
-                return true;
-            } else {
-                try {
-                    this.parse_date(value, type_of_date);
-                    return true;
-                } catch {
-                    return false;
-                }
-            }
-        },
-
-        // This is a stripped down version of format.js parse_value function
-        parse_date: function (value, type_of_date, value_if_empty) {
-            var date_pattern = time.getLangDateFormat(),
-                time_pattern = time.getLangTimeFormat();
-            var date_pattern_wo_zero = date_pattern.replace('MM', 'M').replace('DD', 'D'),
-                time_pattern_wo_zero = time_pattern.replace('HH', 'H').replace('mm', 'm').replace('ss', 's');
-            switch (type_of_date) {
-                case 'datetime':
-                    var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero], true);
-                    if (datetime.isValid()) {
-                        return time.datetime_to_str(datetime.toDate());
-                    }
-                    throw new Error(_t("'%s' is not a correct datetime", value));
-                case 'date':
-                    var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
-                    if (date.isValid()) {
-                        return time.date_to_str(date.toDate());
-                    }
-                    throw new Error(_t("'%s' is not a correct date", value));
-            }
-            return value;
         },
 
         update_status: function (status, message) {
@@ -720,13 +672,7 @@
                     return value.name === '';
             }
             // Date & Date Time comparison requires formatting the value
-            if (value.includes(':')) {
-                const datetimeFormat = time.getLangDatetimeFormat();
-                value = moment(value, datetimeFormat)._d.getTime() / 1000;
-            } else {
-                const dateFormat = time.getLangDateFormat();
-                value = moment(value, dateFormat)._d.getTime() / 1000;
-            }
+            value = (value.includes(':') ? parseDateTime(value) : parseDate(value)).toUnixInteger();
             comparable = parseInt(comparable);
             between = parseInt(between) || '';
             switch (comparator) {

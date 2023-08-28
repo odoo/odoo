@@ -4,6 +4,7 @@ import { Component, reactive, useState, xml } from "@odoo/owl";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { editInput, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -57,7 +58,8 @@ QUnit.module("Components", ({ beforeEach }) => {
                 })
             )
             .add("popover", popoverService)
-            .add("ui", uiService);
+            .add("ui", uiService)
+            .add("datetime_picker", datetimePickerService);
 
         fixture = getFixture();
     });

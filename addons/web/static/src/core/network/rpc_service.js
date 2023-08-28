@@ -123,9 +123,9 @@ export const rpcService = {
         /**
          * @param {string} route
          * @param {Object} params
-         * @param {Object} settings
+         * @param {Object} [settings]
          * @param {boolean} settings.silent
-         * @param {XmlHttpRequest} settings.xhr
+         * @param {XMLHttpRequest} settings.xhr
          */
         return function rpc(route, params = {}, settings) {
             return jsonrpc(env, rpcId++, route, params, settings);
