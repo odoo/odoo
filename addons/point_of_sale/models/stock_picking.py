@@ -135,7 +135,7 @@ class StockPicking(models.Model):
                     move_vals.append({
                         'journal_id': rec.pos_order_id.sale_journal.id,
                         'date': rec.pos_order_id.date_order,
-                        'ref': rec.pos_order_id.name,
+                        'ref': 'pos_order_'+str(rec.pos_order_id.id),
                         'line_ids': [
                             (0, 0, {
                                 'name': rec.pos_order_id.name,
@@ -152,7 +152,6 @@ class StockPicking(models.Model):
                         ],
                     })
                 move = self.env['account.move'].create(move_vals)
-                rec.pos_order_id.write({'account_move': move.id})
                 move.action_post()
         return res
 
