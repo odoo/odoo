@@ -42,7 +42,7 @@ export class Group extends DataPoint {
     // -------------------------------------------------------------------------
 
     get hasData() {
-        return this.list.hasData;
+        return this.count > 0;
     }
     get isFolded() {
         return this.config.isFolded;
