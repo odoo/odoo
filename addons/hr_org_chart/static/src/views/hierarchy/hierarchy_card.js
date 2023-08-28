@@ -7,7 +7,7 @@ import { Record } from "@web/views/record";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 
-import { OrgChartCompiler } from "./hierarchy_compiler";
+import { HierarchyCompiler } from "./hierarchy_compiler";
 import { getFormattedRecord } from "@web/views/kanban/kanban_record";
 
 export class HierarchyCard extends Component {
@@ -27,7 +27,7 @@ export class HierarchyCard extends Component {
         classNames: "",
     };
     static template = "hr_org_chart.HierarchyCard";
-    static Compiler = OrgChartCompiler;
+    static Compiler = HierarchyCompiler;
 
     setup() {
         const { templates } = this.props;
