@@ -1,14 +1,15 @@
 odoo.define('web.custom_hooks', function (require) {
     "use strict";
 
-    const { useEffect } = require("@web/core/utils/hooks");
+    const { useEffect, useService } = require("@web/core/utils/hooks");
 
     const { Component } = owl;
 
     /**
-     * Focus a given selector as soon as it appears in the DOM and if it was not
+     * Focus a given selector as soon as it appears in the active element and if it was not
      * displayed before. If the selected target is an input|textarea, set the selection
      * at the end.
+     *
      * @param {Object} [params]
      * @param {string} [params.selector='autofocus'] default: select the first element
      *                 with an `autofocus` attribute.
@@ -20,10 +21,11 @@ odoo.define('web.custom_hooks', function (require) {
         if (comp.env.device.isMobileDevice) {
             return () => {};
         }
+        const uiService = useService("ui");
         const selector = params.selector || '[autofocus]';
         let forceFocusCount = 0;
         useEffect(function autofocus(target) {
-            if (target) {
+            if (target && uiService.activeElement.contains(target)) {
                 target.focus();
                 if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
                     const inputEl = target;
