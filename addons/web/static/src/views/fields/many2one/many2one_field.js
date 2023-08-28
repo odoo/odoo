@@ -66,9 +66,6 @@ export class Many2OneField extends Component {
                 const context = this.props.record.getFieldContext(this.props.name);
                 const records = await this.orm.read(this.relation, [resId], fields, { context });
                 await this.props.update(m2oTupleFromData(records[0]));
-                if (this.props.record.model.root.id !== this.props.record.id) {
-                    this.props.record.switchMode("readonly");
-                }
             },
             onClose: () => this.focusInput(),
             fieldString: this.props.string,

@@ -4078,7 +4078,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".modal");
 
         assert.strictEqual(
-            target.querySelectorAll(".o_data_cell")[1].textContent,
+            target.querySelectorAll(".o_data_cell .o_input")[1].value,
             "test",
             "the partner name should have been updated to 'test'"
         );
