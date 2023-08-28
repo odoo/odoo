@@ -427,6 +427,7 @@ class Website(models.Model):
         website = self.get_current_website()
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
+        theme._generate_primary_snippet_templates()
         redirect_url = theme.button_choose_theme()
 
         # Force to refresh env after install of module
@@ -614,7 +615,7 @@ class Website(models.Model):
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = snippet_lists.get(page_code, [])
             for snippet in snippet_list:
-                render, placeholders = _render_snippet(f'website.{snippet}')
+                render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
         try:
@@ -642,7 +643,7 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    render, placeholders = _render_snippet(f'website.{snippet}')
+                    render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
 
                     # Fill rendered block with AI text
                     render = xml_translate(
