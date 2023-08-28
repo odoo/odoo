@@ -7,7 +7,6 @@ import { download } from "@web/core/network/download";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-import { loadSpreadsheetDependencies } from "../helpers/helpers";
 import { migrate } from "../o_spreadsheet/migration";
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
@@ -35,7 +34,6 @@ export class PublicReadonlySpreadsheet extends Component {
                     data: {},
                 }),
         });
-        onWillStart(loadSpreadsheetDependencies);
         onWillStart(this.createModel.bind(this));
     }
 

@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getBundle, loadBundle } from "@web/core/assets";
 import { sprintf } from "@web/core/utils/strings";
+import { loadSpreadsheetDependencies } from "./helpers";
 
 const actionRegistry = registry.category("actions");
 
@@ -14,6 +15,7 @@ const actionRegistry = registry.category("actions");
  * @param {function} actionLazyLoader
  */
 export async function loadSpreadsheetAction(env, actionName, actionLazyLoader) {
+    await loadSpreadsheetDependencies();
     const desc = await getBundle("spreadsheet.o_spreadsheet");
     await loadBundle(desc);
 

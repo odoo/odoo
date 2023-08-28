@@ -13,6 +13,10 @@
         'views/public_readonly_spreadsheet_templates.xml',
     ],
     'assets': {
+        'spreadsheet.dependencies': [
+            'web/static/lib/Chart/Chart.js',
+            'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+        ],
         'spreadsheet.o_spreadsheet': [
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/**/*.js',
@@ -54,6 +58,7 @@
             'web/static/src/core/user_service.js',
             'web/static/src/core/l10n/**/*.js',
             'web/static/src/core/network/download.js',
+            ('include', 'spreadsheet.dependencies'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_extended.scss',
@@ -74,6 +79,7 @@
             'spreadsheet/static/src/**/*.dark.scss',
         ],
         'web.qunit_suite_tests': [
+            ('include', 'spreadsheet.dependencies'),
             'spreadsheet/static/tests/**/*',
             ('include', 'spreadsheet.o_spreadsheet'),
             'spreadsheet/static/src/public_readonly_app/**/*.xml',
