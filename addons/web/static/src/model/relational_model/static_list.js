@@ -291,7 +291,7 @@ export class StaticList extends DataPoint {
 
     forget(record) {
         return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.FORGET, record.resId]]);
+            await this._applyCommands([[x2ManyCommands.UNLINK, record.resId]]);
             await this._onUpdate();
         });
     }
@@ -328,7 +328,7 @@ export class StaticList extends DataPoint {
 
     linkTo(resId, serverData) {
         return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.LINK_TO, resId, serverData]]);
+            await this._applyCommands([[x2ManyCommands.LINK, resId, serverData]]);
             await this._onUpdate();
         });
     }
@@ -464,7 +464,7 @@ export class StaticList extends DataPoint {
 
     _applyCommands(commands) {
         const isOnLastPage = this.limit + this.offset >= this.count;
-        const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, REPLACE_WITH } = x2ManyCommands;
+        const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
         for (const command of commands) {
             switch (command[0]) {
                 case CREATE: {
@@ -518,7 +518,7 @@ export class StaticList extends DataPoint {
                     break;
                 }
                 case DELETE:
-                case FORGET: {
+                case UNLINK: {
                     if (command[0] === DELETE) {
                         if (!this._commands.find((c) => c[0] === CREATE && c[1] === command[1])) {
                             this._commands.push([DELETE, command[1]]);
@@ -529,7 +529,7 @@ export class StaticList extends DataPoint {
                     } else {
                         // FORGET
                         const replaceWithIndex = this._commands.findIndex(
-                            (c) => c[0] === REPLACE_WITH && c[2].includes(command[1])
+                            (c) => c[0] === SET && c[2].includes(command[1])
                         );
                         if (replaceWithIndex >= 0) {
                             const ids = this._commands[replaceWithIndex][2];
@@ -538,12 +538,12 @@ export class StaticList extends DataPoint {
                             );
                         } else {
                             const linkToIndex = this._commands.findIndex(
-                                (c) => c[0] === LINK_TO && c[1] === command[1]
+                                (c) => c[0] === LINK && c[1] === command[1]
                             );
                             if (linkToIndex >= 0) {
                                 this._commands.splice(linkToIndex, 1);
                             } else {
-                                this._commands.push([FORGET, command[1]]);
+                                this._commands.push([UNLINK, command[1]]);
                             }
                         }
                     }
@@ -559,7 +559,7 @@ export class StaticList extends DataPoint {
                     this.count--;
                     break;
                 }
-                case LINK_TO: {
+                case LINK: {
                     const record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     if (!this.limit || this.records.length < this.limit) {
                         this.records.push(record);
@@ -824,7 +824,7 @@ export class StaticList extends DataPoint {
         const updateCommandsToKeep = this._commands.filter(
             (c) => c[0] === x2ManyCommands.UPDATE && ids.includes(c[1])
         );
-        this._commands = [x2ManyCommands.replaceWith(ids)].concat(updateCommandsToKeep);
+        this._commands = [x2ManyCommands.set(ids)].concat(updateCommandsToKeep);
         this._currentIds = [...ids];
         this.count = this._currentIds.length;
     }
