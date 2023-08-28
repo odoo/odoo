@@ -108,7 +108,7 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")
-        default_sale_line = next(sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet'])
+        default_sale_line = next((sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet']), self.env['sale.order.line'])
         context = {
             'search_default_billable_timesheet': True,
             'default_is_so_line_edited': True,
