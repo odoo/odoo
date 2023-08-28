@@ -29,7 +29,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.translate import PREFERRED_BASES, TranslationImporter
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
 
@@ -907,11 +907,12 @@ class Module(models.Model):
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
                         translation_importer.load_file(base_trans_file, lang)
 
-                    if base_lang_code == "es" and lang != "es_MX":
-                        mx_trans_file = get_module_resource(module_name, 'i18n', 'es_MX.po')
-                        if mx_trans_file:
-                            _logger.info('module %s: loading translation file %s for language %s', module_name, "es_MX", lang)
-                            translation_importer.load_file(mx_trans_file, lang)
+                    if base_lang_code in PREFERRED_BASES and lang != PREFERRED_BASES[base_lang_code]:
+                        preferred_base = PREFERRED_BASES[base_lang_code]
+                        pref_trans_file = get_module_resource(module_name, 'i18n', f'{preferred_base}.po')
+                        if pref_trans_file:
+                            _logger.info('module %s: loading translation file %s for language %s', module_name, preferred_base, lang)
+                            translation_importer.load_file(pref_trans_file, lang)
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')

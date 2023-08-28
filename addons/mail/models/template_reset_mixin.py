@@ -11,7 +11,7 @@ from odoo.modules import get_module_resource
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools.convert import xml_import
 from odoo.tools.misc import file_open
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.translate import PREFERRED_BASES, TranslationImporter
 
 
 class TemplateResetMixin(models.AbstractModel):
@@ -74,11 +74,11 @@ class TemplateResetMixin(models.AbstractModel):
                 if base_trans_file:
                     translation_importer.load_file(base_trans_file, code, xmlids=xml_ids)
 
-                # Step 1.5: in case of latin america Spanish variation, load es_MX too
-                if base_lang_code == "es" and lang_code != "es_MX":
-                    mx_trans_file = get_module_resource(module_name, 'i18n', 'es_MX.po')
-                    if mx_trans_file:
-                        translation_importer.load_file(mx_trans_file, code, xmlids=xml_ids)
+                # Step 1.5: if a specific locale is preferred to the base language, load it too
+                if base_lang_code in PREFERRED_BASES and lang_code != PREFERRED_BASES[base_lang_code]:
+                    pref_trans_file = get_module_resource(module_name, 'i18n', f'{PREFERRED_BASES[base_lang_code]}.po')
+                    if pref_trans_file:
+                        translation_importer.load_file(pref_trans_file, code, xmlids=xml_ids)
 
             # Step 2: reset translation file with main language file (can possibly override the
             # terms coming from the base language)
