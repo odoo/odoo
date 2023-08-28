@@ -3,6 +3,8 @@
 import { onWillStart, onWillUpdateProps, reactive, useComponent } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { extractInfoFromGroupData } from "@web/model/relational_model/utils";
+
 const FALSE = Symbol("False");
 
 /**
@@ -226,7 +228,7 @@ class ProgressBarState {
     }
 
     async _updateAggregates() {
-        const { context, groupBy, domain, resModel } = this.model.root;
+        const { context, fields, groupBy, domain, resModel } = this.model.root;
         const fieldsName = this._aggregateFields.map((f) => f.name);
         const firstGroupByName = groupBy[0].split(":")[0];
         const kwargs = { context };
@@ -238,7 +240,8 @@ class ProgressBarState {
             kwargs
         );
         this._aggregateValues = res.groups.map((r) => {
-            return { ...r, [firstGroupByName]: r[groupBy] };
+            const groupInfo = extractInfoFromGroupData(r, groupBy, fields);
+            return { ...groupInfo.aggregates, [firstGroupByName]: groupInfo.serverValue };
         });
     }
 

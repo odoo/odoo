@@ -22,6 +22,7 @@ export class Group extends DataPoint {
         /** @type {number} */
         this.count = data.count;
         this.value = data.value;
+        this.serverValue = data.serverValue;
         this.displayName = data.displayName;
         this.aggregates = data.aggregates;
         let List;
@@ -49,19 +50,6 @@ export class Group extends DataPoint {
     }
     get records() {
         return this.list.records;
-    }
-    get serverValue() {
-        const { type } = this.groupByField;
-        switch (type) {
-            case "many2one":
-                return this.value || false;
-            case "many2many": {
-                return this.value ? [this.value] : false;
-            }
-            default: {
-                return this._rawValue || false;
-            }
-        }
     }
 
     // -------------------------------------------------------------------------

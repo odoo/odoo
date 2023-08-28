@@ -31,8 +31,6 @@
                         <t t-if="!group.isFolded">
                             <t t-if="group.id === props.quickCreateState.groupId">
                                 <KanbanRecordQuickCreate
-                                    context="props.list.context"
-                                    resModel="props.list.resModel"
                                     group="group"
                                     onCancel="force => this.cancelQuickCreate(force)"
                                     onValidate="(record, mode) => this.validateQuickCreate(record, mode, group)"

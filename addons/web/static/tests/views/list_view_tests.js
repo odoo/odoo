@@ -2308,6 +2308,46 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("add record in list grouped by m2m", async function (assert) {
+        assert.expect(7);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            groupBy: ["m2m"],
+            mockRPC(route, args) {
+                if (args.method === "onchange2") {
+                    assert.deepEqual(args.kwargs.context.default_m2m, [1]);
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 4);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_group_header")), [
+            "None (1) ",
+            "Value 1 (3) ",
+            "Value 2 (2) ",
+            "Value 3 (1) ",
+        ]);
+
+        await click(target.querySelectorAll(".o_group_header")[1]);
+        assert.containsN(target, ".o_data_row", 3);
+
+        await click(target, ".o_group_field_row_add a");
+        assert.containsOnce(target, ".o_selected_row");
+        assert.containsOnce(target, ".o_selected_row .o_field_tags .o_tag");
+        assert.strictEqual(
+            target.querySelector(".o_selected_row .o_field_tags .o_tag").innerText,
+            "Value 1"
+        );
+    });
+
     QUnit.test(
         "editing a record should change same record in other groups when grouped by m2m field",
         async function (assert) {
