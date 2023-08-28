@@ -100,8 +100,9 @@ QUnit.module("Search", (hooks) => {
 
         assert.strictEqual(views[0].getAttribute("data-tooltip"), "List");
         assert.hasClass(views[0], "active");
+        assert.containsOnce(views[0], ".oi-view-list");
         assert.strictEqual(views[1].getAttribute("data-tooltip"), "Kanban");
-        assert.hasClass(views[1], "oi-view-kanban");
+        assert.containsOnce(views[1], ".oi-view-kanban");
 
         controlPanel.env.services.action.switchView = (viewType) => {
             assert.step(viewType);

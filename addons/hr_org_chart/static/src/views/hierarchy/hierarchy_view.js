@@ -10,7 +10,7 @@ import { HierarchyRenderer } from "./hierarchy_renderer";
 export const hierarchyView = {
     type: "hierarchy",
     display_name: _t("Hierarchy"),
-    icon: "fa fa-share-alt",
+    icon: "fa fa-share-alt o_hierarchy_icon",
     isMobileFriendly: false,
     multiRecord: true,
     ArchParser: HierarchyArchParser,
