@@ -36,9 +36,6 @@ export class DynamicGroupList extends DynamicList {
     }
 
     get hasData() {
-        if (this.count === 0) {
-            return false;
-        }
         return this.groups.some((group) => group.hasData);
     }
 

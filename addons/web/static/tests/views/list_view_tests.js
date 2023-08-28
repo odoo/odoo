@@ -2195,6 +2195,24 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("list view with multiple groupbys", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["bar", "foo"],
+            noContentHelp: "<p>should not be displayed</p>",
+        });
+
+        assert.containsNone(target, ".o_view_nocontent");
+        assert.containsN(target, ".o_group_has_content", 2);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_group_has_content")), [
+            "No (1) ",
+            "Yes (3) ",
+        ]);
+    });
+
     QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
         serviceRegistry.add(
             "user",
