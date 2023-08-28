@@ -211,8 +211,6 @@ export class KanbanRecordQuickCreate extends Component {
     static template = "web.KanbanRecordQuickCreate";
     static props = {
         quickCreateView: { type: [String, { value: null }], optional: 1 },
-        resModel: String,
-        context: Object,
         onValidate: Function,
         onCancel: Function,
         group: Object,
@@ -241,7 +239,7 @@ export class KanbanRecordQuickCreate extends Component {
         if (props.quickCreateView) {
             const { fields, relatedModels, views } = await this.viewService.loadViews({
                 context: { ...props.context, form_view_ref: props.quickCreateView },
-                resModel: props.resModel,
+                resModel: props.group.resModel,
                 views: [[false, "form"]],
             });
             quickCreateFields = fields;
@@ -250,24 +248,22 @@ export class KanbanRecordQuickCreate extends Component {
         }
         const models = {
             ...quickCreateRelatedModels,
-            [props.resModel]: quickCreateFields,
+            [props.group.resModel]: quickCreateFields,
         };
         const archInfo = new formView.ArchParser().parse(
             quickCreateForm.arch,
             models,
-            props.resModel
+            props.group.resModel
         );
-        const context = props.context || {};
-        context[`default_${props.group.groupByField.name}`] = props.group.serverValue;
         this.quickCreateProps = {
             Model: formView.Model,
             Renderer: formView.Renderer,
             Compiler: formView.Compiler,
-            resModel: props.resModel,
+            resModel: props.group.resModel,
             onValidate: props.onValidate,
             onCancel: props.onCancel,
             fields: quickCreateFields,
-            context,
+            context: props.group.context,
             archInfo,
         };
     }
