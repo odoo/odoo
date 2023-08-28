@@ -26,7 +26,7 @@ from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
     config, existing_tables, lazy_classproperty,
-    lazy_property, sql, Collector, OrderedSet,
+    lazy_property, sql, Collector, OrderedSet, SQL,
     format_frame
 )
 from odoo.tools.func import locked
@@ -797,9 +797,11 @@ class Registry(Mapping):
 
             for sequence_name in sequence_names:
                 if sequence_name not in existing_sequences:
-                    _sequence_name = sql.Identifier(sequence_name)  # even if sequence_name should be safe, will avoid flagging the sql_injection linter
-                    cr.execute(sql.SQL("CREATE SEQUENCE {} INCREMENT BY 1 START WITH 1").format(_sequence_name))
-                    cr.execute("SELECT nextval(%s)", [sequence_name])
+                    cr.execute(SQL(
+                        "CREATE SEQUENCE %s INCREMENT BY 1 START WITH 1",
+                        SQL.identifier(sequence_name),
+                    ))
+                    cr.execute(SQL("SELECT nextval(%s)", sequence_name))
 
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             self.registry_sequence = db_registry_sequence
