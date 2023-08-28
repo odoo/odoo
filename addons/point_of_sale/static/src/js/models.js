@@ -1900,6 +1900,7 @@ class Orderline extends PosModel {
             pack_lot_lines:      this.get_lot_lines(),
             customer_note:      this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
+            unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
         };
     }
     generate_wrapped_product_name() {
