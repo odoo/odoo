@@ -385,7 +385,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_id': sale_order_2.id,
         })
         sale_order_2._compute_show_project_and_task_button()
-        self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be hidden")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertFalse(sale_order_2.show_task_button, "There is no project on the sale order, the button should be hidden")
         # create a new task, whose sale order item is a sol of the SO
@@ -396,7 +396,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         sale_order_2._compute_tasks_ids()
         sale_order_2._compute_show_project_and_task_button()
-        self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be hidden")
         self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_2.show_task_button, "There is no project on the sale order and there is a task whose sale item is one of the sale_line of the SO, the button should be displayed")
 
@@ -406,7 +406,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_id': sale_order_3.id,
         })
         sale_order_3._compute_show_project_and_task_button()
-        self.assertTrue(sale_order_3.show_create_project_button, "There is a product service with the service_policy set on 'manual' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_3.show_create_project_button, "There is a product service with the service_policy set on 'manual' on the sale order, the button should be hidden")
         self.assertFalse(sale_order_3.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertFalse(sale_order_3.show_task_button, "There is no project on the sale order, the button should be hidden")
 

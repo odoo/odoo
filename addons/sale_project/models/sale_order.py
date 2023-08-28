@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.show_project_button = order.id in show_button_ids and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
-            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count
+            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and order.order_line.product_template_id.filtered(lambda x: x.service_policy in ['delivered_timesheet', 'delivered_milestones'])
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
