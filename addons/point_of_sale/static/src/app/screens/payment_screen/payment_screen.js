@@ -233,7 +233,7 @@ export class PaymentScreen extends Component {
             this.hardwareProxy.openCashbox();
         }
 
-        this.currentOrder.initialize_validation_date();
+        this.currentOrder.date_order = luxon.DateTime.now();
         this.currentOrder.finalized = true;
 
         // 1. Save order to server.
