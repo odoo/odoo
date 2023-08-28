@@ -464,6 +464,7 @@
           <field name="name">Office combo</field>
           <field name="type">combo</field>
           <field name="categ_id" ref="product.product_category_5"/>
+          <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_desks')])]"/>
           <field name="uom_id" ref="uom.product_uom_unit"/>
           <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/office_combo.png"/>
