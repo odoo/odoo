@@ -2,6 +2,9 @@
 import wTourUtils from '@website/js/tours/tour_utils';
 
 function waitForCSSReload() {
+    // TODO we should find a better way to wait for this in tests after CSS
+    // reload, it is currently done multiple different ways depending on the
+    // test.
     return [
         // This step is here because the option is applied but triggers a
         // reloading of the CC value, so if the second value is sent too soon,
@@ -10,6 +13,11 @@ function waitForCSSReload() {
         // step.
         wTourUtils.goBackToBlocks(),
         wTourUtils.goToTheme(),
+        {
+            content: "Wait for no loading",
+            trigger: 'body:not(:has(.o_we_ui_loading)) iframe body:not(:has(.o_we_ui_loading))',
+            run: () => null,
+        },
     ];
 }
 
@@ -41,7 +49,6 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     {
         content: "Drag the saturation slider",
         trigger: '.o_we_user_value_widget[data-param="gray-extra-saturation"]',
-        extra_trigger: ':not(:has(.o_we_ui_loading))',
         run: () => {
             const slider = document.querySelector('.o_we_user_value_widget[data-param="gray-extra-saturation"] input');
             slider.value = 15;
