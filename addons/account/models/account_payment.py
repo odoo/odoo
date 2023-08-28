@@ -672,11 +672,16 @@ class AccountPayment(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
-    def new(self, values=None, origin=None, ref=None):
-        payment = super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
-        if not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
-            payment.move_id._compute_journal_id()
-        return payment
+    @api.onchange('available_journal_ids')
+    def _onchange_available_journal_ids(self):
+        """ This onchange is a temporary fix for two things:
+        1. When me remove the "new" inheritance method that to fix that changing the journl was not computng
+        dependant computed fields, now the "default journal" was not computed when creating new record. This onchange
+        fix it for now.
+        2. Fix the use case where a journal only suitable for one kind of operation (lets said inbound) is selected
+        and then the user selects "outbound" type, the journals remains selected."""
+        if not self.journal_id or self.journal_id not in self.available_journal_ids._origin:
+            self.journal_id = self.available_journal_ids._origin[:1]
 
     @api.model_create_multi
     def create(self, vals_list):
