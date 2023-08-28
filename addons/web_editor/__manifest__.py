@@ -194,11 +194,6 @@ Odoo Web Editor widget.
 
             ('include', 'web_editor.assets_media_dialog'),
 
-            # TODO: remove when refactoring 'DatetimePickerUserValueWidget'
-            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
-            'web/static/lib/tempusdominus/tempusdominus.scss',
-            'web/static/lib/tempusdominus/tempusdominus.js',
-
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 

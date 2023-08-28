@@ -31,6 +31,7 @@ import { overlayService } from "@web/core/overlay/overlay_service";
 import { Component, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -77,6 +78,7 @@ export function setupWebClientRegistries() {
         user: () => makeFakeUserService(),
         view: () => viewService,
         company: () => fakeCompanyService,
+        datetime_picker: () => datetimePickerService,
     };
     for (const serviceName in services) {
         if (!serviceRegistry.contains(serviceName)) {

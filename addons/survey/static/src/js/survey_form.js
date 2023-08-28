@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { formatDateTime, parseDate, parseDateTime} from "@web/legacy/js/core/dates";
-import time from "@web/legacy/js/core/time";
 import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import {getCookie, setCookie, deleteCookie} from "@web/legacy/js/core/cookie_utils";
@@ -11,9 +8,17 @@ import { utils as uiUtils } from "@web/core/ui/ui_service";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    parseDateTime,
+    parseDate,
+    serializeDateTime,
+    serializeDate,
+} from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 var isMac = navigator.platform.toUpperCase().includes('MAC');
-const { DateTime, Settings } = luxon;
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_form',
@@ -56,9 +61,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 self._initTimer();
                 self._initBreadcrumb();
             }
-            self.$('div.o_survey_form_date').each(function () {
-                self._initDateTimePicker($(this));
-            });
             self._initChoiceItems();
             self._initTextArea();
             self._focusOnFirstInput();
@@ -472,9 +474,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 options.isFinish = true;
             }
 
-            this.$('div.o_survey_form_date').each(function () {
-                self._initDateTimePicker($(this));
-            });
+            // Start datetime pickers
+            self.trigger_up("widgets_start_request");
             if (this.options.isStartScreen || (options && options.initTimer)) {
                 this._initTimer();
                 this.options.isStartScreen = false;
@@ -602,16 +603,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        var datetimepickerFormat = $input.data('questionType') === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
-                        var momentDate = moment($input.val(), datetimepickerFormat);
-                        if (!momentDate.isValid()) {
+                        const [parse, deserialize] =
+                            $input.data("questionType") === "date"
+                                ? [parseDate, deserializeDate]
+                                : [parseDateTime, deserializeDateTime];
+                        const date = parse($input.val());
+                        if (!date || !date.isValid) {
                             errors[questionId] = validationDateMsg;
                         } else {
-                            var $dateDiv = $questionWrapper.find('.o_survey_form_date');
-                            var maxDate = $dateDiv.data('maxdate');
-                            var minDate = $dateDiv.data('mindate');
-                            if ((maxDate && momentDate.isAfter(moment(maxDate)))
-                                    || (minDate && momentDate.isBefore(moment(minDate)))) {
+                            const maxDate = deserialize($input.data('max-date'));
+                            const minDate = deserialize($input.data('min-date'));
+                            if (
+                                (maxDate.isValid && date > maxDate) ||
+                                (minDate.isValid && date < minDate)
+                            ) {
                                 errors[questionId] = validationErrorMsg;
                             }
                         }
@@ -691,11 +696,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     params[this.name] = this.value;
                     break;
                 case 'date':
-                    params = self._prepareSubmitDates(params, this.name, this.value, false);
+                case 'datetime':{
+                    const [parse, serialize] =
+                        $(this).data("questionType") === "date"
+                            ? [parseDate, serializeDate]
+                            : [parseDateTime, serializeDateTime];
+                    const date = parse(this.value);
+                    params[this.name] = date ? serialize(date) : "";
                     break;
-                case 'datetime':
-                    params = self._prepareSubmitDates(params, this.name, this.value, true);
-                    break;
+                }
                 case 'simple_choice_radio':
                 case 'multiple_choice':
                     params = self._prepareSubmitChoices(params, $(this), $(this).data('name'));
@@ -706,19 +715,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             }
         });
     },
-
-    /**
-    *   Prepare date answer before submitting form.
-    *   Convert date value from client current timezone to UTC Date to correspond to the server format.
-    *   return params = { 'dateQuestionId' : '2019-05-23', 'datetimeQuestionId' : '2019-05-23 14:05:12' }
-    */
-    _prepareSubmitDates: function (params, questionId, value, isDateTime) {
-        var momentDate = isDateTime ? parseDateTime(value, null, {timezone: true}) : parseDate(value);
-        var formattedDate = momentDate ? momentDate.toJSON() : '';
-        params[questionId] = formattedDate;
-        return params;
-    },
-
     /**
     *   Prepare choice answer before submitting form.
     *   If the answer is not the 'comment selection' (=Other), calls the _prepareSubmitAnswer method to add the answer to the params
@@ -917,77 +913,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 });
             });
         }
-    },
-
-    /**
-    * Initialize datetimepicker in correct format and with constraints
-    */
-    _initDateTimePicker: function ($dateGroup) {
-        var disabledDates = [];
-        var questionType = $dateGroup.find('input').data('questionType');
-        var minDateData = $dateGroup.data('mindate');
-        var maxDateData = $dateGroup.data('maxdate');
-
-        var datetimepickerFormat = questionType === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
-
-        var minDate = minDateData
-            ? this._formatDateTime(minDateData, datetimepickerFormat)
-            : moment({ y: 1000 });
-
-        var maxDate = maxDateData
-            ? this._formatDateTime(maxDateData, datetimepickerFormat)
-            : moment().add(200, "y");
-
-        if (questionType === 'date') {
-            // Include min and max date in selectable values
-            maxDate = moment(maxDate).add(1, "d");
-            minDate = moment(minDate).subtract(1, "d");
-            disabledDates = [minDate, maxDate];
-        }
-
-        $dateGroup.datetimepicker({
-            format: datetimepickerFormat,
-            minDate: minDate,
-            maxDate: maxDate,
-            disabledDates: disabledDates,
-            useCurrent: false,
-            viewDate: moment(new Date()).hours(minDate.hours()).minutes(minDate.minutes()).seconds(minDate.seconds()).milliseconds(minDate.milliseconds()),
-            calendarWeeks: true,
-            icons: {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                next: 'oi oi-chevron-right',
-                previous: 'oi oi-chevron-left',
-                up: 'oi oi-chevron-up',
-                down: 'oi oi-chevron-down',
-            },
-            locale: Settings.defaultLocale,
-            allowInputToggle: true,
-        });
-        $dateGroup.on('error.datetimepicker', (err) => {
-            if (err.date) {
-                if (err.date < minDate) {
-                    this.call("dialog", "add", AlertDialog, {
-                        body:
-                            _t("The date you selected is lower than the minimum date: ") +
-                            minDate.format(datetimepickerFormat),
-                    });
-                }
-
-                if (err.date > maxDate) {
-                    this.call("dialog", "add", AlertDialog, {
-                        body:
-                            _t("The date you selected is greater than the maximum date: ") +
-                            maxDate.format(datetimepickerFormat),
-                    });
-                }
-            }
-            return false;
-        });
-    },
-
-    _formatDateTime: function (datetimeValue, format) {
-        return moment(formatDateTime(moment(datetimeValue), null, {timezone: true}), format);
     },
 
     _initResultWidget: function () {

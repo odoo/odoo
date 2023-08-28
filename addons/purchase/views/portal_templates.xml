@@ -262,7 +262,6 @@
                             <th class="text-start">Products</th>
                             <th class="text-end">Quantity</th>
                             <th t-if="update_dates" class="text-end">Scheduled Date</th>
-                            <th t-if="update_dates" class="text-end"><strong>Update Here</strong></th>
                             <th t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
                             <th t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                 <span>Taxes</span>
@@ -296,19 +295,20 @@
                                             <span t-field="line.product_uom" groups="uom.group_uom"/>
                                         </div>
                                     </td>
-                                    <td t-if="update_dates" class="text-end"><span t-esc="line.date_planned.date()"/></td>
                                     <td t-if="update_dates" class="text-end">
-                                      <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <div class="container">
                                           <div class="mb-3">
                                             <div class="input-group date">
-                                                <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{line.id}" t-att-name="line.id"
-                                                  data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{line.id}"/>
+                                                <input type="text"
+                                                    class="form-control datetimepicker-input o-purchase-datetimepicker text-end"
+                                                    t-att-data-access-token="order.access_token"
+                                                    t-att-data-order-id="order.id"
+                                                    t-att-data-line-id="line.id"
+                                                    t-att-data-value="line.date_planned.isoformat()"
+                                                />
                                             </div>
                                           </div>
                                         </div>
-                                      </form>
                                     </td>
                                     <td t-if="not update_dates and order.state in ['purchase', 'done']" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div

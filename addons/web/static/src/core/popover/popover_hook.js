@@ -15,6 +15,28 @@ import { onWillUnmount, status, useComponent } from "@odoo/owl";
  *  - Whether the popover is currently open.
  */
 
+export function makePopover(popoverService, component, options) {
+    let removeFn = null;
+    function close() {
+        removeFn?.();
+    }
+    return {
+        open(target, props) {
+            close();
+            const newOptions = Object.create(options);
+            newOptions.onClose = () => {
+                removeFn = null;
+                options.onClose?.();
+            };
+            removeFn = popoverService.add(target, component, props, newOptions);
+        },
+        close,
+        get isOpen() {
+            return Boolean(removeFn);
+        },
+    };
+}
+
 /**
  * Manages a component to be used as a popover.
  *
@@ -23,28 +45,15 @@ import { onWillUnmount, status, useComponent } from "@odoo/owl";
  * @returns {PopoverHookReturnType}
  */
 export function usePopover(component, options = {}) {
-    let removeFn = null;
-    const popover = useService("popover");
+    const popoverService = useService("popover");
     const owner = useComponent();
-    function close() {
-        removeFn?.();
-    }
-    onWillUnmount(close);
-    return {
-        open(target, props) {
-            close();
-            const newOptions = Object.create(options);
-            newOptions.onClose = function () {
-                removeFn = null;
-                if (status(owner) !== "destroyed") {
-                    options.onClose?.();
-                }
-            };
-            removeFn = popover.add(target, component, props, newOptions);
-        },
-        close,
-        get isOpen() {
-            return Boolean(removeFn);
-        },
+    const newOptions = Object.create(options);
+    newOptions.onClose = () => {
+        if (status(owner) !== "destroyed") {
+            options.onClose?.();
+        }
     };
+    const popover = makePopover(popoverService, component, newOptions);
+    onWillUnmount(popover.close);
+    return popover;
 }

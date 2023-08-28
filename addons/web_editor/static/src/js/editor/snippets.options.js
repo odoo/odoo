@@ -5,7 +5,6 @@ import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_di
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import rpc from "@web/legacy/js/core/rpc";
-import time from "@web/legacy/js/core/time";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import utils from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
@@ -34,7 +33,6 @@ import {
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
-import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -1837,11 +1835,9 @@ const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
 const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     events: { // Explicitely not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
-        'change.datetimepicker': '_onDateTimePickerChange',
-        'error.datetimepicker': '_onDateTimePickerError',
         'input input': '_onDateInputInput',
     },
-    defaultFormat: time.getLangDatetimeFormat(),
+    pickerType: 'datetime',
 
     /**
      * @override
@@ -1849,7 +1845,6 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     init: function () {
         this._super(...arguments);
         this._value = DateTime.now().toUnixInteger().toString();
-        this.__libInput = 0;
     },
     /**
      * @override
@@ -1857,51 +1852,21 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
 
-        const datetimePickerId = uniqueId("datetimepicker");
         this.el.classList.add('o_we_large');
         this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
-        this.inputEl.setAttribute('id', datetimePickerId);
-        this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 
-        const datepickersOptions = {
-            minDate: moment({ y: 1000 }),
-            maxDate: moment().add(200, 'y'),
-            calendarWeeks: true,
-            defaultDate: moment().format(),
-            icons: {
-                close: 'fa fa-check primary',
+        this.picker = this.call("datetime_picker", "create", {
+            target: this.inputEl,
+            onChange: this._onDateTimePickerChange.bind(this),
+            pickerProps: {
+                type: this.pickerType,
+                minDate: DateTime.fromObject({ year: 1000 }),
+                maxDate: DateTime.now().plus({ year: 200 }),
+                value: DateTime.fromSeconds(parseInt(this._value)),
+                rounding: 0,
             },
-            locale: moment.locale(),
-            format: this.defaultFormat,
-            sideBySide: true,
-            buttons: {
-                showClear: true,
-                showClose: true,
-                showToday: true,
-            },
-            widgetParent: 'body',
-
-            // Open the datetimepicker on focus not on click. This allows to
-            // take care of a bug which is due to the wysiwyg editor:
-            // sometimes, the datetimepicker loses the focus then get it back
-            // in the same execution flow. This was making the datepicker close
-            // for no apparent reason. Now, it only closes then reopens directly
-            // without it be possible to notice.
-            allowInputToggle: true,
-        };
-        this.__libInput++;
-        const $input = $(this.inputEl);
-        $input.datetimepicker(datepickersOptions);
-        this.__libInput--;
-
-        // Monkey-patch the library option to add custom classes on the pickers
-        const libObject = $input.data('datetimepicker');
-        const oldFunc = libObject._getTemplate;
-        libObject._getTemplate = function () {
-            const $template = oldFunc.call(this, ...arguments);
-            $template.addClass('o_we_no_overlay o_we_datetimepicker');
-            return $template;
-        };
+        });
+        this.picker.enable();
     },
 
     //--------------------------------------------------------------------------
@@ -1920,23 +1885,21 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @override
      */
     isPreviewed: function () {
-        return this._super(...arguments) || !!$(this.inputEl).data('datetimepicker').widget;
+        return this._super(...arguments) || this.picker.isOpen;
     },
     /**
      * @override
      */
     async setValue() {
         await this._super(...arguments);
-        let momentObj = null;
+        let dateTime = "";
         if (this._value) {
-            momentObj = moment.unix(this._value);
-            if (!momentObj.isValid()) {
-                momentObj = moment();
+            dateTime = DateTime.fromSeconds(parseInt(this._value))
+            if (!dateTime.isValid) {
+                dateTime = DateTime.now();
             }
         }
-        this.__libInput++;
-        $(this.inputEl).datetimepicker('date', momentObj);
-        this.__libInput--;
+        this.picker.state.value = dateTime;
     },
 
     //--------------------------------------------------------------------------
@@ -1947,23 +1910,13 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onDateTimePickerChange: function (ev) {
-        if (this.__libInput > 0) {
-            return;
-        }
-        if (!ev.date || !ev.date.isValid()) {
+    _onDateTimePickerChange: function (newDateTime) {
+        if (!newDateTime || !newDateTime.isValid) {
             this._value = '';
         } else {
-            this._value = ev.date.unix().toString();
+            this._value = newDateTime.toUnixInteger().toString();
         }
-        this._onUserValuePreview(ev);
-    },
-    /**
-     * Prevents crash manager to throw CORS error. Note that library already
-     * clears the wrong date format.
-     */
-    _onDateTimePickerError: function (ev) {
-        ev.stopPropagation();
+        this._onUserValuePreview();
     },
     /**
      * Handles the clear button of the datepicker.
@@ -1980,7 +1933,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
 });
 
 const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
-    defaultFormat: time.getLangDateFormat(),
+    pickerType: 'date',
 });
 
 const ListUserValueWidget = UserValueWidget.extend({

@@ -101,8 +101,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             this.el.scrollTop = +window.location.hash.match(/scrollTop=([0-9]+)/)[1];
         }
 
-        this.$el.children().on('error.datetimepicker', this._onDateTimePickerError.bind(this));
-
         return Promise.all(defs);
     },
 

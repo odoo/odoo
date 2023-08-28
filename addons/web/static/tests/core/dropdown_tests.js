@@ -25,6 +25,7 @@ import {
 } from "../helpers/utils";
 import { makeParent } from "./tooltip/tooltip_service_tests";
 import { getPickerCell } from "./datetime/datetime_test_helpers";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -1204,6 +1205,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test(
         "Dropdown with a date picker inside do not close when a click occurs in date picker",
         async (assert) => {
+            registry.category("services").add("datetime_picker", datetimePickerService);
             class MyComponent extends owl.Component {}
             MyComponent.template = owl.xml`
                 <Dropdown>

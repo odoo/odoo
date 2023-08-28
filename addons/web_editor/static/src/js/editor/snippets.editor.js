@@ -1758,6 +1758,7 @@ var SnippetsMenu = Widget.extend({
             '.modal .btn-close',
             '.o_we_crop_widget',
             '.transfo-container',
+            '.o_datetime_picker',
         ].join(', ');
 
         this.loadingTimers = {};

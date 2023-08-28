@@ -24,6 +24,7 @@ import {
     getTimePickers,
     zoomOut,
 } from "./datetime_test_helpers";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
 const { DateTime } = luxon;
 
@@ -74,7 +75,8 @@ QUnit.module("Components", ({ beforeEach }) => {
                 })
             )
             .add("popover", popoverService)
-            .add("ui", uiService);
+            .add("ui", uiService)
+            .add("datetime_picker", datetimePickerService);
 
         fixture = getFixture();
     });

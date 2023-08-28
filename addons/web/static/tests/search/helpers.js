@@ -26,6 +26,7 @@ import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { nameService } from "@web/core/name_service";
+import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -41,6 +42,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("popover", popoverService);
     serviceRegistry.add("view", viewService);
     serviceRegistry.add("command", commandService);
+    serviceRegistry.add("datetime_picker", datetimePickerService);
 }
 
 export function setupControlPanelFavoriteMenuRegistry() {
