@@ -102,28 +102,6 @@ QUnit.module('core', {}, function () {
             "should call with correct kargs");
     });
 
-    QUnit.test('search_read controller', function (assert) {
-        assert.expect(1);
-        var query = rpc.buildQuery({
-            route: '/web/dataset/search_read',
-            model: 'partner',
-            domain: ['a', '=', 1],
-            fields: ['name'],
-            limit: 32,
-            offset: 2,
-            orderBy: [{name: 'yop', asc: true}, {name: 'aa', asc: false}],
-        });
-        assert.deepEqual(query.params, {
-            context: {},
-            domain: ['a', '=', 1],
-            fields: ['name'],
-            limit: 32,
-            offset: 2,
-            model: 'partner',
-            sort: 'yop ASC, aa DESC',
-        }, "should have correct args");
-    });
-
     QUnit.test('search_read method', function (assert) {
         assert.expect(1);
         var query = rpc.buildQuery({
@@ -295,19 +273,5 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(query.params.kwargs.offset, undefined, "should not enforce a default value for offset");
         assert.deepEqual(query.params.kwargs.limit, undefined, "should not enforce a default value for limit");
         assert.deepEqual(query.params.kwargs.order, undefined, "should not enforce a default value for orderby");
-    });
-
-    QUnit.test('search_read controller with no domain, nor fields', function (assert) {
-        assert.expect(5);
-        var query = rpc.buildQuery({
-            model: 'partner',
-            route: '/web/dataset/search_read',
-        });
-
-        assert.deepEqual(query.params.domain, undefined, "should not enforce a default value for domain");
-        assert.deepEqual(query.params.fields, undefined, "should not enforce a default value for fields");
-        assert.deepEqual(query.params.offset, undefined, "should not enforce a default value for groupby");
-        assert.deepEqual(query.params.limit, undefined, "should not enforce a default value for limit");
-        assert.deepEqual(query.params.sort, undefined, "should not enforce a default value for order");
     });
 });

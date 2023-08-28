@@ -569,9 +569,6 @@ QUnit.module("Board", (hooks) => {
                         views: [[false, "kanban"]],
                     });
                 }
-                if (route === "/web/dataset/search_read") {
-                    return Promise.resolve({ records: [{ foo: "aqualung" }] });
-                }
             },
         });
 
