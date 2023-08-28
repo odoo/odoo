@@ -1090,13 +1090,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_manual_currency_rate(self):
         move_form = Form(self.invoice)
-        self.assertTrue(move_form._get_modifier('exchange_rate', 'invisible'))
+        self.assertTrue(move_form._get_modifier('display_rate', 'invisible'))
 
         move_form.currency_id = self.currency_data['currency']
         move_form.save()
 
         # Exchange rate is visible when using a foreign currency
-        self.assertFalse(move_form._get_modifier('exchange_rate', 'invisible'))
+        self.assertFalse(move_form._get_modifier('display_rate', 'invisible'))
 
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.0 }
@@ -1116,16 +1116,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # Fix the rate (difference greater than 20%)
         with Form(self.invoice) as move_form:
             with self.assertLogs('odoo.tests.form', level="WARNING") as log_catcher:
-                move_form.exchange_rate = 2.2
+                move_form.display_rate = 2.2
                 move_form.invoice_date = '2017-01-01'
-                self.assertEqual(move_form.exchange_rate, 2.2, "Immediate date change should not replace the rate")
+                self.assertEqual(move_form.display_rate, 2.2, "Immediate date change should not replace the rate")
 
         self.assertIn('The previous rate was 3.0', log_catcher.output[0])
 
         # Clear the display rate should reset to system rate
         with Form(self.invoice) as move_form:
             with self.assertNoLogs('odoo.tests.form', level='WARNING'):
-                move_form.exchange_rate = False
+                move_form.display_rate = False
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.0 }
             for _ in self.invoice.line_ids
@@ -1134,7 +1134,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # Fix the rate (difference less than 20%)
         with Form(self.invoice) as move_form:
             with self.assertNoLogs('odoo.tests.form', level='WARNING'):
-                move_form.exchange_rate = 2.3
+                move_form.display_rate = 2.3
 
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.3 }
@@ -1175,7 +1175,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             { 'currency_rate': 5.0 }
             for _ in self.invoice.line_ids
         ])
-        self.assertFalse(self.invoice.uses_custom_rate)
+        self.assertFalse(self.invoice.exchange_rate)
 
     def test_in_invoice_onchange_past_invoice_1(self):
         if self.env.ref('purchase.group_purchase_manager', raise_if_not_found=False):
