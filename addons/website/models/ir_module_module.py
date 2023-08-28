@@ -231,6 +231,7 @@ class IrModuleModule(models.Model):
         for module in self:
             _logger.info('Load theme %s for website %s from template.' % (module.mapped('name'), website.id))
 
+            module._generate_primary_snippet_templates()
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
@@ -442,6 +443,7 @@ class IrModuleModule(models.Model):
         ], order='name')
 
         for theme in themes:
+            theme._generate_primary_snippet_templates()
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
             for image in images:
