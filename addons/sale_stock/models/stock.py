@@ -48,6 +48,8 @@ class StockMove(models.Model):
                     subtype_xmlid='mail.mt_note',
                 )
 
+    def _get_all_related_sm(self, product):
+        return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
