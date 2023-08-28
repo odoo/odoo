@@ -1105,7 +1105,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Changing the date sets a new rate
         with Form(self.invoice) as move_form:
-            move_form.invoice_date = fields.Date.from_string('2016-01-01')
+            with self.assertNoLogs('odoo.tests.form', level='WARNING'):
+                move_form.invoice_date = fields.Date.from_string('2016-01-01')
 
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 3.0 }
@@ -1116,26 +1117,44 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with Form(self.invoice) as move_form:
             with self.assertLogs('odoo.tests.form', level="WARNING") as log_catcher:
                 move_form.exchange_rate = 2.2
+                move_form.invoice_date = '2017-01-01'
+                self.assertEqual(move_form.exchange_rate, 2.2, "Immediate date change should not replace the rate")
 
         self.assertIn('The previous rate was 3.0', log_catcher.output[0])
+
+        # Clear the display rate should reset to system rate
+        with Form(self.invoice) as move_form:
+            with self.assertNoLogs('odoo.tests.form', level='WARNING'):
+                move_form.exchange_rate = False
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 2.0 }
+            for _ in self.invoice.line_ids
+        ])
 
         # Fix the rate (difference less than 20%)
         with Form(self.invoice) as move_form:
             with self.assertNoLogs('odoo.tests.form', level='WARNING'):
-                move_form.exchange_rate = 2.5
+                move_form.exchange_rate = 2.3
 
         self.assertRecordValues(self.invoice.line_ids, [
-            { 'currency_rate': 2.5 }
+            { 'currency_rate': 2.3 }
             for _ in self.invoice.line_ids
         ])
-        self.assertTrue(self.invoice.uses_custom_rate)
+        self.assertTrue(self.invoice.exchange_rate)
 
         # Changing the date should not change the fixed rate
+        self.env['res.currency.rate'].create({
+            'name': '2019-01-01',
+            'rate': 4.0,
+            'currency_id': self.invoice.currency_id.id,
+            'company_id': self.invoice.company_id.id,
+        })
         with Form(self.invoice) as move_form:
-            move_form.invoice_date = fields.Date.from_string('2019-01-01')
+            with self.assertNoLogs('odoo.tests.form', level='WARNING'):
+                move_form.invoice_date = fields.Date.from_string('2019-01-01')
 
         self.assertRecordValues(self.invoice.line_ids, [
-            { 'currency_rate': 2.5 }
+            { 'currency_rate': 2.3 }
             for _ in self.invoice.line_ids
         ])
 
@@ -1149,7 +1168,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Changing the currency should change the rates (even though they've been fixed on another currency)
         with Form(self.invoice) as move_form:
-            move_form.currency_id = forex_data['currency']
+            with self.assertNoLogs('odoo.tests.form', level='WARNING'):
+                move_form.currency_id = forex_data['currency']
 
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 5.0 }

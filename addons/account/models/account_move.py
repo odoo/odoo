@@ -1748,7 +1748,7 @@ class AccountMove(models.Model):
                             )
                         }
                     }
-        # (self.line_ids | self.invoice_line_ids)._conditional_add_to_compute('currency_id', lambda l: True)
+        (self.line_ids | self.invoice_line_ids).invalidate_recordset(fnames=['currency_rate'])
 
     @api.onchange('journal_id')
     def _inverse_journal_id(self):
