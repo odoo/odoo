@@ -14,7 +14,7 @@ Thai accounting chart and localization.
     'author': 'Almacom (http://almacom.co.th/)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
-        'account',
+        'account_qr_code_emv',
     ],
     'data': [
         'data/account_tax_report_data.xml',
