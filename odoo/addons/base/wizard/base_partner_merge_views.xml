@@ -43,7 +43,7 @@
                         </group>
                         <separator string="Options" invisible="state not in ('option',)"/>
                         <group invisible="state not in ('option', 'finished')">
-                            <field name='maximum_group' readonly="state in 'finished'"/>
+                            <field name='maximum_group' readonly="state == 'finished'"/>
                         </group>
                         <separator string="Merge the following contacts"
                             invisible="state in ('option', 'finished')"/>
