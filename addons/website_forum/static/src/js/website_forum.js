@@ -472,7 +472,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             const message = data.error === 'anonymous_user'
                 ? _t('Sorry, anonymous users cannot choose correct answers.')
                 : data.error === 'own_post'
-                    ? _t('Sorry, you cannot vote for your own posts')
+                    ? _t('Sorry, you cannot select your own posts as best answer')
                     : data.error;
             this._displayAccessDeniedNotification(message);
             return;
