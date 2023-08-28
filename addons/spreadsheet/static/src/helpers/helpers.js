@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { serializeDate } from "@web/core/l10n/dates";
-import { loadJS } from "@web/core/assets";
 
 const { DateTime } = luxon;
 
@@ -94,13 +93,4 @@ export function isEmpty(item) {
         }
     }
     return false;
-}
-
-/**
- * Load external libraries required for o-spreadsheet
- * @returns {Promise<void>}
- */
-export async function loadSpreadsheetDependencies() {
-    await loadJS("/web/static/lib/Chart/Chart.js");
-    await loadJS("/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js");
 }
