@@ -33,7 +33,7 @@ async function applyProduct(record, product) {
     await record.update({
         product_id: [product.id, product.display_name],
         product_uom_qty: product.quantity,
-        product_no_variant_attribute_value_ids: [x2ManyCommands.replaceWith(noVariantPTAVIds)],
+        product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
     });
 };
 

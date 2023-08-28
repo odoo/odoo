@@ -42,24 +42,24 @@ export const x2ManyCommands = {
         return [x2ManyCommands.DELETE, id, false];
     },
     // (3, id[, _]) removes relation, but not linked record itself
-    FORGET: 3,
-    forget(id) {
-        return [x2ManyCommands.FORGET, id, false];
+    UNLINK: 3,
+    unlink(id) {
+        return [x2ManyCommands.UNLINK, id, false];
     },
     // (4, id[, _])
-    LINK_TO: 4,
-    linkTo(id) {
-        return [x2ManyCommands.LINK_TO, id, false];
+    LINK: 4,
+    link(id) {
+        return [x2ManyCommands.LINK, id, false];
     },
     // (5[, _[, _]])
-    DELETE_ALL: 5,
-    deleteAll() {
-        return [x2ManyCommands.DELETE_ALL, false, false];
+    CLEAR: 5,
+    clear() {
+        return [x2ManyCommands.CLEAR, false, false];
     },
     // (6, _, ids) replaces all linked records with provided ids
-    REPLACE_WITH: 6,
-    replaceWith(ids) {
-        return [x2ManyCommands.REPLACE_WITH, false, ids];
+    SET: 6,
+    set(ids) {
+        return [x2ManyCommands.SET, false, ids];
     },
 };
 

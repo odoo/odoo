@@ -64,7 +64,7 @@ patch(SaleOrderLineProductField.prototype, {
                         this.props.record.update({
                             event_id,
                             event_booth_category_id,
-                            event_booth_pending_ids: [x2ManyCommands.replaceWith(event_booth_pending_ids)],
+                            event_booth_pending_ids: [x2ManyCommands.set(event_booth_pending_ids)],
                         });
                     }
                 }

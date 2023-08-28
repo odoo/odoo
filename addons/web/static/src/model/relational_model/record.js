@@ -754,7 +754,7 @@ export class Record extends DataPoint {
             const list = this.data[fieldName];
             for (const command of value) {
                 switch (command[0]) {
-                    case x2ManyCommands.REPLACE_WITH:
+                    case x2ManyCommands.SET:
                         await list._replaceWith(command[2]);
                         break;
                     default:
