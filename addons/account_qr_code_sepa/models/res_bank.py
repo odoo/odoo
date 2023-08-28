@@ -45,6 +45,7 @@ class ResPartnerBank(models.Model):
             sepa_country_codes = self.env.ref('base.sepa_zone').country_ids.mapped('code')
             non_iban_codes = {'AX', 'NC', 'YT', 'TF', 'BL', 'RE', 'MF', 'GP', 'PM', 'PF', 'GF', 'MQ', 'JE', 'GG', 'IM'}
             sepa_iban_codes = {code for code in sepa_country_codes if code not in non_iban_codes}
+<<<<<<< HEAD
             error_messages = []
             if currency.name != 'EUR':
                 error_messages.append(_("Can't generate a SEPA QR Code with the %s currency." % currency.name))
@@ -56,6 +57,17 @@ class ResPartnerBank(models.Model):
                 return '\r\n'.join(error_messages)
             return None
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
+||||||| parent of 9f5ed43e00a (temp)
+
+            return currency.name == 'EUR' and self.acc_type == 'iban' and self.sanitized_acc_number[:2] in sepa_iban_codes
+
+        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency)
+=======
+
+            return currency.name == 'EUR' and self.acc_type == 'iban' and self.sanitized_acc_number[:2] in sepa_iban_codes
+
+        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency, raises_error=raises_error)
+>>>>>>> 9f5ed43e00a (temp)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'sct_qr':
