@@ -1075,6 +1075,42 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)
 
+    def test_replenishment_rounding(self):
+        """ Tests that consumed components are correctly rounded between UoMs
+        """
+
+        # We set the Unit(s) rounding to 0.0001 (digit = 4)
+        self.env.ref('product.decimal_product_uom').digits = 4
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_kg.rounding = 0.0001
+
+        product_kg, finished = self.env['product.product'].create([
+            {
+                'name': 'component',
+                'type': 'product',
+                'uom_id': uom_kg.id,
+                'uom_po_id': uom_kg.id,
+            },{
+                'name': 'finisehd',
+                'type': 'product',
+            }
+        ])
+        # Use Kg products in a bom with grams (less than 0.005 Kg)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_kg.id,
+                'product_qty': 4,
+                'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+            })],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1.0
+        mo_form.save().action_confirm()
+        self.assertEqual(product_kg.virtual_available, -0.004)
+
     def test_bom_kit_with_sub_kit(self):
         p1, p2, p3, p4 = self.make_prods(4)
         self.make_bom(p1, p2, p3)
