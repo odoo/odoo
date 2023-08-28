@@ -15,6 +15,9 @@ import {
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { Component, onMounted, useState, xml } from "@odoo/owl";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { CommandPalette } from "@web/core/commands/command_palette";
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -201,6 +204,45 @@ QUnit.module("utils", () => {
             assert.strictEqual(document.activeElement, comp.inputRef.el);
             assert.strictEqual(comp.inputRef.el.selectionStart, 0);
             assert.strictEqual(comp.inputRef.el.selectionEnd, 10);
+        });
+
+        QUnit.test("useAutofocus: autofocus outside of active element doesn't work (CommandPalette)", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    this.inputRef = useAutofocus();
+                }
+                get DialogContainer() {
+                    return registry.category("main_components").get("DialogContainer");
+                }
+            }
+            MyComponent.template = xml`
+                <div>
+                    <input type="text" t-ref="autofocus" />
+                    <div class="o_dialog_container"/>
+                    <t t-component="DialogContainer.Component" t-props="DialogContainer.props" />
+                </div>
+            `;
+
+            registry.category("services").add("ui", uiService);
+            registry.category("services").add("dialog", dialogService);
+            registry.category("services").add("hotkey", hotkeyService);
+
+            const config = { providers: [] };
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, target , { env });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.inputRef.el);
+
+            env.services.dialog.add(CommandPalette, { config });
+            await nextTick();
+            assert.containsOnce(target, ".o_command_palette");
+            assert.notStrictEqual(document.activeElement, comp.inputRef.el);
+
+            comp.render();
+            await nextTick();
+            assert.notStrictEqual(document.activeElement, comp.inputRef.el);
         });
 
         QUnit.module("useBus");
