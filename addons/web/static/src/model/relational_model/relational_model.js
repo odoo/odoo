@@ -18,9 +18,7 @@ import { StaticList } from "./static_list";
 import {
     getFieldsSpec,
     createPropertyActiveField,
-    getAggregatesFromGroupData,
-    getDisplayNameFromGroupData,
-    getValueFromGroupData,
+    extractInfoFromGroupData,
     isRelational,
 } from "./utils";
 
@@ -397,25 +395,7 @@ export class RelationalModel extends Model {
 
         const groups = [];
         for (const groupData of groupsData) {
-            const group = {};
-            // When group_by_no_leaf key is present FIELD_ID_count doesn't exist
-            // we have to get the count from `__count` instead
-            // see _read_group_raw in models.py
-            group.count = groupData.__count || groupData[`${firstGroupByName}_count`];
-            group.length = group.count;
-            group.range = groupData.__range ? groupData.__range[config.groupBy[0]] : null;
-            group.value = getValueFromGroupData(
-                groupData,
-                groupByField,
-                groupData[config.groupBy[0]],
-                group.range
-            );
-            group.rawValue = groupData[config.groupBy[0]];
-            group.displayName = getDisplayNameFromGroupData(
-                groupByField,
-                groupData[config.groupBy[0]]
-            );
-            group.aggregates = getAggregatesFromGroupData(groupData, config.fields);
+            const group = extractInfoFromGroupData(groupData, config.groupBy, config.fields);
             if (!config.groups[group.value]) {
                 config.groups[group.value] = {
                     ...commonConfig,
@@ -448,18 +428,18 @@ export class RelationalModel extends Model {
             }
             const groupConfig = config.groups[group.value];
             groupConfig.list.orderBy = config.orderBy;
-            groupConfig.initialDomain = groupData.__domain;
+            groupConfig.initialDomain = group.domain;
             if (groupConfig.extraDomain) {
                 groupConfig.list.domain = Domain.and([
-                    groupData.__domain,
+                    group.domain,
                     groupConfig.extraDomain,
                 ]).toList();
             } else {
-                groupConfig.list.domain = groupData.__domain;
+                groupConfig.list.domain = group.domain;
             }
             const context = {
                 ...config.context,
-                [`default_${firstGroupByName}`]: group.value,
+                [`default_${firstGroupByName}`]: group.serverValue,
             };
             groupConfig.list.context = context;
             groupConfig.context = context;

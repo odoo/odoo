@@ -2,7 +2,12 @@
 
 import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
-import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
@@ -73,7 +78,7 @@ export function completeActiveFields(activeFields, extraActiveFields) {
     for (const fieldName in extraActiveFields) {
         const extraActiveField = {
             ...extraActiveFields[fieldName],
-            invisible: 'True',
+            invisible: "True",
         };
         if (fieldName in activeFields) {
             completeActiveField(activeFields[fieldName], extraActiveField);
@@ -203,7 +208,7 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 }
             }
             if (fieldNode.field?.useSubView) {
-                activeField.required = 'False';
+                activeField.required = "False";
             }
         }
 
@@ -390,10 +395,35 @@ export function parseServerValue(field, value) {
 }
 
 /**
+ * Extract useful information from a group data returned by a call to webReadGroup.
+ *
+ * @param {Object} groupData
+ * @param {string[]} groupBy
+ * @param {Object} fields
+ * @returns {Object}
+ */
+export function extractInfoFromGroupData(groupData, groupBy, fields) {
+    const info = {};
+    const groupByField = fields[groupBy[0].split(":")[0]];
+    // sometimes the key FIELD_ID_count doesn't exist and we have to get the count from `__count` instead
+    // see read_group in models.py
+    info.count = groupData.__count || groupData[`${groupByField.name}_count`];
+    info.length = info.count; // TODO: remove
+    info.range = groupData.__range ? groupData.__range[groupBy[0]] : null;
+    info.domain = groupData.__domain;
+    info.rawValue = groupData[groupBy[0]];
+    info.value = getValueFromGroupData(groupByField, info.rawValue, info.range);
+    info.displayName = getDisplayNameFromGroupData(groupByField, info.rawValue);
+    info.serverValue = getServerValueFromGroupData(groupByField, info.value);
+    info.aggregates = getAggregatesFromGroupData(groupData, fields);
+    return info;
+}
+
+/**
  * @param {Object} groupData
  * @returns {Object}
  */
-export function getAggregatesFromGroupData(groupData, fields) {
+function getAggregatesFromGroupData(groupData, fields) {
     const aggregates = {};
     for (const [key, value] of Object.entries(groupData)) {
         if (key in fields && AGGREGATABLE_FIELD_TYPES.includes(fields[key].type)) {
@@ -408,7 +438,7 @@ export function getAggregatesFromGroupData(groupData, fields) {
  * @param {any} rawValue
  * @returns {string | false}
  */
-export function getDisplayNameFromGroupData(field, rawValue) {
+function getDisplayNameFromGroupData(field, rawValue) {
     if (field.type === "selection") {
         return Object.fromEntries(field.selection)[rawValue];
     }
@@ -419,12 +449,34 @@ export function getDisplayNameFromGroupData(field, rawValue) {
 }
 
 /**
- * @param {Object} groupData
  * @param {import("./datapoint").Field} field
- * @param {any} rawValue
+ * @param {any} value
  * @returns {any}
  */
-export function getValueFromGroupData(groupData, field, rawValue, range) {
+function getServerValueFromGroupData(field, value) {
+    switch (field.type) {
+        case "many2many": {
+            return value ? [value] : false;
+        }
+        case "datetime": {
+            return value ? serializeDateTime(value) : false;
+        }
+        case "date": {
+            return value ? serializeDate(value) : false;
+        }
+        default: {
+            return value || false;
+        }
+    }
+}
+
+/**
+ * @param {import("./datapoint").Field} field
+ * @param {any} rawValue
+ * @param {object} [range]
+ * @returns {any}
+ */
+function getValueFromGroupData(field, rawValue, range) {
     if (["date", "datetime"].includes(field.type)) {
         if (!range) {
             return false;
