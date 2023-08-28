@@ -3,6 +3,7 @@
 
 import base64
 import logging
+import re
 import warnings
 
 from odoo import api, fields, models, tools, _, Command
@@ -107,8 +108,12 @@ class Company(models.Model):
     @api.depends('parent_path')
     def _compute_parent_ids(self):
         for company in self:
-            company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
-            company.root_id = company.parent_ids[0]
+            parent_path = company.parent_path
+            if re.match(r'^[1-9]\d*(/[1-9]\d*)*/$', parent_path):
+                company.parent_ids = self.browse(int(id) for id in parent_path.split('/') if id) if parent_path else company
+                company.root_id = company.parent_ids[0]
+            else:
+                raise UserError(_('Invalid value for parent Path.'))
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
