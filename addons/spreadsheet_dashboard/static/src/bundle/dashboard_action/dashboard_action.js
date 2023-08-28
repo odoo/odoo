@@ -8,7 +8,6 @@ import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
-import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
@@ -30,7 +29,6 @@ export class SpreadsheetDashboardAction extends Component {
             new DashboardLoader(this.env, this.env.services.orm, this._fetchDashboardData)
         );
         onWillStart(async () => {
-            await loadSpreadsheetDependencies();
             if (this.props.state && this.props.state.dashboardLoader) {
                 const { groups, dashboards } = this.props.state.dashboardLoader;
                 this.loader.restoreFromState(groups, dashboards);
