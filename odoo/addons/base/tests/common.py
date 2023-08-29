@@ -91,7 +91,6 @@ class TransactionCaseWithUserDemo(TransactionCase):
 
         if not cls.user_demo:
             cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            # YTI TODO: This could be factorized between the different classes
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
