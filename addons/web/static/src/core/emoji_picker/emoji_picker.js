@@ -20,7 +20,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
  *
@@ -125,23 +125,22 @@ export async function loadEmoji() {
 export const EMOJI_PER_ROW = 9;
 
 export class EmojiPicker extends Component {
-    static props = ["onSelect", "className?", "close?", "onClose?", "storeScroll?"];
+    static props = ["close?", "onClose?", "onSelect", "state?", "storeScroll?"];
     static template = "web.EmojiPicker";
 
     categories = null;
     emojis = null;
     shouldScrollElem = null;
-    lastSearchStr;
+    lastSearchTerm;
 
     setup() {
-        this.inputRef = useRef("input");
         this.gridRef = useRef("emoji-grid");
         this.ui = useState(useService("ui"));
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
             recent: JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}"),
-            searchStr: "",
+            searchTerm: "",
         });
         const onStorage = (ev) => {
             if (ev.key === "web.emoji.frequent") {
@@ -154,6 +153,7 @@ export class EmojiPicker extends Component {
         onWillDestroy(() => {
             browser.removeEventListener("storage", onStorage);
         });
+        useAutofocus();
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
             this.categories = categories;
@@ -173,7 +173,6 @@ export class EmojiPicker extends Component {
             if (this.emojis.length === 0) {
                 return;
             }
-            this.inputRef.el.focus();
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
                 this.gridRef.el.scrollTop = this.props.storeScroll.get();
@@ -199,18 +198,18 @@ export class EmojiPicker extends Component {
         });
         useEffect(
             () => {
-                if (this.state.searchStr) {
+                if (this.searchTerm) {
                     this.gridRef.el.scrollTop = 0;
                     this.state.categoryId = null;
                 } else {
-                    if (this.lastSearchStr) {
+                    if (this.lastSearchTerm) {
                         this.gridRef.el.scrollTop = 0;
                     }
                     this.highlightActiveCategory();
                 }
-                this.lastSearchStr = this.state.searchStr;
+                this.lastSearchTerm = this.searchTerm;
             },
-            () => [this.state.searchStr]
+            () => [this.searchTerm]
         );
         onWillUnmount(() => {
             if (this.emojis.length === 0) {
@@ -220,6 +219,18 @@ export class EmojiPicker extends Component {
                 this.props.storeScroll.set(this.gridRef.el.scrollTop);
             }
         });
+    }
+
+    get searchTerm() {
+        return this.props.state ? this.props.state.searchTerm : this.state.searchTerm;
+    }
+
+    set searchTerm(value) {
+        if (this.props.state) {
+            this.props.state.searchTerm = value;
+        } else {
+            this.state.searchTerm = value;
+        }
     }
 
     get itemsNumber() {
@@ -234,7 +245,6 @@ export class EmojiPicker extends Component {
     }
 
     onClick(ev) {
-        markEventHandled(ev, "EmojiPicker.onClick");
         markEventHandled(ev, "emoji.selectEmoji");
     }
 
@@ -286,9 +296,8 @@ export class EmojiPicker extends Component {
     }
 
     getEmojis() {
-        const search = this.state.searchStr;
-        if (search.length > 1) {
-            return fuzzyLookup(this.state.searchStr, this.emojis, (emoji) =>
+        if (this.searchTerm.length > 1) {
+            return fuzzyLookup(this.searchTerm, this.emojis, (emoji) =>
                 [emoji.name, ...emoji.keywords, ...emoji.emoticons, ...emoji.shortcodes].join(" ")
             );
         }
@@ -297,18 +306,19 @@ export class EmojiPicker extends Component {
 
     selectCategory(ev) {
         const id = Number(ev.currentTarget.dataset.id);
-        this.state.searchStr = "";
+        this.searchTerm = "";
         this.state.categoryId = id;
         this.shouldScrollElem = true;
     }
 
     selectEmoji(ev) {
         const codepoints = ev.currentTarget.dataset.codepoints;
-        this.props.onSelect(codepoints);
+        const resetOnSelect = !ev.shiftKey && !this.ui.isSmall;
+        this.props.onSelect(codepoints, resetOnSelect);
         this.state.recent[codepoints] ??= 0;
         this.state.recent[codepoints]++;
         browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(this.state.recent));
-        if (!ev.shiftKey) {
+        if (resetOnSelect) {
             this.gridRef.el.scrollTop = 0;
             this.props.close?.();
             this.props.onClose?.();

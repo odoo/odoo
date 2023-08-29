@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="discuss.GifPicker">
-        <div class="o-discuss-GifPicker bg-view d-flex flex-column" t-attf-class="{{ props.className }}" t-on-click="onClick">
-            <div class="o-discuss-GifPicker-search d-flex align-items-center m-2 rounded">
+        <div class="o-discuss-GifPicker bg-view d-flex flex-column" t-attf-class="{{ props.className }}">
+            <div class="o-EmojiPicker-search d-flex align-items-center m-2 rounded">
                 <i t-if="!state.showCategories" aria-label="back" t-on-click="openCategories" class="oi oi-arrow-left cursor-pointer p-2 fs-5"/>
-                <input class="form-control border-0 flex-grow-1 rounded-end-0" placeholder="Search for a gif" t-on-input="onInput" t-model="state.searchTerm" t-ref="autofocus" />
-                <i class="oi oi-search p-2 fs-5 rounded-end" title="Search..." role="img" aria-label="Search..."/>
+                <span class="d-flex mx-1 w-100 rounded o-active">
+                    <t t-call="discuss.GifPicker.searchInput">
+                        <t t-if="props.state" t-set="localState" t-value="props.state"/>
+                        <t t-else="" t-set="localState" t-value="state"/>
+                    </t>
+                    <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
+                </span>
             </div>
-            <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden px-2 pb-2 h-100" t-ref="scroller">
+            <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden ps-2 pe-3 pb-2 h-100" t-ref="scroller">
                 <div t-if="state.loadingError" class="text-center">
                     <span class="o-discuss-GifPicker-error d-block">😵‍💫</span>
                     <span class="fs-5 text-muted d-block">Failed to load gifs...</span>
                 </div>
                 <div t-if="state.showCategories and !state.loadingError" class="row row-cols-2 gy-2 gx-2" aria-label="list">
                     <div t-if="!store.guest" class="col">
-                        <div class="position-relative ratio ratio-16x9 cursor-pointer" t-on-click="onClickFavoritesCategory" aria-label="list-item">
+                        <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="onClickFavoritesCategory" aria-label="list-item">
                             <img
                                 t-if="state.favorites.gifs.length > 0"
                                 class="o-discuss-GifPicker-category"
@@ -30,7 +35,7 @@
                     <t t-if="state.categories.length === 0">
                         <t t-foreach="Array(10).keys()" t-as="category" t-key="category_index">
                             <div class="col">
-                                <div class="position-relative ratio ratio-16x9 cursor-pointer" aria-label="list-item">
+                                <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" aria-label="list-item">
                                     <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50"/>
                                 </div>
                             </div>
@@ -39,7 +44,7 @@
                     <t t-else="">
                         <t t-foreach="state.categories" t-as="category" t-key="category.name">
                             <div class="col">
-                                <div class="position-relative ratio ratio-16x9 cursor-pointer" t-on-click="() => this.onClickCategory(category)" aria-label="list-item">
+                                <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="() => this.onClickCategory(category)" aria-label="list-item">
                                     <img class="o-discuss-GifPickerCategory-img img-fluid" t-att-src="category.image" loading="lazy" alt="GIF Category"/>
                                     <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50">
                                         <t t-out="category.name"/>
@@ -75,7 +80,7 @@
     </t>
 
     <t t-name="discuss.Gif">
-        <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer">
+        <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
                 t-if="!store.guest"
                 class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
@@ -90,5 +95,9 @@
                 alt="GIF"
             />
         </div>
+    </t>
+
+    <t t-name="discuss.GifPicker.searchInput">
+        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-model="localState.searchTerm" t-ref="autofocus" />
     </t>
 </templates>

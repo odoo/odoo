@@ -1,12 +1,9 @@
 /* @odoo-module */
 
+import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
 
-import { Component, onWillStart, useRef, useState } from "@odoo/owl";
-
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -42,35 +39,16 @@ import { useDebounced } from "@web/core/utils/timing";
  */
 
 /**
- * @param {import("@web/core/utils/common/hooks").Ref} ref
- * @param {{ onSelected: function, className: String }} options
- */
-export function useGifPicker(refName, options) {
-    const ref = useRef(refName);
-    const popover = usePopover(GifPicker, {
-        position: "top",
-        popoverClass: "o-fast-popover",
-    });
-    function toggle() {
-        if (popover.isOpen) {
-            popover.close();
-        } else {
-            popover.open(ref.el, options);
-        }
-    }
-    return { toggle };
-}
-
-/**
  * @typedef {Object} Props
- * @property {function} onSelected Callback to use when the gif is selected
+ * @property {function} onSelect Callback to use when the gif is selected
  * @property {string} [className]
  * @property {function} [close]
+ * @property {Object} [state]
  * @extends {Component<Props, Env>}
  */
 export class GifPicker extends Component {
     static template = "discuss.GifPicker";
-    static props = ["onSelected", "className?", "close?"];
+    static props = ["PICKERS?", "className?", "close?", "onSelect", "state?"];
 
     setup() {
         this.rpc = useService("rpc");
@@ -130,6 +108,34 @@ export class GifPicker extends Component {
                 this.loadFavorites();
             });
         }
+        useEffect(
+            () => {
+                if (this.props.state?.picker !== this.props.PICKERS?.GIF) {
+                    return;
+                }
+                this.clear();
+                this.state.loadingGif = true;
+                this.search();
+                if (this.searchTerm) {
+                    this.closeCategories();
+                } else {
+                    this.openCategories();
+                }
+            },
+            () => [this.searchTerm, this.props.state?.picker]
+        );
+    }
+
+    get searchTerm() {
+        return this.props.state ? this.props.state.searchTerm : this.state.searchTerm;
+    }
+
+    set searchTerm(value) {
+        if (this.props.state) {
+            this.props.state.searchTerm = value;
+        } else {
+            this.state.searchTerm = value;
+        }
     }
 
     async loadCategories() {
@@ -152,7 +158,7 @@ export class GifPicker extends Component {
 
     openCategories() {
         this.state.showCategories = true;
-        this.state.searchTerm = "";
+        this.searchTerm = "";
         this.clear();
     }
 
@@ -161,14 +167,14 @@ export class GifPicker extends Component {
     }
 
     async search() {
-        if (!this.state.searchTerm) {
+        if (!this.searchTerm) {
             return;
         }
         try {
             const params = {
                 country: this.userService.lang.slice(3, 5),
                 locale: this.userService.lang,
-                search_term: this.state.searchTerm,
+                search_term: this.searchTerm,
             };
             if (this.next) {
                 params.position = this.next;
@@ -207,27 +213,12 @@ export class GifPicker extends Component {
         }
     }
 
-    onInput() {
-        this.clear();
-        this.state.loadingGif = true;
-        this.search();
-        if (this.state.searchTerm) {
-            this.closeCategories();
-        } else {
-            this.openCategories();
-        }
-    }
-
-    onClick(ev) {
-        markEventHandled(ev, "GifPicker.onClick");
-    }
-
     /**
      * @param {TenorGif} gif
      */
     onClickGif(gif) {
-        this.props.onSelected(gif);
-        this.props.close();
+        this.props.onSelect(gif, true);
+        this.props.close?.();
     }
 
     clear() {
@@ -242,8 +233,7 @@ export class GifPicker extends Component {
      */
     async onClickCategory(category) {
         this.clear();
-        this.state.searchTerm = category.searchterm;
-        await this.search();
+        this.props.state.searchTerm = category.searchterm;
         this.closeCategories();
     }
 

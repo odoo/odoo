@@ -4,31 +4,10 @@
 }
 
 .o-discuss-GifPicker {
-    display: grid;
-    grid-template-areas:
-        "search"
-        "content";
-    grid-template-rows: 40px 1fr;
-}
-
-.o-discuss-GifPicker-search {
-    grid-area: search;
-    background-color: $input-bg;
-
-    input {
-        &:focus, &:hover {
-            & + .oi-search {
-                @extend .bg-view !optional;
-            }
-        }
-        &:not(:focus) + .oi-search {
-            opacity: 60%;
-        }
+    --o-gif-picker-active: #{$gray-200};
+    .o-active {
+        background-color: var(--o-gif-picker-active) !important;
     }
-}
-
-.o-discuss-GifPicker-content {
-    grid-area: content;
 }
 
 .o-discuss-GifPickerCategory-img {

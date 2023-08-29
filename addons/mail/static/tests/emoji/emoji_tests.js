@@ -65,16 +65,18 @@ QUnit.test("Basic keyboard navigation", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200"); // bg-200 means active
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active");
     triggerHotkey("ArrowRight");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=1].bg-200");
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index=1].o-active");
     triggerHotkey("ArrowDown");
-    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW + 1}].bg-200`);
+    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW + 1}].o-active`);
     triggerHotkey("ArrowLeft");
-    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`);
+    await contains(`.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].o-active`);
     triggerHotkey("ArrowUp");
-    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200");
-    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data("codepoints");
+    await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active");
+    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].o-active").data(
+        "codepoints"
+    );
     triggerHotkey("Enter");
     await contains(".o-EmojiPicker", { count: 0 });
     await contains(".o-mail-Composer-input", { value: codepoints });
@@ -151,7 +153,7 @@ QUnit.test("first category should be highlighted by default", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar .o-Emoji:eq(0).bg-300");
+    await contains(".o-EmojiPicker-navbar .o-Emoji:eq(0).o-active");
 });
 
 QUnit.test(
@@ -163,7 +165,7 @@ QUnit.test(
         openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
         (await contains(".o-EmojiPicker-content .o-Emoji:contains(👺)"))[0].dispatchEvent(
-            new MouseEvent("click", { shiftKey: true })
+            new MouseEvent("click", { bubbles: true, shiftKey: true })
         );
         await contains(".o-EmojiPicker-navbar [title='Frequently used']");
         await contains(".o-EmojiPicker");

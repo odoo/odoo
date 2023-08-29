@@ -237,16 +237,18 @@ QUnit.test(
         });
         openDiscuss(channelId);
         await triggerEvent(getFixture(), null, "mousedown");
-        await click("button[aria-label='Emojis']");
+        await click("[title='Add a Reaction']");
+        await contains(".o-EmojiPicker-content", { scroll: 0 });
         await scroll(".o-EmojiPicker-content", 150);
         await triggerEvent(getFixture(), null, "mousedown");
-        await click("[title='Add a Reaction']");
+        await click("button[aria-label='Emojis']");
+        await contains(".o-mail-PickerContent .o-EmojiPicker-content", { scroll: 0 });
         await scroll(".o-EmojiPicker-content", 200);
         await triggerEvent(getFixture(), null, "mousedown");
-        await click("button[aria-label='Emojis']");
+        await click("[title='Add a Reaction']");
         await contains(".o-EmojiPicker-content", { scroll: 150 });
         await triggerEvent(getFixture(), null, "mousedown");
-        await click("[title='Add a Reaction']");
+        await click("button[aria-label='Emojis']");
         await contains(".o-EmojiPicker-content", { scroll: 200 });
     }
 );

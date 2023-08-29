@@ -12,7 +12,7 @@ import {
 
 import { useService } from "@web/core/utils/hooks";
 
-function useExternalListener(target, eventName, handler, eventParams) {
+export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
     let t;
     onMounted(() => {
@@ -75,7 +75,7 @@ export function useHover(refName, callback = () => {}) {
         state.isHover = hovered;
         callback(hovered);
     }
-    useExternalListener(
+    useLazyExternalListener(
         () => ref.el,
         "mouseenter",
         (ev) => {
@@ -86,7 +86,7 @@ export function useHover(refName, callback = () => {}) {
         },
         true
     );
-    useExternalListener(
+    useLazyExternalListener(
         () => ref.el,
         "mouseleave",
         (ev) => {
@@ -276,6 +276,7 @@ export function useMessageHighlight(duration = 2000) {
 }
 
 export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
+    const ui = useState(useService("ui"));
     const ref = useRef(refName);
     function onSelectionChange() {
         if (document.activeElement && document.activeElement === ref.el) {
@@ -313,7 +314,11 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
         },
         moveCursor(position) {
             model.start = model.end = position;
-            ref.el.selectionStart = ref.el.selectionEnd = position;
+            if (!ui.isSmall) {
+                // In mobile, selection seems to adjust correctly.
+                // Don't programmatically adjust, otherwise it shows soft keyboard!
+                ref.el.selectionStart = ref.el.selectionEnd = position;
+            }
         },
     };
 }
