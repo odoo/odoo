@@ -189,6 +189,7 @@ export class ORM {
         validateArray("domain", domain);
         validatePrimitiveList("fields", "string", fields);
         validatePrimitiveList("groupby", "string", groupby);
+        groupby = [...new Set(groupby)];
         return this.call(model, "read_group", [], { ...kwargs, domain, fields, groupby });
     }
 
