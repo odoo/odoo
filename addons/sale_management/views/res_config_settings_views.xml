@@ -21,17 +21,6 @@
                             <button name="%(sale_management.sale_order_template_action)d" icon="oi-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
                         </div>
                     </div>
-                    <div class="mt16 oe_inline"
-                         invisible="not group_sale_order_template"
-                         id="module_sale_quotation_builder">
-                        <field name="module_sale_quotation_builder" class="col-lg-4 oe_inline"/>
-                        <label for="module_sale_quotation_builder"/>
-                    </div>
-                    <div class="text-muted"
-                         invisible="not group_sale_order_template"
-                         id="module_sale_quotation_builder_description">
-                        Design your quotation templates using building blocks
-                    </div>
                 </setting>
             </setting>
             <xpath expr="//div[@id='order_default_values_div']" position="before">
