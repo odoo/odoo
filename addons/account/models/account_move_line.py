@@ -1289,7 +1289,27 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # CRUD/ORM
     # -------------------------------------------------------------------------
+<<<<<<< HEAD
     def invalidate_model(self, fnames=None, flush=True):
+||||||| parent of c5968855afc (temp)
+    def check_field_access_rights(self, operation, field_names):
+        result = super().check_field_access_rights(operation, field_names)
+        if not field_names:
+            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed']
+            result = [fname for fname in result if fname not in weirdos]
+        return result
+
+    def invalidate_model(self, fnames=None):
+=======
+    def check_field_access_rights(self, operation, field_names):
+        result = super().check_field_access_rights(operation, field_names)
+        if not field_names:
+            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed']
+            result = [fname for fname in result if fname not in weirdos]
+        return result
+
+    def invalidate_model(self, fnames=None, flush=True):
+>>>>>>> c5968855afc (temp)
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
@@ -1297,7 +1317,13 @@ class AccountMoveLine(models.Model):
             move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
+<<<<<<< HEAD
         return super().invalidate_model(fnames, flush)
+||||||| parent of c5968855afc (temp)
+        return super().invalidate_model(fnames)
+=======
+        return super().invalidate_model(fnames=fnames, flush=flush)
+>>>>>>> c5968855afc (temp)
 
     def invalidate_recordset(self, fnames=None, flush=True):
         # Invalidate cache of related moves
@@ -1306,7 +1332,13 @@ class AccountMoveLine(models.Model):
             move_ids = {id_ for id_ in self.env.cache.get_values(self, field) if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
+<<<<<<< HEAD
         return super().invalidate_recordset(fnames, flush)
+||||||| parent of c5968855afc (temp)
+        return super().invalidate_recordset(fnames)
+=======
+        return super().invalidate_recordset(fnames=fnames, flush=flush)
+>>>>>>> c5968855afc (temp)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
