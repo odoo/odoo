@@ -5,9 +5,16 @@
             <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="display">
                 <t t-set-slot="control-panel-create-button">
                     <t t-if="isPreviewing">
-                        <button t-if="!state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
-                        <button t-else="" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Resume</button>
-                        <button type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(true)">Test</button>
+                        <t t-if="!state.isTested">
+                            <button type="button" class="btn btn-primary" t-on-click="() => this.handleImport(true)">Test</button>
+                            <button t-if="!state.isPaused" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-else="" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Resume</button>
+                        </t>
+                        <t t-else="">
+                            <button t-if="!state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-else="" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Resume</button>
+                            <button type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(true)">Test</button>
+                        </t>
                     </t>
                     <FileInput
                         acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
