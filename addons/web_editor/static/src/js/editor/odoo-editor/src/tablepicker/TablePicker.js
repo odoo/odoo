@@ -134,10 +134,9 @@ export class TablePicker extends EventTarget {
             }
         };
 
-        const parentContextRect = this.options.getContextFromParentRect();
-        const offset = getRangePosition(this.el, this.options.document);
-        this.el.style.left = `${parentContextRect.left + offset.left}px`;
-        this.el.style.top = `${parentContextRect.top + offset.top}px`;
+        const offset = getRangePosition(this.el, this.options.document, this.options);
+        this.el.style.left = `${offset.left}px`;
+        this.el.style.top = `${offset.top}px`;
 
         const stop = () => {
             this.hide();
