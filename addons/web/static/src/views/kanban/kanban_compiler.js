@@ -224,5 +224,4 @@ KanbanCompiler.OWL_DIRECTIVE_WHITELIST = [
     "t-key",
     "t-att.*",
     "t-call",
-    "t-translation",
 ];

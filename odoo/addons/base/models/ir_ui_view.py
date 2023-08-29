@@ -1087,6 +1087,12 @@ actual arch.
         while stack:
             node, editable = stack.pop()
 
+            # Don't transmit t-translation to the caller. This is meaningless
+            # as the view is already translated, and that it won't be evaluated
+            # client side. This is because non-qweb views are descriptors and are not rendered as is.
+            if "t-translation" in node.attrib:
+                node.attrib.pop("t-translation")
+
             # compute default
             tag = node.tag
             had_parent = node.getparent() is not None
