@@ -612,8 +612,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('price_total', 'product_uom_qty')
     def _compute_price_reduce_taxinc(self):
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
+            line.price_reduce_taxinc = float_round(line.price_total / line.product_uom_qty, precision_digits=precision_digits, rounding_method='HALF_DOWN') if line.product_uom_qty else 0.0
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _compute_product_packaging_id(self):

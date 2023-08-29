@@ -90,7 +90,11 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         normalized_value += sign*epsilon
         rounded_value = math.floor(abs(normalized_value)) * sign
 
-    # TIE-BREAKING: HALF-UP (for normal rounding)
+    # TIE-BREAKING: HALF-UP (for normal rounding) or HALF-DOWN
+    elif rounding_method == 'HALF_DOWN':
+        normalized_value -= math.copysign(epsilon, normalized_value)
+        rounded_value = round(normalized_value)     # round to integer
+
     # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
     else:
         normalized_value += math.copysign(epsilon, normalized_value)
