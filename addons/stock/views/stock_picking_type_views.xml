@@ -109,6 +109,7 @@
                         <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Lots/Serial Numbers" groups="stock.group_production_lot" name="stock_picking_type_lot">
                             <field name="use_create_lots" string="Create New"/>
                             <field name="use_existing_lots" string="Use Existing ones"/>
+                            <field name="show_reserved_sns" string="Show Reserved" invisible="use_existing_lots == False"/>
                         </group>
                         <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Packages" groups="stock.group_tracking_lot">
                             <field name="show_entire_packs"/>
