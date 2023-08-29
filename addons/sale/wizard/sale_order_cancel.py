@@ -59,7 +59,7 @@ class SaleOrderCancel(models.TransientModel):
 
     @api.depends('order_id')
     def _compute_subject(self):
-        for wizard_su in self.filtered('template_id').sudo():
+        for wizard_su in self.filtered('template_id'):
             wizard_su.subject = wizard_su.template_id._render_field(
                 'subject',
                 [wizard_su.order_id.id],
@@ -69,7 +69,7 @@ class SaleOrderCancel(models.TransientModel):
 
     @api.depends('order_id')
     def _compute_body(self):
-        for wizard_su in self.filtered('template_id').sudo():
+        for wizard_su in self.filtered('template_id'):
             wizard_su.body = wizard_su.template_id._render_field(
                 'body_html',
                 [wizard_su.order_id.id],

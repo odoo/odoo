@@ -21,9 +21,9 @@ class MailComposerMixin(models.AbstractModel):
     _description = 'Mail Composer Mixin'
 
     # Content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True, compute_sudo=False)
     body = fields.Html(
-        'Contents', compute='_compute_body', readonly=False, store=True,
+        'Contents', compute='_compute_body', readonly=False, store=True, compute_sudo=False,
         render_engine='qweb', render_options={'post_process': True}, sanitize=False)
     template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
     # Access
