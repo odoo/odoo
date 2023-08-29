@@ -116,7 +116,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector(".o_edit_mode").textContent,
-                "This domain is not supported.",
+                " This domain is not supported. Reset domain",
                 "The widget should not crash the view, but gracefully admit its failure."
             );
         }
