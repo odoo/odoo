@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Follower } from "@mail/core/common/follower_model";
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
 import { createLocalId } from "@mail/utils/common/misc";
@@ -44,7 +43,7 @@ patch(ThreadService.prototype, {
         if ("attachments" in result) {
             result["attachments"] = result["attachments"].map((attachment) => ({
                 ...attachment,
-                originThread: this.insert(attachment.originThread[0][1]),
+                originThread: this.store.Thread.insert(attachment.originThread[0][1]),
             }));
         }
         thread.canPostOnReadonly = result.canPostOnReadonly;
@@ -111,7 +110,7 @@ patch(ThreadService.prototype, {
             // to force a reload
             this.store.Thread.records[localId].status = "new";
         }
-        const thread = this.insert({
+        const thread = this.store.Thread.insert({
             id: resId,
             model: resModel,
             type: "chatter",
@@ -131,25 +130,6 @@ patch(ThreadService.prototype, {
             thread.messages.push(message);
         }
         return thread;
-    },
-    /**
-     * @param {import("@mail/core/common/follower_model").Data} data
-     * @returns {import("@mail/core/common/follower_model").Follower}
-     */
-    insertFollower(data) {
-        let follower = this.store.Follower.records[data.id];
-        if (!follower) {
-            this.store.Follower.records[data.id] = new Follower();
-            follower = this.store.Follower.records[data.id];
-        }
-        Object.assign(follower, {
-            followedThread: data.followedThread,
-            id: data.id,
-            isActive: data.is_active,
-            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
-            _store: this.store,
-        });
-        return follower;
     },
     /**
      * @param {import("@mail/core/common/thread_model").Thread} thread

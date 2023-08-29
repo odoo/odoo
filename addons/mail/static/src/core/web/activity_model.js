@@ -1,6 +1,7 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef Data
@@ -33,6 +34,30 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Activity extends Record {
+    /** @type {Object.<number, Activity>} */
+    static records = {};
+
+    /**
+     * @param {Data} data
+     * @param {Object} [param1]
+     * @param {boolean} param1.broadcast
+     * @returns {Activity}
+     */
+    static insert(data, { broadcast = true } = {}) {
+        const activity = this.records[data.id] ?? new Activity(this.store, data.id);
+        if (data.request_partner_id) {
+            data.request_partner_id = data.request_partner_id[0];
+        }
+        assignDefined(activity, data);
+        if (broadcast) {
+            this.env.services["mail.activity"].broadcastChannel?.postMessage({
+                type: "insert",
+                payload: this.env.services["mail.activity"]._serialize(activity),
+            });
+        }
+        return activity;
+    }
+
     /** @type {string} */
     activity_category;
     /** @type {[number, string]} */
@@ -105,3 +130,5 @@ export class Activity extends Record {
         return store.Activity.records[id];
     }
 }
+
+modelRegistry.add(Activity.name, Activity);

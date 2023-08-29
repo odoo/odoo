@@ -1,8 +1,5 @@
 /* @odoo-module */
 
-import { ChatWindow } from "@mail/core/common/chat_window_model";
-import { assignDefined } from "@mail/utils/common/misc";
-
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
@@ -80,49 +77,6 @@ export class ChatWindowService {
             Math.floor(available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH))
         );
         return maxAmountWithoutHidden;
-    }
-
-    /**
-     * @param {ChatWindowData} [data]
-     * @returns {ChatWindow}
-     */
-    insert(data = {}) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === data.thread?.localId
-        );
-        if (!chatWindow) {
-            const chatWindow = new ChatWindow(this.store, data);
-            assignDefined(chatWindow, data);
-            let index;
-            if (!data.replaceNewMessageChatWindow) {
-                if (this.maxVisible <= this.store.ChatWindow.records.length) {
-                    const swaped = this.visible[this.visible.length - 1];
-                    index = this.visible.length - 1;
-                    this.hide(swaped);
-                } else {
-                    index = this.store.ChatWindow.records.length;
-                }
-            } else {
-                const newMessageChatWindowIndex = this.store.ChatWindow.records.findIndex(
-                    (chatWindow) => !chatWindow.thread
-                );
-                index =
-                    newMessageChatWindowIndex !== -1
-                        ? newMessageChatWindowIndex
-                        : this.store.ChatWindow.records.length;
-            }
-            this.store.ChatWindow.records.splice(
-                index,
-                data.replaceNewMessageChatWindow ? 1 : 0,
-                chatWindow
-            );
-            return this.store.ChatWindow.records[index]; // return reactive version
-        }
-        if (chatWindow.hidden) {
-            this.makeVisible(chatWindow);
-        }
-        assignDefined(chatWindow, data);
-        return chatWindow;
     }
 
     focus(chatWindow) {

@@ -2,7 +2,6 @@
 
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
 import { closeStream, createLocalId, onChange } from "@mail/utils/common/misc";
 
@@ -1395,38 +1394,6 @@ export class Rtc {
             this.state.selfSession.isTalking = true;
         }
         await this.refreshAudioStatus();
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {RtcSession}
-     */
-    insertSession(data) {
-        let session;
-        if (this.store.RtcSession.records[data.id]) {
-            session = this.store.RtcSession.records[data.id];
-        } else {
-            session = new RtcSession();
-            session._store = this.store;
-        }
-        const { channelMember, ...remainingData } = data;
-        for (const key in remainingData) {
-            session[key] = remainingData[key];
-        }
-        if (channelMember?.channel) {
-            session.channelId = channelMember.channel.id;
-        }
-        if (channelMember) {
-            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
-            channelMemberRecord.rtcSessionId = session.id;
-            session.channelMemberId = channelMemberRecord.id;
-            if (channelMemberRecord.thread) {
-                channelMemberRecord.thread.rtcSessions[session.id] = session;
-            }
-        }
-        this.store.RtcSession.records[session.id] = session;
-        // return reactive version
-        return this.store.RtcSession.records[session.id];
     }
 
     /**

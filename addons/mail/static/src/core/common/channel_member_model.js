@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 /**
@@ -11,6 +11,24 @@ import { createLocalId } from "@mail/utils/common/misc";
  * @property {number} threadId
  */
 export class ChannelMember extends Record {
+    /** @type {Object.<number, ChannelMember>} */
+    static records = {};
+    /**
+     * @param {Object|Array} data
+     * @returns {ChannelMember}
+     */
+    static insert(data) {
+        const memberData = Array.isArray(data) ? data[1] : data;
+        let member = this.records[memberData.id];
+        if (!member) {
+            this.records[memberData.id] = new ChannelMember();
+            member = this.records[memberData.id];
+            member._store = this.store;
+        }
+        this.env.services["discuss.channel.member"].update(member, data);
+        return member;
+    }
+
     /** @type {number} */
     id;
     personaLocalId;
@@ -42,3 +60,5 @@ export class ChannelMember extends Record {
         return this.persona.lang_name;
     }
 }
+
+modelRegistry.add(ChannelMember.name, ChannelMember);

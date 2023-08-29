@@ -7,7 +7,7 @@ QUnit.module("attachment model test", {});
 QUnit.test("Attachment model properties", async (assert) => {
     const { env } = await start();
 
-    const attachment = env.services["mail.attachment"].insert({
+    const attachment = env.services["mail.store"].Attachment.insert({
         filename: "test.txt",
         id: 750,
         mimetype: "text/plain",

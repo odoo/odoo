@@ -1,11 +1,36 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
+import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
 import { _t } from "@web/core/l10n/translation";
 
 let nextId = 1;
 export class NotificationGroup extends Record {
+    /** @type {NotificationGroup[]} */
+    static records = [];
+    /**
+     * @param {Object} data
+     * @returns {NotificationGroup}
+     */
+    static insert(data) {
+        let group = this.records.find((group) => {
+            return (
+                group.resModel === data.resModel &&
+                group.type === data.type &&
+                (group.resModel !== "discuss.channel" || group.resIds.has(data.resId))
+            );
+        });
+        if (!group) {
+            group = new NotificationGroup(this.store);
+        }
+        this.env.services["mail.message"].updateNotificationGroup(group, data);
+        if (group.notifications.length === 0) {
+            removeFromArrayWithPredicate(this.records, (gr) => gr.eq(group));
+        }
+        return group;
+    }
+
     /** @type {import("@mail/core/common/notification_model").Notification[]} */
     notifications = [];
     /** @type {string} */
@@ -46,3 +71,5 @@ export class NotificationGroup extends Record {
         return this.lastMessage?.datetime;
     }
 }
+
+modelRegistry.add(NotificationGroup.name, NotificationGroup);

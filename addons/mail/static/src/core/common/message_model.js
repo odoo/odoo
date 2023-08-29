@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
 
@@ -14,6 +14,33 @@ import { url } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class Message extends Record {
+    /** @type {Object.<number, Message>} */
+    static records = {};
+    /**
+     * @param {Object} data
+     * @returns {Message}
+     */
+    static insert(data) {
+        let message;
+        if (data.res_id) {
+            this.store.Thread.insert({
+                model: data.model,
+                id: data.res_id,
+            });
+        }
+        if (data.id in this.records) {
+            message = this.records[data.id];
+        } else {
+            message = new Message();
+            message._store = this.store;
+            this.records[data.id] = message;
+            message = this.records[data.id];
+        }
+        this.env.services["mail.message"].update(message, data);
+        // return reactive version
+        return message;
+    }
+
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/common/persona_model").Persona} */
@@ -243,3 +270,5 @@ export class Message extends Record {
         );
     }
 }
+
+modelRegistry.add(Message.name, Message);
