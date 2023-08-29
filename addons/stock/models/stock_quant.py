@@ -328,7 +328,7 @@ class StockQuant(models.Model):
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
         allowed_fields = self._get_inventory_fields_write()
-        if self._is_inventory_mode() and any(field for field in allowed_fields if field in vals.keys()):
+        if self._is_inventory_mode():
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return

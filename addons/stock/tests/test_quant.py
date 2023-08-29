@@ -519,7 +519,7 @@ class StockQuant(TransactionCase):
             'location_id': self.stock_location.id,
             'quantity': 1.0,
         })
-        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'quantity': 3.0})
+        quant.with_user(self.stock_user).with_context(inventory_mode=True).write({'inventory_quantity': 3.0})
         with self.assertRaises(AccessError):
             quant.with_user(self.stock_user).unlink()
 
