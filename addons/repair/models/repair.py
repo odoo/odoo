@@ -70,7 +70,7 @@ class Repair(models.Model):
         copy=False, readonly=True, tracking=True, check_company=True)
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
         check_company=True)
     product_qty = fields.Float(
         'Product Quantity',
@@ -99,7 +99,7 @@ class Repair(models.Model):
         'procurement.group', 'Procurement Group',
         copy=False)
     location_id = fields.Many2one(
-        'stock.location', 'Product to Repair Source & Destination Location',
+        'stock.location', 'Location',
         compute="_compute_location_id",
         store=True, readonly=False, required=True, precompute=True,
         index=True, check_company=True,
@@ -156,12 +156,13 @@ class Repair(models.Model):
     # Return Binding
     picking_id = fields.Many2one(
         'stock.picking', 'Return', check_company=True,
+        domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
         copy=False, help="Return Order from which the product to be repaired comes from.")
-    allowed_picking_type_ids = fields.Many2many('stock.picking.type', compute='_compute_allowed_picking_type_ids')
     is_returned = fields.Boolean(
         "Returned", compute='_compute_is_returned',
         help="True if this repair is linked to a Return Order and the order is 'Done'. False otherwise.")
-
+    picking_product_ids = fields.One2many('product.product', compute='compute_picking_product_ids')
+    picking_product_id = fields.Many2one(related="picking_id.product_id")
     # UI Fields
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
@@ -171,6 +172,11 @@ class Repair(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
+
+    @api.depends('picking_id')
+    def compute_picking_product_ids(self):
+        for repair in self:
+            repair.picking_product_ids = repair.picking_id.move_ids.product_id
 
     @api.depends('product_id', 'product_id.uom_id.category_id', 'product_uom.category_id')
     def compute_product_uom(self):
@@ -238,15 +244,6 @@ class Repair(models.Model):
                 repair.is_parts_available = True
             elif repair.parts_availability_state == 'late':
                 repair.is_parts_late = True
-
-    @api.depends('product_id')
-    def _compute_allowed_picking_type_ids(self):
-        """Computes the ids of return picking types
-        """
-        out_picking_types = self.env['stock.picking.type'].search_read(
-            domain=[('code', '=', 'outgoing')], fields=['return_picking_type_id'], load='')
-        self.allowed_picking_type_ids = [
-            pt['return_picking_type_id'] for pt in out_picking_types if pt['return_picking_type_id']]
 
     @api.depends('picking_id', 'picking_id.state')
     def _compute_is_returned(self):
