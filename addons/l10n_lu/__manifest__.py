@@ -28,7 +28,10 @@ Notes:
     ],
     'data': [
         'data/l10n_lu_chart_data.xml',
-        'data/account_tax_report_line.xml',
+        'data/tax_report/section_1.xml',
+        'data/tax_report/section_2.xml',
+        'data/tax_report/sections_34.xml',
+        'data/tax_report/tax_report.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
