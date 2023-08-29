@@ -148,8 +148,6 @@ class HrContract(models.Model):
 
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
-            # YTI TODO: This mimics the behavior of _leave_intervals_batch, while waiting to be cleaned
-            # in master.
             resources_list = [self.env['resource.resource'], resource]
             result = defaultdict(lambda: [])
             for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
