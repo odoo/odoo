@@ -305,7 +305,7 @@ class PropertiesCase(TestPropertiesMixin):
             # check the many2one existence
             ''' SELECT "test_new_api_partner"."id"
                 FROM "test_new_api_partner"
-                WHERE "test_new_api_partner".id IN %s
+                WHERE "test_new_api_partner"."id" IN %s
             ''',
             ''' SELECT "test_new_api_partner"."id",
                        "test_new_api_partner"."name",
@@ -2015,7 +2015,7 @@ class PropertiesSearchCase(TestPropertiesMixin):
                     self.env['test_new_api.message'].search(domain=[], order=order)
 
 
-class PropertiesGroupByCase(PropertiesCase):
+class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
