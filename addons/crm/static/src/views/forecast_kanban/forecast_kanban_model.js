@@ -8,6 +8,8 @@ export class ForecastKanbanModel extends CrmKanbanModel {
         super.setup(...arguments);
         this.fillTemporalService = fillTemporalService;
         this.forceNextRecompute = !params.state?.groups;
+        this.originalDomain = null;
+        this.fillTemporalDomain = null;
     }
 
     async _webReadGroup(config, firstGroupByName, orderBy) {
@@ -15,10 +17,20 @@ export class ForecastKanbanModel extends CrmKanbanModel {
             config.context = this.fillTemporalPeriod(config).getContext({
                 context: config.context,
             });
-            config.domain = this.fillTemporalPeriod(config).getDomain({
-                        domain: config.domain,
-                        forceStartBound: false,
-                    });
+            // Domain leaves added by the fillTemporalPeriod should be replaced
+            // between 2 _webReadGroup calls, not added on top of each other.
+            // Keep track of the modified domain, and if encountered in the
+            // future, modify the original domain instead. It is not robust
+            // against external modification of `config.domain`, but currently
+            // there are only replacements except this case.
+            if (!this.originalDomain || this.fillTemporalDomain !== config.domain) {
+                this.originalDomain = config.domain || [];
+            }
+            this.fillTemporalDomain = this.fillTemporalPeriod(config).getDomain({
+                domain: this.originalDomain,
+                forceStartBound: false,
+            });
+            config.domain = this.fillTemporalDomain;
         }
         return super._webReadGroup(...arguments);
     }

@@ -263,6 +263,7 @@ class ProgressBarState {
             if (groupsId !== this.model.root.groups.map((g) => g.id).join()) {
                 return;
             }
+            this._pbCounts = res;
             for (const group of this.model.root.groups) {
                 if (!group.isFolded) {
                     const groupInfo = this.getGroupInfo(group);
