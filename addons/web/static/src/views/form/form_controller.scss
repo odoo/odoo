@@ -1051,6 +1051,19 @@
     }
 }
 
+@include media-breakpoint-down(md) {
+    .modal {
+        &.o_modal_full .modal-content {
+            .modal-body .o_form_view .o_form_sheet_bg {
+                &, & > .o_form_sheet {
+                    border-bottom: 0;
+                    border-top: 0;
+                }
+            }
+        }
+    }
+}
+
 @media print {
     .oe_button_box, .o_form_statusbar {
         display: none !important;
