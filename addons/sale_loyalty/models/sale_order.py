@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
         for order in self:
             coupons |= order._get_reward_coupons()
         if coupons:
-            coupons._send_creation_communication()
+            coupons._send_creation_communication(force_send=True)
 
     def _get_applied_global_discount_lines(self):
         """
