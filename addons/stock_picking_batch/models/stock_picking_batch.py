@@ -18,13 +18,12 @@ class StockPickingBatch(models.Model):
         string='Batch Transfer', default='New',
         copy=False, required=True, readonly=True)
     user_id = fields.Many2one(
-        'res.users', string='Responsible', tracking=True, check_company=True,
-        readonly=False)
+        'res.users', string='Responsible', tracking=True, check_company=True)
     company_id = fields.Many2one(
         'res.company', string="Company", required=True, readonly=True,
         index=True, default=lambda self: self.env.company)
     picking_ids = fields.One2many(
-        'stock.picking', 'batch_id', string='Transfers', readonly=False,
+        'stock.picking', 'batch_id', string='Transfers',
         domain="[('id', 'in', allowed_picking_ids)]", check_company=True,
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
@@ -41,7 +40,7 @@ class StockPickingBatch(models.Model):
         'stock.move', string="Stock moves", compute='_compute_move_ids')
     move_line_ids = fields.One2many(
         'stock.move.line', string='Stock move lines',
-        compute='_compute_move_ids', inverse='_set_move_line_ids', readonly=False)
+        compute='_compute_move_ids', inverse='_set_move_line_ids')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In progress'),

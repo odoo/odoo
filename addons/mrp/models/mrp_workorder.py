@@ -71,13 +71,11 @@ class MrpWorkorder(models.Model):
         'Start',
         compute='_compute_dates',
         inverse='_set_dates',
-        readonly=False,
         store=True, copy=False)
     date_finished = fields.Datetime(
         'End',
         compute='_compute_dates',
         inverse='_set_dates',
-        readonly=False,
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
