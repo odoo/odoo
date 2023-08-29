@@ -30,3 +30,12 @@ class TestFrontendMobile(SelfOrderCommonTest):
             "self_order_after_meal_product_tour",
             login=None,
         )
+
+    def test_self_order_menu_only_accessing_without_token_tour(self):
+        self.pos_config.self_order_table_mode = True
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/menu/{self.pos_config.id}",
+            "self_order_menu_only_tour",
+            login=None,
+        )
