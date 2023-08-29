@@ -1155,18 +1155,20 @@
                 <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
                 <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
-                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
-                    t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                <span t-attf-class="text-danger oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] and not combination_info['compare_list_price'] else 'd-none'}}"
+                    style="text-decoration: line-through; white-space: nowrap;"
+                    t-esc="combination_info['list_price']"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                     itemprop="listPrice"
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
+                <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
                     <bdi dir="inherit">
-                    <span t-field="product.compare_list_price"
+                    <span t-esc="combination_info['compare_list_price']"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                            "widget": "monetary",
-                           "display_currency": product.currency_id,
+                           "display_currency": website.currency_id,
                        }'/>
                     </bdi>
                 </del>
@@ -1178,13 +1180,13 @@
                        "display_currency": product.currency_id,
                 }'/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
-                <del t-if="product.compare_list_price">
+                <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
                     <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                             "widget": "monetary",
-                            "display_currency": product.currency_id,
+                            "display_currency": website.currency_id,
                         }'/>
                     </bdi>
                 </del>

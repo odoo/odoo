@@ -12,6 +12,8 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
         ProductTemplate = cls.env['product.template']
         Pricelist = cls.env['product.pricelist']
         PricelistItem = cls.env['product.pricelist.item']
+        Currency = cls.env['res.currency']
+        CurrencyRate = cls.env['res.currency.rate']
 
         # Cleanup existing pricelist.
         cls.env['website'].search([]).write({'sequence': 1000})
@@ -52,6 +54,17 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'company_id': cls.env.company.id,
         })
 
+        cls.test_custom_currency = Currency.create({
+            'name': "Test currency",
+            'symbol': 'A',
+        })
+
+        CurrencyRate.create({
+            'currency_id': cls.test_custom_currency.id,
+            'name': '2000-01-01',
+            'rate': 2.0,
+        })
+
         # Three pricelists
         Pricelist.search([]).write({'sequence': 1000})
         cls.pricelist_default = Pricelist.create({
@@ -76,6 +89,14 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'selectable': True,
             'sequence': 3,
             'discount_policy': 'without_discount',
+        })
+        cls.pricelist_other_currency = Pricelist.create({
+            'name': 'pricelist_other_currency',
+            'website_id': website.id,
+            'company_id': cls.env.company.id,
+            'selectable': True,
+            'sequence': 4,
+            'currency_id': cls.test_custom_currency.id,
         })
 
         # Pricelist items
