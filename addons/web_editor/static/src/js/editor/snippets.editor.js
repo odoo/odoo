@@ -153,11 +153,11 @@ var SnippetEditor = Widget.extend({
         }
 
         var _animationsCount = 0;
-        this.postAnimationCover = debounce(() => {
+        this.postAnimationCover = throttleForAnimation(() => {
             this.trigger_up('cover_update', {
                 overlayVisible: true,
             });
-        }, 100);
+        });
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
             // We cannot rely on the fact each transition/animation start will
             // trigger a transition/animation end as the element may be removed
@@ -1879,9 +1879,9 @@ var SnippetsMenu = Widget.extend({
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
         // Adapt overlay covering when the window is resized / content changes
-        this.debouncedCoverUpdate = debounce(() => {
+        this.debouncedCoverUpdate = throttleForAnimation(() => {
             this.updateCurrentSnippetEditorOverlay();
-        }, 50);
+        });
         this.$window.on("resize.snippets_menu", this.debouncedCoverUpdate);
         this.$body.on("content_changed.snippets_menu", this.debouncedCoverUpdate);
         $(this.$body[0].ownerDocument.defaultView).on(
