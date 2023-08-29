@@ -66,8 +66,8 @@ export class CalendarFilterPanel extends Component {
 
         if (records.length > 7) {
             options.push({
-                label: _t("View all"),
-                action: () => this.onViewAll(section, resModel, domain, request),
+                label: _t("Search More..."),
+                action: () => this.onSearchMore(section, resModel, domain, request),
             });
         }
 
@@ -82,7 +82,7 @@ export class CalendarFilterPanel extends Component {
         return options;
     }
 
-    async onViewAll(section, resModel, domain, request) {
+    async onSearchMore(section, resModel, domain, request) {
         const dynamicFilters = [];
         if (request.length) {
             const nameGets = await this.orm.call(resModel, "name_search", [], {
