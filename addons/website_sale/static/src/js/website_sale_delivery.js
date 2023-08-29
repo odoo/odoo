@@ -39,7 +39,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         await this._getCurrentLocation();
         await this.carriers.forEach(async (carrierInput) => {
             this._showLoading((carrierInput));
-            await this._handleCarrierUpdateResult(carrierInput)
+            await this._getCarrierRateShipment(carrierInput);
         });
         if (this._super && typeof(this._super.apply)==="function") {
           return this._super.apply(this, arguments);
@@ -117,6 +117,21 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      */
     _updateShippingCost: function(amount) {
         core.bus.trigger('update_shipping_cost', amount);
+    },
+     /**
+     * Get the rate shipment of a carrier
+     *
+     * @private
+     * @params {Object} carrier: The carrier element
+     */
+    _getCarrierRateShipment: async function(carrierInput) {
+      const result = await this._rpc({
+          route: '/shop/carrier_rate_shipment',
+          params: {
+              'carrier_id': carrierInput.value,
+          }
+      });
+      this._handleCarrierUpdateResultBadge(result);
     },
     /**
      * @private
