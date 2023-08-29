@@ -22,8 +22,8 @@ class Do {
     clickEdit() {
         return [
             {
-                content: 'Click Menu button',
-                trigger: '.menu-button',
+                content: "Click Menu button",
+                trigger: ".menu-button",
             },
             {
                 content: `click edit button`,
@@ -74,16 +74,16 @@ class Do {
     closeEdit() {
         return [
             {
-                content: 'Close edit mode',
-                trigger: '.edit-button .close-edit-button',
-            }
+                content: "Close edit mode",
+                trigger: ".edit-button .close-edit-button",
+            },
         ];
     }
     changeShapeTo(shape) {
         return [
             {
                 content: `change shape to '${shape}'`,
-                trigger: `.edit-button .button-option${shape === "round" ? ".round" : ".square"}`,
+                trigger: `.edit-button.button-option${shape === "round" ? ".round" : ".square"}`,
             },
         ];
     }
@@ -94,8 +94,8 @@ class Do {
                 trigger: `.floor-map .table .label:contains("${name}")`,
                 run() {
                     const el = this.$anchor[0];
-                    el.dispatchEvent(new MouseEvent("click", {bubbles: true, ctrlKey: true}));
-                }
+                    el.dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
+                },
             },
         ];
     }

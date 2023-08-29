@@ -10,9 +10,9 @@
                         setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
                         toggleEditMode.bind="toggleEditMode"
             />
-            <div class="floor-selector d-flex text-center bg-100 fs-3">
+            <div class="floor-selector d-flex text-center bg-100 fs-3 w-100 h-54">
                 <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
-                    <button class="button button-floor btn p-3 rounded-0" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
+                    <button class="button button-floor btn p-3 rounded-0 flex-fill border-start shadow-none" t-attf-class="{{ floor.id === state.selectedFloorId ? 'btn-primary border-start-0' : 'btn-light' }}" t-on-click="() => this.selectFloor(floor)">
                         <t t-esc="floor.name" />
                     </button>
                 </t>
