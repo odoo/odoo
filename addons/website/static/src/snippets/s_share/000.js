@@ -8,17 +8,6 @@ const ShareWidget = publicWidget.Widget.extend({
         'click a': '_onShareLinkClick',
     },
 
-    /**
-     * @override
-     */
-    async start() {
-        this.URL_REGEX = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
-        this.TITLE_REGEX = /(\?(?:|.*&)(?:title|text|subject|description)=)(.*?)(&|#|$)/;
-        this.MEDIA_REGEX = /(\?(?:|.*&)(?:media)=)(.*?)(&|#|$)/;
-
-        return this._super(...arguments);
-    },
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -31,47 +20,69 @@ const ShareWidget = publicWidget.Widget.extend({
      * @private
      */
     _onShareLinkClick(ev) {
+        const urlParams = ["u", "url", "body"];
+        const titleParams = ["title", "text", "subject", "description"];
+        const mediaParams = ["media"];
         const aEl = ev.currentTarget;
-        const currentHref = aEl.href;
+        // We don't modify the original URL in case the user clicks again on the
+        // sharer later.
+        const modifiedUrl = new URL(aEl.href);
 
         // Try and support old use of share snippet as a social link snippet:
         // if the URL does not look like a sharer, then do nothing. This
         // obviously won't cover all cases (people may have added URL that look
         // like sharer but are not but in that case, it was probably already
         // broken before).
-        if (!this.URL_REGEX.test(currentHref)
-                && !this.TITLE_REGEX.test(currentHref)
-                && !this.MEDIA_REGEX.test(currentHref)) {
+        if (![...urlParams, ...titleParams, ...mediaParams]
+                .some(param => modifiedUrl.searchParams.has(param))) {
             return;
         }
 
         ev.preventDefault();
         ev.stopPropagation();
 
-        const url = encodeURIComponent(window.location.href);
-        const title = encodeURIComponent(document.title);
-        const media = encodeURIComponent(document.querySelector('meta[property="og:image"]').content);
+        // We don't need to encode the URL as searchParams.set does it for us.
+        const currentUrl = window.location.href;
 
-        aEl.href = currentHref
-            .replace(this.URL_REGEX, (match, a, b, c) => {
-                return a + url + c;
-            })
-            .replace(this.TITLE_REGEX, function (match, a, b, c) {
-                if (aEl.classList.contains('s_share_whatsapp')) {
-                    // WhatsApp does not support the "url" GET parameter.
-                    // Instead we need to include the url within the passed "text"
-                    // parameter, merging everything together, e.g of output:
-                    // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
-                    // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
-                    return `${a + title}%20${url + c}`;
-                }
-                return a + title + c;
-            })
-            .replace(this.MEDIA_REGEX, (match, a, b, c) => {
-                return a + media + c;
-            });
+        const urlParamFound = urlParams.find(param => modifiedUrl.searchParams.has(param));
+        if (urlParamFound) {
+            modifiedUrl.searchParams.set(urlParamFound, currentUrl);
+        }
 
-        window.open(aEl.href, aEl.target, 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+        const titleParamFound = titleParams.find(param => modifiedUrl.searchParams.has(param));
+        if (titleParamFound) {
+            // We don't need to encode the title as searchParams.set does it.
+            const currentTitle = document.title;
+            if (aEl.classList.contains('s_share_whatsapp')) {
+                // WhatsApp does not support the "url" GET parameter.
+                // Instead we need to include the url within the passed "text"
+                // parameter, merging everything together, e.g of output:
+                // https://wa.me/?text=%20OpenWood%20Collection%20Online%20Reveal%20%7C%20My%20Website%20http%3A%2F%2Flocalhost%3A8888%2Fevent%2Fopenwood-collection-online-reveal-2021-06-21-2021-06-23-8%2Fregister
+                // For more details, see https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat/
+                modifiedUrl.searchParams.set(titleParamFound, `${currentTitle}%20${currentUrl}`);
+            } else {
+                modifiedUrl.searchParams.set(titleParamFound, currentTitle);
+            }
+        }
+
+        const mediaParamFound = mediaParams.find(param => modifiedUrl.searchParams.has(param));
+        if (mediaParamFound) {
+            const ogImageEl = document.querySelector("meta[property='og:image']");
+            // Some pages (/profile/user/ID) don't have an image to share.
+            if (ogImageEl) {
+                // We don't need to encode the media as searchParams does it.
+                const media = ogImageEl.content;
+                modifiedUrl.searchParams.set(mediaParamFound, media);
+            } else {
+                modifiedUrl.searchParams.delete(mediaParamFound);
+            }
+        }
+
+        window.open(
+            modifiedUrl.toString(),
+            aEl.target,
+            "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600",
+        );
     },
 });
 
