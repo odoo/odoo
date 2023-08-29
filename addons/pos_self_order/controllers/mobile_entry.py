@@ -31,6 +31,7 @@ class PosQRMenuController(http.Controller):
         auth="public", website=True, sitemap=True,
     )
     def pos_self_order_start(self, config_id=None, access_token=None, table_identifier=None):
+        self_order_mode = 'qr_code'
         pos_config_sudo = False
         table_sudo = False
         config_access_token = False
@@ -46,6 +47,7 @@ class PosQRMenuController(http.Controller):
                 raise werkzeug.exceptions.Unauthorized()
 
         if pos_config_sudo and pos_config_sudo.has_active_session and pos_config_sudo.self_order_table_mode:
+            self_order_mode = pos_config_sudo.self_order_pay_after
             table_sudo = table_identifier and (
                 request.env["restaurant.table"]
                 .sudo()
@@ -72,7 +74,7 @@ class PosQRMenuController(http.Controller):
                     **request.env["ir.http"].get_frontend_session_info(),
                     'currencies': request.env["ir.http"].get_currencies(),
                     'pos_self_order_data': {
-                        'self_order_mode': pos_config.self_order_pay_after,
+                        'self_order_mode': self_order_mode,
                         'table': table._get_self_order_data() if table else False,
                         'access_token': config_access_token,
                         **pos_config._get_self_order_mobile_data(),
