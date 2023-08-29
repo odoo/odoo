@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { constants } from "@odoo/o-spreadsheet";
 
 registry
     .category("mock_server")
@@ -29,7 +28,4 @@ registry
             position: "after",
             decimalPlaces: 2,
         };
-    })
-    .add("res.lang/get_user_spreadsheet_locale", function (route, args) {
-        return constants.DEFAULT_LOCALE;
     });
