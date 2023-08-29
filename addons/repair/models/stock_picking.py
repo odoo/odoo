@@ -21,7 +21,6 @@ class PickingType(models.Model):
     count_repair_late = fields.Integer(
         string="Number of Repair Orders Late", compute='_compute_count_repair')
 
-    default_location_dest_id = fields.Many2one()
     default_remove_location_dest_id = fields.Many2one(
         'stock.location', 'Default Remove Destination Location',
         check_company=True, readonly=True,
