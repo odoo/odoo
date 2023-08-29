@@ -4,36 +4,21 @@
 }
 
 .o-EmojiPicker {
-
-    display: grid;
-    grid-template-areas:
-        "search"
-        "content"
-        "navbar";
-
-    &:not(.o-small) {
-        grid-template-rows: 40px 1fr 32px;
+    --o-emoji-picker-active: #{$gray-200};
+    .o-active {
+        background-color: var(--o-emoji-picker-active) !important;
     }
 
     .o-Emoji {
         width: 30px;
-        font-size: 1rem;
+        font-size: 0.8rem;
         &:hover {
-            background-color: $gray-200;
+            background-color: var(--o-emoji-picker-active) !important;
         }
     }
 
-    &.o-small .o-Emoji {
-        width: 40px;
-        font-size: 1.5rem;
-    }
-
-    .o-EmojiPicker-content {
-        grid-area: content;
-    }
 
     .o-EmojiPicker-navbar {
-        grid-area: navbar;
         .o-Emoji {
             filter: grayscale(1);
         }
@@ -41,22 +26,6 @@
 
     .o-EmojiPicker-sectionIcon {
         filter: grayscale(1);
-    }
-
-    .o-EmojiPicker-search {
-        grid-area: search;
-        background-color: $input-bg;
-
-        input {
-            &:focus, &:hover {
-                & + .oi-search {
-                    @extend .bg-white !optional;
-                }
-            }
-            &:not(:focus) + i.oi-search {
-                opacity: 60%;
-            }
-        }
     }
 
     .o-EmojiPicker-empty {
@@ -68,4 +37,14 @@
 .o-EmojiPicker-category:before {
     // invisible character so that category has constant height, regardless of text content.
     content: "\200b"; /* unicode zero width space character */
+}
+
+.o-EmojiPicker-search {
+    input {
+        &:not(:focus) {
+            & + .oi-search {
+                @extend .text-muted !optional;
+            }
+        }
+    }
 }
