@@ -13,7 +13,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         this.orm = useService("orm");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
         // Show status dropdown if user is in attendees list
-        if (this.isCurrentUserAttendee) {
+        if (this.isEventEditable) {
             this.statusColors = {
                 accepted: "text-success",
                 declined: "text-danger",
@@ -51,7 +51,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     get isEventDetailsVisible() {
-        return this.isEventPrivate ? this.isCurrentUserAttendee : true;
+        return this.isEventPrivate ? this.isEventEditable : true;
     }
 
     get isEventArchivable() {
@@ -62,18 +62,22 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
-        return super.isEventDeletable && this.isCurrentUserAttendee && !this.isEventArchivable;
+        return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
     }
 
     /**
      * @override
      */
     get isEventEditable() {
-        return this.isCurrentUserAttendee;
+        let isEditable = this.props.record.rawRecord.user_can_edit;
+        if (isEditable === undefined) {
+            isEditable = this.isCurrentUserAttendee;
+        }
+        return isEditable;
     }
 
     get isEventViewable() {
-        return this.isEventPrivate ? this.isCurrentUserAttendee : super.isEventEditable;
+        return this.isEventPrivate ? this.isEventEditable : super.isEventEditable;
     }
 
     /**
