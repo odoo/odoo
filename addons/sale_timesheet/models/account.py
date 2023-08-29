@@ -160,7 +160,7 @@ class AccountAnalyticLine(models.Model):
 
     def _get_employee_mapping_entry(self):
         self.ensure_one()
-        return self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
+        return self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id or self.env.user.employee_id.id)])
 
     def _hourly_cost(self):
         if self.project_id.pricing_type == 'employee_rate':
