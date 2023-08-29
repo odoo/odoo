@@ -149,9 +149,7 @@ patch(PaymentScreen.prototype, "pos_online_payment.PaymentScreen", {
                     body: this.env._t("There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"),
                     confirmText: this.env._t("Yes"),
                 });
-                if (!confirmed) {
-                    return false;
-                }
+                return confirmed;
             }
             if (orderServerOPData.is_paid) {
                 await this.afterPaidOrderSavedOnServer(orderServerOPData.paid_order);
