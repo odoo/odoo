@@ -102,14 +102,23 @@ class MailTracking(models.Model):
                 'currencyId': tracking.currency_id.id,
                 'fieldType': tracking.field_type,
                 'value': tracking._get_new_display_value()[0],
+                'digits': tracking._get_digits()[0],
             },
             'oldValue': {
                 'currencyId': tracking.currency_id.id,
                 'fieldType': tracking.field_type,
                 'value': tracking._get_old_display_value()[0],
+                'digits': tracking._get_digits()[0],
             },
         } for tracking in self]
         return tracking_values
+
+    def _get_digits(self):
+        result = []
+        for record in self:
+            digits = self.env[record.mail_message_id.model]._fields[record.field.name].get_digits(self.env) or (12, 6) if record.field_type == 'float' else 0
+            result.append(digits)
+        return result
 
     def _get_display_value(self, prefix):
         assert prefix in ('new', 'old')
