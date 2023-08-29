@@ -694,6 +694,7 @@ class WebsiteSale(http.Controller):
             order_sudo = request.website.sale_get_order(force_create=True)
             order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
         else:
+            request.session['website_sale_current_pl'] = False
             order_sudo = request.website.sale_get_order()
             if order_sudo:
                 order_sudo._cart_update_pricelist(update_pricelist=True)
