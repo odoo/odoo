@@ -31,6 +31,12 @@ class TestDDT(TestSaleCommon):
             'vat': 'IT12345670124'
         })
 
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        return super().setup_company_data(company_name, **{
+            **kwargs,
+            'country_id': cls.env.ref('base.it').id,
+        })
 
     def test_ddt_flow(self):
         """
