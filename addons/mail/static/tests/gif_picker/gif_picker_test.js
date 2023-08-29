@@ -111,7 +111,7 @@ QUnit.test("Searching for a GIF", async () => {
     });
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    insertText((await contains("input[placeholder='Search for a gif']"))[0], "search");
+    insertText((await contains("input[placeholder='Search for a GIF']"))[0], "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -133,7 +133,7 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a gif']", { value: "cry" });
+    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
 });
 
 QUnit.test("Reopen GIF category list when going back", async () => {
@@ -196,7 +196,9 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await click("span", { text: "General" });
-        await click("button[aria-label='GIFs']");
+        await click("button[aria-label='Emojis']");
+        await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
+        await click("button:contains('GIFs')");
         await contains(".popover .o-discuss-GifPicker", { count: 0 });
         await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
     }
@@ -217,6 +219,6 @@ QUnit.test("Searching for a GIF with a failling RPC should display an error", as
     });
     await openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
-    await insertText("input[placeholder='Search for a gif']", "search");
+    await insertText("input[placeholder='Search for a GIF']", "search");
     await contains(".o-discuss-GifPicker-error");
 });

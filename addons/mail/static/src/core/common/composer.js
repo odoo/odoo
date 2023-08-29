@@ -3,7 +3,7 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
-import { EmojiPicker, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { Picker, usePicker } from "@mail/core/common/picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
@@ -18,12 +18,10 @@ import {
     onMounted,
     useChildSubEnv,
     useEffect,
-    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -52,7 +50,7 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
-        EmojiPicker,
+        Picker,
         FileUploader,
         NavigableList,
     };
@@ -82,10 +80,6 @@ export class Composer extends Component {
         this.SEND_KEYBIND_TO_SEND = markup(
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
-        this.KEYBOARD = {
-            NONE: "None",
-            EMOJI: "Emoji",
-        };
         this.store = useState(useService("mail.store"));
         if (this.allowUpload) {
             this.attachmentUploader = useAttachmentUploader(
@@ -97,12 +91,13 @@ export class Composer extends Component {
         this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.rpc = useService("rpc");
+        this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
+        this.emojiButton = useRef("emoji-button");
         this.state = useState({
             autofocus: 0,
             active: true,
-            keyboard: this.KEYBOARD.NONE,
         });
         this.selection = useSelection({
             refName: "textarea",
@@ -132,26 +127,7 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        if (!this.ui.isSmall) {
-            useEmojiPicker(useRef("emoji-button"), {
-                onSelect: (str) => this.addEmoji(str),
-                onClose: () => this.state.autofocus++,
-            });
-        }
-        useExternalListener(
-            browser,
-            "click",
-            async (ev) => {
-                if (this.state.keyboard === this.KEYBOARD.NONE) {
-                    return;
-                }
-                await new Promise(setTimeout); // let bubbling to catch marked event handled
-                if (!this.isEventHandledByPicker(ev)) {
-                    this.state.keyboard = this.KEYBOARD.NONE;
-                }
-            },
-            true
-        );
+        this.picker = usePicker(this.pickerSettings);
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -188,6 +164,20 @@ export class Composer extends Component {
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
+    }
+
+    get pickerSettings() {
+        return {
+            anchor: this.props.mode === "extended" ? undefined : this.mainActionsRef,
+            buttons: [this.emojiButton],
+            close: () => {
+                if (!this.ui.isSmall) {
+                    this.state.autofocus++;
+                }
+            },
+            pickers: { emoji: (emoji) => this.addEmoji(emoji) },
+            position: this.props.mode === "extended" ? "bottom-start" : "top-end",
+        };
     }
 
     get placeholder() {
@@ -232,17 +222,6 @@ export class Composer extends Component {
 
     get sendKeybind() {
         return this.props.mode === "extended" ? _t("CTRL-Enter") : _t("Enter");
-    }
-
-    /**
-     * @param {Event} ev
-     * @returns {boolean}
-     */
-    isEventHandledByPicker(ev) {
-        return (
-            isEventHandled(ev, "Composer.onClickAddEmoji") ||
-            isEventHandled(ev, "EmojiPicker.onClick")
-        );
     }
 
     get thread() {
@@ -492,8 +471,6 @@ export class Composer extends Component {
 
     onClickAddEmoji(ev) {
         markEventHandled(ev, "Composer.onClickAddEmoji");
-        this.state.keyboard =
-            this.state.keyboard === this.KEYBOARD.EMOJI ? this.KEYBOARD.NONE : this.KEYBOARD.EMOJI;
     }
 
     isEventTrusted(ev) {
@@ -593,7 +570,9 @@ export class Composer extends Component {
         const secondPart = textContent.slice(this.props.composer.selection.end, textContent.length);
         this.props.composer.textInputContent = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
-        this.state.autofocus++;
+        if (!this.ui.isSmall) {
+            this.state.autofocus++;
+        }
     }
 
     onFocusin() {
