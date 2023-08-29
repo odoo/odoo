@@ -125,7 +125,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return request.redirect('/my')
 
         if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.action_report_saleorder', download=download)
+            return self._show_report(
+                model=order_sudo,
+                report_type=report_type,
+                report_ref='sale.action_report_saleorder',
+                download=download,
+            )
 
         if request.env.user.share and access_token:
             # If a public/portal user accesses the order with the access token
