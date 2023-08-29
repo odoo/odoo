@@ -286,9 +286,11 @@ export class TicketScreen extends Component {
 
         //Add a check too see if the fiscal position exist in the pos
         if (order.fiscal_position_not_found) {
-            this.showPopup('ErrorPopup', {
-                title: this.env._t('Fiscal Position not found'),
-                body: this.env._t('The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration.')
+            this.showPopup("ErrorPopup", {
+                title: _t("Fiscal Position not found"),
+                body: _t(
+                    "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
+                ),
             });
             return;
         }

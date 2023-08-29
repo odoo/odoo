@@ -95,8 +95,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 this._setValue("remove");
             } else {
                 this.popup.add(ErrorPopup, {
-                    title: this.env._t("Cannot modify a tip"),
-                    body: this.env._t("Customer tips, cannot be modified directly"),
+                    title: _t("Cannot modify a tip"),
+                    body: _t("Customer tips, cannot be modified directly"),
                 });
             }
         } else if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
