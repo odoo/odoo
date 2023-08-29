@@ -39,7 +39,7 @@
                     <field name="link"
                            string="Generate and Copy Payment Link"
                            readonly="1"
-                           disabled="[('warning_message', '!=', '')]"
+                           disabled="warning_message != ''"
                            widget="CopyClipboardButton"
                            data-hotkey="q"/>
                     <button string="Close"
