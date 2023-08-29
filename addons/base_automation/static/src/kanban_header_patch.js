@@ -67,6 +67,10 @@ patch(KanbanHeader.prototype, {
     },
 
     async openAutomations() {
+        return this._openAutomations();
+    },
+
+    async _openAutomations() {
         const domain = [["model", "=", this.props.list.resModel]];
         const modelId = await this.orm.search("ir.model", domain, { limit: 1 });
         const context = {
