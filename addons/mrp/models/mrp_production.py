@@ -1520,7 +1520,10 @@ class MrpProduction(models.Model):
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
                 if not move.quantity_done:
-                    move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
+                    done_qty = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                    if move.reserved_availability < done_qty and move.state not in ['done', 'cancel']:
+                        move._action_assign(force_qty=done_qty)
+                    move._set_quantity_done(done_qty)
                 if move.has_tracking != 'none' and order.lot_producing_id:
                     move.move_line_ids.lot_id = order.lot_producing_id
             # workorder duration need to be set to calculate the price of the product
