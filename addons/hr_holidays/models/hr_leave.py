@@ -942,6 +942,8 @@ class HolidaysRequest(models.Model):
     def copy_data(self, default=None):
         if default and 'request_date_from' in default and 'request_date_to' in default:
             return super().copy_data(default)
+        elif self.state in {"cancel", "refuse"}:  # No overlap constraint in these cases
+            return super().copy_data(default)
         raise UserError(_('A time off cannot be duplicated.'))
 
     def _get_mail_redirect_suggested_company(self):
