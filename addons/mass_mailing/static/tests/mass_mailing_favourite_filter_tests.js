@@ -145,9 +145,8 @@ QUnit.module('favorite filter widget', (hooks) => {
         assert.isVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
             "should have option to save filter if no filter is set");
         await testUtils.click(fixture.querySelector('.o_field_mailing_filter input'));
-        assert.containsN($dropdown, 'li.ui-menu-item',
-            2,
-            "there should be only one existing filter as well as the View all option");
+        assert.containsN($dropdown, 'li.ui-menu-item', 2,
+            "there should be only one existing filter and a search more btn");
         // create a new filter
         await testUtils.click(fixture, '.o_mass_mailing_add_filter');
         fixture.querySelector('.o_mass_mailing_filter_name').value = 'event promo - new users';
@@ -168,7 +167,7 @@ QUnit.module('favorite filter widget', (hooks) => {
         fixture.querySelector('.o_field_mailing_filter .o_input_dropdown input').blur();
         await testUtils.click(fixture.querySelector('.o_field_mailing_filter input'));
         assert.containsN($dropdown, 'li.ui-menu-item', 3,
-            "there should be two existing filters (and the View all option)");
+            "there should be two existing filters and a search more btn");
         await testUtils.clickSave(fixture);
     });
 
@@ -290,7 +289,7 @@ QUnit.module('favorite filter widget', (hooks) => {
         await testUtils.click(fixture.querySelector('.o_field_mailing_filter input'));
         fixture.querySelector('.o_field_mailing_filter input').autocomplete = 'widget';
         const $dropdown = fixture.querySelector('.o_field_mailing_filter .dropdown');
-        await testUtils.click($dropdown.lastElementChild.firstElementChild);
+        await testUtils.click($dropdown.lastElementChild, 'li:first-of-type');
         assert.equal(fixture.querySelector('.o_domain_show_selection_button').textContent.trim(), '1 record(s)',
             "applied filter should only display single record (only Azure)");
         await testUtils.clickSave(fixture);

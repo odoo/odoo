@@ -166,7 +166,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             autocomplete.querySelectorAll("li").length,
             4,
-            "autocomplete dropdown should have 4 entries (2 values + 'View all' + 'Start typing...')"
+            "autocomplete dropdown should have 4 entries (2 values + 'Search More...' + 'Search and Edit...')"
         );
         await clickOpenedDropdownItem(target, "timmy", "gold");
         assert.containsOnce(target, "[name=timmy] .o_tag");
@@ -248,7 +248,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             autocompleteDropdown.querySelectorAll("li").length,
             3,
-            "autocomplete dropdown should have 3 entries"
+            "autocomplete dropdown should have 3 entry"
         );
 
         assert.strictEqual(
@@ -502,7 +502,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.deepEqual(
             getNodesTextContent(autocompleteDropdown.querySelectorAll("li")),
-            ["silver", "View all", "Start typing..."],
+            ["silver", "Search More...", "Start typing..."],
             "should contain newly added tag 'silver'"
         );
         assert.strictEqual(
@@ -548,7 +548,7 @@ QUnit.module("Fields", (hooks) => {
             autocompleteDropdown,
             "li",
             3,
-            "autocomplete should contain 'silver', 'View all' and 'Start typing...' options"
+            "autocomplete should contain 'silver'm 'Search More...' and 'Start typing...' options"
         );
         assert.strictEqual(
             autocompleteDropdown.querySelector("li a").textContent,
@@ -567,7 +567,7 @@ QUnit.module("Fields", (hooks) => {
             autocompleteDropdown,
             "li",
             3,
-            "autocomplete should contain 'gold', 'View all' and 'Start typing...' options"
+            "autocomplete should contain 'gold'm 'Search More...' and 'Start typing...' options"
         );
         assert.strictEqual(
             autocompleteDropdown.querySelector("li a").textContent,
@@ -611,7 +611,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             autocomplete.querySelectorAll("li").length,
             4,
-            "autocomplete dropdown should have 4 entries (2 values + 'View all' + 'Start typing...')"
+            "autocomplete dropdown should have 4 entries (2 values + 'Search More...' + 'Search and Edit...')"
         );
         await clickOpenedDropdownItem(target, "timmy", "gold");
 
@@ -1190,7 +1190,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await selectDropdownItem(target, "timmy", "View all");
+        await selectDropdownItem(target, "timmy", "Search More...");
 
         assert.ok(target.querySelector(".o_dialog"), "should have open the modal");
         // + 1 for the select all
@@ -1246,7 +1246,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await selectDropdownItem(target, "timmy", "View all");
+            await selectDropdownItem(target, "timmy", "Search More...");
 
             // -1 for the one that is already on the form & +1 for the select all,
             assert.containsN(
@@ -1448,7 +1448,7 @@ QUnit.module("Fields", (hooks) => {
             "autocomplete should contain Start typing..."
         );
 
-        await clickOpenedDropdownItem(target, "partner_ids", "View all");
+        await clickOpenedDropdownItem(target, "partner_ids", "Search More...");
 
         assert.containsN(
             target,
@@ -1498,7 +1498,7 @@ QUnit.module("Fields", (hooks) => {
         await nameSearchProm;
         await nextTick();
 
-        // only View all option should be available
+        // only Search More option should be available
         assert.containsOnce(
             $(target.querySelector(".o-autocomplete.dropdown")),
             "li.o_m2o_dropdown_option",
@@ -1506,11 +1506,11 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             $(target.querySelector(".o-autocomplete.dropdown")),
-            "li.o_m2o_dropdown_option a:contains(View all)",
-            "autocomplete option should be View all"
+            "li.o_m2o_dropdown_option a:contains(Search More...)",
+            "autocomplete option should be Search More"
         );
 
-        await clickOpenedDropdownItem(target, "partner_ids", "View all");
+        await clickOpenedDropdownItem(target, "partner_ids", "Search More...");
 
         assert.containsN(
             document.body,
@@ -1538,7 +1538,7 @@ QUnit.module("Fields", (hooks) => {
         await nameSearchProm;
         await nextTick();
 
-        // only View all option should be available
+        // only Search More option should be available
         assert.containsOnce(
             $(target.querySelector(".o-autocomplete.dropdown")),
             "li.o_m2o_dropdown_option",
@@ -1546,8 +1546,8 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             $(target.querySelector(".o-autocomplete.dropdown")),
-            "li.o_m2o_dropdown_option a:contains(View all)",
-            "autocomplete option should be View all"
+            "li.o_m2o_dropdown_option a:contains(Search More)",
+            "autocomplete option should be Search More"
         );
     });
 
@@ -1733,7 +1733,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_many2many_tags .o-autocomplete--dropdown-menu")
                 .textContent,
-            "goldsilverView all"
+            "goldsilverSearch More..."
         );
     });
 

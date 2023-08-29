@@ -5715,6 +5715,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("custom delete confirmation dialog", async (assert) => {
+
         const listView = registry.category("views").get("list");
         class CautiousController extends listView.Controller {
             get deleteConfirmationDialogProps() {
@@ -5754,12 +5755,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(document, "body .modal footer button.btn-secondary");
-        assert.containsN(
-            target,
-            "tbody td.o_list_record_selector",
-            4,
-            "nothing deleted, 4 records remain"
-        );
+        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
     });
 
     QUnit.test(
@@ -8478,10 +8474,10 @@ QUnit.module("Views", (hooks) => {
             "the entire content should be selected on initial click"
         );
 
-        Object.assign(target.querySelector("[name=text] textarea"), {
-            selectionStart: 0,
-            selectionEnd: 1,
-        });
+        Object.assign(
+            target.querySelector("[name=text] textarea"),
+            { selectionStart: 0, selectionEnd: 1 }
+        );
 
         await click(target, "[name=text] textarea");
 
@@ -10457,7 +10453,7 @@ QUnit.module("Views", (hooks) => {
 
             await click(target.querySelector(".o_data_cell"));
             await clickOpenM2ODropdown(target, "m2o");
-            await clickOpenedDropdownItem(target, "m2o", "View all");
+            await clickOpenedDropdownItem(target, "m2o", "Search More...");
             assert.containsOnce(target, ".modal-content");
             assert.containsNone(
                 target,
@@ -11860,7 +11856,7 @@ QUnit.module("Views", (hooks) => {
         await click(rows[0], ".o_list_record_selector input");
         await click(rows[1], ".o_list_record_selector input");
         await click(rows[0].querySelector(".o_data_cell"));
-        await selectDropdownItem(target, "m2m", "View all");
+        await selectDropdownItem(target, "m2m", "Search More...");
         assert.containsOnce(document.body, ".modal", "should have open the modal");
 
         await click(target.querySelector(".modal .o_data_row .o_field_cell"));
@@ -17887,22 +17883,19 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
-    QUnit.test(
-        "Formatted group operator with digit precision on the field definition",
-        async function (assert) {
-            serverData.models.foo.fields.qux.digits = [16, 3];
-            await makeView({
-                type: "list",
-                resModel: "foo",
-                serverData,
-                arch: '<tree><field name="qux"/></tree>',
-                groupBy: ["bar"],
-            });
-            const [td1, td2] = target.querySelectorAll("td.o_list_number");
-            assert.strictEqual(td1.textContent, "9.000");
-            assert.strictEqual(td2.textContent, "10.400");
-        }
-    );
+    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
+        serverData.models.foo.fields.qux.digits = [16, 3];
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="qux"/></tree>',
+            groupBy: ["bar"],
+        });
+        const [td1, td2] = target.querySelectorAll("td.o_list_number");
+        assert.strictEqual(td1.textContent, "9.000");
+        assert.strictEqual(td2.textContent, "10.400");
+    });
 
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
@@ -18271,7 +18264,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".o_data_row:nth-child(1) td.o_list_many2one");
         await click(target, ".o_field_many2one_selection .o-autocomplete--input");
-        await clickOpenedDropdownItem(target, "m2o", "View all");
+        await clickOpenedDropdownItem(target, "m2o", "Search More...");
 
         assert.verifySteps([]);
 
@@ -19418,7 +19411,7 @@ QUnit.module("Views", (hooks) => {
         const items = Array.from(
             target.querySelectorAll(".o_selected_row .o_field_many2many_tags .dropdown-item")
         );
-        await click(items.find((el) => el.textContent.trim() === "View all"));
+        await click(items.find((el) => el.textContent.trim() === "Search More..."));
         assert.verifySteps([
             `bar: get_views: {"lang":"en","uid":7,"tz":"taht"}`,
             `bar: unity_web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
@@ -19432,16 +19425,16 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("search nested many2one field with early option selection", async (assert) => {
         const deferred = makeDeferred();
-        (serverData.models.parent = {
+        serverData.models.parent = {
             fields: {
                 foo: { string: "Foo", type: "one2many", relation: "foo" },
             },
-        }),
-            await makeView({
-                type: "form",
-                resModel: "parent",
-                serverData,
-                arch: `
+        },
+        await makeView({
+            type: "form",
+            resModel: "parent",
+            serverData,
+            arch: `
             <form>
                 <field name="foo">
                     <tree editable="bottom">
@@ -19449,29 +19442,30 @@ QUnit.module("Views", (hooks) => {
                     </tree>
                 </field>
             </form>`,
-                mockRPC: async (route, { method }) => {
-                    if (method === "name_search") {
-                        await deferred;
-                    }
-                },
-            });
+            mockRPC: async (route, { method }) => {
+                if (method === "name_search") {
+                    await deferred;
+                }
+            },
+        });
 
-        await triggerEvent(document.querySelector(".o_field_x2many_list_row_add a"), null, "click");
+        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
 
         const input = document.activeElement;
-        input.value = "alu";
-        triggerEvent(document.activeElement, null, "input"), await nextTick();
-
-        input.value = "alue";
+        input.value = 'alu';
         triggerEvent(document.activeElement, null, "input"),
-            triggerHotkey("Enter"),
-            await nextTick();
+        await nextTick();
+
+        input.value = 'alue';
+        triggerEvent(document.activeElement, null, "input"),
+        triggerHotkey("Enter"),
+        await nextTick();
 
         deferred.resolve();
         await nextTick();
 
         assert.strictEqual(input, document.activeElement);
-        assert.strictEqual(input.value, "Value 1");
+        assert.strictEqual(input.value, 'Value 1');
     });
 
     QUnit.test("monetary field display for rtl languages", async function (assert) {
