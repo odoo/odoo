@@ -16,7 +16,7 @@ class LeadTest(models.Model):
                              string="Status", readonly=True, default='draft')
     active = fields.Boolean(default=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
-    date_action_last = fields.Datetime(string='Last Action', readonly=True)
+    date_automation_last = fields.Datetime(string='Last Automation', readonly=True)
     employee = fields.Boolean(compute='_compute_employee_deadline', store=True)
     line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
@@ -72,6 +72,10 @@ class Project(models.Model):
 
     name = fields.Char()
     task_ids = fields.One2many('test_base_automation.task', 'project_id')
+    stage_id = fields.Many2one('test_base_automation.stage')
+    tag_ids = fields.Many2many('test_base_automation.tag')
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], default='1')
+    user_ids = fields.Many2many('res.users')
 
 
 class Task(models.Model):
@@ -89,3 +93,13 @@ class Task(models.Model):
         for task in self:
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
+
+
+class Stage(models.Model):
+    _name = _description = 'test_base_automation.stage'
+    name = fields.Char()
+
+
+class Tag(models.Model):
+    _name = _description = 'test_base_automation.tag'
+    name = fields.Char()

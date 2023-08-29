@@ -325,23 +325,35 @@
                                 help="Run this action manually."/>
                     </header>
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name"/>
-                            <h1><field name="name" placeholder="e.g. Update order quantity"/></h1>
-                        </div>
+                        <h1 class="oe_title">
+                            <field name="name" placeholder="e.g. Mass archive contacts"/>
+                        </h1>
                         <group name="action_wrapper">
                             <group name="action_content">
-                                <field name="model_id" options="{'no_create': True}"/>
                                 <field name="model_name" invisible="1"/>
-                            </group>
-                            <group>
-                                <field name="state"/>
+                                <field name="model_id" invisible="1"/>
+                                <field name="model_id" options="{'no_create': True}" groups="base.group_no_one"/>
+                                <field name="model_id" options="{'no_create': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"/>
+                                <field name="groups_id" widget="many2many_tags" groups="base.group_no_one" />
+                                <field name="state" string="Action Type"/>
+                                <field name="update_field_id" invisible="state != 'object_write'"
+                                    options="{'no_create': True}"
+                                    domain="['|', ('model_id', '=', crud_model_id), ('model_id', '=', model_id)]"/>
+                                <field name="evaluation_type" invisible="state != 'object_write'"/>
+                                <field name="value_field_to_show" invisible="1"/>
+                                <field name="update_related_model_id" invisible="1"/>
+                                <field name="value" invisible="state != 'object_write' or value_field_to_show != 'value' or evaluation_type != 'value'"/>
+                                <field name="value" widget="code" options="{'mode': 'python'}" invisible="state != 'object_write' or evaluation_type != 'equation'"/>
+                                <field name="resource_ref" string="Value" options="{'model_field': 'update_related_model_id', 'no_create': True}" invisible="state != 'object_write' or value_field_to_show != 'resource_ref' or evaluation_type == 'equation'"/>
+                                <field name="selection_value" options="{'no_create': True}" invisible="state != 'object_write' or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
+
                                 <field name="type" invisible="1"/>
                                 <field name="crud_model_id"
                                     options="{'no_create': True}"
                                     invisible="state != 'object_create'"
                                     required="state == 'object_create'"/>
                                 <field name="crud_model_name" invisible="1"/>
+                                <field name="value" widget="char" string="Name" invisible="state != 'object_create'"/>
                                 <field name="link_field_id"
                                     domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                     ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
@@ -349,37 +361,22 @@
                                     invisible="state != 'object_create'"
                                     context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                             </group>
+                            <group invisible="evaluation_type != 'equation' or state != 'object_write'">
+                                    <span colspan="2" class="text-muted"> Available variables: </span>
+                                    <ul colspan="2" class="text-muted">
+                                        <li><code>env</code>: environment on which the action is triggered</li>
+                                        <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>record</code>: record on which the action is triggered</li>
+                                        <li><code>records</code>: recordset of all records on which the action is triggered in multi mode</li>
+                                        <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                        <li><code>float_compare()</code>: utility function to compare floats based on a specific precision</li>
+                                    </ul>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Python Code" name='code'
                                     invisible="state != 'code'">
                                 <field name="code" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
-                            </page>
-
-                            <page string="Data to Write" name="page_object"
-                                    invisible="state not in ['object_create', 'object_write']">
-                                <p invisible="model_id">
-                                    Please set the Model to Create before choosing values
-                                </p>
-                                <field name="fields_lines">
-                                     <tree string="Field Mappings" editable="bottom">
-                                        <field name="col1"
-                                            options="{'no_create': True}"
-                                            domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
-                                        <field name="evaluation_type"/>
-                                        <field name="resource_ref"
-                                            options="{'hide_model': True, 'no_create': True}"
-                                            readonly="evaluation_type != 'reference'"/>
-                                        <field name="value"
-                                            readonly="evaluation_type == 'reference'"
-                                            options="{'no_create': True}"
-                                            force_save="1"/>
-                                    </tree>
-                                </field>
-                            </page>
-
-                            <page name="security" string="Access Rights">
-                                <field name="groups_id"/>
                             </page>
 
                             <page string="Actions" name="actions"
@@ -411,10 +408,10 @@
                                     </ul>
                                     <div invisible="state != 'code'">
                                         <p>Example of Python code</p>
-<code style='white-space: pre-wrap'>
-partner_name = record.name + '_code' \n
+<pre style='white-space: pre-wrap'>
+partner_name = record.name + '_code'
 env['res.partner'].create({'name': partner_name})
-</code>
+</pre>
                                     </div>
                                 </div>
                             </page>
@@ -428,7 +425,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
                 <tree string="Server Actions">
-                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="state"/>
                     <field name="model_id"/>

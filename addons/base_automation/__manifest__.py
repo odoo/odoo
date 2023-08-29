@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Automated Action Rules',
+    'name': 'Automation Rules',
     'version': '1.0',
     'category': 'Sales/Sales',
     'description': """
-This module allows to implement action rules for any object.
-============================================================
+This module allows to implement automation rules for any object.
+================================================================
 
-Use automated actions to automatically trigger actions for various screens.
+Use automation rules to automatically trigger actions for various screens.
 
 **Example:** A lead created by a specific user may be automatically set to a specific
 Sales Team, or an opportunity which still has status pending after 14 days might
