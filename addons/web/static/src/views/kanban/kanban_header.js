@@ -13,6 +13,8 @@ import { isRelational } from "@web/model/relational_model/utils";
 import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { registry } from "@web/core/registry";
+import { utils } from "@web/core/ui/ui_service";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -66,6 +68,21 @@ export class KanbanHeader extends Component {
         // The dropdown's container prop is only used here as a workaround of
         // a stacking context issue. It should be removed in the next release.
         return this.rootRef.el.closest(`.o_kanban_group[data-id="${this.props.group.id}"]`);
+    }
+
+    get configItems() {
+        const args = { permissions: this.permissions, props: this.props };
+        return registry
+            .category("kanban_header_config_items")
+            .getEntries()
+            .map(([key, desc]) => ({
+                key,
+                method: desc.method,
+                label: desc.label,
+                isVisible:
+                    typeof desc.isVisible === "function" ? desc.isVisible(args) : desc.isVisible,
+                class: typeof desc.class === "function" ? desc.class(args) : desc.class,
+            }));
     }
 
     get progressBar() {
@@ -187,6 +204,16 @@ export class KanbanHeader extends Component {
     // Permissions
     // ------------------------------------------------------------------------
 
+    get permissions() {
+        return ["canArchiveGroup", "canDeleteGroup", "canEditGroup", "canQuickCreate"].reduce(
+            (o, key) => {
+                Object.defineProperty(o, key, { get: () => this[key]() });
+                return o;
+            },
+            {}
+        );
+    }
+
     canArchiveGroup() {
         const { archiveGroup } = this.props.activeActions;
         const hasActiveField = "active" in this.group.fields;
@@ -214,3 +241,58 @@ export class KanbanHeader extends Component {
         this.props.scrollTop();
     }
 }
+
+const kanbanHeaderConfigItems = registry.category("kanban_header_config_items");
+kanbanHeaderConfigItems.add(
+    "toggle_group",
+    {
+        label: _t("Fold"),
+        method: "toggleGroup",
+        isVisible: () => !utils.isSmall(),
+        class: ({ props }) => ({
+            o_kanban_toggle_fold: true,
+            disabled: props.list.model.useSampleModel,
+        }),
+    },
+    { sequence: 10 }
+);
+kanbanHeaderConfigItems.add(
+    "edit_group",
+    {
+        label: _t("Edit"),
+        method: "editGroup",
+        isVisible: ({ permissions }) => permissions.canEditGroup,
+        class: "o_column_edit",
+    },
+    { sequence: 20 }
+);
+kanbanHeaderConfigItems.add(
+    "delete_group",
+    {
+        label: _t("Delete"),
+        method: "deleteGroup",
+        isVisible: ({ permissions }) => permissions.canDeleteGroup,
+        class: "o_column_delete",
+    },
+    { sequence: 30 }
+);
+kanbanHeaderConfigItems.add(
+    "archive_group",
+    {
+        label: _t("Archive All"),
+        method: "archiveGroup",
+        isVisible: ({ permissions }) => permissions.canArchiveGroup,
+        class: "o_column_archive_records",
+    },
+    { sequence: 40 }
+);
+kanbanHeaderConfigItems.add(
+    "unarchive_group",
+    {
+        label: _t("Unarchive All"),
+        method: "unarchiveGroup",
+        isVisible: ({ permissions }) => permissions.canArchiveGroup,
+        class: "o_column_unarchive_records",
+    },
+    { sequence: 50 }
+);

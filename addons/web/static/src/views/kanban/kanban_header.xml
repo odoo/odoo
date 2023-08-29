@@ -19,28 +19,9 @@
                         <t t-set-slot="toggler">
                             <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
                         </t>
-                        <DropdownItem t-if="!env.isSmall" class="{
-                                'o_kanban_toggle_fold': true,
-                                'disabled': props.list.model.useSampleModel,
-                            }" onSelected="() => this.toggleGroup()">
-                            Fold
-                        </DropdownItem>
-                        <t t-if="canEditGroup()">
-                            <DropdownItem class="'o_column_edit'" onSelected="() => this.editGroup()">
-                                Edit
-                            </DropdownItem>
-                        </t>
-                        <t t-if="canDeleteGroup()">
-                            <DropdownItem class="'o_column_delete'" onSelected="() => this.deleteGroup()">
-                                Delete
-                            </DropdownItem>
-                        </t>
-                        <t t-if="canArchiveGroup()">
-                            <DropdownItem class="'o_column_archive_records'" onSelected="() => this.archiveGroup()">
-                                Archive All
-                            </DropdownItem>
-                            <DropdownItem class="'o_column_unarchive_records'" onSelected="() => this.unarchiveGroup()">
-                                Unarchive All
+                        <t t-foreach="configItems" t-as="item" t-key="item.key">
+                            <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => this[item.method]()">
+                                <t t-esc="item.label"/>
                             </DropdownItem>
                         </t>
                     </Dropdown>
