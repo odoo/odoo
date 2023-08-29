@@ -19,7 +19,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
 
     async onWillStart() {
         // Show status dropdown if user is in attendees list
-        if (this.isCurrentUserAttendee) {
+        if (this.isEventEditable) {
             const stateSelections = await this.env.services.orm.call(
                 this.props.model.resModel,
                 "get_state_selections",
@@ -61,7 +61,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     get isEventDetailsVisible() {
-        return this.isEventPrivate ? this.isCurrentUserAttendee : true;
+        return this.isEventPrivate ? this.isEventEditable : true;
     }
 
     get isEventArchivable() {
@@ -72,18 +72,18 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
-        return super.isEventDeletable && this.isCurrentUserAttendee && !this.isEventArchivable;
+        return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
     }
 
     /**
      * @override
      */
     get isEventEditable() {
-        return this.isCurrentUserAttendee;
+        return this.props.record.rawRecord.user_can_edit;
     }
 
     get isEventViewable() {
-        return this.isEventPrivate ? this.isCurrentUserAttendee : super.isEventEditable;
+        return this.isEventPrivate ? this.isEventEditable : super.isEventEditable;
     }
 
     /**
