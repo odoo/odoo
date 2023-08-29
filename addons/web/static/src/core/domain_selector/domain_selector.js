@@ -87,6 +87,10 @@ export class DomainSelector extends Component {
         this.props.update(this.tree.root.toDomain().toString());
     }
 
+    resetDomain() {
+        this.props.update("[]");
+    }
+
     async loadFieldDefs(resModel, fields) {
         const promises = [];
         const fieldDefs = {};
