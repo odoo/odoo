@@ -14,12 +14,12 @@ class PickingType(models.Model):
         ('repair_operation', 'Repair')
     ], ondelete={'repair_operation': 'cascade'})
 
+    count_repair_confirmed = fields.Integer(
+        string="Number of Repair Orders Confirmed", compute='_compute_count_repair')
+    count_repair_under_repair = fields.Integer(
+        string="Number of Repair Orders Under Repair", compute='_compute_count_repair')
     count_repair_ready = fields.Integer(
         string="Number of Repair Orders to Process", compute='_compute_count_repair')
-    count_repair_waiting = fields.Integer(
-        string="Number of Repair Orders Waiting", compute='_compute_count_repair')
-    count_repair_late = fields.Integer(
-        string="Number of Repair Orders Late", compute='_compute_count_repair')
 
     default_remove_location_dest_id = fields.Many2one(
         'stock.location', 'Default Remove Destination Location', compute='_compute_default_remove_location_dest_id',
@@ -33,7 +33,7 @@ class PickingType(models.Model):
 
     is_repairable = fields.Boolean(
         'Create Repair Orders from Returns',
-        compute='_compute_is_repairable', store=True, readonly=False,
+        compute='_compute_is_repairable', store=True, readonly=False, default=False,
         help="If ticked, you will be able to directly create repair orders from a return.")
     return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
 
@@ -42,39 +42,43 @@ class PickingType(models.Model):
 
         # By default, set count_repair_xxx to False
         self.count_repair_ready = False
-        self.count_repair_waiting = False
-        self.count_repair_late = False
+        self.count_repair_confirmed = False
+        self.count_repair_under_repair = False
 
         # shortcut
         if not repair_picking_types:
             return
 
-        domains = {
-            'count_repair_ready': [
-                ('is_parts_available', '=', True)
+        picking_types = self.env['repair.order']._read_group(
+            [
+                ('picking_type_id', 'in', repair_picking_types.ids),
+                ('state', 'in', ('confirmed', 'under_repair')),
             ],
-            'count_repair_waiting': [],
-            'count_repair_late': [
-                '|',
-                    ('schedule_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-                    ('is_parts_late', '=', True)
-            ],
-        }
+            groupby=['picking_type_id', 'is_parts_available', 'state'],
+            aggregates=['id:count']
+        )
 
-        for field, domain in domains.items():
-            counts = dict(self.env['repair.order']._read_group(
-                [('picking_type_id', 'in', repair_picking_types.ids), ('state', 'in', ('confirmed', 'under_repair'))] + domain,
-                groupby=['picking_type_id'],
-                aggregates=['__count'],
-            ))
-            for record in repair_picking_types:
-                record[field] = counts.get(record)
+        counts = {}
+        for pt in picking_types:
+            pt_count = counts.setdefault(pt[0].id, {})
+            if pt[1]:
+                pt_count.setdefault('ready', 0)
+                pt_count['ready'] += pt[3]
+            pt_count.setdefault(pt[2], 0)
+            pt_count[pt[2]] += pt[3]
+
+        for pt in repair_picking_types:
+            if pt.id not in counts:
+                continue
+            pt.count_repair_ready = counts[pt.id].get('ready')
+            pt.count_repair_confirmed = counts[pt.id].get('confirmed')
+            pt.count_repair_under_repair = counts[pt.id].get('under_repair')
 
     @api.depends('return_type_of_ids', 'code')
     def _compute_is_repairable(self):
         for picking_type in self:
-            if not(picking_type.code == 'incoming' and picking_type.return_type_of_ids):
-                picking_type.is_repairable = False
+            if not picking_type.return_type_of_ids:
+                picking_type.is_repairable = False  # Reset the user choice as it's no more available.
 
     def _compute_default_location_src_id(self):
         remaining_picking_type = self.env['stock.picking.type']
@@ -129,9 +133,14 @@ class PickingType(models.Model):
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
-    is_repairable = fields.Boolean(related='picking_type_id.is_repairable')
+    is_repairable = fields.Boolean(compute='_compute_is_repairable')
     repair_ids = fields.One2many('repair.order', 'picking_id')
     nbr_repairs = fields.Integer('Number of repairs linked to this picking', compute='_compute_nbr_repairs')
+
+    @api.depends('picking_type_id.is_repairable', 'return_id')
+    def _compute_is_repairable(self):
+        for picking in self:
+            picking.is_repairable = picking.picking_type_id.is_repairable and picking.return_id
 
     @api.depends('repair_ids')
     def _compute_nbr_repairs(self):

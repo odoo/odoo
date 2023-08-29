@@ -13,8 +13,8 @@
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
                 <field name="product_id" readonly="1" optional="show"/>
-                <field name="parts_availability_state" column_invisible="True" options='{"lazy": true}'/>
-                <field name="parts_availability" options='{"lazy": true}'
+                <field name="parts_availability_state" column_invisible="True"/>
+                <field name="parts_availability"
                     invisible="state not in ['confirmed', 'under_repair']"
                     optional="show"
                     decoration-success="parts_availability_state == 'available'"
@@ -79,6 +79,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="picking_product_ids" invisible="1"/>
+                            <field name="picking_product_id" invisible="1"/>
                             <field name="tracking" invisible="1" readonly="True"/>
                             <field name="company_id" invisible="1"/>
                             <field name="sale_order_id" invisible="1"/>
@@ -93,15 +95,20 @@
                                 <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
                                 <field name="product_uom" groups="uom.group_uom" readonly="state != 'draft'"/>
                             </div>
-                            <field name="allowed_picking_type_ids" invisible="1"/>
-                            <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids)]" options="{'no_create': True}"/>
+                            <field name="picking_id" options="{'no_create': True}"/>
+                            <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
                         </group>
                         <group>
                             <field name="schedule_date" readonly="state in ['done', 'cancel']"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
+                            <field name="parts_availability_state" invisible="True"/>
+                            <field name="parts_availability"
+                                invisible="state not in ['confirmed', 'under_repair']"
+                                decoration-success="parts_availability_state == 'available'"
+                                decoration-warning="parts_availability_state == 'expected'"
+                                decoration-danger="parts_availability_state == 'late'"/>
                         </group>
                     </group>
                 <notebook>
@@ -231,12 +238,15 @@
                 <field name="product_id"/>
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                 <field name="sale_order_id"/>
-                <filter string="Confirmed" domain="[('state', '=', 'confirmed')]" name="current" />
-                <filter string="Ready To Repair" name="ready" domain="[('state', 'in', ('confirmed', 'under_repair')),('is_parts_available', '=', True)]"/>
-                <filter string="Waiting" name="filter_waiting" domain="[('state', 'in', ('confirmed', 'under_repair'))]"/>
-                <filter string="Late" name="filter_late" domain="[('state', 'in', ('confirmed', 'under_repair')), '|', ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_parts_late', '=', True)]"/>
-                <filter string="Returned" name="is_returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done'), ('state', 'not in', ['cancel', 'done'])]"/>
+                <filter string="New" domain="[('state', '=', 'draft')]" name="filter_draft" />
+                <filter string="Confirmed" domain="[('state', '=', 'confirmed')]" name="filter_confirmed" />
+                <filter string="Under Repair" name="filter_under_repair" domain="[('state', '=', 'under_repair')]"/>
+                <filter string="Repaired" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
+                <filter string="Returned" name="returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done')]"/>
                 <separator/>
+                <filter string="Ready" name="ready" domain="[('state', 'in', ('confirmed', 'under_repair')),('is_parts_available', '=', True)]" invisible="True"/>
+                <filter string="Late" name="filter_late" domain="[('state', 'in', ('confirmed', 'under_repair')), '|', ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_parts_late', '=', True)]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
