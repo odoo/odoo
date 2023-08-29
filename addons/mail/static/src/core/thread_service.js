@@ -17,6 +17,7 @@ import { memoize } from "@web/core/utils/functions";
 import { DEFAULT_AVATAR } from "@mail/core/persona_service";
 import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
 import { browser } from "@web/core/browser/browser";
+import session from "web.session";
 
 const FETCH_LIMIT = 30;
 
@@ -913,6 +914,7 @@ export class ThreadService {
             context: {
                 mail_post_autofollow: !isNote && thread.hasWriteAccess,
                 temporary_id: tmpId,
+                ...session.user_context,
             },
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
