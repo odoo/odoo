@@ -15,7 +15,7 @@ import {
     toggleSearchBarMenu,
     toggleMenuItem,
 } from "@web/../tests/search/helpers";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { createWebClient, doAction }  from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
@@ -2316,7 +2316,7 @@ QUnit.module("Search", (hooks) => {
 
         await doAction(webclient, 1, { viewType: "form" });
 
-        await selectDropdownItem(target, "company_id", "View all");
+        await selectDropdownItem(target, "company_id", "Search More...");
 
         assert.containsOnce(document.body, ".modal .o_list_view");
         assert.containsNone(document.body, ".modal .o_search_panel");
@@ -3454,22 +3454,19 @@ QUnit.module("Search", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "Don't display empty state message when some filters are available",
-        async (assert) => {
-            const { TestComponent } = makeTestComponent();
-            await makeWithSearch({
-                serverData,
-                Component: TestComponent,
-                resModel: "partner",
-                searchViewId: false,
-            });
+    QUnit.test("Don't display empty state message when some filters are availible", async (assert) => {
+        const { TestComponent } = makeTestComponent();
+        await makeWithSearch({
+            serverData,
+            Component: TestComponent,
+            resModel: "partner",
+            searchViewId: false,
+        });
 
-            assert.containsNone(
-                target,
-                ".o_search_panel_empty_state",
-                "Search panel does not have the empty state container"
-            );
-        }
-    );
+        assert.containsNone(
+            target,
+            ".o_search_panel_empty_state",
+            "Search panel does not have the empty state container"
+        );
+    });
 });

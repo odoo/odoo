@@ -1983,7 +1983,7 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(target, ".o_field_many2many_selection input");
         checkGetViews = true;
-        await clickOpenedDropdownItem(target, "timmy", "View all");
+        await clickOpenedDropdownItem(target, "timmy", "Search More...");
         assert.verifySteps([`get_views`]);
 
         assert.containsOnce(target, ".modal");

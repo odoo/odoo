@@ -601,7 +601,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await selectDropdownItem(target, "trululu", "View all");
+        await selectDropdownItem(target, "trululu", "Search More...");
 
         assert.strictEqual($("tr.o_data_row").length, 9, "should display 9 records");
         assert.equal(target.querySelector(".o_field_widget[name=trululu] input").value, "aaa");
@@ -615,7 +615,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "many2ones: Open the selection dialog several times using the 'View all' button with a context containing 'search_default_...'",
+        "many2ones: Open the selection dialog several times using the 'Search More...' button with a context containing 'search_default_...'",
         async function (assert) {
             for (let i = 5; i < 11; i++) {
                 serverData.models.partner.records.push({ id: i, display_name: `Partner ${i}` });
@@ -647,7 +647,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             });
 
-            await selectDropdownItem(target, "trululu", "View all");
+            await selectDropdownItem(target, "trululu", "Search More...");
 
             let modal = target.querySelector(".modal");
             assert.containsOnce(modal, ".o_data_row", "should display 1 records");
@@ -656,7 +656,7 @@ QUnit.module("Fields", (hooks) => {
             await click(modal, ".btn-close");
             assert.containsNone(modal, ".modal");
 
-            await selectDropdownItem(target, "trululu", "View all");
+            await selectDropdownItem(target, "trululu", "Search More...");
             modal = target.querySelector(".modal");
             assert.containsOnce(modal, ".o_data_row", "should display 1 records");
             assert.deepEqual(getFacetTexts(modal), ["Displayed name\nPartner 10"]);
@@ -1013,7 +1013,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             target,
             ".dropdown-menu li.o_m2o_dropdown_option",
-            "autocomplete should contain the View all dropdown option"
+            "autocomplete should contain the Search More dropdown option"
         );
         assert.containsOnce(
             target,
@@ -1086,7 +1086,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("many2one in edit mode", async function (assert) {
         assert.expect(17);
 
-        // create 10 partners
+        // create 10 partners to have the 'Search More' option in the autocomplete dropdown
         for (let i = 0; i < 10; i++) {
             const id = 20 + i;
             serverData.models.partner.records.push({ id, display_name: `Partner ${id}` });
@@ -1143,7 +1143,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             dropdown,
             "li.o_m2o_dropdown_option",
-            'autocomplete should contain "View all"'
+            'autocomplete should contain "Search More"'
         );
         assert.containsNone(
             dropdown,
@@ -1168,11 +1168,11 @@ QUnit.module("Fields", (hooks) => {
             "value of the m2o should have been correctly updated"
         );
 
-        // change the value of the m2o with a record in the 'View allodal
+        // change the value of the m2o with a record in the 'Search More' modal
         await clickDropdown(target, "trululu");
-        // click on 'View all' (mouseenter required by ui-autocomplete)
+        // click on 'Search More' (mouseenter required by ui-autocomplete)
         dropdown = target.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
-        await click(dropdown.querySelector(".o_m2o_dropdown_option_view_all"));
+        await click(dropdown.querySelector(".o_m2o_dropdown_option_search_more"));
         assert.containsOnce(
             target,
             ".modal .o_list_view",
@@ -1905,7 +1905,7 @@ QUnit.module("Fields", (hooks) => {
                         </field>
                     </sheet>
                 </form>`,
-            mockRPC(route, { method, args }) {
+            mockRPC(route, { method, args}) {
                 if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
                     throw new Error("read(['display_name']) should not be called");
                 }
@@ -1945,11 +1945,7 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, { method, args }) {
-                    if (
-                        method === "read" &&
-                        args[1].length === 1 &&
-                        args[1][0] === "display_name"
-                    ) {
+                    if (method === "read" && args[1].length === 1 && args[1][0] === "display_name") {
                         throw new Error("read(['display_name']) should not be called");
                     }
                 },
@@ -3294,7 +3290,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".ui-autocomplete a:contains(Create and Edit)");
 
         await editInput(target, ".o_field_many2one[name=product_id] input", "");
-        await clickOpenedDropdownItem(target, "product_id", "View all");
+        await clickOpenedDropdownItem(target, "product_id", "Search More...");
 
         assert.containsOnce(target, ".modal-dialog.modal-lg");
 
@@ -3747,7 +3743,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("search more in many2one: no text in input", async function (assert) {
-        // when the user clicks on 'View all' in a many2one dropdown, and there is no text
+        // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
         // in the input (i.e. no value to search on), we bypass the name_search that is meant to
         // return a list of preselected ids to filter on in the list view (opened in a dialog)
         assert.expect(7);
@@ -3785,7 +3781,7 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvent(field, null, "change");
 
         await click(target, `.o_field_widget[name="trululu"] input`);
-        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_view_all`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.verifySteps([
             "get_views", // main form view
@@ -3797,7 +3793,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("search more in many2one: text in input", async function (assert) {
-        // when the user clicks on 'View all' in a many2one dropdown, and there is some
+        // when the user clicks on 'Search More...' in a many2one dropdown, and there is some
         // text in the input, we perform a name_search to get a (limited) list of preselected
         // ids and we add a dynamic filter (with those ids) to the search view in the dialog, so
         // that the user can remove this filter to bypass the limit
@@ -3832,7 +3828,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, `.o_field_widget[name="trululu"] input`);
 
         await editInput(target, ".o_field_widget[name='trululu'] input", "test");
-        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_view_all`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.containsOnce(target, ".modal .o_list_view");
         assert.containsOnce(
@@ -3879,7 +3875,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, `.o_field_widget[name="trululu"] input`);
 
         await editInput(target, ".o_field_widget[name='trululu'] input", "test");
-        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_view_all`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         // dropdown selector
         const searchDropdown = ".o_control_panel_actions .o-dropdown";
@@ -3952,7 +3948,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("search more in many2one: resequence inside dialog", async function (assert) {
-        // when the user clicks on 'View all' in a many2one dropdown, resequencing inside
+        // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
         // the dialog works
         serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
         for (let i = 0; i < 8; i++) {
@@ -3985,7 +3981,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await editInput(target, ".o_field_widget[name='trululu'] input", "");
-        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_view_all`);
+        await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         assert.containsOnce(target, ".modal");
         assert.containsN(target, ".modal .ui-sortable-handle", 11);
@@ -4081,7 +4077,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
         });
 
-        await selectDropdownItem(target, "trululu", "View all");
+        await selectDropdownItem(target, "trululu", "Search More...");
         const modal = target.querySelector(".modal");
         await toggleSearchBarMenu(modal);
         await toggleMenuItem(modal, "Bar");
@@ -4181,7 +4177,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await selectDropdownItem(target, "trululu", "View all");
+        await selectDropdownItem(target, "trululu", "Search More...");
 
         const modal = target.querySelector(".modal");
         await click(modal, ".o_pager_next");

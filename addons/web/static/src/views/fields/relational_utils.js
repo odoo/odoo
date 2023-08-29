@@ -301,11 +301,11 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!this.props.noViewAll && records.length > 0) {
+        if (!this.props.noSearchMore &&  records.length > 0) {
             options.push({
-                label: _t("View all"),
-                action: this.onViewAll.bind(this, request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_view_all",
+                label: _t("Search More..."),
+                action: this.onSearchMore.bind(this, request),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
             });
         }
 
@@ -343,10 +343,10 @@ export class Many2XAutocomplete extends Component {
 
     async onBarcodeSearch() {
         const autoCompleteInput = this.autoCompleteContainer.el.querySelector("input");
-        return this.onViewAll(autoCompleteInput.value);
+        return this.onSearchMore(autoCompleteInput.value);
     }
 
-    async onViewAll(request) {
+    async onSearchMore(request) {
         const { resModel, getDomain, context, fieldString } = this.props;
 
         const domain = getDomain();
@@ -356,7 +356,7 @@ export class Many2XAutocomplete extends Component {
                 name: request,
                 args: domain,
                 operator: "ilike",
-                limit: this.props.viewAllLimit,
+                limit: this.props.searchMoreLimit,
                 context,
             });
 
@@ -396,8 +396,8 @@ Many2XAutocomplete.props = {
     getDomain: Function,
     searchLimit: { type: Number, optional: true },
     quickCreate: { type: [Function, { value: null }], optional: true },
-    noViewAll: { type: Boolean, optional: true },
-    viewAllLimit: { type: Number, optional: true },
+    noSearchMore: { type: Boolean, optional: true },
+    searchMoreLimit: { type: Number, optional: true },
     fieldString: String,
     id: { type: String, optional: true },
     placeholder: { type: String, optional: true },
@@ -409,7 +409,7 @@ Many2XAutocomplete.props = {
 };
 Many2XAutocomplete.defaultProps = {
     searchLimit: 7,
-    viewAllLimit: 320,
+    searchMoreLimit: 320,
     nameCreateField: "name",
     value: "",
     setInputFloats: () => {},
@@ -633,7 +633,7 @@ X2ManyFieldDialog.props = {
     save: Function,
     title: String,
     delete: { optional: true },
-    deleteButtonLabel: { optional: true },
+    deleteButtonLabel: {optional: true},
     config: Object,
 };
 X2ManyFieldDialog.template = "web.X2ManyFieldDialog";
