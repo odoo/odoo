@@ -410,7 +410,7 @@ class SaleOrder(models.Model):
     def _cart_recovery_email_send(self):
         """Send the cart recovery email on the current recordset,
         making sure that the portal token exists to avoid broken links, and marking the email as sent.
-        Similar method to action_recovery_email_send, made to be called in automated actions.
+        Similar method to action_recovery_email_send, made to be called in automation rules.
         Contrary to the former, it will use the website-specific template for each order."""
         sent_orders = self.env['sale.order']
         for order in self:

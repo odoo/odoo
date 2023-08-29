@@ -14,6 +14,11 @@ tests independently to functional aspects of other models.""",
     'data': [
         'security/ir.model.access.csv',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'test_base_automation/static/tests/**/*',
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }

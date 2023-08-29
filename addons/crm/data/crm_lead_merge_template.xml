@@ -49,8 +49,8 @@
                 <div>
                     Created on: <span t-field="lead.create_date"/>
                 </div>
-                <div t-if="lead.date_action_last">
-                    Last Action: <span t-field="lead.date_action_last"/>
+                <div t-if="lead.date_automation_last">
+                    Last Automation: <span t-field="lead.date_automation_last"/>
                 </div>
                 <div t-if="lead.date_deadline">
                     Expected Closing: <span t-field="lead.date_deadline"/>

@@ -421,9 +421,9 @@ class Team(models.Model):
           which is a good trade-off between transaction time and speed
         :config int crm.assignment.delay: optional config parameter giving a
           delay before taking a lead into assignment process (BUNDLE_HOURS_DELAY)
-          given in hours. Purpose if to allow other crons or automated actions
+          given in hours. Purpose if to allow other crons or automation rules
           to make their job. This option is mainly historic as its purpose was
-          to let automated actions prepare leads and score before PLS was added
+          to let automation rules prepare leads and score before PLS was added
           into CRM. This is now not required anymore but still supported;
 
         :param float work_days: see ``CrmTeam.action_assign_leads()``;

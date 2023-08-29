@@ -133,7 +133,7 @@ class Digest(models.Model):
 
     def action_send_manual(self):
         """ Manually send digests emails to all registered users. In that case
-        do not update periodicity as this is not an automated action that could
+        do not update periodicity as this is not an automation rule that could
         be considered as unwanted spam. """
         return self._action_send(update_periodicity=False)
 

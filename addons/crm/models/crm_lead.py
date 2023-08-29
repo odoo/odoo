@@ -49,7 +49,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'recurring_revenue',
     # dates
     'create_date',
-    'date_action_last',
+    'date_automation_last',
     'date_deadline',
     # partner / contact
     'partner_id',
@@ -162,7 +162,7 @@ class Lead(models.Model):
     company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
-    date_action_last = fields.Datetime('Last Action', readonly=True)
+    date_automation_last = fields.Datetime('Last Action', readonly=True)
     date_open = fields.Datetime(
         'Assignment Date', compute='_compute_date_open', readonly=True, store=True)
     day_open = fields.Float('Days to Assign', compute='_compute_day_open', store=True)

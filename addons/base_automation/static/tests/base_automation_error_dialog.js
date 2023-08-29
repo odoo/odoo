@@ -53,7 +53,7 @@ QUnit.module("base_automation", {}, function () {
         },
     });
 
-    QUnit.test("Error due to an automated action", async function (assert) {
+    QUnit.test("Error due to an automation rule", async function (assert) {
         assert.expect(4);
 
         const errorContext = {
@@ -101,7 +101,7 @@ QUnit.module("base_automation", {}, function () {
         assert.containsOnce(target, ".modal .o_edit_action_button");
     });
 
-    QUnit.test("Error not due to an automated action", async function (assert) {
+    QUnit.test("Error not due to an automation rule", async function (assert) {
         assert.expect(3);
 
         const error = makeServerError({
