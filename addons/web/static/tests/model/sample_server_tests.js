@@ -261,6 +261,24 @@ QUnit.module(
             );
         });
 
+        QUnit.test("Send 'search_read' RPC: many2one fields", async function (assert) {
+            const server = new DeterministicSampleServer("res.users", fields["res.users"]);
+
+            const result = await server.mockRpc({
+                method: "unity_web_search_read",
+                model: "res.users",
+                specification: {
+                    manager_id: {
+                        fields: { display_name: {} },
+                    },
+                },
+            });
+
+            assert.deepEqual(Object.keys(result.records[0]), ["id", "manager_id"]);
+            assert.ok(result.records[0].manager_id.id);
+            assert.ok(/\w+/.test(result.records[0].manager_id.display_name));
+        });
+
         QUnit.test("Send 'web_read_group' RPC: no group", async function (assert) {
             assert.expect(1);
 
