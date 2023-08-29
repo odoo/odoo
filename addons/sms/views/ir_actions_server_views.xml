@@ -11,10 +11,25 @@
                     context="{'default_model': model_name}"
                     invisible="state != 'sms'"
                     required="state == 'sms'"/>
-                <field name="sms_method"
-                       string="Send as"
-                       invisible="state != 'sms'"
-                       required="state == 'sms'"/>
+                <label for="sms_method" invisible="state != 'sms'"/>
+                    <div class="d-flex flex-column" invisible="state != 'sms'">
+                        <field name="sms_method" required="state == 'sms'"/>
+                        <div class="text-muted">
+                            <span invisible="sms_method != 'sms'">
+                                The message will be sent as an SMS to the recipients of the template
+                                and will not appear in the messaging history.
+                            </span>
+                            <span invisible="sms_method != 'note'">
+                                The SMS will not be sent, it will only be posted as an
+                                internal note in the messaging history.
+                            </span>
+                            <span invisible="sms_method != 'comment'">
+                                The SMS will be sent as an SMS to the recipients of the
+                                template and it will also be posted as an internal note
+                                in the messaging history.
+                            </span>
+                        </div>
+                    </div>
             </xpath>
         </field>
     </record>

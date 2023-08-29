@@ -21,11 +21,20 @@ class ServerActions(models.Model):
         domain="[('model_id', '=', model_id)]",
     )
     sms_method = fields.Selection(
-        selection=[('sms', 'SMS'), ('comment', 'Post as Message'), ('note', 'Post as Note')],
-        string='Send as (SMS)',
+        selection=[('sms', 'SMS (without note)'), ('comment', 'SMS (with note)'), ('note', 'Note only')],
+        string='Send SMS As',
         compute='_compute_sms_method',
-        readonly=False, store=True,
-        help='Choose method for SMS sending:\nSMS: mass SMS\nPost as Message: log on document\nPost as Note: mass SMS with archives')
+        readonly=False, store=True)
+
+    @api.depends('state', 'sms_template_id')
+    def _compute_name(self):
+        for action in self:
+            if not action.state or not self.env.context.get('automatic_action_name'):
+                continue
+            if action.state == 'sms':
+                action.name = 'Send SMS: %s' % action.sms_template_id.name
+            else:
+                super(ServerActions, action)._compute_name()
 
     @api.depends('model_id', 'state')
     def _compute_sms_template_id(self):

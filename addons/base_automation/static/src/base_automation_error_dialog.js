@@ -8,8 +8,8 @@ export class BaseAutomationErrorDialog extends RPCErrorDialog {
     setup() {
         super.setup(...arguments);
         const { id, name } = this.props.data.context.base_automation;
-        this.actionId = id;
-        this.actionName = name;
+        this.automationId = id;
+        this.automationName = name;
         this.isUserAdmin = useService("user").isAdmin;
         this.actionService = useService("action");
         this.orm = useService("orm");
@@ -20,32 +20,30 @@ export class BaseAutomationErrorDialog extends RPCErrorDialog {
     //--------------------------------------------------------------------------
 
     /**
-     * This method is called when the user clicks on the 'Disable action' button
-     * displayed when a crash occurs in the evaluation of an automated action.
-     * Then, we write `active` to `False` on the automated action to disable it.
+     * This method is called when the user clicks on the 'Disable Automation Rule' button
+     * displayed when a crash occurs in the evaluation of an automation rule.
+     * Then, we write `active` to `False` on the automation rule to disable it.
      *
      * @private
      * @param {MouseEvent} ev
      */
-    async disableAction(ev) {
-        await this.orm.write("base.automation", [this.actionId], {
-            active: false,
-        });
+    async disableAutomation(ev) {
+        await this.orm.write("base.automation", [this.automationId], { active: false });
         this.props.close();
     }
     /**
      * This method is called when the user clicks on the 'Edit action' button
-     * displayed when a crash occurs in the evaluation of an automated action.
-     * Then, we redirect the user to the automated action form.
+     * displayed when a crash occurs in the evaluation of an automation rule.
+     * Then, we redirect the user to the automation rule form.
      *
      * @private
      * @param {MouseEvent} ev
      */
-    editAction(ev) {
+    editAutomation(ev) {
         this.actionService.doAction({
-            name: "Automated Actions",
+            name: "Automation Rules",
             res_model: "base.automation",
-            res_id: this.actionId,
+            res_id: this.automationId,
             views: [[false, "form"]],
             type: "ir.actions.act_window",
             view_mode: "form",

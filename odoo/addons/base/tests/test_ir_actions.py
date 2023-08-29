@@ -123,56 +123,48 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         # Do: create a new record in another model
         self.action.write({
             'state': 'object_create',
-            'crud_model_id': self.res_country_model.id,
+            'crud_model_id': self.res_partner_model.id,
             'link_field_id': False,
-            'fields_lines': [Command.clear(),
-                             Command.create({'col1': self.res_country_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'}),
-                             Command.create({'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'evaluation_type': 'equation'})],
+            'value': 'TestingPartner2'
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
-        # Test: new country created
-        country = self.test_country.search([('name', 'ilike', 'TestingPartner')])
-        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
-        self.assertEqual(country.code, 'TE', 'ir_actions_server: TODO')
+        # Test: new partner created
+        partner = self.test_partner.search([('name', 'ilike', 'TestingPartner2')])
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
 
     def test_20_crud_create_link_many2one(self):
-        _city = 'TestCity'
-        _name = 'TestNew'
 
         # Do: create a new record in the same model and link it with a many2one
         self.action.write({
             'state': 'object_create',
-            'crud_model_id': self.action.model_id.id,
+            'crud_model_id': self.res_partner_model.id,
             'link_field_id': self.res_partner_parent_field.id,
-            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name}),
-                             Command.create({'col1': self.res_partner_city_field.id, 'value': _city})],
+            'value': "TestNew"
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new partner created
-        partner = self.test_partner.search([('name', 'ilike', _name)])
+        partner = self.test_partner.search([('name', 'ilike', 'TestNew')])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
-        self.assertEqual(partner.city, _city, 'ir_actions_server: TODO')
         # Test: new partner linked
         self.assertEqual(self.test_partner.parent_id, partner, 'ir_actions_server: TODO')
 
     def test_20_crud_create_link_one2many(self):
-        _name = 'TestNew'
 
         # Do: create a new record in the same model and link it with a one2many
         self.action.write({
             'state': 'object_create',
-            'crud_model_id': self.action.model_id.id,
+            'crud_model_id': self.res_partner_model.id,
             'link_field_id': self.res_partner_children_field.id,
-            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name})],
+            'value': 'TestNew',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new partner created
-        partner = self.test_partner.search([('name', 'ilike', _name)])
+        partner = self.test_partner.search([('name', 'ilike', 'TestNew')])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
-        self.assertEqual(partner.name, _name, 'ir_actions_server: TODO')
+        self.assertEqual(partner.name, 'TestNew', 'ir_actions_server: TODO')
         # Test: new partner linked
         self.assertIn(partner, self.test_partner.child_ids, 'ir_actions_server: TODO')
 
@@ -182,7 +174,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'state': 'object_create',
             'crud_model_id': self.res_partner_category_model.id,
             'link_field_id': self.res_partner_category_field.id,
-            'fields_lines': [Command.create({'col1': self.res_partner_category_name_field.id, 'value': 'record.name', 'evaluation_type': 'equation'})],
+            'value': 'TestingPartner'
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -192,17 +184,17 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertIn(category, self.test_partner.category_id)
 
     def test_30_crud_write(self):
-        _name = 'TestNew'
 
         # Do: update partner name
         self.action.write({
             'state': 'object_write',
-            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name})],
+            'update_field_id': self.res_partner_name_field.id,
+            'value': 'TestNew',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: partner updated
-        partner = self.test_partner.search([('name', 'ilike', _name)])
+        partner = self.test_partner.search([('name', 'ilike', 'TestNew')])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
@@ -222,19 +214,27 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'model_id': self.res_partner_model.id,
             'crud_model_id': self.res_partner_model.id,
             'state': 'object_create',
-            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': 'RaoulettePoiluchette'}),
-                             Command.create({'col1': self.res_partner_city_field.id, 'value': 'TestingCity'})],
+            'value': 'RaoulettePoiluchette',
         })
         action3 = self.action.create({
-            'name': 'Subaction3',
+            'name': 'Subaction2',
             'sequence': 3,
+            'model_id': self.res_partner_model.id,
+            'crud_model_id': self.res_partner_model.id,
+            'state': 'object_write',
+            'update_field_id': self.res_partner_city_field.id,
+            'value': 'RaoulettePoiluchette',
+        })
+        action4 = self.action.create({
+            'name': 'Subaction3',
+            'sequence': 4,
             'model_id': self.res_partner_model.id,
             'state': 'code',
             'code': 'action = {"type": "ir.actions.act_url"}',
         })
         self.action.write({
             'state': 'multi',
-            'child_ids': [Command.set([action1.id, action2.id, action3.id])],
+            'child_ids': [Command.set([action1.id, action2.id, action3.id, action4.id])],
         })
 
         # Do: run the action

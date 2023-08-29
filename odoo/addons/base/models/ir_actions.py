@@ -439,6 +439,26 @@ class IrActionsServer(models.Model):
 #  - Command: x2many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
+    @api.model
+    def _default_update_field_id(self):
+        if self.model_id:
+            model_id = self.model_id.id
+        elif 'default_model_id' in self.env.context:
+            model_id = self.env.context['default_model_id']
+        else:
+            return False
+
+        ir_model = self.env["ir.model"].browse(model_id)
+        if ir_model:
+            fields = self.env[ir_model.model]._fields
+            if 'state' in fields:
+                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'state')
+            elif 'stage_id' in fields:
+                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'stage_id')
+            elif 'priority' in fields:
+                return ir_model.field_id.filtered(lambda ir_field: ir_field.name == 'priority')
+
+    name = fields.Char(compute='_compute_name', store=True, readonly=False, required=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
@@ -448,8 +468,8 @@ class IrActionsServer(models.Model):
         ('code', 'Execute Python Code'),
         ('object_create', 'Create a new Record'),
         ('object_write', 'Update the Record'),
-        ('multi', 'Execute several actions')], string='Action To Do',
-        default='object_write', required=True, copy=True,
+        ('multi', 'Execute several actions')], string='Type',
+        default='code', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Execute Python Code': a block of python code that will be executed\n"
              "- 'Create a new Record': create a new record with new values\n"
@@ -476,17 +496,53 @@ class IrActionsServer(models.Model):
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(
-        'ir.model', string='Target Model',
+        'ir.model', string='Record to Create',
         compute='_compute_crud_model_id', readonly=False, store=True,
-        help="Model for record creation / update. Set this field only to specify a different model than the base model.")
+        help="Specify which kind of record should be created. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
     link_field_id = fields.Many2one(
         'ir.model.fields', string='Link Field',
         compute='_compute_link_field_id', readonly=False, store=True,
-        help="Provide the field used to link the newly created record on the record used by the server action.")
-    fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
+        help="Specify a field used to link the newly created record on the record used by the server action.")
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
-                                 'act_id', 'gid', string='Groups')
+                                 'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
+
+    update_field_id = fields.Many2one('ir.model.fields', string='Field to update', default=_default_update_field_id, ondelete='cascade')
+    update_related_model_id = fields.Many2one('ir.model', compute='_compute_update_related_model_id')
+
+    value = fields.Text(help="For Python expressions, this field may hold a Python expression "
+                             "that can use the same values as for the code field on the server action,"
+                             "e.g. `env.user.name` to set the current user's name as the value "
+                             "or `record.id` to set the ID of the record on which the action is run.\n\n"
+                             "For Static values, the value will be used directly without evaluation, e.g."
+                             "`42` or `My custom name` or the selected record.")
+    evaluation_type = fields.Selection([
+        ('value', 'Static value'),
+        ('equation', 'Python expression')
+    ], 'Value Type', default='value', change_default=True)
+    resource_ref = fields.Reference(
+        string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
+    selection_value = fields.Many2one('ir.model.fields.selection', string="Selection value", ondelete='cascade',
+                                      domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
+
+    value_field_to_show = fields.Selection([
+        ('value', 'value'),
+        ('resource_ref', 'reference'),
+        ('selection_value', 'selection_value'),
+    ], compute='_compute_value_field_to_show')
+
+    @api.depends('state', 'update_field_id', 'crud_model_id', 'value')
+    def _compute_name(self):
+        for action in self:
+            if not action.state or not self.env.context.get('automatic_action_name'):
+                continue
+            if action.state == 'object_write':
+                action.name = _("Update %s", action.update_field_id.field_description)
+            elif action.state == 'object_create':
+                action.name = _("Create %s with name %s", action.crud_model_id.name, action.value)
+            else:
+                state_name = dict(action._fields['state']._description_selection(self.env))[action.state]
+                action.name = state_name
 
     @api.onchange('model_id')
     def _compute_crud_model_id(self):
@@ -566,8 +622,8 @@ class IrActionsServer(models.Model):
 
     def _run_action_object_write(self, eval_context=None):
         """Apply specified write changes to active_id."""
-        vals = self.fields_lines.eval_value(eval_context=eval_context)
-        res = {line.col1.name: vals[line.id] for line in self.fields_lines}
+        vals = self._eval_value(eval_context=eval_context)
+        res = {action.update_field_id.name: vals[action.id] for action in self}
 
         if self._context.get('onchange_self'):
             record_cached = self._context['onchange_self']
@@ -577,12 +633,11 @@ class IrActionsServer(models.Model):
             self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
 
     def _run_action_object_create(self, eval_context=None):
-        """Create specified model object with specified values.
+        """Create specified model object with specified name contained in value.
 
         If applicable, link active_id.<self.link_field_id> to the new record.
         """
-        vals = self.fields_lines.eval_value(eval_context=eval_context)
-        res = {line.col1.name: vals[line.id] for line in self.fields_lines}
+        res = {'name': self.value}
 
         res = self.env[self.crud_model_id.model].create(res)
 
@@ -661,11 +716,12 @@ class IrActionsServer(models.Model):
                 if not (action_groups & self.env.user.groups_id):
                     raise AccessError(_("You don't have enough access rights to run this action."))
             else:
+                model_name = action.model_id.model
                 try:
-                    self.env[action.model_name].check_access_rights("write")
+                    self.env[model_name].check_access_rights("write")
                 except AccessError:
                     _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, action.model_name,
+                        action.name, self.env.user.login, model_name,
                     )
                     raise
 
@@ -707,72 +763,59 @@ class IrActionsServer(models.Model):
                 )
         return res or False
 
+    @api.depends('update_field_id')
+    def _compute_update_related_model_id(self):
+        for action in self:
+            if action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation:
+                relation = action.update_field_id.relation
+                action.update_related_model_id = action.env["ir.model"]._get_id(relation)
+            else:
+                action.update_related_model_id = False
 
-class IrServerObjectLines(models.Model):
-    _name = 'ir.server.object.lines'
-    _description = 'Server Action value mapping'
-
-    server_id = fields.Many2one('ir.actions.server', string='Related Server Action', ondelete='cascade')
-    col1 = fields.Many2one('ir.model.fields', string='Field', required=True, ondelete='cascade')
-    value = fields.Text(required=True, help="Expression containing a value specification. \n"
-                                            "When Formula type is selected, this field may be a Python expression "
-                                            " that can use the same values as for the code field on the server action.\n"
-                                            "If Value type is selected, the value will be used directly without evaluation.")
-    evaluation_type = fields.Selection([
-        ('value', 'Value'),
-        ('reference', 'Reference'),
-        ('equation', 'Python expression')
-    ], 'Evaluation Type', default='value', required=True, change_default=True)
-    resource_ref = fields.Reference(
-        string='Record', selection='_selection_target_model',
-        compute='_compute_resource_ref', inverse='_set_resource_ref')
+    @api.depends('evaluation_type', 'update_field_id')
+    def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
+        for action in self:
+            if action.update_field_id.ttype == 'many2one':
+                action.value_field_to_show = 'resource_ref'
+            elif action.update_field_id.ttype == 'selection':
+                action.value_field_to_show = 'selection_value'
+            else:
+                action.value_field_to_show = 'value'
 
     @api.model
     def _selection_target_model(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
-    @api.depends('col1.relation', 'value', 'evaluation_type')
-    def _compute_resource_ref(self):
-        for line in self:
-            if line.evaluation_type in ['reference', 'value'] and line.col1 and line.col1.relation:
-                value = line.value or ''
-                try:
-                    value = int(value)
-                    if not self.env[line.col1.relation].browse(value).exists():
-                        record = self.env[line.col1.relation].search([], limit=1)
-                        value = record.id or 0
-                except ValueError:
-                    record = self.env[line.col1.relation].search([], limit=1)
-                    value = record.id or 0
-                line.resource_ref = '%s,%s' % (line.col1.relation, value)
-            else:
-                line.resource_ref = False
-
-    @api.constrains('col1', 'evaluation_type')
+    @api.constrains('update_field_id', 'evaluation_type')
     def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'reference'):
+        if self.filtered(lambda line: line.update_field_id.ttype == 'many2many' and line.evaluation_type == 'reference'):
             raise ValidationError(_('many2many fields cannot be evaluated by reference'))
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
-        for line in self.filtered(lambda line: line.evaluation_type == 'reference'):
-            if line.resource_ref:
-                line.value = str(line.resource_ref.id)
+        for action in self.filtered(lambda action: action.value_field_to_show == 'resource_ref'):
+            if action.resource_ref:
+                action.value = str(action.resource_ref.id)
 
-    def eval_value(self, eval_context=None):
+    @api.onchange('selection_value')
+    def _set_selection_value(self):
+        for action in self.filtered(lambda action: action.value_field_to_show == 'selection_value'):
+            if action.selection_value:
+                action.value = action.selection_value.name
+
+    def _eval_value(self, eval_context=None):
         result = {}
-        for line in self:
-            expr = line.value
-            if line.evaluation_type == 'equation':
-                expr = safe_eval(line.value, eval_context)
-            elif line.col1.ttype in ['many2one', 'integer']:
+        for action in self:
+            expr = action.value
+            if action.evaluation_type == 'equation':
+                expr = safe_eval(action.value, eval_context)
+            elif action.update_field_id.ttype in ['many2one', 'integer']:
                 try:
-                    expr = int(line.value)
+                    expr = int(action.value)
                 except Exception:
                     pass
-            result[line.id] = expr
+            result[action.id] = expr
         return result
-
 
 class IrActionsTodo(models.Model):
     """
