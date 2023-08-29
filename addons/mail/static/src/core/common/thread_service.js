@@ -3,19 +3,13 @@
 import { Composer } from "@mail/core/common/composer_model";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
-import { Thread } from "@mail/core/common/thread_model";
 import {
     removeFromArray,
     removeFromArrayWithPredicate,
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import {
-    assignDefined,
-    createLocalId,
-    onChange,
-    nullifyClearCommands,
-} from "@mail/utils/common/misc";
+import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -801,42 +795,6 @@ export class ThreadService {
             thread.type = "chatter";
         }
         this.env.bus.trigger("mail.thread/onUpdate", { thread, data });
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {Thread}
-     */
-    insert(data) {
-        if (!("id" in data)) {
-            throw new Error("Cannot insert thread: id is missing in data");
-        }
-        if (!("model" in data)) {
-            throw new Error("Cannot insert thread: model is missing in data");
-        }
-        const localId = createLocalId(data.model, data.id);
-        if (localId in this.store.Thread.records) {
-            const thread = this.store.Thread.records[localId];
-            this.update(thread, data);
-            return thread;
-        }
-        const thread = new Thread(this.store, data);
-        onChange(thread, "message_unread_counter", () => {
-            if (thread.channel) {
-                thread.channel.message_unread_counter = thread.message_unread_counter;
-            }
-        });
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
-                this.store.discuss.threadLocalId = null;
-            }
-        });
-        this.update(thread, data);
-        this.insertComposer({ thread });
-        // return reactive version.
-        return this.store.Thread.records[thread.localId];
     }
 
     /**

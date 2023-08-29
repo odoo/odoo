@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 /**
  * @typedef Data
@@ -11,6 +11,28 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Follower extends Record {
+    /** @type {Object.<number, Follower>} */
+    static records = {};
+    /**
+     * @param {Data} data
+     * @returns {Follower}
+     */
+    static insert(data) {
+        let follower = this.records[data.id];
+        if (!follower) {
+            this.records[data.id] = new Follower();
+            follower = this.records[data.id];
+        }
+        Object.assign(follower, {
+            followedThread: data.followedThread,
+            id: data.id,
+            isActive: data.is_active,
+            partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
+            _store: this.store,
+        });
+        return follower;
+    }
+
     /** @type {import("@mail/core/common/thread_model").Thread} */
     followedThread;
     /** @type {number} */
@@ -32,3 +54,5 @@ export class Follower extends Record {
             : hasWriteAccess;
     }
 }
+
+modelRegistry.add(Follower.name, Follower);

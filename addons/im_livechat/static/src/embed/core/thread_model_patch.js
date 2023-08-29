@@ -1,9 +1,63 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
+import { createLocalId, onChange } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
+import { SESSION_STATE } from "./livechat_service";
+
+patch(Thread, {
+    insert(data) {
+        const isUnknown = !(createLocalId(data.model, data.id) in this.records);
+        const thread = super.insert(...arguments);
+        const livechatService = this.env.services["im_livechat.livechat"];
+        const chatbotService = this.env.services["im_livechat.chatbot"];
+        const messageService = this.env.services["mail.message"];
+        if (thread.type === "livechat" && isUnknown) {
+            if (livechatService.displayWelcomeMessage && !chatbotService.isChatbotThread(thread)) {
+                livechatService.welcomeMessage = this.store.Message.insert({
+                    id: messageService.getNextTemporaryId(),
+                    body: livechatService.options.default_message,
+                    res_id: thread.id,
+                    model: thread.model,
+                    author: thread.operator,
+                });
+            }
+            if (chatbotService.isChatbotThread(thread)) {
+                chatbotService.typingMessage = this.store.Message.insert({
+                    id: messageService.getNextTemporaryId(),
+                    res_id: thread.id,
+                    model: thread.model,
+                    author: thread.operator,
+                });
+            }
+            onChange(thread, "state", () => {
+                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
+                    livechatService.updateSession({
+                        state: thread.state,
+                    });
+                }
+            });
+            onChange(thread, "seen_message_id", () => {
+                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
+                    livechatService.updateSession({
+                        seen_message_id: thread.seen_message_id,
+                    });
+                }
+            });
+            onChange(thread, "message_unread_counter", () => {
+                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
+                    livechatService.updateSession({
+                        channel: thread.channel,
+                    });
+                }
+            });
+            this.store.livechatThread = thread;
+        }
+        return thread;
+    },
+});
 
 patch(Thread.prototype, {
     chatbotScriptId: null,

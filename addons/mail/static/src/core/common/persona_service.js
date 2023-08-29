@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { Persona } from "@mail/core/common/persona_model";
-import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
+import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
@@ -37,24 +36,6 @@ export class PersonaService {
             guest_id: guest.id,
             name,
         });
-    }
-
-    /**
-     * @param {import("@mail/core/common/persona_model").Data} data
-     * @returns {import("@mail/core/common/persona_model").Persona}
-     */
-    insert(data) {
-        const localId = createLocalId(data.type, data.id);
-        let persona = this.store.Persona.records[localId];
-        if (!persona) {
-            persona = new Persona();
-            persona._store = this.store;
-            persona.localId = localId;
-            this.store.Persona.records[localId] = persona;
-        }
-        this.update(persona, data);
-        // return reactive version
-        return this.store.Persona.records[localId];
     }
 
     update(persona, data) {
@@ -96,13 +77,13 @@ export class PersonaService {
                 }
             );
             for (const { id, is_company } of partnerData) {
-                this.insert({ id, is_company, type: "partner" });
+                this.store.Persona.insert({ id, is_company, type: "partner" });
                 ongoing.delete(id);
                 this._sQueue.todo.delete(id);
             }
             for (const id of ongoing) {
                 // no is_company found => assumes persona is not a company
-                this.insert({ id, is_company: false, type: "partner" });
+                this.store.Persona.insert({ id, is_company: false, type: "partner" });
                 this._sQueue.todo.delete(id);
             }
         });

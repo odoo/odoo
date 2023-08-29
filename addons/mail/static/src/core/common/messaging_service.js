@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { CannedResponse } from "@mail/core/common/canned_response_model";
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { reactive } from "@odoo/owl";
@@ -156,20 +155,6 @@ export class Messaging {
             views: [[false, "form"]],
             res_id: id,
         });
-    }
-
-    insertCannedResponse(data) {
-        let cannedResponse = this.store.CannedResponse.records[data.id];
-        if (!cannedResponse) {
-            this.store.CannedResponse.records[data.id] = new CannedResponse();
-            cannedResponse = this.store.CannedResponse.records[data.id];
-        }
-        Object.assign(cannedResponse, {
-            id: data.id,
-            name: data.source,
-            substitution: data.substitution,
-        });
-        return cannedResponse;
     }
 }
 

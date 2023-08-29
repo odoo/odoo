@@ -1,12 +1,33 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { url } from "@web/core/utils/urls";
 
 export class Attachment extends Record {
+    /** @type {Object.<number, Attachment>} */
+    static records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Attachment}
+     */
+    static insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert attachment: id is missing in data");
+        }
+        let attachment = this.records[data.id];
+        if (!attachment) {
+            this.records[data.id] = new Attachment();
+            attachment = this.records[data.id];
+            Object.assign(attachment, { _store: this.store, id: data.id });
+        }
+        this.env.services["mail.attachment"].update(attachment, data);
+        return attachment;
+    }
+
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     accessToken;
@@ -151,3 +172,5 @@ export class Attachment extends Record {
         );
     }
 }
+
+modelRegistry.add(Attachment.name, Attachment);
