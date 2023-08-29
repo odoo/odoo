@@ -60,7 +60,7 @@ from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
-    partition, populate, Query, ReversedIterable, split_every, unique,
+    partition, populate, Query, ReversedIterable, split_every, unique, SQL,
 )
 from .tools.lru import LRU
 from .tools.translate import _, _lt
@@ -941,11 +941,11 @@ class BaseModel(metaclass=MetaModel):
         modname = '__export__'
 
         cr = self.env.cr
-        cr.execute("""
+        cr.execute(SQL("""
             SELECT res_id, module, name
             FROM ir_model_data
-            WHERE model = %s AND res_id in %s
-        """, (self._name, tuple(self.ids)))
+            WHERE model = %s AND res_id IN %s
+        """, self._name, tuple(self.ids)))
         xids = {
             res_id: (module, name)
             for res_id, module, name in cr.fetchall()
@@ -1863,49 +1863,48 @@ class BaseModel(metaclass=MetaModel):
         groupby_terms_map = {}  # {spec: <SQL expression>}
         for spec in groupby:
             sql_expression, fnames_used = self._read_group_groupby(spec, query)
-            groupby_terms_map[spec] = sql_expression
+            groupby_terms_map[spec] = SQL(sql_expression)
             fnames_to_flush.update(fnames_used)
 
         select_terms = []  # [<SQL expression>,]
         for spec in aggregates:
             sql_expression, fnames_used = self._read_group_select(spec, query)
-            select_terms.append(sql_expression)
+            select_terms.append(SQL(sql_expression))
             fnames_to_flush.update(fnames_used)
 
         having_expression, having_params, fnames_used = self._read_group_having(having, query)
+        having_term = SQL(having_expression, *having_params)
         fnames_to_flush.update(fnames_used)
 
         orderby_terms, extra_groupby_terms, fnames_used = self._read_group_orderby(order, groupby_terms_map, query)
+        orderby_terms = [SQL(term) for term in orderby_terms]
+        extra_groupby_terms = [SQL(term) for term in extra_groupby_terms]
         fnames_to_flush.update(fnames_used)
 
         groupby_terms = list(groupby_terms_map.values())
 
-        from_clause, where_clause, query_params = query.get_sql()
         query_parts = [
-            f"SELECT {', '.join(groupby_terms + select_terms)}",
-            f"FROM {from_clause}",
+            SQL("SELECT %s", SQL(", ").join(groupby_terms + select_terms)),
+            SQL("FROM %s", query.from_clause),
         ]
-        if where_clause:
-            query_parts.append(f"WHERE {where_clause}")
+        if query.where_clause:
+            query_parts.append(SQL("WHERE %s", query.where_clause))
         if groupby_terms:
-            query_parts.append(f"GROUP BY {', '.join(groupby_terms + extra_groupby_terms)}")
-        if having_expression:
-            query_parts.append(f"HAVING {having_expression}")
-            query_params.extend(having_params)
+            query_parts.append(SQL("GROUP BY %s", SQL(", ").join(groupby_terms + extra_groupby_terms)))
+        if having_term:
+            query_parts.append(SQL("HAVING %s", having_term))
         if orderby_terms:
-            query_parts.append(f"ORDER BY {', '.join(orderby_terms)}")
+            query_parts.append(SQL("ORDER BY %s", SQL(", ").join(orderby_terms)))
         if limit:
-            query_parts.append("LIMIT %s")
-            query_params.append(limit)
+            query_parts.append(SQL("LIMIT %s", limit))
         if offset:
-            query_parts.append("OFFSET %s")
-            query_params.append(offset)
+            query_parts.append(SQL("OFFSET %s", offset))
 
         self._flush_search(domain, fnames_to_flush)
         if fnames_to_flush:
             self._read_group_check_field_access_rights(fnames_to_flush)
 
-        self.env.cr.execute('\n'.join(query_parts), query_params)
+        self.env.cr.execute(SQL("\n").join(query_parts))
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
         row_values = self.env.cr.fetchall()
 
@@ -2093,7 +2092,7 @@ class BaseModel(metaclass=MetaModel):
                 extra_groupby_terms.extend(order.strip().split()[0] for order in extra_order.split(",") if order.strip())
             else:
                 sql_expression = groupby_terms[order_term]
-                orderby_terms.append(f'{sql_expression} {order_direction} {order_nulls}')
+                orderby_terms.append(SQL(f'%s {order_direction} {order_nulls}', sql_expression))
 
         return orderby_terms, extra_groupby_terms, fnames_used
 
@@ -2906,17 +2905,16 @@ class BaseModel(metaclass=MetaModel):
 
         field = self._fields[field_name]
         target_model = self.env[self._fields[field.definition_record].comodel_name]
-        query = psycopg2.sql.SQL("""
-            SELECT definition
-              FROM {table},
-                   jsonb_array_elements({field}) definition
-             WHERE {field} IS NOT NULL
-               AND definition->>'name' = %(property_name)s
-             LIMIT 1
-        """).format(
-            table=psycopg2.sql.Identifier(target_model._table),
-            field=psycopg2.sql.Identifier(field.definition_record_field))
-        self.env.cr.execute(query, {'property_name': property_name})
+        self.env.cr.execute(SQL(
+            """ SELECT definition
+                  FROM %s, jsonb_array_elements(%s) definition
+                 WHERE %s IS NOT NULL AND definition->>'name' = %s
+                 LIMIT 1 """,
+            SQL.identifier(target_model._table),
+            SQL.identifier(field.definition_record_field),
+            SQL.identifier(field.definition_record_field),
+            property_name,
+        ))
         result = self.env.cr.dictfetchone()
         return result["definition"] if result else {}
 
@@ -2940,20 +2938,25 @@ class BaseModel(metaclass=MetaModel):
         # Note: the final '/' is necessary to match subtrees correctly: '42/63'
         # is a prefix of '42/630', but '42/63/' is not a prefix of '42/630/'.
         _logger.info('Computing parent_path for table %s...', self._table)
-        query = """
-            WITH RECURSIVE __parent_store_compute(id, parent_path) AS (
-                SELECT row.id, concat(row.id, '/')
-                FROM {table} row
-                WHERE row.{parent} IS NULL
-            UNION
-                SELECT row.id, concat(comp.parent_path, row.id, '/')
-                FROM {table} row, __parent_store_compute comp
-                WHERE row.{parent} = comp.id
-            )
-            UPDATE {table} row SET parent_path = comp.parent_path
-            FROM __parent_store_compute comp
-            WHERE row.id = comp.id
-        """.format(table=self._table, parent=self._parent_name)
+        query = SQL(
+            """ WITH RECURSIVE __parent_store_compute(id, parent_path) AS (
+                    SELECT row.id, concat(row.id, '/')
+                    FROM %s row
+                    WHERE row.%s IS NULL
+                UNION
+                    SELECT row.id, concat(comp.parent_path, row.id, '/')
+                    FROM %s row, __parent_store_compute comp
+                    WHERE row.%s = comp.id
+                )
+                UPDATE %s row SET parent_path = comp.parent_path
+                FROM __parent_store_compute comp
+                WHERE row.id = comp.id """,
+            SQL.identifier(self._table),
+            SQL.identifier(self._parent_name),
+            SQL.identifier(self._table),
+            SQL.identifier(self._parent_name),
+            SQL.identifier(self._table),
+        )
         self.env.cr.execute(query)
         self.invalidate_model(['parent_path'])
         return True
@@ -2967,13 +2970,16 @@ class BaseModel(metaclass=MetaModel):
         cr = self._cr
         cols = [name for name, field in self._fields.items()
                      if field.store and field.column_type]
-        cr.execute("SELECT a.attname, a.attnotnull"
-                   "  FROM pg_class c, pg_attribute a"
-                   " WHERE c.relname=%s"
-                   "   AND c.oid=a.attrelid"
-                   "   AND a.attisdropped=%s"
-                   "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN %s", (self._table, False, tuple(cols))),
+        cr.execute(SQL(
+            """ SELECT a.attname, a.attnotnull
+                  FROM pg_class c, pg_attribute a
+                 WHERE c.relname=%s
+                   AND c.oid=a.attrelid
+                   AND a.attisdropped=%s
+                   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')
+                   AND a.attname NOT IN %s """,
+            self._table, False, tuple(cols),
+        ))
 
         for row in cr.dictfetchall():
             if log:
@@ -2999,15 +3005,20 @@ class BaseModel(metaclass=MetaModel):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
-            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+            self._cr.execute(SQL(
+                "UPDATE %s SET %s = %s WHERE %s IS NULL",
+                SQL.identifier(self._table),
+                SQL.identifier(column_name),
+                value,
+                SQL.identifier(column_name),
+            ))
 
     @ormcache()
     def _table_has_rows(self):
         """ Return whether the model's table has rows. This method should only
             be used when updating the database schema (:meth:`~._auto_init`).
         """
-        self.env.cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
+        self.env.cr.execute(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(self._table)))
         return self.env.cr.rowcount
 
     def _auto_init(self):
@@ -3076,7 +3087,7 @@ class BaseModel(metaclass=MetaModel):
                 # mark existing records for computation now, so that computed
                 # required fields are flushed before the NOT NULL constraint is
                 # added to the database
-                cr.execute('SELECT id FROM "{}"'.format(self._table))
+                cr.execute(SQL('SELECT id FROM %s', SQL.identifier(self._table)))
                 records = self.browse(row[0] for row in cr.fetchall())
                 if records:
                     for field in fields_to_compute:
@@ -3545,13 +3556,21 @@ class BaseModel(metaclass=MetaModel):
                 else translations[self.env.lang] if translations.get(self.env.lang) is not None \
                 else next((v for v in translations.values() if v is not None), None)
             self.invalidate_recordset([field_name])
-            self._cr.execute(f'''
-                UPDATE "{self._table}"
-                SET "{field_name}" = NULLIF(
-                    jsonb_strip_nulls(%s || COALESCE("{field_name}", '{{}}'::jsonb) || %s),
-                    '{{}}'::jsonb)
-                WHERE id = %s
-            ''', (Json({'en_US': translation_fallback}), Json(translations), self.id))
+            self._cr.execute(SQL(
+                """ UPDATE %s
+                    SET %s = NULLIF(
+                        jsonb_strip_nulls(%s || COALESCE(%s, '{}'::jsonb) || %s),
+                        '{}'::jsonb)
+                    WHERE id = %s
+                """,
+                SQL.identifier(self._table),
+                SQL.identifier(field_name),
+                Json({'en_US': translation_fallback}),
+                SQL.identifier(field_name),
+                Json(translations),
+                self.id,
+            ))
+            self.modified([field_name])
         else:
             # Note:
             # update terms in 'en_US' will not change its value other translated values
@@ -3830,8 +3849,7 @@ class BaseModel(metaclass=MetaModel):
                 select_terms.append(qname)
 
             # select the given columns from the rows in the query
-            query_str, params = query.select(*select_terms)
-            self.env.cr.execute(query_str, params)
+            self.env.cr.execute(query.select(*select_terms))
             rows = self.env.cr.fetchall()
 
             if not rows:
@@ -4062,13 +4080,10 @@ class BaseModel(metaclass=MetaModel):
             return self
 
         # determine ids in database that satisfy ir.rules
-        valid_ids = set()
-        query.add_where(f'"{self._table}".id IN %s')
-        query_str, params = query.select()
         self._flush_search([])
-        for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query_str, params + [sub_ids])
-            valid_ids.update(row[0] for row in self._cr.fetchall())
+        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
+        self._cr.execute(query.select())
+        valid_ids = {row[0] for row in self._cr.fetchall()}
 
         # return new ids without origin and ids with origin in valid_ids
         return self.browse([
@@ -4138,8 +4153,10 @@ class BaseModel(metaclass=MetaModel):
             # Delete the records' properties.
             ir_property_unlink |= Property.search([('res_id', 'in', refs)])
 
-            query = f'DELETE FROM "{self._table}" WHERE id IN %s'
-            cr.execute(query, (sub_ids,))
+            cr.execute(SQL(
+                "DELETE FROM %s WHERE id IN %s",
+                SQL.identifier(self._table), sub_ids,
+            ))
 
             # Removing the ir_model_data reference if the record being deleted
             # is a record created by xml/csv file, as these are not connected
@@ -4159,8 +4176,10 @@ class BaseModel(metaclass=MetaModel):
             # (the search is performed with sql as the search method of
             # ir_attachment is overridden to hide attachments of deleted
             # records)
-            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-            cr.execute(query, (self._name, sub_ids))
+            cr.execute(SQL(
+                "SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s",
+                self._name, sub_ids,
+            ))
             ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
 
         # invalidate the *whole* cache, since the orm does not handle all
@@ -4386,9 +4405,8 @@ class BaseModel(metaclass=MetaModel):
             vals.setdefault('write_uid', self.env.uid)
             vals.setdefault('write_date', self.env.cr.now())
 
-        # determine SQL values
-        columns = []
-        params = []
+        # determine SQL assignments
+        assignments = []
 
         for name, val in sorted(vals.items()):
             if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
@@ -4400,19 +4418,25 @@ class BaseModel(metaclass=MetaModel):
                 # The first param is for the fallback value {'en_US': 'first_written_value'}
                 # which fills the 'en_US' key of jsonb only when the old column value is NULL.
                 # The second param is for the real value {'fr_FR': 'French', 'nl_NL': 'Dutch'}
-                columns.append(f'''"{name}" = %s || COALESCE("{name}", '{{}}'::jsonb) || %s''')
-                params.append(Json({} if 'en_US' in val.adapted else {'en_US': next(iter(val.adapted.values()))}))
-                params.append(val)
+                assignments.append(SQL(
+                    "%s = %s || COALESCE(%s, '{}'::jsonb) || %s",
+                    SQL.identifier(name),
+                    Json({} if 'en_US' in val.adapted else {'en_US': next(iter(val.adapted.values()))}),
+                    SQL.identifier(name),
+                    val,
+                ))
             else:
-                columns.append(f'"{name}" = %s')
-                params.append(val)
+                assignments.append(SQL('%s = %s', SQL.identifier(name), val))
 
         # update columns
-        if columns:
-            template = ', '.join(columns)
-            query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
+        if assignments:
             for sub_ids in cr.split_for_in_conditions(self._ids):
-                cr.execute(query, params + [sub_ids])
+                cr.execute(SQL(
+                    "UPDATE %s SET %s WHERE id IN %s",
+                    SQL.identifier(self._table),
+                    SQL(", ").join(assignments),
+                    sub_ids,
+                ))
 
         # update parent_path
         if parent_records:
@@ -4701,12 +4725,12 @@ class BaseModel(metaclass=MetaModel):
                 for row in rows:
                     row.append(SQL_DEFAULT)
 
-            header = ", ".join(f'"{column}"' for column in columns)
-            template = ", ".join("%s" for _ in rows)
-            cr.execute(
-                f'INSERT INTO "{self._table}" ({header}) VALUES {template} RETURNING "id"',
-                [tuple(row) for row in rows],
-            )
+            cr.execute(SQL(
+                'INSERT INTO %s (%s) VALUES %s RETURNING "id"',
+                SQL.identifier(self._table),
+                SQL(', ').join(map(SQL.identifier, columns)),
+                SQL(', ').join(tuple(row) for row in rows),
+            ))
             ids.extend(id_ for id_, in cr.fetchall())
 
         # put the new records in cache, and update inverse fields, for many2one
@@ -4791,14 +4815,20 @@ class BaseModel(metaclass=MetaModel):
         if not self._parent_store:
             return
 
-        query = """
-            UPDATE {0} node
-            SET parent_path=concat((SELECT parent.parent_path FROM {0} parent
-                                    WHERE parent.id=node.{1}), node.id, '/')
-            WHERE node.id IN %s
-            RETURNING node.id, node.parent_path
-        """.format(self._table, self._parent_name)
-        self._cr.execute(query, [tuple(self.ids)])
+        self._cr.execute(SQL(
+            """ UPDATE %s node
+                SET parent_path=concat((
+                        SELECT parent.parent_path
+                        FROM %s parent
+                        WHERE parent.id=node.%s
+                    ), node.id, '/')
+                WHERE node.id IN %s
+                RETURNING node.id, node.parent_path """,
+            SQL.identifier(self._table),
+            SQL.identifier(self._table),
+            SQL.identifier(self._parent_name),
+            tuple(self.ids),
+        ))
 
         # update the cache of updated nodes, and determine what to recompute
         updated = dict(self._cr.fetchall())
@@ -4815,15 +4845,23 @@ class BaseModel(metaclass=MetaModel):
         # No need to recompute the values if the parent is the same.
         parent_val = vals[self._parent_name]
         if parent_val:
-            query = """ SELECT id FROM {0}
-                        WHERE id IN %s AND ({1} != %s OR {1} IS NULL) """
-            params = [tuple(self.ids), parent_val]
+            condition = SQL(
+                "(%s != %s OR %s IS NULL)",
+                SQL.identifier(self._parent_name),
+                parent_val,
+                SQL.identifier(self._parent_name),
+            )
         else:
-            query = """ SELECT id FROM {0}
-                        WHERE id IN %s AND {1} IS NOT NULL """
-            params = [tuple(self.ids)]
-        query = query.format(self._table, self._parent_name)
-        self._cr.execute(query, params)
+            condition = SQL(
+                "%s IS NOT NULL",
+                SQL.identifier(self._parent_name),
+            )
+        self._cr.execute(SQL(
+            "SELECT id FROM %s WHERE id IN %s AND %s",
+            SQL.identifier(self._table),
+            tuple(self.ids),
+            condition,
+        ))
         return self.browse([row[0] for row in self._cr.fetchall()])
 
     def _parent_store_update(self):
@@ -4831,11 +4869,15 @@ class BaseModel(metaclass=MetaModel):
         cr = self.env.cr
 
         # determine new prefix of parent_path
-        query = """
-            SELECT parent.parent_path FROM {0} node, {0} parent
-            WHERE node.id = %s AND parent.id = node.{1}
-        """
-        cr.execute(query.format(self._table, self._parent_name), [self.ids[0]])
+        cr.execute(SQL(
+            """ SELECT parent.parent_path
+                FROM %s node, %s parent
+                WHERE node.id = %s AND parent.id = node.%s """,
+            SQL.identifier(self._table),
+            SQL.identifier(self._table),
+            self.ids[0],
+            SQL.identifier(self._parent_name),
+        ))
         prefix = cr.fetchone()[0] if cr.rowcount else ''
 
         # check for recursion
@@ -4845,16 +4887,20 @@ class BaseModel(metaclass=MetaModel):
                 raise UserError(_("Recursion Detected."))
 
         # update parent_path of all records and their descendants
-        query = """
-            UPDATE {0} child
-            SET parent_path = concat(%s, substr(child.parent_path,
-                    length(node.parent_path) - length(node.id || '/') + 1))
-            FROM {0} node
-            WHERE node.id IN %s
-            AND child.parent_path LIKE concat(node.parent_path, '%%')
-            RETURNING child.id, child.parent_path
-        """
-        cr.execute(query.format(self._table), [prefix, tuple(self.ids)])
+        cr.execute(SQL(
+            """ UPDATE %s child
+                SET parent_path = concat(%s, substr(child.parent_path,
+                        length(node.parent_path) - length(node.id || '/') + 1))
+                FROM %s node
+                WHERE node.id IN %s
+                AND child.parent_path LIKE concat(node.parent_path, %s)
+                RETURNING child.id, child.parent_path """,
+            SQL.identifier(self._table),
+            prefix,
+            SQL.identifier(self._table),
+            tuple(self.ids),
+            '%',
+        ))
 
         # update the cache of updated nodes, and determine what to recompute
         updated = dict(cr.fetchall())
@@ -5438,9 +5484,8 @@ class BaseModel(metaclass=MetaModel):
         if not ids:
             return self
         query = Query(self.env.cr, self._table, self._table_query)
-        query.add_where(f'"{self._table}".id IN %s', [tuple(ids)])
-        query_str, params = query.select()
-        self.env.cr.execute(query_str, params)
+        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
+        self.env.cr.execute(query.select())
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
@@ -5459,11 +5504,13 @@ class BaseModel(metaclass=MetaModel):
         # must ignore 'active' flag, ir.rules, etc. => direct SQL query
         cr = self._cr
         self.flush_model([parent])
-        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
         for id in self.ids:
             current_id = id
             while current_id:
-                cr.execute(query, (current_id,))
+                cr.execute(SQL(
+                    "SELECT %s FROM %s WHERE id = %s",
+                    SQL.identifier(parent), SQL.identifier(self._table), current_id,
+                ))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
                 if current_id == id:
@@ -5487,15 +5534,20 @@ class BaseModel(metaclass=MetaModel):
         self.flush_model([field_name])
 
         cr = self._cr
-        query = 'SELECT "%s", "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
-                    (field.column1, field.column2, field.relation, field.column1, field.column2)
-
         succs = defaultdict(set)        # transitive closure of successors
         preds = defaultdict(set)        # transitive closure of predecessors
         todo, done = set(self.ids), set()
         while todo:
             # retrieve the respective successors of the nodes in 'todo'
-            cr.execute(query, [tuple(todo)])
+            cr.execute(SQL(
+                "SELECT %s, %s FROM %s WHERE %s IN %s AND %s IS NOT NULL",
+                SQL.identifier(field.column1),
+                SQL.identifier(field.column2),
+                SQL.identifier(field.relation),
+                SQL.identifier(field.column1),
+                tuple(todo),
+                SQL.identifier(field.column2),
+            ))
             done.update(todo)
             todo.clear()
             for id1, id2 in cr.fetchall():
@@ -6941,8 +6993,7 @@ class TransientModel(Model):
 
     def _transient_clean_old_rows(self, max_count):
         # Check how many rows we have in the table
-        query = 'SELECT count(*) FROM "{}"'.format(self._table)
-        self._cr.execute(query)
+        self._cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
         [count] = self._cr.fetchone()
         if count > max_count:
             self._transient_clean_rows_older_than(300)
@@ -6950,12 +7001,12 @@ class TransientModel(Model):
     def _transient_clean_rows_older_than(self, seconds):
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
-        query = """
-            SELECT id FROM "{}"
-            WHERE COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp
-                < (now() AT TIME ZONE 'UTC') - interval %s
-        """.format(self._table)
-        self._cr.execute(query, ["%s seconds" % seconds])
+        self._cr.execute(SQL(
+            "SELECT id FROM %s WHERE %s < %s",
+            SQL.identifier(self._table),
+            SQL("COALESCE(write_date, create_date, (now() AT TIME ZONE 'UTC'))::timestamp"),
+            SQL("(now() AT TIME ZONE 'UTC') - interval %s", f"{seconds} seconds"),
+        ))
         ids = [x[0] for x in self._cr.fetchall()]
         self.sudo().browse(ids).unlink()
 
@@ -6986,7 +7037,7 @@ def convert_pgerror_unique(model, fields, info, e):
     # new cursor since we're probably in an error handler in a blown
     # transaction which may not have been rollbacked/cleaned yet
     with closing(model.env.registry.cursor()) as cr_tmp:
-        cr_tmp.execute("""
+        cr_tmp.execute(SQL("""
             SELECT
                 conname AS "constraint name",
                 t.relname AS "table name",
@@ -6998,7 +7049,7 @@ def convert_pgerror_unique(model, fields, info, e):
             FROM pg_constraint
             JOIN pg_class t ON t.oid = conrelid
             WHERE conname = %s
-        """, [e.diag.constraint_name])
+        """, e.diag.constraint_name))
         constraint, table, ufields = cr_tmp.fetchone() or (None, None, None)
     # if the unique constraint is on an expression or on an other table
     if not ufields or model._table != table:
