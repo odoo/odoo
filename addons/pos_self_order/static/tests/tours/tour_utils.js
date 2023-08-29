@@ -13,6 +13,7 @@
  * @property {string} name
  * @property {string} value
  */
+import { TourError } from "@web_tour/tour_service/tour_utils";
 
 export const PosSelf = {
     check: {
@@ -98,9 +99,14 @@ export const PosSelf = {
                     trigger: `.o_self_order_item_card .o_self_product_name:contains('${name}')`,
                 },
                 {
-                    content: `Click on 'Add' button`,
-                    trigger: `.btn:not(:contains('Add'))`,
-                    run: () => {},
+                    content: `Inside product main view 'Add' button should not be present`,
+                    trigger: `.product_main_view`,
+                    run: () => {
+                        const addButton = document.querySelector(".o_self_order_main_button");
+                        if (addButton){
+                            throw new TourError("Add button should not be present");
+                        }
+                    },
                 },
             ];
         },
