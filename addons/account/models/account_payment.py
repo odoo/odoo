@@ -1000,15 +1000,15 @@ class AccountPayment(models.Model):
             'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(self.reconciled_statement_lines_ids) == 1:
+        if len(self.reconciled_statement_line_ids) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': self.reconciled_statement_lines_ids.id,
+                'res_id': self.reconciled_statement_line_ids.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', self.reconciled_statement_lines_ids.ids)],
+                'domain': [('id', 'in', self.reconciled_statement_line_ids.ids)],
             })
         return action
 
