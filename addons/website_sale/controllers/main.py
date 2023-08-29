@@ -1539,7 +1539,7 @@ class WebsiteSale(http.Controller):
             keep_carrier = bool(int(keep_carrier))
         if carrier_id:
             carrier_id = int(carrier_id)
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(update_pricelist=True)
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
             if carrier_id:
