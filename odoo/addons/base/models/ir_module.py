@@ -148,15 +148,6 @@ class Module(models.Model):
     _description = "Module"
     _order = 'application desc,sequence,name'
 
-    @api.model
-    def get_views(self, views, options=None):
-        res = super().get_views(views, options)
-        if res['views'].get('form', {}).get('toolbar'):
-            install_id = self.env.ref('base.action_server_module_immediate_install').id
-            action = [rec for rec in res['views']['form']['toolbar']['action'] if rec.get('id', False) != install_id]
-            res['views']['form']['toolbar'] = {'action': action}
-        return res
-
     @classmethod
     def get_module_info(cls, name):
         try:
