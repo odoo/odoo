@@ -16,7 +16,7 @@ import {
     onWillDestroy,
 } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 
 /**
@@ -165,14 +165,14 @@ export class Colorpicker extends Component {
             this._onMouseMoveOpacitySlider(ev);
         });
         this.$documents.on(`mousemove.${this.uniqueId}`, this.throttleOnMouseMove);
-        this.$documents.on(`mouseup.${this.uniqueId}`, debounce((ev) => {
+        this.$documents.on(`mouseup.${this.uniqueId}`, () => {
             if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
                 this._colorSelected();
             }
             this.pickerFlag = false;
             this.sliderFlag = false;
             this.opacitySliderFlag = false;
-        }, 10));
+        });
 
         this.previewActive = true;
     }
