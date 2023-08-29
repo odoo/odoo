@@ -663,11 +663,13 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
+        unrounded_total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = currency.round(unrounded_total_excluded)
 
         # 4) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
         base = total_included = total_void = total_excluded
+        unrounded_total_included = unrounded_total_excluded
 
         # Flag indicating the checkpoint used in price_include to avoid rounding issue must be skipped since the base
         # amount has changed because we are currently mixing price-included and price-excluded include_base_amount
@@ -702,6 +704,7 @@ class AccountTax(models.Model):
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
+            unrounded_factorized_tax_amount = tax_amount * sum_repartition_factor
             tax_amount = float_round(tax_amount, precision_rounding=prec)
             factorized_tax_amount = float_round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
@@ -774,6 +777,7 @@ class AccountTax(models.Model):
                     skip_checkpoint = True
 
             total_included += factorized_tax_amount
+            unrounded_total_included += unrounded_factorized_tax_amount
             i += 1
 
         base_taxes_for_tags = taxes
@@ -787,6 +791,8 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),
+            'error_excluded': sign * (unrounded_total_excluded - total_excluded),
+            'error_included': sign * (unrounded_total_included - total_included),
             'total_void': sign * total_void,
         }
 
@@ -908,6 +914,8 @@ class AccountTax(models.Model):
                 'tax_tag_ids': [Command.set(taxes_res['base_tags'])],
                 'price_subtotal': taxes_res['total_excluded'],
                 'price_total': taxes_res['total_included'],
+                'error_subtotal': taxes_res['error_excluded'],
+                'error_total': taxes_res['error_included'],
             }
 
             if early_pay_discount_computation == 'excluded':
@@ -926,6 +934,11 @@ class AccountTax(models.Model):
                     tax_res['amount'] += delta_tax
                     to_update_vals['price_total'] += delta_tax
 
+                    # The error on the subtotal remains the same but the error
+                    # on the tax needs to copied from the recomputed values.
+                    new_error_tax = new_taxes_res['error_total'] - new_taxes_res['error_subtotal']
+                    taxes_res['error_total'] = taxes_res['error_subtotal'] + new_error_tax
+
             tax_values_list = []
             for tax_res in taxes_res['taxes']:
                 tax_amount = tax_res['amount'] / rate
@@ -942,11 +955,14 @@ class AccountTax(models.Model):
                 })
 
         else:
+            unrounded_price_subtotal = price_unit_after_discount * base_line['quantity']
             price_subtotal = currency.round(price_unit_after_discount * base_line['quantity'])
             to_update_vals = {
                 'tax_tag_ids': [Command.clear()],
                 'price_subtotal': price_subtotal,
                 'price_total': price_subtotal,
+                'error_subtotal': unrounded_price_subtotal - price_subtotal,
+                'error_total': unrounded_price_subtotal - price_subtotal,
             }
             tax_values_list = []
 
@@ -1097,6 +1113,8 @@ class AccountTax(models.Model):
             'totals': defaultdict(lambda: {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
+                'error_untaxed': 0.0,
+                'error_tax': 0.0,
             }),
         }
 
@@ -1117,6 +1135,8 @@ class AccountTax(models.Model):
             res['base_lines_to_update'].append((base_line, to_update_vals))
             currency = base_line['currency'] or self.env.company.currency_id
             res['totals'][currency]['amount_untaxed'] += to_update_vals['price_subtotal']
+            res['totals'][currency]['error_untaxed'] += to_update_vals['error_subtotal']
+            res['totals'][currency]['error_tax'] += to_update_vals['error_total'] - to_update_vals['error_subtotal']
 
         # =========================================================================================
         # TAX LINES
@@ -1149,8 +1169,10 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
-                tax_amount = currency.round(tax_values['tax_amount'])
+                unrounded_tax_amount = tax_values['tax_amount']
+                tax_amount = currency.round(unrounded_tax_amount)
                 res['totals'][currency]['amount_tax'] += tax_amount
+                res['totals'][currency]['error_tax'] += unrounded_tax_amount - tax_amount
 
             if grouping_key in existing_tax_line_map:
                 # Update an existing tax line.

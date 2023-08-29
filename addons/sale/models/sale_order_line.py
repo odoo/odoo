@@ -164,11 +164,11 @@ class SaleOrderLine(models.Model):
         store=True, precompute=True)
     price_reduce_taxexcl = fields.Monetary(
         string="Price Reduce Tax excl",
-        compute='_compute_price_reduce_taxexcl',
+        compute='_compute_amount',
         store=True, precompute=True)
     price_reduce_taxinc = fields.Monetary(
         string="Price Reduce Tax incl",
-        compute='_compute_price_reduce_taxinc',
+        compute='_compute_amount',
         store=True, precompute=True)
 
     # Logistics/Delivery fields
@@ -599,21 +599,16 @@ class SaleOrderLine(models.Model):
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
 
+            unrounded_amount_untaxed = amount_untaxed + totals['error_untaxed']
+            unrounded_amount_taxed = unrounded_amount_untaxed + amount_tax + totals['error_tax']
+
             line.update({
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
+                'price_reduce_taxexcl': unrounded_amount_untaxed / line.product_uom_qty if line.product_uom_qty else 0.0,
+                'price_reduce_taxinc': unrounded_amount_taxed / line.product_uom_qty if line.product_uom_qty else 0.0,
             })
-
-    @api.depends('price_subtotal', 'product_uom_qty')
-    def _compute_price_reduce_taxexcl(self):
-        for line in self:
-            line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
-
-    @api.depends('price_total', 'product_uom_qty')
-    def _compute_price_reduce_taxinc(self):
-        for line in self:
-            line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _compute_product_packaging_id(self):

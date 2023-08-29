@@ -411,6 +411,77 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(sale_order.amount_total, 15.41, "")
 
+    def test_price_reduce_taxinc_rounding(self):
+        tax = self.env['account.tax'].create({
+            'name': 'Test tax',
+            'type_tax_use': 'sale',
+            'price_include': False,
+            'amount_type': 'percent',
+            'amount': 11.0,
+        })
+
+        # Test Round per Line (default)
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+
+        for qty in range(1, 10):
+            sale_order.write({'order_line': [Command.clear()]})
+            line = self.env['sale.order.line'].create({
+                'order_id': sale_order.id,
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'price_unit': 126.13,
+                'discount': 0,
+                'tax_id': tax.ids,
+            })
+            self.assertAlmostEqual(line.price_reduce_taxinc, 140.00)
+            line = self.env['sale.order.line'].create({
+                'order_id': sale_order.id,
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'price_unit': 144.14,
+                'discount': 0,
+                'tax_id': tax.ids,
+            })
+            self.assertAlmostEqual(line.price_reduce_taxinc, 160.00)
+
+    def test_price_reduce_taxexcl_rounding(self):
+        tax = self.env['account.tax'].create({
+            'name': 'Test tax',
+            'type_tax_use': 'sale',
+            'price_include': True,
+            'amount_type': 'percent',
+            'amount': 11.0,
+        })
+
+        # Test Round per Line (default)
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+
+        for qty in range(1, 10):
+            sale_order.write({'order_line': [Command.clear()]})
+            line = self.env['sale.order.line'].create({
+                'order_id': sale_order.id,
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'price_unit': 140.00,
+                'discount': 0,
+                'tax_id': tax.ids,
+            })
+            self.assertAlmostEqual(line.price_reduce_taxexcl, 126.13)
+            line = self.env['sale.order.line'].create({
+                'order_id': sale_order.id,
+                'product_id': self.product.id,
+                'product_uom_qty': qty,
+                'price_unit': 160.00,
+                'discount': 0,
+                'tax_id': tax.ids,
+            })
+            self.assertAlmostEqual(line.price_reduce_taxexcl, 144.14)
 
 @tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):
