@@ -297,6 +297,23 @@ QUnit.test("readGroup method", async (assert) => {
     });
 });
 
+QUnit.test("test readGroup method removes duplicate values from groupby", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    await env.services.orm.readGroup(
+        "sale.order",
+        [["user_id", "=", 2]],
+        ["amount_total:sum"],
+        ["date_order:month", "date_order:month"],
+        { offset: 1 }
+    );
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read_group");
+    assert.deepEqual(query.params.kwargs.groupby, ["date_order:month"],
+        "Duplicate values should be removed from groupby"
+    );
+});
+
 QUnit.test("searchRead method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
