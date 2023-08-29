@@ -538,8 +538,6 @@ class IrModelFields(models.Model):
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
     help = fields.Text(string='Field Help', translate=True)
     ttype = fields.Selection(selection=FIELD_TYPES, string='Field Type', required=True)
-    selection = fields.Char(string="Selection Options (Deprecated)",
-                            compute='_compute_selection', inverse='_inverse_selection')
     selection_ids = fields.One2many("ir.model.fields.selection", "field_id",
                                     string="Selection Options", copy=True)
     copied = fields.Boolean(string='Copied',
@@ -608,19 +606,6 @@ class IrModelFields(models.Model):
                 rec.related_field_id = rec._related_field()
             else:
                 rec.related_field_id = False
-
-    @api.depends('selection_ids')
-    def _compute_selection(self):
-        for rec in self:
-            if rec.ttype in ('selection', 'reference'):
-                rec.selection = str(self.env['ir.model.fields.selection']._get_selection(rec.id))
-            else:
-                rec.selection = False
-
-    def _inverse_selection(self):
-        for rec in self:
-            selection = literal_eval(rec.selection or "[]")
-            self.env['ir.model.fields.selection']._update_selection(rec.model, rec.name, selection)
 
     @api.depends('ttype', 'related', 'compute')
     def _compute_copied(self):

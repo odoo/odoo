@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import common
+from odoo import Command
 
 
 @common.tagged('post_install', '-at_install')
@@ -78,7 +79,11 @@ class TestReadProgressBar(common.TransactionCase):
                     'field_description': 'State',
                     'name': 'x_state',
                     'ttype': 'selection',
-                    'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
+                    'selection_ids': [
+                        Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                        Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+                        Command.create({'value': 'baz', 'name': 'Baz', 'sequence': 2}),
+                    ]
                 }),
             ],
         })
@@ -131,7 +136,11 @@ class TestReadProgressBar(common.TransactionCase):
                 'field_description': 'Related State',
                 'name': 'x_state_computed',
                 'ttype': 'selection',
-                'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
+                'selection_ids': [
+                    Command.create({'value': 'foo', 'name': 'Foo', 'sequence': 0}),
+                    Command.create({'value': 'bar', 'name': 'Bar', 'sequence': 1}),
+                    Command.create({'value': 'baz', 'name': 'Baz', 'sequence': 2}),
+                ],
                 'compute': "for rec in self: rec['x_state_computed'] = rec.x_state",
                 'depends': 'x_state',
                 'readonly': True,
