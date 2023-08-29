@@ -275,6 +275,7 @@
                                                        context="{'partner_id': parent.partner_id}"
                                                        widget="many2one_barcode"
                                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                                       readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                                 />
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
