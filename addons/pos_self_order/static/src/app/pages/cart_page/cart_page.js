@@ -63,6 +63,11 @@ export class CartPage extends Component {
             return;
         }
 
+        if (type === "mobile" && orderingMode === "table" && !takeAway && !this.selfOrder.table) {
+            this.state.selectTable = true;
+            return;
+        }
+
         if (mode === "meal" && !order.isSavedOnServer) {
             this.sendInProgress = true;
             await this.selfOrder.sendDraftOrderToServer();
@@ -72,13 +77,9 @@ export class CartPage extends Component {
                 return;
             }
         }
-
         if (orderingMode === "table" && !takeAway) {
             if (type === "kiosk") {
                 this.router.navigate("stand_number");
-            } else if (type === "mobile" && !this.selfOrder.table) {
-                this.state.selectTable = true;
-                return;
             } else {
                 this.router.navigate("payment");
             }

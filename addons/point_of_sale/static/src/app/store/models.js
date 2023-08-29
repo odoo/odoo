@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { uuidv4 } from "@point_of_sale/utils";
+import { uuidv4, constructFullProductName } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import {
@@ -567,27 +567,11 @@ export class Orderline extends PosModel {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     set_full_product_name() {
-        let attributeString = "";
-
-        if (this.attribute_value_ids && this.attribute_value_ids.length > 0) {
-            for (const valId of this.attribute_value_ids) {
-                const value = this.pos.db.attribute_value_by_id[valId];
-                if (value.is_custom) {
-                    const customValue = this.custom_attribute_value_ids.find(
-                        (cus) => cus.custom_product_template_attribute_value_id == parseInt(valId)
-                    );
-                    attributeString += customValue
-                        ? `${value.name}: ${customValue.custom_value}, `
-                        : `${value.name}, `;
-                } else {
-                    attributeString += `${value.name}, `;
-                }
-            }
-            attributeString = attributeString.slice(0, -2);
-            attributeString = `(${attributeString})`;
-        }
-
-        this.full_product_name = `${this.product.display_name} ${attributeString}`;
+        this.full_product_name = constructFullProductName(
+            this,
+            this.pos.db.attribute_value_by_id,
+            this.product.display_name
+        );
     }
     get_price_extra() {
         return this.price_extra;

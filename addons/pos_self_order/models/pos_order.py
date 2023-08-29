@@ -42,7 +42,7 @@ class PosOrderLine(models.Model):
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    tracking_number = fields.Char(string="Tracking Number")
+    table_stand_number = fields.Char(string="Table Stand Number")
     take_away = fields.Boolean(string="Take Away", default=False)
 
     @api.model
@@ -66,8 +66,8 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         fields = super()._order_fields(ui_order)
         fields.update({
-            'tracking_number': ui_order.get('tracking_number'),
             'take_away': ui_order.get('take_away'),
+            'table_stand_number': ui_order.get('table_stand_number'),
         })
         return fields
 
@@ -92,7 +92,7 @@ class PosOrder(models.Model):
             "take_away": self.take_away,
             "pos_reference": self.pos_reference,
             "access_token": self.access_token,
-            "tracking_number": self.tracking_number,
+            "table_stand_number": self.table_stand_number,
             "state": self.state,
             "date_order": str(self.date_order),
             "amount_total": self.amount_total,
@@ -113,3 +113,7 @@ class PosOrder(models.Model):
                 for line in self.lines
             ],
         }
+
+    def _send_order(self):
+        #This function is made to be overriden by pos_self_order_preparation_display
+        pass

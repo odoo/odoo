@@ -147,7 +147,7 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         for record in self:
-            if vals.get('self_ordering_mode') == 'kiosk' or record.self_ordering_mode == 'kiosk':
+            if vals.get('self_ordering_mode') == 'kiosk' or (vals.get('pos_self_ordering_mode') == 'mobile' and vals.get('pos_self_ordering_service_mode') == 'counter'):
                 vals['self_ordering_pay_after'] = 'each'
 
             if (not vals.get('module_pos_restaurant') and not record.module_pos_restaurant) and vals.get('self_ordering_mode') == 'mobile':
@@ -170,6 +170,11 @@ class PosConfig(models.Model):
 
                 vals['self_ordering_image_home_ids'] = unlink_commands + vals['self_ordering_image_home_ids']
 
+            if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
+                vals['self_ordering_service_mode'] = 'table'
+
+            if (vals.get('self_ordering_service_mode') == 'counter' or record.self_ordering_service_mode == 'counter') and vals.get('self_ordering_mode') == 'mobile':
+                vals['self_ordering_pay_after'] = 'each'
         return super().write(vals)
 
     @api.depends("module_pos_restaurant")

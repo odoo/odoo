@@ -4,7 +4,7 @@ from odoo import http, fields
 from odoo.http import request
 
 
-class PosSelfAdyenContoller(PosAdyenController):
+class PosSelfAdyenController(PosAdyenController):
     @http.route()
     def notification(self):
         super().notification()
@@ -33,6 +33,7 @@ class PosSelfAdyenContoller(PosAdyenController):
                     'pos_order_id': order_sudo.id
                 })
                 order_sudo.action_pos_order_paid()
+                order_sudo._send_order()
 
             if order_sudo.config_id.self_ordering_mode == 'kiosk':
                 request.env['bus.bus']._sendone(f'pos_config-{order_sudo.config_id.access_token}', 'PAYMENT_STATUS', {
