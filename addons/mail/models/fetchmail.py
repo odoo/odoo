@@ -16,7 +16,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 MAX_POP_MESSAGES = 50
-MAIL_TIMEOUT = 60
+MAIL_TIMEOUT = 240 # secondes
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
