@@ -59,7 +59,7 @@ class PosOrder(models.Model):
             'tip_amount': ui_order.get('tip_amount', 0),
             'access_token': ui_order.get('access_token', ''),
             'ticket_code': ui_order.get('ticket_code', ''),
-            'last_order_preparation_change': ui_order.get('last_order_preparation_change', False),
+            'last_order_preparation_change': ui_order.get('last_order_preparation_change', '{}'),
         }
 
     @api.model
@@ -113,9 +113,10 @@ class PosOrder(models.Model):
 
         return new_session
 
-    def _get_tracking_ref(self):
-        self.ensure_one()
-        return str(self.session_id.id)[-1] + str(self.sequence_number)[-2:]
+    @api.depends('sequence_number', 'session_id')
+    def _compute_tracking_number(self):
+        for record in self:
+            record.tracking_number = str(record.session_id.id)[-1] + str(record.sequence_number)[-2:]
 
     @api.model
     def _process_order(self, order, draft, existing_order):
@@ -327,6 +328,7 @@ class PosOrder(models.Model):
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
+    tracking_number = fields.Char(string="Tracking Number", compute='_compute_tracking_number')
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
@@ -1132,6 +1134,7 @@ class PosOrder(models.Model):
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
             'last_order_preparation_change': order.last_order_preparation_change,
+            'tracking_number':order.tracking_number,
         }
 
     @api.model

@@ -6,6 +6,7 @@ import { ComboSelection } from "@pos_self_order/app/components/combo_selection/c
 import { useService } from "@web/core/utils/hooks";
 import { Line } from "@pos_self_order/app/models/line";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
+import { constructFullProductName } from "@point_of_sale/utils";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
@@ -151,12 +152,16 @@ export class ComboPage extends Component {
                 uuid: null,
                 qty: this.state.qty,
                 product_id: combo.product.id,
-                full_product_name: combo.product.name,
                 attribute_value_ids: attributeFlatter(combo.product.variants),
                 custom_attribute_value_ids: Object.values(combo.product.customValues),
                 combo_parent_uuid: parent_line.uuid,
                 combo_id: combo.id,
             });
+            child_line.full_product_name = constructFullProductName(
+                child_line,
+                this.selfOrder.attributeValueById,
+                combo.product.name
+            );
             lines.push(child_line);
             parent_line.child_lines.push(child_line);
         }

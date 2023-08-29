@@ -19,7 +19,7 @@
                             <div class="product-info d-flex flex-column gap-2 flex-grow-1">
                                 <div>
                                     <span t-if="selfOrder.currentOrder.isSavedOnServer"><t t-esc="line.qty" />x </span>
-                                    <strong t-esc="line.full_product_name"/>
+                                    <strong t-esc="selfOrder.productByIds[line.product_id].name"/>
                                 </div>
                                 <div t-if="this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || childLines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
                                     <button
@@ -37,7 +37,7 @@
                                             </div>
                                         </div>
                                         <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
-                                            - <span t-esc="cline.full_product_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
+                                            - <span t-esc="selfOrder.productByIds[cline.product_id].name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
                                             <div class="product-info d-flex flex-column flex-grow-1 ms-3">
                                                 <div t-foreach="getSelectedAttributes(cline)" t-as="attribute" t-key="attribute.name">
                                                     - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />

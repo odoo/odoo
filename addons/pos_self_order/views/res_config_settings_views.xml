@@ -54,7 +54,7 @@
                         </div>
                         <div id="self-payment-after" class="content-group row" invisible="not pos_self_ordering_mode in ['kiosk', 'mobile']">
                             <label string="Pay after" for="pos_self_ordering_pay_after" class="col-lg-4"/>
-                            <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk' or pos_self_ordering_service_mode == 'counter' and pos_self_ordering_mode == 'mobile'" widget="upgrade_selection"/>
+                            <field name="pos_self_ordering_pay_after" readonly="pos_self_ordering_mode == 'kiosk' or (pos_self_ordering_service_mode == 'counter' and pos_self_ordering_mode == 'mobile')" widget="upgrade_selection"/>
                         </div>
                     </setting>
                     <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout." invisible="not pos_self_ordering_mode in ['mobile', 'kiosk']">
