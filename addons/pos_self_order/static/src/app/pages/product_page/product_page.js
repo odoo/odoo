@@ -6,6 +6,7 @@ import { AttributeSelection } from "@pos_self_order/app/components/attribute_sel
 import { Line } from "@pos_self_order/app/models/line";
 import { useService } from "@web/core/utils/hooks";
 import { attributeFlatter } from "@pos_self_order/app/utils";
+import { constructFullProductName } from "@point_of_sale/utils";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -124,11 +125,16 @@ export class ProductPage extends Component {
                 uuid: lineToMerge ? lineToMerge.uuid : null,
                 qty: this.state.qty,
                 product_id: this.product.id,
-                full_product_name: this.product.name,
                 customer_note: this.state.customer_note,
                 custom_attribute_value_ids: Object.values(this.env.customValues),
                 attribute_value_ids: attributeFlatter(this.env.selectedValues),
             });
+
+            mainLine.full_product_name = constructFullProductName(
+                mainLine,
+                this.selfOrder.attributeValueById,
+                this.product.name
+            );
 
             lines.push(mainLine);
         }

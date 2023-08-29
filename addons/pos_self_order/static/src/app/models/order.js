@@ -13,7 +13,6 @@ export class Order extends Reactive {
         date,
         amount_total,
         amount_tax,
-        tracking_number,
         lastChangesSent,
         take_away,
     }) {
@@ -32,7 +31,6 @@ export class Order extends Reactive {
         this.amount_total = order.amount_total || 0;
         this.amount_tax = order.amount_tax || 0;
         this.lines = order.lines || [];
-        this.tracking_number = order.tracking_number || null;
         this.take_away = typeof order.take_away === "boolean" ? order.take_away : null;
 
         // data
@@ -51,6 +49,18 @@ export class Order extends Reactive {
 
     get isSavedOnServer() {
         return this.isAlreadySent && this.hasNotAllLinesSent().length === 0;
+    }
+
+    get trackingNumber() {
+        if (this.pos_reference) {
+            const reference = this.pos_reference;
+            const arrRef = reference.split(" ")[1].split("-");
+            const sessionID = parseInt(arrRef[0]).toString();
+            const sequence = parseInt(arrRef[2]).toString();
+            const trackingNumber = sessionID + sequence;
+            return trackingNumber;
+        }
+        return null;
     }
 
     initLines() {

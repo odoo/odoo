@@ -39,7 +39,6 @@ export class SelfOrder extends Reactive {
         this.lastEditedProductId = null;
         this.attributeValueById = {};
         this.eatingLocation = "in"; // (in, out) in by default because out can be disabled in the config
-        this.tablePadNumber = null;
         this.currentProduct = 0;
         this.attributeById = {};
         this.priceLoading = false;

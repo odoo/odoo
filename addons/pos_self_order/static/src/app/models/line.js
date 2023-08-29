@@ -28,7 +28,7 @@ export class Line extends Reactive {
         // server data
         this.id = line.id || null;
         this.uuid = line.uuid || uuidv4();
-        this.full_product_name = line.full_product_name;
+        this.full_product_name = line.full_product_name || "";
         this.product_id = line.product_id;
         this.qty = line.qty ? line.qty : 0;
         this.customer_note = line.customer_note;

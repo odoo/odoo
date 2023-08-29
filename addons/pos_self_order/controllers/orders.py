@@ -13,14 +13,10 @@ class PosSelfOrderController(http.Controller):
         is_take_away = order.get('take_away')
         pos_config, table = self._verify_authorization(access_token, table_identifier, is_take_away)
         pos_session = pos_config.current_session_id
-
-        date_string = fields.Date.today().isoformat()
         ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        ir_sequence_tracking = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{date_string}')
 
         sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
-        tracking_number = f"{'A' if device_type == 'kiosk' else 'B'}{ir_sequence_tracking}"
 
         fiscal_position = (
             pos_config.self_ordering_alternative_fp_id
@@ -49,7 +45,7 @@ class PosSelfOrderController(http.Controller):
                 'amount_total': 0,
                 'amount_paid': 0,
                 'amount_return': 0,
-                'tracking_number': tracking_number,
+                'table_stand_number': order.get('table_stand_number'),
             },
             'to_invoice': False,
             'session_id': pos_session.id,
@@ -143,6 +139,7 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
             'table_id': table if table else False,
+            'table_stand_number': order.get('table_stand_number'),
         })
 
         pos_order.send_table_count_notification(pos_order.table_id)

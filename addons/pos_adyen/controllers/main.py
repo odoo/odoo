@@ -20,7 +20,7 @@ class PosAdyenController(http.Controller):
         _logger.info('notification received from adyen:\n%s', pprint.pformat(data))
         terminal_identifier = data['SaleToPOIResponse']['MessageHeader']['POIID']
         payment_method_sudo = request.env['pos.payment.method'].sudo().search([('adyen_terminal_identifier', '=', terminal_identifier)], limit=1)
-        pos_session_id = int(data["SaleToPOIResponse"]["PaymentResponse"]["SaleData"]["SaleTransactionID"]["TransactionID"].split("--")[1])
+        pos_session_id = int(data["SaleToPOIResponse"]["PaymentResponse"]["SaleData"]["SaleTransactionID"]["TransactionID"].split("-")[1])
         pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id)
 
         if payment_method_sudo:

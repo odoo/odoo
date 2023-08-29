@@ -29,3 +29,27 @@ export function deduceUrl(url) {
     }
     return url;
 }
+
+export function constructFullProductName(line, attribute_value_by_id, display_name) {
+    let attributeString = "";
+
+    if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
+        for (const valId of line.attribute_value_ids) {
+            const value = attribute_value_by_id[valId];
+            if (value.is_custom) {
+                const customValue = line.custom_attribute_value_ids.find(
+                    (cus) => cus.custom_product_template_attribute_value_id == parseInt(valId)
+                );
+                attributeString += customValue
+                    ? `${value.name}: ${customValue.custom_value}, `
+                    : `${value.name}, `;
+            } else {
+                attributeString += `${value.name}, `;
+            }
+        }
+        attributeString = attributeString.slice(0, -2);
+        attributeString = `(${attributeString})`;
+    }
+
+    return `${display_name} ${attributeString}`;
+}

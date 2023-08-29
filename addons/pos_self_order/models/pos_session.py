@@ -15,8 +15,6 @@ class PosSession(models.Model):
 
     @api.model
     def _create_pos_self_sessions_sequence(self, sessions):
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
         company_id = self.env.company.id
 
         for session in sessions:
@@ -24,16 +22,6 @@ class PosSession(models.Model):
                 'name': _("PoS Order by Session"),
                 'padding': 4,
                 'code': f'pos.order_{session.id}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': company_id,
-            })
-
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
                 'number_next': 1,
                 'number_increment': 1,
                 'company_id': company_id,

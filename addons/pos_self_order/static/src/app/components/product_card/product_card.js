@@ -5,6 +5,7 @@ import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { useService, useForwardRefToParent } from "@web/core/utils/hooks";
 import { Line } from "@pos_self_order/app/models/line";
 import { ProductInfoPopup } from "@pos_self_order/app/components/product_info_popup/product_info_popup";
+import { constructFullProductName } from "@point_of_sale/utils";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
@@ -100,16 +101,18 @@ export class ProductCard extends Component {
                 isProductInCart.qty++;
             } else {
                 const lines = this.selfOrder.currentOrder.lines;
-
-                lines.push(
-                    new Line({
-                        id: null,
-                        uuid: null,
-                        qty: 1,
-                        product_id: product.id,
-                        full_product_name: product.name,
-                    })
+                const line = new Line({
+                    id: null,
+                    uuid: null,
+                    qty: 1,
+                    product_id: product.id,
+                });
+                line.full_product_name = constructFullProductName(
+                    line,
+                    this.selfOrder.attributeValueById,
+                    product.name
                 );
+                lines.push(line);
             }
             await this.selfOrder.getPricesFromServer();
         }

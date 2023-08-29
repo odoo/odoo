@@ -95,5 +95,6 @@ class PosSession(models.Model):
                     "note": "",
                     "product_id": orderline.product_id.id,
                     "quantity": orderline.qty,
+                    "attribute_value_ids": orderline.attribute_value_ids.ids,
                 }
             order.write({'last_order_preparation_change': json.dumps(last_order_preparation_change)})
