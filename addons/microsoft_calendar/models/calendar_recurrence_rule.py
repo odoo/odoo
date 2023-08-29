@@ -29,7 +29,7 @@ class RecurrenceRule(models.Model):
         # modified in Odoo but computed from other fields).
         for recurrence in self.filtered('rrule'):
             values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
-            recurrence.write(dict(values, need_sync_m=False))
+            recurrence.with_context(dont_notify=True).write(dict(values, need_sync_m=False))
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync_m').calendar_event_ids
