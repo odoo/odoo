@@ -141,6 +141,7 @@ Featuring
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
             'web/static/src/core/colorpicker/colorpicker.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
