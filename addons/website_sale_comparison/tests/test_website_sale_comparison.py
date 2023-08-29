@@ -18,12 +18,6 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         `_remove_copied_views`. The problematic view that has to be removed is
         `product_attributes_body` because it has a reference to `add_to_compare`.
         """
-        # YTI TODO: Adapt this tour without demo data
-        # I still didn't figure why, but this test freezes on runbot
-        # without the demo data
-        if tools.config["without_demo"]:
-            return
-
         Website0 = self.env['website'].with_context(website_id=None)
         Website1 = self.env['website'].with_context(website_id=1)
 
