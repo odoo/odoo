@@ -392,16 +392,17 @@ class AccountMove(models.Model):
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
     )
     exchange_rate = fields.Float(
+        string="Currency rate",
         tracking=True,
-        help="Currency rate from company currency to document currency. Used to set a specific rate on the document.",
     )
     system_exchange_rate = fields.Float(
         compute='_compute_system_exchange_rate',
-        help="Expected currency rate based on document invoice date, company, and currency"
+        help="Expected exchange rate based on document invoice date, company, and currency"
     )
     display_rate = fields.Float(
         string="Exchange Rate",
         compute='_compute_display_rate', inverse='_inverse_display_rate',
+        help="Use this exchange rate instead of the default rate."
     )
 
     # === Amount fields === #
@@ -4604,6 +4605,17 @@ class AccountMove(models.Model):
         self._extend_with_attachments(attachments, new=False)
 
         return res
+
+    def _mail_track(self, tracked_fields, initial):
+        changes, tracking_value_ids = super()._mail_track(tracked_fields, initial)
+        for _a,_b,tracking_val in tracking_value_ids:
+            # vals = tracking_val[2]
+            if tracking_val['field_desc'] == self._fields['exchange_rate'].string:
+                if not tracking_val['old_value_float']:
+                    tracking_val['old_value_float'] = self.system_exchange_rate
+                elif not tracking_val['new_value_float']:
+                    tracking_val['new_value_float'] = self.system_exchange_rate
+        return changes, tracking_value_ids
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
