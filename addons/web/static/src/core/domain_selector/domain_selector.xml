@@ -5,6 +5,7 @@
         <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-att-class="className" t-ref="root">
             <t t-if="tree.isSupported">
                 <t t-set="node" t-value="tree.root" />
+<<<<<<< HEAD
                 <t t-if="node.children.length === 0">
                     <span>Match <strong>all records</strong></span>
                     <t t-if="!props.readonly">
@@ -21,6 +22,44 @@
                     <t t-if="!props.readonly">
                         <a href="#" class="pt-1 ms-1 d-block" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
                     </t>
+||||||| parent of 05806a28e153 (temp)
+            </t>
+        </t>
+        <t t-else="">
+            <div t-att-class="props.className">This domain is not supported.</div>
+        </t>
+    </t>
+
+    <t t-name="web._DomainSelector.root" owl="1">
+        <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-attf-class="{{ props.className }} {{ props.readonly ? 'o_read_mode' : 'o_edit_mode'}}" t-ref="root">
+            <t t-if="node.children.length === 0">
+                <span>Match <strong>all records</strong></span>
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">
+                        <i class="fa fa-plus"/> Add filter
+                    </button>
+=======
+            </t>
+        </t>
+        <t t-else="">
+            <div t-att-class="props.className">
+                This domain is not supported.
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary ms-2" t-on-click="() => this.resetDomain()">Reset domain</button>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web._DomainSelector.root" owl="1">
+        <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-attf-class="{{ props.className }} {{ props.readonly ? 'o_read_mode' : 'o_edit_mode'}}" t-ref="root">
+            <t t-if="node.children.length === 0">
+                <span>Match <strong>all records</strong></span>
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">
+                        <i class="fa fa-plus"/> Add filter
+                    </button>
+>>>>>>> 05806a28e153 (temp)
                 </t>
             </t>
             <t t-else="">

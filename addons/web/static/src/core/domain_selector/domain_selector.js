@@ -119,7 +119,17 @@ export class DomainSelector extends Component {
         this.props.update(buildDomain(this.tree.root));
     }
 
+<<<<<<< HEAD
     async loadPathsInfo(resModel, paths) {
+||||||| parent of 05806a28e153 (temp)
+    async loadFieldDefs(resModel, fields) {
+=======
+    resetDomain() {
+        this.props.update("[]");
+    }
+
+    async loadFieldDefs(resModel, fields) {
+>>>>>>> 05806a28e153 (temp)
         const promises = [];
         const pathsInfo = {};
         for (const path of paths) {

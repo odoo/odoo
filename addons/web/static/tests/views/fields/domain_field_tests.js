@@ -116,9 +116,19 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
+<<<<<<< HEAD
                 target.querySelector(".o_ds_value_cell").textContent,
                 "uid",
                 "The widget should show the dynamic filter."
+||||||| parent of 05806a28e153 (temp)
+                target.querySelector(".o_edit_mode").textContent,
+                "This domain is not supported.",
+                "The widget should not crash the view, but gracefully admit its failure."
+=======
+                target.querySelector(".o_edit_mode").textContent,
+                " This domain is not supported. Reset domain",
+                "The widget should not crash the view, but gracefully admit its failure."
+>>>>>>> 05806a28e153 (temp)
             );
         }
     );

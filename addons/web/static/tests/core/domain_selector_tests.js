@@ -363,13 +363,50 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
+<<<<<<< HEAD
         await makeDomainSelector({
             resModel: "product",
             domain: `[("name", "=", parent.foo)]`,
             isDebugMode: true,
+||||||| parent of 05806a28e153 (temp)
+        assert.expect(1);
+
+        // Create the domain selector and its mock environment
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "product",
+                value: `[("name", "=", parent.foo)]`,
+                readonly: false,
+                isDebugMode: true,
+            },
+=======
+        // Create the domain selector and its mock environment
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "product",
+                value: `[("name", "=", parent.foo)]`,
+                readonly: false,
+                isDebugMode: true,
+            },
+>>>>>>> 05806a28e153 (temp)
         });
+<<<<<<< HEAD
         assert.containsOnce(target, ".o_ds_expr_value");
         assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "parent.foo");
+||||||| parent of 05806a28e153 (temp)
+        assert.strictEqual(
+            target.lastElementChild.innerHTML,
+            "This domain is not supported.",
+            "an error message should be displayed because of the `parent` key"
+        );
+=======
+        assert.strictEqual(
+            target.lastElementChild.textContent,
+            " This domain is not supported. Reset domain",
+            "an error message should be displayed because of the `parent` key"
+        );
+        assert.containsOnce(target, "button:contains(Reset domain)");
+>>>>>>> 05806a28e153 (temp)
     });
 
     QUnit.test("creating a domain with a default option", async (assert) => {
