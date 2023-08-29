@@ -16,7 +16,8 @@ This module extend the employee form with a organizational chart.
     'depends': ['hr'],
     'auto_install': True,
     'data': [
-        'views/hr_views.xml'
+        'views/hr_department_views.xml',
+        'views/hr_views.xml',
     ],
     'assets': {
         'web._assets_primary_variables': [
