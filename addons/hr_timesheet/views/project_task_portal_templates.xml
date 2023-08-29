@@ -23,7 +23,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="after">
-            <div t-if="task.allocated_hours > 0"><strong>Progress:</strong> <span t-field="task.progress"/>%</div>
+            <div t-if="task.allocated_hours > 0 and allow_timesheets"><strong>Progress:</strong> <span t-field="task.progress"/>%</div>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']/t" position="replace">
             <t t-call="hr_timesheet.portal_my_task_allocated_hours_template"></t>
@@ -34,7 +34,7 @@
         <t t-if="is_uom_day and timesheets._convert_hours_to_days(task.allocated_hours) > 0">
             <span t-out="timesheets._convert_hours_to_days(task.allocated_hours)" t-options='{"widget": "timesheet_uom"}'/>
         </t>
-        <t t-if="not is_uom_day and task.allocated_hours > 0" t-call="project.portal_my_task_allocated_hours_template"></t>
+        <t t-if="not is_uom_day and task.allocated_hours > 0 and allow_timesheets" t-call="project.portal_my_task_allocated_hours_template"></t>
     </template>
 
     <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
@@ -46,20 +46,24 @@
             <attribute name="t-value">9</attribute>
         </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
-            <th t-if="is_uom_day" class="text-end">Days Spent</th>
-            <th t-else="" class="text-end">Hours Spent</th>
+            <t t-if="not project or project.allow_timesheets">
+                <th t-if="is_uom_day" class="text-end">Days Spent</th>
+                <th t-else="" class="text-end">Hours Spent</th>
+            </t>
         </xpath>
         <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">
-            <td class="text-end">
-                <t t-if="is_uom_day">
-                    <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>
-                    <span t-if="task.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.allocated_hours)"/></span>
-                </t>
-                <t t-else="">
-                    <span t-field="task.effective_hours" t-options='{"widget": "float_time"}'/>
-                    <t t-if="task.allocated_hours > 0">
-                        /
-                        <span t-field="task.allocated_hours" t-options='{"widget": "float_time"}'/>
+            <td t-if="not project or project.allow_timesheets" class="text-end">
+                <t t-if="task.allow_timesheets">
+                    <t t-if="is_uom_day">
+                        <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>
+                        <span t-if="task.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.allocated_hours)"/></span>
+                    </t>
+                    <t t-else="">
+                        <span t-field="task.effective_hours" t-options='{"widget": "float_time"}'/>
+                        <t t-if="task.allocated_hours > 0">
+                            /
+                            <span t-field="task.allocated_hours" t-options='{"widget": "float_time"}'/>
+                        </t>
                     </t>
                 </t>
             </td>
