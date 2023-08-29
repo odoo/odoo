@@ -293,26 +293,6 @@ export function makeLegacyRPCService(legacyEnv) {
     };
 }
 
-export function useLegacyRefs() {
-    const env = owl.useEnv();
-
-    let legacyRefs;
-    if (env.legacyRefs) {
-        legacyRefs = env.legacyRefs;
-    } else {
-        legacyRefs = {
-            component: null,
-            widget: null,
-        };
-    }
-
-    owl.useChildSubEnv({
-        legacyRefs,
-    });
-
-    return legacyRefs;
-}
-
 /**
  * This hook allows legacy owl Components to use services coming from the wowl env.
  * @param {string} serviceName
