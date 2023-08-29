@@ -184,8 +184,6 @@ export class Link extends Component {
      */
     focusUrl() {
         const urlInput = this.linkComponentWrapperRef.el.querySelector('input[name="url"]');
-        console.log("focus5")
-        console.log(urlInput)
         if (urlInput) {
             urlInput.focus();
             urlInput.select();
@@ -627,8 +625,7 @@ export class Link extends Component {
      * should only be done in event handler part.
      *
      * This allows to differentiate the event handler part. In master, we should
-     * take the opportunity to also update the `_updatePreview`      * take the opportunity to also update the `_updatePreview` concept which
-concept which
+     * take the opportunity to also update the `_updatePreview` concept which
      * updates the "preview" of the original link dialog but actually updates
      * the real DOM for the "new" link tools.
      *

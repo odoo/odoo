@@ -3927,7 +3927,6 @@ var SnippetsMenu = Widget.extend({
         $snippet.find('we-button').remove();
         $snippet.find('span.oe_snippet_thumbnail_title').replaceWith($input);
         const $textInput = $input.find('input');
-        console.log("focus2")
         $textInput.focus();
         $textInput.select();
         $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
