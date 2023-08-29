@@ -27,29 +27,3 @@
         transform: rotate(180deg);
     }
 }
-
-.o_image_128_max {
-    max-width: 128px !important;
-    max-height: 128px !important;
-}
-
-.o_width_128 {
-    width: 128px;
-}
-
-.o_web_accesskey_overlay {
-    @include o-position-absolute(0, 0);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .6);
-    color: #FFFFFF;
-    font-size: 1rem;
-
-    // Needed as the parent button could be using font-awesome. Can't be put to a BS variable here
-    // as this file will be included in both backend and frontend, and will be overridden for
-    // backend but left with 'sans-serif' for frontend to not have an useless frontend rule.
-    font-family: sans-serif;
-}
