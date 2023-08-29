@@ -99,7 +99,6 @@ class Http(models.AbstractModel):
             "name": user.name,
             "username": user.login,
             "partner_display_name": user.partner_id.display_name,
-            "company_id": user.company_id.id if session_uid else None,  # YTI TODO: Remove this from the user context
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
