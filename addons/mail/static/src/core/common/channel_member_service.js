@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { ChannelMember } from "@mail/core/common/channel_member_model";
 import { removeFromArray } from "@mail/utils/common/arrays";
 
 import { registry } from "@web/core/registry";
@@ -13,22 +12,6 @@ export class ChannelMemberService {
     constructor(env, services) {
         this.env = env;
         this.store = services["mail.store"];
-    }
-
-    /**
-     * @param {Object|Array} data
-     * @returns {ChannelMember}
-     */
-    insert(data) {
-        const memberData = Array.isArray(data) ? data[1] : data;
-        let member = this.store.ChannelMember.records[memberData.id];
-        if (!member) {
-            this.store.ChannelMember.records[memberData.id] = new ChannelMember();
-            member = this.store.ChannelMember.records[memberData.id];
-            member._store = this.store;
-        }
-        this.update(member, data);
-        return member;
     }
 
     update(member, data) {

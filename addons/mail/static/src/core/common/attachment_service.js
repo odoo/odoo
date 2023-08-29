@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { Attachment } from "@mail/core/common/attachment_model";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
@@ -19,20 +18,6 @@ export class AttachmentService {
         this.env = env;
         this.store = services["mail.store"];
         this.rpc = services["rpc"];
-    }
-
-    insert(data) {
-        if (!("id" in data)) {
-            throw new Error("Cannot insert attachment: id is missing in data");
-        }
-        let attachment = this.store.Attachment.records[data.id];
-        if (!attachment) {
-            this.store.Attachment.records[data.id] = new Attachment();
-            attachment = this.store.Attachment.records[data.id];
-            Object.assign(attachment, { _store: this.store, id: data.id });
-        }
-        this.update(attachment, data);
-        return attachment;
     }
 
     update(attachment, data) {

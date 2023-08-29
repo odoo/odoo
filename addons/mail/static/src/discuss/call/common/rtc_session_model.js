@@ -1,9 +1,43 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 export class RtcSession extends Record {
+    /** @type {Object.<number, RtcSession>} */
+    static records = {};
+    /**
+     * @param {Object} data
+     * @returns {number, RtcSession}
+     */
+    static insert(data) {
+        let session;
+        if (this.records[data.id]) {
+            session = this.records[data.id];
+        } else {
+            session = new RtcSession();
+            session._store = this.store;
+        }
+        const { channelMember, ...remainingData } = data;
+        for (const key in remainingData) {
+            session[key] = remainingData[key];
+        }
+        if (channelMember?.channel) {
+            session.channelId = channelMember.channel.id;
+        }
+        if (channelMember) {
+            const channelMemberRecord = this.store.ChannelMember.insert(channelMember);
+            channelMemberRecord.rtcSessionId = session.id;
+            session.channelMemberId = channelMemberRecord.id;
+            if (channelMemberRecord.thread) {
+                channelMemberRecord.thread.rtcSessions[session.id] = session;
+            }
+        }
+        this.records[session.id] = session;
+        // return reactive version
+        return this.records[session.id];
+    }
+
     // Server data
     channelId;
     channelMemberId;
@@ -141,3 +175,5 @@ export class RtcSession extends Record {
         }
     }
 }
+
+modelRegistry.add(RtcSession.name, RtcSession);

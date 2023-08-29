@@ -2,8 +2,33 @@
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Thread } from "@mail/core/common/thread_model";
+import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
+
+patch(Thread, {
+    insert(data) {
+        const isUnknown = !(createLocalId(data.model, data.id) in this.records);
+        const thread = super.insert(data);
+        if (thread.type === "livechat") {
+            if (data?.channel) {
+                assignDefined(thread, data.channel, ["anonymous_name"]);
+            }
+            if (data?.operator_pid) {
+                thread.operator = this.store.Persona.insert({
+                    type: "partner",
+                    id: data.operator_pid[0],
+                    displayName: data.operator_pid[1],
+                });
+            }
+            if (isUnknown) {
+                this.store.discuss.livechat.threads.push(thread.localId);
+                this.env.services["mail.thread"].sortChannels();
+            }
+        }
+        return thread;
+    },
+});
 
 patch(Thread.prototype, {
     get isChannel() {

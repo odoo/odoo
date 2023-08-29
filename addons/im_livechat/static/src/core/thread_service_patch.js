@@ -2,32 +2,10 @@
 
 import { ThreadService } from "@mail/core/common/thread_service";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
-    insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.store.Thread.records);
-        const thread = super.insert(data);
-        if (thread.type === "livechat") {
-            if (data?.channel) {
-                assignDefined(thread, data.channel, ["anonymous_name"]);
-            }
-            if (data?.operator_pid) {
-                thread.operator = this.store.Persona.insert({
-                    type: "partner",
-                    id: data.operator_pid[0],
-                    displayName: data.operator_pid[1],
-                });
-            }
-            if (isUnknown) {
-                this.store.discuss.livechat.threads.push(thread.localId);
-                this.sortChannels();
-            }
-        }
-        return thread;
-    },
     /**
      * @override
      * @param {import("@mail/core/common/thread_model").Thread} thread

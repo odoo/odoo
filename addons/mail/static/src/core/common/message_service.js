@@ -1,10 +1,7 @@
 /* @odoo-module */
 
 import { LinkPreview } from "@mail/core/common/link_preview_model";
-import { Message } from "@mail/core/common/message_model";
 import { MessageReactions } from "@mail/core/common/message_reactions_model";
-import { NotificationGroup } from "@mail/core/common/notification_group_model";
-import { Notification } from "@mail/core/common/notification_model";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, createLocalId } from "@mail/utils/common/misc";
@@ -208,31 +205,6 @@ export class MessageService {
     }
 
     /**
-     * @param {Object} data
-     * @returns {Message}
-     */
-    insert(data) {
-        let message;
-        if (data.res_id) {
-            this.store.Thread.insert({
-                model: data.model,
-                id: data.res_id,
-            });
-        }
-        if (data.id in this.store.Message.records) {
-            message = this.store.Message.records[data.id];
-        } else {
-            message = new Message();
-            message._store = this.store;
-            this.store.Message.records[data.id] = message;
-            message = this.store.Message.records[data.id];
-        }
-        this.update(message, data);
-        // return reactive version
-        return message;
-    }
-
-    /**
      * @param {import("@mail/core/common/message_model").Message} message
      * @param {Object} data
      */
@@ -426,20 +398,6 @@ export class MessageService {
         return reaction;
     }
 
-    /**
-     * @param {Object} data
-     * @returns {Notification}
-     */
-    insertNotification(data) {
-        let notification = this.store.Notification.records[data.id];
-        if (!notification) {
-            this.store.Notification.records[data.id] = new Notification(this.store, data);
-            notification = this.store.Notification.records[data.id];
-        }
-        this.updateNotification(notification, data);
-        return notification;
-    }
-
     updateNotification(notification, data) {
         Object.assign(notification, {
             messageId: data.messageId,
@@ -468,26 +426,6 @@ export class MessageService {
                 [notification.isFailure ? "insert" : "insert-and-unlink", notification],
             ],
         });
-    }
-
-    insertNotificationGroups(data) {
-        let group = this.store.NotificationGroup.records.find((group) => {
-            return (
-                group.resModel === data.resModel &&
-                group.type === data.type &&
-                (group.resModel !== "discuss.channel" || group.resIds.has(data.resId))
-            );
-        });
-        if (!group) {
-            group = new NotificationGroup(this.store);
-        }
-        this.updateNotificationGroup(group, data);
-        if (group.notifications.length === 0) {
-            removeFromArrayWithPredicate(this.store.NotificationGroup.records, (gr) =>
-                gr.eq(group)
-            );
-        }
-        return group;
     }
 
     updateNotificationGroup(group, data) {
