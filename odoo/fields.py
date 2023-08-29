@@ -41,7 +41,7 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
-from odoo.exceptions import CacheMiss
+from odoo.exceptions import CacheMiss, ValidationError
 from odoo.osv import expression
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -1387,10 +1387,12 @@ class Field(MetaField('DummyField', (object,), {})):
         try:
             with records.env.protecting(fields, records):
                 records._compute_field_value(self)
-        except Exception:
+        except Exception as e:
             for field in fields:
                 if field.store:
                     env.add_to_compute(field, records)
+                if field.name.startswith('x_'):
+                    raise ValidationError(e)
             raise
 
     def determine_inverse(self, records):
