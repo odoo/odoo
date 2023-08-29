@@ -31,11 +31,21 @@ class TestDDT(TestSaleCommon):
             'vat': 'IT12345670124'
         })
 
+<<<<<<< HEAD
         settings = cls.env['res.config.settings'].create({})
         if hasattr(settings, 'button_create_proxy_user'):
             # Needed when `l10n_it_edi_sdiscoop` is installed
             settings.button_create_proxy_user()
 
+||||||| parent of 320310eacac (temp)
+=======
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        return super().setup_company_data(company_name, **{
+            **kwargs,
+            'country_id': cls.env.ref('base.it').id,
+        })
+>>>>>>> 320310eacac (temp)
 
     def test_ddt_flow(self):
         """
