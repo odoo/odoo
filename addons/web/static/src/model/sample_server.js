@@ -608,9 +608,19 @@ export class SampleServer {
         } else {
             result = this._mockWebSearchRead({ ...params, fields });
         }
-        // populate x2many values
+        // populate many2one and x2many values
         for (const fieldName in params.specification) {
             const field = this.data[params.model].fields[fieldName];
+            if (field.type === "many2one") {
+                for (const record of result.records) {
+                    record[fieldName] = record[fieldName]
+                        ? {
+                              id: record[fieldName][0],
+                              display_name: record[fieldName][1],
+                          }
+                        : false;
+                }
+            }
             if (field.type === "one2many" || field.type === "many2many") {
                 const relFields = Object.keys(params.specification[fieldName].fields || {});
                 if (relFields.length) {
