@@ -30,6 +30,7 @@ try:
 
     PyPDF2.PdfFileReader = PdfFileReader
     from PyPDF2 import PdfFileWriter, PdfFileReader
+    PdfFileReader.getFields = PdfFileReader.get_fields
     PdfFileWriter._addObject = PdfFileWriter._add_object
 except ImportError:
     from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -76,17 +77,31 @@ class BrandedFileWriter(PdfFileWriter):
 PdfFileWriter = BrandedFileWriter
 
 
-def merge_pdf(pdf_data):
+def merge_pdf(pdf_data, form_fields=None):
     ''' Merge a collection of PDF documents in one.
     Note that the attachments are not merged.
     :param list pdf_data: a list of PDF datastrings
+    :param dict form_fields: a dictionary of form fields to update in the merged PDF
     :return: a unique merged PDF datastring
     '''
+    form_fields = form_fields or {}
     writer = PdfFileWriter()
     for document in pdf_data:
         reader = PdfFileReader(io.BytesIO(document), strict=False)
+        has_fields = form_fields and bool(reader.getFields())
         for page in range(0, reader.getNumPages()):
-            writer.addPage(reader.getPage(page))
+            page = reader.getPage(page)
+            writer.addPage(page)
+            if has_fields:
+                try:
+                    writer.update_page_form_field_values(page, form_fields)
+                except AttributeError:  # This method was renamed in PyPDF2 2.0
+                    # This is a known bug on previous version of PyPDF2, fixed in 2.11
+                    if not page.get('/Annots'):
+                        _logger.info("No fields to update in this page")
+                    else:
+                        writer.updatePageFormFieldValues(page, form_fields)
+
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()

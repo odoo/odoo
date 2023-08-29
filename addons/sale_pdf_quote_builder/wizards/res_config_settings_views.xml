@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.pdf.quote.builder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_management.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="sale_pdf_quote_builder" position="replace">
+                <setting id="sale_pdf_quote_builder"
+                         string="PDF Quote builder"
+                         help="Make your quote attractive by adding header pages, product descriptions and footer pages to your quote."
+                         company_dependent="1">
+                    <div class="mt16">
+                        <label for="sale_header" class="me-2"/>
+                        <field name="sale_header" options="{'accepted_file_extensions': '.pdf'}"/>
+                    </div>
+                    <div class="mt16">
+                        <label for="sale_footer" class="me-2"/>
+                        <field name="sale_footer" options="{'accepted_file_extensions': '.pdf'}"/>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+
+</odoo>

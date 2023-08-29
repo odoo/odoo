@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_order_template_form" model="ir.ui.view">
+        <field name="name">sale.order.template.form</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="pdf_quote" string="PDF Quote Builder">
+                    <group>
+                        <p class="text-muted" colspan="2">
+                            Provide header pages and footer pages to compose an attractive quotation
+                            with more information about your company, your products and your services.
+                            The pdf of your quotes will be built by putting together header pages,
+                            product descriptions, details of the quote and then the footer pages.
+                        </p>
+                        <group>
+                            <field name="sale_header" options="{'accepted_file_extensions': '.pdf'}"/>
+                            <field name="sale_footer" options="{'accepted_file_extensions': '.pdf'}"/>
+                        </group>
+                        <p class="text-muted" colspan="2">
+                            Products descriptions are pdf documents you can add directly on products.
+                            To do so, go on a product, find the "product documents" button, then add a
+                            new pdf document with a visibility set as "Inside Quotes". For each product
+                            in the quote, if the product has an "inside quotes" document, this document
+                            will be added after header pages and before the quotation details.
+                        </p>
+                        <p class="text-muted" colspan="2">
+                            Some information specific to the quote (customer name, quotation reference, ... )
+                            can be injected in these documents using pdf forms.
+                            Refer to the documentation to know more about this feature.
+                        </p>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

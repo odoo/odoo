@@ -183,6 +183,14 @@
             <field name="description_sale">160x80cm, with large legs.</field>
         </record>
 
+        <record id="product_product_4_product_template_document" model="product.document">
+            <field name="name">Customizable Desk Document.pdf</field>
+            <field name="datas" type="base64" file="product/static/demo/customizable_desk_document.pdf"/>
+            <field name="mimetype">application/pdf</field>
+            <field name="res_model">product.template</field>
+            <field name="res_id" ref="product.product_product_4_product_template"/>
+        </record>
+
         <!-- the product template attribute lines have to be defined before creating the variants -->
         <record id="product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
@@ -516,6 +524,14 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
         </record>
 
+        <record id="product_product_25_document" model="product.document">
+            <field name="name">Acoustic Bloc Screens Document.pdf</field>
+            <field name="datas" type="base64" file="product/static/demo/acoustic_bloc_screen_document.pdf"/>
+            <field name="mimetype">application/pdf</field>
+            <field name="res_model">product.product</field>
+            <field name="res_id" ref="product.product_product_25"/>
+        </record>
+
         <record id="product_product_27" model="product.product">
             <field name="name">Drawer</field>
             <field name="categ_id" ref="product_category_5"/>
@@ -556,6 +572,14 @@
             <field name="description_sale">Conference room table</field>
             <field name="default_code">FURN_6741</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_46-image.jpg"/>
+        </record>
+
+        <record id="consu_delivery_02_document" model="product.document">
+            <field name="name">Large Meeting Table Document.pdf</field>
+            <field name="datas" type="base64" file="product/static/demo/large_meeting_table_document.pdf"/>
+            <field name="mimetype">application/pdf</field>
+            <field name="res_model">product.product</field>
+            <field name="res_id" ref="product.consu_delivery_02"/>
         </record>
 
         <record id="consu_delivery_01" model="product.product">
