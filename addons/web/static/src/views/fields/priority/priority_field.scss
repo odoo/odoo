@@ -1,0 +1,27 @@
+.o_field_widget {
+    &.o_priority, & .o_priority {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        vertical-align: baseline;
+        > .o_priority_star {
+            display: inline-block;
+            font-size: 1.35em;
+            &:hover, &:focus {
+                text-decoration: none;
+                outline: none;
+            }
+
+            + .o_priority_star {
+                padding-left: 5px;
+            }
+
+            &.fa-star-o {
+                color: $o-main-color-muted;
+            }
+            &.fa-star {
+                color: $o-main-favorite-color;
+            }
+        }
+    }
+}
