@@ -36,6 +36,12 @@ class TestDDT(TestSaleCommon):
             # Needed when `l10n_it_edi_sdiscoop` is installed
             settings._create_proxy_user(cls.company_data['company'], 'demo')
 
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        return super().setup_company_data(company_name, **{
+            **kwargs,
+            'country_id': cls.env.ref('base.it').id,
+        })
 
     def test_ddt_flow(self):
         """
