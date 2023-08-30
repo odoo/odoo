@@ -17,7 +17,11 @@ export class ChatWindow extends Record {
     static insert(data = {}) {
         const chatWindow = this.records.find((c) => c.threadLocalId === data.thread?.localId);
         if (!chatWindow) {
-            const chatWindow = new ChatWindow(this.store, data);
+            const chatWindow = new ChatWindow();
+            Object.assign(chatWindow, {
+                thread: data.thread,
+                _store: this.store,
+            });
             assignDefined(chatWindow, data);
             let index;
             const visible = this.env.services["mail.chat_window"].visible;
@@ -55,19 +59,6 @@ export class ChatWindow extends Record {
     autofocus = 0;
     folded = false;
     hidden = false;
-
-    /**
-     * @param {import("@mail/core/common/store_service").Store} store
-     * @param {ChatWindowData} data
-     * @returns {ChatWindow}
-     */
-    constructor(store, data) {
-        super();
-        Object.assign(this, {
-            thread: data.thread,
-            _store: store,
-        });
-    }
 
     get thread() {
         return this._store.Thread.records[this.threadLocalId];

@@ -41,7 +41,16 @@ export class Thread extends Record {
             this.env.services["mail.thread"].update(thread, data);
             return thread;
         }
-        const thread = new Thread(this.store, data);
+        let thread = new Thread();
+        Object.assign(thread, {
+            id: data.id,
+            model: data.model,
+            type: data.type,
+            _store: this.store,
+        });
+        this.records[thread.localId] = thread;
+        // return reactive version.
+        thread = this.records[thread.localId];
         onChange(thread, "message_unread_counter", () => {
             if (thread.channel) {
                 thread.channel.message_unread_counter = thread.message_unread_counter;
@@ -57,7 +66,7 @@ export class Thread extends Record {
         this.env.services["mail.thread"].update(thread, data);
         this.store.Composer.insert({ thread });
         // return reactive version.
-        return this.records[thread.localId];
+        return thread;
     }
 
     /** @type {number} */
@@ -172,18 +181,6 @@ export class Thread extends Record {
     lastServerMessageId;
     /** @type {Boolean} */
     is_editable;
-
-    constructor(store, data) {
-        super();
-        Object.assign(this, {
-            id: data.id,
-            model: data.model,
-            type: data.type,
-            _store: store,
-        });
-        store.Thread.records[this.localId] = this;
-        return store.Thread.records[this.localId];
-    }
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {

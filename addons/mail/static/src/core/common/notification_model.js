@@ -14,7 +14,12 @@ export class Notification extends Record {
     static insert(data) {
         let notification = this.records[data.id];
         if (!notification) {
-            this.records[data.id] = new Notification(this.store, data);
+            notification = new Notification();
+            this.records[data.id] = notification;
+            Object.assign(notification, {
+                id: data.id,
+                _store: this.store,
+            });
             notification = this.records[data.id];
         }
         this.env.services["mail.message"].updateNotification(notification, data);
@@ -35,14 +40,6 @@ export class Notification extends Record {
     persona;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
-
-    constructor(store, data) {
-        super();
-        Object.assign(this, {
-            id: data.id,
-            _store: store,
-        });
-    }
 
     get message() {
         return this._store.Message.records[this.messageId];

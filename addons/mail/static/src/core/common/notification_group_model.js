@@ -22,7 +22,12 @@ export class NotificationGroup extends Record {
             );
         });
         if (!group) {
-            group = new NotificationGroup(this.store);
+            group = new NotificationGroup();
+            group._store = this.store;
+            this.store.NotificationGroup.records.push(group);
+            group.id = nextId++;
+            // return reactive
+            group = this.store.NotificationGroup.records.find((g) => g.eq(group));
         }
         this.env.services["mail.message"].updateNotificationGroup(group, data);
         if (group.notifications.length === 0) {
@@ -45,15 +50,6 @@ export class NotificationGroup extends Record {
     type;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
-
-    constructor(store) {
-        super();
-        this._store = store;
-        this._store.NotificationGroup.records.push(this);
-        this.id = nextId++;
-        // return reactive
-        return store.NotificationGroup.records.find((group) => group.eq(this));
-    }
 
     get iconSrc() {
         return "/mail/static/src/img/smiley/mailfailure.jpg";

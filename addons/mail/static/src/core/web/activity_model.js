@@ -44,7 +44,17 @@ export class Activity extends Record {
      * @returns {Activity}
      */
     static insert(data, { broadcast = true } = {}) {
-        const activity = this.records[data.id] ?? new Activity(this.store, data.id);
+        let activity = this.records[data.id];
+        if (!activity) {
+            activity = new Activity();
+            Object.assign(activity, {
+                id: data.id,
+                _store: this.store,
+            });
+            this.store.Activity.records[data.id] = activity;
+            // return reactive
+            activity = this.store.Activity.records[data.id];
+        }
         if (data.request_partner_id) {
             data.request_partner_id = data.request_partner_id[0];
         }
@@ -114,21 +124,6 @@ export class Activity extends Record {
     write_uid;
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
-
-    /**
-     * @param {import("@mail/core/common/store_service").Store} store
-     * @param {number} id
-     * @returns {Activity}
-     */
-    constructor(store, id) {
-        super();
-        Object.assign(this, {
-            id,
-            _store: store,
-        });
-        store.Activity.records[id] = this;
-        return store.Activity.records[id];
-    }
 }
 
 modelRegistry.add(Activity.name, Activity);
