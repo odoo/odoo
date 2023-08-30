@@ -3587,7 +3587,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".modal", "should not have any modal in DOM");
             assert.verifySteps([
                 "get_views",
-                "unity_web_search_read", // to display results in the dialog
+                "web_search_read", // to display results in the dialog
                 "name_search",
                 "onchange",
                 "write",
@@ -3637,7 +3637,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".modal", "should not have any modal in DOM");
             assert.verifySteps([
                 "get_views",
-                "unity_web_search_read", // to display results in the dialog
+                "web_search_read", // to display results in the dialog
                 "name_search",
                 "onchange",
                 "write",
@@ -3772,7 +3772,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method);
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(
                         kwargs.domain,
                         [],
@@ -3794,7 +3794,7 @@ QUnit.module("Fields", (hooks) => {
             "onchange",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
-            "unity_web_search_read", // to display results in the dialog
+            "web_search_read", // to display results in the dialog
         ]);
     });
 
@@ -3824,7 +3824,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(kwargs.domain, expectedDomain);
                 }
             },
@@ -3854,8 +3854,8 @@ QUnit.module("Fields", (hooks) => {
             "name_search", // to display results in the dropdown
             "name_search", // to get preselected ids matching the search
             "get_views", // list view in dialog
-            "unity_web_search_read", // to display results in the dialog
-            "unity_web_search_read", // after removal of dynamic filter
+            "web_search_read", // to display results in the dialog
+            "web_search_read", // after removal of dynamic filter
         ]);
     });
 
@@ -3976,7 +3976,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="trululu" /></form>',
             mockRPC(route, { kwargs, method }) {
                 assert.step(method || route);
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(
                         kwargs.domain,
                         [],
@@ -4003,7 +4003,7 @@ QUnit.module("Fields", (hooks) => {
             "onchange",
             "name_search", // to display results in the dropdown
             "get_views", // list view in dialog
-            "unity_web_search_read", // to display results in the dialog
+            "web_search_read", // to display results in the dialog
             "/web/dataset/resequence", // resequencing lines
             "read",
         ]);

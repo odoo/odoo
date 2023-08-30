@@ -128,7 +128,7 @@ QUnit.module(
             }
             const server = new DeterministicSampleServer("res.users", fields["res.users"]);
             const { records } = await server.mockRpc({
-                method: "unity_web_search_read",
+                method: "web_search_read",
                 model: "res.users",
                 specification,
             });
@@ -209,7 +209,7 @@ QUnit.module(
 
             const server = new DeterministicSampleServer("res.country", fields["res.country"]);
             const { records } = await server.mockRpc({
-                method: "unity_web_search_read",
+                method: "web_search_read",
                 model: "res.country",
                 specification: { display_name: {} },
             });
@@ -223,7 +223,7 @@ QUnit.module(
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
 
             const { records } = await server.mockRpc({
-                method: "unity_web_search_read",
+                method: "web_search_read",
                 model: "hobbit",
                 specification: { display_name: {} },
             });
@@ -239,7 +239,7 @@ QUnit.module(
             const server = new DeterministicSampleServer("hobbit", fields.hobbit);
 
             const result = await server.mockRpc({
-                method: "unity_web_search_read",
+                method: "web_search_read",
                 model: "hobbit",
                 specification: { display_name: {} },
             });
@@ -253,7 +253,7 @@ QUnit.module(
             const server = new DeterministicSampleServer("res.users", fields["res.users"]);
 
             const result = await server.mockRpc({
-                method: "unity_web_search_read",
+                method: "web_search_read",
                 model: "res.users",
                 specification: {
                     manager_id: {

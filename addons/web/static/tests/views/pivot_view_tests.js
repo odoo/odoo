@@ -4071,8 +4071,8 @@ QUnit.module("Views", (hooks) => {
                     }
                     readGroupCount++;
                 }
-                if (args.method === "unity_web_search_read") {
-                    assert.step("unity_web_search_read");
+                if (args.method === "web_search_read") {
+                    assert.step("web_search_read");
                     const domain = args.kwargs.domain;
                     assert.deepEqual(
                         domain,
@@ -4105,7 +4105,7 @@ QUnit.module("Views", (hooks) => {
                 "read_group",
                 "read_group",
                 "read_group",
-                "unity_web_search_read",
+                "web_search_read",
                 "read_group",
                 "read_group",
             ]);
@@ -4739,7 +4739,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_control_panel .o_switch_view.o_list"));
 
         assert.containsOnce(target, ".o_list_view");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         // switch back to pivot
         await click(target.querySelector(".o_control_panel .o_switch_view.o_pivot"));

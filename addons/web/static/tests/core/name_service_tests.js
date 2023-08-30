@@ -62,7 +62,7 @@ QUnit.test("single loadDisplayNames following addDisplayNames (2)", async (asser
     env.services.name.addDisplayNames("dev", { 1: "JUM" });
     const displayNames = await env.services.name.loadDisplayNames("dev", [1, 2]);
     assert.deepEqual(displayNames, { 1: "JUM", 2: "Pierre" });
-    assert.verifySteps(["unity_web_search_read", "id(s): 2"]);
+    assert.verifySteps(["web_search_read", "id(s): 2"]);
 });
 
 QUnit.test("loadDisplayNames in batch", async (assert) => {
@@ -79,7 +79,7 @@ QUnit.test("loadDisplayNames in batch", async (assert) => {
     const [displayNames1, displayNames2] = await Promise.all([prom1, prom2]);
     assert.deepEqual(displayNames1, { 1: "Julien" });
     assert.deepEqual(displayNames2, { 2: "Pierre" });
-    assert.verifySteps(["unity_web_search_read", "id(s): 1, 2"]);
+    assert.verifySteps(["web_search_read", "id(s): 1, 2"]);
 });
 
 QUnit.test("loadDisplayNames on different models", async (assert) => {
@@ -101,7 +101,7 @@ QUnit.test("loadDisplayNames on different models", async (assert) => {
     const [displayNames1, displayNames2] = await Promise.all([prom1, prom2]);
     assert.deepEqual(displayNames1, { 1: "Julien" });
     assert.deepEqual(displayNames2, { 1: "Damien" });
-    assert.verifySteps(["unity_web_search_read", "dev", "id(s): 1", "unity_web_search_read", "PO", "id(s): 1"]);
+    assert.verifySteps(["web_search_read", "dev", "id(s): 1", "web_search_read", "PO", "id(s): 1"]);
 });
 
 QUnit.test("invalid id", async (assert) => {
@@ -121,7 +121,7 @@ QUnit.test("inaccessible or missing id", async (assert) => {
     const env = await makeTestEnv({ serverData, mockRPC });
     const displayNames = await env.services.name.loadDisplayNames("dev", [3]);
     assert.deepEqual(displayNames, { 3: ERROR_INACCESSIBLE_OR_MISSING });
-    assert.verifySteps(["unity_web_search_read"]);
+    assert.verifySteps(["web_search_read"]);
 });
 
 QUnit.test("batch + inaccessible/missing", async (assert) => {
@@ -138,5 +138,5 @@ QUnit.test("batch + inaccessible/missing", async (assert) => {
     const [displayNames1, displayNames2] = await Promise.all([prom1, prom2]);
     assert.deepEqual(displayNames1, { 1: "Julien", 3: ERROR_INACCESSIBLE_OR_MISSING });
     assert.deepEqual(displayNames2, { 2: "Pierre", 4: ERROR_INACCESSIBLE_OR_MISSING });
-    assert.verifySteps(["unity_web_search_read", "id(s): 1, 3, 2, 4"]);
+    assert.verifySteps(["web_search_read", "id(s): 1, 3, 2, 4"]);
 });

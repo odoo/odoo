@@ -13788,7 +13788,7 @@ QUnit.module("Fields", (hooks) => {
                     p: [[0, args.args[1].p[0][1], { display_name: "a name" }]],
                 });
             }
-            if (args.method === "unity_web_search_read") {
+            if (args.method === "web_search_read") {
                 return def;
             }
         };

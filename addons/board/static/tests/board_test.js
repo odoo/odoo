@@ -109,7 +109,7 @@ QUnit.module("Board", (hooks) => {
                         views: [[4, "list"]],
                     };
                 }
-                if (route === "/web/dataset/call_kw/partner/unity_web_search_read") {
+                if (route === "/web/dataset/call_kw/partner/web_search_read") {
                     assert.deepEqual(
                         args.kwargs.domain,
                         [["foo", "!=", "False"]],

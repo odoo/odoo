@@ -42,7 +42,7 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def unity_web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
