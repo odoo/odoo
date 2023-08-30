@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -173,4 +173,4 @@ export class Attachment extends Record {
     }
 }
 
-modelRegistry.add(Attachment.name, Attachment);
+Attachment.register();
