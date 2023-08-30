@@ -151,9 +151,16 @@
                 <td width="15%" align="center"><strong>Quantity</strong></td>
                 <td width="20%" align="right"><strong>
                 % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
-                    VAT Excl.
+                    Unit Price VAT Excl.
                 % else
-                    VAT Incl.
+                    Unit Price VAT Incl.
+                % endif
+                </strong></td>
+                <td width="15%" align="center"><strong>
+                % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
+                    Total VAT Excl.
+                % else
+                    Total VAT Incl.
                 % endif
                 </strong></td>
             </tr>
@@ -179,13 +186,21 @@
                         </td>
                         <td align="left">${line.product_id.name}</td>
                         <td width="15%" align="center">${line.product_uom_qty}</td>
-                        <td width="20%" align="right"><strong>
+                        <td width="20%" align="right">
                         % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
                             ${format_amount(line.price_reduce_taxexcl, object.currency_id)}
                         % else
                             ${format_amount(line.price_reduce_taxinc, object.currency_id)}
                         % endif
-                        </strong></td>
+                        </td>
+                        <td width="15%" align="right">
+                        % if object.user_id.has_group('account.group_show_line_subtotals_tax_excluded'):
+                            ${format_amount(line.price_subtotal, object.currency_id)}
+                        % else
+                            ${format_amount(line.price_total, object.currency_id)}
+                        % endif
+                        </td>
+
                     </tr>
                 </table>
             % endif
