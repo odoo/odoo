@@ -82,6 +82,9 @@ def handle_history_divergence(record, html_field_name, vals):
     # Save only the latest id.
     vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
 
+def can_use_instrumentation():
+    return request.env['ir.config_parameter'].sudo().get_param('web_editor.use_instrumentation').lower().strip() == 'true'
+
 class Web_Editor(http.Controller):
     #------------------------------------------------------
     # convert font into picture
@@ -768,6 +771,13 @@ class Web_Editor(http.Controller):
     def get_ice_servers(self):
         return request.env['mail.ice.server']._get_ice_servers()
 
+    @http.route("/web_editor/get_collaboration_config", type='json', auth="user")
+    def get_collaboration_config(self):
+        return {
+            'use_instrumentation': can_use_instrumentation(),
+            'ice_servers': request.env['mail.ice.server']._get_ice_servers()
+        }
+
     @http.route("/web_editor/bus_broadcast", type="json", auth="user")
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):
         document = request.env[model_name].browse([res_id])
@@ -794,3 +804,17 @@ class Web_Editor(http.Controller):
             ensure_no_history_divergence(record, field_name, history_ids)
         except ValidationError:
             return record[field_name]
+
+    @http.route("/web_editor/peer_to_peer_log", type="json", auth="user")
+    def peer_to_peer_log(self, message):
+        if request.env.user.has_group('base.group_user') and can_use_instrumentation():
+            request.env['ir.logging'].sudo().create({
+                'name': 'ODOO_PEER_TO_PEER_LOGS',
+                'type': 'server',
+                'level': 'DEBUG',
+                'dbname': request.env.cr.dbname,
+                'message': message,
+                'func': '',
+                'path': '',
+                'line': '0',
+            })

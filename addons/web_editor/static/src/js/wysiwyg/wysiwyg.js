@@ -71,8 +71,8 @@ const PTP_MAX_RECOVERY_TIME = 500;
 
 const REQUEST_ERROR = Symbol('REQUEST_ERROR');
 
-// this is a local cache for ice server descriptions
-let ICE_SERVERS = null;
+// This is a cache for the collaboration config.
+let COLLABORATION_CONFIG;
 
 const Wysiwyg = Widget.extend({
     defaultOptions: {
@@ -549,10 +549,10 @@ const Wysiwyg = Widget.extend({
         }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            if (!ICE_SERVERS) {
-                ICE_SERVERS = await this._rpc({route: '/web_editor/get_ice_servers'});
+            if (!COLLABORATION_CONFIG) {
+                COLLABORATION_CONFIG = await this._rpc({route: '/web_editor/get_collaboration_config'});
             }
-            let iceServers = ICE_SERVERS;
+            let iceServers = COLLABORATION_CONFIG.ice_servers;
             if (!iceServers.length) {
                 iceServers = [
                     {
@@ -2644,6 +2644,14 @@ const Wysiwyg = Widget.extend({
         // Check if the current document is stale.
         this._isDocumentStale = this._isLastDocumentStale();
         if (this._isDocumentStale && this._ptpJoined) {
+            this._ptpLog({
+                type: 'stale_document',
+                server_last_step_id: this._serverLastStepId,
+                client_last_step_id: peek(this.odooEditor.historyGetBranchIds()),
+                client_id: this._currentClientId,
+                channel_name: this._collaborationChannelName,
+                ptp_peer_length: this._getPtpClients().length,
+            });
             return this._recoverFromStaleDocument();
         } else if (this._isDocumentStale && this._joiningPtp) {
             // In case there is a stale document while another recover did not finished.
@@ -2685,7 +2693,7 @@ const Wysiwyg = Widget.extend({
                 if (this._isDocumentStale) {
                     this._showResetDialog();
                     resolve();
-                    return this._recoverFromStaleDocumentFromServer();
+                    return this._recoverFromStaleDocumentFromServer({ logAfterReset: true });
                 }
             }
 
@@ -2722,6 +2730,16 @@ const Wysiwyg = Widget.extend({
                     }
                     this._processMissingSteps(response.missingSteps);
                     this._isDocumentStale = this._isLastDocumentStale();
+                    if (!this._isDocumentStale) {
+                        this._ptpLog({
+                            type: 'stale_document_recovered_from_steps',
+                            server_last_step_id: this._serverLastStepId,
+                            client_last_step_id: peek(this.odooEditor.historyGetBranchIds()),
+                            client_id: this._currentClientId,
+                            channel_name: this._collaborationChannelName,
+                        });
+                        success();
+                    }
                     snapshots.push(response.snapshot);
                     if (nbOfResponseToReceive < 1) {
                         processSnapshots();
@@ -2732,7 +2750,7 @@ const Wysiwyg = Widget.extend({
             // Only process the snapshots after having receiving a response from all
             // the peers or after PTP_MAX_RECOVERY_TIME in order to try to recover
             // from missing steps.
-            const processSnapshots = async () => {
+            const processSnapshots = async ({ fromTimeout = false } = {}) => {
                 this._isDocumentStale = this._isLastDocumentStale();
                 if (!this._isDocumentStale) {
                     return success();
@@ -2746,6 +2764,13 @@ const Wysiwyg = Widget.extend({
                     // Prevent reseting from another snapshot if the document
                     // converge.
                     if (!this._isDocumentStale) {
+                        this._ptpLog({
+                            type: 'stale_document_recovered_from_snapshot',
+                            server_last_step_id: this._serverLastStepId,
+                            client_last_step_id: peek(this.odooEditor.historyGetBranchIds()),
+                            client_id: this._currentClientId,
+                            channel_name: this._collaborationChannelName,
+                        });
                         return success();
                     }
                 }
@@ -2753,7 +2778,7 @@ const Wysiwyg = Widget.extend({
                 // 2. If the document is still stale, try to recover from the server.
                 if (this._isDocumentStale) {
                     this._showResetDialog();
-                    await this._recoverFromStaleDocumentFromServer();
+                    await this._recoverFromStaleDocumentFromServer({ logAfterReset: true, fromTimeout });
                 }
 
                 success();
@@ -2779,9 +2804,9 @@ const Wysiwyg = Widget.extend({
      * @param {Function} processSnapshots The snapshot processing function.
      */
     async _onRecoveryClientTimeout(processSnapshots) {
-        processSnapshots();
+        processSnapshots({ fromTimeout: true });
     },
-    async _recoverFromStaleDocumentFromServer() {
+    async _recoverFromStaleDocumentFromServer({ logAfterReset, fromTimeout } = {}) {
         let resetCollabCount = this._lastResetCollabCount;
         const record = await this._getCurrentRecord();
         if (resetCollabCount !== this._lastResetCollabCount) return;
@@ -2792,12 +2817,30 @@ const Wysiwyg = Widget.extend({
         // lastHistoryId will be different if the odoo bus did not had time to
         // notify the user.
         if (this._serverLastStepId !== lastHistoryId) {
-            // todo: instrument it to ensure it never happens
+            this._ptpLog({
+                type: 'stale_document_recovered_from_server_concurency',
+                server_last_step_id: this._serverLastStepId,
+                content_last_step_id: lastHistoryId,
+                client_id: this._currentClientId,
+                channel_name: this._collaborationChannelName,
+                fromTimeout: fromTimeout,
+            });
             throw new Error('Concurency detected while recovering from a stale document. The last history id of the server is different from the history id received by the document_write event.');
         }
 
         this._isDocumentStale = false;
         this.resetValue(content);
+
+        if (logAfterReset) {
+            this._ptpLog({
+                type: 'stale_document_recovered_from_server',
+                server_last_step_id: this._serverLastStepId,
+                content_last_step_id: lastHistoryId,
+                client_id: this._currentClientId,
+                channel_name: this._collaborationChannelName,
+                fromTimeout: fromTimeout,
+            });
+        }
 
         // After reseting from the server, try to resynchronise with a peer as
         // if it was the first time connecting to a peer in order to retreive a
@@ -2962,7 +3005,16 @@ const Wysiwyg = Widget.extend({
     _bindOnBlur() {
         this.$editable.on('blur', this._onBlur);
     },
-
+    _ptpLog(jsonContent) {
+        if (!COLLABORATION_CONFIG.use_instrumentation) return;
+        const stringContent = JSON.stringify(jsonContent);
+        return this._rpc({
+            route: '/web_editor/peer_to_peer_log',
+            params: {
+                message: stringContent,
+            },
+        });
+    },
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
 Wysiwyg.activeWysiwygs = new Set();
