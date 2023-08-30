@@ -125,7 +125,7 @@ export class SampleServer {
         }
         this._populateModels();
         switch (params.method || params.route) {
-            case "unity_web_search_read":
+            case "web_search_read":
                 return this._mockWebSearchReadUnity(params);
             case "web_read_group":
                 return this._mockWebReadGroup(params);

@@ -350,7 +350,7 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             mockRPC(route, args) {
-                if (args.method === "unity_web_search_read") {
+                if (args.method === "web_search_read") {
                     assert.ok(
                         args.kwargs.context.bin_size,
                         "should not request direct binary payload"
@@ -1208,7 +1208,7 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
             async mockRPC(route, { method, kwargs }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.strictEqual(kwargs.limit, 40, "default limit should be 40 in Kanban");
                 }
             },
@@ -1231,7 +1231,7 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             async mockRPC(route, { method, kwargs }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.strictEqual(kwargs.limit, 2);
                 }
             },
@@ -1256,7 +1256,7 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             async mockRPC(route, { method, kwargs }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.strictEqual(kwargs.limit, 3);
                 }
             },
@@ -1290,7 +1290,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target.querySelector(".o_pager_limit"));
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
@@ -1322,13 +1322,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target.querySelector(".o_pager_next"));
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, click next (2)", async (assert) => {
@@ -1355,19 +1355,19 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target.querySelector(".o_pager_next"));
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "3-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4+");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         await click(target.querySelector(".o_pager_next"));
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "5-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, click previous", async (assert) => {
@@ -1394,13 +1394,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target.querySelector(".o_pager_previous"));
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "5-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["search_count", "unity_web_search_read"]);
+        assert.verifySteps(["search_count", "web_search_read"]);
     });
 
     QUnit.test("pager, ungrouped, with count limit reached, edit pager", async (assert) => {
@@ -1427,21 +1427,21 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target, ".o_pager_value");
         await editInput(target, "input.o_pager_value", "2-4");
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 3);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "2-4");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4+");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         await click(target, ".o_pager_value");
         await editInput(target, "input.o_pager_value", "2-14");
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "2-5");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test("count_limit attrs set in arch", async (assert) => {
@@ -1465,7 +1465,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
         assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
 
         await click(target.querySelector(".o_pager_limit"));
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
@@ -1627,9 +1627,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
         assert.verifySteps([
             "get_views",
-            "unity_web_search_read",
+            "web_search_read",
             "doAction some.action",
-            "unity_web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -1870,8 +1870,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
@@ -1948,8 +1948,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
@@ -2223,8 +2223,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
@@ -2292,8 +2292,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
@@ -2349,8 +2349,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
@@ -2406,9 +2406,9 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
-            "unity_web_search_read", // read records when unfolding 'None'
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
+            "web_search_read", // read records when unfolding 'None'
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
@@ -2474,8 +2474,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "get_views", // get form view
             "onchange", // quick create
             "create", // should perform a create to create the record
@@ -2548,8 +2548,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "get_views", // get form view
             "onchange", // quick create
             "create", // should perform a create to create the record
@@ -2576,12 +2576,7 @@ QUnit.module("Views", (hooks) => {
                 assert.step(method || route);
             },
         });
-        assert.verifySteps([
-            "get_views",
-            "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
-        ]);
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
 
         await createRecord();
         assert.verifySteps(["onchange"]);
@@ -2651,8 +2646,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
             "onchange", // quick create
             "onchange", // onchange due to 'foo' field change
@@ -2742,8 +2737,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
         ]);
 
         // click on 'Create' -> should open the quick create in the first column
@@ -4609,7 +4604,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(getCard(0), ".o_tag.o_tag_color_2", "first tag should have color 2");
         assert.verifySteps([
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/unity_web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
 
         // Checks that second records has only one tag as one should be hidden (color 0)
@@ -4801,11 +4796,11 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -4833,11 +4828,11 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -4872,11 +4867,11 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
         const allNames = Array.from(
             target.querySelectorAll(".o_kanban_record span"),
@@ -5806,8 +5801,8 @@ QUnit.module("Views", (hooks) => {
                     result.groups[8].__fold = true;
                     return result;
                 }
-                if (args.method === "unity_web_search_read") {
-                    assert.step(`unity_web_search_read domain: ${args.kwargs.domain}`);
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read domain: ${args.kwargs.domain}`);
                 }
             },
         });
@@ -5828,16 +5823,16 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group.o_column_folded", 4);
 
         assert.verifySteps([
-            "unity_web_search_read domain: product_id,=,3",
-            "unity_web_search_read domain: product_id,=,5",
-            "unity_web_search_read domain: product_id,=,9",
-            "unity_web_search_read domain: product_id,=,10",
-            "unity_web_search_read domain: product_id,=,11",
-            "unity_web_search_read domain: product_id,=,12",
-            "unity_web_search_read domain: product_id,=,13",
-            "unity_web_search_read domain: product_id,=,15",
-            "unity_web_search_read domain: product_id,=,16",
-            "unity_web_search_read domain: product_id,=,17",
+            "web_search_read domain: product_id,=,3",
+            "web_search_read domain: product_id,=,5",
+            "web_search_read domain: product_id,=,9",
+            "web_search_read domain: product_id,=,10",
+            "web_search_read domain: product_id,=,11",
+            "web_search_read domain: product_id,=,12",
+            "web_search_read domain: product_id,=,13",
+            "web_search_read domain: product_id,=,15",
+            "web_search_read domain: product_id,=,16",
+            "web_search_read domain: product_id,=,17",
         ]);
     });
 
@@ -5879,8 +5874,8 @@ QUnit.module("Views", (hooks) => {
                     }
                     return result;
                 }
-                if (args.method === "unity_web_search_read") {
-                    assert.step(`unity_web_search_read domain: ${args.kwargs.domain}`);
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read domain: ${args.kwargs.domain}`);
                 }
             },
         });
@@ -5901,16 +5896,16 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group.o_column_folded", 4);
 
         assert.verifySteps([
-            "unity_web_search_read domain: product_id,=,3",
-            "unity_web_search_read domain: product_id,=,5",
-            "unity_web_search_read domain: product_id,=,9",
-            "unity_web_search_read domain: product_id,=,10",
-            "unity_web_search_read domain: product_id,=,11",
-            "unity_web_search_read domain: product_id,=,12",
-            "unity_web_search_read domain: product_id,=,13",
-            "unity_web_search_read domain: product_id,=,15",
-            "unity_web_search_read domain: product_id,=,16",
-            "unity_web_search_read domain: product_id,=,17",
+            "web_search_read domain: product_id,=,3",
+            "web_search_read domain: product_id,=,5",
+            "web_search_read domain: product_id,=,9",
+            "web_search_read domain: product_id,=,10",
+            "web_search_read domain: product_id,=,11",
+            "web_search_read domain: product_id,=,12",
+            "web_search_read domain: product_id,=,13",
+            "web_search_read domain: product_id,=,15",
+            "web_search_read domain: product_id,=,16",
+            "web_search_read domain: product_id,=,17",
         ]);
     });
 
@@ -6091,12 +6086,12 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "unlink",
             "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
         assert.containsN(
             target,
@@ -6290,7 +6285,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
             groupBy: ["product_id"],
             async mockRPC(_route, { method, model, kwargs }) {
-                if (model === "partner" && method === "unity_web_search_read") {
+                if (model === "partner" && method === "web_search_read") {
                     assert.strictEqual(
                         kwargs.context.lang,
                         "brol",
@@ -8201,7 +8196,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.verifySteps([
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/unity_web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
 
         assert.ok(
@@ -8222,7 +8217,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(count, 1, "should have triggered an execute action only once");
         assert.verifySteps(
-            ["/web/dataset/call_kw/partner/unity_web_search_read"],
+            ["/web/dataset/call_kw/partner/web_search_read"],
             "the records should be reloaded after executing a button action"
         );
     });
@@ -8799,7 +8794,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             limit: 2,
             async mockRPC(_route, { method, kwargs }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.step(`${kwargs.limit} - ${kwargs.offset}`);
                 }
             },
@@ -8861,8 +8856,8 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             limit: 2,
             async mockRPC(_route, { kwargs, method }) {
-                if (method === "unity_web_search_read") {
-                    assert.step(`unity_web_search_read ${kwargs.limit}-${kwargs.offset}`);
+                if (method === "web_search_read") {
+                    assert.step(`web_search_read ${kwargs.limit}-${kwargs.offset}`);
                 }
             },
         });
@@ -8872,7 +8867,7 @@ QUnit.module("Views", (hooks) => {
             [...getColumn(1).querySelectorAll("[name='category_ids']")].map((el) => el.textContent),
             ["silver", ""]
         );
-        assert.verifySteps(["unity_web_search_read 2-0", "unity_web_search_read 2-0"]);
+        assert.verifySteps(["web_search_read 2-0", "web_search_read 2-0"]);
 
         // load more
         await loadMore(1);
@@ -8882,7 +8877,7 @@ QUnit.module("Views", (hooks) => {
             [...getColumn(1).querySelectorAll("[name='category_ids']")].map((el) => el.textContent),
             ["silver", "", "gold"]
         );
-        assert.verifySteps(["unity_web_search_read 4-0"]);
+        assert.verifySteps(["web_search_read 4-0"]);
     });
 
     QUnit.test("update buttons after column creation", async (assert) => {
@@ -9336,8 +9331,8 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9402,9 +9397,9 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9455,10 +9450,10 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read_group",
-            "unity_web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9485,7 +9480,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(getCardTexts(), ["name", "name", "name", "name"]);
         assert.verifySteps(
-            ["get_views", "unity_web_search_read"],
+            ["get_views", "web_search_read"],
             "no read on progress bar data is done"
         );
     });
@@ -9530,8 +9525,8 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "name_create",
                 "/web/dataset/resequence",
             ]);
@@ -9576,8 +9571,8 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "onchange",
             "name_create",
             "web_read",
@@ -9617,9 +9612,9 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9662,10 +9657,10 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -9719,11 +9714,11 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "action_archive",
             "web_read_group",
-            "unity_web_search_read",
+            "web_search_read",
             "read_progress_bar",
             "web_read_group",
         ]);
@@ -9774,11 +9769,11 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "action_archive",
                 "web_read_group",
-                "unity_web_search_read",
+                "web_search_read",
                 "read_progress_bar",
                 "web_read_group",
             ]);
@@ -9814,13 +9809,13 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             // reload
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9857,15 +9852,15 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read_group", // recomputes aggregates
-            "unity_web_search_read",
+            "web_search_read",
             // activate filter
             "web_read_group", // recomputes aggregates
-            "unity_web_search_read",
+            "web_search_read",
             // activate another filter (switching)
-            "unity_web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -9920,9 +9915,9 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
             "write",
             "web_read",
             "read_progress_bar",
@@ -9992,8 +9987,8 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "write",
                 "web_read",
                 "read_progress_bar",
@@ -10032,9 +10027,9 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -10074,8 +10069,8 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "write",
                 "web_read",
                 "read_progress_bar",
@@ -10126,21 +10121,21 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
 
         await click(getColumn(1), ".progress-bar.bg-success");
 
         assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
         assert.deepEqual(getCounters(), ["1", "4"]);
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         // Add searchdomain to something restricting progressbars' values (records still in filtered group)
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
         assert.deepEqual(getTooltips(), ["3 yop"]);
         assert.deepEqual(getCounters(), ["3"]);
-        assert.verifySteps(["web_read_group", "read_progress_bar", "unity_web_search_read"]);
+        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
     });
 
     QUnit.test("progress bar recompute after filter selection (aggregates)", async (assert) => {
@@ -10187,8 +10182,8 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
 
         await click(getColumn(1), ".progress-bar.bg-success");
@@ -10197,14 +10192,14 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["-4", "610"]);
         assert.verifySteps([
             "web_read_group", // recomputes aggregates
-            "unity_web_search_read",
+            "web_search_read",
         ]);
 
         // Add searchdomain to something restricting progressbars' values (records still in filtered group)
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
         assert.deepEqual(getTooltips(), ["3 yop"]);
         assert.deepEqual(getCounters(), ["600"]);
-        assert.verifySteps(["web_read_group", "read_progress_bar", "unity_web_search_read"]);
+        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
     });
 
     QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
@@ -10290,8 +10285,8 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "get_views",
                 "onchange",
                 "create",
@@ -10363,10 +10358,10 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "web_read_group",
-                "unity_web_search_read",
+                "web_search_read",
                 "get_views",
                 "onchange",
                 "create",
@@ -10467,7 +10462,7 @@ QUnit.module("Views", (hooks) => {
                     </div></t></templates>
                 </kanban>`,
             mockRPC(route, { method, kwargs }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(kwargs.specification, { id: {}, write_date: {} });
                 }
             },
@@ -11353,16 +11348,16 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
+                "web_search_read",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -11449,18 +11444,18 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -11541,9 +11536,9 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "write",
                 "web_read",
                 "read_progress_bar",
@@ -11592,8 +11587,8 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
 
         // Apply an active filter
@@ -11610,7 +11605,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
         assert.deepEqual(getCardTexts(1), ["1yop"]);
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         // Drag out its only record onto the first column
         await dragAndDrop(
@@ -11633,7 +11628,7 @@ QUnit.module("Views", (hooks) => {
             "write",
             "web_read",
             "read_progress_bar",
-            "unity_web_search_read",
+            "web_search_read",
             "/web/dataset/resequence",
             "read",
         ]);
@@ -11700,9 +11695,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
         await click(target.querySelector(".o_kanban_record p"));
-        assert.verifySteps(["doActionButton type object name a1", "unity_web_search_read"]);
+        assert.verifySteps(["doActionButton type object name a1", "web_search_read"]);
     });
 
     QUnit.test("action/type attributes on kanban arch, type='action'", async (assert) => {
@@ -11729,9 +11724,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "unity_web_search_read"]);
+        assert.verifySteps(["get_views", "web_search_read"]);
         await click(target.querySelector(".o_kanban_record p"));
-        assert.verifySteps(["doActionButton type action name a1", "unity_web_search_read"]);
+        assert.verifySteps(["doActionButton type action name a1", "web_search_read"]);
     });
 
     QUnit.test("Missing t-key is automatically filled with a warning", async (assert) => {
@@ -12057,12 +12052,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
-        assert.verifySteps([
-            "get_views",
-            "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
-        ]);
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
     });
 
     QUnit.test("basic rendering with a date groupby with a granularity", async (assert) => {
@@ -12095,12 +12085,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
-        assert.verifySteps([
-            "get_views",
-            "web_read_group",
-            "unity_web_search_read",
-            "unity_web_search_read",
-        ]);
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
     });
 
     QUnit.test("quick create record and click outside (no dirty input)", async (assert) => {
@@ -12410,11 +12395,11 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -12494,14 +12479,14 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
             "write",
             "web_read",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -12527,7 +12512,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
             mockRPC: async (route, args) => {
                 const { method } = args;
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     await def;
                 }
             },
@@ -12582,7 +12567,7 @@ QUnit.module("Views", (hooks) => {
             domain: [["id", ">", 0]],
             mockRPC: (route, args) => {
                 const { method, kwargs } = args;
-                if (args.method === "unity_web_search_read") {
+                if (args.method === "web_search_read") {
                     assert.step(method);
                     assert.deepEqual(kwargs.domain, [
                         "&",
@@ -12610,7 +12595,7 @@ QUnit.module("Views", (hooks) => {
         await click(getProgressBars(0)[0]);
         assert.containsOnce(target, ".o_kanban_record");
 
-        assert.verifySteps(["unity_web_search_read"]);
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test(
@@ -12932,7 +12917,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(target.querySelector("[name=foo] span").innerText, "hello");
-            assert.verifySteps(["get_views", "unity_web_search_read"]);
+            assert.verifySteps(["get_views", "web_search_read"]);
         }
     );
 
@@ -13099,8 +13084,8 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group",
             "read_progress_bar",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "write",
             "web_read",
             "read_progress_bar",
@@ -13185,8 +13170,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "get_views",
             "web_read_group", // initial read_group
-            "unity_web_search_read", // initial search_read (first column)
-            "unity_web_search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "get_views", // load views for form view dialog
@@ -13450,8 +13435,8 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
-                "unity_web_search_read",
-                "unity_web_search_read",
+                "web_search_read",
+                "web_search_read",
             ]);
             assert.deepEqual(
                 [...target.querySelectorAll(".o_kanban_record")].map((el) => el.innerText),

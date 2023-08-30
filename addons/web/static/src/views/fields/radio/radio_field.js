@@ -29,7 +29,7 @@ export class RadioField extends Component {
                     specification: { display_name: 1 },
                     domain: props.domain,
                 };
-                const { records } = await orm.call(relation, "unity_web_search_read", [], kwargs);
+                const { records } = await orm.call(relation, "web_search_read", [], kwargs);
                 return records.map((record) => [record.id, record.display_name]);
             });
         }

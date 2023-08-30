@@ -226,7 +226,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "unity_web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -311,7 +311,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "unity_web_search_read",
+            "web_search_read",
         ]);
     });
 
@@ -346,7 +346,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "get_views",
                 "web_read",
-                "unity_web_search_read",
+                "web_search_read",
             ]);
         }
     );
@@ -426,8 +426,8 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "unity_web_search_read",
-            "unity_web_search_read",
+            "web_search_read",
+            "web_search_read",
             "web_read",
         ]);
     });
@@ -460,7 +460,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "unity_web_search_read",
+            "web_search_read",
             "web_read",
             "web_read",
         ]);
@@ -531,10 +531,10 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "unity_web_search_read",
+            "web_search_read",
             "setItem session current_action",
             "getItem session current_action",
-            "unity_web_search_read",
+            "web_search_read",
             "setItem session current_action",
         ]);
     });
@@ -559,7 +559,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/unity_web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 
@@ -600,7 +600,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/call_kw/partner/unity_web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 

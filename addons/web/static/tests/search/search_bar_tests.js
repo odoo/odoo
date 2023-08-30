@@ -1075,7 +1075,7 @@ QUnit.module("Search", (hooks) => {
 
         async function mockRPC(_, { method, model, kwargs }) {
             if (
-                method === "unity_web_search_read" &&
+                method === "web_search_read" &&
                 model === "partner" &&
                 kwargs.specification.display_name &&
                 kwargs.specification.child_properties
@@ -1374,7 +1374,7 @@ QUnit.module("Search", (hooks) => {
 
         async function mockRPC(route, { method, model, args, kwargs }) {
             if (
-                method === "unity_web_search_read" &&
+                method === "web_search_read" &&
                 model === "partner" &&
                 kwargs.specification.display_name &&
                 kwargs.specification.child_properties

@@ -665,7 +665,7 @@ QUnit.module("Fields", (hooks) => {
                 "get_views",
                 "web_read",
                 "get_views",
-                "unity_web_search_read",
+                "web_search_read",
                 "onchange",
             ]);
             modal = target.querySelector(".modal");
@@ -724,7 +724,7 @@ QUnit.module("Fields", (hooks) => {
                 "get_views",
                 "web_read",
                 "get_views",
-                "unity_web_search_read",
+                "web_search_read",
                 "onchange",
             ]);
 
@@ -784,7 +784,7 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "unity_web_search_read") {
+                if (args.method === "web_search_read") {
                     // done by the SelectCreateDialog
                     assert.deepEqual(args.kwargs.context, {
                         abc: 2,
@@ -946,7 +946,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "get_views", // list view in dialog
-            "unity_web_search_read", // list view in dialog
+            "web_search_read", // list view in dialog
             "web_read", // relational field (updated)
             "write", // save main record
             "web_read", // main record
@@ -1434,7 +1434,7 @@ QUnit.module("Fields", (hooks) => {
                 </field>
             </form>`,
                 mockRPC(route, args) {
-                    if (args.method === "unity_web_search_read") {
+                    if (args.method === "web_search_read") {
                         assert.deepEqual(args.kwargs.domain, [
                             "&",
                             ["id", "in", [2, 3]],
@@ -1512,9 +1512,9 @@ QUnit.module("Fields", (hooks) => {
 
         assert.verifySteps([
             "web_read on partner",
-            "unity_web_search_read on partner_type",
+            "web_search_read on partner_type",
             "web_read on partner_type",
-            "unity_web_search_read on partner_type",
+            "web_search_read on partner_type",
             "web_read on partner_type",
         ]);
     });
@@ -1635,7 +1635,7 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["get_views", "web_read"]);
 
             await addRow(target);
-            assert.verifySteps(["get_views", "unity_web_search_read"]);
+            assert.verifySteps(["get_views", "web_search_read"]);
 
             await click(target, ".o_create_button");
             assert.strictEqual(

@@ -42,7 +42,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
     });
     await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary:eq(0):contains()");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget with activities", async (assert) => {
@@ -99,7 +99,7 @@ QUnit.test("list activity widget with activities", async (assert) => {
     );
     await contains(".o_data_row:eq(1) .o-mail-ActivityButton i.text-success.fa-clock-o");
     assert.strictEqual($(".o_data_row:eq(1) .o-mail-ListActivity-summary")[0].innerText, "Type 2");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget with exception", async (assert) => {
@@ -142,7 +142,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
     });
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
     await contains(".o-mail-ListActivity-summary:eq(0):contains(Warning)");
-    assert.verifySteps(["/web/dataset/call_kw/res.users/unity_web_search_read"]);
+    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
 QUnit.test("list activity widget: open dropdown", async (assert) => {
@@ -226,7 +226,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     await click(".o-mail-ActivityListPopoverItem-markAsDone:eq(0)"); // mark the first activity as done
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']"); // confirm
     await contains(".o-mail-ListActivity-summary:eq(0):contains(Meet FP)");
-    assert.verifySteps(["unity_web_search_read", "activity_format", "action_feedback", "web_read"]);
+    assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 
 QUnit.test("list activity exception widget with activity", async () => {

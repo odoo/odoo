@@ -277,7 +277,7 @@ export class ORM {
      */
     webSearchRead(model, domain, kwargs = {}) {
         validateArray("domain", domain);
-        return this.call(model, "unity_web_search_read", [], { ...kwargs, domain });
+        return this.call(model, "web_search_read", [], { ...kwargs, domain });
     }
 
     /**

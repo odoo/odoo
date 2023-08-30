@@ -83,8 +83,8 @@ class TestUnityRead(TransactionCase):
     def test_many2one_query_count(self):
         with self.assertQueryCount(1        # 1 query for the search of the domain and read course fields
                                    + 1):    # 1 query to read the data of the author
-            self.course.unity_web_search_read(domain=(),
-                                              specification={'display_name': {}, 'author_id': {'fields': {'write_date': {}}}})
+            self.course.web_search_read(domain=(),
+                                        specification={'display_name': {}, 'author_id': {'fields': {'write_date': {}}}})
 
     def test_read_many2one_throws_if_it_cannot_read_extra_fields(self):
         with self.assertRaises(AccessError):

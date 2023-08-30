@@ -10766,10 +10766,10 @@ QUnit.module("Views", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "partner:get_views",
-            "partner:unity_web_search_read",
-            "partner:unity_web_search_read",
+            "partner:web_search_read",
+            "partner:web_search_read",
             "partner:web_read_group",
-            "partner:unity_web_search_read",
+            "partner:web_search_read",
             "partner:web_read",
         ]);
     });
