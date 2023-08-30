@@ -835,12 +835,12 @@ class ProductTemplate(models.Model):
         product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
         return {
             ptav.id: [
-                value_id
+                value.id
                 for filter_line in ptav.exclude_for.filtered(
                     lambda filter_line: filter_line.product_tmpl_id == self
-                ) for value_id in filter_line.value_ids.ids
+                ) for value in filter_line.value_ids if value.ptav_active
             ]
-            for ptav in product_template_attribute_values
+            for ptav in product_template_attribute_values if ptav.ptav_active
         }
 
     def _get_parent_attribute_exclusions(self, parent_combination):
