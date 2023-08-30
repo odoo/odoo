@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
 import { createLocalId, onChange } from "@mail/utils/common/misc";
 
@@ -497,4 +497,4 @@ export class Thread extends Record {
     }
 }
 
-modelRegistry.add(Thread.name, Thread);
+Thread.register();

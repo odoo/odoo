@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 /**
  * @typedef {{partnerIds: Set<number>, threadIds: Set<number>}} RawMentions
@@ -77,4 +77,4 @@ export class Composer extends Record {
     isFocused = false;
 }
 
-modelRegistry.add(Composer.name, Composer);
+Composer.register();

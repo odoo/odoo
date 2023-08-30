@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 /**
  * @typedef Data
@@ -55,4 +55,4 @@ export class Follower extends Record {
     }
 }
 
-modelRegistry.add(Follower.name, Follower);
+Follower.register();

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 /**
@@ -61,4 +61,4 @@ export class ChannelMember extends Record {
     }
 }
 
-modelRegistry.add(ChannelMember.name, ChannelMember);
+ChannelMember.register();

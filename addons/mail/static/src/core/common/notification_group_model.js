@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
 import { _t } from "@web/core/l10n/translation";
@@ -68,4 +68,4 @@ export class NotificationGroup extends Record {
     }
 }
 
-modelRegistry.add(NotificationGroup.name, NotificationGroup);
+NotificationGroup.register();

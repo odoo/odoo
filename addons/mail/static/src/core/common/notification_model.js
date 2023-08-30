@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -93,4 +93,4 @@ export class Notification extends Record {
     }
 }
 
-modelRegistry.add(Notification.name, Notification);
+Notification.register();
