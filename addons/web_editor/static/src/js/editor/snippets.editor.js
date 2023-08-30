@@ -3454,7 +3454,7 @@ var SnippetsMenu = Widget.extend({
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
     _updateRightPanelContent: function ({content, tab, ...options}) {
-        this._hideActiveTooltip();
+        this._hideTooltips();
         this._closeWidgets();
 
         this._currentTab = tab || this.tabs.BLOCKS;
@@ -3582,22 +3582,27 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
-     * Hides the active tooltip.
+     * Hides the active tooltips.
+     *
+     * The BS documentation says that "Tooltips that use delegation (which are
+     * created using the selector option) cannot be individually destroyed on
+     * descendant trigger elements". So this function should be useful to remove
+     * the active tooltips manually.
+     * For instance, without this, clicking on "Hide in Desktop" on a snippet
+     * will leave the tooltip "forever" visible even if the "Hide in Desktop"
+     * button is gone.
      *
      * @private
      */
-    _hideActiveTooltip() {
-        // The BS documentation says that "Tooltips that use delegation (which
-        // are created using the selector option) cannot be individually
-        // destroyed on descendant trigger elements". So we remove the active
-        // tooltips manually.
-        // For instance, without this, clicking on "Hide in Desktop" on a
-        // snippet will leave the tooltip "forever" visible even if the "Hide in
-        // Desktop" button is gone.
-        const tooltipClass = 'aria-describedby';
-        const tooltippedEl = this.el.querySelector(`[${tooltipClass}^="tooltip"]`);
-        if (tooltippedEl) {
-            Tooltip.getInstance(tooltippedEl).hide();
+    _hideTooltips() {
+        // While functionally there is probably no way to have multiple active
+        // tooltips, it is possible that the panel contains multiple tooltip
+        // descriptions (we do not know what is in customers' own saved snippets
+        // for example). In any case, it does not hurt to technically consider
+        // the case anyway.
+        const tooltipTargetEls = this.el.querySelectorAll('[aria-describedby^="tooltip"]');
+        for (const el of tooltipTargetEls) {
+            Tooltip.getInstance(el)?.hide();
         }
     },
 
@@ -4472,9 +4477,9 @@ var SnippetsMenu = Widget.extend({
         }
         this._buttonAction = true;
         let removeLoadingEffect;
-        // Remove the tooltip now, because the button will be disabled and so,
+        // Remove the tooltips now, because the button will be disabled and so,
         // the tooltip will not be removable (see BS doc).
-        this._hideActiveTooltip();
+        this._hideTooltips();
         if (addLoadingEffect) {
             removeLoadingEffect = dom.addButtonLoadingEffect(button);
         }
