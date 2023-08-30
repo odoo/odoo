@@ -386,7 +386,7 @@ class Web_Editor(http.Controller):
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
         else:
-            attachment = IrAttachment.create(attachment_data)
+            attachment = IrAttachment._create_image_attachment(attachment_data)
 
         return attachment
 

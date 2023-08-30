@@ -78,3 +78,26 @@ class IrAttachment(models.Model):
         - Non admin user uploading an unsplash image (bypass binary/url check)
         """
         return False
+
+    def _create_image_attachment(self, vals):
+        """
+        Check if an attachment for the same image does not already exists before
+        creating a new one.
+        TODO: write this to support batch, adapt mailing.py to use raw instead of datas
+        / or support datas here as well 
+        """
+        bin_data = vals.get('raw')
+        res_model = vals.get('res_model')
+        res_id = vals.get('res_id')
+        if bin_data and res_model and res_id:
+            checksum = self._compute_checksum(bin_data)
+            attachs = self.env['ir.attachment'].search([
+                ('res_model', '=', res_model),
+                ('res_id', '=', res_id),
+                ('checksum', '=', checksum),
+            ])
+            attachs = self._filter_attachment_access(attachs.mapped('id'))
+            if len(attachs):
+                return attachs[0]
+
+        return self.create(vals)
