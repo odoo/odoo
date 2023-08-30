@@ -18736,6 +18736,11 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
 
         assert.strictEqual(target.querySelector(".o_field_cell.o_integer_cell").textContent, "321");
+        assert.strictEqual(
+            target.querySelector(".o_list_footer .o_list_number").textContent,
+            "567",
+            "First property is 321, second is zero because it has a different parent and the 2 others are 123 so the total should be 321 + 123 * 2 = 567"
+        );
     });
 
     QUnit.test("Properties: float", async (assert) => {
@@ -18784,6 +18789,11 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
 
         assert.strictEqual(target.querySelector(".o_field_cell.o_float_cell").textContent, "3.21");
+        assert.strictEqual(
+            target.querySelector(".o_list_footer .o_list_number").textContent,
+            "250.11",
+            "First property is 3.21, second is zero because it has a different parent and the 2 others are 123.45 so the total should be 3.21 + 123.45 * 2 = 250.11"
+        );
     });
 
     QUnit.test("Properties: date", async (assert) => {
