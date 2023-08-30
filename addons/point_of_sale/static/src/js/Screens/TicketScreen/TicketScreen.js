@@ -222,7 +222,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 });
                 return;
             }
-            destinationOrder.fiscal_position = order.fiscal_position;
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
@@ -232,6 +231,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
 
+            destinationOrder.fiscal_position = order.fiscal_position;
             // Set the customer to the destinationOrder.
             if (customer && !destinationOrder.get_client()) {
                 destinationOrder.set_client(customer);
