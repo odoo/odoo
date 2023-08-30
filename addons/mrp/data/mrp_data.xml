@@ -71,6 +71,10 @@
             <field name="sequence">0</field>
         </record>
 
+        <!-- Groups -->
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('mrp.group_mrp_routings'))]"/>
+        </record>
     </data>
 
 </odoo>

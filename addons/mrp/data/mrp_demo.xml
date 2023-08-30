@@ -252,6 +252,7 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
             <field name="consumption">flexible</field>
+            <field name="days_to_prepare_mo">3</field>
         </record>
         <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_desk"/>
@@ -515,12 +516,6 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="lot_product_product_leg_0" model="stock.lot">
-            <field name="name">0000000030010</field>
-            <field name="product_id" ref="product_product_computer_desk_leg"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-
 
         <!-- Initital Inventory -->
 
@@ -563,12 +558,6 @@
             <field name="inventory_quantity">30.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_product_leg" model="stock.quant">
-            <field name="product_id" ref="product_product_computer_desk_leg"/>
-            <field name="inventory_quantity">10.0</field>
-            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
-            <field name="lot_id" ref="lot_product_product_leg_0"/>
-        </record>
 
         <function model="stock.quant" name="action_apply_inventory">
             <function eval="[[('id', 'in', (ref('stock_inventory_drawer_lot0'),
@@ -578,7 +567,6 @@
                                             ref('stock_inventory_product_wood_panel'),
                                             ref('stock_inventory_product_ply'),
                                             ref('stock_inventory_product_wear'),
-                                            ref('stock_inventory_product_leg'),
                                             ))]]" model="stock.quant" name="search"/>
         </function>
 
