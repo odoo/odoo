@@ -51,13 +51,14 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTracking(trackingValue) {
+    formatTracking(trackingValue, fieldName) {
         /**
          * Maps tracked field type to a JS formatter. Tracking values are
          * not always stored in the same field type as their origin type.
          * Field types that are not listed here are not supported by
          * tracking in Python. Also see `create_tracking_values` in Python.
          */
+        let modelDigits = 0;
         switch (trackingValue.fieldType) {
             case "boolean":
                 return trackingValue.value ? _t("Yes") : _t("No");
@@ -86,7 +87,23 @@ patch(Message.prototype, {
                 return formatDateTime(value);
             }
             case "float":
-                return formatFloat(trackingValue.value, { digits: trackingValue.digits });
+                if (fieldName) {
+                    // POC 2: (it's not there yet)
+                    // Ideally it should use the digits spec from the view, not the model
+                    // but unfortunately those are props of the FloatField, and not accessible by this component.
+                    // We may want to store 16 decimals in the db, but only display 8 on the view
+                    // The tracking values should therefore match the same value as the view
+                    // I have used [12,7] on the field, and [12,6] in the view to illustrate this.
+                    //
+                    // Crazy Idea/ Joke: maybe the formCompiler override in mail should compile a list of float fields
+                    // along with their info/spec and make it accessible to Chatter -> Thread -> Message
+                    // seems like a lot of complexity for a small use case.
+                    //
+                    // The simplest option is to display 2 decimals in the chatter with a t-att-title containing the db
+                    // value - To check with PO
+                    modelDigits = this.env.model.root.fields[fieldName]?.digits;
+                }
+                return formatFloat(trackingValue.value, { digits: modelDigits });
             case "integer":
                 return formatInteger(trackingValue.value);
             case "text":
@@ -103,8 +120,8 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTrackingOrNone(trackingValue) {
-        const formattedValue = this.formatTracking(trackingValue);
+    formatTrackingOrNone(trackingValue, fieldName) {
+        const formattedValue = this.formatTracking(trackingValue, fieldName);
         return formattedValue || _t("None");
     },
 });

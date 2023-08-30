@@ -394,6 +394,7 @@ class AccountMove(models.Model):
     exchange_rate = fields.Float(
         string="Currency rate",
         tracking=True,
+        digits=[12,7],
     )
     system_exchange_rate = fields.Float(
         compute='_compute_system_exchange_rate',
