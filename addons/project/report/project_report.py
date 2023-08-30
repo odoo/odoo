@@ -74,13 +74,13 @@ class ReportProjectTaskUser(models.Model):
                 t.date_end,
                 t.date_last_stage_update,
                 t.date_deadline,
-                t.project_id,
+                ph.project_id,
                 t.priority,
                 t.name as name,
                 t.company_id,
                 t.partner_id,
                 t.parent_id,
-                t.stage_id,
+                ph.stage_id,
                 t.is_closed,
                 t.state,
                 t.milestone_id,
@@ -106,13 +106,13 @@ class ReportProjectTaskUser(models.Model):
                 t.date_end,
                 t.date_last_stage_update,
                 t.date_deadline,
-                t.project_id,
+                ph.project_id,
                 t.priority,
                 t.name,
                 t.company_id,
                 t.partner_id,
                 t.parent_id,
-                t.stage_id,
+                ph.stage_id,
                 t.is_closed,
                 t.state,
                 t.rating_last_value,
@@ -128,6 +128,7 @@ class ReportProjectTaskUser(models.Model):
     def _from(self):
         return f"""
                 project_task t
+                    INNER JOIN project_hierarchy ph ON ph.id = t.id
                     LEFT JOIN rating_rating rt ON rt.res_id = t.id
                           AND rt.res_model = 'project.task'
                           AND rt.consumed = True
@@ -140,15 +141,37 @@ class ReportProjectTaskUser(models.Model):
 
     def _where(self):
         return """
-                t.project_id IS NOT NULL
+                ph.project_id IS NOT NULL
+        """
+
+    def _cte(self):
+        return """
+                WITH RECURSIVE project_hierarchy as (
+                    SELECT pt.id,
+                           pt.project_id,
+                           pt.stage_id
+                      FROM project_task pt
+                     WHERE pt.project_id IS NOT NULL
+                       AND pt.parent_id IS NULL
+
+                UNION ALL
+
+                    SELECT pt.id,
+                           COALESCE(pt.project_id, ph.project_id),
+                           COALESCE(pt.stage_id, ph.stage_id)
+                      FROM project_task pt
+                      JOIN project_hierarchy ph
+                        ON pt.parent_id = ph.id
+                )
         """
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""
     CREATE view %s as
+         %s
          SELECT %s
            FROM %s
           WHERE %s
        GROUP BY %s
-        """ % (self._table, self._select(), self._from(), self._where(), self._group_by()))
+        """ % (self._table, self._cte(), self._select(), self._from(), self._where(), self._group_by()))
