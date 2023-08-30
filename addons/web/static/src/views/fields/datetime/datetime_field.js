@@ -103,7 +103,7 @@ export class DateTimeField extends Component {
                 }
                 this.triggerIsDirty(this.props);
             },
-            onApply: (value) => {
+            onApply: async (value) => {
                 const toUpdate = {};
                 if (Array.isArray(value)) {
                     // Value is already a range
@@ -120,7 +120,12 @@ export class DateTimeField extends Component {
                         delete toUpdate[fieldName];
                     }
                 }
-                this.props.record.update(toUpdate);
+                try {
+                    await this.props.record.update(toUpdate);
+                } catch {
+                    // if the update was not successful render back to previous value
+                    this.state.value = this.props.record.data[name];
+                }
             },
         });
         this.state = useState(dateTimePicker.state);

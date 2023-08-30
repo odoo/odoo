@@ -546,6 +546,35 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
     });
 
+    QUnit.test("DateTimeField should go back to previous value on UserError", async (assert) => {
+        serverData.models.partner.onchanges = {
+            datetime: function () {},
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: '<form><field name="datetime"/></form>',
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    return Promise.reject({ message: "Odoo Server Error" });
+                }
+            },
+        });
+
+        const datetime = target.querySelector(".o_field_datetime input");
+        const defaultValue = datetime.value;
+
+        // Change date to trigger onChange
+        await editInput(datetime, null, "01/08/21 14:30:40");
+        await triggerEvent(datetime, null, "keydown", { key: "Enter" });
+        await click(target);
+
+        // as the onchange will raise an error the value should go back to previous one
+        assert.strictEqual(datetime.value, defaultValue);
+    });
+
     QUnit.test("datetime field: use picker with arabic numbering system", async (assert) => {
         patchWithCleanup(luxon.Settings, {
             defaultLocale: "ar-001",
