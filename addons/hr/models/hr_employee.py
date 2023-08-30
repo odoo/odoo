@@ -94,6 +94,7 @@ class HrEmployeePrivate(models.Model):
     work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
+    work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name')
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
@@ -175,6 +176,13 @@ class HrEmployeePrivate(models.Model):
                 avatar = employee.user_id[avatar_field]
             employee[avatar_field] = avatar
         super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
+
+    @api.depends('name', 'permit_no')
+    def _compute_work_permit_name(self):
+        for employee in self:
+            name = employee.name.replace(' ', '_') + '_' if employee.name else ''
+            permit_no = '_' + employee.permit_no if employee.permit_no else ''
+            employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
 
     def action_create_user(self):
         self.ensure_one()
