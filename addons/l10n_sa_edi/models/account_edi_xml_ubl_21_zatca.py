@@ -312,7 +312,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             }
         return {}
 
-    def _get_invoice_line_vals(self, line, taxes_vals):
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
 
         def grouping_key_generator(base_line, tax_values):
@@ -338,7 +338,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             line_taxes = line.move_id._prepare_invoice_aggregated_taxes(grouping_key_generator=grouping_key_generator)
             taxes_vals = line_taxes['tax_details_per_record'][line]
 
-        line_vals = super()._get_invoice_line_vals(line, taxes_vals)
+        line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         total_amount_sa = abs(taxes_vals['tax_amount_currency'] + taxes_vals['base_amount_currency'])
         extension_amount = abs(line_vals['line_extension_amount'])
         if not line.move_id._is_downpayment() and line._get_downpayment_lines():
