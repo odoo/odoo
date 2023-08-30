@@ -140,6 +140,10 @@ class HrWorkEntry(models.Model):
     def _get_leaves_entries_outside_schedule(self):
         return self.filtered(lambda w: w.work_entry_type_id.is_leave and w.state not in ('validated', 'cancelled'))
 
+    def _get_contract_standard_calendar(self):
+        self.ensure_one()
+        return self.contract_id.resource_calendar_id
+
     def _mark_leaves_outside_schedule(self):
         """
         Check leave work entries in `self` which are completely outside
@@ -149,7 +153,7 @@ class HrWorkEntry(models.Model):
         work_entries = self._get_leaves_entries_outside_schedule()
         entries_by_calendar = defaultdict(lambda: self.env['hr.work.entry'])
         for work_entry in work_entries:
-            calendar = work_entry.contract_id.resource_calendar_id
+            calendar = work_entry._get_contract_standard_calendar()
             entries_by_calendar[calendar] |= work_entry
 
         outside_entries = self.env['hr.work.entry']
