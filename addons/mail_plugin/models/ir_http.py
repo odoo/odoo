@@ -24,3 +24,6 @@ class IrHttp(models.AbstractModel):
 
         # take the identity of the API key user
         request.update_env(user=user_id)
+
+        # switch to the user context
+        request.update_context(**request.env.user.context_get())
