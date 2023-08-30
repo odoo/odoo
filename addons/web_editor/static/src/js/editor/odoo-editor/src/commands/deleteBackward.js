@@ -27,6 +27,7 @@ import {
     isNotEditableNode,
     createDOMPathGenerator,
     closestElement,
+    closestBlock,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -141,6 +142,29 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             return;
         }
 
+        /** If we are at the beninning of a block node,
+         *  And the previous node is empty, remove it.
+         *
+         *   E.g. (previousEl == empty)
+         *        <p><br></p><h1>[]def</h1> + BACKSPACE
+         *   <=>  <h1>[]def</h1>
+         *
+         *   E.g. (previousEl != empty)
+         *        <h3>abc</h3><h1>[]def</h1> + BACKSPACE
+         *   <=>  <h3>abc[]def</h3>
+        */
+        const previousElementSiblingClosestBlock = closestBlock(this.previousElementSibling);
+        if (
+            previousElementSiblingClosestBlock &&
+            (isEmptyBlock(previousElementSiblingClosestBlock) ||
+                previousElementSiblingClosestBlock.textContent === '\u200B') &&
+            paragraphRelatedElements.includes(this.nodeName)
+        ) {
+            previousElementSiblingClosestBlock.remove();
+            setSelection(this, 0);
+            return;
+        }
+
         /**
          * Backspace at the beginning of a block node. If it doesn't have a left
          * block and it is one of the special block formatting tags below then
@@ -234,13 +258,14 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
 };
 
 HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    if (offset > 0 || this.previousElementSibling) {
-        // If backspace inside li content or if the li is not the first one,
-        // it behaves just like in a normal element.
-        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    // If the deleteBackward is performed at the begening of a LI element,
+    // we take the current LI out of the list.
+    if (offset === 0) {
+        this.oToggleList(offset);
         return;
     }
-    this.oShiftTab(offset);
+    // Otherwise, call the HTMLElement deleteBackward method.
+    HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
 };
 
 HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
