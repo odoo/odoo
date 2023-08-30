@@ -24,6 +24,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
+import session from "web.session";
 
 const FETCH_LIMIT = 30;
 
@@ -864,7 +865,7 @@ export class ThreadService {
             thread,
         });
         const tmpId = this.messageService.getNextTemporaryId();
-        params.context = { ...params.context, temporary_id: tmpId };
+        params.context = { ...params.context, temporary_id: tmpId, ...session.user_context };
         if (parentId) {
             params.post_data.parent_id = parentId;
         }
