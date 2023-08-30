@@ -7,9 +7,9 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     # pos.config fields
-    pos_basic_employee_ids = fields.Many2many(related='pos_config_id.basic_employee_ids', readonly=False,
+    pos_basic_employee_ids = fields.Many2many(related='pos_config_id.basic_employee_ids', related_inverse=True,
         help='If left empty, all employees can log in to PoS')
-    pos_advanced_employee_ids = fields.Many2many(related='pos_config_id.advanced_employee_ids', readonly=False,
+    pos_advanced_employee_ids = fields.Many2many(related='pos_config_id.advanced_employee_ids', related_inverse=True,
         help='If left empty, only Odoo users have extended rights in PoS')
 
     @api.onchange('pos_basic_employee_ids')

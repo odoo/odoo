@@ -8,10 +8,10 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.company.po_lock == 'lock')
-    po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *", readonly=False)
+    po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *", related_inverse=True)
     po_order_approval = fields.Boolean("Purchase Order Approval", default=lambda self: self.env.company.po_double_validation == 'two_step')
-    po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *", readonly=False)
-    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id', readonly=False)
+    po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *", related_inverse=True)
+    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id', related_inverse=True)
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True)
     default_purchase_method = fields.Selection([
         ('purchase', 'Ordered quantities'),
@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
     module_purchase_product_matrix = fields.Boolean("Purchase Grid Entry")
-    po_lead = fields.Float(related='company_id.po_lead', readonly=False)
+    po_lead = fields.Float(related='company_id.po_lead', related_inverse=True)
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
         config_parameter='purchase.use_po_lead',

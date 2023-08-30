@@ -46,7 +46,7 @@ class DeliveryCarrier(models.Model):
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
-    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
+    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, related_inverse=True)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
     currency_id = fields.Many2one(related='product_id.currency_id')
 

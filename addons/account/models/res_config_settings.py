@@ -8,11 +8,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, related_inverse=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
         comodel_name='account.journal',
-        related='company_id.currency_exchange_journal_id', readonly=False,
+        related='company_id.currency_exchange_journal_id', related_inverse=True,
         string="Currency Exchange Journal",
         check_company=True,
         domain="[('type', '=', 'general')]",
@@ -21,14 +21,14 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.account",
         related="company_id.income_currency_exchange_account_id",
         string="Gain Exchange Rate Account",
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Exchange Rate Account",
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
@@ -37,22 +37,22 @@ class ResConfigSettings(models.TransientModel):
         'account.tax',
         string="Default Sale Tax",
         related='company_id.account_sale_tax_id',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
     )
     purchase_tax_id = fields.Many2one(
         'account.tax',
         string="Default Purchase Tax",
         related='company_id.account_purchase_tax_id',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
     )
     tax_calculation_rounding_method = fields.Selection(
-        related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
+        related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', related_inverse=True)
     account_journal_suspense_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Bank Suspense',
-        readonly=False,
+        related_inverse=True,
         related='company_id.account_journal_suspense_account_id',
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', 'in', ('asset_current', 'liability_current'))]",
@@ -62,7 +62,7 @@ class ResConfigSettings(models.TransientModel):
     account_journal_payment_debit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Receipts',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         related='company_id.account_journal_payment_debit_account_id',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
@@ -73,7 +73,7 @@ class ResConfigSettings(models.TransientModel):
     account_journal_payment_credit_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Outstanding Payments',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         related='company_id.account_journal_payment_credit_account_id',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
@@ -81,7 +81,7 @@ class ResConfigSettings(models.TransientModel):
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer",
-        related='company_id.transfer_account_id', readonly=False,
+        related='company_id.transfer_account_id', related_inverse=True,
         check_company=True,
         domain=[
             ('reconcile', '=', True),
@@ -116,36 +116,36 @@ class ResConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
-    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', related_inverse=True)
     tax_cash_basis_journal_id = fields.Many2one(
         'account.journal',
         string="Tax Cash Basis Journal",
         related='company_id.tax_cash_basis_journal_id',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
     )
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Base Tax Received Account",
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         related='company_id.account_cash_basis_base_account_id',
         domain=[('deprecated', '=', False)])
-    account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
+    account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", related_inverse=True, store=False)
 
-    qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
-    invoice_is_download = fields.Boolean(string='Download', related='company_id.invoice_is_download', readonly=False)
-    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
-    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
-    invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', related_inverse=True)
+    invoice_is_download = fields.Boolean(string='Download', related='company_id.invoice_is_download', related_inverse=True)
+    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', related_inverse=True)
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', related_inverse=True)
+    invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", related_inverse=True)
     invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
-                                     readonly=False)
+                                     related_inverse=True)
     terms_type = fields.Selection(
-        related='company_id.terms_type', readonly=False)
+        related='company_id.terms_type', related_inverse=True)
     display_invoice_amount_total_words = fields.Boolean(
         string="Total amount of invoice in letters",
         related='company_id.display_invoice_amount_total_words',
-        readonly=False
+        related_inverse=True
     )
     preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
 
@@ -153,7 +153,7 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
     account_use_credit_limit = fields.Boolean(
-        string="Sales Credit Limit", related="company_id.account_use_credit_limit", readonly=False,
+        string="Sales Credit Limit", related="company_id.account_use_credit_limit", related_inverse=True,
         help="Enable the use of credit limit on partners.")
     account_default_credit_limit = fields.Monetary(
         string="Default Credit Limit", readonly=False,
@@ -164,19 +164,19 @@ class ResConfigSettings(models.TransientModel):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     # Storno Accounting
-    account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
+    account_storno = fields.Boolean(string="Storno accounting", related_inverse=True, related='company_id.account_storno')
 
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
     # Quick encoding (fiduciary mode)
-    quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
+    quick_edit_mode = fields.Selection(string="Quick encoding", related_inverse=True, related='company_id.quick_edit_mode')
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Cash Discount Loss',
         help='Account for the difference amount after the expense discount has been granted',
-        readonly=False,
+        related_inverse=True,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
         check_company=True,
         domain="[('deprecated', '=', False), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
@@ -185,7 +185,7 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.account',
         string='Cash Discount Gain',
         help='Account for the difference amount after the income discount has been granted',
-        readonly=False,
+        related_inverse=True,
         check_company=True,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
         domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other', 'expense'))]",

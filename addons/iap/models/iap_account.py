@@ -37,9 +37,9 @@ class IapAccount(models.Model):
     warn_me = fields.Boolean(
         related='account_info_id.warn_me',
         help="We will send you an email when your balance gets below that threshold",
-        readonly=False)
-    warning_threshold = fields.Float(related='account_info_id.warning_threshold', readonly=False)
-    warning_email = fields.Char(related='account_info_id.warning_email', readonly=False)
+        related_inverse=True)
+    warning_threshold = fields.Float(related='account_info_id.warning_threshold', related_inverse=True)
+    warning_email = fields.Char(related='account_info_id.warning_email', related_inverse=True)
     show_token = fields.Boolean()
 
     @api.model

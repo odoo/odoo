@@ -1314,6 +1314,29 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_25_related_attributes(self):
         """ test the attributes of related fields """
+        Model = self.registry['test_new_api.related']
+
+        self.assertFalse(Model.related.store, "Related fields are non-stored by default")
+        self.assertFalse(Model.related_editable.store, "Related fields are non-stored by default")
+        self.assertFalse(Model.related_invertible.store, "Related fields are non-stored by default")
+        self.assertTrue(Model.related_store.store)
+        self.assertTrue(Model.related_store_editable.store)
+        self.assertTrue(Model.related_store_invertible.store)
+
+        self.assertTrue(Model.related.readonly, "Related fields are readonly by default")
+        self.assertTrue(Model.related_store.readonly, "Related fields are readonly by default")
+        self.assertFalse(Model.related_editable.readonly)
+        self.assertFalse(Model.related_store_editable.readonly)
+        self.assertFalse(Model.related_invertible.readonly, "Invertible related fields are non-readonly")
+        self.assertFalse(Model.related_store_invertible.readonly, "Invertible related fields are non-readonly")
+
+        self.assertFalse(Model.related.inverse, "Related fields are non-invertible by default")
+        self.assertFalse(Model.related_store.inverse, "Related fields are non-invertible by default")
+        self.assertFalse(Model.related_editable.inverse, "Related fields are non-invertible by default")
+        self.assertFalse(Model.related_store_editable.inverse, "Related fields are non-invertible by default")
+        self.assertTrue(Model.related_invertible.inverse)
+        self.assertTrue(Model.related_store_invertible.inverse)
+
         text = self.registry['test_new_api.foo'].text
         self.assertFalse(text.trim, "The target field is defined with trim=False")
 
@@ -1367,6 +1390,28 @@ class TestFields(TransactionCaseWithUserDemo):
         bar.name = 'B'
         self.assertEqual(bar.foo, oof)
         self.assertIn(bar, bar.search([('foo', 'in', oof.ids)]))
+
+    def test_25_related_editable(self):
+        """ test related editable fields """
+        record = self.env['test_new_api.related'].create({'name': 'Foo'})
+        self.assertEqual(record.related, record.name)
+        self.assertEqual(record.related_editable, record.name)
+        self.assertEqual(record.related_invertible, record.name)
+        self.assertEqual(record.related_store, record.name)
+        self.assertEqual(record.related_store_editable, record.name)
+        self.assertEqual(record.related_store_invertible, record.name)
+
+        # related editable fields don't change their target
+        record.write({'related_editable': 'Bar'})
+        self.assertEqual(record.name, 'Foo')
+        record.write({'related_store_editable': 'Baz'})
+        self.assertEqual(record.name, 'Foo')
+
+        # related invertible fields do change their target
+        record.write({'related_invertible': 'Bar'})
+        self.assertEqual(record.name, 'Bar')
+        record.write({'related_store_invertible': 'Baz'})
+        self.assertEqual(record.name, 'Baz')
 
     def test_25_one2many_inverse_related(self):
         left = self.env['test_new_api.trigger.left'].create({})

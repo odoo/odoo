@@ -72,7 +72,7 @@ class Applicant(models.Model):
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
     user_email = fields.Char(related='user_id.email', string="User Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    employee_name = fields.Char(related='emp_id.name', string="Employee Name", readonly=False, tracking=False)
+    employee_name = fields.Char(related='emp_id.name', string="Employee Name", related_inverse=True, tracking=False)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'Grey'),

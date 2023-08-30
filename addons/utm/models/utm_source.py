@@ -47,7 +47,7 @@ class UtmSourceMixin(models.AbstractModel):
     _name = 'utm.source.mixin'
     _description = 'UTM Source Mixin'
 
-    name = fields.Char('Name', related='source_id.name', readonly=False)
+    name = fields.Char('Name', related='source_id.name', related_inverse=True)
     source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict', copy=False)
 
     @api.model_create_multi

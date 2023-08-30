@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class Product(models.Model):
     _inherit = "product.product"
 
-    website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
+    website_id = fields.Many2one(related='product_tmpl_id.website_id', related_inverse=True)
 
     product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
 

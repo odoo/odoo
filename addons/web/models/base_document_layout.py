@@ -58,28 +58,28 @@ class BaseDocumentLayout(models.TransientModel):
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)
 
-    logo = fields.Binary(related='company_id.logo', readonly=False)
+    logo = fields.Binary(related='company_id.logo', related_inverse=True)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
-    report_header = fields.Html(related='company_id.report_header', readonly=False)
-    report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
-    company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
+    report_header = fields.Html(related='company_id.report_header', related_inverse=True)
+    report_footer = fields.Html(related='company_id.report_footer', related_inverse=True, default=_default_report_footer)
+    company_details = fields.Html(related='company_id.company_details', related_inverse=True, default=_default_company_details)
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
 
     # The paper format changes won't be reflected in the preview.
-    paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
+    paperformat_id = fields.Many2one(related='company_id.paperformat_id', related_inverse=True)
 
-    external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', readonly=False)
+    external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', related_inverse=True)
 
-    font = fields.Selection(related='company_id.font', readonly=False)
-    primary_color = fields.Char(related='company_id.primary_color', readonly=False)
-    secondary_color = fields.Char(related='company_id.secondary_color', readonly=False)
+    font = fields.Selection(related='company_id.font', related_inverse=True)
+    primary_color = fields.Char(related='company_id.primary_color', related_inverse=True)
+    secondary_color = fields.Char(related='company_id.secondary_color', related_inverse=True)
 
     custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
 
-    layout_background = fields.Selection(related='company_id.layout_background', readonly=False)
-    layout_background_image = fields.Binary(related='company_id.layout_background_image', readonly=False)
+    layout_background = fields.Selection(related='company_id.layout_background', related_inverse=True)
+    layout_background_image = fields.Binary(related='company_id.layout_background_image', related_inverse=True)
 
     report_layout_id = fields.Many2one('report.layout')
 

@@ -176,8 +176,8 @@ class AccountJournal(models.Model):
         check_company=True,
         domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
-    bank_acc_number = fields.Char(related='bank_account_id.acc_number', readonly=False)
-    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
+    bank_acc_number = fields.Char(related='bank_account_id.acc_number', related_inverse=True)
+    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', related_inverse=True)
 
     # Sale journals fields
     sale_activity_type_id = fields.Many2one('mail.activity.type', string='Schedule Activity', default=False, help="Activity will be automatically scheduled on payment due date, improving collection process.")

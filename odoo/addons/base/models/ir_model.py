@@ -1213,9 +1213,15 @@ class IrModelFields(models.Model):
                 not (field_data['currency_field'] and field_data['currency_field'].startswith('x_')):
                 return
             attrs['currency_field'] = field_data['currency_field']
+
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
+
+        # make non-readonly related fields invertible
+        if attrs['related'] and not attrs['readonly']:
+            attrs['related_inverse'] = True
+
         return attrs
 
     def _instanciate(self, field_data):

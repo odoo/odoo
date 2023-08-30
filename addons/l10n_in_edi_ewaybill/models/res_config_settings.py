@@ -10,9 +10,9 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_in_edi_ewaybill_username = fields.Char("Indian EDI Stock username",
-        related="company_id.l10n_in_edi_ewaybill_username", readonly=False)
+        related="company_id.l10n_in_edi_ewaybill_username", related_inverse=True)
     l10n_in_edi_ewaybill_password = fields.Char("Indian EDI Stock password",
-        related="company_id.l10n_in_edi_ewaybill_password", readonly=False)
+        related="company_id.l10n_in_edi_ewaybill_password", related_inverse=True)
 
     def l10n_in_edi_ewaybill_test(self):
         self.l10n_in_check_gst_number()

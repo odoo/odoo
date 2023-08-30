@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     )
     deposit_default_product_id = fields.Many2one(
         related='company_id.sale_down_payment_product_id',
-        readonly=False,
+        related_inverse=True,
         # previously config_parameter='sale.default_deposit_product_id',
     )
 
@@ -50,13 +50,13 @@ class ResConfigSettings(models.TransientModel):
     )
     quotation_validity_days = fields.Integer(
         related='company_id.quotation_validity_days',
-        readonly=False)
+        related_inverse=True)
     portal_confirmation_sign = fields.Boolean(
         related='company_id.portal_confirmation_sign',
-        readonly=False)
+        related_inverse=True)
     portal_confirmation_pay = fields.Boolean(
         related='company_id.portal_confirmation_pay',
-        readonly=False)
+        related_inverse=True)
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

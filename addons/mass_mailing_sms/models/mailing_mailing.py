@@ -31,8 +31,7 @@ class Mailing(models.Model):
     # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
     # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
     sms_subject = fields.Char(
-        'Title', related='subject',
-        readonly=False, translate=False,
+        'Title', related='subject', related_inverse=True, translate=False,
         help='For an email, the subject your recipients will see in their inbox.\n'
              'For an SMS, the internal title of the message.')
     # sms options
@@ -50,8 +49,8 @@ class Mailing(models.Model):
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
     # A/B Testing
     ab_testing_sms_winner_selection = fields.Selection(
-        related="campaign_id.ab_testing_sms_winner_selection",
-        default="clicks_ratio", readonly=False, copy=True)
+        related="campaign_id.ab_testing_sms_winner_selection", related_inverse=True,
+        default="clicks_ratio", copy=True)
     ab_testing_mailings_sms_count = fields.Integer(related="campaign_id.ab_testing_mailings_sms_count")
 
     @api.depends('mailing_type')

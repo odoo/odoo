@@ -273,7 +273,7 @@ class PosOrder(models.Model):
     session_id = fields.Many2one(
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]")
-    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
+    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", related_inverse=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
@@ -286,7 +286,7 @@ class PosOrder(models.Model):
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
-    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
+    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", related_inverse=True)
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     note = fields.Text(string='Internal Notes')
@@ -1420,9 +1420,9 @@ class PosOrderLineLot(models.Model):
     _rec_name = "lot_name"
 
     pos_order_line_id = fields.Many2one('pos.order.line')
-    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
+    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", related_inverse=True)
     lot_name = fields.Char('Lot Name')
-    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
+    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', related_inverse=True)
 
     def _export_for_ui(self, lot):
         return {

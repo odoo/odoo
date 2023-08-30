@@ -26,7 +26,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     available_carrier_ids = fields.Many2many("delivery.carrier", compute='_compute_available_carrier', string="Available Carriers")
     invoicing_message = fields.Text(compute='_compute_invoicing_message')
     delivery_message = fields.Text(readonly=True)
-    total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
+    total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', related_inverse=True)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
 
     @api.onchange('carrier_id', 'total_weight')

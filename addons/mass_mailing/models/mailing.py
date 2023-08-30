@@ -195,10 +195,10 @@ class MassMailing(models.Model):
         default=10,
         help='Percentage of the contacts that will be mailed. Recipients will be chosen randomly.')
     ab_testing_schedule_datetime = fields.Datetime(
-        related="campaign_id.ab_testing_schedule_datetime", readonly=False,
+        related="campaign_id.ab_testing_schedule_datetime", related_inverse=True,
         default=lambda self: fields.Datetime.now() + relativedelta(days=1))
     ab_testing_winner_selection = fields.Selection(
-        related="campaign_id.ab_testing_winner_selection", readonly=False,
+        related="campaign_id.ab_testing_winner_selection", related_inverse=True,
         default="opened_ratio",
         copy=True)
     is_ab_test_sent = fields.Boolean(compute="_compute_is_ab_test_sent")

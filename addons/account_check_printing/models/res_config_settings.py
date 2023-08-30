@@ -9,39 +9,39 @@ class ResConfigSettings(models.TransientModel):
 
     account_check_printing_layout = fields.Selection(
         related='company_id.account_check_printing_layout',
+        related_inverse=True,
         string="Check Layout",
-        readonly=False,
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
              "In order to disable the printing feature, select 'None'."
     )
     account_check_printing_date_label = fields.Boolean(
         related='company_id.account_check_printing_date_label',
+        related_inverse=True,
         string="Print Date Label",
-        readonly=False,
         help="This option allows you to print the date label on the check as per CPA.\n"
              "Disable this if your pre-printed check includes the date label."
     )
     account_check_printing_multi_stub = fields.Boolean(
         related='company_id.account_check_printing_multi_stub',
+        related_inverse=True,
         string='Multi-Pages Check Stub',
-        readonly=False,
         help="This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
     )
     account_check_printing_margin_top = fields.Float(
         related='company_id.account_check_printing_margin_top',
+        related_inverse=True,
         string='Check Top Margin',
-        readonly=False,
         help="Adjust the margins of generated checks to make it fit your printer's settings."
     )
     account_check_printing_margin_left = fields.Float(
         related='company_id.account_check_printing_margin_left',
+        related_inverse=True,
         string='Check Left Margin',
-        readonly=False,
         help="Adjust the margins of generated checks to make it fit your printer's settings."
     )
     account_check_printing_margin_right = fields.Float(
         related='company_id.account_check_printing_margin_right',
+        related_inverse=True,
         string='Check Right Margin',
-        readonly=False,
         help="Adjust the margins of generated checks to make it fit your printer's settings."
     )

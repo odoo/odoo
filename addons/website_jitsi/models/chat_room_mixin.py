@@ -26,9 +26,9 @@ class ChatRoomMixin(models.AbstractModel):
     # chat room related fields
     room_name = fields.Char("Room Name", related="chat_room_id.name")
     room_is_full = fields.Boolean("Room Is Full", related="chat_room_id.is_full")
-    room_lang_id = fields.Many2one("res.lang", "Language", related="chat_room_id.lang_id", readonly=False)
-    room_max_capacity = fields.Selection(string="Max capacity", related="chat_room_id.max_capacity", readonly=False, required=True)
-    room_participant_count = fields.Integer("Participant count", related="chat_room_id.participant_count", readonly=False)
+    room_lang_id = fields.Many2one("res.lang", "Language", related="chat_room_id.lang_id", related_inverse=True)
+    room_max_capacity = fields.Selection(string="Max capacity", related="chat_room_id.max_capacity", related_inverse=True, required=True)
+    room_participant_count = fields.Integer("Participant count", related="chat_room_id.participant_count", related_inverse=True)
     room_last_activity = fields.Datetime("Last activity", related="chat_room_id.last_activity")
     room_max_participant_reached = fields.Integer("Peak participants", related="chat_room_id.max_participant_reached")
 

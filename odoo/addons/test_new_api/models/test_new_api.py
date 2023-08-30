@@ -139,7 +139,7 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
+    discussion_name = fields.Char(related='discussion.name', string="Discussion Name", related_inverse=True)
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
@@ -315,7 +315,7 @@ class Edition(models.Model):
     name = fields.Char()
     res_id = fields.Integer(required=True)
     res_model_id = fields.Many2one('ir.model', required=True, ondelete='cascade')
-    res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
+    res_model = fields.Char(related='res_model_id.model', store=True)
 
 
 class Book(models.Model):
@@ -401,10 +401,10 @@ class Bar(models.Model):
 
     name = fields.Char()
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
-    value1 = fields.Integer(related='foo.value1', readonly=False)
-    value2 = fields.Integer(related='foo.value2', readonly=False)
-    text1 = fields.Char('Text1', related='foo.text', readonly=False)
-    text2 = fields.Char('Text2', related='foo.text', readonly=False, trim=True)
+    value1 = fields.Integer(related='foo.value1', related_inverse=True)
+    value2 = fields.Integer(related='foo.value2', related_inverse=True)
+    text1 = fields.Char('Text1', related='foo.text', related_inverse=True)
+    text2 = fields.Char('Text2', related='foo.text', related_inverse=True, trim=True)
 
     @api.depends('name')
     def _compute_foo(self):
@@ -423,12 +423,20 @@ class Related(models.Model):
 
     name = fields.Char()
     # related fields with a single field
-    related_name = fields.Char(related='name', string='A related on Name', readonly=False)
-    related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
+    related_name = fields.Char(related='name', string='A related on Name', related_inverse=True)
+    related_related_name = fields.Char(related='related_name', string='A related on a related on Name', related_inverse=True)
 
     message = fields.Many2one('test_new_api.message')
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
+
+    # various related field definition: readonly, editable and invertible
+    related = fields.Char(string='Related', related='name')
+    related_editable = fields.Char(string='Related editable', related='name', readonly=False)
+    related_invertible = fields.Char(string='Related invertible', related='name', related_inverse=True)
+    related_store = fields.Char(string='Related store', related='name', store=True)
+    related_store_editable = fields.Char(string='Related store editable', related='name', store=True, readonly=False)
+    related_store_invertible = fields.Char(string='Related store invertible', related='name', store=True, related_inverse=True)
 
 
 class ComputeReadonly(models.Model):
@@ -841,8 +849,8 @@ class ModelBinary(models.Model):
     _description = 'Test Image field'
 
     binary = fields.Binary()
-    binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, readonly=False)
-    binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
+    binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, related_inverse=True)
+    binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, related_inverse=True)
     binary_computed = fields.Binary(compute='_compute_binary')
 
     @api.depends('binary')
@@ -859,8 +867,8 @@ class ModelImage(models.Model):
     name = fields.Char(required=True)
 
     image = fields.Image()
-    image_512 = fields.Image("Image 512", related='image', max_width=512, max_height=512, store=True, readonly=False)
-    image_256 = fields.Image("Image 256", related='image', max_width=256, max_height=256, store=False, readonly=False)
+    image_512 = fields.Image("Image 512", related='image', max_width=512, max_height=512, store=True, related_inverse=True)
+    image_256 = fields.Image("Image 256", related='image', max_width=256, max_height=256, store=False, related_inverse=True)
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
 
 
@@ -1233,7 +1241,7 @@ class SelectionRelatedUpdatable(models.Model):
     )
     related_selection = fields.Selection(
         related='selection_id.my_selection',
-        readonly=False,
+        related_inverse=True,
     )
 
 
@@ -1742,8 +1750,8 @@ class RelatedTranslation2(models.Model):
     _description = 'A model to test translation for related fields'
 
     parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
-    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
-    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    name = fields.Char('Name Related', related='parent_id.name', related_inverse=True)
+    html = fields.Html('HTML Related', related='parent_id.html', related_inverse=True)
 
 
 class RelatedTranslation3(models.Model):
@@ -1751,8 +1759,8 @@ class RelatedTranslation3(models.Model):
     _description = 'A model to test translation for related fields'
 
     parent_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
-    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
-    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    name = fields.Char('Name Related', related='parent_id.name', related_inverse=True)
+    html = fields.Html('HTML Related', related='parent_id.html', related_inverse=True)
 
 
 class IndexedTranslation(models.Model):

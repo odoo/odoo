@@ -15,7 +15,7 @@ class ChatbotScript(models.Model):
     # we keep a separate field for UI since name is manipulated by 'utm.source.mixin'
     title = fields.Char('Title', required=True, translate=True, default="Chatbot")
     active = fields.Boolean(default=True)
-    image_1920 = fields.Image(related='operator_partner_id.image_1920', readonly=False)
+    image_1920 = fields.Image(related='operator_partner_id.image_1920', related_inverse=True)
 
     script_step_ids = fields.One2many('chatbot.script.step', 'chatbot_script_id',
         copy=True, string='Script Steps')

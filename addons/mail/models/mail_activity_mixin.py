@@ -62,12 +62,12 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id', readonly=False,
+        related='activity_ids.user_id', related_inverse=True,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
-        related='activity_ids.activity_type_id', readonly=False,
+        related='activity_ids.activity_type_id', related_inverse=True,
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
@@ -82,7 +82,7 @@ class MailActivityMixin(models.AbstractModel):
         compute_sudo=False, readonly=True, groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
-        related='activity_ids.summary', readonly=False,
+        related='activity_ids.summary', related_inverse=True,
         search='_search_activity_summary',
         groups="base.group_user",)
     activity_exception_decoration = fields.Selection([

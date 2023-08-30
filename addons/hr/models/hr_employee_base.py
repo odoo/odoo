@@ -43,7 +43,7 @@ class HrEmployeeBase(models.AbstractModel):
         help='Select the "Employee" who is the coach of this employee.\n'
              'The "Coach" has no specific rights or responsibilities by default.')
     tz = fields.Selection(
-        string='Timezone', related='resource_id.tz', readonly=False,
+        string='Timezone', related='resource_id.tz', related_inverse=True,
         help="This field is used in order to define in which timezone the resources will work.")
     hr_presence_state = fields.Selection([
         ('present', 'Present'),

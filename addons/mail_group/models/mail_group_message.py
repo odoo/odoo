@@ -26,12 +26,12 @@ class MailGroupMessage(models.Model):
     # <mail.message> fields, can not be done with inherits because it will impact
     # the performance of the <mail.message> model (different cache, so the ORM will need
     # to do one more SQL query to be able to update the <mail.group.message> cache)
-    attachment_ids = fields.Many2many(related='mail_message_id.attachment_ids', readonly=False)
-    author_id = fields.Many2one(related='mail_message_id.author_id', readonly=False)
-    email_from = fields.Char(related='mail_message_id.email_from', readonly=False)
+    attachment_ids = fields.Many2many(related='mail_message_id.attachment_ids', related_inverse=True)
+    author_id = fields.Many2one(related='mail_message_id.author_id', related_inverse=True)
+    email_from = fields.Char(related='mail_message_id.email_from', related_inverse=True)
     email_from_normalized = fields.Char('Normalized From', compute='_compute_email_from_normalized', store=True)
-    body = fields.Html(related='mail_message_id.body', readonly=False)
-    subject = fields.Char(related='mail_message_id.subject', readonly=False)
+    body = fields.Html(related='mail_message_id.body', related_inverse=True)
+    subject = fields.Char(related='mail_message_id.subject', related_inverse=True)
     # Thread
     mail_group_id = fields.Many2one(
         'mail.group', string='Group',

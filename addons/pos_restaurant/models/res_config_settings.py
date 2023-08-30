@@ -6,12 +6,12 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
+    pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', related_inverse=True)
     pos_iface_orderline_notes = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False)
-    pos_module_pos_restaurant_appointment = fields.Boolean(related="pos_config_id.module_pos_restaurant_appointment", readonly=False)
+    pos_module_pos_restaurant_appointment = fields.Boolean(related="pos_config_id.module_pos_restaurant_appointment", related_inverse=True)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_module_pos_restaurant(self):

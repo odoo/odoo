@@ -34,7 +34,7 @@ class CrmTeamMember(models.Model):
     # salesman information
     image_1920 = fields.Image("Image", related="user_id.image_1920", max_width=1920, max_height=1920)
     image_128 = fields.Image("Image (128)", related="user_id.image_128", max_width=128, max_height=128)
-    name = fields.Char(string='Name', related='user_id.display_name', readonly=False)
+    name = fields.Char(string='Name', related='user_id.display_name', related_inverse=True)
     email = fields.Char(string='Email', related='user_id.email')
     phone = fields.Char(string='Phone', related='user_id.phone')
     mobile = fields.Char(string='Mobile', related='user_id.mobile')

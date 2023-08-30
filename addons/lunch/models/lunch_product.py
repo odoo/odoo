@@ -25,7 +25,7 @@ class LunchProduct(models.Model):
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', check_company=True, required=True)
     active = fields.Boolean(default=True)
 
-    company_id = fields.Many2one('res.company', related='supplier_id.company_id', readonly=False, store=True)
+    company_id = fields.Many2one('res.company', related='supplier_id.company_id', related_inverse=True, store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     new_until = fields.Date('New Until')

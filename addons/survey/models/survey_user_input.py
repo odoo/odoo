@@ -632,9 +632,9 @@ class SurveyUserInputLine(models.Model):
 
     # survey data
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True, index=True)
-    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
+    survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, related_inverse=True)
     question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
-    page_id = fields.Many2one(related='question_id.page_id', string="Section", readonly=False)
+    page_id = fields.Many2one(related='question_id.page_id', string="Section", related_inverse=True)
     question_sequence = fields.Integer('Sequence', related='question_id.sequence', store=True)
     # answer
     skipped = fields.Boolean('Skipped')

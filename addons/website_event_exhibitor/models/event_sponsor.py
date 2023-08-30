@@ -72,11 +72,11 @@ class Sponsor(models.Model):
         'Within opening hours', compute='_compute_is_in_opening_hours')
     # chat room
     chat_room_id = fields.Many2one(readonly=False)
-    room_name = fields.Char(readonly=False)
+    room_name = fields.Char(related_inverse=True)  # make this related field invertible
     # country information (related to ease frontend templates)
     country_id = fields.Many2one(
         'res.country', string='Country',
-        related='partner_id.country_id', readonly=True)
+        related='partner_id.country_id', related_inverse=True)
     country_flag_url = fields.Char(
         string='Country Flag',
         compute='_compute_country_flag_url', compute_sudo=True)

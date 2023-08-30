@@ -40,8 +40,8 @@ class Page(models.Model):
     footer_visible = fields.Boolean(default=True)
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
-    website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
-    arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
+    website_id = fields.Many2one(related='view_id.website_id', store=True, related_inverse=True, ondelete='cascade')
+    arch = fields.Text(related='view_id.arch', related_inverse=True, depends_context=('website_id',))
 
     def _compute_is_homepage(self):
         website = self.env['website'].get_current_website()
