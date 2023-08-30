@@ -286,6 +286,9 @@ class PickingType(models.Model):
             raise UserError(_("Sequences %s already exist.",
                             ', '.join(duplicate_names)))
 
+    def _is_incoming(self):
+        return self.code == "incoming"
+
 class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']

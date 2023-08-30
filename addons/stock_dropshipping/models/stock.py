@@ -59,6 +59,9 @@ class StockPickingType(models.Model):
             if record.code == "dropship":
                 record.show_picking_type = True
 
+    def _is_incoming(self):
+        return super()._is_incoming() or self.code == "dropship"
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'

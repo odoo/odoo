@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="col-5 offset-1" name="div_incoming_address">
                                     <t t-set="show_partner" t-value="False" />
-                                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
+                                    <div t-if="o.picking_type_id._is_incoming() and o.partner_id">
                                         <span><strong>Vendor Address:</strong></span>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
