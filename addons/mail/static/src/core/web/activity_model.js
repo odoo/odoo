@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 /**
@@ -126,4 +126,4 @@ export class Activity extends Record {
     _store;
 }
 
-modelRegistry.add(Activity.name, Activity);
+Activity.register();

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 /**
@@ -67,4 +67,4 @@ export class Persona extends Record {
     }
 }
 
-modelRegistry.add(Persona.name, Persona);
+Persona.register();

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 export class CannedResponse extends Record {
     /** @type {Object.<number, CannedResponse>} */
@@ -31,4 +31,4 @@ export class CannedResponse extends Record {
     substitution;
 }
 
-modelRegistry.add(CannedResponse.name, CannedResponse);
+CannedResponse.register();

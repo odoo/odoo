@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
     /**
@@ -54,4 +54,4 @@ export class LinkPreview extends Record {
     }
 }
 
-modelRegistry.add(LinkPreview.name, LinkPreview);
+LinkPreview.register();

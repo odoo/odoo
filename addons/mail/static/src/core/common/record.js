@@ -7,6 +7,9 @@ export const modelRegistry = registry.category("discuss.model");
 
 export class Record {
     static records = {};
+    static register() {
+        modelRegistry.add(this.name, this);
+    }
 
     /**
      * @param {Object} data
@@ -35,4 +38,4 @@ export class Record {
     }
 }
 
-modelRegistry.add(Record.name, Record);
+Record.register();

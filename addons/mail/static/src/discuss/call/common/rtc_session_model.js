@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { createLocalId } from "@mail/utils/common/misc";
 
 export class RtcSession extends Record {
@@ -176,4 +176,4 @@ export class RtcSession extends Record {
     }
 }
 
-modelRegistry.add(RtcSession.name, RtcSession);
+RtcSession.register();
