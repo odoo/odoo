@@ -967,19 +967,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _push_apply(self):
         new_moves = []
-        for move in self:
-            # if the move is already chained, there is no need to check push rules
-            if move.move_dest_ids:
-                continue
+        # if the move is already chained, there is no need to check push rules
+        check_moves = self.filtered(lambda m: not m.move_dest_ids)
+        rules = self.env['stock.rule'].search([('location_src_id', 'in', check_moves.location_dest_id.ids)])
+        for move in check_moves:
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
             if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['stock.rule']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+                rule = rules._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             else:
-                rule = self.sudo().env['stock.rule']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+                rule = rules.sudo()._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
