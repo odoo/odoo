@@ -175,3 +175,35 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
         return getSteps();
     },
 });
+
+
+registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
+    test: true,
+    url: "/pos/ui",
+    steps: () => {
+        startSteps();
+
+        ProductScreen.do.confirmOpeningPopup();
+        ProductScreen.do.clickHomeCategory();
+        ProductScreen.do.clickDisplayedProduct('Product Test');
+        ProductScreen.check.totalAmountIs('100.00');
+        ProductScreen.do.changeFiscalPosition('No Tax');
+        ProductScreen.check.totalAmountIs('86.96');
+        ProductScreen.do.clickPayButton();
+        PaymentScreen.do.clickPaymentMethod('Bank');
+        PaymentScreen.check.remainingIs('0.00');
+        PaymentScreen.do.clickValidate();
+        ReceiptScreen.check.isShown();
+        ReceiptScreen.do.clickNextOrder();
+        ProductScreen.do.clickRefund();
+        TicketScreen.do.selectOrder('-0001');
+        ProductScreen.do.pressNumpad('1');
+        TicketScreen.check.toRefundTextContains('To Refund: 1.00');
+        TicketScreen.do.confirmRefund();
+        ProductScreen.check.isShown();
+        ProductScreen.do.goBackToMainScreen();
+        ProductScreen.check.totalAmountIs('-86.96');
+
+        return getSteps();
+    }
+});
