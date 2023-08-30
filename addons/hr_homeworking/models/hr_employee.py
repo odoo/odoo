@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import timedelta
 from dateutil.rrule import rrule, WEEKLY
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 from .hr_homeworking import DAYS
 
@@ -43,8 +43,9 @@ class HrEmployeeBase(models.AbstractModel):
 
     def _compute_name_work_location_display(self):
         dayfield = self._get_current_day_location_field()
+        unspecified = _('Unspecified')
         for employee in self:
-            employee.name_work_location_display = employee[dayfield].name
+            employee.name_work_location_display = employee[dayfield].name if employee[dayfield] else unspecified
 
     @api.depends(*DAYS)
     def _compute_presence_icon(self):
@@ -180,5 +181,5 @@ class HrEmployeeBase(models.AbstractModel):
             )
             for employee, locations in read_group:
                 if employee.id in employee_locations_to_remove:
-                    locations.filtered(lambda l: l.weekday in employee_locations_to_remove[employee.id]).unlink()
+                    locations.filtered(lambda l: l.weekday in employee_locations_to_remove[employee.id]).delete_default_worklocation()
         return super().write(values)
