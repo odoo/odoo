@@ -215,9 +215,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_line_vals(self, line, taxes_vals):
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_invoice_line_vals(line, taxes_vals)
+        vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
 
         vals.pop('tax_total_vals', None)
 
