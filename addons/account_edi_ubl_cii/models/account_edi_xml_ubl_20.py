@@ -304,7 +304,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'base_quantity_attrs': {'unitCode': uom},
         }
 
-    def _get_invoice_line_vals(self, line, taxes_vals):
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Method used to fill the cac:InvoiceLine node.
         It provides information about the invoice line.
 
@@ -322,15 +322,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return {
             'currency': line.currency_id,
             'currency_dp': line.currency_id.decimal_places,
-
-            # The requirement is the id has to be unique by invoice line.
-            'id': line.id,
-
+            'id': line_id + 1,
             'invoiced_quantity': line.quantity,
             'invoiced_quantity_attrs': {'unitCode': uom},
-
             'line_extension_amount': line.price_subtotal + total_fixed_tax_amount,
-
             'allowance_charge_vals': allowance_charge_vals_list,
             'tax_total_vals': self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
@@ -394,9 +389,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
-        for line in invoice_lines:
+        for line_id, line in enumerate(invoice_lines):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
-            line_vals = self._get_invoice_line_vals(line, line_taxes_vals)
+            line_vals = self._get_invoice_line_vals(line, line_id, line_taxes_vals)
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
