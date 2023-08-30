@@ -798,35 +798,6 @@ export class ThreadService {
     }
 
     /**
-     * @param {Object} data
-     * @returns {Composer}
-     */
-    insertComposer(data) {
-        const { message, thread } = data;
-        if (Boolean(message) === Boolean(thread)) {
-            throw new Error("Composer shall have a thread xor a message.");
-        }
-        let composer = (thread ?? message)?.composer;
-        if (!composer) {
-            composer = new Composer(this.store, data);
-        }
-        if ("textInputContent" in data) {
-            composer.textInputContent = data.textInputContent;
-        }
-        if ("selection" in data) {
-            Object.assign(composer.selection, data.selection);
-        }
-        if ("mentions" in data) {
-            for (const mention of data.mentions) {
-                if (mention.type === "partner") {
-                    composer.rawMentions.partnerIds.add(mention.id);
-                }
-            }
-        }
-        return composer;
-    }
-
-    /**
      * @param {Thread} thread
      * @param {string} body
      */

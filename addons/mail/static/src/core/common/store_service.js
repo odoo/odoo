@@ -20,10 +20,16 @@ export class Store {
     ChannelMember;
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
     ChatWindow;
+    /** @type {typeof import("@mail/core/common/composer_model").Composer} */
+    Composer;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
+    /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
+    LinkPreview;
     /** @type {typeof import("@mail/core/common/message_model").Message} */
     Message;
+    /** @type {typeof import("@mail/core/common/message_reactions_model").MessageReactions} */
+    MessageReactions;
     /** @type {typeof import("@mail/core/common/notification_model").Notification} */
     Notification;
     /** @type {typeof import("@mail/core/common/notification_group_model").NotificationGroup} */
