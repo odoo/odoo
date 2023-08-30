@@ -447,7 +447,7 @@ class Project(models.Model):
             domain,
             [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0),
+            ('price_subtotal', '!=', 0),
             ('is_downpayment', '=', False)],
         ])
 

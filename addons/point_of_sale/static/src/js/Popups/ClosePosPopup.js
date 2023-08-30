@@ -79,7 +79,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         handleInputChange(paymentId, event) {
             if (event.target.classList.contains('invalid-cash-input')) return;
             let expectedAmount;
-            if (paymentId === this.defaultCashDetails.id) {
+            if (this.defaultCashDetails && paymentId === this.defaultCashDetails.id) {
                 this.manualInputCashCount = true;
                 this.state.notes = '';
                 expectedAmount = this.defaultCashDetails.amount;

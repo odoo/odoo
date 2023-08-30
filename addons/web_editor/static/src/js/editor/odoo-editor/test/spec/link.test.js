@@ -15,10 +15,17 @@ const convertToLink = createLink;
 const unlink = async function (editor) {
     editor.execCommand('unlink');
 };
-const testUrlRegex = (url) => {
-    it(`should be a link: ${url}`, () => {
-        window.chai.assert.exists(url.match(URL_REGEX));
-        window.chai.assert.exists(url.match(URL_REGEX_WITH_INFOS));
+const testUrlRegex = (content, {expectedUrl} = {}) => {
+    const message = expectedUrl ?
+        `should have the text be "${content}" with one link ${expectedUrl}` :
+        `should be a link: ${content}`;
+    it(message, () => {
+        const match = content.match(URL_REGEX);
+        if (expectedUrl) {
+            window.chai.assert.equal(expectedUrl, match && match[0]);
+        }
+        window.chai.assert.exists(content.match(URL_REGEX));
+        window.chai.assert.exists(content.match(URL_REGEX_WITH_INFOS));
     });
 }
 const testNotUrlRegex = (url) => {
@@ -31,10 +38,47 @@ const testNotUrlRegex = (url) => {
 describe('Link', () => {
     describe('regex', () => {
         testUrlRegex('google.com');
+        testUrlRegex('a google.com b', {expectedUrl: 'google.com'});
+
+        // Url separator
+        testUrlRegex('google.com/', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com?', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com#', {expectedUrl: 'google.com#'});
+
+        testUrlRegex('google.com!', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com)', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com(', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com. a', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com, a', {expectedUrl: 'google.com'});
+
+        // Some special characters should not be included if at the end.
+        testUrlRegex('google.com/.', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/,', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/)', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/]', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/}', {expectedUrl: 'google.com/'});
+        testUrlRegex("google.com/'", {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/"', {expectedUrl: 'google.com/'});
+
+        // The previous special character should be included when they are nt at the end.
+        testUrlRegex('google.com/.a', {expectedUrl: 'google.com/.a'});
+        testUrlRegex('google.com/,a', {expectedUrl: 'google.com/,a'});
+        testUrlRegex('google.com/)a', {expectedUrl: 'google.com/)a'});
+        testUrlRegex('google.com/]a', {expectedUrl: 'google.com/]a'});
+        testUrlRegex('google.com/}a', {expectedUrl: 'google.com/}a'});
+        testUrlRegex("google.com/'a", {expectedUrl: "google.com/'a"});
+        testUrlRegex('google.com/"a', {expectedUrl: 'google.com/"a'});
+
+        // Other special character can be included at the end.
+        testUrlRegex('google.com/(', {expectedUrl: 'google.com/('});
+        testUrlRegex('google.com/[', {expectedUrl: 'google.com/['});
+        testUrlRegex('google.com/{', {expectedUrl: 'google.com/{'});
+
         testUrlRegex('google.co.uk');
         testUrlRegex('http://google.com');
         testUrlRegex('https://google.com');
         testUrlRegex('https://www.google.com');
+        testUrlRegex('https://google.shop');
         testNotUrlRegex('google.shop');
         testUrlRegex('google.com/');
         testUrlRegex('http://google.com/');
