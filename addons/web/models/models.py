@@ -42,24 +42,6 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def web_search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, count_limit=None):
-        """
-        Performs a search_read and a search_count.
-
-        :param domain: search domain
-        :param fields: list of fields to read
-        :param limit: maximum number of records to read
-        :param offset: number of records to skip
-        :param order: columns to sort results
-        :return: {
-            'records': array of read records (result of a call to 'search_read')
-            'length': number of records matching the domain (result of a call to 'search_count')
-        }
-        """
-        values_records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
-        return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
-
-    @api.model
     def unity_web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
@@ -227,8 +209,7 @@ class Base(models.AbstractModel):
     @api.model
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
         """
-        Returns the result of a read_group (and optionally search for and read records inside each
-        group), and the total number of groups matching the search domain.
+        Returns the result of a read_group and the total number of groups matching the search domain.
 
         :param domain: search domain
         :param fields: list of fields to read (see ``fields``` param of ``read_group``)
@@ -263,7 +244,6 @@ class Base(models.AbstractModel):
     @api.model
     def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
         """
-        Performs a read_group and optionally a web_search_read for each group.
         See ``web_read_group`` for params description.
 
         :returns: array of groups
