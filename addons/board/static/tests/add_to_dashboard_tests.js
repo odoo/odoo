@@ -3,6 +3,7 @@
 import { addToBoardItem } from "@board/add_to_board/add_to_board";
 import {
     click,
+    editInput,
     getFixture,
     patchWithCleanup,
     mouseEnter,
@@ -10,7 +11,9 @@ import {
 } from "@web/../tests/helpers/utils";
 import {
     applyGroup,
+    openAddCustomFilterDialog,
     removeFacet,
+    switchView,
     toggleAddCustomGroup,
     toggleSearchBarMenu,
     toggleMenuItem,
@@ -432,6 +435,72 @@ QUnit.module("Board", (hooks) => {
             context: { search_default_filter: 1 },
         });
 
+        await toggleSearchBarMenu(target);
+        await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
+        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
+        await testUtils.fields.editInput(input, "Pipeline");
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+    });
+
+    QUnit.test("Add a view to dashboard doesn't save default filters", async function (assert) {
+        assert.expect(2);
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,list": '<list><field name="foo"/></list>',
+            "partner,false,search": `
+                <search>
+                    <filter name="filter" domain="[('foo','!=','yop')]"/>
+                </search>`,
+        };
+
+        registry.category("services").add("user", makeFakeUserService());
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
+        patchWithCleanup(odoo, { debug: true });
+
+        const mockRPC = (route, args) => {
+            if (route === "/board/add_to_dashboard") {
+                assert.deepEqual(args.domain, [["foo", "=", "yop"]]);
+                assert.deepEqual(args.context_to_save, {
+                    pivot_measures: ["__count"],
+                    pivot_column_groupby: [],
+                    pivot_row_groupby: [],
+                    orderedBy: [],
+                    group_by: [],
+                    dashboard_merge_domains_contexts: false,
+                });
+                return Promise.resolve(true);
+            }
+            if (route === "/web/domain/validate") {
+                return true;
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "pivot"],
+            ],
+            context: { search_default_filter: 1 },
+        });
+
+        await switchView(target, "pivot");
+
+        // Remove default filter ['foo', '!=', 'yop']
+        await removeFacet(target);
+
+        // Add a filter ['foo', '=', 'yop']
+        await toggleSearchBarMenu(target);
+        await openAddCustomFilterDialog(target);
+        await editInput(target, ".o_domain_debug_input", `[("foo", "=", "yop")]`);
+        await click(target.querySelector(".modal footer button"));
+
+        // Add to dashboard
         await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
         const input = target.querySelector(".o_add_to_board .dropdown-menu input");

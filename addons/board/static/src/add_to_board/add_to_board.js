@@ -39,7 +39,11 @@ export class AddToBoard extends Component {
         const { comparison, context, groupBys, orderBy } =
             this.env.searchModel.getPreFavoriteValues();
         const contextToSave = {
-            ...globalContext,
+            ...Object.fromEntries(
+                Object.entries(globalContext).filter(
+                    (entry) => !entry[0].startsWith("search_default_")
+                )
+            ),
             ...context,
             comparison,
             orderedBy: orderBy,
