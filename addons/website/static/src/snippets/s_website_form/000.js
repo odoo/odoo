@@ -703,13 +703,13 @@
                 case '!set':
                     return !value;
                 case 'greater':
-                    return value > comparable;
+                    return parseFloat(value) > parseFloat(comparable);
                 case 'less':
-                    return value < comparable;
+                    return parseFloat(value) < parseFloat(comparable);
                 case 'greater or equal':
-                    return value >= comparable;
+                    return parseFloat(value) >= parseFloat(comparable);
                 case 'less or equal':
-                    return value <= comparable;
+                    return parseFloat(value) <= parseFloat(comparable);
                 case 'fileSet':
                     return value.name !== '';
                 case '!fileSet':
