@@ -328,7 +328,7 @@ class Picking(models.Model):
              " * Cancelled: The transfer has been cancelled.")
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
-        readonly=True, related='move_ids.group_id', store=True)
+        readonly=True, related='move_ids.group_id', store=True, index=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Products will be reserved first for the transfers with the highest priorities.")
@@ -352,11 +352,11 @@ class Picking(models.Model):
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     location_id = fields.Many2one(
         'stock.location', "Source Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False, index=True,
         check_company=True, required=True)
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
+        compute="_compute_location_id", store=True, precompute=True, readonly=False, index=True,
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
