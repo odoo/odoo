@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.KanbanPropertiesField">
-        <div t-ref="properties" class="w-100 mt-2 fw-normal text-muted">
-            <div class="o_kanban_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 my-1"
+    <t t-name="web.CardPropertiesField">
+        <div t-ref="properties" class="w-100 fw-normal text-muted">
+            <div class="o_card_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 mb-1"
                 t-foreach="propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
