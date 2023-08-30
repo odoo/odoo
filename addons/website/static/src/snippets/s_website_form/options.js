@@ -986,7 +986,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             // Synchronize the fields whose visibility depends on this field
             const dependentEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousInputName}"]`);
             for (const dependentEl of dependentEls) {
-                dependentEl.dataset.visibilityDependency = value;
+                if (!previewMode && this._findCircular(this.$target[0], dependentEl)) {
+                    // For all the fields whose visibility depends on this
+                    // field, check if the new name creates a circular
+                    // dependency and remove the problematic conditional
+                    // visibility if it is the case. E.g. a field (A) depends on
+                    // another (B) and the user renames "B" by "A".
+                    this._deleteConditionalVisibility(dependentEl);
+                } else {
+                    dependentEl.dataset.visibilityDependency = value;
+                }
             }
         }
     },
@@ -1216,11 +1225,18 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         return this.formEl.querySelector(`.s_website_form_input[name="${dependencyName}"]`);
     },
     /**
-     * @override
+     * @param {HTMLElement} dependentFieldEl
+     * @param {HTMLElement} targetFieldEl
+     * @returns {boolean} "true" if adding "dependentFieldEl" or any other field
+     * with the same label in the conditional visibility of "targetFieldEl"
+     * would create a circular dependency involving "targetFieldEl".
      */
-    _renderCustomXML: async function (uiFragment) {
-        const recursiveFindCircular = (el) => {
-            const dependentFieldName = this._getFieldName(el);
+    _findCircular(dependentFieldEl, targetFieldEl = this.$target[0]) {
+        // Keep a register of the already visited fields to not enter an
+        // infinite check loop.
+        const visitedFields = new Set();
+        const recursiveFindCircular = (dependentFieldEl, targetFieldEl) => {
+            const dependentFieldName = this._getFieldName(dependentFieldEl);
             // Get all the fields that have the same label as the dependent
             // field.
             let dependentFieldEls = Array.from(this.formEl
@@ -1229,19 +1245,30 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             // Remove the duplicated fields. This could happen if the field has
             // multiple inputs ("Multiple Checkboxes" for example.)
             dependentFieldEls = new Set(dependentFieldEls);
-            const fieldName = this._getFieldName();
+            const fieldName = this._getFieldName(targetFieldEl);
             for (const dependentFieldEl of dependentFieldEls) {
-                if (dependentFieldEl.dataset.visibilityDependency === fieldName) {
-                    return true;
-                }
-                const dependencyInputEl = this._getDependencyEl(dependentFieldEl);
-                if (dependencyInputEl && recursiveFindCircular(dependencyInputEl.closest(".s_website_form_field"))) {
-                    return true;
+                // Only check for circular dependencies on fields that do not
+                // already have been checked.
+                if (!(visitedFields.has(dependentFieldEl))) {
+                    // Add the dependentFieldEl in the set of checked field.
+                    visitedFields.add(dependentFieldEl);
+                    if (dependentFieldEl.dataset.visibilityDependency === fieldName) {
+                        return true;
+                    }
+                    const dependencyInputEl = this._getDependencyEl(dependentFieldEl);
+                    if (dependencyInputEl && recursiveFindCircular(dependencyInputEl.closest(".s_website_form_field"), targetFieldEl)) {
+                        return true;
+                    }
                 }
             }
             return false;
         };
-
+        return recursiveFindCircular(dependentFieldEl, targetFieldEl);
+    },
+    /**
+     * @override
+     */
+    _renderCustomXML: async function (uiFragment) {
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
         const existingDependencyNames = [];
@@ -1249,7 +1276,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const inputEl = el.querySelector('.s_website_form_input');
             if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
                     && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
-                    && !existingDependencyNames.includes(inputEl.name) && !recursiveFindCircular(el)) {
+                    && !existingDependencyNames.includes(inputEl.name) && !this._findCircular(el)) {
                 const button = document.createElement('we-button');
                 button.textContent = el.querySelector('.s_website_form_label_content').textContent;
                 button.dataset.setVisibilityDependency = inputEl.name;
