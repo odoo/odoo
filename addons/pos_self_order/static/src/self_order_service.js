@@ -57,6 +57,7 @@ export class SelfOrder {
                 [this]
             );
         }
+        this.exitMenuOtherTabs();
     }
 
     initData() {
@@ -170,19 +171,19 @@ export class SelfOrder {
     }
 
     async getOrdersFromServer() {
-        const accessTokens = this.orders.map((order) => order.access_token).filter(Boolean);
+        const ordersAccessTokens = this.orders.map((order) => order.access_token).filter(Boolean);
 
-        if (accessTokens.length === 0) {
+        if (ordersAccessTokens.length === 0) {
             return;
         }
 
         try {
             const orders = await this.rpc(`/pos-self-order/get-orders/`, {
                 access_token: this.access_token,
-                order_access_tokens: accessTokens,
+                order_access_tokens: ordersAccessTokens,
             });
 
-            this.updateOrdersFromServer(orders, accessTokens);
+            this.updateOrdersFromServer(orders, ordersAccessTokens);
             this.editedOrder = null;
         } catch (error) {
             this.handleErrorNotification(
@@ -192,9 +193,9 @@ export class SelfOrder {
         }
     }
 
-    updateOrdersFromServer(orders, localAccessToken) {
+    updateOrdersFromServer(orders, localOrderAccessToken) {
         //FIXME, if the user refresh the page with not sent, we will lost this data.
-        const accessTokensFromServer = orders.map((order) => order.access_token);
+        const oderAccessTokensFromServer = orders.map((order) => order.access_token);
 
         for (const idx in this.orders) {
             const order = this.orders[idx];
@@ -211,8 +212,8 @@ export class SelfOrder {
 
         for (const index in this.orders) {
             if (
-                !accessTokensFromServer.includes(this.orders[index].access_token) &&
-                localAccessToken.includes(this.orders[index].access_token)
+                !oderAccessTokensFromServer.includes(this.orders[index].access_token) &&
+                localOrderAccessToken.includes(this.orders[index].access_token)
             ) {
                 this.orders.splice(index, 1);
             }
@@ -247,7 +248,7 @@ export class SelfOrder {
         this.priceLoading = false;
     }
 
-    handleErrorNotification(error, accessToken = []) {
+    handleErrorNotification(error, orderAccessToken = []) {
         let message = _t("An error has occurred");
         let cleanOrders = false;
 
@@ -267,19 +268,19 @@ export class SelfOrder {
             type: "danger",
         });
 
-        if (accessToken && cleanOrders) {
+        if (orderAccessToken && cleanOrders) {
             this.editedOrder = null;
 
             for (const index in this.orders) {
-                if (accessToken.includes(this.orders[index].access_token)) {
+                if (orderAccessToken.includes(this.orders[index].access_token)) {
                     this.orders.splice(index, 1);
                 }
             }
         }
     }
 
-    changeOrderState(access_token, state) {
-        const order = this.orders.filter((o) => o.access_token === access_token);
+    changeOrderState(orderAccessToken, state) {
+        const order = this.orders.filter((o) => o.access_token === orderAccessToken);
         let message = _t("Your order status has been changed");
 
         if (order.length !== 1) {
@@ -300,6 +301,34 @@ export class SelfOrder {
             type: "success",
         });
         this.router.navigate("default");
+    }
+
+    exitMenuOtherTabs() {
+        if (window.location.search) {
+            localStorage["message"] = "";
+            localStorage["message"] = JSON.stringify({
+                message: "exit_menus",
+                access_token: this.access_token,
+            });
+        }
+
+        window.addEventListener(
+            "storage",
+            (event) => {
+                if (event.key === "message" && event.newValue) {
+                    const msg = JSON.parse(event.newValue);
+                    if (msg.message === "exit_menus" && msg.access_token == this.access_token) {
+                        console.info(
+                            "Self Order / Session opened in another window. EXITING Self Order"
+                        );
+                        if (window.location.search) {
+                            window.location = `/menu/${this.pos_config_id}`;
+                        }
+                    }
+                }
+            },
+            false
+        );
     }
 }
 
