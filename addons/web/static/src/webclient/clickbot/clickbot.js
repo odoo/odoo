@@ -113,7 +113,7 @@ async function triggerClick(target, elDescription) {
  */
 function waitForCondition(stopCondition) {
     return new Promise(function (resolve, reject) {
-        const interval = 250;
+        const interval = 25;
         const initialTime = 30000;
 
         function hasPendingRPC() {
