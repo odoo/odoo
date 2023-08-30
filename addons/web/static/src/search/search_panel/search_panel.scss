@@ -22,6 +22,7 @@
 
 .o_search_panel {
     width: var(--SearchPanel-width, #{$o-search-panel-width});
+    resize: horizontal;
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
     
     @include media-breakpoint-up(md) {
