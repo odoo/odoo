@@ -383,6 +383,14 @@
             name="Contracts"
             parent="hr.menu_human_resources_configuration"
             sequence="25"/>
+
+        <menuitem
+            id="hr_menu_contract"
+            name="Contracts"
+            action="hr_contract.action_hr_contract"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="6"
+            groups="hr_contract.group_hr_contract_manager"/>
         
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
