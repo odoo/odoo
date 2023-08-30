@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { LinkPreview } from "@mail/core/common/link_preview_model";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 
 import { markup, reactive } from "@odoo/owl";
