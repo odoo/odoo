@@ -32,10 +32,13 @@ class PosPaymentMethod(models.Model):
                      payment_method.stripe_serial_number, existing_payment_method.display_name))
 
     def _get_stripe_payment_provider(self):
-        stripe_payment_provider = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
+        stripe_payment_provider = self.env['payment.provider'].search([
+            ('code', '=', 'stripe'),
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
 
         if not stripe_payment_provider:
-            raise UserError(_("Stripe payment provider is missing"))
+            raise UserError(_("Stripe payment provider for company %s is missing", self.env.company.name))
 
         return stripe_payment_provider
 
@@ -44,7 +47,7 @@ class PosPaymentMethod(models.Model):
         stripe_secret_key = self._get_stripe_payment_provider().stripe_secret_key
 
         if not stripe_secret_key:
-            raise ValidationError(_('Complete the Stripe onboarding.'))
+            raise ValidationError(_('Complete the Stripe onboarding for company %s.', self.env.company.name))
 
         return stripe_secret_key
 

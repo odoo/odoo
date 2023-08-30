@@ -26,6 +26,7 @@ let PaymentStripe = PaymentInterface.extend({
             let data = await rpc.query({
                 model: 'pos.payment.method',
                 method: 'stripe_connection_token',
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -34,7 +35,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Token');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Fetch Token');
             this.terminal = false;
         };
     },
@@ -194,6 +196,7 @@ let PaymentStripe = PaymentInterface.extend({
                 model: 'pos.payment.method',
                 method: 'stripe_capture_payment',
                 args: [paymentIntentId],
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -202,7 +205,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data;
         } catch (error) {
-            this._showError(error.message.message, 'Capture Payment');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Capture Payment');
             return false;
         };
     },
@@ -213,6 +217,7 @@ let PaymentStripe = PaymentInterface.extend({
                 model: 'pos.payment.method',
                 method: 'stripe_payment_intent',
                 args: [[payment_method.id], amount],
+                kwargs: { context: this.pos.env.session.user_context },
             }, {
                 silent: true,
             });
@@ -221,7 +226,8 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Secret');
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            this._showError(message, 'Fetch Secret');
             return false;
         };
     },
