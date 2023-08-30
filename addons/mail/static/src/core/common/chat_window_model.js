@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -77,4 +77,4 @@ export class ChatWindow extends Record {
     }
 }
 
-modelRegistry.add(ChatWindow.name, ChatWindow);
+ChatWindow.register();

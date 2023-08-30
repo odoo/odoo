@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Record, modelRegistry } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { createLocalId } from "@mail/utils/common/misc";
 
@@ -271,4 +271,4 @@ export class Message extends Record {
     }
 }
 
-modelRegistry.add(Message.name, Message);
+Message.register();
