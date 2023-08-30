@@ -3576,7 +3576,13 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
-     * Hides the active tooltip.
+     * Hides the active tooltips.
+     *
+     * TODO should probably be renamed _hideTooltips. While functionally there
+     * is probably no way to have multiple active tooltips, it is possible that
+     * the panel contains multiple tooltip descriptions (we do not know what is
+     * in customers' own saved snippets for example). In any case, it does not
+     * hurt to technically consider the case anyway.
      *
      * @private
      */
@@ -3588,10 +3594,9 @@ var SnippetsMenu = Widget.extend({
         // For instance, without this, clicking on "Hide in Desktop" on a
         // snippet will leave the tooltip "forever" visible even if the "Hide in
         // Desktop" button is gone.
-        const tooltipClass = 'aria-describedby';
-        const tooltippedEl = this.el.querySelector(`[${tooltipClass}^="tooltip"]`);
-        if (tooltippedEl) {
-            Tooltip.getInstance(tooltippedEl).hide();
+        const tooltipTargetEls = this.el.querySelectorAll('[aria-describedby^="tooltip"]');
+        for (const el of tooltipTargetEls) {
+            Tooltip.getInstance(el)?.hide();
         }
     },
 
