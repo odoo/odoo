@@ -5,13 +5,12 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
-import { symmetricalDifference } from "@web/core/utils/arrays";
 
 import { Component, useState, reactive } from "@odoo/owl";
 
 const store = reactive({
-    companiesToToggle: [],
     toggleTimer: null,
+    nextAvailableCompanies: [],
 });
 
 
@@ -21,25 +20,25 @@ export class SwitchCompanyItem extends Component {
         this.store = useState(store);
     }
 
-    logIntoCompany(companyId) {
-        browser.clearTimeout(this.store.toggleTimer);
-        this.companyService.setCompanies("loginto", companyId);
+    get selectedCompanies() {
+        this.store.nextAvailableCompanies;  // check if the state changed
+        return this.companyService.nextAvailableCompanies;
     }
 
-    get selectedCompanies() {
-        return symmetricalDifference(
-            this.companyService.allowedCompanyIds,
-            this.store.companiesToToggle,
-        );
+    logIntoCompany(companyId) {
+        this.companyService.setCompanies("loginto", companyId);
+        browser.clearTimeout(this.store.toggleTimer);
+        this.companyService.logNextCompanies();
     }
 
     toggleCompany(companyId) {
-        this.store.companiesToToggle = symmetricalDifference(this.store.companiesToToggle, [
-            companyId, ...this.companyService.getChildrenToToggle(companyId)
-        ]);
+        this.companyService.setCompanies("toggle", companyId);
+        // trigger state change
+        this.store.nextAvailableCompanies = this.companyService.nextAvailableCompanies.slice();
+
         browser.clearTimeout(this.store.toggleTimer);
         this.store.toggleTimer = browser.setTimeout(() => {
-            this.companyService.setCompanies("toggle", ...this.store.companiesToToggle);
+            this.companyService.logNextCompanies();
         }, this.constructor.toggleDelay);
     }
 }
@@ -56,7 +55,7 @@ export class SwitchCompanyMenu extends Component {
     setup() {
         this.companyService = useService("company");
         this.store = useState(store);
-        this.store.companiesToToggle = [];
+        this.store.nextAvailableCompanies = [];
     }
 }
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";

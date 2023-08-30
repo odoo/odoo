@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { symmetricalDifference } from "../core/utils/arrays";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 
@@ -39,15 +38,29 @@ export const companyService = {
         } else if ("cids" in cookie.current) {
             cids = parseCompanyIds(cookie.current.cids);
         }
+
+        const availableCompanies = session.user_companies.allowed_companies;
         const allowedCompanyIds = computeAllowedCompanyIds(cids);
+        const nextAvailableCompanies = allowedCompanyIds.slice();  // not using a Set because order is important
+        nextAvailableCompanies.add = (companyId) => {
+            if (!nextAvailableCompanies.includes(companyId)) {
+                nextAvailableCompanies.push(companyId);
+                availableCompanies[companyId].child_ids.map(nextAvailableCompanies.add);
+            }
+        }
+        nextAvailableCompanies.remove = (companyId) => {
+            if (nextAvailableCompanies.includes(companyId)) {
+                nextAvailableCompanies.splice(nextAvailableCompanies.indexOf(companyId), 1);
+                availableCompanies[companyId].child_ids.map(nextAvailableCompanies.remove);
+            }
+        }
 
         const stringCIds = allowedCompanyIds.join(",");
         router.replaceState({ cids: stringCIds }, { lock: true });
         cookie.setCookie("cids", stringCIds);
-
         user.updateContext({ allowed_company_ids: allowedCompanyIds });
-        const availableCompanies = session.user_companies.allowed_companies;
 
+        // reload the page if changes are being done to `res.company`
         env.bus.addEventListener("RPC:RESPONSE", (ev) => {
             const { data, error } = ev.detail;
             const { model, method } = data.params;
@@ -57,8 +70,10 @@ export const companyService = {
                 }
             }
         });
+
         return {
             availableCompanies,
+            nextAvailableCompanies,
             get allowedCompanyIds() {
                 return allowedCompanyIds.slice();
             },
@@ -68,47 +83,24 @@ export const companyService = {
             getCompany(companyId) {
                 return availableCompanies[companyId];
             },
-            getAllChildren(companyId) {
-                return [
-                    ...availableCompanies[companyId].child_ids,
-                    ...availableCompanies[companyId].child_ids.map((child) => this.getAllChildren(child))
-                ].flat()
-            },
-            getChildrenToToggle(companyId) {
-                const children = this.getAllChildren(companyId)
-                if ( allowedCompanyIds.includes(companyId) ) {
-                    return children.filter((id) => allowedCompanyIds.includes(id))
-                } else {
-                    return children.filter((id) => !allowedCompanyIds.includes(id))
-                }
-            },
-            setCompanies(mode, ...companyIds) {
-                // compute next company ids
-                let nextCompanyIds;
+            setCompanies(mode, companyId) {
                 if (mode === "toggle") {
-                    nextCompanyIds = symmetricalDifference(allowedCompanyIds, companyIds);
-                } else if (mode === "loginto") {
-                    const companyId = companyIds[0];
-                    const children = this.getAllChildren(companyId);
-                    if (allowedCompanyIds.length === 1) {
-                        // 1 enabled company: stay in single company mode
-                        nextCompanyIds = [companyId, ...children];
+                    if (nextAvailableCompanies.includes(companyId)) {
+                        nextAvailableCompanies.remove(companyId);
                     } else {
-                        // multi company mode
-                        nextCompanyIds = [
-                            companyId,
-                            ...children,
-                            ...allowedCompanyIds.filter((id) => id !== companyId && !children.includes(id)),
-                        ];
+                        nextAvailableCompanies.add(companyId);
                     }
+                } else if (mode === "loginto") {
+                    nextAvailableCompanies.splice(0, nextAvailableCompanies.length);
+                    nextAvailableCompanies.add(companyId)
                 }
-                nextCompanyIds = nextCompanyIds.length ? nextCompanyIds : [companyIds[0]];
-
-                // apply them
-                router.pushState({ cids: nextCompanyIds }, { lock: true });
-                cookie.setCookie("cids", nextCompanyIds);
-                browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
             },
+            logNextCompanies() {
+                const next = nextAvailableCompanies.length ? nextAvailableCompanies : [allowedCompanyIds[0]]
+                router.pushState({ cids: next }, { lock: true });
+                cookie.setCookie("cids", next);
+                browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
+            }
         };
     },
 };

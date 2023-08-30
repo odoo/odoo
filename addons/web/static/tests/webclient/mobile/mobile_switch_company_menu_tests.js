@@ -252,7 +252,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [x] **Company 3**
          */
         await click(scMenuEl.querySelectorAll(".log_into")[1]);
-        assert.verifySteps(["cids=2%2C3%2C1"]);
+        assert.verifySteps(["cids=2"]);
     });
 
     QUnit.test("multi company mode: log into an already selected company", async (assert) => {
@@ -282,7 +282,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [x] Company 3      -> log into
          */
         await click(scMenuEl.querySelectorAll(".log_into")[2]);
-        assert.verifySteps(["cids=3%2C2"]);
+        assert.verifySteps(["cids=3"]);
     });
 
     QUnit.test("companies can be logged in even if some toggled within delay", async (assert) => {
