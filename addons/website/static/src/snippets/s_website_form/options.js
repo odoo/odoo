@@ -223,11 +223,12 @@ const FieldEditor = FormEditor.extend({
      * Returns the name of the field
      *
      * @private
+     * @param {HTMLElement} fieldEl
      * @returns {string}
      */
-    _getFieldName: function () {
-        const multipleName = this.$target[0].querySelector('.s_website_form_multiple');
-        return multipleName ? multipleName.dataset.name : this.$target[0].querySelector('.s_website_form_input').name;
+    _getFieldName: function (fieldEl = this.$target[0]) {
+        const multipleName = fieldEl.querySelector('.s_website_form_multiple');
+        return multipleName ? multipleName.dataset.name : fieldEl.querySelector('.s_website_form_input').name;
     },
     /**
      * Returns the type of the  field, can be used for both custom and existing fields
@@ -1219,14 +1220,26 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _renderCustomXML: async function (uiFragment) {
         const recursiveFindCircular = (el) => {
-            if (el.dataset.visibilityDependency === this._getFieldName()) {
-                return true;
+            const dependentFieldName = this._getFieldName(el);
+            // Get all the fields that have the same label as the dependent
+            // field.
+            let dependentFieldEls = Array.from(this.formEl
+                .querySelectorAll(`.s_website_form_input[name="${dependentFieldName}"]`))
+                .map((el) => el.closest(".s_website_form_field"));
+            // Remove the duplicated fields. This could happen if the field has
+            // multiple inputs ("Multiple Checkboxes" for example.)
+            dependentFieldEls = new Set(dependentFieldEls);
+            const fieldName = this._getFieldName();
+            for (const dependentFieldEl of dependentFieldEls) {
+                if (dependentFieldEl.dataset.visibilityDependency === fieldName) {
+                    return true;
+                }
+                const dependencyInputEl = this._getDependencyEl(dependentFieldEl);
+                if (dependencyInputEl && recursiveFindCircular(dependencyInputEl.closest(".s_website_form_field"))) {
+                    return true;
+                }
             }
-            const dependencyInputEl = this._getDependencyEl(el);
-            if (!dependencyInputEl) {
-                return false;
-            }
-            return recursiveFindCircular(dependencyInputEl.closest('.s_website_form_field'));
+            return false;
         };
 
         // Update available visibility dependencies
