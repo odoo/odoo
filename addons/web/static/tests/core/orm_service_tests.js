@@ -371,7 +371,7 @@ QUnit.test("webSearchRead method", async (assert) => {
     const env = await makeTestEnv();
     const specification = { amount_total: {} };
     await env.services.orm.webSearchRead("sale.order", [["user_id", "=", 2]], { specification });
-    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/unity_web_search_read");
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/web_search_read");
     assert.deepEqual(query.params, {
         args: [],
         kwargs: {
@@ -383,7 +383,7 @@ QUnit.test("webSearchRead method", async (assert) => {
             domain: [["user_id", "=", 2]],
             specification: { amount_total: {} },
         },
-        method: "unity_web_search_read",
+        method: "web_search_read",
         model: "sale.order",
     });
 });

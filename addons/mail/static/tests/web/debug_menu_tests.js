@@ -30,7 +30,7 @@ QUnit.test("Manage Messages", async (assert) => {
         if (method === "check_access_rights") {
             return true;
         }
-        if (method === "unity_web_search_read" && model === "mail.message") {
+        if (method === "web_search_read" && model === "mail.message") {
             assert.step("message_read");
             const { context, domain } = kwargs;
             assert.strictEqual(context.default_res_id, 5);

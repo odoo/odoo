@@ -97,7 +97,7 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
         assert.verifySteps([]);
 
         await nextTick();
-        assert.verifySteps(["unity_web_search_read-A-[1,2]", "unity_web_search_read-B-[1]", "labels-fetched"]);
+        assert.verifySteps(["web_search_read-A-[1,2]", "web_search_read-B-[1]", "labels-fetched"]);
 
         assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
         assert.strictEqual(metadataRepository.getRecordDisplayName("A", 2), "2");
@@ -120,11 +120,11 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
         assert.verifySteps([]);
 
         await nextTick();
-        assert.verifySteps(["unity_web_search_read-A-[1]"]);
+        assert.verifySteps(["web_search_read-A-[1]"]);
 
         assert.throws(() => metadataRepository.getRecordDisplayName("A", 2));
         await nextTick();
-        assert.verifySteps(["unity_web_search_read-A-[2]"]);
+        assert.verifySteps(["web_search_read-A-[2]"]);
     });
 
     QUnit.test(
@@ -147,7 +147,7 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "test");
 
             await nextTick();
-            assert.verifySteps(["unity_web_search_read-A-[1]"]);
+            assert.verifySteps(["web_search_read-A-[1]"]);
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "test");
         }
     );
@@ -178,7 +178,7 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
             assert.verifySteps([]);
 
             await nextTick();
-            assert.verifySteps(["unity_web_search_read-A-[1]", "unity_web_search_read-B-[1,2]"]);
+            assert.verifySteps(["web_search_read-A-[1]", "web_search_read-B-[1,2]"]);
 
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
             assert.throws(

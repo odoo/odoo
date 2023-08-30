@@ -631,7 +631,7 @@ export class MockServer {
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
                 return this.mockWebReadGroup(args.model, args.kwargs);
-            case "unity_web_search_read":
+            case "web_search_read":
                 return this.mockWebSearchReadUnity(args.model, args.args, args.kwargs);
             case "read_progress_bar":
                 return this.mockReadProgressBar(args.model, args.kwargs);

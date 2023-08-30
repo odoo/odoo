@@ -350,7 +350,7 @@ QUnit.module("test_mail", {}, function () {
         const { openView } = await start({
             serverData,
             mockRPC: function (route, args) {
-                if (["get_activity_data", "unity_web_search_read"].includes(args.method)) {
+                if (["get_activity_data", "web_search_read"].includes(args.method)) {
                     assert.step(JSON.stringify(args.kwargs.domain));
                 }
             },
@@ -1023,7 +1023,7 @@ QUnit.module("test_mail", {}, function () {
         const { target, openView } = await start({
             serverData,
             mockRPC(route, { method, kwargs }, result) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.deepEqual(Object.keys(kwargs.specification), ["write_date", "id"]);
                     return Promise.resolve({
                         length: 2,
