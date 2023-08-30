@@ -1,15 +1,12 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
-
-export class ScrollPosition extends Record {
+export class ScrollPosition {
     /** @type {number|undefined} */
     top;
     /** @type {number|undefined} */
     left;
 
     constructor(top, left) {
-        super();
         this.top = top;
         this.left = left;
     }

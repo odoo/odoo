@@ -102,7 +102,7 @@ export class MailCoreCommon {
                 if (linkPreviews) {
                     for (const linkPreview of linkPreviews) {
                         this.store.Message.records[linkPreview.message.id]?.linkPreviews.push(
-                            new LinkPreview(linkPreview)
+                            this.store.LinkPreview.insert(linkPreview)
                         );
                     }
                 }
