@@ -18,7 +18,20 @@ export class Composer extends Record {
         }
         let composer = (thread ?? message)?.composer;
         if (!composer) {
-            composer = new Composer(this.store, data);
+            composer = new Composer();
+            const { message, thread } = data;
+            if (thread) {
+                composer.thread = thread;
+                Object.assign(composer, { thread });
+                Object.assign(thread, { composer });
+            } else if (message) {
+                Object.assign(composer, { message });
+                Object.assign(message, { composer });
+            }
+            Object.assign(composer, {
+                textInputContent: "",
+                _store: this.store,
+            });
         }
         if ("textInputContent" in data) {
             composer.textInputContent = data.textInputContent;
@@ -62,22 +75,6 @@ export class Composer extends Record {
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     isFocused = false;
-
-    constructor(store, data) {
-        super();
-        const { message, thread } = data;
-        if (thread) {
-            this.thread = thread;
-            thread.composer = this;
-        } else if (message) {
-            this.message = message;
-            message.composer = this;
-        }
-        Object.assign(this, {
-            textInputContent: "",
-            _store: store,
-        });
-    }
 }
 
 modelRegistry.add(Composer.name, Composer);

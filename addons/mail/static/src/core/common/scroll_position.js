@@ -6,11 +6,6 @@ export class ScrollPosition {
     /** @type {number|undefined} */
     left;
 
-    constructor(top, left) {
-        this.top = top;
-        this.left = left;
-    }
-
     clear() {
         this.top = this.left = undefined;
     }
