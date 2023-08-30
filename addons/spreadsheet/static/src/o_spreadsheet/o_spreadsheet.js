@@ -19031,34 +19031,25 @@
     };
 
     function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
-        const _onMouseDown = (ev) => {
-            ev.preventDefault();
-            onMouseDown(ev);
-        };
-        const _onMouseMove = (ev) => {
-            ev.preventDefault();
-            onMouseMove(ev);
-        };
         const _onMouseUp = (ev) => {
-            ev.preventDefault();
             onMouseUp(ev);
-            window.removeEventListener("mousedown", _onMouseDown);
+            window.removeEventListener("mousedown", onMouseDown);
             window.removeEventListener("mouseup", _onMouseUp);
             window.removeEventListener("dragstart", _onDragStart);
-            window.removeEventListener("mousemove", _onMouseMove);
-            window.removeEventListener("wheel", _onMouseMove);
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("wheel", onMouseMove);
         };
         function _onDragStart(ev) {
             ev.preventDefault();
         }
-        window.addEventListener("mousedown", _onMouseDown);
+        window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", _onMouseUp);
         window.addEventListener("dragstart", _onDragStart);
-        window.addEventListener("mousemove", _onMouseMove);
+        window.addEventListener("mousemove", onMouseMove);
         // mouse wheel on window is by default a passive event.
         // preventDefault() is not allowed in passive event handler.
         // https://chromestatus.com/feature/6662647093133312
-        window.addEventListener("wheel", _onMouseMove, { passive: false });
+        window.addEventListener("wheel", onMouseMove, { passive: false });
     }
     /**
      * Function to be used during a mousedown event, this function allows to
@@ -22303,7 +22294,8 @@
             }
             let prevCol = col;
             let prevRow = row;
-            const onMouseMove = (col, row) => {
+            const onMouseMove = (col, row, ev) => {
+                ev.preventDefault();
                 if ((col !== prevCol && col != -1) || (row !== prevRow && row != -1)) {
                     prevCol = col === -1 ? prevCol : col;
                     prevRow = row === -1 ? prevRow : row;
@@ -45407,9 +45399,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.13';
-    __info__.date = '2023-08-09T11:59:06.622Z';
-    __info__.hash = '5620a2e';
+    __info__.version = '16.2.14';
+    __info__.date = '2023-08-30T08:42:34.781Z';
+    __info__.hash = 'ad037b1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
