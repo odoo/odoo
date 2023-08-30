@@ -395,12 +395,13 @@ export class WebsitePreview extends Component {
             const { href, target, classList } = linkEl;
             if (classList.contains('o_add_language')) {
                 ev.preventDefault();
+                const searchParams = new URLSearchParams(href);
                 this.action.doAction('base.action_view_base_language_install', {
                     target: 'new',
                     additionalContext: {
                         params: {
                             website_id: this.websiteId,
-                            url_return: $.deparam(href).url_return,
+                            url_return: searchParams.get("url_return"),
                         },
                     },
                 });

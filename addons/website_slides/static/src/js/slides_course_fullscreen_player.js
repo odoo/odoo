@@ -513,9 +513,9 @@
             this.slides = this._preprocessSlideData(slides);
             this.channel = channelData;
             var slide;
-            var urlParams = $.deparam.querystring();
+            const urlParams = new URL(window.location).searchParams;
             if (defaultSlideId) {
-                slide = findSlide(this.slides, {id: defaultSlideId, isQuiz: urlParams.quiz === "1" });
+                slide = findSlide(this.slides, {id: defaultSlideId, isQuiz: String(urlParams.get("quiz")) === "1" });
             } else {
                 slide = this.slides[0];
             }
