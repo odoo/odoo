@@ -1049,6 +1049,10 @@ class SaleOrder(models.Model):
                 if group_name not in ('customer', 'portal'):
                     group_data['has_button_access'] = True
 
+                if group_name in ['customer']:
+                    # A follower of the document of type customer needs an access token
+                    group_data['notification_is_customer'] = True
+
         return groups
 
     def preview_sale_order(self):
