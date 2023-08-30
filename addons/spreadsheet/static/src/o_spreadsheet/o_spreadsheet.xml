@@ -2339,15 +2339,17 @@
     <div>
       <div class="o-section o-chart-background-color">
         <div class="o-section-title">Background color</div>
-        Select a color...
-        <ColorPickerWidget
-          currentColor="props.definition.background"
-          toggleColorPicker="() => this.toggleColorPicker()"
-          showColorPicker="state.fillColorTool"
-          onColorPicked="(color) => this.updateBackgroundColor(color)"
-          title="env._t('Background Color')"
-          icon="'o-spreadsheet-Icon.FILL_COLOR'"
-        />
+        <div class="d-flex align-items-center">
+          <span class="pe-1">Select a color...</span>
+          <ColorPickerWidget
+            currentColor="props.definition.background"
+            toggleColorPicker="() => this.toggleColorPicker()"
+            showColorPicker="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            title="env._t('Background Color')"
+            icon="'o-spreadsheet-Icon.FILL_COLOR'"
+          />
+        </div>
       </div>
       <div class="o-section o-chart-title">
         <div class="o-section-title">Title</div>
@@ -2410,15 +2412,17 @@
     <div>
       <div class="o-section o-chart-background-color">
         <div class="o-section-title">Background color</div>
-        Select a color...
-        <ColorPickerWidget
-          currentColor="props.definition.background"
-          toggleColorPicker="() => this.toggleMenu('backgroundColor', ev)"
-          showColorPicker="state.openedMenu === 'backgroundColor'"
-          onColorPicked="(color) => this.updateBackgroundColor(color)"
-          title="env._t('Background Color')"
-          icon="'o-spreadsheet-Icon.FILL_COLOR'"
-        />
+        <div class="d-flex align-items-center">
+          <span class="pe-1">Select a color...</span>
+          <ColorPickerWidget
+            currentColor="props.definition.background"
+            toggleColorPicker="() => this.toggleMenu('backgroundColor', ev)"
+            showColorPicker="state.openedMenu === 'backgroundColor'"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            title="env._t('Background Color')"
+            icon="'o-spreadsheet-Icon.FILL_COLOR'"
+          />
+        </div>
       </div>
 
       <div class="o-section o-chart-title">
@@ -2606,15 +2610,17 @@
     <div>
       <div class="o-section o-chart-background-color">
         <div class="o-section-title">Background color</div>
-        Select a color...
-        <ColorPickerWidget
-          currentColor="props.definition.background"
-          toggleColorPicker="() => this.toggleColorPicker()"
-          showColorPicker="state.fillColorTool"
-          onColorPicked="(color) => this.updateBackgroundColor(color)"
-          title="env._t('Background Color')"
-          icon="'o-spreadsheet-Icon.FILL_COLOR'"
-        />
+        <div class="d-flex align-items-center">
+          <span class="pe-1">Select a color...</span>
+          <ColorPickerWidget
+            currentColor="props.definition.background"
+            toggleColorPicker="() => this.toggleColorPicker()"
+            showColorPicker="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            title="env._t('Background Color')"
+            icon="'o-spreadsheet-Icon.FILL_COLOR'"
+          />
+        </div>
       </div>
       <div class="o-section o-chart-title">
         <div class="o-section-title">Title</div>
@@ -2724,15 +2730,17 @@
     <div>
       <div class="o-section o-chart-background-color">
         <div class="o-section-title">Background color</div>
-        Select a color...
-        <ColorPickerWidget
-          currentColor="props.definition.background"
-          toggleColorPicker="() => this.toggleColorPicker()"
-          showColorPicker="state.fillColorTool"
-          onColorPicked="(color) => this.updateBackgroundColor(color)"
-          title="env._t('Background Color')"
-          icon="'o-spreadsheet-Icon.FILL_COLOR'"
-        />
+        <div class="d-flex align-items-center">
+          <span class="pe-1">Select a color...</span>
+          <ColorPickerWidget
+            currentColor="props.definition.background"
+            toggleColorPicker="() => this.toggleColorPicker()"
+            showColorPicker="state.fillColorTool"
+            onColorPicked="(color) => this.updateBackgroundColor(color)"
+            title="env._t('Background Color')"
+            icon="'o-spreadsheet-Icon.FILL_COLOR'"
+          />
+        </div>
       </div>
       <div class="o-section o-chart-title">
         <div class="o-section-title">Title</div>
@@ -2872,15 +2880,17 @@
     <div>
       <div class="o-section o-chart-background-color">
         <div class="o-section-title">Background color</div>
-        Select a color...
-        <ColorPickerWidget
-          currentColor="props.definition.background"
-          toggleColorPicker="() => this.toggleColorPicker('backgroundColor')"
-          showColorPicker="state.openedColorPicker === 'backgroundColor'"
-          onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
-          title="env._t('Background Color')"
-          icon="'o-spreadsheet-Icon.FILL_COLOR'"
-        />
+        <div class="d-flex align-items-center">
+          <span class="pe-1">Select a color...</span>
+          <ColorPickerWidget
+            currentColor="props.definition.background"
+            toggleColorPicker="() => this.toggleColorPicker('backgroundColor')"
+            showColorPicker="state.openedColorPicker === 'backgroundColor'"
+            onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
+            title="env._t('Background Color')"
+            icon="'o-spreadsheet-Icon.FILL_COLOR'"
+          />
+        </div>
       </div>
 
       <div class="o-section o-chart-title">
@@ -2905,25 +2915,28 @@
     </div>
     <div class="o-section o-chart-baseline-color">
       <div class="o-section-title">Baseline color</div>
-      Color on value increase
-      <ColorPickerWidget
-        currentColor="props.definition.baselineColorUp"
-        toggleColorPicker="() => this.toggleColorPicker('baselineColorUp')"
-        showColorPicker="state.openedColorPicker === 'baselineColorUp'"
-        onColorPicked="(color) => this.setColor(color, 'baselineColorUp')"
-        title="env._t('Color Up')"
-        icon="'o-spreadsheet-Icon.FILL_COLOR'"
-      />
-      <br/>
-      Color on value decrease
-      <ColorPickerWidget
-        currentColor="props.definition.baselineColorDown"
-        toggleColorPicker="() => this.toggleColorPicker('baselineColorDown')"
-        showColorPicker="state.openedColorPicker === 'baselineColorDown'"
-        onColorPicked="(color) => this.setColor(color, 'baselineColorDown')"
-        title="env._t('Color Down')"
-        icon="'o-spreadsheet-Icon.FILL_COLOR'"
-      />
+      <div class="d-flex align-items-center">
+        <span class="pe-1">Color on value increase</span>
+        <ColorPickerWidget
+          currentColor="props.definition.baselineColorUp"
+          toggleColorPicker="() => this.toggleColorPicker('baselineColorUp')"
+          showColorPicker="state.openedColorPicker === 'baselineColorUp'"
+          onColorPicked="(color) => this.setColor(color, 'baselineColorUp')"
+          title="env._t('Color Up')"
+          icon="'o-spreadsheet-Icon.FILL_COLOR'"
+        />
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="pe-1">Color on value decrease</span>
+        <ColorPickerWidget
+          currentColor="props.definition.baselineColorDown"
+          toggleColorPicker="() => this.toggleColorPicker('baselineColorDown')"
+          showColorPicker="state.openedColorPicker === 'baselineColorDown'"
+          onColorPicked="(color) => this.setColor(color, 'baselineColorDown')"
+          title="env._t('Color Down')"
+          icon="'o-spreadsheet-Icon.FILL_COLOR'"
+        />
+      </div>
     </div>
   </t>
 
@@ -3850,7 +3863,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.8';
-  __info__.date = '2023-08-17T11:13:18.797Z';
-  __info__.hash = 'af65228';
+  __info__.version = '16.3.9';
+  __info__.date = '2023-08-30T08:43:51.503Z';
+  __info__.hash = '79cedd4';
 -->
