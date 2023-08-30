@@ -86,7 +86,9 @@ class WebsiteVisitor(models.Model):
     @api.depends('partner_id')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = record.partner_id.name or _('Website Visitor #%s', record.id)
+            # Accessing name of partner through sudo to avoid infringing
+            # record rule if partner belongs to another company.
+            record.display_name = record.partner_id.sudo().name or _('Website Visitor #%s', record.id)
 
     @api.depends('access_token')
     def _compute_partner_id(self):
