@@ -41,3 +41,25 @@ class TestProjectReport(TestProjectCommon):
             rating_values = task.read(['rating_avg', 'rating_last_value'])[0]
             task_report = self.env['report.project.task.user'].search_read([('project_id', '=', self.project_pigs.id), ('task_id', '=', task.id)], ['rating_avg', 'rating_last_value'])[0]
             self.assertDictEqual(task_report, rating_values, 'The rating average and the last rating value for the task 1 should be the same in the report and on the task.')
+
+    def test_task_report_includes_subtask_with_parent_project(self):
+        subtask = self.env['project.task'].create({
+            'name': 'subtask',
+            'parent_id': self.task_1.id,
+        })
+        subsubtask = self.env['project.task'].create({
+            'name': 'subsubtask',
+            'parent_id': subtask.id,
+        })
+        subtask_with_different_project = self.env['project.task'].create({
+            'name': 'subtask with different project',
+            'parent_id': self.task_1.id,
+            'project_id': self.project_goats.id,
+        })
+
+        self.assertEqual(self.env['report.project.task.user'].browse(subtask.id).project_id,
+                         self.task_1.project_id)
+        self.assertEqual(self.env['report.project.task.user'].browse(subsubtask.id).project_id,
+                         self.task_1.project_id)
+        self.assertEqual(self.env['report.project.task.user'].browse(subtask_with_different_project.id).project_id,
+                         self.project_goats)
