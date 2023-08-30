@@ -43,12 +43,14 @@ class AccountMove(models.Model):
 
         return lot_values
 
-    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+    def _get_reconciled_info_JSON_values(self):
         """Add pos_payment_name field in the reconciled vals to be able to show the payment method in the invoice."""
-        result = super()._get_reconciled_vals(partial, amount, counterpart_line)
-        if counterpart_line.move_id.sudo().pos_payment_ids:
-            pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
-            result['pos_payment_name'] = pos_payment.payment_method_id.name
+        result = super()._get_reconciled_info_JSON_values()
+        reconciled_partials, _ = self._get_reconciled_invoices_partials()
+        for i, (_, _, counterpart_line) in enumerate(reconciled_partials):
+            if counterpart_line.move_id.sudo().pos_payment_ids:
+                pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
+                result[i]['pos_payment_name'] = pos_payment.payment_method_id.name
         return result
 
 class AccountMoveLine(models.Model):
