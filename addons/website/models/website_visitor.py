@@ -87,9 +87,11 @@ class WebsiteVisitor(models.Model):
     def name_get(self):
         res = []
         for record in self:
+            # Accessing name of partner through sudo to avoid infringing
+            # record rule if partner belongs to another company.
             res.append((
                 record.id,
-                record.partner_id.name or _('Website Visitor #%s', record.id)
+                record.partner_id.sudo().name or _('Website Visitor #%s', record.id)
             ))
         return res
 
