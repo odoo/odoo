@@ -43,7 +43,11 @@ export class AddToBoard extends Component {
             orderBy,
         } = this.env.searchModel.getPreFavoriteValues({ forBoardApp: true }); // call with { forBoardApp: true } only in saas-16.2
         const contextToSave = {
-            ...globalContext,
+            ...Object.fromEntries(
+                Object.entries(globalContext).filter(
+                    (entry) => !entry[0].startsWith("search_default_")
+                )
+            ),
             ...context,
             comparison,
             orderedBy: orderBy,
