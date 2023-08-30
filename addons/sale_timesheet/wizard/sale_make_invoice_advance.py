@@ -5,7 +5,31 @@ from odoo import api, fields, models
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
+<<<<<<< HEAD
     _inherit = 'sale.advance.payment.inv'
+||||||| parent of 21c6f3d7f2f (temp)
+    _inherit = "sale.advance.payment.inv"
+
+    @api.model
+    def _default_invoicing_timesheet_enabled(self):
+        if 'active_id' not in self._context and 'active_ids' not in self._context:
+            return False
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_id') or self._context.get('active_ids'))
+        order_lines = sale_orders.mapped('order_line').filtered(lambda sol: sol.invoice_status == 'to invoice')
+        product_ids = order_lines.mapped('product_id').filtered(lambda p: p._is_delivered_timesheet())
+        return bool(product_ids)
+=======
+    _inherit = "sale.advance.payment.inv"
+
+    @api.model
+    def _default_invoicing_timesheet_enabled(self):
+        if 'active_id' not in self._context and 'active_ids' not in self._context:
+            return False
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids') or self._context.get('active_id'))
+        order_lines = sale_orders.mapped('order_line').filtered(lambda sol: sol.invoice_status == 'to invoice')
+        product_ids = order_lines.mapped('product_id').filtered(lambda p: p._is_delivered_timesheet())
+        return bool(product_ids)
+>>>>>>> 21c6f3d7f2f (temp)
 
     date_start_invoice_timesheet = fields.Date(
         string="Start Date",
