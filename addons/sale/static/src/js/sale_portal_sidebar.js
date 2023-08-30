@@ -25,9 +25,11 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         // Nav Menu ScrollSpy
         this._generateMenu();
         // After signature, automatically open the popup for payment
-        if ($.bbq.getState('allow_payment') === 'yes' && this.$('#o_sale_portal_paynow').length) {
+        const hash = new URLSearchParams(window.location.hash.substring(1));
+        if (hash.get("allow_payment") === "yes" && this.$("#o_sale_portal_paynow").length) {
             this.el.querySelector('#o_sale_portal_paynow').click();
-            $.bbq.removeState('allow_payment');
+            hash.delete("allow_payment");
+            window.location.hash = hash.toString();
         }
         return def;
     },
