@@ -922,3 +922,46 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?debug=1&config_id=%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="accountman")
+
+    def test_refund_order_with_fp_tax_included(self):
+        #create a tax of 15% tax included
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 15,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include': True,
+        })
+        #create a tax of 0%
+        self.tax2 = self.env['account.tax'].create({
+            'name': 'Tax 2',
+            'amount': 0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        #create a fiscal position with the two taxes
+        self.fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': self.tax1.id,
+                'tax_dest_id': self.tax2.id,
+            })],
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'type': 'product',
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [(6, 0, self.tax1.ids)],
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        #add the fiscal position to the PoS
+        self.main_pos_config.write({
+            'fiscal_position_ids': [(4, self.fiscal_position.id)],
+            'tax_regime_selection': True,
+            })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="accountman")
