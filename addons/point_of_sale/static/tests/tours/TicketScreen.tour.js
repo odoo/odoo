@@ -12,9 +12,9 @@ import { registry } from "@web/core/registry";
 
 registry
     .category("web_tour.tours")
-    .add("TicketScreenTour", { 
-        test: true, 
-        url: "/pos/ui", 
+    .add("TicketScreenTour", {
+        test: true,
+        url: "/pos/ui",
         steps: () => {
             startSteps();
             ProductScreen.do.confirmOpeningPopup();
@@ -114,7 +114,7 @@ registry
             ReceiptScreen.do.clickBack();
             // When going back, the ticket screen should be in its previous state.
             TicketScreen.check.filterIs("Paid");
-            
+
             // Test refund //
             TicketScreen.do.clickDiscard();
             ProductScreen.check.isShown();
@@ -170,6 +170,40 @@ registry
             TicketScreen.do.selectOrder("-0005");
             TicketScreen.check.refundedNoteContains("2.00 Refunded");
 
-            return getSteps(); 
-        } 
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("FiscalPositionNoTaxRefund", {
+        test: true,
+        url: "/pos/ui",
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            ProductScreen.do.clickDisplayedProduct('Product Test');
+            ProductScreen.check.totalAmountIs('100.00');
+            ProductScreen.do.changeFiscalPosition('No Tax');
+            ProductScreen.check.totalAmountIs('86.96');
+            ProductScreen.do.clickPayButton();
+            PaymentScreen.do.clickPaymentMethod('Bank');
+            PaymentScreen.check.remainingIs('0.00');
+            PaymentScreen.do.clickValidate();
+            ReceiptScreen.check.isShown();
+            ReceiptScreen.do.clickNextOrder();
+            ProductScreen.do.clickRefund();
+            TicketScreen.do.selectOrder('-0001');
+            TicketScreen.do.clickOrderline('Product Test');
+            TicketScreen.do.pressNumpad('1');
+            TicketScreen.check.toRefundTextContains('To Refund: 1.00');
+            TicketScreen.do.confirmRefund();
+            ProductScreen.check.isShown();
+            ProductScreen.do.goBackToMainScreen();
+            ProductScreen.check.totalAmountIs('-86.96');
+
+            return getSteps();
+        }
     });
