@@ -127,7 +127,7 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
  *                          -120 => UTC-2
  */
 export function patchTimeZone(offset) {
-    patchWithCleanup(luxon.Settings, { defaultZone: new luxon.FixedOffsetZone.instance(offset) });
+    patchWithCleanup(luxon.Settings, { defaultZone: luxon.FixedOffsetZone.instance(offset) });
 }
 
 /**

@@ -807,7 +807,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("one2many with date and datetime", async function (assert) {
         const originalZone = luxon.Settings.defaultZone;
-        luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(120);
+        luxon.Settings.defaultZone = luxon.FixedOffsetZone.instance(120);
         registerCleanup(() => {
             luxon.Settings.defaultZone = originalZone;
         });
