@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { LinkPreview } from "@mail/core/common/link_preview_model";
-import { MessageReactions } from "@mail/core/common/message_reactions_model";
 import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "@mail/utils/common/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
 import { assignDefined, createLocalId } from "@mail/utils/common/misc";
@@ -278,7 +276,7 @@ export class MessageService {
         }
         replaceArrayWithCompare(
             message.linkPreviews,
-            linkPreviews.map((data) => this.insertLinkPreview({ ...data, message }))
+            linkPreviews.map((data) => this.store.LinkPreview.insert({ ...data, message }))
         );
         replaceArrayWithCompare(
             message.notifications,
@@ -319,7 +317,7 @@ export class MessageService {
             const [command, reactionData] = Array.isArray(rawReaction)
                 ? rawReaction
                 : ["insert", rawReaction];
-            const reaction = this.insertReactions(reactionData);
+            const reaction = this.store.MessageReactions.insert(reactionData);
             if (command === "insert") {
                 reactionsToInsert.push(reaction);
             } else {
@@ -337,65 +335,6 @@ export class MessageService {
                 message.reactions.push(reaction);
             }
         });
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {LinkPreview}
-     */
-    insertLinkPreview(data) {
-        const linkPreview = data.message.linkPreviews.find(
-            (linkPreview) => linkPreview.id === data.id
-        );
-        if (linkPreview) {
-            return Object.assign(linkPreview, data);
-        }
-        return new LinkPreview(data);
-    }
-
-    /**
-     * @param {Object} data
-     * @returns {MessageReactions}
-     */
-    insertReactions(data) {
-        let reaction = this.store.Message.records[data.message.id]?.reactions.find(
-            ({ content }) => content === data.content
-        );
-        if (!reaction) {
-            reaction = new MessageReactions();
-            reaction._store = this.store;
-        }
-        const personasToUnlink = new Set();
-        const alreadyKnownPersonaIds = new Set(reaction.personaLocalIds);
-        for (const rawPartner of data.partners) {
-            const [command, partnerData] = Array.isArray(rawPartner)
-                ? rawPartner
-                : ["insert", rawPartner];
-            const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
-                reaction.personaLocalIds.push(persona.localId);
-            } else if (command !== "insert") {
-                personasToUnlink.add(persona.localId);
-            }
-        }
-        for (const rawGuest of data.guests) {
-            const [command, guestData] = Array.isArray(rawGuest) ? rawGuest : ["insert", rawGuest];
-            const persona = this.store.Persona.insert({ ...guestData, type: "guest" });
-            if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
-                reaction.personaLocalIds.push(persona.localId);
-            } else if (command !== "insert") {
-                personasToUnlink.add(persona.localId);
-            }
-        }
-        Object.assign(reaction, {
-            count: data.count,
-            content: data.content,
-            messageId: data.message.id,
-            personaLocalIds: reaction.personaLocalIds.filter(
-                (localId) => !personasToUnlink.has(localId)
-            ),
-        });
-        return reaction;
     }
 
     updateNotification(notification, data) {

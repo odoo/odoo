@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Record, modelRegistry } from "@mail/core/common/record";
-import { ScrollPosition } from "@mail/core/common/scroll_position_model";
+import { ScrollPosition } from "@mail/core/common/scroll_position";
 import { createLocalId, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -55,7 +55,7 @@ export class Thread extends Record {
             }
         });
         this.env.services["mail.thread"].update(thread, data);
-        this.env.services["mail.thread"].insertComposer({ thread });
+        this.store.Composer.insert({ thread });
         // return reactive version.
         return this.records[thread.localId];
     }

@@ -1,8 +1,22 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
+    /**
+     * @param {Object} data
+     * @returns {LinkPreview}
+     */
+    static insert(data) {
+        const linkPreview = data.message.linkPreviews.find(
+            (linkPreview) => linkPreview.id === data.id
+        );
+        if (linkPreview) {
+            return Object.assign(linkPreview, data);
+        }
+        return new LinkPreview(data);
+    }
+
     /** @type {number} */
     id;
     /** @type {Object} */
@@ -47,3 +61,5 @@ export class LinkPreview extends Record {
         return !this.isImage && !this.isVideo;
     }
 }
+
+modelRegistry.add(LinkPreview.name, LinkPreview);
