@@ -37,6 +37,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 export const WORKER_VERSION = '1.0.5';
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 60000;
+console.log('websocket_worker.js');
 
 /**
  * This class regroups the logic necessary in order for the
@@ -56,7 +57,7 @@ export class WebsocketWorker {
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.debugModeByClient = new Map();
-        this.isDebug = false;
+        this.isDebug = true;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
         this.lastNotificationId = 0;
@@ -154,6 +155,7 @@ export class WebsocketWorker {
      * @param {string} channel
      */
     _addChannel(client, channel) {
+        debugger
         const clientChannels = this.channelsByClient.get(client);
         if (!clientChannels.includes(channel)) {
             clientChannels.push(channel);
@@ -199,7 +201,7 @@ export class WebsocketWorker {
     _unregisterClient(client) {
         this.channelsByClient.delete(client);
         this.debugModeByClient.delete(client);
-        this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+        // this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
         this._updateChannels();
     }
 
@@ -221,7 +223,7 @@ export class WebsocketWorker {
     _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient[client] = debug;
-            this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+            // this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
             this.sendToClient(client, "initialized");
             return;
         }
@@ -229,7 +231,7 @@ export class WebsocketWorker {
         this.websocketURL = websocketURL;
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;
-        this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+        // this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -336,6 +338,7 @@ export class WebsocketWorker {
             console.debug(`%c${new Date().toLocaleString()} - [onMessage]`, 'color: #c6e; font-weight: bold;', notifications);
         }
         this.lastNotificationId = notifications[notifications.length - 1].id;
+        console.log(`notifications:`, notifications);
         this.broadcast('notification', notifications);
     }
 
@@ -385,6 +388,7 @@ export class WebsocketWorker {
      * Start the worker by opening a websocket connection.
      */
     _start() {
+        debugger;
         if (this._isWebsocketConnected() || this._isWebsocketConnecting()) {
             return;
         }
@@ -400,6 +404,7 @@ export class WebsocketWorker {
             this.lastChannelSubscription = null;
             this.broadcast("disconnect", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE });
         }
+        console.log(`this.websocketURL:`, this.websocketURL);
         this.websocket = new WebSocket(this.websocketURL);
         this.websocket.addEventListener('open', this._onWebsocketOpen);
         this.websocket.addEventListener('error', this._onWebsocketError);

@@ -4,6 +4,8 @@
 
 import { WebsocketWorker } from "./websocket_worker";
 
+console.log(`self:`, self);
+
 (function () {
     const websocketWorker = new WebsocketWorker();
 

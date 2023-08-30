@@ -4,6 +4,7 @@ import { WebsocketWorker } from "@bus/workers/websocket_worker";
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+console.log('mock_websocket.js');
 
 class WebSocketMock extends EventTarget {
     constructor() {

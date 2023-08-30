@@ -88,6 +88,7 @@ const Wysiwyg = Widget.extend({
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
+        window.wysiwyg = this;
         this.id = ++id;
         this.options = this._getEditorOptions(options);
         this.saving_mutex = new concurrency.Mutex();
@@ -552,6 +553,7 @@ const Wysiwyg = Widget.extend({
             if (!COLLABORATION_CONFIG) {
                 COLLABORATION_CONFIG = await this._rpc({route: '/web_editor/get_collaboration_config'});
             }
+            console.log(`COLLABORATION_CONFIG:`, COLLABORATION_CONFIG);
             let iceServers = COLLABORATION_CONFIG.ice_servers;
             if (!iceServers.length) {
                 iceServers = [
@@ -2566,6 +2568,7 @@ const Wysiwyg = Widget.extend({
                         break;
                     }
                     case 'oe_history_step':
+                        if (window.simulate_offline) return;
                         if (this._historySyncFinished) {
                             this.odooEditor.onExternalHistorySteps([notificationPayload]);
                         } else {
@@ -2573,6 +2576,7 @@ const Wysiwyg = Widget.extend({
                         }
                         break;
                     case 'oe_history_set_selection': {
+                        if (window.simulate_offline) return;
                         const client = this.ptp.clientsInfos[fromClientId];
                         if (!client) {
                             return;
@@ -2605,6 +2609,7 @@ const Wysiwyg = Widget.extend({
                     const success = await this._recoverFromStaleDocumentFromServer();
                     if (!success) return;
                 }
+                if (window.simulate_cluster) return;
                 this.ptp.notifyAllClients('ptp_join');
                 this._joiningPtp = false;
                 this._ptpJoined = true;

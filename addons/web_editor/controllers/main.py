@@ -793,6 +793,32 @@ class Web_Editor(http.Controller):
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
+    # todo: do not include it in the commit: it's for development only
+    @http.route("/web_editor/get_collaboration_instrument",  auth="public")
+    def get_collaboration_instrument(self):
+        logs = []
+        for log in request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')]):
+            l = {
+                'type': log.type,
+                'name': log.name,
+                'message': log.message,
+            }
+            import pprint; print('l: ',end='');pprint.pprint(l)
+
+            logs.append(l)
+        return json.dumps(logs)
+        # return logs
+        # return request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')])
+        # return {
+        #     'use_instrumentation': .sudo().get_param('web_editor.use_instrumentation').lower().strip() == 'true',
+        #     'ice_servers': request.env['mail.ice.server']._get_ice_servers()
+        # }
+
+    # todo: do not include it in the commit: it's for development only
+    @http.route("/web_editor/remove_collaboration_instrument", auth="public")
+    def remove_collaboration_instrument(self):
+        request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')]).unlink()
+
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
