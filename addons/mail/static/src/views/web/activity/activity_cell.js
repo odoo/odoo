@@ -28,7 +28,7 @@ export class ActivityCell extends Component {
     get closestDeadlineFormatted() {
         const date = luxon.DateTime.fromISO(this.props.closestDeadline);
         // To remove year only if current year
-        if (new luxon.DateTime.now().year === date.year) {
+        if (luxon.DateTime.now().year === date.year) {
             return date.toLocaleString({
                 day: "numeric",
                 month: "short",
