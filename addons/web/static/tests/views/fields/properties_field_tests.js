@@ -1480,7 +1480,7 @@ QUnit.module("Fields", (hooks) => {
 
         // check second card
         const property3 = target.querySelector(
-            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(3) span"
+            ".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(3) span"
         );
         assert.notEqual(
             property3.innerText,
@@ -1489,17 +1489,17 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.equal(property3.innerText, "char value 4");
         const property1 = target.querySelector(
-            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(1) span"
+            ".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(1) span"
         );
         assert.equal(property1.innerText, "char value");
         const property2 = target.querySelector(
-            ".o_kanban_record:nth-child(2) .o_kanban_property_field:nth-child(2) span"
+            ".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(2) span"
         );
         assert.equal(property2.innerText, "C");
 
         // check first card
         const items = target.querySelectorAll(
-            ".o_kanban_record:nth-child(1) .o_kanban_property_field"
+            ".o_kanban_record:nth-child(1) .o_card_property_field"
         );
         assert.equal(items.length, 2);
     });
@@ -1549,11 +1549,11 @@ QUnit.module("Fields", (hooks) => {
 
             // check fifth card
             const property1 = target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) span"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(1) span"
             );
             assert.equal(property1.innerText, "01/01/2019");
             const property2 = target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) span"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(2) span"
             );
             assert.equal(property2.innerText, "01/01/2019 11:00:00");
         }
@@ -1688,25 +1688,25 @@ QUnit.module("Fields", (hooks) => {
         // check for label in integer, float, date and datetime field
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) label"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(1) label"
             ).innerText,
             "My Integer"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) label"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(2) label"
             ).innerText,
             "My Float"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(3) label"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(3) label"
             ).innerText,
             "My Date"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(4) label"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(4) label"
             ).innerText,
             "My Datetime"
         );
@@ -1714,11 +1714,11 @@ QUnit.module("Fields", (hooks) => {
         //check that label and border class is present for checkbox field
         assert.containsOnce(
             target,
-            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) .border"
+            ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(5) .border"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) label"
+                ".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(5) label"
             ).innerText,
             "My Checkbox"
         );
