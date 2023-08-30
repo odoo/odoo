@@ -129,11 +129,11 @@ class PosSelfOrderController(http.Controller):
         if not orders:
             raise NotFound("Orders not found")
 
-        orders = []
+        result = []
         for order in orders:
-            orders.append(order._export_for_self_order())
+            result.append(order._export_for_self_order())
 
-        return orders
+        return result
 
     @http.route('/pos-self-order/get-tables', auth='public', type='json', website=True)
     def get_tables(self, access_token):
