@@ -165,7 +165,6 @@ Featuring
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery.ui/jquery-ui.js',
             'web/static/lib/jquery/jquery.browser.js',
-            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
             'web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',

@@ -156,22 +156,19 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         }
     },
     _applyHash: function () {
-        var hash = window.location.hash.substring(1);
-        if (hash) {
-            var params = $.deparam(hash);
-            if (params['attr']) {
-                var attributeIds = params['attr'].split(',');
-                var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
-                attributeIds.forEach((id) => {
-                    var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
-                    if ($toSelect.is('input[type="radio"]')) {
-                        $toSelect.prop('checked', true);
-                    } else if ($toSelect.is('option')) {
-                        $toSelect.prop('selected', true);
-                    }
-                });
-                this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
-            }
+        const params = new URLSearchParams(window.location.hash.substring(1));
+        if (params.get("attr")) {
+            var attributeIds = params.get("attr").split(',');
+            var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
+            attributeIds.forEach((id) => {
+                var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
+                if ($toSelect.is('input[type="radio"]')) {
+                    $toSelect.prop('checked', true);
+                } else if ($toSelect.is('option')) {
+                    $toSelect.prop('selected', true);
+                }
+            });
+            this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
         }
     },
 
@@ -697,10 +694,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _applyHashFromSearch() {
-        const params = $.deparam(window.location.search.slice(1));
-        if (params.attrib) {
+        const params =  new URL(window.location).searchParams;
+        if (params.get("attrib")) {
             const dataValueIds = [];
-            for (const attrib of [].concat(params.attrib)) {
+            for (const attrib of [].concat(params.get("attrib"))) {
                 const attribSplit = attrib.split('-');
                 const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
