@@ -482,6 +482,7 @@ class TestTrackingInternals(MailCommon):
         tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
         formattedTrackingValues = [{
             'changedField': 'Email From',
+            'fieldName': 'email_from',
             'id': tracking_values[0]['id'],
             'newValue': {
                 'currencyId': False,

@@ -4608,15 +4608,36 @@ class AccountMove(models.Model):
         return res
 
     def _mail_track(self, tracked_fields, initial):
-        changes, tracking_value_ids = super()._mail_track(tracked_fields, initial)
-        for _a,_b,tracking_val in tracking_value_ids:
-            # vals = tracking_val[2]
-            if tracking_val['field_desc'] == self._fields['exchange_rate'].string:
-                if not tracking_val['old_value_float']:
-                    tracking_val['old_value_float'] = self.system_exchange_rate
-                elif not tracking_val['new_value_float']:
-                    tracking_val['new_value_float'] = self.system_exchange_rate
-        return changes, tracking_value_ids
+        # EXTENDS base (mail)
+        # Refactor this
+        # this is probably the only solution: a manual _message_log
+        # this avoids having to set the digits on the field, as we don't want to limit the number of decimals
+        new_tracking_values_commands = []
+        values = []
+        msg = None
+        changes, original_tracking_values = super()._mail_track(tracked_fields, initial)
+        if 'exchange_rate' in changes:
+            # changes.remove('exchange_rate')  # add this if using the message
+            for tracking_val_command in original_tracking_values:
+                print(tracking_val_command)
+                if tracking_val_command[2]['field_desc'] == self._fields['exchange_rate'].string:
+                    values = tracking_val_command[2]
+                    if not values['old_value_float']:
+                        msg = _("Exchange rate changed to: %s", values['new_value_float'])
+                        values['old_value_float'] = self.system_exchange_rate # remove this if using the message
+                    elif not values['new_value_float']:
+                        msg = _("Exchange rate has been reset to the default system rate of %s", self.system_exchange_rate)
+                        values['new_value_float'] = self.system_exchange_rate # remove this if using the message
+                    else:
+                        msg = _("Exchange rate changed from %s to %s", values['old_value_float'], values['new_value_float'])
+                    new_tracking_values_commands.append([0, 0, values])  # remove this if using the message
+                else:
+                    new_tracking_values_commands.append(tracking_val_command)
+        if msg:
+            self._message_log(
+                body=msg,
+            )
+        return changes, new_tracking_values_commands
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
