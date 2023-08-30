@@ -287,9 +287,9 @@ function hasColor(element, mode) {
         }
     }
     return (
-        (style[mode] && style[mode] !== 'inherit' && style[mode] !== parent.style[mode]) ||
+        (style[mode] && style[mode] !== 'inherit' && (!parent || style[mode] !== parent.style[mode])) ||
         (classRegex.test(element.className) &&
-            getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
+            (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode]))
     );
 }
 function addColumn(editor, beforeOrAfter) {
