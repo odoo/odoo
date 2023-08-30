@@ -85,5 +85,9 @@ class StockMoveLine(TestStockCommon):
         move._action_confirm()
         move._action_assign()
         self.assertEqual(move.move_line_ids.qty_done, 0)
-        move.move_line_ids.write({'quant_id': self.quant.id})
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.edit(0) as ml:
+            ml.quant_id = self.quant
+        move = move_form.save()
         self.assertEqual(move.move_line_ids.qty_done, 5)
+        self.assertEqual(move.move_line_ids.reserved_qty, 5)
