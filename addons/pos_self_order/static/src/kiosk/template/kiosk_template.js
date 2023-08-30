@@ -18,11 +18,9 @@ export class KioskTemplate extends Component {
         onMounted(() => {
             const style = document.createElement("style");
             const color = escape(this.selfOrder.color);
-            style.innerHTML = markup(`.btn-primary,.text-bg-primary,.bg-primary {
-                background-color: ${color} !important;
-                border-color: ${color} !important;
-            } .border-primary {
-                border-color: ${color} !important;
+            style.innerHTML = markup(`
+            body {
+                --companyColor: ${color};
             }`);
 
             document.getElementsByTagName("head")[0].appendChild(style);

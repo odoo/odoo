@@ -6,7 +6,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow: hidden;
-  font-size: 24px;
+  font-size: clamp(.75rem, 1.25rem, 1.50em);
   -webkit-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
@@ -23,4 +23,37 @@ body {
 .o_kiosk-card img {
   object-fit: contain;
   aspect-ratio: 1/1;
+}
+
+/* Custom styling for .btn-primary to reflect company settings colors */
+
+.btn-primary {
+  background-color: var(--companyColor);
+  border-color: transparent;
+
+  &:hover {
+      background-color: var(--companyColor);
+      border-color: var(--companyColor);
+  }
+
+  &:active, &:focus {
+      background-color: $white;
+      color: var(--companyColor);
+      border-color: var(--companyColor);
+  }
+
+  &.disabled {
+      background-color: var(--companyColor);
+      border-color: var(--companyColor);
+      opacity: .5;
+  }
+}
+
+.text-bg-primary, .bg-primary {
+  background-color: var(--companyColor) !important;
+  border-color: var(--companyColor) !important;
+}
+
+.border-primary {
+  border-color: var(--companyColor) !important;
 }

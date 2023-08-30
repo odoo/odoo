@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.LandingPage" owl="1">
-        <KioskTemplate headerHeight="0" contentHeight="90" footerHeight="10">
+        <KioskTemplate headerHeight="0" contentHeight="88" footerHeight="12">
             <t t-set-slot="content">
                 <div t-if="languages.length > 1" t-on-click="openLanguages" class="o_kiosk_language_selector position-absolute top-0 end-0 m-4 rounded p-4 bg-white shadow-lg">
                     <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}" />
@@ -18,7 +18,7 @@
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary h-100 w-100 p-0 m-0 fs-1 text-uppercase" t-on-click="start">TOUCH TO START</button>
+                <button class="btn btn-primary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="start">TOUCH TO START</button>
             </t>
         </KioskTemplate>
     </t>

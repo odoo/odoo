@@ -9,7 +9,7 @@
             </t>
             <t t-set-slot="content">
                 <div class="o_kiosk-order-cart position-relative h-100 d-flex flex-column justify-content-between bg-100">
-                    <div class="order-content bg-100 px-3 py-4 overflow-auto">
+                    <div class="order-content h-90 px-3 py-4 bg-100 overflow-auto">
                         <t t-foreach="lines" t-as="line" t-key="line.uuid">
                             <div t-if="!line.combo_parent_uuid" class="d-flex align-items-start justify-content-between w-100 gap-3 py-3 p-2 pe-4 mb-3 rounded shadow-sm bg-view">
                                 <t t-set="childLines" t-value="getChildLines(line)"/>
@@ -58,8 +58,8 @@
                             </div>
                         </t>
                     </div>
-                    <div class="order-price absolute-content position-absolute fixed-bottom w-100">
-                        <div class="absolute-content-price d-flex flex-column justify-content-center py-4 px-5 border-top bg-view text-end lh-sm">
+                    <div class="order-price absolute-content position-absolute h-10 fixed-bottom w-100">
+                        <div class="absolute-content-price d-flex flex-column justify-content-center h-100 py-4 px-5 border-top bg-view text-end lh-sm">
                             <p class="mb-0 fs-1 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_total)" /></p>
                             <p class="mb-0 fs-2 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_tax)" /></p>
                         </div>

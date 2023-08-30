@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.Combo" owl="1">
-        <KioskTemplate headerHeight="10" contentHeight="80" footerHeight="10">
+        <KioskTemplate headerHeight="10" contentHeight="78" footerHeight="12">
             <t t-set-slot="header">
                 <div class="d-flex flex-column h-100 w-100 fs-2 text-center border-bottom">
-                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white"><t t-esc="props.product.name" /></div>
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center text-bg-300"><t t-esc="props.product.name" /></div>
                     <div t-if="!state.showResume" class="breadcrumb h-100 w-100 d-flex flex-nowrap p-0 bg-200 overflow-x-auto overflow-y-hidden">
                         <t t-foreach="props.product.pos_combo_ids" t-as="combo_id" t-key="combo_id">
                             <div t-attf-class="d-flex align-items-center justify-content-center {{ currentComboId === combo_id ? 'active-step bg-100' : 'bg-200' }}">
@@ -52,8 +52,9 @@
                                 <div t-foreach="state.selectedCombos" t-as="combo" t-key="combo.id" class="d-flex align-items-center justify-content-between w-100 gap-3 py-3 p-2 pe-4 mb-3 rounded shadow-sm bg-view">
                                     <t t-set="product" t-value="this.selfOrder.productByIds[combo.product.id]"/>
                                     <img
-                                        class="o_self_order_item_card_image w-auto h-100 rounded bg-view"
+                                        class="o_self_order_item_card_image w-auto rounded bg-view"
                                         t-attf-src="/menu/get-image/{{ combo.product.id }}/512?unique={{product.write_date}}"
+                                        t-attf-style="height: 150px"
                                         alt="Product image"
                                         loading="lazy"
                                         onerror="this.remove()" />

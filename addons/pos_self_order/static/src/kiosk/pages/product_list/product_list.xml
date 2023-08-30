@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductList" owl="1">
         <t t-set="categories" t-value="Array.from(selfOrder.categoryList)" />
-        <KioskTemplate headerHeight="selfOrder.kiosk_image_brand ? 8 : 0" contentHeight="selfOrder.kiosk_image_brand ? 82 : 90" footerHeight="10">
+        <KioskTemplate headerHeight="selfOrder.kiosk_image_brand ? 8 : 0" contentHeight="selfOrder.kiosk_image_brand ? 80 : 88" footerHeight="12">
             <t t-set-slot="header">
                 <div class="header-image h-100" t-attf-style="background-image: url('data:image/png;base64,{{selfOrder.kiosk_image_brand}}')" />
             </t>
@@ -22,7 +22,7 @@
                                 alt="Product image"
                                 loading="lazy"
                                 onerror="this.remove()" />
-                            <span class="w-100 fs-3 text-truncate" t-esc="category.name" />
+                            <span class="w-100 fs-3 text-truncate mt-2" t-esc="category.name" />
                         </button>
                     </div>
                     <div class="product-list pb-4" t-ref="productsList">
@@ -40,12 +40,23 @@
 
             <t t-set-slot="footer">
                 <div class="d-flex flex-row w-100 h-100 gap-3">
-                    <button class="btn btn-secondary h-100 w-100 p-0 m-0 fs-2 text-uppercase" t-on-click="cancelOrder">CANCEL ORDER</button>
-                    <button t-attf-class="{{ selfOrder.currentOrder.lines.length === 0 ? 'd-none' : '' }} cart btn btn-primary h-100 w-100 d-flex flex-column justify-content-center align-items-center p-0 m-0 fs-2 text-uppercase" t-on-click="review">
-                        Review Order
-                        <span t-attf-class="total-price {{ selfOrder.currentOrder.lines.length === 0 ? 'd-none' : '' }} fs-4">
-                            Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_total)" />
-                        </span>
+                    <button class="btn btn-secondary h-100 px-5 d-flex flex-column justify-content-center align-items-center m-0 fs-2 text-uppercase" t-on-click="cancelOrder">CANCEL</button>
+                    <div class="footer-information d-flex flex-column flex-xl-row flex-grow-1 align-items-start align-items-xl-center justify-content-between px-4 py-5 py-xl-0 m-0 rounded border">
+                        <h2 class="fw-bolder m-0">Your Order</h2>
+                        <div class="footer-information-content d-flex align-items-center">
+                            <span class="info-number position-relative d-flex me-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="47" fill="none">
+                                    <path fill="var(--companyColor)" d="m35.289 26.702.703 18.887c.04.371-.067.702-.322.994a1.25 1.25 0 0 1-.963.417H1.293c-.388 0-.71-.14-.964-.417a1.25 1.25 0 0 1-.32-.994L.71 26.702h34.578Zm-1.867-15.398 1.726 15.398H.852l1.726-15.398c.04-.317.181-.586.422-.804.241-.219.529-.328.864-.328h5.14v2.543c0 .702.251 1.301.753 1.798a2.49 2.49 0 0 0 1.817.745 2.49 2.49 0 0 0 1.818-.745 2.437 2.437 0 0 0 .753-1.798v-2.543h7.71v2.543c0 .702.251 1.301.753 1.798a2.49 2.49 0 0 0 1.818.745 2.49 2.49 0 0 0 1.817-.745 2.437 2.437 0 0 0 .753-1.798v-2.543h5.14c.335 0 .623.11.864.328.24.218.381.487.422.805ZM25.71 7.63v5.086c0 .344-.127.642-.382.894a1.242 1.242 0 0 1-.903.377c-.348 0-.65-.125-.904-.377a1.216 1.216 0 0 1-.381-.894V7.629c0-1.404-.502-2.603-1.506-3.596-1.005-.993-2.216-1.49-3.635-1.49-1.419 0-2.63.497-3.634 1.49-1.005.993-1.506 2.192-1.506 3.596v5.086c0 .344-.128.642-.382.894a1.242 1.242 0 0 1-.904.377c-.348 0-.649-.125-.903-.377a1.216 1.216 0 0 1-.382-.894V7.629c0-2.106.753-3.904 2.26-5.394C14.053.745 15.87 0 18 0c2.128 0 3.946.745 5.452 2.235 1.506 1.49 2.259 3.288 2.259 5.394Z"/>
+                                </svg>
+                                <span class="position-absolute position-absolute top-50 start-50 translate-middle fs-3 fw-bolder pt-3 text-white">
+                                    <t t-esc="selfOrder.currentOrder.lines.length"/>
+                                </span>
+                            </span>
+                            <span class="total-price fs-1 fw-bolder mt-1"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amount_total)" /></span>
+                        </div>
+                    </div>
+                    <button t-attf-class="cart btn btn-primary h-100 d-flex flex-column justify-content-center align-items-center m-0 fs-2 text-uppercase" t-on-click="review">
+                        PAY
                     </button>
                 </div>
             </t>

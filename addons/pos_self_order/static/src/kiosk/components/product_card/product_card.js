@@ -45,7 +45,7 @@ export class ProductCard extends Component {
 
         requestAnimationFrame(() => {
             clonedCard.style.top = `${cartRect.top}px`;
-            clonedCard.style.left = `${cartRect.left * 1.25}px`;
+            clonedCard.style.left = `${cartRect.left * 0.35}px`;
             clonedCard.style.width = `${cardRect.width * 0.80}px`;
             clonedCard.style.height = `${cardRect.height * 0.80}px`;
             clonedCard.style.opacity = "0"; // Fading out the card
@@ -54,19 +54,6 @@ export class ProductCard extends Component {
         clonedCard.addEventListener('transitionend', () => {
             clonedCard.remove();
         });
-    }
-
-    scaleUpPrice() {
-        const priceElement = document.querySelector(".total-price");
-        console.log(priceElement);
-
-        if (!priceElement) return;    
-        
-        priceElement.classList.add('scale-up');
-    
-        setTimeout(() => {
-            priceElement.classList.remove('scale-up');
-        }, 600);
     }
     
     async selectProduct() {
@@ -78,7 +65,6 @@ export class ProductCard extends Component {
             this.router.navigate("product", { id: product.id });
         } else {
             this.flyToCart();
-            this.scaleUpPrice();
             const isProductInCart = this.selfOrder.currentOrder.lines.find(
                 (line) => line.product_id === product.id
             );
