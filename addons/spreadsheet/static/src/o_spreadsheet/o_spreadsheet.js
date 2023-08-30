@@ -294,6 +294,8 @@
     const FONT_SIZES = [6, 7, 8, 9, 10, 11, 12, 14, 18, 24, 36];
 
     //------------------------------------------------------------------------------
+    // Miscellaneous
+    //------------------------------------------------------------------------------
     /**
      * Stringify an object, like JSON.stringify, except that the first level of keys
      * is ordered.
@@ -1155,6 +1157,8 @@
             String(row + 1));
     }
 
+    // -----------------------------------------------------------------------------
+    // Date Type
     // -----------------------------------------------------------------------------
     // -----------------------------------------------------------------------------
     // Parsing
@@ -3424,6 +3428,39 @@
         }
     }
 
+    function createActions(menuItems) {
+        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
+    }
+    const uuidGenerator$2 = new UuidGenerator();
+    function createAction(item) {
+        const name = item.name;
+        const children = item.children;
+        const description = item.description;
+        const icon = item.icon;
+        return {
+            id: item.id || uuidGenerator$2.uuidv4(),
+            name: typeof name === "function" ? name : () => name,
+            isVisible: item.isVisible ? item.isVisible : () => true,
+            isEnabled: item.isEnabled ? item.isEnabled : () => true,
+            isActive: item.isActive,
+            execute: item.execute,
+            children: children
+                ? (env) => {
+                    return children
+                        .map((child) => (typeof child === "function" ? child(env) : child))
+                        .flat()
+                        .map(createAction);
+                }
+                : () => [],
+            isReadonlyAllowed: item.isReadonlyAllowed || false,
+            separator: item.separator || false,
+            icon: typeof icon === "function" ? icon : () => icon || "",
+            description: typeof description === "function" ? description : () => description || "",
+            textColor: item.textColor,
+            sequence: item.sequence || 0,
+        };
+    }
+
     class ChartJsComponent extends owl.Component {
         static template = "o-spreadsheet-ChartJsComponent";
         canvas = owl.useRef("graphContainer");
@@ -3698,7 +3735,7 @@
     }
   }
 `;
-    class ScorecardChart$1 extends owl.Component {
+    let ScorecardChart$1 = class ScorecardChart extends owl.Component {
         static template = "o-spreadsheet-ScorecardChart";
         ctx = document.createElement("canvas").getContext("2d");
         get runtime() {
@@ -3807,7 +3844,7 @@
                 ? baseline
                 : keyValue;
         }
-    }
+    };
     class ScorecardScalableElement {
         style;
         constructor(style = {}) {
@@ -6062,7 +6099,7 @@
             };
         }
         get childrenHaveIcon() {
-            return this.props.menuItems.some((menuItem) => !!menuItem.icon || !!menuItem.isActive);
+            return this.props.menuItems.some((menuItem) => !!this.getIconName(menuItem));
         }
         getIconName(menu) {
             if (menu.icon(this.env)) {
@@ -8239,8 +8276,8 @@
         FLOOR_MATH: FLOOR_MATH,
         FLOOR_PRECISE: FLOOR_PRECISE,
         ISEVEN: ISEVEN,
-        ISO_CEILING: ISO_CEILING,
         ISODD: ISODD,
+        ISO_CEILING: ISO_CEILING,
         LN: LN,
         MOD: MOD,
         MUNIT: MUNIT,
@@ -9138,10 +9175,10 @@
         __proto__: null,
         AVEDEV: AVEDEV,
         AVERAGE: AVERAGE,
-        AVERAGE_WEIGHTED: AVERAGE_WEIGHTED,
         AVERAGEA: AVERAGEA,
         AVERAGEIF: AVERAGEIF,
         AVERAGEIFS: AVERAGEIFS,
+        AVERAGE_WEIGHTED: AVERAGE_WEIGHTED,
         COUNT: COUNT,
         COUNTA: COUNTA,
         COVAR: COVAR,
@@ -9163,17 +9200,17 @@
         QUARTILE_INC: QUARTILE_INC,
         SMALL: SMALL,
         STDEV: STDEV,
-        STDEV_P: STDEV_P,
-        STDEV_S: STDEV_S,
         STDEVA: STDEVA,
         STDEVP: STDEVP,
         STDEVPA: STDEVPA,
+        STDEV_P: STDEV_P,
+        STDEV_S: STDEV_S,
         VAR: VAR,
-        VAR_P: VAR_P,
-        VAR_S: VAR_S,
         VARA: VARA,
         VARP: VARP,
-        VARPA: VARPA
+        VARPA: VARPA,
+        VAR_P: VAR_P,
+        VAR_S: VAR_S
     });
 
     function getMatchingCells(database, field, criteria, locale) {
@@ -9256,7 +9293,7 @@
         }
         // Example continuation: matchingRows = {0, 2}
         // 4 - return for each database row corresponding, the cells corresponding to the field parameter
-        const fieldCol = database[index].map((col) => col);
+        const fieldCol = database[index];
         // Example continuation:: fieldCol = ["C", "j", "k", 7]
         const matchingCells = [...matchingRows].map((x) => fieldCol[x + 1]);
         // Example continuation:: matchingCells = ["j", 7]
@@ -10256,9 +10293,14 @@
         ISOWEEKNUM: ISOWEEKNUM,
         MINUTE: MINUTE,
         MONTH: MONTH,
+        MONTH_END: MONTH_END,
+        MONTH_START: MONTH_START,
         NETWORKDAYS: NETWORKDAYS,
         NETWORKDAYS_INTL: NETWORKDAYS_INTL,
         NOW: NOW,
+        QUARTER: QUARTER,
+        QUARTER_END: QUARTER_END,
+        QUARTER_START: QUARTER_START,
         SECOND: SECOND,
         TIME: TIME,
         TIMEVALUE: TIMEVALUE,
@@ -10269,13 +10311,8 @@
         WORKDAY_INTL: WORKDAY_INTL,
         YEAR: YEAR,
         YEARFRAC: YEARFRAC,
-        MONTH_START: MONTH_START,
-        MONTH_END: MONTH_END,
-        QUARTER: QUARTER,
-        QUARTER_START: QUARTER_START,
-        QUARTER_END: QUARTER_END,
-        YEAR_START: YEAR_START,
-        YEAR_END: YEAR_END
+        YEAR_END: YEAR_END,
+        YEAR_START: YEAR_START
     });
 
     const DEFAULT_DELTA_ARG = 0;
@@ -12407,8 +12444,8 @@
         __proto__: null,
         ACCRINTM: ACCRINTM,
         AMORLINC: AMORLINC,
-        COUPDAYS: COUPDAYS,
         COUPDAYBS: COUPDAYBS,
+        COUPDAYS: COUPDAYS,
         COUPDAYSNC: COUPDAYSNC,
         COUPNCD: COUPNCD,
         COUPNUM: COUPNUM,
@@ -12436,17 +12473,17 @@
         PDURATION: PDURATION,
         PMT: PMT,
         PPMT: PPMT,
-        PV: PV,
         PRICE: PRICE,
         PRICEDISC: PRICEDISC,
         PRICEMAT: PRICEMAT,
+        PV: PV,
         RATE: RATE,
         RECEIVED: RECEIVED,
         RRI: RRI,
         SLN: SLN,
         SYD: SYD,
-        TBILLPRICE: TBILLPRICE,
         TBILLEQ: TBILLEQ,
+        TBILLPRICE: TBILLPRICE,
         TBILLYIELD: TBILLYIELD,
         VDB: VDB,
         XIRR: XIRR,
@@ -12611,6 +12648,7 @@
 
     var info = /*#__PURE__*/Object.freeze({
         __proto__: null,
+        ISBLANK: ISBLANK,
         ISERR: ISERR,
         ISERROR: ISERROR,
         ISLOGICAL: ISLOGICAL,
@@ -12618,7 +12656,6 @@
         ISNONTEXT: ISNONTEXT,
         ISNUMBER: ISNUMBER,
         ISTEXT: ISTEXT,
-        ISBLANK: ISBLANK,
         NA: NA
     });
 
@@ -13853,10 +13890,10 @@
         SEARCH: SEARCH,
         SPLIT: SPLIT,
         SUBSTITUTE: SUBSTITUTE,
+        TEXT: TEXT,
         TEXTJOIN: TEXTJOIN,
         TRIM: TRIM,
-        UPPER: UPPER,
-        TEXT: TEXT
+        UPPER: UPPER
     });
 
     // -----------------------------------------------------------------------------
@@ -15287,39 +15324,6 @@
         isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
         execute: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
     };
-
-    function createActions(menuItems) {
-        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
-    }
-    const uuidGenerator$2 = new UuidGenerator();
-    function createAction(item) {
-        const name = item.name;
-        const children = item.children;
-        const description = item.description;
-        const icon = item.icon;
-        return {
-            id: item.id || uuidGenerator$2.uuidv4(),
-            name: typeof name === "function" ? name : () => name,
-            isVisible: item.isVisible ? item.isVisible : () => true,
-            isEnabled: item.isEnabled ? item.isEnabled : () => true,
-            isActive: item.isActive,
-            execute: item.execute,
-            children: children
-                ? (env) => {
-                    return children
-                        .map((child) => (typeof child === "function" ? child(env) : child))
-                        .flat()
-                        .map(createAction);
-                }
-                : () => [],
-            isReadonlyAllowed: item.isReadonlyAllowed || false,
-            separator: item.separator || false,
-            icon: typeof icon === "function" ? icon : () => icon || "",
-            description: typeof description === "function" ? description : () => description || "",
-            textColor: item.textColor,
-            sequence: item.sequence || 0,
-        };
-    }
 
     /**
      * The class Registry is extended in order to add the function addChild
@@ -16835,8 +16839,6 @@
         return "year";
     }
 
-    // @ts-ignore
-    const Chart = window.Chart;
     class LineChart extends AbstractChart {
         dataSets;
         labelRange;
@@ -17013,7 +17015,9 @@
                 generateLabels(chart) {
                     // color the legend labels with the dataset color, without any transparency
                     const { data } = chart;
-                    const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                    /** @ts-ignore */
+                    const labels = window.Chart.defaults.plugins.legend.labels
+                        .generateLabels(chart);
                     for (const [index, label] of labels.entries()) {
                         label.fillStyle = data.datasets[index].borderColor;
                     }
@@ -18831,26 +18835,26 @@
 
     var ACTION_EDIT = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        undo: undo,
-        redo: redo,
+        clearCols: clearCols,
+        clearRows: clearRows,
         copy: copy,
         cut: cut,
+        deleteCellShiftLeft: deleteCellShiftLeft,
+        deleteCellShiftUp: deleteCellShiftUp,
+        deleteCells: deleteCells,
+        deleteCol: deleteCol,
+        deleteCols: deleteCols,
+        deleteRow: deleteRow,
+        deleteRows: deleteRows,
+        deleteValues: deleteValues,
+        findAndReplace: findAndReplace,
+        mergeCells: mergeCells,
         paste: paste,
         pasteSpecial: pasteSpecial,
-        pasteSpecialValue: pasteSpecialValue,
         pasteSpecialFormat: pasteSpecialFormat,
-        findAndReplace: findAndReplace,
-        deleteValues: deleteValues,
-        deleteRows: deleteRows,
-        deleteRow: deleteRow,
-        clearRows: clearRows,
-        deleteCols: deleteCols,
-        deleteCol: deleteCol,
-        clearCols: clearCols,
-        deleteCells: deleteCells,
-        deleteCellShiftUp: deleteCellShiftUp,
-        deleteCellShiftLeft: deleteCellShiftLeft,
-        mergeCells: mergeCells
+        pasteSpecialValue: pasteSpecialValue,
+        redo: redo,
+        undo: undo
     });
 
     const insertRow = {
@@ -19709,42 +19713,42 @@
 
     var ACTION_FORMAT = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        formatNumberAutomatic: formatNumberAutomatic,
-        formatNumberNumber: formatNumberNumber,
-        formatPercent: formatPercent,
-        formatNumberPercent: formatNumberPercent,
-        formatNumberCurrency: formatNumberCurrency,
-        formatNumberCurrencyRounded: formatNumberCurrencyRounded,
-        formatCustomCurrency: formatCustomCurrency,
-        formatNumberDate: formatNumberDate,
-        formatNumberTime: formatNumberTime,
-        formatNumberDateTime: formatNumberDateTime,
-        formatNumberDuration: formatNumberDuration,
-        incraseDecimalPlaces: incraseDecimalPlaces,
+        clearFormat: clearFormat,
         decraseDecimalPlaces: decraseDecimalPlaces,
-        formatBold: formatBold,
-        formatItalic: formatItalic,
-        formatUnderline: formatUnderline,
-        formatStrikethrough: formatStrikethrough,
-        formatFontSize: formatFontSize,
+        fillColor: fillColor,
         formatAlignment: formatAlignment,
+        formatAlignmentBottom: formatAlignmentBottom,
+        formatAlignmentCenter: formatAlignmentCenter,
         formatAlignmentHorizontal: formatAlignmentHorizontal,
         formatAlignmentLeft: formatAlignmentLeft,
-        formatAlignmentCenter: formatAlignmentCenter,
-        formatAlignmentRight: formatAlignmentRight,
-        formatAlignmentVertical: formatAlignmentVertical,
-        formatAlignmentTop: formatAlignmentTop,
         formatAlignmentMiddle: formatAlignmentMiddle,
-        formatAlignmentBottom: formatAlignmentBottom,
-        formatWrappingIcon: formatWrappingIcon,
+        formatAlignmentRight: formatAlignmentRight,
+        formatAlignmentTop: formatAlignmentTop,
+        formatAlignmentVertical: formatAlignmentVertical,
+        formatBold: formatBold,
+        formatCF: formatCF,
+        formatCustomCurrency: formatCustomCurrency,
+        formatFontSize: formatFontSize,
+        formatItalic: formatItalic,
+        formatNumberAutomatic: formatNumberAutomatic,
+        formatNumberCurrency: formatNumberCurrency,
+        formatNumberCurrencyRounded: formatNumberCurrencyRounded,
+        formatNumberDate: formatNumberDate,
+        formatNumberDateTime: formatNumberDateTime,
+        formatNumberDuration: formatNumberDuration,
+        formatNumberNumber: formatNumberNumber,
+        formatNumberPercent: formatNumberPercent,
+        formatNumberTime: formatNumberTime,
+        formatPercent: formatPercent,
+        formatStrikethrough: formatStrikethrough,
+        formatUnderline: formatUnderline,
         formatWrapping: formatWrapping,
+        formatWrappingClip: formatWrappingClip,
+        formatWrappingIcon: formatWrappingIcon,
         formatWrappingOverflow: formatWrappingOverflow,
         formatWrappingWrap: formatWrappingWrap,
-        formatWrappingClip: formatWrappingClip,
-        textColor: textColor,
-        fillColor: fillColor,
-        formatCF: formatCF,
-        clearFormat: clearFormat
+        incraseDecimalPlaces: incraseDecimalPlaces,
+        textColor: textColor
     });
 
     function interactiveFreezeColumnsRows(env, dimension, base) {
@@ -19962,25 +19966,25 @@
 
     var ACTION_VIEW = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        hideCols: hideCols,
-        unhideCols: unhideCols,
-        unhideAllCols: unhideAllCols,
-        hideRows: hideRows,
-        unhideRows: unhideRows,
-        unhideAllRows: unhideAllRows,
-        unFreezePane: unFreezePane,
-        freezePane: freezePane,
-        unFreezeRows: unFreezeRows,
-        freezeFirstRow: freezeFirstRow,
-        freezeSecondRow: freezeSecondRow,
-        freezeCurrentRow: freezeCurrentRow,
-        unFreezeCols: unFreezeCols,
-        freezeFirstCol: freezeFirstCol,
-        freezeSecondCol: freezeSecondCol,
+        createRemoveFilter: createRemoveFilter,
         freezeCurrentCol: freezeCurrentCol,
-        viewGridlines: viewGridlines,
+        freezeCurrentRow: freezeCurrentRow,
+        freezeFirstCol: freezeFirstCol,
+        freezeFirstRow: freezeFirstRow,
+        freezePane: freezePane,
+        freezeSecondCol: freezeSecondCol,
+        freezeSecondRow: freezeSecondRow,
+        hideCols: hideCols,
+        hideRows: hideRows,
+        unFreezeCols: unFreezeCols,
+        unFreezePane: unFreezePane,
+        unFreezeRows: unFreezeRows,
+        unhideAllCols: unhideAllCols,
+        unhideAllRows: unhideAllRows,
+        unhideCols: unhideCols,
+        unhideRows: unhideRows,
         viewFormulas: viewFormulas,
-        createRemoveFilter: createRemoveFilter
+        viewGridlines: viewGridlines
     });
 
     const colMenuRegistry = new MenuItemRegistry();
@@ -20985,34 +20989,25 @@
     }
 
     function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
-        const _onMouseDown = (ev) => {
-            ev.preventDefault();
-            onMouseDown(ev);
-        };
-        const _onMouseMove = (ev) => {
-            ev.preventDefault();
-            onMouseMove(ev);
-        };
         const _onMouseUp = (ev) => {
-            ev.preventDefault();
             onMouseUp(ev);
-            window.removeEventListener("mousedown", _onMouseDown);
+            window.removeEventListener("mousedown", onMouseDown);
             window.removeEventListener("mouseup", _onMouseUp);
             window.removeEventListener("dragstart", _onDragStart);
-            window.removeEventListener("mousemove", _onMouseMove);
-            window.removeEventListener("wheel", _onMouseMove);
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("wheel", onMouseMove);
         };
         function _onDragStart(ev) {
             ev.preventDefault();
         }
-        window.addEventListener("mousedown", _onMouseDown);
+        window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", _onMouseUp);
         window.addEventListener("dragstart", _onDragStart);
-        window.addEventListener("mousemove", _onMouseMove);
+        window.addEventListener("mousemove", onMouseMove);
         // mouse wheel on window is by default a passive event.
         // preventDefault() is not allowed in passive event handler.
         // https://chromestatus.com/feature/6662647093133312
-        window.addEventListener("wheel", _onMouseMove, { passive: false });
+        window.addEventListener("wheel", onMouseMove, { passive: false });
     }
     /**
      * Function to be used during a mousedown event, this function allows to
@@ -26534,7 +26529,7 @@
         color: String,
     };
 
-    class ScrollBar$1 {
+    let ScrollBar$1 = class ScrollBar {
         direction;
         el;
         constructor(el, direction) {
@@ -26552,7 +26547,7 @@
                 this.el.scrollTop = value;
             }
         }
-    }
+    };
 
     css /* scss */ `
   .o-scrollbar {
@@ -27034,7 +27029,11 @@
             }
             let prevCol = col;
             let prevRow = row;
-            const onMouseMove = (col, row) => {
+            const onMouseMove = (col, row, ev) => {
+                // When selecting cells during the edition, we don't want to avoid the default
+                // browser behaviour that will select the text inside the composer
+                // (see related commit msg for more information)
+                ev.preventDefault();
                 if ((col !== prevCol && col != -1) || (row !== prevRow && row != -1)) {
                     prevCol = col === -1 ? prevCol : col;
                     prevRow = row === -1 ? prevRow : row;
@@ -46971,6 +46970,11 @@
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
             this.bindModelEvents();
+            owl.onWillUpdateProps((nextProps) => {
+                if (nextProps.model !== this.props.model) {
+                    throw new Error("Changing the props model is not supported at the moment.");
+                }
+            });
             owl.onMounted(() => {
                 this.checkViewportSize();
             });
@@ -50744,6 +50748,8 @@
         isDefined: isDefined$1,
         lazy,
         genericRepeat,
+        createAction,
+        createActions,
     };
     const links = {
         isMarkdownLink,
@@ -50768,6 +50774,7 @@
         ScorecardChartConfigPanel,
         ScorecardChartDesignPanel,
         FigureComponent,
+        Menu,
     };
     function addFunction(functionName, functionDescription) {
         functionRegistry.add(functionName, functionDescription);
@@ -50813,12 +50820,10 @@
     exports.setTranslationMethod = setTranslationMethod;
     exports.tokenize = tokenize;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
 
-
-    __info__.version = '16.5.0-alpha.5';
-    __info__.date = '2023-08-17T11:19:14.474Z';
-    __info__.hash = 'e0cb3aa';
+    __info__.version = '16.5.0-alpha.6';
+    __info__.date = '2023-08-30T08:46:04.369Z';
+    __info__.hash = '';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
