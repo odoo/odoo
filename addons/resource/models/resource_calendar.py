@@ -447,13 +447,16 @@ class ResourceCalendar(models.Model):
 
     def _unavailable_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the unavailable intervals between the given datetimes. """
+        if not self:
+            return {}
         if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
         else:
             resources_list = list(resources)
-
-        resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources, domain, tz)
+        resources_work_intervals = {}
+        for record in self:
+            resources_work_intervals.update(record._work_intervals_batch(start_dt, end_dt, resources, domain, tz))
         result = {}
         for resource in resources_list:
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
