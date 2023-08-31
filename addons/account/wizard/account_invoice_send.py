@@ -156,11 +156,13 @@ class AccountInvoiceSend(models.TransientModel):
             default_lang = get_lang(self.env)
             for lang in sorted((set(langs)) or [default_lang]):
                 active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
-                self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
+                self_lang = self.with_context(active_ids=active_ids_lang, lang=get_lang(self.env, lang).code)
                 self_lang.onchange_template_id()
                 self_lang._send_email()
         else:
-            self._send_email()
+            active_record = self.env[self.model].browse(self.res_id)
+            lang = get_lang(self.env, active_record.partner_id.lang).code
+            self.with_context(lang=lang)._send_email()
         if self.is_print:
             return self._print_document()
         return {'type': 'ir.actions.act_window_close'}
