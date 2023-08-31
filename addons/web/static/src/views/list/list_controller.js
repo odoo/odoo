@@ -329,6 +329,13 @@ export class ListController extends Component {
                 description: _t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
             },
+            duplicate: {
+                isAvailable: () => this.activeActions.duplicate && !isM2MGrouped,
+                sequence: 35,
+                icon: "fa fa-clone",
+                description: _t("Duplicate"),
+                callback: () => this.duplicateRecords(),
+            },
             delete: {
                 isAvailable: () => this.activeActions.delete && !isM2MGrouped,
                 sequence: 40,
@@ -514,6 +521,10 @@ export class ListController extends Component {
             return this.model.root.archive(true);
         }
         return this.model.root.unarchive(true);
+    }
+
+    async duplicateRecords(){
+        return this.model.root.duplicateRecords()
     }
 
     get deleteConfirmationDialogProps() {
