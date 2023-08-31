@@ -215,14 +215,14 @@ class TestMailTools(MailCommon):
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('Evelyne The Goat', 'evelyne.gargouillis@test.example.com')],
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
-            # text containing email -> probably not designed for that
-            [('', 'Hello alfred.astaire@test.example.comhowareyou?')],
-            [('', 'Hello alfred.astaire@test.example.com')],
-            # text containing emails -> probably not designed for that
+            # text containing email -> fallback on parsing to extract text from email
+            [('Hello', 'alfred.astaire@test.example.comhowareyou?')],
+            [('Hello', 'alfred.astaire@test.example.com')],
             [('Hello Fredo', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
-            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('', 'and evelyne.gargouillis@test.example.com')],
+            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('and', 'evelyne.gargouillis@test.example.com')],
             # falsy -> probably not designed for that
-            [], [('', "j'adore écrire des@gmail.comou"), ('', '@gmail.com')], [],
+            [],
+            [('j\'adore écrire', "des@gmail.comou"), ('', '@gmail.com')], [],
         ]
 
         for src, exp in zip(self.sources, expected):
