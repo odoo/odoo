@@ -7,16 +7,7 @@ import {
 } from "@mail/core/common/chat_window_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import {
-    afterNextRender,
-    click,
-    contains,
-    insertText,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
-
-import { makeDeferred } from "@web/../tests/helpers/utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("chat window: new message");
 
@@ -87,7 +78,6 @@ QUnit.test(
                 ],
             },
         ]);
-        const imSearchDef = makeDeferred();
         patchUiSize({ width: 1920 });
         assert.ok(
             CHAT_WINDOW_END_GAP_WIDTH * 2 +
@@ -96,44 +86,23 @@ QUnit.test(
                 1920,
             "should have enough space to open 3 chat windows simultaneously"
         );
-        await start({
-            mockRPC(route, args) {
-                if (args.method === "im_search") {
-                    imSearchDef.resolve();
-                }
-            },
-        });
+        await start();
         // open "new message" chat window
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button", { text: "New Message" });
-        await contains(".o-mail-ChatWindow-name", { text: "New message" });
         await contains(".o-mail-ChatWindow", { count: 2 });
+        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "New message" });
         await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector");
-        assert.ok(
-            Array.from(document.querySelectorAll(".o-mail-ChatWindow"))
-                .pop()
-                .textContent.includes("New message")
-        );
-
         // open channel-2
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name", { text: "channel-2" });
         await contains(".o-mail-ChatWindow", { count: 3 });
-        assert.ok(
-            Array.from(document.querySelectorAll(".o-mail-ChatWindow"))[1].textContent.includes(
-                "New message"
-            )
-        );
-
+        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "New message" });
         // search for a user in "new message" autocomplete
-        await afterNextRender(async () => {
-            await insertText(".o-discuss-ChannelSelector input", "131");
-            await imSearchDef;
-        });
+        await insertText(".o-discuss-ChannelSelector input", "131");
         await click(".o-discuss-ChannelSelector-suggestion a", { text: "Partner 131" });
         await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
-
-        assert.strictEqual($(".o-mail-ChatWindow-name:eq(1)").text(), "Partner 131");
+        await contains(".o-mail-ChatWindow-name:eq(1)", { text: "Partner 131" });
     }
 );
 

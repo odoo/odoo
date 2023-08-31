@@ -2,7 +2,7 @@
 
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { serializeDate } from "@web/core/l10n/dates";
 
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
@@ -94,10 +94,6 @@ QUnit.module("test_mail", {}, function () {
         },
     });
 
-    var activityDateFormat = function (date) {
-        return DateTime.now().toLocaleString({ day: "numeric", month: "short" });
-    };
-
     QUnit.test("activity view: simple activity rendering", async function (assert) {
         assert.expect(14);
         const mailTestActivityIds = pyEnv["mail.test.activity"].search([]);
@@ -137,7 +133,7 @@ QUnit.module("test_mail", {}, function () {
 
         const $activity = $(document.querySelector(".o_activity_view"));
         assert.containsOnce($activity, "table", "should have a table");
-        var $th1 = $activity.find("table thead tr:first th:nth-child(2)");
+        const $th1 = $activity.find("table thead tr:first th:nth-child(2)");
         assert.containsOnce(
             $th1,
             "span:first:contains(Email)",
@@ -160,7 +156,7 @@ QUnit.module("test_mail", {}, function () {
             "1 Today",
             "the counter progressbars should be correctly displayed"
         );
-        var $th2 = $activity.find("table thead tr:first th:nth-child(3)");
+        const $th2 = $activity.find("table thead tr:first th:nth-child(3)");
         assert.containsOnce(
             $th2,
             "span:first:contains(Call)",
@@ -187,7 +183,7 @@ QUnit.module("test_mail", {}, function () {
             'should contain "Meeting Room Furnitures" in first colum of second row'
         );
 
-        var today = activityDateFormat(new Date());
+        const today = DateTime.now().toLocaleString({ day: "numeric", month: "short" });
 
         assert.ok(
             $activity.find(
@@ -197,7 +193,7 @@ QUnit.module("test_mail", {}, function () {
             ).length,
             "should contain an activity for today in second cell of first line " + today
         );
-        var td = "table tbody tr:nth-child(1) td.o_activity_empty_cell";
+        const td = "table tbody tr:nth-child(1) td.o_activity_empty_cell";
         assert.containsN(
             $activity,
             td,
@@ -261,26 +257,18 @@ QUnit.module("test_mail", {}, function () {
         }
     );
 
-    QUnit.test("activity view: no content rendering", async function (assert) {
-        assert.expect(2);
-
-        const { openView, pyEnv } = await start({
-            serverData,
-        });
+    QUnit.test("activity view: no content rendering", async function () {
+        const { openView, pyEnv } = await start({ serverData });
         // reset incompatible setup
         pyEnv["mail.activity.type"].unlink(pyEnv["mail.activity.type"].search([]));
         await openView({
             res_model: "mail.test.activity",
             views: [[false, "activity"]],
         });
-        const $activity = $(document);
-
-        assert.containsOnce($activity, ".o_view_nocontent", "should display the no content helper");
-        assert.strictEqual(
-            $activity.find(".o_view_nocontent .o_view_nocontent_empty_folder").text().trim(),
-            "No data to display",
-            "should display the no content helper text"
-        );
+        await contains(".o_view_nocontent");
+        await contains(".o_view_nocontent .o_view_nocontent_empty_folder", {
+            text: "No data to display",
+        });
     });
 
     QUnit.test("activity view: batch send mail on activity", async function (assert) {
@@ -600,7 +588,7 @@ QUnit.module("test_mail", {}, function () {
             patchWithCleanup(env.services.action, {
                 doAction(action, options) {
                     assert.step("doAction");
-                    var expectedAction = {
+                    const expectedAction = {
                         context: {
                             default_res_id: mailTestActivityId1,
                             default_res_model: "mail.test.activity",
@@ -631,7 +619,7 @@ QUnit.module("test_mail", {}, function () {
             );
             await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
             // search create dialog
-            var $modal = $(".modal-lg");
+            const $modal = $(".modal-lg");
             assert.strictEqual(
                 $modal.find(".o_data_row").length,
                 3,
@@ -677,7 +665,7 @@ QUnit.module("test_mail", {}, function () {
         await testUtils.dom.click(
             document.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
         );
-        assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
+        await contains(".modal.o_technical_modal", "Activity Modal should be opened");
 
         await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
         await contains(".modal.o_technical_modal", { count: 0 });

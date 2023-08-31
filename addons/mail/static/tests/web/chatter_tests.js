@@ -311,7 +311,7 @@ QUnit.test("base rendering when chatter has no attachment", async (assert) => {
     await contains(".o-mail-Message", { count: 30 });
 });
 
-QUnit.test("base rendering when chatter has no record", async (assert) => {
+QUnit.test("base rendering when chatter has no record", async () => {
     const { openView } = await start();
     openView({
         res_model: "res.partner",
@@ -322,9 +322,8 @@ QUnit.test("base rendering when chatter has no record", async (assert) => {
     await contains(".o-mail-AttachmentBox", { count: 0 });
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Message");
-    assert.strictEqual($(".o-mail-Message-body").text(), "Creating a new record...");
+    await contains(".o-mail-Message-body", { text: "Creating a new record..." });
     await contains("button", { count: 0, text: "Load More" });
-
     await contains(".o-mail-Message-actions");
     await contains(".o-mail-Message-actions i", { count: 0 });
 });

@@ -6,7 +6,7 @@ import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("message (patch)");
 
-QUnit.test("Sent", async (assert) => {
+QUnit.test("Sent", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -26,19 +26,12 @@ QUnit.test("Sent", async (assert) => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailNotificationPopover");
-    await contains(".o-snailmail-SnailmailNotificationPopover i");
-    assert.hasClass($(".o-snailmail-SnailmailNotificationPopover i"), "fa-check");
-    assert.strictEqual($(".o-snailmail-SnailmailNotificationPopover").text(), "Sent");
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-check");
+    await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Sent" });
 });
 
-QUnit.test("Canceled", async (assert) => {
+QUnit.test("Canceled", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -58,19 +51,12 @@ QUnit.test("Canceled", async (assert) => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailNotificationPopover");
-    await contains(".o-snailmail-SnailmailNotificationPopover i");
-    assert.hasClass($(".o-snailmail-SnailmailNotificationPopover i"), "fa-trash-o");
-    assert.strictEqual($(".o-snailmail-SnailmailNotificationPopover").text(), "Canceled");
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-trash-o");
+    await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Canceled" });
 });
 
-QUnit.test("Pending", async (assert) => {
+QUnit.test("Pending", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
@@ -90,16 +76,9 @@ QUnit.test("Pending", async (assert) => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailNotificationPopover");
-    await contains(".o-snailmail-SnailmailNotificationPopover i");
-    assert.hasClass($(".o-snailmail-SnailmailNotificationPopover i"), "fa-clock-o");
-    assert.strictEqual($(".o-snailmail-SnailmailNotificationPopover").text(), "Awaiting Dispatch");
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailNotificationPopover i.fa-clock-o");
+    await contains(".o-snailmail-SnailmailNotificationPopover", { text: "Awaiting Dispatch" });
 });
 
 QUnit.test("No Price Available", async (assert) => {
@@ -133,18 +112,10 @@ QUnit.test("No Price Available", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailError");
-    assert.strictEqual(
-        $(".o-snailmail-SnailmailError .modal-body").text().trim(),
-        "The country to which you want to send the letter is not supported by our service."
-    );
-    await contains("button", { text: "Cancel letter" });
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailError .modal-body", {
+        text: "The country to which you want to send the letter is not supported by our service.",
+    });
     await click("button", { text: "Cancel letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
     assert.verifySteps(["cancel_letter"]);
@@ -181,18 +152,10 @@ QUnit.test("Credit Error", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailError");
-    assert.strictEqual(
-        $(".o-snailmail-SnailmailError p").text().trim(),
-        "The letter could not be sent due to insufficient credits on your IAP account."
-    );
-    await contains("button", { text: "Re-send letter" });
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailError p", {
+        text: "The letter could not be sent due to insufficient credits on your IAP account.",
+    });
     await contains("button", { text: "Cancel letter" });
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
@@ -230,18 +193,10 @@ QUnit.test("Trial Error", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    await click(".o-mail-Message-notification");
-    await contains(".o-snailmail-SnailmailError");
-    assert.strictEqual(
-        $(".o-snailmail-SnailmailError p").text().trim(),
-        "You need credits on your IAP account to send a letter."
-    );
-    await contains("button", { text: "Re-send letter" });
+    await click(".o-mail-Message-notification i.fa-paper-plane");
+    await contains(".o-snailmail-SnailmailError p", {
+        text: "You need credits on your IAP account to send a letter.",
+    });
     await contains("button", { text: "Cancel letter" });
     await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", { count: 0 });
@@ -278,12 +233,7 @@ QUnit.test("Format Error", async (assert) => {
             openFormatErrorActionDef.resolve();
         },
     });
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    click(".o-mail-Message-notification").then(() => {});
+    await click(".o-mail-Message-notification i.fa-paper-plane");
     await openFormatErrorActionDef;
     assert.verifySteps(["do_action"]);
 });
@@ -317,12 +267,7 @@ QUnit.test("Missing Required Fields", async (assert) => {
             openRequiredFieldsActionDef.resolve();
         },
     });
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message-notification");
-    await contains(".o-mail-Message-notification i");
-    assert.hasClass($(".o-mail-Message-notification i"), "fa-paper-plane");
-
-    click(".o-mail-Message-notification").then(() => {});
+    await click(".o-mail-Message-notification i.fa-paper-plane");
     await openRequiredFieldsActionDef;
     assert.verifySteps(["do_action"]);
 });
