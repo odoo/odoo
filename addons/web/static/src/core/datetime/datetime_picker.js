@@ -180,11 +180,12 @@ const PRECISION_LEVELS = new Map()
                     // Generate all days of the week
                     for (let d = 0; d < 7; d++) {
                         const day = startOfNextWeek.plus({ day: d });
+                        const range = [day, day.endOf("day")];
                         const dayItem = toDateItem({
                             isOutOfRange: !isInRange(day, monthRange),
-                            isInvalid: !isInRange(day, [minDate, maxDate]),
+                            isInvalid: !isInRange(range, [minDate, maxDate]),
                             label: "day",
-                            range: [day, day.endOf("day")],
+                            range,
                         });
                         weekDayItems.push(dayItem);
                         if (d === 6) {
@@ -222,10 +223,11 @@ const PRECISION_LEVELS = new Map()
             const startOfYear = date.startOf("year");
             return numberRange(0, 12).map((i) => {
                 const startOfMonth = startOfYear.plus({ month: i });
+                const range = [startOfMonth, startOfMonth.endOf("month")];
                 return toDateItem({
-                    isInvalid: !isInRange(startOfMonth, [minDate, maxDate]),
+                    isInvalid: !isInRange(range, [minDate, maxDate]),
                     label: "monthShort",
-                    range: [startOfMonth, startOfMonth.endOf("month")],
+                    range,
                 });
             });
         },
@@ -240,11 +242,12 @@ const PRECISION_LEVELS = new Map()
             const startOfDecade = date.startOf("year").set({ year: getStartOfDecade(date) });
             return numberRange(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
                 const startOfYear = startOfDecade.plus({ year: i });
+                const range = [startOfYear, startOfYear.endOf("year")];
                 return toDateItem({
                     isOutOfRange: i < 0 || i >= GRID_COUNT,
-                    isInvalid: !isInRange(startOfYear, [minDate, maxDate]),
+                    isInvalid: !isInRange(range, [minDate, maxDate]),
                     label: "year",
-                    range: [startOfYear, startOfYear.endOf("year")],
+                    range,
                 });
             });
         },
@@ -259,11 +262,12 @@ const PRECISION_LEVELS = new Map()
             const startOfCentury = date.startOf("year").set({ year: getStartOfCentury(date) });
             return numberRange(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
                 const startOfDecade = startOfCentury.plus({ year: i * 10 });
+                const range = [startOfDecade, startOfDecade.plus({ year: 10, millisecond: -1 })];
                 return toDateItem({
                     label: "year",
                     isOutOfRange: i < 0 || i >= GRID_COUNT,
-                    isInvalid: !isInRange(startOfDecade, [minDate, maxDate]),
-                    range: [startOfDecade, startOfDecade.plus({ year: 10, millisecond: -1 })],
+                    isInvalid: !isInRange(range, [minDate, maxDate]),
+                    range,
                 });
             });
         },
@@ -403,6 +407,7 @@ export class DateTimePicker extends Component {
 
         this.adjustFocus(this.values, props.focusedDateIndex);
         this.handle12HourSystem();
+        this.state.timeValues = this.state.timeValues.map((timeValue) => timeValue.map(String));
     }
 
     onWillRender() {

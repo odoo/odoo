@@ -102,6 +102,331 @@ QUnit.module("Components", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("minDate: correct days/month/year/decades are disabled", async (assert) => {
+        const fixture = getFixture();
+        await mountPicker({
+            minDate: DateTime.fromISO("2023-04-20T00:00:00.000"),
+        });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, -1],
+                        [-2, -3, -4, -5, -6, -7, -8],
+                        [-9, -10, -11, -12, -13, -14, -15],
+                        [-16, -17, -18, -19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, 29],
+                        [30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        assert.deepEqual(getTexts(hourSelect, "option"), range(24, String));
+        assert.deepEqual(
+            getTexts(minuteSelect, "option"),
+            range(12, (i) => pad2(i * 5))
+        );
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2023");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+
+            ["Jan", "Feb", "Mar"],
+            "correct months are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "correct months are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "Apr");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2019 - 2030");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+
+            ["2019", "2020", "2021", "2022"],
+            "correct years are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "correct years are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2023");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "1990 - 2100");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            ["1990", "2000", "2010"],
+            "correct decades are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+
+            ["2020", "2030", "2040", "2050", "2060", "2070", "2080", "2090", "2100"],
+            "correct decades are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2020");
+
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, -1],
+                        [-2, -3, -4, -5, -6, -7, -8],
+                        [-9, -10, -11, -12, -13, -14, -15],
+                        [-16, -17, -18, -19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, 29],
+                        [30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+    });
+
+    QUnit.test("maxDate: correct days/month/year/decades are disabled", async (assert) => {
+        const fixture = getFixture();
+        await mountPicker({
+            maxDate: DateTime.fromISO("2023-04-28T00:00:00.000"),
+        });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, 1],
+                        [2, 3, 4, 5, 6, 7, 8],
+                        [9, 10, 11, 12, 13, 14, 15],
+                        [16, 17, 18, 19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, -29],
+                        [-30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        assert.deepEqual(getTexts(hourSelect, "option"), range(24, String));
+        assert.deepEqual(
+            getTexts(minuteSelect, "option"),
+            range(12, (i) => pad2(i * 5))
+        );
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2023");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "correct months are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["Jan", "Feb", "Mar", "Apr"],
+            "correct months are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "Apr");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2019 - 2030");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+
+            ["2024", "2025", "2026", "2027", "2028", "2029", "2030"],
+            "correct years are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["2019", "2020", "2021", "2022", "2023"],
+            "correct years are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2023");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "1990 - 2100");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            ["2030", "2040", "2050", "2060", "2070", "2080", "2090", "2100"],
+            "correct decades are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+
+            ["1990", "2000", "2010", "2020"],
+            "correct decades are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2020");
+
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, 1],
+                        [2, 3, 4, 5, 6, 7, 8],
+                        [9, 10, 11, 12, 13, 14, 15],
+                        [16, 17, 18, 19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, -29],
+                        [-30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+    });
+
+    QUnit.test("min+max date: correct days/month/year/decades are disabled", async (assert) => {
+        const fixture = getFixture();
+        await mountPicker({
+            minDate: DateTime.fromISO("2023-04-20T00:00:00.000"),
+            maxDate: DateTime.fromISO("2023-04-28T00:00:00.000"),
+        });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, -1],
+                        [-2, -3, -4, -5, -6, -7, -8],
+                        [-9, -10, -11, -12, -13, -14, -15],
+                        [-16, -17, -18, -19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, -29],
+                        [-30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        assert.deepEqual(getTexts(hourSelect, "option"), range(24, String));
+        assert.deepEqual(
+            getTexts(minuteSelect, "option"),
+            range(12, (i) => pad2(i * 5))
+        );
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2023");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            ["Jan", "Feb", "Mar", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            "correct months are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["Apr"],
+            "correct months are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "Apr");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "2019 - 2030");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            [
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+            ],
+            "correct years are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+            ["2023"],
+            "correct years are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2023");
+
+        await click(fixture, ".o_zoom_out");
+        assert.equal(fixture.querySelector(".o_datetime_picker_header").textContent, "1990 - 2100");
+        assert.deepEqual(
+            getTexts(".o_date_item_cell[disabled]"),
+            [
+                "1990",
+                "2000",
+                "2010",
+                "2030",
+                "2040",
+                "2050",
+                "2060",
+                "2070",
+                "2080",
+                "2090",
+                "2100",
+            ],
+            "correct decades are disabled"
+        );
+        assert.deepEqual(
+            getTexts(".o_date_item_cell:not([disabled])"),
+
+            ["2020"],
+            "correct decades are enabled"
+        );
+        assert.equal($(fixture).find(".o_date_item_cell.o_today").text(), "2020");
+
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+        await click(fixture, ".o_today");
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, -1],
+                        [-2, -3, -4, -5, -6, -7, -8],
+                        [-9, -10, -11, -12, -13, -14, -15],
+                        [-16, -17, -18, -19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, -29],
+                        [-30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+    });
+
     QUnit.test("twelve-hour clock", async (assert) => {
         useTwelveHourClockFormat();
 
