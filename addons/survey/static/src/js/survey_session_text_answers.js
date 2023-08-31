@@ -2,8 +2,9 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
-import time from "@web/legacy/js/core/time";
 import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
 
 publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
     init: function (parent, options) {
@@ -40,9 +41,11 @@ publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
                         textValue.substring(0, 22) + '...' :
                         textValue;
                 } else if (self.questionType === 'date') {
-                    textValue = moment(textValue).format(time.getLangDateFormat());
+                    textValue = formatDate(DateTime.fromFormat(textValue, "yyyy-MM-dd"));
                 } else if (self.questionType === 'datetime') {
-                    textValue = moment(textValue).format(time.getLangDatetimeFormat());
+                    textValue = formatDateTime(
+                        DateTime.fromFormat(textValue, "yyyy-MM-dd HH:mm:ss")
+                    );
                 }
 
                 var $textAnswer = $(renderToElement('survey.survey_session_text_answer', {

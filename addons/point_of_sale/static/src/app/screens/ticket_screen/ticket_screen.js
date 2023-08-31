@@ -367,7 +367,13 @@ export class TicketScreen extends Component {
         return this._getOrderList().filter(predicate);
     }
     getDate(order) {
-        return deserializeDate(order.validation_date).toFormat("yyyy-MM-dd HH:mm a");
+        let validation_date = order.validation_date || DateTime.now();
+        if (typeof validation_date === "string") {
+            validation_date = DateTime.fromISO(validation_date);
+        } else if (validation_date instanceof Date) {
+            validation_date = DateTime.fromJSDate(validation_date);
+        }
+        return validation_date.toFormat("yyyy-MM-dd HH:mm a");
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.get_total_with_tax());
