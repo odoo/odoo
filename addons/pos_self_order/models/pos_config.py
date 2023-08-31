@@ -69,12 +69,10 @@ class PosConfig(models.Model):
             [("code", "=", self.env.lang)], limit=1
         ),
     )
-    self_order_kiosk_image_home = fields.Image(
-        string="Self Order Kiosk Image Home",
+    self_order_kiosk_image_home_ids = fields.Many2many(
+        'ir.attachment',
+        string="Home Images",
         help="Image to display on the self order screen",
-        max_width=1080,
-        max_height=1920,
-        default=_self_order_default_image,
     )
     self_order_kiosk_image_eat = fields.Image(
         string="Self Order Kiosk Image Eat",
@@ -88,11 +86,6 @@ class PosConfig(models.Model):
         help="Image to display on the self order screen",
         max_width=1200,
         max_height=250,
-    )
-    self_order_kiosk_image_home_name = fields.Char(
-        string="Self Order Kiosk Image Home Name",
-        help="Name of the image to display on the self order screen",
-        default=_self_order_default_image_name,
     )
     self_order_kiosk_image_eat_name = fields.Char(
         string="Self Order Kiosk Image Eat Name",
@@ -163,6 +156,17 @@ class PosConfig(models.Model):
         pos_config_ids = super().create(vals_list)
 
         for pos_config_id in pos_config_ids:
+            for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']:
+                image_path = modules.get_module_resource("pos_self_order", "static/img", image_name)
+                attachment = self.env['ir.attachment'].create({
+                    'name': image_name,
+                    'datas': base64.b64encode(file_open(image_path, "rb").read()),
+                    'res_model': 'pos.config',
+                    'res_id': pos_config_id.id,
+                    'type': 'binary',
+                })
+                pos_config_id.self_order_kiosk_image_home_ids = [(4, attachment.id)]
+
             if pos_config_id.module_pos_restaurant:
                 pos_config_id.self_order_view_mode = True
                 pos_config_id.self_order_table_mode = True
@@ -348,7 +352,7 @@ class PosConfig(models.Model):
             "kiosk_mode": self.self_order_kiosk_mode,
             "kiosk_takeaway": self.self_order_kiosk_takeaway,
             "kiosk_alternative_fp": self.self_order_kiosk_alternative_fp_id.id,
-            "kiosk_image_home":  self._get_kiosk_image(self.self_order_kiosk_image_home),
+            "kiosk_image_home":  self._get_kiosk_attachment(self.self_order_kiosk_image_home_ids),
             "kiosk_image_eat": self._get_kiosk_image(self.self_order_kiosk_image_eat),
             "kiosk_image_brand": self._get_kiosk_image(self.self_order_kiosk_image_brand),
             "kiosk_default_language": default_language[0] if default_language else [],
@@ -358,6 +362,15 @@ class PosConfig(models.Model):
     def _get_kiosk_image(self, image):
         image = Image.open(io.BytesIO(base64.b64decode(image))) if image else False
         return image_to_base64(image, 'PNG').decode('utf-8') if image else False
+
+    def _get_kiosk_attachment(self, images):
+        encoded_images = []
+        for image in images:
+            encoded_images.append({
+                'id': image.id,
+                'data': image.datas.decode('utf-8'),
+            })
+        return encoded_images
 
     def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
         """
