@@ -268,11 +268,11 @@ export function makeLegacyRPC(wowlRPC) {
         const promise = new Promise(function (resolve, reject) {
             rpcPromise = wowlRPC(route, args, options);
             rpcPromise.then(function (result) {
-                if (!target.isDestroyed()) {
+                if (target && !target.isDestroyed()) {
                     resolve(result);
                 }
             }).guardedCatch(function (reason) {
-                if (!target.isDestroyed()) {
+                if (target && !target.isDestroyed()) {
                     reject(reason);
                 }
             });
