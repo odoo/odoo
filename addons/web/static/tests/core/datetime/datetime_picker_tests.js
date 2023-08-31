@@ -872,6 +872,23 @@ QUnit.module("Components", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("rounding=0 enables seconds picker", async (assert) => {
+        await mountPicker({
+            rounding: 0,
+        });
+
+        const [hourSelect, minuteSelect, secondsSelect] = getTimePickers().at(0);
+        assert.deepEqual(getTexts(hourSelect, "option"), range(24, String));
+        assert.deepEqual(
+            getTexts(minuteSelect, "option"),
+            range(60, (i) => pad2(i))
+        );
+        assert.deepEqual(
+            getTexts(secondsSelect, "option"),
+            range(60, (i) => pad2(i))
+        );
+    });
+
     QUnit.test("no value, select date without handler", async (assert) => {
         await mountPicker();
 
@@ -902,6 +919,86 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         assert.verifySteps(["2023-04-25T18:00:00", "2023-04-25T18:05:00"]);
     });
+
+    QUnit.test("minDate with time: selecting out-of-range and in-range times", async (assert) => {
+        await mountPicker({
+            onSelect: (value) => assert.step(formatForStep(value)),
+            minDate: DateTime.fromISO("2023-04-25T16:00:00.000"),
+        });
+
+        const [hourSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "15");
+        assert.verifySteps([]);
+        await editSelect(hourSelect, null, "16");
+        assert.verifySteps(["2023-04-25T16:00:00"]);
+    });
+
+    QUnit.test("maxDate with time: selecting out-of-range and in-range times", async (assert) => {
+        await mountPicker({
+            onSelect: (value) => assert.step(formatForStep(value)),
+            maxDate: DateTime.fromISO("2023-04-25T16:00:00.000"),
+        });
+
+        const [hourSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "17");
+        assert.verifySteps([]);
+        await editSelect(hourSelect, null, "16");
+        assert.verifySteps(["2023-04-25T16:00:00"]);
+    });
+
+    QUnit.test(
+        "max and min date with time: selecting out-of-range and in-range times",
+        async (assert) => {
+            await mountPicker({
+                onSelect: (value) => assert.step(formatForStep(value)),
+                minDate: DateTime.fromISO("2023-04-25T16:00:00.000"),
+                maxDate: DateTime.fromISO("2023-04-25T16:00:00.000"),
+            });
+
+            const [hourSelect] = getTimePickers().at(0);
+            await editSelect(hourSelect, null, "15");
+            await editSelect(hourSelect, null, "17");
+            assert.verifySteps([]);
+            await editSelect(hourSelect, null, "16");
+            assert.verifySteps(["2023-04-25T16:00:00"]);
+        }
+    );
+
+    QUnit.test(
+        "max and min date with time: selecting invalid minutes and making it valid by selecting hours",
+        async (assert) => {
+            await mountPicker({
+                onSelect: (value) => assert.step(formatForStep(value)),
+                minDate: DateTime.fromISO("2023-04-25T16:10:00.000"),
+                maxDate: DateTime.fromISO("2023-04-25T16:50:00.000"),
+            });
+
+            const [hourSelect, minuteSelect] = getTimePickers().at(0);
+            await editSelect(hourSelect, null, "13");
+            await editSelect(minuteSelect, null, "30");
+            assert.verifySteps([]);
+            await editSelect(hourSelect, null, "16");
+            assert.verifySteps(["2023-04-25T16:30:00"]);
+        }
+    );
+
+    QUnit.test(
+        "max and min date with time: valid time on invalid day becomes valid when selecting day",
+        async (assert) => {
+            await mountPicker({
+                onSelect: (value) => assert.step(formatForStep(value)),
+                minDate: DateTime.fromISO("2023-04-24T16:10:00.000"),
+                maxDate: DateTime.fromISO("2023-04-24T16:50:00.000"),
+            });
+
+            const [hourSelect, minuteSelect] = getTimePickers().at(0);
+            await editSelect(hourSelect, null, "16");
+            await editSelect(minuteSelect, null, "30");
+            assert.verifySteps([]);
+            await click(getPickerCell("24"));
+            assert.verifySteps(["2023-04-24T16:30:00"]);
+        }
+    );
 
     QUnit.test("single value, select date", async (assert) => {
         await mountPicker({

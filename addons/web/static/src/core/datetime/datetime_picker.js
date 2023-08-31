@@ -37,7 +37,8 @@ import { ensureArray } from "../utils/arrays";
  * @property {PrecisionLevel} [minPrecision="days"]
  * @property {(value: DateTime) => any} [onSelect]
  * @property {boolean} [range]
- * @property {number} [rounding=5]
+ * @property {number} [rounding=5] the rounding in minutes, pass 0 to show seconds, pass 1 to avoid
+ *  rounding minutes without displaying seconds.
  * @property {{ buttons?: any }} [slots]
  * @property {"date" | "datetime"} [type]
  * @property {NullableDateTime | NullableDateRange} value
@@ -143,6 +144,7 @@ const toWeekItem = (weekDayItems) => ({
 // Time constants
 const HOURS = numberRange(0, 24).map((hour) => [hour, String(hour)]);
 const MINUTES = numberRange(0, 60).map((minute) => [minute, String(minute || 0).padStart(2, "0")]);
+const SECONDS = [...MINUTES];
 const MERIDIEMS = ["AM", "PM"];
 
 /**
@@ -380,14 +382,19 @@ export class DateTimePicker extends Component {
         );
         this.availableHours = HOURS;
         this.availableMinutes = MINUTES.filter((minute) => !(minute[0] % props.rounding));
+        this.availableSeconds = props.rounding ? [] : SECONDS;
         this.allowedPrecisionLevels = this.filterPrecisionLevels(
             props.minPrecision,
             props.maxPrecision
         );
 
         this.additionalMonth = props.range && !this.env.isSmall;
-        this.maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE).endOf("day");
-        this.minDate = parseLimitDate(props.minDate, MIN_VALID_DATE).startOf("day");
+        this.maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE);
+        this.minDate = parseLimitDate(props.minDate, MIN_VALID_DATE);
+        if (this.props.type === "date") {
+            this.maxDate = this.maxDate.endOf("day");
+            this.minDate = this.minDate.startOf("day");
+        }
 
         if (this.maxDate < this.minDate) {
             throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
