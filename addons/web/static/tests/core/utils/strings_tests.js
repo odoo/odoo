@@ -5,6 +5,7 @@ import {
     escapeRegExp,
     intersperse,
     sprintf,
+    unaccent,
     unescapeHTML,
 } from "@web/core/utils/strings";
 import { _t, translatedTerms } from "@web/core/l10n/translation";
@@ -56,6 +57,13 @@ QUnit.module("utils", () => {
         assert.deepEqual(intersperse("12345678", [2, 0, -1], "."), "12.34.56.78");
         assert.deepEqual(intersperse("12345678", [3, 3, 3, 3], "."), "12.345.678");
         assert.deepEqual(intersperse("12345678", [3, 0], "."), "12.345.678");
+    });
+
+    QUnit.test("unaccent", function (assert) {
+        assert.strictEqual(unaccent("éèàôù"), "eeaou");
+        assert.strictEqual(unaccent("ⱮɀꝾƶⱵȥ"), "mzgzhz"); // single characters
+        assert.strictEqual(unaccent("ǱǄꝎꜩꝡƕ"), "dzdzootzvyhv"); // doubled characters
+        assert.strictEqual(unaccent("ⱮɀꝾƶⱵȥ", true), "MzGzHz"); // case sensitive characters
     });
 
     QUnit.test("sprintf properly formats strings", (assert) => {
