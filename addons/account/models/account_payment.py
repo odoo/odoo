@@ -702,10 +702,10 @@ class AccountPayment(models.Model):
 
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
+            vals['journal_id'] = vals.get('journal_id') or self.move_id.with_context(is_payment=True)._search_default_journal().id
 
         payments = super().create([{
             'name': False,
-            'journal_id': self.move_id.with_context(is_payment=True)._search_default_journal().id,
             **vals,
         } for vals in vals_list])
 
