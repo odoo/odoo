@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import warnings
 from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
@@ -169,7 +170,15 @@ class Module(models.Model):
             if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
-                    html = lxml.html.document_fromstring(doc)
+                    try:
+                        contents = doc.decode()
+                    except UnicodeDecodeError:
+                        warnings.warn(
+                            f"Non-UTF8 module descriptions are deprecated since Odoo 17 ({module.name}'s description is not)",
+                            category=DeprecationWarning,
+                        )
+                        contents = doc
+                    html = lxml.html.document_fromstring(contents)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
