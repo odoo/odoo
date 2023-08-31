@@ -1,18 +1,19 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { AND, Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
+    static id = AND("messageId", "content");
     /**
      * @param {Object} data
      * @returns {MessageReactions}
      */
     static insert(data) {
-        let reaction = this.store.Message.records[data.message.id]?.reactions.find(
+        let reaction = this.store.Message.get(data.message.id)?.reactions.find(
             ({ content }) => content === data.content
         );
         if (!reaction) {
-            reaction = new MessageReactions();
+            reaction = this.new(data);
             reaction._store = this.store;
         }
         const personasToUnlink = new Set();

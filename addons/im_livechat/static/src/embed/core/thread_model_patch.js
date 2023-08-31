@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Thread } from "@mail/core/common/thread_model";
-import { createLocalId, onChange } from "@mail/utils/common/misc";
+import { onChange } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
@@ -9,7 +9,7 @@ import { SESSION_STATE } from "./livechat_service";
 
 patch(Thread, {
     insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.records);
+        const isUnknown = !this.get(data);
         const thread = super.insert(...arguments);
         const livechatService = this.env.services["im_livechat.livechat"];
         const chatbotService = this.env.services["im_livechat.chatbot"];
