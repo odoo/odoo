@@ -83,7 +83,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-discuss-Typing").text(), "");
+    await contains(".o-discuss-Typing", { text: "" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>

@@ -103,23 +103,18 @@ QUnit.test('click on "add followers" button', async (assert) => {
             options.onClose();
         },
     });
-
     await contains(".o-mail-Followers");
-    await contains(".o-mail-Followers-button");
-    assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
-
+    await contains(".o-mail-Followers-counter", { text: "1" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
-    await contains("a", { text: "Add Followers" });
-
     await click("a", { text: "Add Followers" });
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     assert.verifySteps(["action:open_view"]);
-    assert.strictEqual($(".o-mail-Followers-counter").text(), "2");
-
+    await contains(".o-mail-Followers-counter", { text: "2" });
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower", { count: 2 });
-    assert.strictEqual($(".o-mail-Follower").text(), "François PerussePartner3");
+    await contains(".o-mail-Follower:eq(0)", { text: "François Perusse" });
+    await contains(".o-mail-Follower:eq(1)", { text: "Partner3" });
 });
 
 QUnit.test("click on remove follower", async (assert) => {

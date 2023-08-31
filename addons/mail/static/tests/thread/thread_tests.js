@@ -1023,7 +1023,7 @@ QUnit.test("New message separator not appearing after showing composer on thread
     await contains(".o-mail-Thread-newMessage", { count: 0 });
 });
 
-QUnit.test("Transient messages are added at the end of the thread", async (assert) => {
+QUnit.test("Transient messages are added at the end of the thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
@@ -1034,6 +1034,6 @@ QUnit.test("Transient messages are added at the end of the thread", async (asser
     await insertText(".o-mail-Composer-input", "/help");
     await click(".o-mail-Composer-send:not(:disabled)");
     await contains(".o-mail-Message", { count: 2 });
-    const lastMessage = document.querySelectorAll(".o-mail-Message")[1];
-    assert.ok(lastMessage.innerText.includes("You are in channel #General"));
+    await contains(".o-mail-Message-author:eq(0)", { text: "Mitchell Admin" });
+    await contains(".o-mail-Message-author:eq(1)", { text: "OdooBot" });
 });

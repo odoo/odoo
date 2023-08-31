@@ -236,33 +236,30 @@ QUnit.test("non-failure notifications are ignored", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test(
-    "marked as read thread notifications are ordered by last message date",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-            { name: "Channel 2019" },
-            { name: "Channel 2020" },
-        ]);
-        pyEnv["mail.message"].create([
-            {
-                date: "2019-01-01 00:00:00",
-                model: "discuss.channel",
-                res_id: channelId_1,
-            },
-            {
-                date: "2020-01-01 00:00:00",
-                model: "discuss.channel",
-                res_id: channelId_2,
-            },
-        ]);
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await contains(".o-mail-NotificationItem-name", { count: 2 });
-        assert.strictEqual($(".o-mail-NotificationItem-name:eq(0)").text(), "Channel 2020");
-        assert.strictEqual($(".o-mail-NotificationItem-name:eq(1)").text(), "Channel 2019");
-    }
-);
+QUnit.test("marked as read thread notifications are ordered by last message date", async () => {
+    const pyEnv = await startServer();
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+        { name: "Channel 2019" },
+        { name: "Channel 2020" },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            date: "2019-01-01 00:00:00",
+            model: "discuss.channel",
+            res_id: channelId_1,
+        },
+        {
+            date: "2020-01-01 00:00:00",
+            model: "discuss.channel",
+            res_id: channelId_2,
+        },
+    ]);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem-name", { count: 2 });
+    await contains(".o-mail-NotificationItem-name:eq(0)", { text: "Channel 2020" });
+    await contains(".o-mail-NotificationItem-name:eq(1)", { text: "Channel 2019" });
+});
 
 QUnit.test("thread notifications are re-ordered on receiving a new message", async () => {
     const pyEnv = await startServer();
