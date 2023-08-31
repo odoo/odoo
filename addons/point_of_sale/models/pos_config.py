@@ -414,6 +414,7 @@ class PosConfig(models.Model):
         bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
 
+        self._preprocess_x2many_vals_from_settings_view(vals)
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
@@ -426,8 +427,30 @@ class PosConfig(models.Model):
                     if key == 'use_pricelist' and vals[key]:
                         continue
                     if key == 'available_pricelist_ids':
-                        removed_pricelist = set(self.available_pricelist_ids.ids) - set(vals[key][0][2])
-                        if len(removed_pricelist) == 0:
+                        will_unlink_a_pricelist = \
+                            (
+                                (not isinstance(vals[key], list) or len(vals[key]) == 0)
+                                and self.available_pricelist_ids
+                            ) or (
+                                isinstance(vals[key], list) and any(
+                                    (
+                                        len(cmd) >= 1
+                                        and cmd[0] == Command.CLEAR
+                                        and self.available_pricelist_ids
+                                    ) or (
+                                        len(cmd) >= 2
+                                        and cmd[0] in {Command.UNLINK, Command.DELETE}
+                                        and cmd[1] in self.available_pricelist_ids.ids
+                                    ) or (
+                                        len(cmd) == 3
+                                        and cmd[0] == Command.SET
+                                        and set(self.available_pricelist_ids.ids) - set(cmd[2])
+                                    )
+                                    for cmd in vals[key]
+                                )
+                            )
+
+                        if not will_unlink_a_pricelist:
                             continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
@@ -437,7 +460,6 @@ class PosConfig(models.Model):
                     ", ".join(forbidden_fields)
                 ))
 
-        self._preprocess_x2many_vals_from_settings_view(vals)
         result = super(PosConfig, self).write(vals)
 
         self.sudo()._set_fiscal_position()
