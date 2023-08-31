@@ -23,9 +23,9 @@ QUnit.test("base rendering", async () => {
         views: [[false, "form"]],
     });
     await contains(".o-mail-Chatter-topbar");
-    await contains("button:contains(Send message)");
-    await contains("button:contains(Log note)");
-    await contains("button:contains(Activities)");
+    await contains("button", 1, { text: "Send message" });
+    await contains("button", 1, { text: "Log note" });
+    await contains("button", 1, { text: "Activities" });
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-Followers");
 });
@@ -75,15 +75,15 @@ QUnit.test("log note toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button:contains(Log note)");
+    await contains("button", 1, { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains("button:contains(Log note).active");
     await contains(".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']");
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
     await contains(".o-mail-Composer", 0);
 });
@@ -97,15 +97,15 @@ QUnit.test("send message toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button:contains(Send message)");
+    await contains("button", 1, { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains("button:contains(Send message).active");
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
     await contains(".o-mail-Composer", 0);
 });
@@ -119,18 +119,18 @@ QUnit.test("log note/send message switching", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button:contains(Send message)");
+    await contains("button", 1, { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
-    await contains("button:contains(Log note)");
+    await contains("button", 1, { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains("button:contains(Send message).active");
     await contains("button:contains(Log note):not(.active)");
     await contains(".o-mail-Composer-input[placeholder='Send a message to followers…']");
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains("button:contains(Send message):not(.active)");
     await contains("button:contains(Log note).active");
     await contains(".o-mail-Composer-input[placeholder='Log an internal note…']");
@@ -146,7 +146,7 @@ QUnit.test("attachment counter without attachments", async () => {
         views: [[false, "form"]],
     });
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']:contains(0)", 0);
+    await contains("button[aria-label='Attach files']", 0, { text: "0" });
 });
 
 QUnit.test("attachment counter with attachments", async () => {
@@ -172,7 +172,7 @@ QUnit.test("attachment counter with attachments", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button[aria-label='Attach files']:contains(2)");
+    await contains("button[aria-label='Attach files']", 1, { text: "2" });
 });
 
 QUnit.test("attachment counter while loading attachments", async () => {
@@ -194,7 +194,7 @@ QUnit.test("attachment counter while loading attachments", async () => {
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
-    await contains("button[aria-label='Attach files']:contains(0)", 0);
+    await contains("button[aria-label='Attach files']", 0, { text: "0" });
 });
 
 QUnit.test("attachment counter transition when attachments become loaded", async () => {
@@ -271,11 +271,11 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
-    await contains("button:contains(Send message)");
-    await contains("button:contains(Log note)");
+    await contains("button", 1, { text: "Send message" });
+    await contains("button", 1, { text: "Log note" });
     await contains("button[aria-label='Attach files']");
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains("button:contains(Log note).active");
     await contains("button:contains(Send message).active", 0);
 

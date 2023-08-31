@@ -63,7 +63,7 @@ QUnit.test("should have correct members in member list", async () => {
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMember", 2);
     await contains(`.o-discuss-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
-    await contains(".o-discuss-ChannelMember:contains('Demo')");
+    await contains(".o-discuss-ChannelMember", 1, { text: "Demo" });
 });
 
 QUnit.test(
@@ -121,7 +121,7 @@ QUnit.test("should show a button to load more members if they are not all loaded
     openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("[title='Show Member List']");
-    await contains("button:contains(Load more)");
+    await contains("button", 1, { text: "Load more" });
 });
 
 QUnit.test("Load more button should load more members", async (assert) => {
@@ -144,7 +144,7 @@ QUnit.test("Load more button should load more members", async (assert) => {
     await contains(".o-discuss-ChannelMember", 102);
 });
 
-QUnit.test("Channel member count update after user joined", async (assert) => {
+QUnit.test("Channel member count update after user joined", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
@@ -152,13 +152,13 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMemberList:contains(Offline - 1)");
+    await contains(".o-discuss-ChannelMemberList h6", 1, { text: "Offline - 1" });
     await click("[title='Add Users']");
-    await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
     await click("[title='Invite to Channel']:not(:disabled)");
     await contains(".o-discuss-ChannelInvitation", 0);
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMemberList:contains(Offline - 2)");
+    await contains(".o-discuss-ChannelMemberList h6", 1, { text: "Offline - 2" });
 });
 
 QUnit.test("Channel member count update after user left", async (assert) => {

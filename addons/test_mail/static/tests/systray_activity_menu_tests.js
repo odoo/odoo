@@ -72,7 +72,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     const { env } = await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter");
-    await contains(".o-mail-ActivityMenu-counter:contains(5)");
+    await contains(".o-mail-ActivityMenu-counter", 1, { text: "5" });
     let context = {};
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -86,7 +86,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");
     await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Late')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "1 Late" });
     await contains(".o-mail-ActivityMenu", 0);
     context = {
         force_search_count: 1,
@@ -100,7 +100,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_upcoming_all: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Future')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "2 Future" });
     await contains(".o-mail-ActivityMenu", 0);
     context = {
         force_search_count: 1,
@@ -108,7 +108,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup:contains('mail.test.activity')");
+    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup span", { text: "mail.test.activity" });
     await contains(".o-mail-ActivityMenu", 0);
 });
 

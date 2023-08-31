@@ -31,6 +31,6 @@ QUnit.test("Thread name unchanged when inviting new users", async () => {
     await click("button:contains(Invite):not(:disabled)");
     await contains(".o-discuss-ChannelInvitation", 0);
     await click("button[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember:contains(James)");
+    await contains(".o-discuss-ChannelMember", 1, { text: "James" });
     await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
 });

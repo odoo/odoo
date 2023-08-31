@@ -121,7 +121,7 @@ QUnit.test("switching to folded chat window unfolds it", async (assert) => {
     await start();
     assert.containsOnce(
         $,
-        ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-header:contains(Visitor 12)"
+        ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     await afterNextRender(() => {
         $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
@@ -129,7 +129,7 @@ QUnit.test("switching to folded chat window unfolds it", async (assert) => {
     });
     assert.containsOnce(
         $,
-        ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-header:contains(Visitor 12)"
+        ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     assert.strictEqual(
         document.activeElement,
@@ -178,7 +178,7 @@ QUnit.test("switching to hidden chat window unhides it", async (assert) => {
     await start();
     assert.containsNone(
         $,
-        ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-header:contains(Visitor 12)"
+        ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     await afterNextRender(() => {
         $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
@@ -186,7 +186,7 @@ QUnit.test("switching to hidden chat window unhides it", async (assert) => {
     });
     assert.containsOnce(
         $,
-        ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-header:contains(Visitor 12)"
+        ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     assert.strictEqual(
         document.activeElement,

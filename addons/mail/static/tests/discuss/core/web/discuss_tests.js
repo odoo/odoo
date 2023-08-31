@@ -120,7 +120,7 @@ QUnit.test("can create a group chat conversation", async () => {
     await contains(".o-mail-Message", 0);
 });
 
-QUnit.test("should create DM chat when adding self and another user", async (assert) => {
+QUnit.test("should create DM chat when adding self and another user", async () => {
     const pyEnv = await startServer();
     const partner_id = pyEnv["res.partner"].create([{ name: "Mario", im_status: "online" }]);
     pyEnv["res.users"].create({ partner_id });
@@ -135,10 +135,7 @@ QUnit.test("should create DM chat when adding self and another user", async (ass
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector-suggestion", 0);
     triggerHotkey("Enter");
-    assert.strictEqual(
-        (await contains(".o-mail-DiscussSidebarChannel:contains(Mario)")).text(),
-        "Mario"
-    );
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Mario" });
 });
 
 QUnit.test("chat search should display no result when no matches found", async () => {
@@ -146,7 +143,7 @@ QUnit.test("chat search should display no result when no matches found", async (
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector", "Rainbow Panda");
-    await contains(".o-discuss-ChannelSelector-suggestion:contains(No results found)");
+    await contains(".o-discuss-ChannelSelector-suggestion", 1, { text: "No results found" });
 });
 
 QUnit.test("chat search should not be visible when clicking outside of the field", async () => {

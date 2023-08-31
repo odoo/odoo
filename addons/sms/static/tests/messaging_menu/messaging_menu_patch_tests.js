@@ -24,7 +24,9 @@ QUnit.test("mark as read", async () => {
     await contains(".o-mail-NotificationItem");
     await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
     await contains(".o-mail-NotificationItem [title='Mark As Read']");
-    await contains(".o-mail-NotificationItem:contains(An error occurred when sending an SMS)");
+    await contains(".o-mail-NotificationItem-text", 1, {
+        text: "An error occurred when sending an SMS",
+    });
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem", 0);
 });
@@ -134,7 +136,7 @@ QUnit.test("grouped notifications by document model", async (assert) => {
 
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
+    await contains(".o-mail-NotificationItem:contains(Partner) .badge", 1, { text: "2" });
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

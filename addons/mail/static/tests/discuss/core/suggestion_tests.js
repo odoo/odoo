@@ -40,7 +40,7 @@ QUnit.test("use a command for a specific channel type", async () => {
     await contains(".o-mail-Composer-suggestionList .o-open", 0);
     await contains(".o-mail-Composer-input", 1, { value: "" });
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-mail-Composer-suggestion:contains(who)");
+    await click(".o-mail-Composer-suggestion strong", { text: "who" });
     await contains(".o-mail-Composer-input", 1, { value: "/who " });
 });
 
@@ -109,14 +109,14 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:contains('User 2')");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "User 2" });
     await insertText(".o-mail-Composer-input", "This is a test");
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message:contains('This is a test')");
-    await click(".o-mail-DiscussSidebarChannel:contains('General')");
+    await contains(".o-mail-Message-content", 1, { text: "This is a test" });
+    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     await insertText(".o-mail-Composer-input[placeholder='Message #General…']", "@");
     await insertText(".o-mail-Composer-input", "User");
-    await contains(".o-mail-Composer-suggestion", 3);
+    await contains(".o-mail-Composer-suggestion strong", 3);
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
     assert.strictEqual($(".o-mail-Composer-suggestion").eq(2).text(), "User 3");
@@ -136,13 +136,14 @@ QUnit.test("mention suggestion are shown after deleting a character", async () =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@John D");
-    await contains(".o-mail-Composer-suggestion:contains(John Doe)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "John Doe" });
     await insertText(".o-mail-Composer-input", "a");
-    await contains(".o-mail-Composer-suggestion:contains(John D)", 0);
+    await contains(".o-mail-Composer-suggestion strong", 0, { text: "John D" });
+
     // Simulate pressing backspace
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.value = textarea.value.slice(0, -1);
-    await contains(".o-mail-Composer-suggestion:contains(John Doe)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "John Doe" });
 });
 
 QUnit.test("command suggestion are shown after deleting a character", async () => {
@@ -159,11 +160,12 @@ QUnit.test("command suggestion are shown after deleting a character", async () =
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/he");
-    await contains(".o-mail-Composer-suggestion:contains(help)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "help" });
     await insertText(".o-mail-Composer-input", "e");
-    await contains(".o-mail-Composer-suggestion:contains(help)", 0);
+    await contains(".o-mail-Composer-suggestion strong", 0, { text: "help" });
+
     // Simulate pressing backspace
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.value = textarea.value.slice(0, -1);
-    await contains(".o-mail-Composer-suggestion:contains(help)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "help" });
 });

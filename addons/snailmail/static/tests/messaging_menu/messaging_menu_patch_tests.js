@@ -145,8 +145,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem:contains(Partner)");
-    await contains(".o-mail-NotificationItem:contains(2)"); // counter
+    await contains(".o-mail-NotificationItem-name", 1, { text: "Partner" });
+    await contains(".o-mail-NotificationItem-counter", 1, { text: "2" });
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

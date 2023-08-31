@@ -81,7 +81,7 @@ QUnit.test("should be able to search for a new user to invite from an existing c
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains(TestPartner2)");
+    await contains(".o-discuss-ChannelInvitation-selectable", 1, { text: "TestPartner2" });
 });
 
 QUnit.test("Invitation form should display channel group restriction", async () => {
@@ -130,7 +130,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await click(".o-discuss-ChannelInvitation-selectable:contains(TestPartner2)");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
     await click("button[title='Create Group Chat']:not(:disabled)");
     await contains(
         ".o-mail-DiscussSidebarChannel:contains(Mitchell Admin, TestPartner, and TestPartner2)"
