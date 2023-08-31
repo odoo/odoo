@@ -1246,8 +1246,8 @@
                                         <field name="to_check"/>
                                         <field name="system_exchange_rate" invisible="True"/>
                                         <field name="exchange_rate" invisible="True"/>
-                                        <label for="display_rate" invisible="currency_id == company_currency_id"/>
-                                        <div class="d-flex" invisible="currency_id == company_currency_id">
+                                        <label for="display_rate" invisible="currency_id == company_currency_id or (state != 'draft' and not exchange_rate)"/>
+                                        <div class="d-flex" invisible="currency_id == company_currency_id or (state != 'draft' and not exchange_rate)">
                                             <span class="me-1">1</span>
                                             <field name="company_currency_id"
                                                    class="w-auto"
@@ -1256,7 +1256,9 @@
                                             <span class="mx-1">=</span>
                                             <field name="display_rate"
                                                    digits="[12,6]"
-                                                   nolabel="True"/>
+                                                   nolabel="True"
+                                                   placeholder="System rate"
+                                                   readonly="state != 'draft'"/>
                                             <field name="currency_id"
                                                    class="w-100 ms-1"
                                                    nolabel="True"

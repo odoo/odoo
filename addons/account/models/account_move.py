@@ -4612,13 +4612,13 @@ class AccountMove(models.Model):
         changes, original_tracking_values = super()._mail_track(tracked_fields, initial)
         new_tracking_values = []
         msg = None
-        msg_html = """
+        msg_html = f"""
         <ul class="mb-0 ps-4">
             <li class="o-mail-Message-tracking mb-1" role="group">
-                <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold">{}</span>
+                <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold">{{}}</span>
                 <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
-                <span class="o-mail-Message-trackingNew me-1 fw-bold text-info">{}</span>
-                <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">({})</span>
+                <span class="o-mail-Message-trackingNew me-1 fw-bold text-info">{{}}</span>
+                <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">({self._fields['display_rate'].string})</span>
             </li>
         </ul>"""
         for tracking_val_command in original_tracking_values:
@@ -4626,11 +4626,11 @@ class AccountMove(models.Model):
             if values['field_desc'] == self._fields['exchange_rate'].string:
                 changes.remove('exchange_rate')
                 if not values['old_value_float']:
-                    msg = msg_html.format(self.system_exchange_rate, values['new_value_float'], self._fields['display_rate'].string)
+                    msg = msg_html.format(self.system_exchange_rate, values['new_value_float'])
                 elif not values['new_value_float']:
-                    msg = msg_html.format(values['old_value_float'], _("System rate"), self._fields['display_rate'].string)
+                    msg = msg_html.format(values['old_value_float'], _("System rate"))
                 elif values['old_value_float'] != values['new_value_float']:
-                    msg = msg_html.format(values['old_value_float'], values['new_value_float'], self._fields['display_rate'].string)
+                    msg = msg_html.format(values['old_value_float'], values['new_value_float'])
             else:
                 new_tracking_values.append(tracking_val_command)
         if msg:
