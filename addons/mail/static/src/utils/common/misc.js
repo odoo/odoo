@@ -41,10 +41,16 @@ export function isDragSourceExternalFile(dataTransfer) {
 
 /**
  * @param {Object} target
- * @param {string} key
+ * @param {string|string[]} key
  * @param {Function} callback
  */
 export function onChange(target, key, callback) {
+    if (Array.isArray(key)) {
+        for (const k of key) {
+            onChange(target, k, callback);
+        }
+        return;
+    }
     const proxy = reactive(target, () => {
         void proxy[key];
         if (proxy[key] instanceof Object) {

@@ -32,23 +32,11 @@ patch(Thread, {
                     author: thread.operator,
                 });
             }
-            onChange(thread, "state", () => {
+            onChange(thread, ["state", "seen_message_id", "message_unread_counter"], () => {
                 if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
                     livechatService.updateSession({
                         state: thread.state,
-                    });
-                }
-            });
-            onChange(thread, "seen_message_id", () => {
-                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
-                    livechatService.updateSession({
                         seen_message_id: thread.seen_message_id,
-                    });
-                }
-            });
-            onChange(thread, "message_unread_counter", () => {
-                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
-                    livechatService.updateSession({
                         channel: thread.channel,
                     });
                 }
