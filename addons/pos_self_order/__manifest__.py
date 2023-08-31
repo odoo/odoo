@@ -26,7 +26,6 @@
         # Assets
         "pos_self_order.assets_common": [
             "pos_self_order/static/src/kiosk/bootstrap_overridden.scss",
-            "web/static/lib/jquery/jquery.js",
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
             ("include", "web._assets_primary_variables"),
