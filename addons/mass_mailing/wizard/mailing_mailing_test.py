@@ -38,7 +38,7 @@ class TestMassMailing(models.TransientModel):
         if record:
             # Returns a proper error if there is a syntax error with Qweb
             # do not force lang, will simply use user context
-            body = mailing._render_field('body_html', record.ids, compute_lang=False)[record.id]
+            body = mailing._render_field('body_html', record.ids, compute_lang=False, options={'preserve_comments': True})[record.id]
             preview = mailing._render_field('preview', record.ids, compute_lang=False)[record.id]
             full_body = mailing._prepend_preview(Markup(body), preview)
             subject = mailing._render_field('subject', record.ids, compute_lang=False)[record.id]
