@@ -1413,7 +1413,7 @@ class PurchaseOrderLine(models.Model):
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=uom_po_qty,
-            date=po.date_order and po.date_order.date(),
+            date=max(po.date_order and po.date_order.date(), fields.Date.today()),
             uom_id=product_id.uom_po_id)
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
