@@ -3,7 +3,6 @@
 import { registry } from "../core/registry";
 import {
     makeLegacyNotificationService,
-    makeLegacyDialogMappingService,
     makeLegacyRPCService,
 } from "./utils";
 import { makeLegacyActionManagerService } from "./backend_utils";
@@ -28,8 +27,6 @@ export const legacySetupProm = new Promise((resolve) => {
     // legacy env on the bus in the wowl env
     serviceRegistry.add("legacy_rpc", makeLegacyRPCService(legacyEnv));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    const legacyDialogMappingService = makeLegacyDialogMappingService(legacyEnv);
-    serviceRegistry.add("legacy_dialog_mapping", legacyDialogMappingService);
     const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
