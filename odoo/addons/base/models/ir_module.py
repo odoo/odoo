@@ -178,7 +178,11 @@ class Module(models.Model):
             if path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
-                    html = lxml.html.document_fromstring(doc)
+                    try:
+                        contents = doc.decode('utf-8')
+                    except UnicodeDecodeError:
+                        contents = doc
+                    html = lxml.html.document_fromstring(contents)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
