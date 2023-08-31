@@ -985,11 +985,6 @@ QUnit.module("Search", (hooks) => {
         });
         await makeWithSearch({
             serverData,
-            async mockRPC(route) {
-                if (route === "/web/dataset/search_read") {
-                    await promise;
-                }
-            },
             Component: TestComponent,
             resModel: "partner",
             searchViewId: false,
@@ -2070,7 +2065,7 @@ QUnit.module("Search", (hooks) => {
         const webclient = await createWebClient({
             serverData,
             async mockRPC(route, { kwargs, method }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.step(JSON.stringify(kwargs.domain));
                 }
             },
@@ -2118,7 +2113,7 @@ QUnit.module("Search", (hooks) => {
         const webclient = await createWebClient({
             serverData,
             async mockRPC(route, { kwargs, method }) {
-                if (method === "unity_web_search_read") {
+                if (method === "web_search_read") {
                     assert.step(JSON.stringify(kwargs.domain));
                 }
             },

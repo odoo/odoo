@@ -23,11 +23,12 @@ export class BurndownChartModel extends GraphModel {
             !context.active_id || !context.default_project_id
                 ? []
                 : [["project_ids", "in", context.active_id]];
-        const data = await this.orm.webSearchRead("project.task.type", searchDomain, [
-            "name",
-            "sequence",
-            "id",
-        ]);
+        const data = await this.orm.webSearchRead("project.task.type", searchDomain, {
+            specification: {
+                name: {},
+                sequence: {},
+            },
+        });
         const stageSeqAndNamePerId = {};
         for (const { id, name, sequence } of data.records) {
             stageSeqAndNamePerId[id] = { name, sequence };

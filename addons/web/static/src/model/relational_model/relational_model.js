@@ -554,7 +554,6 @@ export class RelationalModel extends Model {
     async _loadUngroupedList(config) {
         const kwargs = {
             specification: getFieldsSpec(config.activeFields, config.fields, config.context),
-            domain: config.domain,
             offset: config.offset,
             order: orderByToString(config.orderBy),
             limit: config.limit,
@@ -562,7 +561,7 @@ export class RelationalModel extends Model {
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
-        const response = await this.orm.call(config.resModel, "unity_web_search_read", [], kwargs);
+        const response = await this.orm.webSearchRead(config.resModel, config.domain, kwargs);
 
         this._applyProperties(response.records, config);
         return response;

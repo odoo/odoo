@@ -416,7 +416,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "create", // create the record before doing the action
                 "web_read", // read the created record
                 "get_views", // for other action in breadcrumb,
-                "unity_web_search_read", // with a searchread
+                "web_search_read", // with a searchread
                 "onchange", // when we come back, we want to restart from scratch
             ]);
         }

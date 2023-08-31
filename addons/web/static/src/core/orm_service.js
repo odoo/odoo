@@ -272,14 +272,12 @@ export class ORM {
     /**
      * @param {string} model
      * @param {import("@web/core/domain").DomainListRepr} domain
-     * @param {string[]} fields
      * @param {any} [kwargs={}]
      * @returns {Promise<any[]>}
      */
-    webSearchRead(model, domain, fields, kwargs = {}) {
+    webSearchRead(model, domain, kwargs = {}) {
         validateArray("domain", domain);
-        validatePrimitiveList("fields", "string", fields);
-        return this.call(model, "web_search_read", [], { ...kwargs, domain, fields });
+        return this.call(model, "web_search_read", [], { ...kwargs, domain });
     }
 
     /**

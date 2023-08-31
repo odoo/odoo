@@ -1077,8 +1077,8 @@ QUnit.module("Search", (hooks) => {
             if (
                 method === "web_search_read" &&
                 model === "partner" &&
-                kwargs.fields[0] === "display_name" &&
-                kwargs.fields[1] === "child_properties"
+                kwargs.specification.display_name &&
+                kwargs.specification.child_properties
             ) {
                 const definition1 = [
                     {
@@ -1376,8 +1376,8 @@ QUnit.module("Search", (hooks) => {
             if (
                 method === "web_search_read" &&
                 model === "partner" &&
-                kwargs.fields[0] === "display_name" &&
-                kwargs.fields[1] === "child_properties"
+                kwargs.specification.display_name &&
+                kwargs.specification.child_properties
             ) {
                 assert.deepEqual(
                     kwargs.domain,
