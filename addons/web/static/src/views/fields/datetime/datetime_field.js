@@ -272,7 +272,7 @@ export const dateField = {
         maxDate: options.max_date,
         minDate: options.min_date,
         placeholder: attrs.placeholder,
-        required: 'required' in attrs ? attrs.required : dynamicInfo.required,
+        required: "required" in attrs ? attrs.required : dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: archParseBoolean(options.warn_future),
@@ -280,14 +280,24 @@ export const dateField = {
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
         if (options[START_DATE_FIELD_OPTION]) {
-            deps.push({ name: options[START_DATE_FIELD_OPTION], type, attrs });
+            deps.push({
+                name: options[START_DATE_FIELD_OPTION],
+                type,
+                readonly: false,
+                ...attrs,
+            });
             if (options[END_DATE_FIELD_OPTION]) {
                 console.warn(
                     `A field cannot have both ${START_DATE_FIELD_OPTION} and ${END_DATE_FIELD_OPTION} options at the same time`
                 );
             }
         } else if (options[END_DATE_FIELD_OPTION]) {
-            deps.push({ name: options[END_DATE_FIELD_OPTION], type, attrs });
+            deps.push({
+                name: options[END_DATE_FIELD_OPTION],
+                type,
+                readonly: false,
+                ...attrs,
+            });
         }
         return deps;
     },

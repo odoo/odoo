@@ -37,40 +37,6 @@ export const BUTTON_CLICK_PARAMS = [
 ];
 
 /**
- * Add dependencies to activeFields (and to fields if needed) from an "info" object,
- * which is expected to contain either a "field" or a "widget" key containing the
- * list of dependencies or a function returning it.
- *
- * @param {Record<string, any>} info
- * @param {Record<string, Object>} activeFields
- * @param {Record<string, Object>} fields
- */
-export function addFieldDependencies(info, activeFields, fields) {
-    const { fieldDependencies } = info.field || info.widget;
-    const deps =
-        typeof fieldDependencies === "function" ? fieldDependencies(info) : fieldDependencies;
-    addDependencies(deps, activeFields, fields);
-}
-
-export function addDependencies(deps, activeFields, fields) {
-    for (const dependency of deps || []) {
-        const { name } = dependency;
-        if (!(name in activeFields)) {
-            activeFields[name] = {
-                name,
-                attrs: {},
-                options: {},
-                ...dependency,
-                invisible: "True",
-            };
-        }
-        if (!(name in fields)) {
-            fields[name] = { ...dependency, name };
-        }
-    }
-}
-
-/**
  * Parse the arch to check if is true or false
  * If the string is empty, 0, False or false it's considered as false
  * The rest is considered as true
@@ -271,7 +237,11 @@ export function processButton(node) {
         display: node.getAttribute("display") || "selection",
         clickParams,
         column_invisible: node.getAttribute("column_invisible"),
-        invisible: combineModifiers(node.getAttribute("column_invisible"), node.getAttribute("invisible"), "OR"),
+        invisible: combineModifiers(
+            node.getAttribute("column_invisible"),
+            node.getAttribute("invisible"),
+            "OR"
+        ),
         readonly: node.getAttribute("readonly"),
         required: node.getAttribute("required"),
     };

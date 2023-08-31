@@ -15,6 +15,17 @@ import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 
+/**
+ * @param {boolean || string} value boolean or string encoding a python expression
+ * @returns {string} string encoding a python expression
+ */
+function convertBoolToPyExpr(value) {
+    if (value === true || value === false) {
+        return value ? "True" : "False";
+    }
+    return value;
+}
+
 export function makeActiveField({
     context,
     invisible,
@@ -26,9 +37,9 @@ export function makeActiveField({
 } = {}) {
     return {
         context: context || "{}",
-        invisible: invisible || "False",
-        readonly: readonly || "False",
-        required: required || "False",
+        invisible: convertBoolToPyExpr(invisible || false),
+        readonly: convertBoolToPyExpr(readonly || false),
+        required: convertBoolToPyExpr(required || false),
         onChange: onChange || false,
         forceSave: forceSave || false,
         isHandle: isHandle || false,
@@ -39,6 +50,9 @@ const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that
 
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
     for (const field of fieldDependencies) {
+        if (!("readonly" in field)) {
+            field.readonly = true;
+        }
         if (field.name in activeFields) {
             patchActiveFields(activeFields[field.name], makeActiveField(field));
         } else {

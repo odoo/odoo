@@ -31,13 +31,13 @@ export class WeekDays extends Component {
 export const weekDays = {
     component: WeekDays,
     fieldDependencies: [
-        { name: "sun", type: "boolean", string: _t("Sun") },
-        { name: "mon", type: "boolean", string: _t("Mon") },
-        { name: "tue", type: "boolean", string: _t("Tue") },
-        { name: "wed", type: "boolean", string: _t("Wed") },
-        { name: "thu", type: "boolean", string: _t("Thu") },
-        { name: "fri", type: "boolean", string: _t("Fri") },
-        { name: "sat", type: "boolean", string: _t("Sat") },
+        { name: "sun", type: "boolean", string: _t("Sun"), readonly: false },
+        { name: "mon", type: "boolean", string: _t("Mon"), readonly: false },
+        { name: "tue", type: "boolean", string: _t("Tue"), readonly: false },
+        { name: "wed", type: "boolean", string: _t("Wed"), readonly: false },
+        { name: "thu", type: "boolean", string: _t("Thu"), readonly: false },
+        { name: "fri", type: "boolean", string: _t("Fri"), readonly: false },
+        { name: "sat", type: "boolean", string: _t("Sat"), readonly: false },
     ],
 };
 
