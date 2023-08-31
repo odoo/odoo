@@ -283,7 +283,7 @@ QUnit.module("Search", (hooks) => {
                     }
                 },
             });
-            webClient.env.bus.on("CLEAR-CACHES", webClient, () => assert.step("CLEAR-CACHES"));
+            webClient.env.bus.addEventListener("CLEAR-CACHES", () => assert.step("CLEAR-CACHES"));
             await doAction(webClient, {
                 name: "Action",
                 res_model: "foo",

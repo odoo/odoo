@@ -154,7 +154,7 @@
             ('include', 'point_of_sale._assets_pos'),
             # dependencies of web.tests_assets (in the web tests, these come from assets_backend)
             'web/static/tests/patch_translations.js',
-            'web/static/src/owl2_compatibility/app.js',
+            'web/static/src/libs/owl.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/jquery/jquery.browser.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',

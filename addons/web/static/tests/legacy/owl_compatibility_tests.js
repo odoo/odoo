@@ -1583,18 +1583,20 @@
         QUnit.module("EventBus");
 
         QUnit.test("unregister multiple listener from the same target", async function (assert) {
-            const target = Symbol("test");
             const bus = new EventBus();
             let i = 0;
 
-            bus.on("a", target, () => assert.step(`a:${i++}`));
-            bus.on("b", target, () => assert.step(`b:${i++}`));
+            const a = () => assert.step(`a:${i++}`);
+            const b = () => assert.step(`b:${i++}`);
+
+            bus.addEventListener("a", a);
+            bus.addEventListener("b", b);
 
             bus.trigger("a");
             bus.trigger("b");
 
-            bus.off("a", target);
-            bus.off("b", target);
+            bus.removeEventListener("a", a);
+            bus.removeEventListener("b", b);
 
             bus.trigger("a");
             bus.trigger("b");

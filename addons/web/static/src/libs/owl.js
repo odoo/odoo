@@ -1,0 +1,1 @@
+owl.App.validateTarget = () => {};
