@@ -142,22 +142,15 @@ export class Rtc {
                 this.toggleVideo("camera", true);
             }
         });
-        onChange(this.userSettingsService, "edgeBlurAmount", () => {
+        onChange(this.userSettingsService, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
             if (this.blurManager) {
                 this.blurManager.edgeBlur = this.userSettingsService.edgeBlurAmount;
-            }
-        });
-        onChange(this.userSettingsService, "backgroundBlurAmount", () => {
-            if (this.blurManager) {
                 this.blurManager.backgroundBlur = this.userSettingsService.backgroundBlurAmount;
             }
         });
-        onChange(this.userSettingsService, "voiceActivationThreshold", async () => {
-            await this.linkVoiceActivation();
-        });
-        onChange(this.userSettingsService, "usePushToTalk", async () => {
-            await this.linkVoiceActivation();
-        });
+        onChange(this.userSettingsService, ["voiceActivationThreshold", "usePushToTalk"], () =>
+            this.linkVoiceActivation()
+        );
         onChange(this.userSettingsService, "audioInputDeviceId", async () => {
             if (this.state.selfSession) {
                 await this.resetAudioTrack({ force: true });
