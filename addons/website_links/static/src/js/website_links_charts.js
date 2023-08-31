@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+const { DateTime } = luxon;
 
 var BarChart = publicWidget.Widget.extend({
     jsLibs: [
@@ -17,9 +18,12 @@ var BarChart = publicWidget.Widget.extend({
      */
     init: function (parent, beginDate, endDate, dates) {
         this._super.apply(this, arguments);
-        this.beginDate = beginDate.locale("en");
-        this.endDate = endDate;
-        this.number_of_days = this.endDate.diff(this.beginDate, 'days') + 2;
+        this.beginDate = beginDate.startOf("day");
+        this.endDate = endDate.startOf("day");
+        if (this.beginDate.toISO() === this.endDate.toISO()) {
+            this.endDate = this.endDate.plus({ days: 1 });
+        }
+        this.number_of_days = this.endDate.diff(this.beginDate).as("days");
         this.dates = dates;
     },
     /**
@@ -28,11 +32,10 @@ var BarChart = publicWidget.Widget.extend({
     start: function () {
         // Fill data for each day (with 0 click for days without data)
         var clicksArray = [];
-        var beginDateCopy = this.beginDate;
-        for (var i = 0; i < this.number_of_days; i++) {
-            var dateKey = beginDateCopy.format('YYYY-MM-DD');
+        for (var i = 0; i <= this.number_of_days; i++) {
+            var dateKey = this.beginDate.toFormat("yyyy-MM-dd");
             clicksArray.push([dateKey, (dateKey in this.dates) ? this.dates[dateKey] : 0]);
-            beginDateCopy.add(1, 'days');
+            this.beginDate = this.beginDate.plus({ days: 1 });
         }
 
         var nbClicks = 0;
@@ -166,29 +169,29 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
                 // This is a trick to get the date without the local formatting.
                 // We can't simply do .locale("en") because some Odoo languages
                 // are not supported by moment.js (eg: Arabic Syria).
-                const date = moment(
+                const date = DateTime.fromFormat(
                     _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
-                        .split(" ")[0], "YYYY MM DD"
+                        .split(" ")[0], "yyyy-MM-dd"
                 );
                 if (i === 0) {
                     beginDate = date;
                 }
-                formattedClicksByDay[date.locale("en").format("YYYY-MM-DD")] =
+                formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
                     _clicksByDay[i]["create_date_count"];
             }
 
             // Process all time line chart data
-            var now = moment();
+            var now = DateTime.now();
             self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
 
             // Process month line chart data
-            beginDate = moment().subtract(30, 'days');
+            beginDate = DateTime.now().minus({ days: 30 });
             self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
 
             // Process week line chart data
-            beginDate = moment().subtract(7, 'days');
+            beginDate = DateTime.now().minus({ days: 7 });
             self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
             self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
 

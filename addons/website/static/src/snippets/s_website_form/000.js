@@ -10,6 +10,8 @@
     import { debounce } from "@web/core/utils/timing";
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
+    import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+    const { DateTime } = luxon;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -20,13 +22,14 @@
         start: function () {
             if (this.editableMode) {
                 // We do not initialize the datetime picker in edit mode but want the dates to be formated
-                const dateTimeFormat = time.getLangDatetimeFormat();
-                const dateFormat = time.getLangDateFormat();
                 this.el.querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
                     const value = el.getAttribute('value');
                     if (value) {
-                        const format = el.closest('.s_website_form_field').dataset.type === 'date' ? dateFormat : dateTimeFormat;
-                        el.value = moment.unix(value).format(format);
+                    const format =
+                        el.closest(".s_website_form_field").dataset.type === "date"
+                            ? formatDate
+                            : formatDateTime;
+                        el.value = format(DateTime.fromSeconds(value));
                     }
                 });
             }
@@ -220,14 +223,15 @@
             this.resetForm();
 
             // Apply default values
-            const dateTimeFormat = time.getLangDatetimeFormat();
-            const dateFormat = time.getLangDateFormat();
             this.el.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]').forEach(el => {
                 let value = el.getAttribute('value');
                 if (value) {
                     if (el.classList.contains('datetimepicker-input')) {
-                        const format = el.closest('.s_website_form_field').dataset.type === 'date' ? dateFormat : dateTimeFormat;
-                        value = moment.unix(value).format(format);
+                        const format =
+                            el.closest(".s_website_form_field").dataset.type === "date"
+                                ? formatDate
+                                : formatDateTime;
+                        value = format(DateTime.fromSeconds(value));
                     }
                     el.value = value;
                 }

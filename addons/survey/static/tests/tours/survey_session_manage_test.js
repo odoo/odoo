@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import SessionManager from "@survey/js/survey_session_manage";
+const { DateTime } = luxon;
 /**
  * Small override for test/tour purposes.
  */
@@ -26,7 +27,7 @@ SessionManager.include({
      * timely variables (rpc/small server delay/...) if the start_question_time flickers.
      */
     _startTimer: function () {
-        this.$el.data('timer', moment.utc());
+        this.$el.data('timer', DateTime.utc());
         return this._super.apply(this, arguments);
     }
 });

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-
+import { formatDuration } from "@web/core/l10n/dates";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
 const { DateTime } = luxon;
 
 /*
@@ -23,7 +24,7 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
     start: function () {
         return this._super.apply(this, arguments).then(() => {
             let timeToLive = this.$el.data('time-to-live');
-            let deadline = DateTime.now().plus({seconds : timeToLive});
+            let deadline = DateTime.now().plus({ seconds: timeToLive });
             let remainingMs = deadline.diff(DateTime.now()).as("milliseconds");
             if (remainingMs > 0) {
                 this._updateTimerDisplay(remainingMs);
@@ -39,7 +40,7 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
     /**
      * @override
      */
-    destroy: function() {
+    destroy: function () {
         this.$el.parent().remove();
         clearInterval(this.timer);
         this._super(...arguments);
@@ -58,7 +59,7 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
      * Otherwise, the component will be destroyed.
      */
     _refreshTimer: function () {
-        let remainingMs = this.deadline.diff(DateTime.now()).as("milliseconds");
+        let remainingMs = this.deadline.diffNow().as("milliseconds");
         if (remainingMs > 0) {
             this._updateTimerDisplay(remainingMs);
         } else {
@@ -69,13 +70,14 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
     /**
      * The function will have the responsibility to update the text indicating
      * the time remaining before the counter expires. The function will use
-     * MomentJS to transform the remaining time in more a human friendly format
+     * Luxon to transform the remaining time in more a human friendly format
      * Example: "in 32 minutes", "in 17 hours", etc.
      * @param {integer} remainingMs - Time remaining before the counter expires (in ms).
      */
     _updateTimerDisplay: function (remainingMs) {
         let $timerTextEl = this.$el.find('span');
-        let str = moment.duration(remainingMs, 'ms').humanize(true);
+        const humanDuration = formatDuration(remainingMs / 1000, true);
+        const str = _t("in %s", humanDuration);
         if (str !== $timerTextEl.text()) {
             $timerTextEl.text(str);
         }

@@ -3,19 +3,37 @@
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer"
 import { patch } from "@web/core/utils/patch";
 import { renderToString } from "@web/core/utils/render";
+const { DateTime } = luxon;
 
 patch(AttendeeCalendarCommonRenderer.prototype, {
     get options(){
         let a = Object.assign(super.options, {
             columnHeaderHtml: function(date) {
+                const datetime = DateTime.fromJSDate(date);
                 if (this.props.model.scale === 'week'){
-                      return "<div>" + moment(date).format("ddd DD") +"</div>" + renderToString(this.constructor.HeaderCalendarTemplate, {date: date, today : new Date()});
+                    return (
+                        "<div>" +
+                        datetime.toFormat("ccc dd") +
+                        "</div>" +
+                        renderToString(this.constructor.HeaderCalendarTemplate, {
+                            date: date,
+                            today: new Date(),
+                        })
+                    );
                 }
                 if (this.props.model.scale === 'day'){
-                    return "<div>" + moment(date).format("MMMM DD, YYYY") + "</div>" + renderToString(this.constructor.HeaderCalendarTemplate, {date: date, today : new Date()});
+                    return (
+                        "<div>" +
+                        datetime.toFormat("LLLL dd, yyyy") +
+                        "</div>" +
+                        renderToString(this.constructor.HeaderCalendarTemplate, {
+                            date: date,
+                            today: new Date(),
+                        })
+                    );
                 }
-                return "<div>" + moment(date).format("dddd") + "</div>";
-              }
+                return "<div>" + datetime.toFormat("cccc") + "</div>";
+            }
         });
         return Object.assign(a, {
             eventOrder: function(event1, event2){
