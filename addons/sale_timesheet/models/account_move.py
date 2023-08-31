@@ -123,9 +123,21 @@ class AccountMoveLine(models.Model):
             ['id:array_agg'])
 
         timesheet_ids = []
+<<<<<<< HEAD
         for timesheet_invoice, so_line, ids in timesheet_read_group:
             if so_line.id in sale_line_ids_per_move[timesheet_invoice.id].ids:
                 timesheet_ids += ids
+||||||| parent of 8d7cc4becdd (temp)
+        for timesheet in timesheet_read_group:
+            move_id = timesheet['timesheet_invoice_id'][0]
+            if timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
+                timesheet_ids += timesheet['ids']
+=======
+        for timesheet in timesheet_read_group:
+            move_id = timesheet['timesheet_invoice_id'][0]
+            if timesheet['so_line'] and timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
+                timesheet_ids += timesheet['ids']
+>>>>>>> 8d7cc4becdd (temp)
 
         self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
         return super().unlink()
