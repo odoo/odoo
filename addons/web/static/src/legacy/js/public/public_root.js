@@ -27,6 +27,7 @@ import { omit } from "@web/core/utils/objects";
 import { Component, App, whenReady } from "@odoo/owl";
 import { getOrigin } from '@web/core/utils/urls';
 
+const { Settings } = luxon;
 
 const serviceRegistry = registry.category("services");
 
@@ -407,6 +408,9 @@ export async function createPublicRoot(RootWidget) {
     });
     renderToString.app = app;
     setLoadXmlDefaultApp(app);
+    const language = lang || browser.navigator.language;
+    const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+    Settings.defaultLocale = locale;
     const [root] = await Promise.all([
         app.mount(document.body),
         publicRoot.attachTo(document.body),
