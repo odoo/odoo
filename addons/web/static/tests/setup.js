@@ -68,12 +68,6 @@ function patchOwlApp() {
                 this.destroyed = true;
             }
         },
-        addTemplate(name) {
-            registerCleanup(() => {
-                delete this.constructor.sharedTemplates[name];
-            });
-            return super.addTemplate(...arguments);
-        },
     });
 }
 
@@ -89,82 +83,79 @@ function patchBrowserWithCleanup() {
     let nextAnimationFrameHandle = 1;
     const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation(() => hasHashChangeListeners);
-    patchWithCleanup(
-        browser,
-        {
-            // patch addEventListner to automatically remove listeners bound (via
-            // browser.addEventListener) during a test (e.g. during the deployment of a service)
-            addEventListener(evName) {
-                if (evName === "hashchange") {
-                    hasHashChangeListeners = true;
-                }
-                originalAddEventListener(...arguments);
-                registerCleanup(() => {
-                    originalRemoveEventListener(...arguments);
-                });
+    patchWithCleanup(browser, {
+        // patch addEventListner to automatically remove listeners bound (via
+        // browser.addEventListener) during a test (e.g. during the deployment of a service)
+        addEventListener(evName) {
+            if (evName === "hashchange") {
+                hasHashChangeListeners = true;
+            }
+            originalAddEventListener(...arguments);
+            registerCleanup(() => {
+                originalRemoveEventListener(...arguments);
+            });
+        },
+        // patch setTimeout to automatically remove timeouts bound (via
+        // browser.setTimeout) during a test (e.g. during the deployment of a service)
+        setTimeout() {
+            const timeout = originalSetTimeout(...arguments);
+            registerCleanup(() => {
+                originalClearTimeout(timeout);
+            });
+            return timeout;
+        },
+        // patch setInterval to automatically remove callbacks registered (via
+        // browser.setInterval) during a test (e.g. during the deployment of a service)
+        setInterval() {
+            const interval = originalSetInterval(...arguments);
+            registerCleanup(() => {
+                originalClearInterval(interval);
+            });
+            return interval;
+        },
+        navigator: {
+            mediaDevices: browser.navigator.mediaDevices,
+            permissions: browser.navigator.permissions,
+            userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),
+            sendBeacon: () => {},
+        },
+        // in tests, we never want to interact with the real url or reload the page
+        location: mockLocation,
+        history: {
+            pushState(state, title, url) {
+                mockLocation.assign(url);
             },
-            // patch setTimeout to automatically remove timeouts bound (via
-            // browser.setTimeout) during a test (e.g. during the deployment of a service)
-            setTimeout() {
-                const timeout = originalSetTimeout(...arguments);
-                registerCleanup(() => {
-                    originalClearTimeout(timeout);
-                });
-                return timeout;
+            replaceState(state, title, url) {
+                mockLocation.assign(url);
             },
-            // patch setInterval to automatically remove callbacks registered (via
-            // browser.setInterval) during a test (e.g. during the deployment of a service)
-            setInterval() {
-                const interval = originalSetInterval(...arguments);
-                registerCleanup(() => {
-                    originalClearInterval(interval);
-                });
-                return interval;
-            },
-            navigator: {
-                mediaDevices: browser.navigator.mediaDevices,
-                permissions: browser.navigator.permissions,
-                userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),
-                sendBeacon: () => {},
-            },
-            // in tests, we never want to interact with the real url or reload the page
-            location: mockLocation,
-            history: {
-                pushState(state, title, url) {
-                    mockLocation.assign(url);
-                },
-                replaceState(state, title, url) {
-                    mockLocation.assign(url);
-                },
-            },
-            // in tests, we never want to interact with the real local/session storages.
-            localStorage: makeRAMLocalStorage(),
-            sessionStorage: makeRAMLocalStorage(),
-            // Don't want original animation frames in tests
-            requestAnimationFrame: (fn) => {
-                const handle = nextAnimationFrameHandle++;
-                animationFrameHandles.add(handle);
+        },
+        // in tests, we never want to interact with the real local/session storages.
+        localStorage: makeRAMLocalStorage(),
+        sessionStorage: makeRAMLocalStorage(),
+        // Don't want original animation frames in tests
+        requestAnimationFrame: (fn) => {
+            const handle = nextAnimationFrameHandle++;
+            animationFrameHandles.add(handle);
 
-                Promise.resolve().then(() => {
-                    if (animationFrameHandles.has(handle)) {
-                        fn(16);
-                    }
-                });
-
-                return handle;
-            },
-            cancelAnimationFrame: (handle) => {
-                animationFrameHandles.delete(handle);
-            },
-            // BroadcastChannels need to be closed to be garbage collected
-            BroadcastChannel: class SelfClosingBroadcastChannel extends BroadcastChannel {
-                constructor() {
-                    super(...arguments);
-                    registerCleanup(() => this.close());
+            Promise.resolve().then(() => {
+                if (animationFrameHandles.has(handle)) {
+                    fn(16);
                 }
-            },
-        }
-    );
+            });
+
+            return handle;
+        },
+        cancelAnimationFrame: (handle) => {
+            animationFrameHandles.delete(handle);
+        },
+        // BroadcastChannels need to be closed to be garbage collected
+        BroadcastChannel: class SelfClosingBroadcastChannel extends BroadcastChannel {
+            constructor() {
+                super(...arguments);
+                registerCleanup(() => this.close());
+            }
+        },
+    });
 }
 
 function patchBodyAddEventListener() {
