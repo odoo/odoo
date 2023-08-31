@@ -33,7 +33,9 @@
                                             <field name="chart_template" readonly="has_accounting_entries" required="chart_template"/>
                                         </div>
                                         <div class="mt16">
-                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh" invisible="not has_accounting_entries"/>
+                                            <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
+                                                    title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
+                                                    invisible="not has_accounting_entries or not chart_template"/>
                                         </div>
                                     </div>
                                 </div>
