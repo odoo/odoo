@@ -614,7 +614,7 @@ export {
  * @param {Object} [options={}] forwarded to `contains`
  */
 export async function click(selector, options) {
-    await contains(selector, 1, { click: true, ...options });
+    await contains(selector, { click: true, ...options });
 }
 
 /**
@@ -626,7 +626,7 @@ export async function click(selector, options) {
  * @param {Object} [options={}] forwarded to `contains`
  */
 export async function scroll(selector, scrollTop, options) {
-    await contains(selector, 1, { setScroll: scrollTop, ...options });
+    await contains(selector, { setScroll: scrollTop, ...options });
 }
 
 let hasUsedContainsPositively = false;
@@ -636,9 +636,9 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  * `options.target`.
  *
  * @param {string} selector
- * @param {number} [count=1]
  * @param {Object} [options={}]
  * @param {boolean} [options.click] if provided, clicks on the found element
+ * @param {number} [count=1]
  * @param {number|"bottom"} [options.scroll] if provided, the scrollTop of the found element(s)
  *  must match.
  *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
@@ -652,8 +652,7 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  */
 export function contains(
     selector,
-    count = 1,
-    { click, scroll, setScroll, target = getFixture(), text, value } = {}
+    { click, count = 1, scroll, setScroll, target = getFixture(), text, value } = {}
 ) {
     if (count) {
         hasUsedContainsPositively = true;

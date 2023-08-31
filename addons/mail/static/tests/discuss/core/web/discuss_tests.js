@@ -24,11 +24,11 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     });
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "abc");
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Discuss-content .o-mail-Message", 0);
+    await contains(".o-mail-Discuss-content .o-mail-Message", { count: 0 });
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -51,14 +51,14 @@ QUnit.test(
         await insertText(".o-discuss-ChannelSelector input", "mario");
         await click(".o-discuss-ChannelSelector-suggestion");
         await contains(".o-discuss-ChannelSelector span[title='Mario']");
-        await contains(".o-mail-DiscussSidebarChannel", 0);
+        await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
         triggerHotkey("Backspace");
-        await contains(".o-discuss-ChannelSelector span[title='Mario']", 0);
+        await contains(".o-discuss-ChannelSelector span[title='Mario']", { count: 0 });
         await insertText(".o-discuss-ChannelSelector input", "mario");
         await contains(".o-discuss-ChannelSelector-suggestion");
         triggerHotkey("Enter");
         await contains(".o-discuss-ChannelSelector span[title='Mario']");
-        await contains(".o-mail-DiscussSidebarChannel", 0);
+        await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     }
 );
 
@@ -82,13 +82,13 @@ QUnit.test("can join a chat conversation", async (assert) => {
     });
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Message", 0);
+    await contains(".o-mail-Message", { count: 0 });
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
@@ -108,16 +108,16 @@ QUnit.test("can create a group chat conversation", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Mario");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Luigi");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Message", 0);
+    await contains(".o-mail-Message", { count: 0 });
 });
 
 QUnit.test("should create DM chat when adding self and another user", async () => {
@@ -127,15 +127,15 @@ QUnit.test("should create DM chat when adding self and another user", async () =
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Mi"); // Mitchell Admin
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Mario");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Mario" });
+    await contains(".o-mail-DiscussSidebarChannel span", { text: "Mario" });
 });
 
 QUnit.test("chat search should display no result when no matches found", async () => {
@@ -143,7 +143,7 @@ QUnit.test("chat search should display no result when no matches found", async (
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector", "Rainbow Panda");
-    await contains(".o-discuss-ChannelSelector-suggestion", 1, { text: "No results found" });
+    await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
 });
 
 QUnit.test("chat search should not be visible when clicking outside of the field", async () => {
@@ -156,7 +156,7 @@ QUnit.test("chat search should not be visible when clicking outside of the field
     await insertText(".o-discuss-ChannelSelector", "Panda");
     await contains(".o-discuss-ChannelSelector-suggestion");
     await click(".o-mail-DiscussSidebar");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
 });
 
 QUnit.test("sidebar: add channel", async (assert) => {
@@ -187,10 +187,10 @@ QUnit.test("Chat is added to discuss on other tab that the one that joined", asy
     await tab1.insertText(".o-discuss-ChannelSelector input", "Jer");
     await click(".o-discuss-ChannelSelector-suggestion", { target: tab1.target });
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", 1, {
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", {
         target: tab1.target,
     });
-    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", 1, {
+    await contains(".o-mail-DiscussSidebarChannel:contains(Jerry Golay)", {
         target: tab2.target,
     });
 });

@@ -160,21 +160,21 @@ QUnit.test("make voice message in chat", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[title='Voice Message']");
-    await contains(".o-mail-VoiceRecorder", 1, { text: "00 : 00" });
+    await contains(".o-mail-VoiceRecorder", { text: "00 : 00" });
     await nextAnimationFrame();
     // simulate 10 sec elapsed
     patchDate(2023, 6, 31, 13, 0, 11); // +1 so exactly 10 sec elapsed
     // simulate some microphone data
     audioProcessor.process([[new Float32Array(128)]]);
-    await contains(".o-mail-VoiceRecorder", 1, { text: "00 : 10" });
+    await contains(".o-mail-VoiceRecorder", { text: "00 : 10" });
     await click("button[title='Stop Recording']");
     await contains(".o-mail-VoicePlayer");
     // wait for audio stream decode + drawing of waves
     await voicePlayerDrawing;
     await nextAnimationFrame();
     await contains(".o-mail-VoicePlayer button[title='Play']");
-    await contains(".o-mail-VoicePlayer canvas", 2); // 1 for global waveforms, 1 for played waveforms
-    await contains(".o-mail-VoicePlayer", 1, { text: "00 : 04" }); // duration of call_02_in_.mp3
+    await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
+    await contains(".o-mail-VoicePlayer", { text: "00 : 04" }); // duration of call_02_in_.mp3
     await contains(".o-mail-VoiceRecorder button[title='Voice Message']:disabled");
     cleanUp();
 });

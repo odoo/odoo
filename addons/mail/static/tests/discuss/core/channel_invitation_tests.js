@@ -51,7 +51,7 @@ QUnit.test("can invite users in channel from chat window", async () => {
         ".o-discuss-ChannelInvitation-selectable:contains(TestPartner) input[type='checkbox']"
     );
     await click("[title='Invite to Channel']:not(:disabled)");
-    await contains(".o-discuss-ChannelInvitation", 0);
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(
         ".o-mail-Thread .o-mail-NotificationMessage:contains(Mitchell Admin invited TestPartner to the channel)"
     );
@@ -81,7 +81,7 @@ QUnit.test("should be able to search for a new user to invite from an existing c
     openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await contains(".o-discuss-ChannelInvitation-selectable", 1, { text: "TestPartner2" });
+    await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
 });
 
 QUnit.test("Invitation form should display channel group restriction", async () => {

@@ -105,7 +105,7 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", 2);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
 QUnit.test("rendering when just one has seen & received the message", async (assert) => {
@@ -139,7 +139,7 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.doesNotHaveClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", 2);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
 QUnit.test("rendering when just everyone has seen the message", async (assert) => {
@@ -170,7 +170,7 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
     await openDiscuss(channelId);
     await contains(".o-mail-MessageSeenIndicator");
     assert.hasClass($(".o-mail-MessageSeenIndicator"), "o-all-seen");
-    await contains(".o-mail-MessageSeenIndicator i", 2);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
 QUnit.test("'channel_fetch' notification received is correctly handled", async () => {
@@ -193,7 +193,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator i", 0);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
@@ -227,7 +227,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-MessageSeenIndicator i", 0);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
@@ -238,7 +238,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
             partner_id: partnerId,
         });
     });
-    await contains(".o-mail-MessageSeenIndicator i", 2);
+    await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
 
 QUnit.test(
@@ -263,7 +263,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message");
-        await contains(".o-mail-MessageSeenIndicator i", 0);
+        await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
 
         const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // Simulate received channel fetched notification
@@ -284,7 +284,7 @@ QUnit.test(
                 partner_id: partnerId,
             });
         });
-        await contains(".o-mail-MessageSeenIndicator i", 2);
+        await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
     }
 );
 
@@ -312,7 +312,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await contains(".o-mail-Message");
-        await contains(".o-mail-MessageSeenIndicator", 0);
+        await contains(".o-mail-MessageSeenIndicator", { count: 0 });
     }
 );
 
@@ -347,13 +347,13 @@ QUnit.test(
         pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await contains(".o-mail-Message-content", 1, { text: "Message before last seen" });
+        await contains(".o-mail-Message-content", { text: "Message before last seen" });
         await contains(
             ".o-mail-Message:contains(Message before last seen) .o-mail-MessageSeenIndicator"
         );
         await contains(
             ".o-mail-Message:contains(Message before last seen) .o-mail-MessageSeenIndicator i",
-            0
+            { count: 0 }
         );
     }
 );

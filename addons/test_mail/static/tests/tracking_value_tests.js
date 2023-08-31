@@ -58,10 +58,10 @@ QUnit.test("basic rendering of tracking value (float type)", async function () {
     await contains(".o-mail-Message-trackingField");
     await contains(".o-mail-Message-trackingField:contains('(Float)')");
     await contains(".o-mail-Message-trackingOld");
-    await contains(".o-mail-Message-trackingOld", 1, { text: "12.30" });
+    await contains(".o-mail-Message-trackingOld", { text: "12.30" });
     await contains(".o-mail-Message-trackingSeparator");
     await contains(".o-mail-Message-trackingNew");
-    await contains(".o-mail-Message-trackingNew", 1, { text: "45.67" });
+    await contains(".o-mail-Message-trackingNew", { text: "45.67" });
 });
 
 QUnit.test("rendering of tracked field of type float: from non-0 to 0", async function () {

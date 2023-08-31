@@ -29,11 +29,11 @@ QUnit.test("hover following button", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".fa-check + span", 1, { text: "Following" });
-    await contains(".fa-times + span", 0, { text: "Following" });
+    await contains(".fa-check + span", { text: "Following" });
+    await contains(".fa-times + span", { count: 0, text: "Following" });
     $("button:contains(Following)")[0].dispatchEvent(new window.MouseEvent("mouseenter"));
-    await contains(".fa-times + span", 1, { text: "Unfollow" });
-    await contains(".fa-check + span", 0, { text: "Unfollow" });
+    await contains(".fa-times + span", { text: "Unfollow" });
+    await contains(".fa-check + span", { count: 0, text: "Unfollow" });
 });
 
 QUnit.test('click on "follow" button', async () => {
@@ -43,10 +43,10 @@ QUnit.test('click on "follow" button', async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button span", 1, { text: "Follow" });
+    await contains("button span", { text: "Follow" });
 
     await click("button span", { text: "Follow" });
-    await contains("button span", 1, { text: "Following" });
+    await contains("button span", { text: "Following" });
 });
 
 QUnit.test('Click on "follow" button should save draft record', async () => {
@@ -63,7 +63,7 @@ QUnit.test('Click on "follow" button should save draft record', async () => {
     };
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.partner");
-    await contains("button span", 1, { text: "Follow" });
+    await contains("button span", { text: "Follow" });
     await contains("div.o_field_char");
     await click("button span", { text: "Follow" });
     await contains("div.o_field_invalid");
@@ -85,5 +85,5 @@ QUnit.test('click on "unfollow" button', async () => {
         views: [[false, "form"]],
     });
     await click(".fa-check + span", { text: "Following" });
-    await contains("button span", 1, { text: "Follow" });
+    await contains("button span", { text: "Follow" });
 });

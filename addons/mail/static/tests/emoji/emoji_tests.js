@@ -14,7 +14,7 @@ QUnit.test("search emoji from keywords", async () => {
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
-    await contains(".o-Emoji", 1, { text: "🌮" });
+    await contains(".o-Emoji", { text: "🌮" });
 });
 
 QUnit.test("search emoji from keywords should be case insensitive", async () => {
@@ -24,7 +24,7 @@ QUnit.test("search emoji from keywords should be case insensitive", async () => 
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "ok");
-    await contains(".o-Emoji", 1, { text: "🆗" }); // all search terms are uppercase OK
+    await contains(".o-Emoji", { text: "🆗" }); // all search terms are uppercase OK
 });
 
 QUnit.test("search emoji from keywords with special regex character", async () => {
@@ -34,7 +34,7 @@ QUnit.test("search emoji from keywords with special regex character", async () =
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
-    await contains(".o-Emoji", 1, { text: "🆎" });
+    await contains(".o-Emoji", { text: "🆎" });
 });
 
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
@@ -44,7 +44,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     triggerHotkey("Escape");
-    await contains(".o-EmojiPicker", 0);
+    await contains(".o-EmojiPicker", { count: 0 });
 });
 
 QUnit.test("Basic keyboard navigation", async () => {
@@ -64,8 +64,8 @@ QUnit.test("Basic keyboard navigation", async () => {
     await contains(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200");
     const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data("codepoints");
     triggerHotkey("Enter");
-    await contains(".o-EmojiPicker", 0);
-    await contains(".o-mail-Composer-input", 1, { value: codepoints });
+    await contains(".o-EmojiPicker", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: codepoints });
 });
 
 QUnit.test("recent category (basic)", async () => {
@@ -74,7 +74,7 @@ QUnit.test("recent category (basic)", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await contains(".o-EmojiPicker-navbar [title='Frequently used']", 0);
+    await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
     await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
@@ -155,6 +155,6 @@ QUnit.test(
         );
         await contains(".o-EmojiPicker-navbar [title='Frequently used']");
         await contains(".o-EmojiPicker");
-        await contains(".o-mail-Composer-input", 1, { value: "👺" });
+        await contains(".o-mail-Composer-input", { value: "👺" });
     }
 );

@@ -29,12 +29,12 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(James) input");
     await click("button:contains(Invite):not(:disabled)");
-    await contains(".o-discuss-ChannelInvitation", 0);
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember", 1, { text: "James" });
+    await contains(".o-discuss-ChannelMember", { text: "James" });
 });
 
-QUnit.test("Available operators come first", async (assert) => {
+QUnit.test("Available operators come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "Harry",
@@ -61,12 +61,12 @@ QUnit.test("Available operators come first", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Add Users']");
-    const partnerSuggestions = await contains(".o-discuss-ChannelInvitation-selectable", 2);
-    assert.ok(partnerSuggestions[0].textContent.includes("Ron"));
-    assert.ok(partnerSuggestions[1].textContent.includes("Harry"));
+    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(0)", { text: "Ron" });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(1)", { text: "Harry" });
 });
 
-QUnit.test("Partners invited most frequently by the current user come first", async (assert) => {
+QUnit.test("Partners invited most frequently by the current user come first", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].create({
         name: "John",
@@ -105,7 +105,7 @@ QUnit.test("Partners invited most frequently by the current user come first", as
     await click("button:contains(Invite):not(:disabled)");
     await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #2" });
     await click("button[title='Add Users']");
-    const partnerSuggestions = await contains(".o-discuss-ChannelInvitation-selectable", 2);
-    assert.ok(partnerSuggestions[0].textContent.includes("John"));
-    assert.ok(partnerSuggestions[1].textContent.includes("Albert"));
+    await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(0)", { text: "John" });
+    await contains(".o-discuss-ChannelInvitation-selectable:eq(1)", { text: "Albert" });
 });

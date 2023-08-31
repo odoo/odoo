@@ -113,7 +113,7 @@ QUnit.test("Searching for a GIF", async () => {
     await click("button[aria-label='GIFs']");
     insertText((await contains("input[placeholder='Search for a gif']"))[0], "search");
     await contains("i[aria-label='back']");
-    await contains(".o-discuss-Gif", 2);
+    await contains(".o-discuss-Gif", { count: 2 });
 });
 
 QUnit.test("Open a GIF category trigger the search for the category", async () => {
@@ -132,8 +132,8 @@ QUnit.test("Open a GIF category trigger the search for the category", async () =
     openDiscuss(channelId);
     await click("button[aria-label='GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await contains(".o-discuss-Gif", 2);
-    await contains("input[placeholder='Search for a gif']", 1, { value: "cry" });
+    await contains(".o-discuss-Gif", { count: 2 });
+    await contains("input[placeholder='Search for a gif']", { value: "cry" });
 });
 
 QUnit.test("Reopen GIF category list when going back", async () => {
@@ -184,7 +184,7 @@ QUnit.test("Chatter should not have the GIF button", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });
-    await contains("button[aria-label='GIFs']", 0);
+    await contains("button[aria-label='GIFs']", { count: 0 });
 });
 
 QUnit.test(
@@ -197,7 +197,7 @@ QUnit.test(
         openDiscuss(channelId, { waitUntilMessagesLoaded: false });
         await click("span", { text: "General" });
         await click("button[aria-label='GIFs']");
-        await contains(".popover .o-discuss-GifPicker", 0);
+        await contains(".popover .o-discuss-GifPicker", { count: 0 });
         await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
     }
 );

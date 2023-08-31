@@ -13,13 +13,13 @@ QUnit.test("Add member to channel", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember", 1, { text: "Mitchell Admin" });
+    await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });
     await click("[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
     await click("[title='Invite to Channel']:not(:disabled)");
-    await contains(".o-discuss-ChannelInvitation", 0);
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember", 1, { text: "Harry" });
+    await contains(".o-discuss-ChannelMember", { text: "Harry" });
 });
 
 QUnit.test("Remove member from channel", async () => {
@@ -39,9 +39,9 @@ QUnit.test("Remove member from channel", async () => {
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
     await click("[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember", 1, { text: "Harry" });
+    await contains(".o-discuss-ChannelMember", { text: "Harry" });
     pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])
     );
-    await contains(".o-discuss-ChannelMember", 0, { text: "Harry" });
+    await contains(".o-discuss-ChannelMember", { count: 0, text: "Harry" });
 });

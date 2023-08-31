@@ -13,5 +13,5 @@ QUnit.test("Member list and settings menu are exclusive", async () => {
     await contains(".o-discuss-ChannelMemberList");
     await click("[title='Show Call Settings']");
     await contains(".o-discuss-CallSettings");
-    await contains(".o-discuss-ChannelMemberList", 0);
+    await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });

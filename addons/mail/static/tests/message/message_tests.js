@@ -40,7 +40,7 @@ QUnit.test("Start edition on click edit", async () => {
     openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
-    await contains(".o-mail-Message-editable .o-mail-Composer-input", 1, { value: "Hello world" });
+    await contains(".o-mail-Message-editable .o-mail-Composer-input", { value: "Hello world" });
 });
 
 QUnit.test("Can edit message comment in chatter", async () => {
@@ -59,7 +59,7 @@ QUnit.test("Can edit message comment in chatter", async () => {
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", 1, { text: "edited message" });
+    await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
 QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
@@ -102,7 +102,7 @@ QUnit.test("Stop edition on click cancel", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     await click(".o-mail-Message a", { text: "cancel" });
-    await contains(".o-mail-Message-editable .o-mail-Composer", 0);
+    await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("Stop edition on press escape", async () => {
@@ -123,7 +123,7 @@ QUnit.test("Stop edition on press escape", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     triggerHotkey("Escape", false);
-    await contains(".o-mail-Message-editable .o-mail-Composer", 0);
+    await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("Stop edition on click save", async () => {
@@ -144,7 +144,7 @@ QUnit.test("Stop edition on click save", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-editable .o-mail-Composer", 0);
+    await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("Stop edition on press enter", async () => {
@@ -165,7 +165,7 @@ QUnit.test("Stop edition on press enter", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     triggerHotkey("Enter", false);
-    await contains(".o-mail-Message-editable .o-mail-Composer", 0);
+    await contains(".o-mail-Message-editable .o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("Do not stop edition on click away when clicking on emoji", async () => {
@@ -209,7 +209,7 @@ QUnit.test("Edit and click save", async () => {
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", 1, { text: "Goodbye World" });
+    await contains(".o-mail-Message-body", { text: "Goodbye World" });
 });
 
 QUnit.test("Do not call server on save if no changes", async (assert) => {
@@ -264,7 +264,7 @@ QUnit.test("Update the link previews when a message is edited", async (assert) =
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", 1, { text: "Goodbye World" });
+    await contains(".o-mail-Message-body", { text: "Goodbye World" });
     assert.verifySteps(["link_preview"]);
 });
 
@@ -287,7 +287,7 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     await click(".o-mail-Message [title='Edit']");
     const $textarea = await contains(".o-mail-Message .o-mail-Composer-input");
     assert.ok($textarea[0].scrollHeight > $textarea[0].clientHeight);
-    await contains(".o-mail-Message .o-mail-Composer-input", 1, { scroll: 0 });
+    await contains(".o-mail-Message .o-mail-Composer-input", { scroll: 0 });
 });
 
 QUnit.test("mentions are kept when editing message", async () => {
@@ -343,7 +343,7 @@ QUnit.test("can add new mentions when editing message", async () => {
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", " @");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    await contains(".o-mail-Composer-input", 1, { value: "Hello @TestPartner " });
+    await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
     await click(".o-mail-Message a", { text: "save" });
     await contains(
         ".o-mail-Message-body:contains(Hello @TestPartner) a.o_mail_redirect:contains(@TestPartner)"
@@ -362,12 +362,12 @@ QUnit.test("Other messages are grayed out when replying to another one", async (
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message", 2);
+    await contains(".o-mail-Message", { count: 2 });
     await click(".o-mail-Message:contains(Hello world) [title='Reply']");
-    await contains(".o-mail-Message.opacity-50 .o-mail-Message-content", 1, {
+    await contains(".o-mail-Message.opacity-50 .o-mail-Message-content", {
         text: "Goodbye world",
     });
-    await contains(".o-mail-Message:not(.opacity_50) .o-mail-Message-content", 1, {
+    await contains(".o-mail-Message:not(.opacity_50) .o-mail-Message-content", {
         text: "Hello world",
     });
 });
@@ -420,7 +420,7 @@ QUnit.test(
         const input = (await contains(".o-mail-Message .o-mail-Composer-input"))[0];
         insertText(input, "Goodbye World", { replace: true });
         triggerHotkey("Enter", false);
-        await contains(".o-mail-MessageInReply-message", 1, { text: "Goodbye World" });
+        await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
         assert.strictEqual($(".o-mail-MessageInReply-message")[0].innerText, "Goodbye World");
     }
 );
@@ -445,7 +445,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Delete']");
     await click("button", { text: "Confirm" });
-    await contains(".o-mail-MessageInReply", 1, { text: "Original message was deleted" });
+    await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
 });
 
 QUnit.test("Can open emoji picker after edit mode", async () => {
@@ -485,7 +485,7 @@ QUnit.test("Can add a reaction", async () => {
     openDiscuss(channelId);
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", 1, { text: "😅1" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
 QUnit.test("Can remove a reaction", async () => {
@@ -505,7 +505,7 @@ QUnit.test("Can remove a reaction", async () => {
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
     await click(".o-mail-MessageReaction");
-    await contains(".o-mail-MessageReaction", 0);
+    await contains(".o-mail-MessageReaction", { count: 0 });
 });
 
 QUnit.test("Two users reacting with the same emoji", async () => {
@@ -535,9 +535,9 @@ QUnit.test("Two users reacting with the same emoji", async () => {
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-MessageReaction", 1, { text: "😅2" });
+    await contains(".o-mail-MessageReaction", { text: "😅2" });
     await click(".o-mail-MessageReaction");
-    await contains(".o-mail-MessageReaction", 1, { text: "😅1" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
 QUnit.test("Reaction summary", async () => {
@@ -590,7 +590,7 @@ QUnit.test("Add the same reaction twice from the emoji picker", async () => {
     await click(".o-Emoji", { text: "😅" });
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
-    await contains(".o-mail-MessageReaction", 1, { text: "😅1" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
 QUnit.test("basic rendering of message", async () => {
@@ -607,11 +607,11 @@ QUnit.test("basic rendering of message", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message .o-mail-Message-content", 1, { text: "body" });
+    await contains(".o-mail-Message .o-mail-Message-content", { text: "body" });
     await contains(
         `.o-mail-Message .o-mail-Message-sidebar .o-mail-Message-avatarContainer img[data-src='${getOrigin()}/discuss/channel/${channelId}/partner/${partnerId}/avatar_128']`
     );
-    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author", 1, {
+    await contains(".o-mail-Message .o-mail-Message-header .o-mail-Message-author", {
         text: "Demo",
     });
     await contains(
@@ -629,7 +629,7 @@ QUnit.test("should not be able to reply to temporary/transient messages", async 
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message [title='Reply']", 0);
+    await contains(".o-mail-Message [title='Reply']", { count: 0 });
 });
 
 QUnit.test("message comment of same author within 1min. should be squashed", async () => {
@@ -659,19 +659,17 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     ]);
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message", 2);
-    await contains(".o-mail-Message-content", 1, { text: "body1" });
-    await contains(".o-mail-Message-content", 1, { text: "body2" });
+    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-Message-content", { text: "body1" });
+    await contains(".o-mail-Message-content", { text: "body2" });
     await contains(".o-mail-Message:contains(body1) .o-mail-Message-header");
-    await contains(".o-mail-Message:contains(body2) .o-mail-Message-header", 0);
-    await contains(
-        ".o-mail-Message:contains(body1) .o-mail-Message-sidebar .o-mail-Message-date",
-        0
-    );
-    await contains(
-        ".o-mail-Message:contains(body2) .o-mail-Message-sidebar .o-mail-Message-date",
-        0
-    );
+    await contains(".o-mail-Message:contains(body2) .o-mail-Message-header", { count: 0 });
+    await contains(".o-mail-Message:contains(body1) .o-mail-Message-sidebar .o-mail-Message-date", {
+        count: 0,
+    });
+    await contains(".o-mail-Message:contains(body2) .o-mail-Message-sidebar .o-mail-Message-date", {
+        count: 0,
+    });
     await click(".o-mail-Message", { text: "body2" });
     await contains(".o-mail-Message:contains(body2) .o-mail-Message-sidebar .o-mail-Message-date");
 });
@@ -698,11 +696,11 @@ QUnit.test("redirect to author (open chat)", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId_1);
-    await contains(".o-mail-DiscussSidebarChannel.o-active", 1, { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
 
     await click(".o-mail-Discuss-content .o-mail-Message-avatarContainer img");
-    await contains(".o-mail-DiscussSidebarChannel.o-active", 1, { text: "Demo" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Demo" });
 });
 
 QUnit.test("open chat from avatar should not work on self-authored messages", async () => {
@@ -726,8 +724,8 @@ QUnit.test("open chat from avatar should not work on self-authored messages", as
     await contains(".o-mail-Message-author:not(.cursor-pointer)");
     await click(".o-mail-Message-avatar");
     // weak test, no guarantee that we waited long enough to open the chat/view
-    await contains(".o-mail-DiscussSidebarChannel.o-active", 0, { text: "Mitchell Admin" });
-    await contains(".breadcrumb", 0, { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { count: 0, text: "Mitchell Admin" });
+    await contains(".breadcrumb", { count: 0, text: "Mitchell Admin" });
 });
 
 QUnit.test("toggle_star message", async (assert) => {
@@ -750,16 +748,16 @@ QUnit.test("toggle_star message", async (assert) => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo']");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star-o");
-    await contains("button:contains(Starred) .badge", 0);
+    await contains("button:contains(Starred) .badge", { count: 0 });
 
     await click("[title='Mark as Todo']");
-    await contains("button:contains(Starred) .badge", 1, { text: "1" });
+    await contains("button:contains(Starred) .badge", { text: "1" });
     assert.verifySteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star");
 
     await click("[title='Mark as Todo']");
-    await contains("button:contains(Starred) .badge", 0);
+    await contains("button:contains(Starred) .badge", { count: 0 });
     assert.verifySteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
     await contains(".o-mail-Message [title='Mark as Todo'] i.fa-star-o");
@@ -814,7 +812,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        await contains(".o-mail-Message-author", 0);
+        await contains(".o-mail-Message-author", { count: 0 });
     }
 );
 
@@ -867,7 +865,7 @@ QUnit.test("Notification Sent", async (assert) => {
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
     assert.hasClass($(".o-mail-MessageNotificationPopover i"), "fa-check");
-    await contains(".o-mail-MessageNotificationPopover", 1, { text: "Someone" });
+    await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
 QUnit.test("Notification Error", async (assert) => {
@@ -939,7 +937,7 @@ QUnit.test(
         await contains(".o-mail-Message");
         triggerHotkey("ArrowUp");
         await contains(".o-mail-Message .o-mail-Message-editable");
-        await contains(".o-mail-Message .o-mail-Composer-input", 1, { value: "not empty" });
+        await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
     }
 );
 
@@ -966,7 +964,7 @@ QUnit.test("Editing a message to clear its composer opens message delete dialog.
         ""
     );
     triggerHotkey("Enter");
-    await contains(".modal-body p", 1, { text: "Are you sure you want to delete this message?" });
+    await contains(".modal-body p", { text: "Are you sure you want to delete this message?" });
 });
 
 QUnit.test(
@@ -997,10 +995,9 @@ QUnit.test(
             ""
         );
         triggerHotkey("Enter");
-        await contains(
-            ".modal-body p:contains('Are you sure you want to delete this message?')",
-            0
-        );
+        await contains(".modal-body p:contains('Are you sure you want to delete this message?')", {
+            count: 0,
+        });
     }
 );
 
@@ -1082,7 +1079,7 @@ QUnit.test("allow attachment delete on authored message", async (assert) => {
     assert.strictEqual($(".modal-body").text(), 'Do you really want to delete "BLAH"?');
 
     await click(".modal-footer .btn-primary");
-    await contains(".o-mail-AttachmentCard", 0);
+    await contains(".o-mail-AttachmentCard", { count: 0 });
 });
 
 QUnit.test("prevent attachment delete on non-authored message in channels", async () => {
@@ -1110,7 +1107,7 @@ QUnit.test("prevent attachment delete on non-authored message in channels", asyn
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-AttachmentImage");
-    await contains(".o-mail-AttachmentImage div[title='Remove']", 0);
+    await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
 });
 
 QUnit.test("Toggle star should update starred counter on all tabs", async () => {
@@ -1131,7 +1128,7 @@ QUnit.test("Toggle star should update starred counter on all tabs", async () => 
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss();
     await click(".o-mail-Message [title='Mark as Todo']", { target: tab1.target });
-    await contains("button:contains(Starred) .badge", 1, { target: tab2.target, text: "1" });
+    await contains("button:contains(Starred) .badge", { target: tab2.target, text: "1" });
 });
 
 QUnit.test("allow attachment image download on message", async () => {
@@ -1171,7 +1168,7 @@ QUnit.test("chat with author should be opened after clicking on their avatar", a
     assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
     await click(".o-mail-Message-avatar");
     await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "Partner_2" });
+    await contains(".o-mail-ChatWindow-name", { text: "Partner_2" });
 });
 
 QUnit.test("chat with author should be opened after clicking on their name", async () => {
@@ -1186,11 +1183,11 @@ QUnit.test("chat with author should be opened after clicking on their name", asy
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message span", 1, { text: "Demo User" });
+    await contains(".o-mail-Message span", { text: "Demo User" });
 
     await click(".o-mail-Message span", { text: "Demo User" });
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "Demo User" });
+    await contains(".o-mail-ChatWindow-name", { text: "Demo User" });
 });
 
 QUnit.test("subtype description should be displayed if it is different than body", async () => {
@@ -1205,7 +1202,7 @@ QUnit.test("subtype description should be displayed if it is different than body
     });
     const { openFormView } = await start();
     openFormView("res.partner", threadId);
-    await contains(".o-mail-Message-body", 1, { text: "HelloBonjour" });
+    await contains(".o-mail-Message-body", { text: "HelloBonjour" });
 });
 
 QUnit.test("subtype description should not be displayed if it is similar to body", async () => {
@@ -1220,7 +1217,7 @@ QUnit.test("subtype description should not be displayed if it is similar to body
     });
     const { openFormView } = await start();
     openFormView("res.partner", threadId);
-    await contains(".o-mail-Message-body", 1, { text: "Hello" });
+    await contains(".o-mail-Message-body", { text: "Hello" });
 });
 
 QUnit.test("data-oe-id & data-oe-model link redirection on click", async (assert) => {
@@ -1257,11 +1254,11 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion strong", { text: "Test Partner" });
-    await contains(".o-mail-Composer-input", 1, { value: "@Test Partner " });
+    await contains(".o-mail-Composer-input", { value: "@Test Partner " });
     await click(".o-mail-Composer-send:not(:disabled)");
     await click(".o_mail_redirect");
     await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "Test Partner" });
+    await contains(".o-mail-ChatWindow-name", { text: "Test Partner" });
 });
 
 QUnit.test(
@@ -1291,7 +1288,7 @@ QUnit.test(
 
         click(".o-mail-Message-avatar").catch(() => {});
         await nextAnimationFrame();
-        await contains(".o-mail-ChatWindow", 0);
+        await contains(".o-mail-ChatWindow", { count: 0 });
     }
 );
 
@@ -1307,7 +1304,7 @@ QUnit.test("Channel should be opened after clicking on its mention", async () =>
     await click(".o-mail-Composer-send:not(:disabled)");
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow-content");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "my-channel" });
+    await contains(".o-mail-ChatWindow-name", { text: "my-channel" });
 });
 
 QUnit.test(
@@ -1331,7 +1328,7 @@ QUnit.test(
 
         await click(".o-mail-AttachmentCard button[title='Remove']");
         await click(".modal button", { text: "Ok" });
-        await contains(".o-mail-Message", 0);
+        await contains(".o-mail-Message", { count: 0 });
     }
 );
 
@@ -1373,7 +1370,7 @@ QUnit.test("message with subtype should be displayed (and not considered as empt
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-content", 1, { text: "Task created" });
+    await contains(".o-mail-Message-content", { text: "Task created" });
 });
 
 QUnit.test("message considered empty", async () => {
@@ -1423,7 +1420,7 @@ QUnit.test("message considered empty", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Thread-empty");
-    await contains(".o-mail-Message", 0);
+    await contains(".o-mail-Message", { count: 0 });
 });
 
 QUnit.test("message with html not to be considered empty", async () => {
@@ -1496,7 +1493,7 @@ QUnit.test("Mark as unread", async () => {
     await click("[title='Expand']");
     await click("[title='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
-    await contains(".o-mail-DiscussSidebarChannel .badge", 1, { text: "1" });
+    await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
 
 QUnit.test("Avatar of unknown author", async () => {
@@ -1528,7 +1525,7 @@ QUnit.test("Show email_from of message without author", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
-    await contains(".o-mail-Message-author", 1, { text: "md@oilcompany.fr" });
+    await contains(".o-mail-Message-author", { text: "md@oilcompany.fr" });
 });
 
 QUnit.test("Message should display attachments in order", async () => {
@@ -1551,7 +1548,7 @@ QUnit.test("Message should display attachments in order", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard:eq(0) div", 1, { text: "A.txt" });
-    await contains(".o-mail-AttachmentCard:eq(1) div", 1, { text: "B.txt" });
-    await contains(".o-mail-AttachmentCard:eq(2) div", 1, { text: "C.txt" });
+    await contains(".o-mail-AttachmentCard:eq(0) div", { text: "A.txt" });
+    await contains(".o-mail-AttachmentCard:eq(1) div", { text: "B.txt" });
+    await contains(".o-mail-AttachmentCard:eq(2) div", { text: "C.txt" });
 });
