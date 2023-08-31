@@ -69,4 +69,9 @@ export class OrderCart extends Component {
         }
         return;
     }
+
+    getAttributes(attributes){
+        //attribute traduction
+        return attributes;
+    }
 }

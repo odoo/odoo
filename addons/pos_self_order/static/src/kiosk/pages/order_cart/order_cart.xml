@@ -11,7 +11,7 @@
                 <div class="o_kiosk-order-cart position-relative h-100 d-flex flex-column justify-content-between bg-100">
                     <div class="order-content bg-100 px-3 py-4 overflow-auto">
                         <t t-foreach="lines" t-as="line" t-key="line.uuid">
-                            <div t-if="!line.combo_parent_uuid" class="d-flex align-items-start justify-content-between w-100 gap-3 py-3 p-2 pe-4 mb-3 rounded shadow-sm bg-view">
+                            <div t-if="!line.combo_parent_uuid" class="o_kiosk_item_card d-flex align-items-start justify-content-between w-100 gap-3 py-3 p-2 pe-4 mb-3 rounded shadow-sm bg-view">
                                 <t t-set="childLines" t-value="getChildLines(line)"/>
                                 <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id]"/>
                                 <img
@@ -23,7 +23,7 @@
                                 <div class="product-wrapper d-flex flex-grow-1">
                                     <div class="product-info d-flex flex-row align-items-center justify-content-center flex-grow-1 h-auto">
                                         <div class="d-flex flex-column flex-grow-1 justify-content-center">
-                                            <div class="fs-2 fw-bolder"><span t-esc="line.full_product_name"/></div>
+                                            <div class="fs-2 fw-bolder"><span class="o_kiosk_product_name" t-esc="line.full_product_name"/></div>
 
                                             <div t-foreach="childLines" t-as="cline" t-key="cline.uuid" class="text-muted">
                                                 - <span t-esc="cline.full_product_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
@@ -33,7 +33,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div t-foreach="line.attributes" t-as="attribute" t-key="attribute.name" class="text-muted">
+                                            <div t-foreach="getAttributes(line.attributes)" t-as="attribute" t-key="attribute.name" class="text-muted">
                                                 - <span t-esc="attribute.name" /> : <span t-esc="attribute.value" />
                                             </div>
                                         </div>

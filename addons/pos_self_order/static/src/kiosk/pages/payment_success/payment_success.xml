@@ -13,7 +13,7 @@
             </t>
             <t t-set-slot="content">
                 <div class="h-100 d-flex justify-content-center align-items-center flex-column text-center">
-                    <h1 class="m-0">We're preparing<br/>your order!</h1>
+                    <h1 class="o_kiosk_preparation_title m-0">We're preparing<br/>your order!</h1>
                     <div class="d-flex flex-column justify-content-center align-items-center w-50 h-25 my-5 border rounded  bg-view">
                         <t t-if="selfOrder.currentOrder.take_away || selfOrder.kiosk_mode !== 'table'">
                             <span class="fs-2 text-muted">Your order number</span>

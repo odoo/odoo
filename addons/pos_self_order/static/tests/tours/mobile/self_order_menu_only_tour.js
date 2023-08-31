@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { PosSelf } from "./tour_utils";
+import { PosSelf } from "../../utils/tour_utils";
 
 registry.category("web_tour.tours").add("self_order_menu_only_tour", {
     test: true,
