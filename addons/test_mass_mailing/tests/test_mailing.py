@@ -229,8 +229,8 @@ class TestMassMailing(TestMassMailCommon):
                          'failure_type': False,
                          'partner': customer_weird,
                          'state': 'sent'},  # concatenates everything after domain
-                        {'email': 'weird format2 test.customer.weird.2@example.com',
-                        'email_to_recipients': [[f'"{customer_weird_2.name}" <weird format2 test.customer.weird.2@example.com>']],
+                        {'email': 'test.customer.weird.2@example.com',
+                        'email_to_recipients': [[f'"{customer_weird_2.name}" <test.customer.weird.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_weird_2,
                          'state': 'sent'},
