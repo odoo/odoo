@@ -8,8 +8,8 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("@mail/core/common/thread_model").Thread} channel
- * @property {string} size
- * @property {boolean} displayText
+ * @property {string} [size]
+ * @property {boolean} [displayText]
  * @extends {Component<Props, Env>}
  */
 export class Typing extends Component {

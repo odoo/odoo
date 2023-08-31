@@ -356,7 +356,7 @@ QUnit.test("chat: correspondent is typing in chat window", async () => {
             is_typing: true,
         })
     );
-    await contains("[title='Demo is typing...']");
+    await contains("[title='Demo is typing...']", { count: 2 }); // icon in header & text above composer
     // simulate receive typing notification from demo "no longer is typing"
     pyEnv.withUser(userId, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
