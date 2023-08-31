@@ -1,6 +1,5 @@
 // = Main Navbar Variables
 // ============================================================================
-$o-navbar-use-pills: false !default;
 $o-navbar-height: 46px !default;
 $o-navbar-padding-v: 0px !default;
 $o-navbar-font-size: $o-font-size-base !default;
@@ -60,19 +59,4 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     padding-left: var(--NavBar-entry-padding-left, #{$o-navbar-entry-padding-h});
     padding-right: var(--NavBar-entry-padding-right, #{$o-navbar-entry-padding-h});
     line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
-}
-
-@if ($o-navbar-use-pills == false) {
-    %-main-navbar-entry-bg-hover {
-        &:hover {
-            background-color: var(--NavBar-entry-backgroundColor--hover, #{$o-navbar-entry-bg--hover});
-        }
-    }
-
-    %-main-navbar-entry-active {
-        &, &:hover, &:focus {
-            background: var(--NavBar-entry-backgroundColor--active, #{$o-navbar-entry-bg--active});
-            color: var(--NavBar-entry-color--active, #{$o-navbar-entry-color--active});
-        }
-    }
 }
