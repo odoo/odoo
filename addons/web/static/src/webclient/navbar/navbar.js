@@ -10,10 +10,10 @@ import { ErrorHandler } from "@web/core/utils/components";
 import {
     Component,
     onWillDestroy,
-    onWillUnmount,
     useExternalListener,
     useEffect,
     useRef,
+    onWillUnmount,
 } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
@@ -61,12 +61,12 @@ export class NavBar extends Component {
             this.render();
         };
 
-        systrayRegistry.on("UPDATE", this, renderAndAdapt);
-        this.env.bus.on("MENUS:APP-CHANGED", this, renderAndAdapt);
+        systrayRegistry.addEventListener("UPDATE", renderAndAdapt);
+        this.env.bus.addEventListener("MENUS:APP-CHANGED", renderAndAdapt);
 
         onWillUnmount(() => {
-            systrayRegistry.off("UPDATE", this);
-            this.env.bus.off("MENUS:APP-CHANGED", this);
+            systrayRegistry.removeEventListener("UPDATE", renderAndAdapt);
+            this.env.bus.removeEventListener("MENUS:APP-CHANGED", renderAndAdapt);
         });
 
         // We don't want to adapt every time we are patched

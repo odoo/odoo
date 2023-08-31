@@ -215,7 +215,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/moment/moment.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
-            'web/static/src/owl2_compatibility/*.js',
+            'web/static/src/libs/owl.js',
             'web/static/src/legacy/js/component_extension.js',
             'web/static/src/legacy/legacy_component.js',
             'web/static/lib/jquery/jquery.js',
@@ -394,7 +394,7 @@ This module provides the core of the Odoo Web Client.
             # libs
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2_compatibility/*.js',
+            'web/static/src/libs/owl.js',
             'web/static/lib/owl/odoo_module.js',
             # core
             'web/static/src/env.js',
@@ -462,7 +462,7 @@ This module provides the core of the Odoo Web Client.
         # remove this bundle alongside the owl2 compatibility layer
         'web.assets_backend_tests': [
             ('include', 'web.assets_backend'),
-            ('after', 'web/static/src/owl2_compatibility/app.js', 'web/static/tests/owl2_compatibility_app.js'),
+            ('after', 'web/static/src/libs/owl.js', 'web/static/tests/owl2_compatibility_app.js'),
         ],
         'web.tests_assets': [
             'web/static/tests/patch_translations.js',

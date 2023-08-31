@@ -189,7 +189,7 @@ QUnit.module("Search", (hooks) => {
             Component: TestComponent,
             searchViewId: false,
         });
-        comp.env.bus.on("CLEAR-CACHES", comp, () => assert.step("CLEAR-CACHES"));
+        comp.env.bus.addEventListener("CLEAR-CACHES", () => assert.step("CLEAR-CACHES"));
 
         assert.verifySteps([]);
 

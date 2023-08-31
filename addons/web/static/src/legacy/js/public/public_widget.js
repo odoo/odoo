@@ -517,7 +517,8 @@ var RootWidget = PublicWidget.extend({
         var defs = [this._super.apply(this, arguments)];
 
         defs.push(this._attachComponents());
-        this._getRegistry().on("UPDATE", this, ({ operation, value }) => {
+        this._getRegistry().addEventListener("UPDATE", ({ detail }) => {
+            const { operation, value } = detail;
             if (operation === "add") {
                 this._attachComponent(value);
             }

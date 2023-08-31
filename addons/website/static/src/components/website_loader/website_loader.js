@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 const { EventBus, Component, markup, useEffect, useState } = owl;
@@ -80,14 +80,15 @@ export class WebsiteLoader extends Component {
             () => [this.state.isVisible]
         );
 
-        this.props.bus.on('SHOW-WEBSITE-LOADER', this, (props) => {
+        useBus(this.props.bus, "SHOW-WEBSITE-LOADER", (ev) => {
+            const props = ev.detail;
             this.state.isVisible = true;
             this.state.title = props && props.title;
             this.state.showTips = props && props.showTips;
             this.state.selectedFeatures = props && props.selectedFeatures;
             this.state.showWaitingMessages = props && props.showWaitingMessages;
         });
-        this.props.bus.on('HIDE-WEBSITE-LOADER', this, () => {
+        useBus(this.props.bus, "HIDE-WEBSITE-LOADER", () => {
             for (const key of Object.keys(initialState)) {
                 this.state[key] = initialState[key];
             }
@@ -97,7 +98,7 @@ export class WebsiteLoader extends Component {
         // Action needed if the app automatically refreshes or redirects the
         // page without hiding/removing the WebsiteLoader. This should be
         // called prior to any refresh/redirect if the loader is still visible.
-        this.props.bus.on("PREPARE-OUT-WEBSITE-LOADER", this, () => {
+        useBus(this.props.bus, "PREPARE-OUT-WEBSITE-LOADER", () => {
             window.removeEventListener("beforeunload", this.showRefreshConfirmation);
         });
     }

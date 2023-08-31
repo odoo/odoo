@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
+import { useBus } from "@web/core/utils/hooks";
+
 const { EventBus, Component, xml, useState } = owl;
 
 export class FullscreenIndication extends Component {
     setup() {
         this.state = useState({ isVisible: false });
-        this.props.bus.on('FULLSCREEN-INDICATION-SHOW', this, this.show);
-        this.props.bus.on('FULLSCREEN-INDICATION-HIDE', this, this.hide);
+        useBus(this.props.bus, "FULLSCREEN-INDICATION-SHOW", this.show.bind(this));
+        useBus(this.props.bus, "FULLSCREEN-INDICATION-HIDE", this.hide.bind(this));
     }
 
     show() {
