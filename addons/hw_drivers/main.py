@@ -93,9 +93,12 @@ class Manager(Thread):
 
         # Start the interfaces
         for interface in interfaces.values():
-            i = interface()
-            i.daemon = True
-            i.start()
+            try:
+                i = interface()
+                i.daemon = True
+                i.start()
+            except Exception as e:
+                _logger.error("Error in %s: %s", str(interface), e)
 
         # Check every 3 secondes if the list of connected devices has changed and send the updated
         # list to the connected DB.
