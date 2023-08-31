@@ -372,8 +372,8 @@ class TestPartner(MailCommon):
             # multi email support
             (False, "Another Customer", "test.different.1@test.dupe.example.com"),
             (False, "Multi Email", "other.customer.2@test.dupe.example.com"),
-            (False, "Invalid, Multi Format", "other.customer.😊@test.dupe.example.com"),
-            (False, "Invalid, Multi Format", "other.customer.😊@test.dupe.example.com"),
+            (False, "Multi Format", "other.customer.😊@test.dupe.example.com"),
+            (False, "Multi Format", "other.customer.😊@test.dupe.example.com"),
         ]
         with self.mockPartnerCalls():
             new_partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
