@@ -255,3 +255,55 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(task.subtask_count, 1, "Parent task should have 1 children")
         task_2 = task.copy()
         self.assertEqual(task_2.subtask_count, 1, "If the parent task is duplicated then the sub task should be copied")
+
+    def test_subtask_copy_display_in_project(self):
+        """
+            Check if `display_in_project` of subtask is not set to `True` during copy
+        """
+        project = self.env['project.project'].create({
+            'name': 'Project',
+        })
+        task_A, task_B = self.env['project.task'].create([
+            {
+                'name': 'Task A',
+                'project_id': project.id,
+                'display_in_project': True,
+            },
+            {
+                'name': 'Task B',
+                'project_id': project.id,
+                'display_in_project': True,
+            },
+        ])
+        self.env['project.task'].create([
+            {
+                'name': 'Subtask A 1',
+                'parent_id': task_A.id,
+                'project_id': project.id,
+                'display_in_project': False,
+            },
+            {
+                'name': 'Subtask A 2',
+                'parent_id': task_A.id,
+                'project_id': project.id,
+                'display_in_project': False,
+            },
+            {
+                'name': 'Subtask B 1',
+                'parent_id': task_B.id,
+                'project_id': project.id,
+                'display_in_project': False,
+            },
+            {
+                'name': 'Subtask B 2',
+                'parent_id': task_B.id,
+                'project_id': project.id,
+                'display_in_project': False,
+            }
+        ])
+        subtask_not_display_in_project = project.task_ids.child_ids.filtered(lambda t: not t.display_in_project)
+        self.assertEqual(len(subtask_not_display_in_project), 4, "No subtask should be displayed in the project")
+        project_copy = project.copy()
+        self.assertEqual(len(project_copy.task_ids.child_ids), 4)
+        subtask_not_display_in_project_copy = project_copy.task_ids.child_ids.filtered(lambda t: not t.display_in_project)
+        self.assertEqual(len(subtask_not_display_in_project_copy), 4, "No subtask should be displayed in the duplicate project")

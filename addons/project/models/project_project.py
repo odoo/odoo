@@ -399,7 +399,14 @@ class Project(models.Model):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
             new_tasks |= task.copy(defaults)
+        all_subtasks = new_tasks._get_all_subtasks()
+        subtasks_not_displayed = all_subtasks.filtered(
+            lambda task: not task.display_in_project
+        )
         project.write({'tasks': [Command.set(new_tasks.ids)]})
+        subtasks_not_displayed.write({
+            'display_in_project': False
+        })
         return True
 
     @api.returns('self', lambda value: value.id)
