@@ -33,7 +33,9 @@
                                             <field name="chart_template" attrs="{'readonly': [('has_accounting_entries','!=', False)], 'required': [('chart_template', '!=', False)]}"/>
                                         </div>
                                         <div class="mt16">
-                                             <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh" attrs="{'invisible': [('has_accounting_entries','=', False)]}"/>
+                                            <button name="reload_template" type="object" string="Reload" class="btn-secondary ps-2 w-100" icon="fa-refresh"
+                                                title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
+                                                attrs="{'invisible': ['|', ('has_accounting_entries','=', False), ('chart_template', '=', False)]}"/>
                                         </div>
                                     </div>
                                 </div>
