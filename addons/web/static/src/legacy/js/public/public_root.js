@@ -10,7 +10,6 @@ import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import {
     makeLegacyNotificationService,
-    makeLegacyDialogMappingService,
     mapLegacyEnvToWowlEnv,
     makeLegacyRPCService,
     createWidgetParent,
@@ -361,7 +360,6 @@ export async function createPublicRoot(RootWidget) {
     // to the wowl env
     serviceRegistry.add("legacy_rpc", makeLegacyRPCService(legacyEnv));
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
     const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
