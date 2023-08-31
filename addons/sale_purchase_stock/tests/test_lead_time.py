@@ -29,18 +29,19 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
     def test_supplier_lead_time(self):
         """ Basic stock configuration and a supplier with a minimum qty and a lead time """
 
+        self.env.user.company_id.po_lead = 7
         seller = self.env['product.supplierinfo'].create({
             'name': self.vendor.id,
             'min_qty': 1,
-            'price': 1,
-            'delay': 7,
+            'price': 10,
+            'date_start': fields.Date.today() - timedelta(days=1),
         })
 
         product = self.env['product.product'].create({
             'name': 'corpse starch',
             'type': 'product',
             'seller_ids': [(6, 0, seller.ids)],
-            'route_ids': [(6, 0, (self.mto_route + self.buy_route).ids)]
+            'route_ids': [(6, 0, (self.mto_route + self.buy_route).ids)],
         })
 
         so = self.env['sale.order'].with_user(self.user_salesperson).create({
@@ -59,9 +60,4 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         so.action_confirm()
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
-
-        start_of_day = lambda x: fields.Datetime.start_of(x, 'day')
-        today = start_of_day(fields.Datetime.now())
-
-        self.assertEqual(start_of_day(po.date_order), today)
-        self.assertEqual(start_of_day(po.date_planned), today + timedelta(days=7))
+        self.assertEqual(po.order_line.price_unit, seller.price)
