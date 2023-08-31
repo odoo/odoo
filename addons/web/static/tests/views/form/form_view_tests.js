@@ -754,6 +754,47 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=p]");
     });
 
+    QUnit.test("fieldDependencies are readonly by default", async function (assert) {
+        class MyField extends CharField {}
+        fieldRegistry.add("my_widget", {
+            component: MyField,
+            fieldDependencies: [
+                { name: "int_field", type: "integer" },
+                { name: "bar", type: "boolean" },
+                { name: "qux", type: "float", readonly: false },
+            ],
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="foo" widget="my_widget"/>
+                    <field name="int_field" readonly="1"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.deepEqual(
+                        args.args[0][0],
+                        {
+                            display_name: "plop",
+                            foo: "My little Foo Value",
+                            qux: 0,
+                        },
+                        " 'int_field' and 'bar' shouldn't be present"
+                    );
+                    assert.step("create");
+                }
+            },
+        });
+
+        await editInput(target, "[name='display_name'] input", "plop");
+        await clickSave(target);
+        assert.verifySteps(["create"]);
+    });
+
     QUnit.test("decoration-bf works on fields", async function (assert) {
         await makeView({
             type: "form",
