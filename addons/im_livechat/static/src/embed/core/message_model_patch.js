@@ -24,4 +24,8 @@ patch(Message.prototype, {
         }
         return !this.author || this.author?.id === session.livechatData.options.current_partner_id;
     },
+
+    get editable() {
+        return this.originThread.type !== "livechat" && this._super();
+    },
 });
