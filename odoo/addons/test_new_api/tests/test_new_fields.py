@@ -1831,7 +1831,6 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test field access on new records vs real records. """
         Model = self.env['test_new_api.category']
         real_record = Model.create({'name': 'Foo'})
-        self.env.invalidate_all()
         new_origin = Model.new({'name': 'Bar'}, origin=real_record)
         new_record = Model.new({'name': 'Baz'})
 
