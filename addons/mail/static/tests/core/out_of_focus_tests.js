@@ -24,5 +24,7 @@ QUnit.test("Spaces in notifications are not encoded", async () => {
             res_id: channelId,
         },
     });
-    await contains(".o_notification.border-info:contains(Hello world!)");
+    await contains(".o_notification.border-info .o_notification_content", 1, {
+        text: "Hello world!",
+    });
 });

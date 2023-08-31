@@ -30,8 +30,8 @@ QUnit.test("basic layout", async () => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem-name:contains(Channel)");
-    await contains(".o-mail-NotificationItem-counter:contains(2)");
+    await contains(".o-mail-NotificationItem-name", 1, { text: "Channel" });
+    await contains(".o-mail-NotificationItem-counter", 1, { text: "2" });
     await contains(
         ".o-mail-NotificationItem:contains(Channel) .o-mail-NotificationItem-date:contains(now)"
     );
@@ -64,7 +64,7 @@ QUnit.test("mark as read", async () => {
         "mouseenter"
     );
     await click(".o-mail-NotificationItem:contains(Channel) .o-mail-NotificationItem-markAsRead");
-    await contains(".o-mail-NotificationItem:contains(Channel)", 0);
+    await contains(".o-mail-NotificationItem-name", 0, { text: "Channel" });
 });
 
 QUnit.test("open non-channel failure", async (assert) => {
@@ -168,7 +168,9 @@ QUnit.test("different discuss.channel are not grouped", async () => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem:contains(An error occurred when sending an email)", 2);
+    await contains(".o-mail-NotificationItem-text", 2, {
+        text: "An error occurred when sending an email",
+    });
 });
 
 QUnit.test("multiple grouped notifications by model", async () => {
@@ -212,7 +214,7 @@ QUnit.test("multiple grouped notifications by model", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", 2);
-    await contains(".o-mail-NotificationItem-counter:contains(2)", 2);
+    await contains(".o-mail-NotificationItem-counter", 2, { text: "2" });
 });
 
 QUnit.test("non-failure notifications are ignored", async () => {

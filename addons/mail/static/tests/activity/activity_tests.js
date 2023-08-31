@@ -39,7 +39,7 @@ QUnit.test("activity upload document is available", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info:contains('Upload Document')");
+    await contains(".o-mail-Activity-info span", 1, { text: "Upload Document" });
     await contains(".btn .fa-upload");
     await contains(".o-mail-Activity .o_input_file");
 });
@@ -62,10 +62,10 @@ QUnit.test("activity can upload a document", async () => {
         contentType: "text/plain",
         name: "text.txt",
     });
-    await contains(".o-mail-Activity-info:contains('Upload Document')");
+    await contains(".o-mail-Activity-info span", 1, { text: "Upload Document" });
     inputFiles($(".o-mail-Activity .o_input_file")[0], [file]);
-    await contains(".o-mail-Activity-info:contains('Upload Document')", 0);
-    await contains("button[aria-label='Attach files']:contains(1)");
+    await contains(".o-mail-Activity-info span", 0, { text: "Upload Document" });
+    await contains("button[aria-label='Attach files']", 1, { text: "1" });
 });
 
 QUnit.test("activity simplest layout", async () => {
@@ -84,10 +84,10 @@ QUnit.test("activity simplest layout", async () => {
     await contains(".o-mail-Activity-note", 0);
     await contains(".o-mail-Activity-details", 0);
     await contains(".o-mail-Activity-mailTemplates", 0);
-    await contains(".btn:contains('Edit')", 0);
-    await contains(".o-mail-Activity span:contains(Cancel)", 0);
-    await contains(".btn:contains('Mark Done')", 0);
-    await contains(".o-mail-Activity-info:contains('Upload Document')", 0);
+    await contains(".btn", 0, { text: "Edit" });
+    await contains(".o-mail-Activity span", 0, { text: "Cancel" });
+    await contains(".btn", 0, { text: "Mark Done" });
+    await contains(".o-mail-Activity-info span", 0, { text: "Upload Document" });
 });
 
 QUnit.test("activity with note layout", async (assert) => {
@@ -120,9 +120,7 @@ QUnit.test("activity info layout when planned after tomorrow", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-success");
-    await contains(".o-mail-Activity:contains('Due in 5 days:')");
+    await contains(".o-mail-Activity span.text-success", 1, { text: "Due in 5 days:" });
 });
 
 QUnit.test("activity info layout when planned tomorrow", async () => {
@@ -140,9 +138,7 @@ QUnit.test("activity info layout when planned tomorrow", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-success");
-    await contains(".o-mail-Activity:contains('Tomorrow:')");
+    await contains(".o-mail-Activity span.text-success", 1, { text: "Tomorrow:" });
 });
 
 QUnit.test("activity info layout when planned today", async () => {
@@ -157,9 +153,7 @@ QUnit.test("activity info layout when planned today", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-warning");
-    await contains(".o-mail-Activity:contains('Today:')");
+    await contains(".o-mail-Activity span.text-warning", 1, { text: "Today:" });
 });
 
 QUnit.test("activity info layout when planned yesterday", async () => {
@@ -177,9 +171,7 @@ QUnit.test("activity info layout when planned yesterday", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-danger");
-    await contains(".o-mail-Activity:contains('Yesterday:')");
+    await contains(".o-mail-Activity span.text-danger", 1, { text: "Yesterday:" });
 });
 
 QUnit.test("activity info layout when planned before yesterday", async () => {
@@ -197,9 +189,7 @@ QUnit.test("activity info layout when planned before yesterday", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-danger");
-    await contains(".o-mail-Activity:contains('5 days overdue:')");
+    await contains(".o-mail-Activity span.text-danger", 1, { text: "5 days overdue:" });
 });
 
 /**
@@ -223,15 +213,11 @@ QUnit.skip("activity info layout change at midnight", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-success");
-    await contains(".o-mail-Activity:contains('Tomorrow:')");
+    await contains(".o-mail-Activity span.text-success", 1, { text: "Tomorrow:" });
 
     patchDate(2023, 11, 8, 0, 0, 1); // OXP is coming!
     await mock.advanceTime(2000);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity .text-warning");
-    await contains(".o-mail-Activity:contains('Today:')");
+    await contains(".o-mail-Activity span.text-warning", 1, { text: "Today:" });
 });
 
 QUnit.test("activity with a summary layout", async () => {
@@ -244,7 +230,7 @@ QUnit.test("activity with a summary layout", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info:contains('test summary')");
+    await contains(".o-mail-Activity-info span", 1, { text: "“test summary”" });
 });
 
 QUnit.test("activity without summary layout", async () => {
@@ -257,7 +243,7 @@ QUnit.test("activity without summary layout", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info:contains('Email')");
+    await contains(".o-mail-Activity-info span", 1, { text: "Email" });
 });
 
 QUnit.test("activity details toggle", async () => {
@@ -304,8 +290,7 @@ QUnit.test("activity with mail template layout", async (assert) => {
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-sidebar");
     await contains(".o-mail-Activity-mailTemplates");
-    await contains(".o-mail-ActivityMailTemplate-name:contains(Dummy mail template)");
-    assert.strictEqual($(".o-mail-ActivityMailTemplate-name").text(), "Dummy mail template");
+    await contains(".o-mail-ActivityMailTemplate-name", 1, { text: "Dummy mail template" });
     await contains(".o-mail-ActivityMailTemplate-preview");
     await contains(".o-mail-ActivityMailTemplate-send");
 });
@@ -385,18 +370,15 @@ QUnit.test("activity click on mark as done", async () => {
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
-    await contains(".btn:contains('Mark Done')");
-
-    await click(".btn:contains('Mark Done')");
+    await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone");
-
-    await click(".btn:contains('Mark Done')");
+    await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone", 0);
 });
 
 QUnit.test(
     "activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
         const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -410,15 +392,8 @@ QUnit.test(
         const { openFormView } = await start();
         openFormView("res.partner", partnerId);
         await contains(".o-mail-Activity");
-        await contains(".btn:contains('Mark Done')");
-
-        await click(".btn:contains('Mark Done')");
-        assert.strictEqual(
-            (
-                await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']")
-            )[0],
-            document.activeElement
-        );
+        await click(".btn", { text: "Mark Done" });
+        await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:focus");
     }
 );
 
@@ -447,7 +422,7 @@ QUnit.test("activity click on edit", async (assert) => {
             return super.doAction(...arguments);
         },
     });
-    await click(".o-mail-Activity .btn:contains('Edit')");
+    await click(".o-mail-Activity .btn", { text: "Edit" });
     assert.verifySteps(["do_action"]);
 });
 
@@ -471,7 +446,7 @@ QUnit.test("activity click on cancel", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity span:contains(Cancel)");
+    await click(".o-mail-Activity span", { text: "Cancel" });
     await contains(".o-mail-Activity", 0);
     assert.verifySteps(["unlink"]);
 });
@@ -490,7 +465,7 @@ QUnit.test("activity mark done popover close on ESCAPE", async () => {
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
 
-    await click(".btn:contains('Mark Done')");
+    await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone");
 
     triggerHotkey("Escape");
@@ -510,9 +485,8 @@ QUnit.test("activity mark done popover click on discard", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-
-    await click(".btn:contains('Mark Done')");
-    await click(".o-mail-ActivityMarkAsDone button:contains(Discard)");
+    await click(".btn", { text: "Mark Done" });
+    await click(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
     await contains(".o-mail-ActivityMarkAsDone", 0);
 });
 
@@ -545,7 +519,7 @@ QUnit.test("Activity are sorted by deadline", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity:eq(0):contains(5 days overdue:)");
-    await contains(".o-mail-Activity:eq(1):contains(Today:)");
-    await contains(".o-mail-Activity:eq(2):contains(Due in 4 days:)");
+    await contains(".o-mail-Activity:eq(0) span", 1, { text: "5 days overdue:" });
+    await contains(".o-mail-Activity:eq(1) span", 1, { text: "Today:" });
+    await contains(".o-mail-Activity:eq(2) span", 1, { text: "Due in 4 days:" });
 });

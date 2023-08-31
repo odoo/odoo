@@ -73,14 +73,12 @@ QUnit.test("show call UI in chat window when in call", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(General)");
+    await click(".o-mail-NotificationItem-name", { text: "General" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", 0);
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
-
-    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
+    await click(".o-mail-ChatWindow-command[title='Start a Call']");
     await contains(".o-discuss-Call");
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']", 0);
+    await contains(".o-mail-ChatWindow-command[title='Start a Call']", 0);
 });
 
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
@@ -191,8 +189,8 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     mockGetMedia();
     const { openDiscuss } = await start();
     openDiscuss();
-    await click("button:contains(Start a meeting)");
-    await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    await click("button", { text: "Start a meeting" });
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");
 });

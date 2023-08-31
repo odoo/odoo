@@ -173,7 +173,7 @@ QUnit.test("follower subtype apply", async () => {
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id=${subtypeId2}] input[type='checkbox']:checked`
     );
-    await click(".modal-footer button:contains(Apply)");
+    await click(".modal-footer button", { text: "Apply" });
     await contains(
         ".o_notification:contains(The subscription preferences were successfully applied.)"
     );

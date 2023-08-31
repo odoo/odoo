@@ -28,6 +28,6 @@ QUnit.test("activity click on Reschedule", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", resPartnerId);
-    await click(".btn:contains('Reschedule')");
+    await click(".btn", { text: "Reschedule" });
     await contains(".o_calendar_view");
 });

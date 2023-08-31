@@ -23,7 +23,7 @@ QUnit.test("toggling category button hide category items", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button.o-active:contains('Inbox')");
+    await contains("button.o-active", 1, { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
 
     await click(".o-mail-DiscussSidebarCategory-icon:eq(0)");
@@ -99,7 +99,7 @@ QUnit.test("channel - command: should have view command when category is folded"
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-channel span:contains(Channels)");
+    await click(".o-mail-DiscussSidebarCategory-channel span", { text: "Channels" });
     await contains("i[title='View or join channels']");
 });
 
@@ -117,7 +117,7 @@ QUnit.test("channel - command: should not have add command when category is fold
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory:contains(Channels)");
+    await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Channels" });
     await contains("i[title='Add or join a channel']", 0);
 });
 
@@ -130,9 +130,9 @@ QUnit.test("channel - states: close manually by clicking the title", async () =>
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(general)");
-    await click(".o-mail-DiscussSidebarCategory-channel span:contains(Channels)");
-    await contains(".o-mail-DiscussSidebarChannel:contains(general)", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "general" });
+    await click(".o-mail-DiscussSidebarCategory-channel span", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "general" });
 });
 
 QUnit.test("channel - states: open manually by clicking the title", async () => {
@@ -144,10 +144,11 @@ QUnit.test("channel - states: open manually by clicking the title", async () => 
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-channel span:contains(Channels)");
-    await contains(".o-mail-DiscussSidebarChannel:contains(general)", 0);
-    await click(".o-mail-DiscussSidebarCategory-channel span:contains(Channels)");
-    await contains(".o-mail-DiscussSidebarChannel:contains(general)");
+    await contains(".o-mail-DiscussSidebarCategory-channel span", 1, { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "general" });
+
+    await click(".o-mail-DiscussSidebarCategory-channel span", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "general" });
 });
 
 QUnit.test("sidebar: inbox with counter", async () => {
@@ -158,7 +159,7 @@ QUnit.test("sidebar: inbox with counter", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button:contains(Inbox) .badge:contains(1)");
+    await contains("button:contains(Inbox) .badge", 1, { text: "1" });
 });
 
 QUnit.test("default thread rendering", async () => {
@@ -166,30 +167,32 @@ QUnit.test("default thread rendering", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button:contains(Inbox)");
-    await contains("button:contains(Starred)");
-    await contains("button:contains(History)");
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)");
+    await contains("button div", 1, { text: "Inbox" });
+    await contains("button div", 1, { text: "Starred" });
+    await contains("button div", 1, { text: "History" });
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "General" });
     await contains("button:contains(Inbox).o-active");
     await contains(
         ".o-mail-Thread:contains(Congratulations, your inbox is empty  New messages appear here.)"
     );
 
-    await click("button:contains(Starred)");
+    await click("button", { text: "Starred" });
     await contains("button:contains(Starred).o-active");
     await contains(
         ".o-mail-Thread:contains(No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.)"
     );
 
-    await click("button:contains(History)");
+    await click("button div", { text: "History" });
     await contains("button:contains(History).o-active");
     await contains(
         ".o-mail-Thread:contains(No history messages  Messages marked as read will appear in the history.)"
     );
 
-    await click(".o-mail-DiscussSidebarChannel:contains(General)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel:contains(General).o-active");
-    await contains(".o-mail-Thread:contains(There are no messages in this conversation.)");
+    await contains(".o-mail-Thread .o-mail-Thread-empty", 1, {
+        text: "There are no messages in this conversation.",
+    });
 });
 
 QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
@@ -199,22 +202,22 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
     }
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", 20);
+    await contains(".o-mail-DiscussSidebarChannel span", 20);
     await contains(".o-mail-DiscussSidebar input[placeholder='Quick search...']");
 
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "1");
-    await contains(".o-mail-DiscussSidebarChannel", 11);
+    await contains(".o-mail-DiscussSidebarChannel span", 11);
 
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "12", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-DiscussSidebarChannel:contains(channel12)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "channel12" });
 
     await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "123", {
         replace: true,
     });
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0);
 });
 
 QUnit.test("sidebar: basic chat rendering", async () => {
@@ -230,7 +233,7 @@ QUnit.test("sidebar: basic chat rendering", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-DiscussSidebarChannel span:contains(Demo)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Demo" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands div[title='Unpin Conversation']"
@@ -243,7 +246,7 @@ QUnit.test("sidebar: show pinned channel", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "General" });
 });
 
 QUnit.test("sidebar: open pinned channel", async () => {
@@ -251,7 +254,7 @@ QUnit.test("sidebar: open pinned channel", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:contains(General)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
     await contains(".o-mail-Discuss-threadName", 1, { value: "General" });
 });
@@ -277,12 +280,13 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
         },
     });
     openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:contains(General)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     assert.verifySteps([]);
 
     await click(".o-mail-DiscussSidebarChannel:contains(General) .btn[title='Leave this channel']");
     assert.verifySteps(["action_unfollow"]);
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "General" });
+
     await contains(".o-mail-Discuss-threadName", 0, { value: "General" });
 });
 
@@ -291,16 +295,17 @@ QUnit.test("sidebar: unpin channel from bus", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "General" });
 
-    await click(".o-mail-DiscussSidebarChannel:contains(General)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "General" });
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
     await contains(".o-mail-Discuss-threadName", 1, { value: "General" });
 
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "General" });
+
     await contains(".o-mail-Discuss-threadName", 0, { value: "General" });
 });
 
@@ -328,7 +333,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
     await contains(".o-discuss-badge");
     assert.strictEqual($(".o-discuss-badge").text(), "1");
 
-    await click(".o-mail-DiscussSidebarChannel:contains(Demo)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "Demo" });
     await contains(".o-discuss-badge", 0);
 });
 
@@ -362,7 +367,7 @@ QUnit.test(
         pyEnv["discuss.channel"].create({ name: "general" });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Channels)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Channels" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Channels) .badge", 0);
     }
 );
@@ -405,7 +410,7 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Channels)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Channels" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Channels) .badge", 0);
     }
 );
@@ -421,7 +426,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Channels)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Channels" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Channels) .badge", 0);
     }
 );
@@ -464,7 +469,9 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Channels) .badge:contains(2)");
+        await contains(".o-mail-DiscussSidebarCategory:contains(Channels) .badge", 1, {
+            text: "2",
+        });
     }
 );
 
@@ -484,7 +491,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Direct messages" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages) .badge", 0);
     }
 );
@@ -508,7 +515,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Direct messages" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages) .badge", 0);
     }
 );
@@ -529,7 +536,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages)");
+        await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Direct messages" });
         await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages) .badge", 0);
     }
 );
@@ -586,7 +593,7 @@ QUnit.test("chat - command: should not have add command when category is folded"
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory:contains(Direct messages)");
+    await contains(".o-mail-DiscussSidebarCategory", 1, { text: "Direct messages" });
     await contains(
         ".o-mail-DiscussSidebarCategory:contains(Direct messages) i[title='Start a conversation']",
         0
@@ -631,7 +638,7 @@ QUnit.test("sidebar: public channel rendering", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains("button:contains(channel1)");
+    await contains("button", 1, { text: "channel1" });
     await contains("button:contains(channel1) .fa-globe");
 });
 
@@ -688,7 +695,7 @@ QUnit.test("channel - states: close should update the value on the server", asyn
         [[currentUserId]]
     );
     assert.ok(initalSettings.is_discuss_sidebar_category_channel_open);
-    await click(".o-mail-DiscussSidebarCategory span:contains(Channels)");
+    await click(".o-mail-DiscussSidebarCategory span", { text: "Channels" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -714,7 +721,7 @@ QUnit.test("channel - states: open should update the value on the server", async
     );
     assert.notOk(initalSettings.is_discuss_sidebar_category_channel_open);
 
-    await click(".o-mail-DiscussSidebarCategory span:contains(Channels)");
+    await click(".o-mail-DiscussSidebarCategory span", { text: "Channels" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -741,7 +748,7 @@ QUnit.test("channel - states: close from the bus", async () => {
         });
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
-    await contains("button:contains(channel1)", 0);
+    await contains("button", 0, { text: "channel1" });
 });
 
 QUnit.test("channel - states: open from the bus", async () => {
@@ -762,7 +769,7 @@ QUnit.test("channel - states: open from the bus", async () => {
         });
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
-    await contains("button:contains(channel1)");
+    await contains("button", 1, { text: "channel1" });
 });
 
 QUnit.test(
@@ -772,15 +779,15 @@ QUnit.test(
         pyEnv["discuss.channel"].create({ name: "channel1" });
         const { openDiscuss } = await start();
         openDiscuss();
-        await click(".o-mail-DiscussSidebarChannel:contains(channel1)");
+        await click(".o-mail-DiscussSidebarChannel span", { text: "channel1" });
         await contains("button:contains(channel1).o-active");
 
-        await click(".o-mail-DiscussSidebarCategory span:contains(Channels)");
+        await click(".o-mail-DiscussSidebarCategory span", { text: "Channels" });
         await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
-        await contains("button:contains(channel1)");
+        await contains("button", 1, { text: "channel1" });
 
-        await click("button:contains(Inbox)");
-        await contains("button:contains(channel1)", 0);
+        await click("button div", { text: "Inbox" });
+        await contains("button", 0, { text: "channel1" });
     }
 );
 
@@ -795,8 +802,8 @@ QUnit.test("chat - states: open manually by clicking the title", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-chat span:contains(Direct messages)");
-    await contains("button:contains(Mitchell Admin)");
+    await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
+    await contains("button", 1, { text: "Mitchell Admin" });
 });
 
 QUnit.test("chat - states: close should call update server data", async (assert) => {
@@ -816,7 +823,7 @@ QUnit.test("chat - states: close should call update server data", async (assert)
     );
     assert.ok(initalSettings.is_discuss_sidebar_category_chat_open);
 
-    await click(".o-mail-DiscussSidebarCategory-chat span:contains(Direct messages)");
+    await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -842,7 +849,7 @@ QUnit.test("chat - states: open should call update server data", async (assert) 
     );
     assert.notOk(initalSettings.is_discuss_sidebar_category_chat_open);
 
-    await click(".o-mail-DiscussSidebarCategory-chat span:contains(Direct messages)");
+    await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -867,7 +874,7 @@ QUnit.test("chat - states: close from the bus", async () => {
         },
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains("button:contains(Mitchell Admin)", 0);
+    await contains("button", 0, { text: "Mitchell Admin" });
 });
 
 QUnit.test("chat - states: open from the bus", async () => {
@@ -888,7 +895,7 @@ QUnit.test("chat - states: open from the bus", async () => {
         });
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains("button:contains(Mitchell Admin)");
+    await contains("button", 1, { text: "Mitchell Admin" });
 });
 
 QUnit.test(
@@ -899,18 +906,18 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-        await contains("button:contains(Mitchell Admin)");
+        await contains("button", 1, { text: "Mitchell Admin" });
 
-        await click("button:contains(Mitchell Admin)");
+        await click("button", { text: "Mitchell Admin" });
         await contains("button:contains(Mitchell Admin).o-active");
 
-        await click(".o-mail-DiscussSidebarCategory-chat span:contains(Direct messages)");
+        await click(".o-mail-DiscussSidebarCategory-chat span", { text: "Direct messages" });
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-        await contains("button:contains(Mitchell Admin)");
+        await contains("button", 1, { text: "Mitchell Admin" });
 
-        await click("button:contains(Inbox)");
+        await click("button div", { text: "Inbox" });
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-        await contains("button:contains(Mitchell Admin)", 0);
+        await contains("button", 0, { text: "Mitchell Admin" });
     }
 );
 
@@ -986,9 +993,9 @@ QUnit.test("Can unpin chat channel", async () => {
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o-mail-DiscussSidebarChannel:contains(Mitchell Admin)", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "Mitchell Admin" });
 });
 
 QUnit.test("Unpinning chat should display notification", async () => {
@@ -997,7 +1004,7 @@ QUnit.test("Unpinning chat should display notification", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0);
     await contains(
         ".o_notification.border-info:contains(You unpinned your conversation with Mitchell Admin)"
     );
@@ -1008,9 +1015,9 @@ QUnit.test("Can leave channel", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "General" });
     await click("[title='Leave this channel']");
-    await contains(".o-mail-DiscussSidebarChannel:contains(General)", 0);
+    await contains(".o-mail-DiscussSidebarChannel span", 0, { text: "General" });
 });
 
 QUnit.test("Do no channel_info after unpin", async (assert) => {
@@ -1078,9 +1085,9 @@ QUnit.test("Unpinning channel closes its chat window", async () => {
     await openFormView("discuss.channel");
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow:contains(Sales)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Sales" });
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel:contains(Sales) [title='Leave this channel']");
     await openFormView("discuss.channel");
-    await contains(".o-mail-ChatWindow:contains(Sales)", 0);
+    await contains(".o-mail-ChatWindow", 0, { text: "Sales" });
 });

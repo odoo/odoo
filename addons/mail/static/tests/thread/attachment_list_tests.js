@@ -55,8 +55,8 @@ QUnit.test("layout with card details and filename and extension", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard:contains('test.txt')");
-    await contains(".o-mail-AttachmentCard small:contains('txt')");
+    await contains(".o-mail-AttachmentCard div", 1, { text: "test.txt" });
+    await contains(".o-mail-AttachmentCard small", 1, { text: "txt" });
 });
 
 QUnit.test(
@@ -309,7 +309,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await contains(".o-mail-AttachmentImage[title='test.png']");
-        await contains(".o-mail-AttachmentCard:contains(test.odt)");
+        await contains(".o-mail-AttachmentCard div", 1, { text: "test.odt" });
         assert.hasClass($(".o-mail-AttachmentImage[title='test.png'] img"), "o-viewable");
         assert.doesNotHaveClass($(".o-mail-AttachmentCard:contains(test.odt)"), "o-viewable");
 

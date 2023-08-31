@@ -94,7 +94,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
             })
         )
     );
-    await contains(".o-discuss-Typing:contains(Visitor 20 is typing...)");
+    await contains(".o-discuss-Typing", 1, { text: "Visitor 20 is typing..." });
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async () => {
@@ -194,6 +194,6 @@ QUnit.test("add an emoji after a canned response", async () => {
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? " });
     await click("button[aria-label='Emojis']");
-    await click(".o-Emoji:contains(😊)");
+    await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? 😊" });
 });

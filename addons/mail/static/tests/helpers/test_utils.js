@@ -611,11 +611,10 @@ export {
  * `options.target` and then clicks on it.
  *
  * @param {string} selector
- * @param {Object} [options={}]
- * @param {HTMLElement} [options.target=document.body]
+ * @param {Object} [options={}] forwarded to `contains`
  */
-export async function click(selector, { target = document.body } = {}) {
-    await contains(selector, 1, { click: true, target });
+export async function click(selector, options) {
+    await contains(selector, 1, { click: true, ...options });
 }
 
 /**
@@ -624,11 +623,10 @@ export async function click(selector, { target = document.body } = {}) {
  *
  * @param {string} selector
  * @param {number|"bottom"} scrollTop
- * @param {Object} [options={}]
- * @param {HTMLElement} [options.target=document.body]
+ * @param {Object} [options={}] forwarded to `contains`
  */
-export async function scroll(selector, scrollTop, { target = document.body } = {}) {
-    await contains(selector, 1, { setScroll: scrollTop, target });
+export async function scroll(selector, scrollTop, options) {
+    await contains(selector, 1, { setScroll: scrollTop, ...options });
 }
 
 let hasUsedContainsPositively = false;
@@ -646,15 +644,16 @@ QUnit.testStart(() => (hasUsedContainsPositively = false));
  *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
  *  to change soon, by checking with a preceding contains that all the expected elements are in DOM.
  * @param {number|"bottom"} [options.setScroll] if provided, set the scrollTop on the found element
- * @param {HTMLElement} [options.target=document.body]
+ * @param {HTMLElement} [options.target=getFixture()]
+ * @param {string} [options.text] if provided, the textContent of the found element(s) must match.
  * @param {string} [options.value] if provided, the input value of the found element(s) must match.
  *  Note: value changes are not observed directly, another mutation must happen to catch them.
- * @returns {Promise<JQuery<HTMLElement>>}
+ * @returns {Promise<HTMLElement>}
  */
 export function contains(
     selector,
     count = 1,
-    { click, scroll, setScroll, target = document.body, value } = {}
+    { click, scroll, setScroll, target = getFixture(), text, value } = {}
 ) {
     if (count) {
         hasUsedContainsPositively = true;
@@ -666,30 +665,33 @@ export function contains(
     return new Promise((resolve, reject) => {
         const scrollListeners = new Set();
         let selectorMessage = `${count} of "${selector}"`;
+        if (text !== undefined) {
+            selectorMessage = `${selectorMessage} with text "${text}"`;
+        }
         if (value !== undefined) {
             selectorMessage = `${selectorMessage} with value "${value}"`;
         }
         if (scroll !== undefined) {
             selectorMessage = `${selectorMessage} with scroll "${scroll}"`;
         }
-        const $res = select();
-        if ($res.length === count) {
-            execute($res, "immediately");
+        const res = select();
+        if (res.length === count) {
+            execute(res, "immediately");
             return;
         }
         let done = false;
         const timer = setTimeout(() => {
             clean();
-            const $res = select();
-            const message = `Waited 5 second for ${selectorMessage}. Found ${$res.length} instead.`;
+            const res = select();
+            const message = `Waited 5 second for ${selectorMessage}. Found ${res.length} instead.`;
             QUnit.assert.ok(false, message);
             reject(new Error(message));
         }, 5000);
         const observer = new MutationObserver(() => {
-            const $res = select();
-            if ($res.length === count) {
+            const res = select();
+            if (res.length === count) {
                 clean();
-                execute($res, "after mutations");
+                execute(res, "after mutations");
             }
         });
         observer.observe(document.body, {
@@ -700,23 +702,35 @@ export function contains(
         registerCleanup(() => {
             if (!done) {
                 clean();
-                const $res = select();
-                const message = `Test ended while waiting for ${selectorMessage}. Found ${$res.length} instead.`;
+                const res = select();
+                const message = `Test ended while waiting for ${selectorMessage}. Found ${res.length} instead.`;
                 QUnit.assert.ok(false, message);
                 reject(new Error(message));
             }
         });
         function onScroll(ev) {
-            const $res = select();
-            if ($res.length === count) {
+            const res = select();
+            if (res.length === count) {
                 clean();
-                execute($res, "after scroll");
+                execute(res, "after scroll");
             }
         }
         function select() {
-            const $res = $(target).find(selector);
-            const $filteredRes = $res.filter(
-                (i, el) =>
+            /** @type HTMLElement[] */
+            let res;
+            try {
+                res = [...target.querySelectorAll(selector)];
+            } catch (error) {
+                if (error.message.includes("Failed to execute 'querySelectorAll'")) {
+                    // keep jquery for backwards compatibility until all tests are converted
+                    res = [...$(target).find(selector)];
+                } else {
+                    throw error;
+                }
+            }
+            const filteredRes = res.filter(
+                (el) =>
+                    (text === undefined || el.textContent.trim() === text) &&
                     (value === undefined || el.value === value) &&
                     (scroll === undefined ||
                         (scroll === "bottom" ? isScrolledToBottom(el) : isScrolledTo(el, scroll)))
@@ -724,28 +738,28 @@ export function contains(
             if (
                 scroll !== undefined &&
                 !scrollListeners.size &&
-                $res.length === count &&
-                $filteredRes.length !== count
+                res.length === count &&
+                filteredRes.length !== count
             ) {
-                for (const el of $res) {
+                for (const el of res) {
                     scrollListeners.add(el);
                     el.addEventListener("scroll", onScroll);
                 }
             }
-            return $filteredRes;
+            return filteredRes;
         }
-        function execute($res, whenMessage) {
+        function execute(res, whenMessage) {
             let message = `Found ${selectorMessage} (${whenMessage})`;
             if (click) {
                 message = `${message} and clicked it`;
-                $res[0].click();
+                res[0].click();
             }
             if (setScroll !== undefined) {
                 message = `${message} and set scroll to "${setScroll}"`;
-                $res[0].scrollTop = setScroll === "bottom" ? $res[0].scrollHeight : setScroll;
+                res[0].scrollTop = setScroll === "bottom" ? res[0].scrollHeight : setScroll;
             }
             QUnit.assert.ok(true, message);
-            resolve($res);
+            resolve(res);
         }
         function clean() {
             observer.disconnect();

@@ -20,7 +20,7 @@ QUnit.test("Unknown visitor", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarChannel:contains(Visitor 11)");
+    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Visitor 11" });
 });
 
 QUnit.test("Known user with country", async () => {
@@ -313,7 +313,9 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge:contains(1)");
+        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", 1, {
+            text: "1",
+        });
     }
 );
 
@@ -418,7 +420,9 @@ QUnit.test("Clicking on unpin button unpins the channel", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o_notification:contains(You unpinned your conversation with Visitor 11)");
+    await contains(".o_notification_content", 1, {
+        text: "You unpinned your conversation with Visitor 11",
+    });
 });
 
 QUnit.test("Message unread counter", async () => {
@@ -440,5 +444,5 @@ QUnit.test("Message unread counter", async () => {
             uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel .badge:contains(1)");
+    await contains(".o-mail-DiscussSidebarChannel .badge", 1, { text: "1" });
 });

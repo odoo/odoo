@@ -25,7 +25,7 @@ QUnit.test("base empty rendering", async () => {
         views: [[false, "form"]],
     });
     await contains(".o-mail-AttachmentBox");
-    await contains("button:contains('Attach files')");
+    await contains("button", 1, { text: "Attach files" });
     await contains(".o-mail-Chatter .o-mail-AttachmentImage", 0);
 });
 
@@ -63,7 +63,7 @@ QUnit.test("base non-empty rendering", async () => {
         views: [[false, "form"]],
     });
     await contains(".o-mail-AttachmentBox");
-    await contains("button:contains('Attach files')");
+    await contains("button", 1, { text: "Attach files" });
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
@@ -97,7 +97,7 @@ QUnit.test("remove attachment should ask for confirmation", async () => {
     await contains("button[title='Remove']");
 
     await click("button[title='Remove']");
-    await contains(".modal-body:contains('Do you really want to delete \"Blah.txt\"?')");
+    await contains(".modal-body", 1, { text: 'Do you really want to delete "Blah.txt"?' });
 
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
@@ -137,15 +137,15 @@ QUnit.test("view attachments", async () => {
     });
     await click('.o-mail-AttachmentCard[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
-    await contains(".o-FileViewer-header:contains(Blah.txt)");
+    await contains(".o-FileViewer-header span", 1, { text: "Blah.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header:contains(Blu.txt)");
+    await contains(".o-FileViewer-header span", 1, { text: "Blu.txt" });
     await contains(".o-FileViewer div[aria-label='Next']");
 
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header:contains(Blah.txt)");
+    await contains(".o-FileViewer-header span", 1, { text: "Blah.txt" });
 });
 
 QUnit.test("scroll to attachment box when toggling on", async (assert) => {
@@ -194,9 +194,9 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Chatter [aria-label='Attach files']:contains(3)");
+    await contains(".o-mail-Chatter [aria-label='Attach files']", 1, { text: "3" });
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    await contains(".o-mail-AttachmentCard:eq(0):contains(C.txt)");
-    await contains(".o-mail-AttachmentCard:eq(1):contains(B.txt)");
-    await contains(".o-mail-AttachmentCard:eq(2):contains(A.txt)");
+    await contains(".o-mail-AttachmentCard:eq(0) div", 1, { text: "C.txt" });
+    await contains(".o-mail-AttachmentCard:eq(1) div", 1, { text: "B.txt" });
+    await contains(".o-mail-AttachmentCard:eq(2) div", 1, { text: "A.txt" });
 });

@@ -175,7 +175,7 @@ QUnit.test("Add GIF to favorite", async () => {
     await click(".o-discuss-Gif .fa-star-o:eq(0)");
     await contains(".o-discuss-Gif .fa-star");
     await click("i[aria-label='back']");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']:contains(Favorites)");
+    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
     await contains(".o-discuss-Gif");
 });
 
@@ -183,7 +183,7 @@ QUnit.test("Chatter should not have the GIF button", async () => {
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains("button[aria-label='GIFs']", 0);
 });
 
@@ -195,7 +195,7 @@ QUnit.test(
         patchUiSize({ size: SIZES.SM });
         const { openDiscuss } = await start();
         openDiscuss(channelId, { waitUntilMessagesLoaded: false });
-        await click("span:contains(General)");
+        await click("span", { text: "General" });
         await click("button[aria-label='GIFs']");
         await contains(".popover .o-discuss-GifPicker", 0);
         await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
