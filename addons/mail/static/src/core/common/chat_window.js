@@ -20,6 +20,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { Typing } from "@mail/discuss/typing/common/typing";
 
 /**
  * @typedef {Object} Props
@@ -36,6 +37,7 @@ export class ChatWindow extends Component {
         ThreadIcon,
         ImStatus,
         AutoresizeInput,
+        Typing,
     };
     static props = ["chatWindow", "right?"];
     static template = "mail.ChatWindow";
@@ -47,6 +49,7 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
+        this.typingService = useState(useService("discuss.typing"));
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
