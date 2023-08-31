@@ -4459,7 +4459,7 @@ class BaseModel(metaclass=MetaModel):
                 # in other words, if `parent_id` is not set, no other message `child_ids` are impacted.
                 # + avoid the fetch of fields which are False. e.g. if a boolean field is not passed in vals and as no default set in the field attributes,
                 # then we know it can be set to False in the cache in the case of a create.
-                elif field.name not in set_vals and not field.compute:
+                elif field.store and field.name not in set_vals and not field.compute:
                     self.env.cache.set(record, field, field.convert_to_cache(None, record))
             for fname, value in vals.items():
                 field = self._fields[fname]
