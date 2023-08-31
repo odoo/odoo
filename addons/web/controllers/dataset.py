@@ -15,12 +15,6 @@ _logger = logging.getLogger(__name__)
 
 class DataSet(http.Controller):
 
-    @http.route('/web/dataset/search_read', type='json', auth="user")
-    def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None, context=None):
-        if context:
-            request.update_context(**context)
-        return request.env[model].web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
-
     def _call_kw(self, model, method, args, kwargs):
         check_method_name(method)
         return call_kw(request.env[model], method, args, kwargs)

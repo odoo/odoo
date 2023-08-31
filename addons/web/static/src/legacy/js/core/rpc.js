@@ -81,18 +81,6 @@ const rpc = {
             params.kwargs.order = orderBy ? rpc._serializeSort(orderBy) : orderBy;
         }
 
-        if (options.route === '/web/dataset/search_read') {
-            // specifically call the controller
-            params.model = options.model || params.model;
-            params.domain = options.domain || params.domain;
-            params.fields = options.fields || params.fields;
-            params.limit = options.limit || params.limit;
-            params.offset = options.offset || params.offset;
-            orderBy = options.orderBy || params.orderBy;
-            params.sort = orderBy ? rpc._serializeSort(orderBy) : orderBy;
-            params.context = options.context || params.context || {};
-        }
-
         return {
             route: route,
             params: JSON.parse(JSON.stringify(params)),
