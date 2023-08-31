@@ -2,23 +2,23 @@
 
 import { serverUrl } from "@im_livechat/embed/livechat_data";
 
-async function loadFontAwesome() {
+async function loadFont(name, url) {
     await document.fonts.ready;
-    if ([...document.fonts].some(({ family }) => family === "FontAwesome")) {
-        // FontAwesome already loaded.
+    if ([...document.fonts].some(({ family }) => family === name)) {
+        // Font already loaded.
         return;
     }
     const link = document.createElement("link");
     link.rel = "preload";
     link.as = "font";
-    link.href = `${serverUrl}/im_livechat/font-awesome`;
+    link.href = url;
     link.crossOrigin = "";
     const style = document.createElement("style");
     style.appendChild(
         document.createTextNode(`
             @font-face {
-                font-family: 'FontAwesome';
-                src: url('${serverUrl}/im_livechat/font-awesome') format('woff2');
+                font-family: ${name};
+                src: url('${url}') format('woff2');
                 font-weight: normal;
                 font-style: normal;
                 font-display: block;
@@ -47,7 +47,7 @@ export function makeRoot(target) {
 
 /**
  * Initialize the livechat container by loading the styles and
- * FontAwesome.
+ * the fonts.
  *
  * @param {HTMLElement} root
  * @returns {ShadowRoot}
@@ -62,6 +62,10 @@ export async function makeShadow(root) {
     });
     const shadow = root.attachShadow({ mode: "open" });
     shadow.appendChild(link);
-    await Promise.all([stylesLoadedPromise, loadFontAwesome()]);
+    await Promise.all([
+        stylesLoadedPromise,
+        loadFont("FontAwesome", `${serverUrl}/im_livechat/font-awesome`),
+        loadFont("odoo_ui_icons", `${serverUrl}/im_livechat/odoo_ui_icons`),
+    ]);
     return shadow;
 }
