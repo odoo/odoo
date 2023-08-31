@@ -2,7 +2,7 @@
 
 import { Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { createLocalId, onChange } from "@mail/utils/common/misc";
+import { onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -22,8 +22,25 @@ import { Deferred } from "@web/core/utils/concurrency";
  */
 
 export class Thread extends Record {
+    static id = Record.AND("model", "id");
     /** @type {Object.<string, Thread>} */
     static records = {};
+    /**
+     * @param {Thread.localId} localId
+     * @returns {string}
+     */
+    static localIdToActiveId(localId) {
+        if (!localId) {
+            return undefined;
+        }
+        /**
+         * Transform this:
+         *      "Thread,<model> AND <id>"
+         * to this:
+         *      "<model>_<id>""
+         */
+        return localId.split(",").slice(1).join("_").replace(" AND ", "_");
+    }
     /**
      * @param {Object} data
      * @returns {Thread}
@@ -35,13 +52,12 @@ export class Thread extends Record {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        const localId = createLocalId(data.model, data.id);
-        if (localId in this.records) {
-            const thread = this.records[localId];
+        let thread = this.get(data);
+        if (thread) {
             this.env.services["mail.thread"].update(thread, data);
             return thread;
         }
-        let thread = new Thread();
+        thread = this.new(data);
         Object.assign(thread, {
             id: data.id,
             model: data.model,
@@ -93,7 +109,7 @@ export class Thread extends Record {
     /** @type {integer} */
     chatPartnerId;
     /** @type {import("@mail/core/common/composer_model").Composer} */
-    composer;
+    composer = Record.one();
     counter = 0;
     /** @type {string} */
     customName;
@@ -102,7 +118,7 @@ export class Thread extends Record {
     /** @type {Set<import("@mail/core/common/follower_model").Follower>} */
     followers = new Set();
     /** @type {import("@mail/core/common/follower_model").Follower} */
-    selfFollower;
+    selfFollower = Record.one();
     /** @type {integer|undefined} */
     followersCount;
     isAdmin = false;
@@ -112,7 +128,7 @@ export class Thread extends Record {
     isLoadedDeferred = new Deferred();
     isLoaded = false;
     /** @type {import("@mail/core/common/attachment_model").Attachment} */
-    mainAttachment;
+    mainAttachment = Record.one();
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
@@ -192,7 +208,7 @@ export class Thread extends Record {
     }
 
     get activeRtcSession() {
-        return this._store.RtcSession.records[this.activeRtcSessionId];
+        return this._store.RtcSession.get(this.activeRtcSessionId);
     }
 
     set activeRtcSession(session) {
@@ -263,7 +279,7 @@ export class Thread extends Record {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.Persona.records[createLocalId("partner", this.chatPartnerId)]
+                this._store.Persona.get({ type: "partner", id: this.chatPartnerId })
                     .nameOrDisplayName
             );
         }
@@ -327,10 +343,6 @@ export class Thread extends Record {
             return editableMessagesBySelf.at(-1);
         }
         return null;
-    }
-
-    get localId() {
-        return createLocalId(this.model, this.id);
     }
 
     get needactionCounter() {
@@ -460,7 +472,7 @@ export class Thread extends Record {
     }
 
     get rtcInvitingSession() {
-        return this._store.RtcSession.records[this.invitingRtcSessionId];
+        return this._store.RtcSession.get(this.invitingRtcSessionId);
     }
 
     get hasNeedactionMessages() {
@@ -493,7 +505,7 @@ export class Thread extends Record {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
     }
 }
 

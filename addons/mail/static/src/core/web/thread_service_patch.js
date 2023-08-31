@@ -2,7 +2,6 @@
 
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 import { parseEmail } from "@mail/js/utils";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -102,15 +101,15 @@ patch(ThreadService.prototype, {
         return result;
     },
     getThread(resModel, resId) {
-        const localId = createLocalId(resModel, resId);
-        if (localId in this.store.Thread.records) {
+        let thread = this.store.Thread.get({ model: resModel, id: resId });
+        if (thread) {
             if (resId === false) {
-                return this.store.Thread.records[localId];
+                return thread;
             }
             // to force a reload
-            this.store.Thread.records[localId].status = "new";
+            thread.status = "new";
         }
-        const thread = this.store.Thread.insert({
+        thread = this.store.Thread.insert({
             id: resId,
             model: resModel,
             type: "chatter",
@@ -158,9 +157,7 @@ patch(ThreadService.prototype, {
         thread.suggestedRecipients = recipients;
     },
     async leaveChannel(channel) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === channel.localId
-        );
+        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(channel));
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }
@@ -215,12 +212,10 @@ patch(ThreadService.prototype, {
         } else {
             thread.followers.delete(follower);
         }
-        delete this.store.Follower.records[follower.id];
+        delete this.store.Follower.records[follower.localId];
     },
     unpin(thread) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === thread.localId
-        );
+        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(thread));
         if (chatWindow) {
             this.chatWindowService.close(chatWindow);
         }

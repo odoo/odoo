@@ -7,6 +7,7 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Composer extends Record {
+    static id = Record.OR("thread", "message");
     /**
      * @param {Object} data
      * @returns {Composer}
@@ -18,7 +19,7 @@ export class Composer extends Record {
         }
         let composer = (thread ?? message)?.composer;
         if (!composer) {
-            composer = new Composer();
+            composer = this.new(data);
             const { message, thread } = data;
             if (thread) {
                 composer.thread = thread;
@@ -52,7 +53,7 @@ export class Composer extends Record {
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {import("@mail/core/common/message_model").Message} */
-    message;
+    message = Record.one();
     /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
@@ -63,7 +64,7 @@ export class Composer extends Record {
     /** @type {string} */
     textInputContent;
     /** @type {import("@mail/core/common/thread_model").Thread */
-    thread;
+    thread = Record.one();
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,

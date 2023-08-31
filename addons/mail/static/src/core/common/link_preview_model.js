@@ -3,6 +3,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
+    static id = "id";
     /**
      * @param {Object} data
      * @returns {LinkPreview}
@@ -12,9 +13,9 @@ export class LinkPreview extends Record {
         if (linkPreview) {
             return Object.assign(linkPreview, data);
         }
-        linkPreview = new LinkPreview();
+        linkPreview = this.new(data);
         Object.assign(linkPreview, data);
-        this.store.Message.records[data.message.id]?.linkPreviews.push(linkPreview);
+        this.store.Message.get(data.message)?.linkPreviews.push(linkPreview);
         return linkPreview;
     }
 

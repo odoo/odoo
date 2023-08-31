@@ -5,8 +5,8 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { url } from "@web/core/utils/urls";
-
 export class Attachment extends Record {
+    static id = "id";
     /** @type {Object.<number, Attachment>} */
     static records = {};
 
@@ -18,10 +18,11 @@ export class Attachment extends Record {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        let attachment = this.records[data.id];
+        let attachment = this.get(data);
         if (!attachment) {
-            this.records[data.id] = new Attachment();
-            attachment = this.records[data.id];
+            attachment = this.new(data);
+            this.records[attachment.localId] = attachment;
+            attachment = this.records[attachment.localId];
             Object.assign(attachment, { _store: this.store, id: data.id });
         }
         this.env.services["mail.attachment"].update(attachment, data);
@@ -37,7 +38,8 @@ export class Attachment extends Record {
     id;
     mimetype;
     name;
-    originThreadLocalId;
+    /** @type {import("@mail/core/common/thread_model").Thread} */
+    originThread = Record.one();
     type;
     /** @type {string} */
     tmpUrl;
@@ -46,14 +48,9 @@ export class Attachment extends Record {
     /** @type {boolean} */
     uploading;
     /** @type {import("@mail/core/common/message_model").Message} */
-    message;
+    message = Record.one();
     /** @type {string} */
     create_date;
-
-    /** @type {import("@mail/core/common/thread_model").Thread} */
-    get originThread() {
-        return this._store.Thread.records[this.originThreadLocalId];
-    }
 
     get isDeletable() {
         return true;

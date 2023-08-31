@@ -59,9 +59,7 @@ patch(ThreadService.prototype, {
      * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
-        const chatWindow = this.store.ChatWindow.records.find(
-            (c) => c.threadLocalId === thread.localId
-        );
+        const chatWindow = this.store.ChatWindow.records.find((c) => c.thread?.eq(thread));
         if (
             this.livechatService.state !== SESSION_STATE.PERSISTED &&
             thread.localId === this.livechatService.thread?.localId

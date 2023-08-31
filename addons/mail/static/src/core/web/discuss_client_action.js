@@ -6,7 +6,6 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { createLocalId } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -45,7 +44,7 @@ export class DiscussClientAction extends Component {
         const rawActiveId =
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store.discuss.threadLocalId?.replace(",", "_") ??
+            this.store.Thread.localIdToActiveId(this.store.discuss.threadLocalId) ??
             "mail.box_inbox";
         const activeId =
             typeof rawActiveId === "number" ? `discuss.channel_${rawActiveId}` : rawActiveId;
@@ -54,10 +53,10 @@ export class DiscussClientAction extends Component {
             // legacy format (sent in old emails, shared links, ...)
             model = "discuss.channel";
         }
-        const activeThreadLocalId = createLocalId(model, id);
+        const activeThreadLocalId = this.store.Thread.localId({ model, id });
         if (activeThreadLocalId !== this.store.discuss.threadLocalId) {
             const thread =
-                this.store.Thread.records[createLocalId(model, id)] ??
+                this.store.Thread.get({ model, id }) ??
                 (await this.threadService.fetchChannel(parseInt(id)));
             if (!thread.is_pinned) {
                 await this.threadService.pin(thread);

@@ -7,7 +7,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry } from "./record";
+import { Record, modelRegistry } from "./record";
 
 export class Store {
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
@@ -56,6 +56,17 @@ export class Store {
     setup(env) {
         this.env = env;
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
+    }
+
+    get(localId) {
+        if (typeof localId !== "string") {
+            return undefined;
+        }
+        const modelName = Record.modelFromLocalId(localId);
+        if (Array.isArray(this[modelName].records)) {
+            return this[modelName].records.find((r) => r.localId === localId);
+        }
+        return this[modelName].get(localId);
     }
 
     updateBusSubscription() {
@@ -186,9 +197,45 @@ export const storeService = {
             // classes cannot be made reactive because they are functions and they are not supported.
             // work-around: make an object whose prototype is the class, so that static props become
             // instance props.
-            const entry = Object.assign(Object.create(Model), { env, store: res });
-            entry.records = JSON.parse(JSON.stringify(Model.records));
-            res[name] = entry;
+            const cls = Object.assign(Object.create(Model), { env, store: res });
+            // produce another class with changed prototype, so that there are automatic get/set on relational fields
+            const Class = {
+                [Model.name]: class extends Model {
+                    static __rels__ = new Set();
+                    constructor() {
+                        super();
+                        for (const name of this.constructor.__rels__) {
+                            // Relational fields contain symbols for detection in original class.
+                            // This constructor is called on genuine records:
+                            // - 'one' fields => undefined
+                            // - 'many' fields => []
+                            const newVal = this[name] === Record.__ONE__ ? undefined : [];
+                            this[name] = newVal;
+                            this.__rels__.set(name, newVal);
+                        }
+                    }
+                },
+            }[Model.name];
+            cls.Class = Class;
+            cls.records = JSON.parse(JSON.stringify(Model.records));
+            res[name] = cls;
+            // Detect relational fields with a dummy record and setup getter/setters on them
+            const obj = new Model();
+            for (const [name, val] of Object.entries(obj)) {
+                if (val === Record.__ONE__) {
+                    Class.__rels__.add(name);
+                    Object.defineProperty(Class.prototype, name, {
+                        get() {
+                            const localId = this.__rels__.get(name);
+                            return res.get(localId);
+                        },
+                        set(record) {
+                            this.__rels__.set(name, record?.localId);
+                        },
+                    });
+                }
+                // TODO: __MANY__
+            }
         }
         onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {

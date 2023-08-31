@@ -3,7 +3,7 @@
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { removeFromArray } from "@mail/utils/common/arrays";
-import { closeStream, createLocalId, onChange } from "@mail/utils/common/misc";
+import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -778,7 +778,7 @@ export class Rtc {
         this.state.logs.clear();
         this.state.channel = channel;
         this.onThreadUpdate(this.state.channel, { rtcSessions, invitedMembers });
-        this.state.selfSession = this.store.RtcSession.records[sessionId];
+        this.state.selfSession = this.store.RtcSession.get(sessionId);
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
         this.state.logs.set("channelId", this.state.channel?.id);
         this.state.logs.set("selfSessionId", this.state.selfSession?.id);
@@ -1400,16 +1400,16 @@ export class Rtc {
      * @param {import("@mail/discuss/call/common/rtc_session_model").id} id
      */
     deleteSession(id) {
-        const session = this.store.RtcSession.records[id];
+        const session = this.store.RtcSession.get(id);
         if (session) {
             if (this.state.selfSession && session.eq(this.state.selfSession)) {
                 this.endCall();
             }
-            delete this.store.Thread.records[createLocalId("discuss.channel", session.channelId)]
+            delete this.store.Thread.get({ model: "discuss.channel", id: session.channelId })
                 ?.rtcSessions[id];
             this.disconnect(session);
         }
-        delete this.store.RtcSession.records[id];
+        delete this.store.RtcSession.records[session.localId];
     }
 
     /**
@@ -1471,7 +1471,7 @@ export class Rtc {
     }
 
     updateRtcSessions(channelId, sessionsData, command) {
-        const channel = this.store.Thread.records[createLocalId("discuss.channel", channelId)];
+        const channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
         if (!channel) {
             return;
         }

@@ -2,7 +2,6 @@
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { cleanTerm } from "@mail/utils/common/format";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -231,7 +230,7 @@ export class ChannelSelector extends Component {
     get tagsList() {
         const res = [];
         for (const partnerId of this.state.selectedPartners) {
-            const partner = this.store.Persona.records[createLocalId("partner", partnerId)];
+            const partner = this.store.Persona.get({ type: "partner", id: partnerId });
             res.push({
                 id: partner.id,
                 text: partner.name,

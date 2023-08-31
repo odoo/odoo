@@ -3,16 +3,17 @@
 import { Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
+    static id = Record.AND("content", "message");
     /**
      * @param {Object} data
      * @returns {MessageReactions}
      */
     static insert(data) {
-        let reaction = this.store.Message.records[data.message.id]?.reactions.find(
+        let reaction = this.store.Message.get(data.message)?.reactions.find(
             ({ content }) => content === data.content
         );
         if (!reaction) {
-            reaction = new MessageReactions();
+            reaction = this.new(data);
             reaction._store = this.store;
         }
         const personasToUnlink = new Set();
@@ -40,7 +41,7 @@ export class MessageReactions extends Record {
         Object.assign(reaction, {
             count: data.count,
             content: data.content,
-            messageId: data.message.id,
+            message: data.message,
             personaLocalIds: reaction.personaLocalIds.filter(
                 (localId) => !personasToUnlink.has(localId)
             ),
@@ -54,8 +55,8 @@ export class MessageReactions extends Record {
     count;
     /** @type {number[]} */
     personaLocalIds = [];
-    /** @type {number} */
-    messageId;
+    /** @type {import("@mail/core/common/message_model").Message[]} */
+    message = Record.one();
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
 

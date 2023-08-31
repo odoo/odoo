@@ -3,7 +3,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -62,10 +61,6 @@ export class MessagingMenu extends Component {
         if (thread.model === "discuss.channel") {
             this.threadService.markAsRead(thread);
         }
-    }
-
-    createLocalId(...args) {
-        return createLocalId(...args);
     }
 
     /**

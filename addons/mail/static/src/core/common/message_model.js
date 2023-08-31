@@ -2,7 +2,6 @@
 
 import { Record } from "@mail/core/common/record";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { createLocalId } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -14,6 +13,7 @@ import { url } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class Message extends Record {
+    static id = "id";
     /** @type {Object.<number, Message>} */
     static records = {};
     /**
@@ -28,13 +28,12 @@ export class Message extends Record {
                 id: data.res_id,
             });
         }
-        if (data.id in this.records) {
-            message = this.records[data.id];
-        } else {
-            message = new Message();
+        message = this.get(data);
+        if (!message) {
+            message = this.new(data);
             message._store = this.store;
-            this.records[data.id] = message;
-            message = this.records[data.id];
+            this.records[message.localId] = message;
+            message = this.records[message.localId];
         }
         this.env.services["mail.message"].update(message, data);
         // return reactive version
@@ -44,7 +43,7 @@ export class Message extends Record {
     /** @type {Object[]} */
     attachments = [];
     /** @type {import("@mail/core/common/persona_model").Persona} */
-    author;
+    author = Record.one();
     /** @type {string} */
     body;
     /** @type {string} */
@@ -66,7 +65,7 @@ export class Message extends Record {
     /** @type {number[]} */
     history_partner_ids = [];
     /** @type {Message|undefined} */
-    parentMessage;
+    parentMessage = Record.one();
     /** @type {MessageReactions[]} */
     reactions = [];
     /** @type {import("@mail/core/common/notification_model").Notification[]} */
@@ -196,7 +195,7 @@ export class Message extends Record {
     }
 
     get originThread() {
-        return this._store.Thread.records[createLocalId(this.resModel, this.resId)];
+        return this._store.Thread.get({ model: this.resModel, id: this.resId });
     }
 
     get resUrl() {

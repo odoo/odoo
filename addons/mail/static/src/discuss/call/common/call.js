@@ -88,7 +88,7 @@ export class Call extends Component {
             for (const memberId of this.props.thread.invitedMemberIds) {
                 invitationCards.push({
                     key: "member_" + memberId,
-                    member: this.store.ChannelMember.records[memberId],
+                    member: this.store.ChannelMember.get(memberId),
                 });
             }
         }

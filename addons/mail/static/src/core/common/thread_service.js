@@ -8,7 +8,7 @@ import {
     replaceArrayWithCompare,
 } from "@mail/utils/common/arrays";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
+import { assignDefined, nullifyClearCommands } from "@mail/utils/common/misc";
 
 import { markup } from "@odoo/owl";
 
@@ -77,7 +77,7 @@ export class ThreadService {
         thread.memberCount = results["memberCount"];
         for (const channelMember of channelMembers) {
             if (channelMember.persona || channelMember.partner) {
-                this.store.ChannelMember.insert({ ...channelMember, threadId: thread.id });
+                this.store.ChannelMember.insert({ ...channelMember, thread });
             }
         }
     }
@@ -340,8 +340,7 @@ export class ThreadService {
         if (ids.length) {
             const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
-                const thread =
-                    this.store.Thread.records[createLocalId("discuss.channel", preview.id)];
+                const thread = this.store.Thread.get({ model: "discuss.channel", id: preview.id });
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
@@ -836,7 +835,7 @@ export class ThreadService {
                 tmpData.guestAuthor = this.store.self;
             }
             if (parentId) {
-                tmpData.parentMessage = this.store.Message.records[parentId];
+                tmpData.parentMessage = this.store.Message.get(parentId);
             }
             const prettyContent = await prettifyMessageContent(body, params.validMentions);
             const { emojis } = await loadEmoji();
@@ -865,7 +864,7 @@ export class ThreadService {
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
         if (thread.type !== "chatter") {
             removeFromArrayWithPredicate(thread.messages, (msg) => msg.eq(tmpMsg));
-            delete this.store.Message.records[tmpMsg.id];
+            delete this.store.Message.records[tmpMsg.localId];
         }
         if (!data) {
             return;
