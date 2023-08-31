@@ -184,7 +184,6 @@
             'web/static/src/webclient/webclient.js',
             'web/static/src/views/view_dialogs/form_view_dialog.js',
             'web/static/src/views/view_dialogs/select_create_dialog.js',
-            'web/static/src/legacy/js/libs/download.js',
             # BEGIN copy of web.tests_assets. We don't 'include' it because other modules add their
             # own test helpers in this module that depend on files that they add in assets_backend
             'web/static/lib/qunit/qunit-2.9.1.css',
