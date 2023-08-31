@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import {
     useAutoScroll,
@@ -35,7 +36,7 @@ export const PRESENT_THRESHOLD = 2500;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition };
+    static components = { Message, Transition, DateSection };
     static props = [
         "isInChatWindow?",
         "hasScrollAdjust?",

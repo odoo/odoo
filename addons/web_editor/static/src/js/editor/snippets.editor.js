@@ -153,11 +153,11 @@ var SnippetEditor = Widget.extend({
         }
 
         var _animationsCount = 0;
-        this.postAnimationCover = debounce(() => {
+        this.postAnimationCover = throttleForAnimation(() => {
             this.trigger_up('cover_update', {
                 overlayVisible: true,
             });
-        }, 100);
+        });
         this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
             // We cannot rely on the fact each transition/animation start will
             // trigger a transition/animation end as the element may be removed
@@ -1879,9 +1879,9 @@ var SnippetsMenu = Widget.extend({
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
         // Adapt overlay covering when the window is resized / content changes
-        this.debouncedCoverUpdate = debounce(() => {
+        this.debouncedCoverUpdate = throttleForAnimation(() => {
             this.updateCurrentSnippetEditorOverlay();
-        }, 50);
+        });
         this.$window.on("resize.snippets_menu", this.debouncedCoverUpdate);
         this.$body.on("content_changed.snippets_menu", this.debouncedCoverUpdate);
         $(this.$body[0].ownerDocument.defaultView).on(
@@ -2746,16 +2746,19 @@ var SnippetsMenu = Widget.extend({
         // Without the `:not(.s_social_media)`, it is no longer possible to edit
         // icons in the social media snippet. This should be fixed in a more
         // proper way to get rid of this hack.
-        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable:not(.s_social_media) :not([contenteditable="true"])`;
+        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
         let filterFunc = function () {
-            if (!$(this).is(exclude)) {
-                return true;
+            // Exclude what it is asked to exclude.
+            if ($(this).is(exclude)) {
+                return false;
             }
+            // `o_editable_media` bypasses the `o_not_editable` class.
             if (this.classList.contains('o_editable_media')) {
                 return weUtils.shouldEditableMediaBeEditable(this);
             }
-            return false;
+            return !$(this)
+                .is('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
         };
         if (target) {
             const oldFilter = filterFunc;

@@ -11,6 +11,29 @@ class PosOrderLine(models.Model):
 
     # For the moment we need this to keep attributes consistency between the server and client_side.
     selected_attributes = fields.Json(string="Selected Attributes")
+    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent')
+    combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
+    combo_id = fields.Many2one('pos.combo', string='Combo line reference')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if (vals.get('combo_parent_uuid')):
+                vals.update([
+                    ('combo_parent_id', self.search([('uuid', '=', vals.get('combo_parent_uuid'))]).id)
+                ])
+            if 'combo_parent_uuid' in vals:
+                del vals['combo_parent_uuid']
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if (vals.get('combo_parent_uuid')):
+            vals.update([
+                ('combo_parent_id', self.search([('uuid', '=', vals.get('combo_parent_uuid'))]).id)
+            ])
+        if 'combo_parent_uuid' in vals:
+            del vals['combo_parent_uuid']
+        return super().write(vals)
 
     # FIXME: uuid already pass in pos and move note in pos_restaurant.
     def _export_for_ui(self, orderline):
@@ -23,6 +46,9 @@ class PosOrderLine(models.Model):
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
+
+    tracking_number = fields.Integer(string="Tracking Number")
+    take_away = fields.Boolean(string="Take Away", default=False)
 
     @api.model
     def create_from_ui(self, orders, draft=False):
@@ -39,6 +65,14 @@ class PosOrder(models.Model):
 
         return super().remove_from_ui(server_ids)
 
+    def _order_fields(self, ui_order):
+        fields = super()._order_fields(ui_order)
+        fields.update({
+            'tracking_number': ui_order.get('tracking_number'),
+            'take_away': ui_order.get('take_away'),
+        })
+        return fields
+
     def _send_notification(self, order_ids):
         for order in order_ids:
             if order.access_token and order.state != 'draft':
@@ -53,8 +87,10 @@ class PosOrder(models.Model):
         return {
             "id": self.id,
             "pos_config_id": self.config_id.id,
+            "take_away": self.take_away,
             "pos_reference": self.pos_reference,
             "access_token": self.access_token,
+            "tracking_number": self.tracking_number,
             "state": self.state,
             "date_order": str(self.date_order),
             "amount_total": self.amount_total,

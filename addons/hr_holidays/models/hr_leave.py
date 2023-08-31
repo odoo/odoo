@@ -840,14 +840,14 @@ class HolidaysRequest(models.Model):
                             start=display_date,
                         )
 
-    def onchange(self, values, field_name, field_onchange):
+    def onchange(self, values, field_names, fields_spec):
         # Try to force the leave_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
-        if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
+        if values and 'employee_id' in fields_spec and 'employee_id' not in self._context:
             employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
             self = self.with_context(employee_id=employee_id)
-        return super().onchange(values, field_name, field_onchange)
+        return super().onchange(values, field_names, fields_spec)
 
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)

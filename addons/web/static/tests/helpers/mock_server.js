@@ -607,7 +607,7 @@ export class MockServer {
                 return this.mockNameCreate(args.model, args.args[0], args.kwargs);
             case "name_search":
                 return this.mockNameSearch(args.model, args.args, args.kwargs);
-            case "onchange2":
+            case "onchange":
                 return this.mockOnchange(args.model, args.args, args.kwargs);
             case "read":
                 return this.mockRead(args.model, args.args);

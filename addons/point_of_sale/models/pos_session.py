@@ -10,6 +10,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, convert
 from odoo.service.common import exp_version
+from odoo.osv.expression import AND
 
 
 class PosSession(models.Model):
@@ -221,6 +222,17 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
+
+        for session in sessions:
+            session.env['ir.sequence'].sudo().create({
+                'name': _("PoS Order by Session"),
+                'padding': 4,
+                'code': f'pos.order_{session.id}',
+                'number_next': 1,
+                'number_increment': 1,
+                'company_id': False,
+            })
+
         return sessions
 
     def unlink(self):
@@ -1829,6 +1841,7 @@ class PosSession(models.Model):
         config = self.env['pos.config'].search_read(**params['search_params'])[0]
         config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
                                                        or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        config['has_cash_move_permission'] = self.user_has_groups('account.group_account_invoice')
         return config
 
     def _loader_params_pos_bill(self):
@@ -2000,9 +2013,15 @@ class PosSession(models.Model):
         return products
 
     def _loader_params_product_packaging(self):
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+
         return {
             'search_params': {
-                'domain': [('barcode', 'not in', ['', False])],
+                'domain': domain,
                 'fields': ['name', 'barcode', 'product_id', 'qty'],
             },
         }
@@ -2068,6 +2087,20 @@ class PosSession(models.Model):
         params['search_params'] = {**params['search_params'], **custom_search_params}
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
+
+    def find_product_by_barcode(self, barcode):
+        product = self.env['product.product'].search([['barcode', '=', barcode], ['sale_ok', '=', True]])
+        if product:
+            return {'product_id': [product.id]}
+
+        packaging_params = self._loader_params_product_packaging()
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search_read(**packaging_params['search_params'])
+        if packaging:
+            product_id = packaging[0]['product_id']
+            if product_id:
+                return {'product_id': [product_id[0]], 'packaging': packaging}
+        return {}
 
     def get_total_discount(self):
         amount = 0
@@ -2156,7 +2189,6 @@ class PosSession(models.Model):
             'models_data': self.get_onboarding_data(),
             'successful': allowed,
         }
-
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

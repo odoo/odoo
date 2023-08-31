@@ -4,6 +4,13 @@ import { blockDom, markup } from "@odoo/owl";
 
 export function renderToElement(template, context = {}) {
     const el = render(template, context).firstElementChild;
+    if (el?.nextElementSibling) {
+        throw new Error(
+            `The rendered template '${template}' contains multiple root ` +
+            `nodes that will be ignored using renderToElement, you should ` +
+            `consider using renderToFragment or refactoring the template.`
+        );
+    }
     el?.remove();
     return el;
 }

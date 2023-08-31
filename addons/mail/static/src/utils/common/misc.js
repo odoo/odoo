@@ -39,7 +39,6 @@ export function isDragSourceExternalFile(dataTransfer) {
     return false;
 }
 
-
 /**
  * @param {Object} target
  * @param {string} key

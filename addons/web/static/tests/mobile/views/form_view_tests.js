@@ -320,7 +320,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     </form>
                 `,
                 mockRPC(route, { method, args }) {
-                    if (method === "onchange2" && args[2][0] === "display_name") {
+                    if (method === "onchange" && args[2][0] === "display_name") {
                         return onchangeDef;
                     }
                 },

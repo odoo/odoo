@@ -27,11 +27,8 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
-                            <div>
-                                <field name="employee_id" widget="many2one_avatar_user"/>
-                                <span class="o_kanban_record_title">
-                                    <strong><t t-esc="record.employee_id.value"/></strong>
-                                </span>
+                            <div class="o_kanban_record_title">
+                                <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold"/>
                             </div>
                             <hr class="mt4 mb8"/>
                             <div class="o_kanban_record_subtitle">

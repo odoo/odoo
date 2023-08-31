@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "../core/browser/browser";
-import { makeErrorFromResponse } from "../core/network/rpc_service";
-import { ErrorDialog } from "../core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useComponent, xml } from "@odoo/owl";
 import { loadJS } from "@web/core/assets";
@@ -64,67 +62,10 @@ export function makeLegacyDialogMappingService(legacyEnv) {
  * @param {object} legacyEnv
  * @returns a wowl deployable service
  */
-export function makeLegacyCommandService(legacyEnv) {
-    return {
-        dependencies: ["command"],
-        start(env) {
-            const { command } = env.services;
-
-            const commandRemoveMap = new Map();
-
-            function setLegacyCommand(uniqueId, getCommandDefinition) {
-                const { name, action, options } = getCommandDefinition(env);
-                removeLegacyCommand(uniqueId);
-                commandRemoveMap.set(uniqueId, command.add(name, action, options));
-            }
-
-            function removeLegacyCommand(uniqueId) {
-                if (commandRemoveMap.has(uniqueId)) {
-                    const removeCommand = commandRemoveMap.get(uniqueId);
-                    removeCommand();
-                    commandRemoveMap.delete(uniqueId);
-                }
-            }
-            function openMainPalette(config = {}) {
-                command.openMainPalette(config);
-            }
-
-            legacyEnv.bus.on("set_legacy_command", null, setLegacyCommand);
-            legacyEnv.bus.on("remove_legacy_command", null, removeLegacyCommand);
-            legacyEnv.bus.on("openMainPalette", null, openMainPalette);
-        },
-    };
-}
-
-export function makeLegacyDropdownService(legacyEnv) {
-    return {
-        dependencies: ["ui", "hotkey"],
-        start(_, { ui, hotkey }) {
-            legacyEnv.services.ui = ui;
-            legacyEnv.services.hotkey = hotkey;
-        },
-    };
-}
-
 export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
     // store wowl services on the legacy env (used by the 'useWowlService' hook)
     legacyEnv[wowlServicesSymbol] = wowlEnv.services;
-
-    legacyEnv.services.dialog = wowlEnv.services.dialog;
-    legacyEnv.services.ui = wowlEnv.services.ui;
-
-    // map WebClientReady
-    wowlEnv.bus.addEventListener("WEB_CLIENT_READY", () => {
-        legacyEnv.bus.trigger("web_client_ready");
-    });
-
-    wowlEnv.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", (ev) => {
-        legacyEnv.bus.trigger("SCROLLER:ANCHOR_LINK_CLICKED", ev.detail);
-    });
-
-    legacyEnv.bus.on("clear_cache", null, () => {
-        wowlEnv.bus.trigger("CLEAR-CACHES");
-    });
+    Object.setPrototypeOf(legacyEnv.services, wowlEnv.services);
 }
 
 const reBSTooltip = /^bs-.*$/;
@@ -207,23 +148,6 @@ export function makeLegacyNotificationService(legacyEnv) {
     };
 }
 
-export function makeLegacyCrashManagerService(legacyEnv) {
-    return {
-        dependencies: ["dialog"],
-        start(env) {
-            legacyEnv.services.crash_manager = {
-                show_message(message) {
-                    env.services.dialog.add(ErrorDialog, { traceback: message });
-                },
-                rpc_error(errorResponse) {
-                    // Will be handled by error_service
-                    Promise.reject(makeErrorFromResponse(errorResponse));
-                },
-            };
-        },
-    };
-}
-
 export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
     return promise.then(on_success || (() => {})).catch((reason) => {
         let alreadyThrown = false;
@@ -237,17 +161,6 @@ export function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
     });
 }
 
-export function makeLegacyRainbowManService(legacyEnv) {
-    return {
-        dependencies: ["effect"],
-        start(env, { effect }) {
-            legacyEnv.bus.on("show-effect", null, (payload) => {
-                effect.add(payload);
-            });
-        },
-    };
-}
-
 export function makeMomentLoaderService() {
     return {
         dependencies: ["localization"],
@@ -256,7 +169,7 @@ export function makeMomentLoaderService() {
             const dow = (localization.weekStart || 0) % 7;
             moment.updateLocale(moment.locale(), {
                 dow,
-                doy: 7 + dow - 4,  // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
+                doy: 7 + dow - 4, // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
             });
         },
     };
@@ -291,26 +204,6 @@ export function makeLegacyRPCService(legacyEnv) {
             legacyEnv.services.rpc = rpc;
         },
     };
-}
-
-export function useLegacyRefs() {
-    const env = owl.useEnv();
-
-    let legacyRefs;
-    if (env.legacyRefs) {
-        legacyRefs = env.legacyRefs;
-    } else {
-        legacyRefs = {
-            component: null,
-            widget: null,
-        };
-    }
-
-    owl.useChildSubEnv({
-        legacyRefs,
-    });
-
-    return legacyRefs;
 }
 
 /**

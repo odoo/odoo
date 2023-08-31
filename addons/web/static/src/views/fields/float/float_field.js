@@ -8,7 +8,7 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export class FloatField extends Component {
     static template = "web.FloatField";
@@ -19,19 +19,34 @@ export class FloatField extends Component {
         step: { type: Number, optional: true },
         digits: { type: Array, optional: true },
         placeholder: { type: String, optional: true },
+        humanReadable: { type: Boolean, optional: true },
+        decimals: { type: Number, optional: true },
     };
     static defaultProps = {
         formatNumber: true,
         inputType: "text",
+        humanReadable: false,
+        decimals:0,
     };
 
     setup() {
+        this.state = useState({
+            hasFocus: false, 
+        })
         this.inputRef = useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
             parse: (v) => this.parse(v),
         });
         useNumpadDecimal();
+    }
+
+    onFocusIn() {
+        this.state.hasFocus = true
+    }
+
+    onFocusOut() {
+        this.state.hasFocus = false
     }
 
     parse(value) {
@@ -49,7 +64,11 @@ export class FloatField extends Component {
         ) {
             return this.value;
         }
-        return formatFloat(this.value, { digits: this.digits });
+        if (this.props.humanReadable && !this.state.hasFocus) {
+            return formatFloat(this.value, { digits: this.digits, humanReadable: true, decimals: this.props.decimals });
+        } else {
+            return formatFloat(this.value, { digits: this.digits, humanReadable: false});
+        }
     }
 
     get value() {
@@ -102,9 +121,11 @@ export const floatField = {
                     ? Boolean(options.enable_formatting)
                     : true,
             inputType: options.type,
+            humanReadable: !!options.human_readable,
             step: options.step,
             digits,
             placeholder: attrs.placeholder,
+            decimals: options.decimals || 0,
         };
     },
 };

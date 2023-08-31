@@ -217,11 +217,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             background: var(--o-we-toolbar-border, #{$o-we-toolbar-border});
             transform: scaleY(.6)
         }
-
-        // Adjust dropdown-menu position, but not when already handled in js
-        .o-dropdown-menu:not([x-placement]) {
-            margin-left: $o-we-toolbar-entries-gap;
-        }
     }
 
     // Main layout of buttons
@@ -410,7 +405,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 
 body:not(.editor_has_snippets) {
-    .oe-toolbar {
+    > .oe-toolbar {
         // Bootstrap sets .modal z-index at 1055. Ensure toolbar is visible in
         // modals. Only apply this to the toolbar if it's not in a snippets menu.
         z-index: 1056;

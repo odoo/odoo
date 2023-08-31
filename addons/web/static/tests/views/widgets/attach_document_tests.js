@@ -145,7 +145,7 @@ QUnit.module("Widgets", (hooks) => {
                     <field name="display_name" required="1"/>
                 </form>`,
             });
-            assert.verifySteps(["get_views", "onchange2"]);
+            assert.verifySteps(["get_views", "onchange"]);
 
             await editInput(target, "[name='display_name'] input", "yop");
             await click(target, ".o_attach_document");

@@ -12,7 +12,7 @@ def get_any_pos_config_sudo() -> PosConfig:
     or raises a NotFound otherwise
     """
     return (
-        request.env["pos.config"].sudo().search([("self_order_view_mode", "=", True)], limit=1)
+        request.env["pos.config"].sudo().search([('|'), ("self_order_view_mode", "=", True), ("self_order_kiosk", "=", True)], limit=1)
     ) or _raise(werkzeug.exceptions.NotFound())
 
 def _raise(e):

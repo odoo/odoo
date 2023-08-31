@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import TransactionCase
-from odoo.exceptions import UserError
 
 import odoo.tests
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestAutomation(TransactionCase):
@@ -31,7 +31,6 @@ class TestAutomation(TransactionCase):
         bilbo.active = True
         bilbo.name = "Bilbo"
         self.assertFalse(bilbo.active)
-
 
     def test_02_on_create_restricted(self):
         """ on_create action with low portal user """
@@ -68,7 +67,6 @@ class TestAutomation(TransactionCase):
         filters.name = "Where is Bilbo Baggins?"
         self.assertFalse(filters.active)
 
-
     def test_03_on_change_restricted(self):
         """ on_create action with low portal user """
         action = self.env["base.automation"].create({
@@ -86,5 +84,5 @@ class TestAutomation(TransactionCase):
         self_portal = self.env["ir.filters"].with_user(self.env.ref("base.user_demo").id)
 
         # simulate a onchange call on name
-        onchange = self_portal.onchange({}, [], {"name": "1", "active": ""})
-        self.assertEqual(onchange["value"]["active"], False)
+        result = self_portal.onchange({}, [], {"name": {}, "active": {}})
+        self.assertEqual(result["value"]["active"], False)

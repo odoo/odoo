@@ -1737,33 +1737,7 @@ class UsersView(models.Model):
         valid_fields = partition(is_reified_group, fnames)[1]
         return super()._read_format(valid_fields, load)
 
-    def onchange(self, values, field_name, field_onchange):
-        # field_name can be either a string, a list or Falsy
-        if isinstance(field_name, list):
-            names = field_name
-        elif field_name:
-            names = [field_name]
-        else:
-            names = []
-
-        if any(is_reified_group(field) for field in names):
-            field_name = (
-                ['groups_id']
-                + [field for field in names if not is_reified_group(field)]
-            )
-            values.pop('groups_id', None)
-            values.update(self._remove_reified_groups(values))
-
-        field_onchange['groups_id'] = ''
-        result = super().onchange(values, field_name, field_onchange)
-        if not field_name: # merged default_get
-            self._add_reified_groups(
-                filter(is_reified_group, field_onchange),
-                result.setdefault('value', {})
-            )
-        return result
-
-    def onchange2(self, values, field_names, fields_spec):
+    def onchange(self, values, field_names, fields_spec):
         reified_fnames = [fname for fname in fields_spec if is_reified_group(fname)]
         if reified_fnames:
             values = {key: val for key, val in values.items() if key != 'groups_id'}
@@ -1780,7 +1754,7 @@ class UsersView(models.Model):
             }
             fields_spec['groups_id'] = {}
 
-        result = super().onchange2(values, field_names, fields_spec)
+        result = super().onchange(values, field_names, fields_spec)
 
         if reified_fnames and 'groups_id' in result.get('value', {}):
             self._add_reified_groups(reified_fnames, result['value'])

@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position_model";
-import { createLocalId } from "@mail/utils/common/misc";
+import { createLocalId, onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -22,6 +22,44 @@ import { Deferred } from "@web/core/utils/concurrency";
  */
 
 export class Thread extends Record {
+    /** @type {Object.<string, Thread>} */
+    static records = {};
+    /**
+     * @param {Object} data
+     * @returns {Thread}
+     */
+    static insert(data) {
+        if (!("id" in data)) {
+            throw new Error("Cannot insert thread: id is missing in data");
+        }
+        if (!("model" in data)) {
+            throw new Error("Cannot insert thread: model is missing in data");
+        }
+        const localId = createLocalId(data.model, data.id);
+        if (localId in this.records) {
+            const thread = this.records[localId];
+            this.env.services["mail.thread"].update(thread, data);
+            return thread;
+        }
+        const thread = new Thread(this.store, data);
+        onChange(thread, "message_unread_counter", () => {
+            if (thread.channel) {
+                thread.channel.message_unread_counter = thread.message_unread_counter;
+            }
+        });
+        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
+        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
+        onChange(thread, "is_pinned", () => {
+            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
+                this.store.discuss.threadLocalId = null;
+            }
+        });
+        this.env.services["mail.thread"].update(thread, data);
+        this.env.services["mail.thread"].insertComposer({ thread });
+        // return reactive version.
+        return this.records[thread.localId];
+    }
+
     /** @type {number} */
     id;
     /** @type {string} */
@@ -202,6 +240,10 @@ export class Thread extends Record {
 
     get hasMemberList() {
         return ["channel", "group"].includes(this.type);
+    }
+
+    get hasAttachmentPanel() {
+        return this.model === "discuss.channel";
     }
 
     get isChatChannel() {
@@ -457,3 +499,5 @@ export class Thread extends Record {
         return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
     }
 }
+
+modelRegistry.add(Thread.name, Thread);

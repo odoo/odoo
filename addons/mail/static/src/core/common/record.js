@@ -1,8 +1,19 @@
 /* @odoo-module */
 
 import { toRaw } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+
+export const modelRegistry = registry.category("discuss.model");
 
 export class Record {
+    static records = {};
+
+    /**
+     * @param {Object} data
+     * @returns {Record}
+     */
+    static insert(data) {}
+
     /** @param {Record} record */
     eq(record) {
         return toRaw(this) === toRaw(record);
@@ -23,3 +34,5 @@ export class Record {
         return !this.in(list);
     }
 }
+
+modelRegistry.add(Record.name, Record);

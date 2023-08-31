@@ -1,10 +1,26 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { Record, modelRegistry } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
+    /** @type {Object.<number, Notification>} */
+    static records = {};
+    /**
+     * @param {Object} data
+     * @returns {Notification}
+     */
+    static insert(data) {
+        let notification = this.records[data.id];
+        if (!notification) {
+            this.records[data.id] = new Notification(this.store, data);
+            notification = this.records[data.id];
+        }
+        this.env.services["mail.message"].updateNotification(notification, data);
+        return notification;
+    }
+
     /** @type {number} */
     id;
     /** @type {number} */
@@ -79,3 +95,5 @@ export class Notification extends Record {
         return "";
     }
 }
+
+modelRegistry.add(Notification.name, Notification);

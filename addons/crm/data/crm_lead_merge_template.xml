@@ -68,7 +68,7 @@
                     Tags:
                     <div class="ms-2 d-flex flex-row">
                         <div t-foreach="lead.tag_ids" t-as="tag" t-esc="tag.name"
-                            t-attf-class="badge rounded-pill o_tag_color_#{tag.color} d-inline-block"/>
+                            t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.color} d-inline-block"/>
                     </div>
                 </div>
                 <div t-if="lead.user_id" class="mt-3">
@@ -168,7 +168,7 @@
                             <div t-if="'values' in property"
                                 class="ms-2 d-flex flex-row"> <!-- Tags -->
                                 <div t-foreach="property['values']" t-as="tag" t-esc="tag['name']"
-                                    t-attf-class="badge rounded-pill o_tag_color_#{tag.get('color', 0)} d-inline-block me-2"/>
+                                    t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.get('color', 0)} d-inline-block me-2"/>
                             </div>
                             <div t-else="" class="ms-2" t-esc="property['value']"/>
                         </li>

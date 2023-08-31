@@ -1303,171 +1303,6 @@ class PropertiesCase(TestPropertiesMixin):
             ]
 
     @mute_logger('odoo.fields')
-    def test_properties_field_onchange(self):
-        """If we change the definition record, the onchange of the properties field must be triggered."""
-        message_form = Form(self.env['test_new_api.message'])
-
-        with self.assertQueryCount(10):
-            message_form.discussion = self.discussion_1
-            message_form.author = self.user
-
-            self.assertEqual(
-                message_form.attributes,
-                [{
-                    'name': 'discussion_color_code',
-                    'string': 'Color Code',
-                    'type': 'char',
-                    'default': 'blue',
-                    'value': 'blue',
-                }, {
-                    'name': 'moderator_partner_id',
-                    'string': 'Partner',
-                    'type': 'many2one',
-                    'comodel': 'test_new_api.partner',
-                    'value': False,
-                }],
-                msg='Should take the new definition when changing the definition record',
-            )
-
-            # change the discussion field
-            message_form.discussion = self.discussion_2
-
-            properties = message_form.attributes
-
-            self.assertEqual(len(properties), 1)
-            self.assertEqual(
-                properties[0]['name'],
-                'state',
-                msg='Should take the values of the new definition record',
-            )
-
-        with self.assertQueryCount(6):
-            message = message_form.save()
-
-        self.assertEqual(
-            message.attributes,
-            {'state': 'draft'},
-            msg='Should take the default value',
-        )
-
-        # check cached value
-        cached_value = self.env.cache.get(message, message._fields['attributes'])
-        self.assertEqual(cached_value, {'state': 'draft'})
-
-        # change the definition record, change the definition and add default values
-        self.assertEqual(message.discussion, self.discussion_2)
-
-        with self.assertQueryCount(4):
-            message.discussion = self.discussion_1
-        self.assertEqual(
-            self.discussion_1.attributes_definition,
-            [{
-                'name': 'discussion_color_code',
-                'type': 'char',
-                'string': 'Color Code',
-                'default': 'blue',
-                }, {
-                    'name': 'moderator_partner_id',
-                    'type': 'many2one',
-                    'string': 'Partner',
-                    'comodel': 'test_new_api.partner',
-                }],
-            )
-        self.assertEqual(
-            message.attributes,
-            {'discussion_color_code': 'blue', 'moderator_partner_id': False},
-        )
-
-        self.discussion_1.attributes_definition = False
-        self.discussion_2.attributes_definition = [{
-            'name': 'test',
-            'type': 'char',
-            'default': 'Default',
-        }]
-
-        # change the message discussion to remove the properties
-        # discussion 1 -> discussion 2
-        message.discussion = self.discussion_2
-        message.attributes = [{'name': 'test', 'value': 'Test'}]
-        onchange_values = message.onchange(
-            values={
-                'discussion': self.discussion_1.id,
-                'attributes': [{
-                    'name': 'test',
-                    'type': 'char',
-                    'default': 'Default',
-                    'value': 'Test',
-                }],
-            },
-            field_name=['discussion'],
-            field_onchange={'discussion': '1', 'attributes': '1'},
-        )
-        self.assertTrue(
-            'attributes' in onchange_values['value'],
-            msg='Should have detected the definition record change')
-        self.assertEqual(
-            onchange_values['value']['attributes'], [],
-            msg='Should have reset the properties definition')
-
-        # change the message discussion to add new properties
-        # discussion 2 -> discussion 1
-        message.discussion = self.discussion_1
-        onchange_values = message.onchange(
-            values={
-                'discussion': self.discussion_2.id,
-                'attributes': [],
-            },
-            field_name=['discussion'],
-            field_onchange={'discussion': '1', 'attributes': '1'},
-        )
-        self.assertTrue(
-            'attributes' in onchange_values['value'],
-            msg='Should have detected the definition record change')
-        self.assertEqual(
-            onchange_values['value']['attributes'],
-            [{'name': 'test', 'type': 'char', 'default': 'Default', 'value': 'Default'}],
-            msg='Should have reset the properties definition to the discussion 1 definition')
-
-        # change the definition record and the definition at the same time
-        message_form = Form(message)
-        message_form.discussion = self.discussion_2
-        message_form.attributes = [{
-            'name': 'new_property',
-            'type': 'char',
-            'value': 'test value',
-            'definition_changed': True,
-        }]
-        message = message_form.save()
-        self.assertEqual(
-            self.discussion_2.attributes_definition,
-            [{'name': 'new_property', 'type': 'char'}])
-        self.assertEqual(
-            message.attributes,
-            {'new_property': 'test value'})
-
-        # re-write the same parent again and check that value are not reset
-        message.discussion = message.discussion
-        self.assertEqual(
-            message.attributes,
-            {'new_property': 'test value'})
-
-        # trigger a other onchange after setting the properties
-        # and check that it does not impact the properties
-        message.discussion.attributes_definition = []
-        message_form = Form(message)
-        message.attributes = [{
-            'name': 'new_property',
-            'type': 'char',
-            'value': 'test value',
-            'definition_changed': True,
-        }]
-        message_form.body = "a" * 42
-        message = message_form.save()
-        self.assertEqual(
-            message.attributes,
-            {'new_property': 'test value'})
-
-    @mute_logger('odoo.fields')
     def test_properties_field_onchange2(self):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
@@ -1574,7 +1409,7 @@ class PropertiesCase(TestPropertiesMixin):
                 'value': 'Test',
             }],
         }
-        result = message.onchange2(values, ['discussion'], fields_spec)
+        result = message.onchange(values, ['discussion'], fields_spec)
         self.assertIn('attributes', result['value'], 'Should have detected the definition record change')
         self.assertEqual(result['value']['attributes'], [], 'Should have reset the properties definition')
 
@@ -1585,7 +1420,7 @@ class PropertiesCase(TestPropertiesMixin):
             'discussion': self.discussion_2.id,
             'attributes': [],
         }
-        result = message.onchange2(values, ['discussion'], fields_spec)
+        result = message.onchange(values, ['discussion'], fields_spec)
         self.assertIn('attributes', result['value'], 'Should have detected the definition record change')
         self.assertEqual(
             result['value']['attributes'],

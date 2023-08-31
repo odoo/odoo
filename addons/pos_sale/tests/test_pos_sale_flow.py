@@ -255,3 +255,39 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(pos_order.picking_ids.move_line_ids[1].qty_done, 2)
         self.assertEqual(pos_order.picking_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
         self.assertEqual(sale_order.order_line.move_ids.move_lines_count, 0)
+
+    def test_settle_order_with_multistep_delivery(self):
+        """This test create an order and settle it in the PoS. It also uses multistep delivery
+            and we need to make sure that all the picking are cancelled if the order is fully delivered.
+        """
+
+        #get the warehouse
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+        })
+        #create a sale order with 2 lines
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder3', login="accountman")
+
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
+        self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel', 'cancel', 'cancel'])

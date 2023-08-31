@@ -67,8 +67,8 @@ patch(AttendeeCalendarController.prototype, {
             this.env.services.action.doAction("base_setup.action_general_configuration");
         } else {
             this.dialog.add(AlertDialog, {
-                title: this.env._t("Configuration"),
-                body: this.env._t("Your administrator paused the synchronization with Google Calendar."),
+                title: _t("Configuration"),
+                body: _t("Your administrator paused the synchronization with Google Calendar."),
             });
         }
     }

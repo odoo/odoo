@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <t groups="point_of_sale.group_pos_manager">
+                    <field name="is_kiosk_mode" invisible="1"/>
                     <field name="pos_selectable_categ_ids" invisible="1"/>
                     <field name="pos_has_active_session" invisible="1"/>
                     <field name="pos_allowed_pricelist_ids" invisible="1"/>
@@ -30,17 +31,16 @@
                             <p>Please create/select a Point of Sale above to show the configuration options.</p>
                         </div>
                     </div>
-
+                    <div class="o_notification_alert alert alert-warning mt-1 mb-0" invisible="not pos_has_active_session" role="alert">
+                        A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
+                        <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
+                    </div>
+                    <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
+                        There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
+                    </div>
                     <div invisible="not pos_config_id">
-                        <block title="PoS Interface" id="pos_interface_section">
+                        <block title="Restaurant Mode" id="restaurant_section">
                             <!-- Wrap the warnings in an o_setting_box so that it doesn't show in the search. -->
-                            <div class="o_notification_alert alert alert-warning" invisible="not pos_has_active_session" role="alert">
-                                A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
-                                <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
-                            </div>
-                            <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
-                                There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
-                            </div>
                             <setting>
                                 <field name="pos_module_pos_restaurant" readonly="pos_has_active_session"/>
                                 <div class="content-group" id="warning_text_pos_restaurant" invisible="not pos_module_pos_restaurant">
@@ -49,6 +49,61 @@
                                     </div>
                                 </div>
                             </setting>
+                        </block>
+                        <block title="Payment" id="pos_payment_section">
+                            <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available">
+                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" invisible="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
+                                <div>
+                                    <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                                </div>
+                            </setting>
+                            <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
+                                <field name="pos_auto_validate_terminal_payment"/>
+                            </setting>
+                            <setting string="Cash Rounding" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
+                                <field name="pos_cash_rounding"/>
+                                <div class="content-group mt16" invisible="not pos_cash_rounding">
+                                    <div class="row mt16">
+                                        <label string="Rounding Method" for="pos_rounding_method" class="col-lg-3 o_light_label" />
+                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <div class="col">
+                                            <field name="pos_only_round_cash_method"/>
+                                            <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt8">
+                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
+                                            type="action" string="Cash Roundings" class="btn-link"
+                                            invisible="not group_cash_rounding"/>
+                                </div>
+                            </setting>
+                            <setting help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
+                                <field name="pos_set_maximum_difference" />
+                                <div class="content-group mt16" invisible="not pos_set_maximum_difference">
+                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal"/>
+                                    <field name="pos_amount_authorized_diff"/>
+                                </div>
+                            </setting>
+                            <setting invisible="not pos_cash_control" string="Coins/Bills" help="Set of coins/bills that will be used in opening and closing control">
+                                <field name="pos_default_bill_ids" colspan="4" widget="many2many_tags" options="{'no_create_edit': True}" context="{'default_pos_config_ids':[(6, False, [pos_config_id])]}"/>
+                            </setting>
+                            <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip">
+                                <field name="pos_iface_tipproduct" readonly="pos_has_active_session"/>
+                                <div class="content-group" invisible="not pos_iface_tipproduct">
+                                    <div class="mt16" id="tip_product">
+                                        <label string="Tip Product" for="pos_tip_product_id" class="o_light_label"/>
+                                        <field name="pos_tip_product_id"/>
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+                        <block title="PoS Interface" id="pos_interface_section">
+                            <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template" role="alert">
+                                There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
+                            </div>
                             <setting help="Start selling from a default product category">
                                 <field name="pos_start_category"/>
                                 <div class="content-group mt16" invisible="not pos_start_category">
@@ -56,7 +111,7 @@
                                 </div>
                             </setting>
 
-                            <setting title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Multi Employees per Session" help="Allow to log and switch between selected Employees">
+                            <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Multi Employees per Session" help="Allow to log and switch between selected Employees">
                                 <field name="pos_module_pos_hr" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_module_pos_hr">
                                     <div class="text-warning" id="warning_text_employees">
@@ -76,7 +131,7 @@
                             <setting help="Improve navigation for imprecise industrial touchscreens">
                                 <field name="pos_iface_big_scrollbars"/>
                             </setting>
-                            <setting string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
+                            <setting id="margin_and_cost" string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
                                 <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
                             <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant">
@@ -91,7 +146,6 @@
                                 </div>
                             </setting>
                         </block>
-
                         <block title="Accounting" id="pos_accounting_section">
                             <setting id="default_sales_tax_setting" title="This tax is applied to any new product created in the catalog.">
                                 <label string="Default Sales Tax" for="sale_tax_id"/>
@@ -114,7 +168,7 @@
                                 </div>
                                 <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('account_type', '=', 'asset_receivable'), ('company_id', '=', company_id)]"/>
                             </setting>
-                            <setting title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
+                            <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order">
                                 <field name="pos_tax_regime_selection"/>
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">
@@ -168,7 +222,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting class="price_control" title="Only users with Manager access rights for PoS app can modify the product prices on orders." string="Price Control" help="Restrict price modification to managers">
+                            <setting id="price_control" class="price_control" title="Only users with Manager access rights for PoS app can modify the product prices on orders." string="Price Control" help="Restrict price modification to managers">
                                 <field name="pos_restrict_price_control"/>
                             </setting>
                             <setting id="product_prices" string="Product Prices" help="Product prices on receipts">
@@ -179,7 +233,7 @@
                                         target="_blank" class="oe-link"><i class="oi oi-fw oi-arrow-right"/>How to manage tax-included prices</a>
                                 </div>
                             </setting>
-                            <setting help="Allow cashiers to set a discount per line">
+                            <setting id="manual_discount" help="Allow cashiers to set a discount per line">
                                 <field name="pos_manual_discount"/>
                             </setting>
                             <setting help="Adds a button to set a global discount">
@@ -225,57 +279,6 @@
                             </setting>
                             <setting id="order_reference" groups="base.group_no_one" string="Order Reference" help="Generation of your order references">
                                 <field name="pos_sequence_id" readonly="1"/>
-                            </setting>
-                        </block>
-
-                        <block title="Payment" id="pos_payment_section">
-                            <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available">
-                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
-                                <div>
-                                    <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
-                                </div>
-                            </setting>
-                            <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
-                                <field name="pos_auto_validate_terminal_payment"/>
-                            </setting>
-                            <setting string="Cash Rounding" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
-                                <field name="pos_cash_rounding"/>
-                                <div class="content-group mt16" invisible="not pos_cash_rounding">
-                                    <div class="row mt16">
-                                        <label string="Rounding Method" for="pos_rounding_method" class="col-lg-3 o_light_label" />
-                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]"/>
-                                    </div>
-                                    <div class="row mt16">
-                                        <div class="col">
-                                            <field name="pos_only_round_cash_method"/>
-                                            <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt8">
-                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
-                                            type="action" string="Cash Roundings" class="btn-link"
-                                            invisible="not group_cash_rounding"/>
-                                </div>
-                            </setting>
-                            <setting help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
-                                <field name="pos_set_maximum_difference" />
-                                <div class="content-group mt16" invisible="not pos_set_maximum_difference">
-                                    <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal"/>
-                                    <field name="pos_amount_authorized_diff"/>
-                                </div>
-                            </setting>
-                            <setting invisible="not pos_cash_control" string="Coins/Bills" help="Set of coins/bills that will be used in opening and closing control">
-                                <field name="pos_default_bill_ids" colspan="4" widget="many2many_tags" options="{'no_create_edit': True}" context="{'default_pos_config_ids':[(6, False, [pos_config_id])]}"/>
-                            </setting>
-                            <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip">
-                                <field name="pos_iface_tipproduct" readonly="pos_has_active_session"/>
-                                <div class="content-group" invisible="not pos_iface_tipproduct">
-                                    <div class="mt16" id="tip_product">
-                                        <label string="Tip Product" for="pos_tip_product_id" class="o_light_label"/>
-                                        <field name="pos_tip_product_id"/>
-                                    </div>
-                                </div>
                             </setting>
                         </block>
 

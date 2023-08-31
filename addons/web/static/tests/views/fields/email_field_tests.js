@@ -212,7 +212,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
                 mockRPC(route, { method }) {
-                    if (method === "onchange2") {
+                    if (method === "onchange") {
                         return Promise.resolve({
                             value: {
                                 foo: "lara.espin@unknown", // onchange to update foo in readonly mode directly

@@ -93,6 +93,13 @@ function parseActiveIds(ids) {
     return activeIds;
 }
 
+const DIALOG_SIZES = {
+    "extra-large": "xl",
+    large: "lg",
+    medium: "md",
+    small: "sm",
+};
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -775,13 +782,16 @@ function makeActionManager(env) {
         if (action.target === "new") {
             cleanDomFromBootstrap();
             const actionDialogProps = {
-                // TODO add size
                 ActionComponent: ControllerComponent,
                 actionProps: controller.props,
                 actionType: action.type,
             };
             if (action.name) {
                 actionDialogProps.title = action.name;
+            }
+            const size = DIALOG_SIZES[action.context.dialog_size];
+            if (size) {
+                actionDialogProps.size = size;
             }
 
             const onClose = _removeDialog();

@@ -120,7 +120,6 @@ class HrEmployeeLocation(models.Model):
 
     def add_exceptional_worklocation(self, vals):
         exceptional, date, work, employee_id = self._check_exceptional_work_location(vals)
-        exceptional.ensure_one()
         if exceptional:
             exceptional.unlink()
         self.env['hr.employee.location'].create({
@@ -179,6 +178,7 @@ class HrEmployeeLocation(models.Model):
 
     def delete_default_worklocation(self):
         self.ensure_one()
+        self.employee_id.with_context(no_loop=True).write({DAYS[self.weekday]: False})
         self._save_previous_default_worklocation()
 
     def _get_new_worklocation_vals(self, vals):

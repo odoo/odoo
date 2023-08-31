@@ -25,6 +25,9 @@ patch(Thread.prototype, {
     get hasMemberList() {
         return false;
     },
+    get hasAttachmentPanel() {
+        return this.type !== "livechat" && super.hasAttachmentPanel;
+    },
 });
 
 patch(ThreadService.prototype, {

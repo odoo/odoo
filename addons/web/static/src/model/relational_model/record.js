@@ -331,6 +331,22 @@ export class Record extends DataPoint {
                     }
                     break;
                 }
+                case "properties": {
+                    const value = this.data[fieldName];
+                    if (value) {
+                        const ok = value.every(
+                            (propertyDefinition) =>
+                                propertyDefinition.name &&
+                                propertyDefinition.name.length &&
+                                propertyDefinition.string &&
+                                propertyDefinition.string.length
+                        );
+                        if (!ok) {
+                            unsetRequiredFields.push(fieldName);
+                        }
+                    }
+                    break;
+                }
                 default:
                     if (!this.data[fieldName] && this._isRequired(fieldName)) {
                         unsetRequiredFields.push(fieldName);
@@ -615,7 +631,7 @@ export class Record extends DataPoint {
                         } else if (property.type === "many2one") {
                             parsedValues[fieldPropertyName] =
                                 property.value.length && property.value[1] === null
-                                    ? [property.value[0], this.model._t("No Access")]
+                                    ? [property.value[0], _t("No Access")]
                                     : property.value;
                         } else {
                             parsedValues[fieldPropertyName] = property.value ?? false;

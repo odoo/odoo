@@ -38,6 +38,16 @@ patch(Wysiwyg.prototype, {
         }
     },
 
+    /**
+     * @override
+     **/
+    destroy() {
+        if (this.options.inIframe) {
+            this.$iframe?.[0].contentDocument.removeEventListener('scroll', this._onScroll, true);
+        }
+        super.destroy();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -178,6 +188,42 @@ patch(Wysiwyg.prototype, {
             super._bindOnBlur(...arguments);
         } else {
             this.$iframe[0].contentWindow.addEventListener('blur', this._onBlur);
+        }
+    },
+
+    /**
+     * When the editable is inside an iframe, we want to update the toolbar
+     * position in 2 scenarios:
+     * 1. scroll event in the top document, if the iframe is a descendant of
+     * the scroll container.
+     * 2. scroll event in the iframe's document.
+     * 
+     * @override
+     */
+    _onScroll(ev) {
+        if (this.options.inIframe) {
+            const iframeDocument = this.$iframe[0].contentDocument;
+            const scrollInIframe = ev.target === iframeDocument || ev.target.ownerDocument === iframeDocument;
+            if (ev.target.contains(this.$iframe[0]))  {
+                this.scrollContainer = ev.target;
+                this.odooEditor.updateToolbarPosition();
+            } else if (scrollInIframe) {
+                // UpdateToolbarPosition needs a scroll container in the top document.
+                this.scrollContainer = this.$iframe[0];
+                this.odooEditor.updateToolbarPosition();
+            }
+        } else {
+            return super._onScroll(...arguments);
+        }
+    },
+
+    /**
+     * @override
+     */
+    _configureToolbar(options) {
+        super._configureToolbar(...arguments);
+        if (this.options.inIframe && !options.snippets) {
+            this.$iframe[0].contentDocument.addEventListener('scroll', this._onScroll, true);
         }
     },
 });

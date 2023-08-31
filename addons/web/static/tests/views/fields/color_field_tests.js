@@ -48,7 +48,7 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     assert.step(`onchange ${JSON.stringify(args.args)}`);
                 }
             },
@@ -159,7 +159,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="hex_color" widget="color" />
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     assert.step(`onchange ${JSON.stringify(args.args)}`);
                 }
             },

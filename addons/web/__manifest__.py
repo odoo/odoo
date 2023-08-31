@@ -59,6 +59,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/modal.scss',
@@ -144,11 +145,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/ace.scss',
             'web/static/src/scss/base_document_layout.scss',
 
-            'web/static/src/legacy/scss/model_field_selector.scss',
             'web/static/src/legacy/scss/dropdown.scss',
             'web/static/src/legacy/scss/fields.scss',
-            'web/static/src/legacy/scss/fields_extra.scss',
-            'web/static/src/legacy/scss/color_picker.scss',
             'base/static/src/scss/res_partner.scss',
 
             # Form style should be computed before
@@ -157,7 +155,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/legacy_promise_error_handler.js',
             'web/static/src/legacy/legacy_rpc_error_handler.js',
-            'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/js/core/dates.js',
@@ -203,6 +200,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/base_frontend.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/translation_dialog.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
 

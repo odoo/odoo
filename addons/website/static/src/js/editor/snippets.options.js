@@ -19,7 +19,7 @@ import {
     convertRgbToHsl,
     convertHslToRgb,
  } from '@web/core/utils/colors';
-import { renderToElement } from "@web/core/utils/render";
+import { renderToElement, renderToFragment } from "@web/core/utils/render";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -1676,10 +1676,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             const ccPreviewEl = $(renderToElement('web_editor.color.combination.preview.legacy'))[0];
             ccPreviewEl.classList.add('text-center', `o_cc${i}`, 'o_colored_level', 'o_we_collapse_toggler');
             collapseEl.appendChild(ccPreviewEl);
-            const editionEls = $(renderToElement('website.color_combination_edition', {number: i}));
-            for (const el of editionEls) {
-                collapseEl.appendChild(el);
-            }
+            collapseEl.appendChild(renderToFragment('website.color_combination_edition', {number: i}));
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }

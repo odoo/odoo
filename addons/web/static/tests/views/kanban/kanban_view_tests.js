@@ -1872,10 +1872,10 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
-            "onchange2", // quick create
+            "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -1951,11 +1951,11 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
-            "onchange2", // quick create
+            "onchange", // quick create
             "create", // should perform a create to create the record
             "web_read",
             "web_read", // read the created record
-            "onchange2", // new quick create
+            "onchange", // new quick create
         ]);
     });
 
@@ -1998,7 +1998,7 @@ QUnit.module("Views", (hooks) => {
                         "should send the correct values"
                     );
                 }
-                if (args.method === "onchange2") {
+                if (args.method === "onchange") {
                     await def;
                 }
             },
@@ -2225,10 +2225,10 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
-            "onchange2", // quick create
+            "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2295,11 +2295,11 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
-            "onchange2", // quick create
+            "onchange", // quick create
             "create", // should perform a create to create the record
             "web_read",
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2351,10 +2351,10 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
-            "onchange2", // quick create
+            "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2409,10 +2409,10 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "unity_web_search_read", // read records when unfolding 'None'
-            "onchange2", // quick create
+            "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2477,10 +2477,10 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "get_views", // get form view
-            "onchange2", // quick create
+            "onchange", // quick create
             "create", // should perform a create to create the record
             "web_read", // read the created record
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -2551,10 +2551,10 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "get_views", // get form view
-            "onchange2", // quick create
+            "onchange", // quick create
             "create", // should perform a create to create the record
             "web_read",
-            "onchange2",
+            "onchange",
         ]);
     });
 
@@ -2584,7 +2584,7 @@ QUnit.module("Views", (hooks) => {
         ]);
 
         await createRecord();
-        assert.verifySteps(["onchange2"]);
+        assert.verifySteps(["onchange"]);
 
         // do not fill anything and validate
         await validateRecord();
@@ -2654,8 +2654,8 @@ QUnit.module("Views", (hooks) => {
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
             "get_views", // form view in quick create
-            "onchange2", // quick create
-            "onchange2", // onchange due to 'foo' field change
+            "onchange", // quick create
+            "onchange", // onchange due to 'foo' field change
         ]);
     });
 
@@ -2748,13 +2748,13 @@ QUnit.module("Views", (hooks) => {
 
         // click on 'Create' -> should open the quick create in the first column
         await quickCreateRecord();
-        assert.verifySteps(["get_views", "onchange2"]);
+        assert.verifySteps(["get_views", "onchange"]);
 
         // fill the 'foo' field -> should trigger the onchange
         await editQuickCreateInput("foo", "new partner");
-        assert.verifySteps(["onchange2"]);
+        assert.verifySteps(["onchange"]);
         await validateRecord();
-        assert.verifySteps(["create", "web_read", "onchange2"]);
+        assert.verifySteps(["create", "web_read", "onchange"]);
     });
 
     QUnit.test("quick create record and change state in grouped mode", async (assert) => {
@@ -3198,7 +3198,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
                 async mockRPC(route, { method, args }) {
                     switch (method) {
-                        case "onchange2": {
+                        case "onchange": {
                             assert.step(method);
                             if (shouldDelayOnchange) {
                                 await prom;
@@ -3271,10 +3271,10 @@ QUnit.module("Views", (hooks) => {
             );
 
             assert.verifySteps([
-                "onchange2", // default_get
-                "onchange2", // new partner
+                "onchange", // default_get
+                "onchange", // new partner
                 "create",
-                "onchange2", // default_get
+                "onchange", // default_get
             ]);
         }
     );
@@ -3306,8 +3306,8 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates></kanban>",
                 groupBy: ["bar"],
                 async mockRPC(route, args) {
-                    if (args.method === "onchange2") {
-                        assert.step("onchange2");
+                    if (args.method === "onchange") {
+                        assert.step("onchange");
                         if (shouldDelayOnchange) {
                             await prom;
                         }
@@ -3370,10 +3370,10 @@ QUnit.module("Views", (hooks) => {
             );
 
             assert.verifySteps([
-                "onchange2", // default_get
-                "onchange2", // new partner
+                "onchange", // default_get
+                "onchange", // new partner
                 "create",
-                "onchange2", // default_get
+                "onchange", // default_get
             ]);
         }
     );
@@ -6872,12 +6872,12 @@ QUnit.module("Views", (hooks) => {
                 "get_views",
                 "web_read_group",
                 "read_progress_bar",
-                "onchange2",
+                "onchange",
                 "name_create",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
-                "onchange2",
+                "onchange",
             ]);
         }
     );
@@ -9578,11 +9578,11 @@ QUnit.module("Views", (hooks) => {
             "read_progress_bar",
             "unity_web_search_read",
             "unity_web_search_read",
-            "onchange2",
+            "onchange",
             "name_create",
             "web_read",
             "read_progress_bar",
-            "onchange2",
+            "onchange",
         ]);
     });
 
@@ -10293,12 +10293,12 @@ QUnit.module("Views", (hooks) => {
                 "unity_web_search_read",
                 "unity_web_search_read",
                 "get_views",
-                "onchange2",
+                "onchange",
                 "create",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
-                "onchange2",
+                "onchange",
             ]);
         }
     );
@@ -10368,19 +10368,19 @@ QUnit.module("Views", (hooks) => {
                 "web_read_group",
                 "unity_web_search_read",
                 "get_views",
-                "onchange2",
+                "onchange",
                 "create",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
                 "web_read_group",
-                "onchange2",
+                "onchange",
                 "create",
                 "web_read",
                 "read_progress_bar",
                 "web_read_group",
                 "web_read_group",
-                "onchange2",
+                "onchange",
             ]);
         }
     );
@@ -13187,13 +13187,13 @@ QUnit.module("Views", (hooks) => {
             "web_read_group", // initial read_group
             "unity_web_search_read", // initial search_read (first column)
             "unity_web_search_read", // initial search_read (second column)
-            "onchange2", // quick create
+            "onchange", // quick create
             "name_create", // should perform a name_create to create the record
             "get_views", // load views for form view dialog
-            "onchange2", // load of a virtual record in form view dialog
+            "onchange", // load of a virtual record in form view dialog
             "create", // save virtual record
             "web_read", // read the created record to get foo value
-            "onchange2", // reopen the quick create automatically
+            "onchange", // reopen the quick create automatically
         ]);
     });
 

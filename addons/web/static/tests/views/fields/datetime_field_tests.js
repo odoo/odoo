@@ -132,8 +132,8 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: '<form><field name="datetime"/></form>',
                 mockRPC(route, { method }) {
-                    if (method === "onchange2") {
-                        assert.step("onchange2");
+                    if (method === "onchange") {
+                        assert.step("onchange");
                     }
                 },
             });
@@ -165,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_field_datetime input").value,
                 "04/22/2018 08:25:00"
             );
-            assert.verifySteps(["onchange2"]);
+            assert.verifySteps(["onchange"]);
         }
     );
 

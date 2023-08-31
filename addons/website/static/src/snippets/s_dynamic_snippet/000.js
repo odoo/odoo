@@ -3,7 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { Markup } from "@web/legacy/js/core/utils";
 import { uniqueId } from "@web/core/utils/functions";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToString } from "@web/core/utils/render";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
@@ -136,7 +136,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _prepareContent: function () {
-        this.renderedContent = renderToElement(
+        this.renderedContent = renderToString(
             this.template_key,
             this._getQWebRenderOptions()
         );

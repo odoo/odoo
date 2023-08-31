@@ -2519,25 +2519,7 @@ class AccountMove(models.Model):
         for move in self:
             move.display_name = move._get_move_display_name(show_ref=True)
 
-    def onchange(self, values, field_name, field_onchange):
-        if field_name in ('line_ids', 'invoice_line_ids'):
-            # Since only one field can be changed at the same time (the record is saved when changing tabs)
-            # we can avoid building the snapshots for the other field
-            to_del = 'invoice_line_ids' if field_name == 'line_ids' else 'line_ids'
-            for key in list(field_onchange):
-                if key == to_del or key.startswith(f"{to_del}."):
-                    del field_onchange[key]
-            # test_01_account_tour
-            # File "/data/build/odoo/addons/account/models/account_move.py", line 2127, in onchange
-            # del values[to_del]
-            # KeyError: 'line_ids'
-            values.pop(to_del, None)
-        if field_name and not isinstance(field_name, list):
-            field_name = [field_name]
-        with self.env.protecting([self._fields[fname] for fname in field_name or []], self):
-            return super().onchange(values, field_name, field_onchange)
-
-    def onchange2(self, values, field_names, fields_spec):
+    def onchange(self, values, field_names, fields_spec):
         # Since only one field can be changed at the same time (the record is
         # saved when changing tabs) we can avoid building the snapshots for the
         # other field
@@ -2547,7 +2529,7 @@ class AccountMove(models.Model):
         elif 'invoice_line_ids' in field_names:
             values = {key: val for key, val in values.items() if key != 'line_ids'}
             fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
-        return super().onchange2(values, field_names, fields_spec)
+        return super().onchange(values, field_names, fields_spec)
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS

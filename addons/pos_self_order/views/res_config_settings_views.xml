@@ -3,10 +3,10 @@
     <record id="res_config_settings_view_form_menu" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.pos_self_order.view</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="iface_orderline_notes" position="after">
-                <setting string="QR Code Menu" help="Allow customers to see the menu from their phone">
+            <block id="restaurant_section" position="inside">
+                <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
                     <field name="pos_self_order_view_mode"/>
                     <div class="content-group d-flex gap-5" invisible="not pos_self_order_view_mode">
                         <div class="d-flex flex-column align-items-start w-50">
@@ -24,13 +24,99 @@
                         </div>
                     </div>
                 </setting>
-                <setting string="Self Order" help="Allow customers to order from their phones">
+                <setting string="Self Order" help="Allow customers to order from their phones" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
                     <field name="pos_self_order_table_mode"/>
                     <div class="content-group" invisible="not pos_self_order_table_mode">
                         <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
                         <field name="pos_self_order_pay_after"/>
                     </div>
                 </setting>
+            </block>
+            <xpath expr="//setting[@id='payment_methods_new']" position="before">
+                <div class="o_notification_alert alert alert-warning" role="alert" invisible="not is_kiosk_mode">
+                    <span>Please note that only Adyen payment methods are supported by the kiosk.</span>
+                </div>
+            </xpath>
+            <block id="restaurant_section" position="after">
+                <block title="Kiosk Mode" id="self_order_section">
+                    <setting string="Is a Kiosk" help="Allow customers to order from a kiosk">
+                        <field name="pos_self_order_kiosk"/>
+                        <div class="content-group" invisible="not is_kiosk_mode">
+                            <field name="pos_self_order_kiosk_mode" />
+                        </div>
+                    </setting>
+                    <setting string="Kiosk Mode: Take Away" invisible="not is_kiosk_mode">
+                        <field name="pos_self_order_kiosk_takeaway"/>
+                        <div class="content-group" invisible="not pos_self_order_kiosk_takeaway">
+                            <label string="" for="pos_self_order_kiosk_alternative_fp_id" class="me-2"/>
+                            <field name="pos_self_order_kiosk_alternative_fp_id" placeholder="Alternative Fiscal Position"/>
+                            <div>
+                                <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Kiosk Images" help="Allow customers to customize kiosk images" invisible="not is_kiosk_mode">
+                        <div class="content-group mt-3">
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_home_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Home background"/>
+                                <field name="pos_self_order_kiosk_image_home" class="w-100" filename="pos_self_order_kiosk_image_home_name"/>
+                            </div>
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_eat_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Eat mode"/>
+                                <field name="pos_self_order_kiosk_image_eat" class="w-100" filename="pos_self_order_kiosk_image_eat_name"/>
+                            </div>
+                            <div class="d-flex flex-column align-items-start">
+                                <field name="pos_self_order_kiosk_image_brand_name" invisible ="1"/>
+                                <label for="pos_self_order_image" string="Brand Header"/>
+                                <field name="pos_self_order_kiosk_image_brand" class="w-100" filename="pos_self_order_kiosk_image_brand_name"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Languages" help="Languages available in the kiosk interface" invisible="not is_kiosk_mode">
+                        <div class="content-group mt-3">
+                            <div class="row">
+                                <label for="pos_self_order_kiosk_default_language" class="col-lg-3" string="Default"/>
+                                <field name="pos_self_order_kiosk_default_language" />
+                            </div>
+                            <div class="row mt-3">
+                                <label for="pos_self_order_kiosk_available_language_ids" class="col-lg-3" string="Available"/>
+                                <field widget="many2many_tags" name="pos_self_order_kiosk_available_language_ids" />
+                            </div>
+                        </div>
+                        <div>
+                            <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+            <setting id="customer_display" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="manual_discount" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="price_control" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="multiple_prices_setting" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="multiple_employee_session" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="margin_and_cost" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="flexible_taxes" position="attributes">
+                <attribute name="invisible">is_kiosk_mode</attribute>
             </setting>
         </field>
     </record>

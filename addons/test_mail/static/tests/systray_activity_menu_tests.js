@@ -163,7 +163,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
         },
     });
     await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
-    await contains(".o-dropdown-menu", 0);
+    await contains(".dropdown-menu", 0);
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);

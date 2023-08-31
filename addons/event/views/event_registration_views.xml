@@ -152,9 +152,9 @@
                                             <b class="o_kanban_record_title"><field name="name"/></b>
                                             <field class="o_text_overflow" name="event_id" invisible="context.get('default_event_id')" readonly="state != 'draft'" />
                                             <span class="o_text_overflow" invisible="not partner_id">Booked by <field name="partner_id" /></span>
-                                            <div id="event_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
+                                            <div id="event_ticket_id" class="o_field_many2many_tags o_field_widget d-flex mt-auto">
                                                 <t t-if="record.event_ticket_id.raw_value">
-                                                    <div t-attf-class="badge rounded-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
+                                                    <div t-attf-class="badge rounded-pill o_tag o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
                                                         <b><span class="o_badge_text o_text_overflow"><t t-out="record.event_ticket_id.value"/></span></b>
                                                     </div>
                                                 </t>
