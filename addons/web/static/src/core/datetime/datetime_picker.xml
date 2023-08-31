@@ -120,7 +120,7 @@
                     class="text-center"
                     t-att-value="unit[0]"
                     t-esc="unit[1]"
-                    t-att-selected="timeValue[unitIndex] === unit[0]"
+                    t-att-selected="timeValue[unitIndex] === unit[0].toString()"
                 />
             </t>
         </select>
