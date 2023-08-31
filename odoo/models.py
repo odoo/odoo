@@ -5410,6 +5410,19 @@ class BaseModel(metaclass=MetaModel):
         return record_copy
 
     @api.returns('self')
+    def copy_multi(self, default=None):
+        """ copy_multi(default=None)
+
+        Duplicate records in ``self`` updating it with default values
+
+        :param dict default: dictionary of field values to override in the
+               original values of the copied records, e.g: ``{'field_name': overridden_value, ...}``
+        :returns: new records
+
+        """
+        return self.browse([record.copy(default).id for record in self])
+
+    @api.returns('self')
     def exists(self):
         """  exists() -> records
 
