@@ -29,7 +29,7 @@
         </template>
 
         <template id="l10n_ch_swissqr_template">
-            <div class="article">
+            <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
                 <t t-set="o" t-value="o.with_context(lang=lang)"/>
                 <t t-set="company" t-value="o.company_id"/>
                 <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
