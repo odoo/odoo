@@ -1444,6 +1444,8 @@ export class Wysiwyg extends Component {
                         }
                     };
                 }
+                // update the shouldFocusUrl prop to focus on url when double click
+                this.state.linkToolProps.shouldFocusUrl = options.shouldFocusUrl;
                 const _onClick = ev => {
                     if (
                         !ev.target.closest('#create-link') &&
