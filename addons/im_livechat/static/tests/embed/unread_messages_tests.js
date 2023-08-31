@@ -32,7 +32,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow-counter", 1, { text: "1" });
+    await contains(".o-mail-ChatWindow-counter", { text: "1" });
 });
 
 QUnit.test("focus on unread livechat marks it as read", async () => {
@@ -58,9 +58,9 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message .o-mail-Message-content", 1, {
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message .o-mail-Message-content", {
         text: "Are you there?",
     });
     $(".o-mail-Composer-input").trigger("focus");
-    await contains(".o-mail-Thread-newMessage", 0);
+    await contains(".o-mail-Thread-newMessage", { count: 0 });
 });

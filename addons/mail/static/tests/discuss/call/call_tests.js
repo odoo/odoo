@@ -28,7 +28,7 @@ QUnit.test("basic rendering", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
     await contains(".o-discuss-CallMenu-buttonContent");
-    await contains(".o-discuss-CallActionList button", 5);
+    await contains(".o-discuss-CallActionList button", { count: 5 });
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
@@ -52,7 +52,7 @@ QUnit.test("no call with odoobot", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Discuss-header");
-    await contains(".o-mail-Discuss-header button[title='Start a Call']", 0);
+    await contains(".o-mail-Discuss-header button[title='Start a Call']", { count: 0 });
 });
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async () => {
@@ -64,7 +64,7 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     await click(".o-mail-Discuss-header button[title='Start a Call']");
     await contains(".o-discuss-Call");
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".o-discuss-Call", 0);
+    await contains(".o-discuss-Call", { count: 0 });
 });
 
 QUnit.test("show call UI in chat window when in call", async () => {
@@ -75,10 +75,10 @@ QUnit.test("show call UI in chat window when in call", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem-name", { text: "General" });
     await contains(".o-mail-ChatWindow");
-    await contains(".o-discuss-Call", 0);
+    await contains(".o-discuss-Call", { count: 0 });
     await click(".o-mail-ChatWindow-command[title='Start a Call']");
     await contains(".o-discuss-Call");
-    await contains(".o-mail-ChatWindow-command[title='Start a Call']", 0);
+    await contains(".o-mail-ChatWindow-command[title='Start a Call']", { count: 0 });
 });
 
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
@@ -149,7 +149,7 @@ QUnit.test("should display invitations", async (assert) => {
             rtcInvitingSession: [["unlink"]],
         },
     });
-    await contains(".o-discuss-CallInvitation", 0);
+    await contains(".o-discuss-CallInvitation", { count: 0 });
     assert.verifySteps(["pause_sound_effect"]);
 });
 
@@ -167,7 +167,7 @@ QUnit.test("can share screen", async () => {
     await contains(".o-discuss-CallParticipantCard video");
     await click(".o-discuss-CallActionList [title='More']");
     await click("[title='Stop Sharing Screen']");
-    await contains(".o-discuss-CallParticipantCard video", 0);
+    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
 });
 
 QUnit.test("can share user camera", async () => {
@@ -182,7 +182,7 @@ QUnit.test("can share user camera", async () => {
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
     await contains(".o-discuss-CallParticipantCard video");
     await click(".o-discuss-CallActionList button[title='Stop camera']");
-    await contains(".o-discuss-CallParticipantCard video", 0);
+    await contains(".o-discuss-CallParticipantCard video", { count: 0 });
 });
 
 QUnit.test("Create a direct message channel when clicking on start a meeting", async () => {
@@ -190,7 +190,7 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     const { openDiscuss } = await start();
     openDiscuss();
     await click("button", { text: "Start a meeting" });
-    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel span", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
     await contains(".o-discuss-ChannelInvitation");
 });

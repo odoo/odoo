@@ -125,7 +125,7 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        await contains(".o_field_many2one_avatar_user input", 1, { value: "Mario" });
+        await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
 
         triggerHotkey("control+k");
         await nextTick();
@@ -142,7 +142,7 @@ QUnit.test(
         );
         await click(document.body, "#o_command_3");
         await nextTick();
-        await contains(".o_field_many2one_avatar_user input", 1, { value: "Luigi" });
+        await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
     }
 );
 
@@ -169,7 +169,7 @@ QUnit.test(
             view_mode: "form",
             views: [[false, "form"]],
         });
-        await contains(".o_field_many2one_avatar_user input", 1, { value: "Mario" });
+        await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
         triggerHotkey("control+k");
         await nextTick();
         const idx = [...document.querySelectorAll(".o_command")]
@@ -180,14 +180,14 @@ QUnit.test(
         // Assign me (Luigi)
         triggerHotkey("alt+shift+i");
         await nextTick();
-        await contains(".o_field_many2one_avatar_user input", 1, { value: "Luigi" });
+        await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
         await click([...document.querySelectorAll(".o_command")][idx]);
         await nextTick();
-        await contains(".o_field_many2one_avatar_user input", 1, { value: "" });
+        await contains(".o_field_many2one_avatar_user input", { value: "" });
     }
 );
 
@@ -402,7 +402,7 @@ QUnit.test("avatar card preview", async (assert) => {
     // Close card
     await triggerEvent(document, ".o_control_panel", "mouseover");
     assert.verifySteps(["setTimeout of 400ms"]);
-    await contains(".o_avatar_card", 0);
+    await contains(".o_avatar_card", { count: 0 });
 });
 
 QUnit.test(

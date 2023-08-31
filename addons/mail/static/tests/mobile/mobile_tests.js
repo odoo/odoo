@@ -12,9 +12,9 @@ QUnit.test("auto-select 'Inbox' when discuss had channel as active thread", asyn
     patchUiSize({ height: 360, width: 640 });
     const { openDiscuss } = await start();
     openDiscuss(channelId, { waitUntilMessagesLoaded: false });
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", 1, { text: "Channel" });
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
 
     await click("button", { text: "Mailboxes" });
-    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", 1, { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Mailboxes" });
     await contains("button:contains(Inbox).active");
 });

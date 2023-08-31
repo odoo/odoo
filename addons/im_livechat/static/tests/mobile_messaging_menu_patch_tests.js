@@ -13,7 +13,7 @@ QUnit.test("Livechat button is not present when there is no livechat thread", as
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-navbar span", 0, { text: "Livechat" });
+    await contains(".o-mail-MessagingMenu-navbar span", { count: 0, text: "Livechat" });
 });
 
 QUnit.test("Livechat button is present when there is at least one livechat thread", async () => {
@@ -30,5 +30,5 @@ QUnit.test("Livechat button is present when there is at least one livechat threa
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu");
-    await contains(".o-mail-MessagingMenu-navbar span", 1, { text: "Livechat" });
+    await contains(".o-mail-MessagingMenu-navbar span", { text: "Livechat" });
 });

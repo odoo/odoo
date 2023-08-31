@@ -38,7 +38,7 @@ QUnit.test("do not show empty text when at least some future activities", async 
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
     await contains(
         ".o-mail-ActivityMenu:contains(Congratulations, you're done with your activities.)",
-        0
+        { count: 0 }
     );
 });
 
@@ -72,7 +72,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     const { env } = await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter");
-    await contains(".o-mail-ActivityMenu-counter", 1, { text: "5" });
+    await contains(".o-mail-ActivityMenu-counter", { text: "5" });
     let context = {};
     patchWithCleanup(env.services.action, {
         doAction(action) {
@@ -85,23 +85,23 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     };
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");
-    await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", 2);
+    await contains(".o-mail-ActivityMenu .o-mail-ActivityGroup", { count: 2 });
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "1 Late" });
-    await contains(".o-mail-ActivityMenu", 0);
+    await contains(".o-mail-ActivityMenu", { count: 0 });
     context = {
         force_search_count: 1,
         search_default_activities_today: 1,
     };
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button:contains('Today'):eq(0)");
-    await contains(".o-mail-ActivityMenu", 0);
+    await contains(".o-mail-ActivityMenu", { count: 0 });
     context = {
         force_search_count: 1,
         search_default_activities_upcoming_all: 1,
     };
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup button", { text: "2 Future" });
-    await contains(".o-mail-ActivityMenu", 0);
+    await contains(".o-mail-ActivityMenu", { count: 0 });
     context = {
         force_search_count: 1,
         search_default_activities_overdue: 1,
@@ -109,7 +109,7 @@ QUnit.test("activity menu widget: activity menu with 2 models", async (assert) =
     };
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup span", { text: "mail.test.activity" });
-    await contains(".o-mail-ActivityMenu", 0);
+    await contains(".o-mail-ActivityMenu", { count: 0 });
 });
 
 QUnit.test("activity menu widget: activity view icon", async (assert) => {
@@ -141,7 +141,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
     ]);
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Activities']");
-    await contains("button[title='Summary']", 2);
+    await contains("button[title='Summary']", { count: 2 });
     const first = $(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     const second = $(
         ".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']"
@@ -163,7 +163,7 @@ QUnit.test("activity menu widget: activity view icon", async (assert) => {
         },
     });
     await click(".o-mail-ActivityGroup:contains('mail.test.activity') button[title='Summary']");
-    await contains(".dropdown-menu", 0);
+    await contains(".dropdown-menu", { count: 0 });
     await click(".o_menu_systray i[aria-label='Activities']");
     await click(".o-mail-ActivityGroup:contains('res.partner') button[title='Summary']");
     assert.verifySteps(["do_action:mail.test.activity", "do_action:res.partner"]);
@@ -174,5 +174,5 @@ QUnit.test("activity menu widget: close on messaging menu click", async (assert)
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu");
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-ActivityMenu", 0);
+    await contains(".o-mail-ActivityMenu", { count: 0 });
 });

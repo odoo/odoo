@@ -44,16 +44,16 @@ QUnit.test("Form view not scrolled when switching record", async () => {
         },
         { resIds: [partnerId_1, partnerId_2] }
     );
-    await contains(".o-mail-Message", 29);
-    await contains(".o_content", 1, { scroll: 0 });
+    await contains(".o-mail-Message", { count: 29 });
+    await contains(".o_content", { scroll: 0 });
     await scroll(".o_content", 150);
     await click(".o_pager_next");
-    await contains(".o-mail-Message", 30);
-    await contains(".o_content", 1, { scroll: 150 });
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o_content", { scroll: 150 });
     await scroll(".o_content", 0);
     await click(".o_pager_previous");
-    await contains(".o-mail-Message", 29);
-    await contains(".o_content", 1, { scroll: 0 });
+    await contains(".o-mail-Message", { count: 29 });
+    await contains(".o_content", { scroll: 0 });
 });
 
 QUnit.test(
@@ -102,7 +102,7 @@ QUnit.test(
                 resIds: [partnerId_1, partnerId_2],
             }
         );
-        await contains("button[aria-label='Attach files']", 1, { text: "2" });
+        await contains("button[aria-label='Attach files']", { text: "2" });
         // The attachment links are updated on (re)load,
         // so using pager is a way to reload the record "Partner1".
         await click(".o_pager_next");
@@ -110,7 +110,7 @@ QUnit.test(
         // Simulate unlinking attachment 1 from Partner 1.
         pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
         await click(".o_pager_previous");
-        await contains("button[aria-label='Attach files']", 1, { text: "1" });
+        await contains("button[aria-label='Attach files']", { text: "1" });
     }
 );
 
@@ -202,10 +202,10 @@ QUnit.test("read more links becomes read less after being clicked", async (asser
     openView(openViewAction);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Message");
-    await contains(".o-mail-read-more-less", 1, { text: "Read More" });
+    await contains(".o-mail-read-more-less", { text: "Read More" });
 
     await click(".o-mail-read-more-less");
-    await contains(".o-mail-read-more-less", 1, { text: "Read Less" });
+    await contains(".o-mail-read-more-less", { text: "Read Less" });
 });
 
 QUnit.test(
@@ -256,13 +256,13 @@ QUnit.test(
             res_id: partnerId,
             views: [[false, "form"]],
         });
-        await contains(".o-mail-read-more-less", 1, { text: "Read More" });
+        await contains(".o-mail-read-more-less", { text: "Read More" });
 
         await click(".o-mail-read-more-less");
-        await contains(".o-mail-read-more-less", 1, { text: "Read Less" });
+        await contains(".o-mail-read-more-less", { text: "Read Less" });
 
         await click(".o-mail-Message");
-        await contains(".o-mail-read-more-less", 1, { text: "Read Less" });
+        await contains(".o-mail-read-more-less", { text: "Read Less" });
     }
 );
 
@@ -305,5 +305,5 @@ QUnit.test("read more/less links on message of type notification", async () => {
         views: [[false, "form"]],
     };
     openView(openViewAction);
-    await contains(".o-mail-Message a", 1, { text: "Read More" });
+    await contains(".o-mail-Message a", { text: "Read More" });
 });

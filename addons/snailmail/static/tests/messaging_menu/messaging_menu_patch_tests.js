@@ -30,7 +30,7 @@ QUnit.test("mark as read", async () => {
         ".o-mail-NotificationItem:contains(An error occurred when sending a letter with Snailmail.)"
     );
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    await contains(".o-mail-NotificationItem", 0);
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
 QUnit.test("notifications grouped by notification_type", async (assert) => {
@@ -74,7 +74,7 @@ QUnit.test("notifications grouped by notification_type", async (assert) => {
     ]);
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem", 2);
+    await contains(".o-mail-NotificationItem", { count: 2 });
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("Partner"));
     assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("2")); // counter
     assert.ok(
@@ -145,8 +145,8 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem-name", 1, { text: "Partner" });
-    await contains(".o-mail-NotificationItem-counter", 1, { text: "2" });
+    await contains(".o-mail-NotificationItem-name", { text: "Partner" });
+    await contains(".o-mail-NotificationItem-counter", { text: "2" });
     await click(".o-mail-NotificationItem");
     assert.verifySteps(["do_action"]);
 });

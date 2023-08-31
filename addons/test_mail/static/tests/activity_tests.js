@@ -680,7 +680,7 @@ QUnit.module("test_mail", {}, function () {
         assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
 
         await testUtils.dom.click($('.modal.o_technical_modal button[special="cancel"]'));
-        assert.containsNone($, ".modal.o_technical_modal", "Activity Modal should be closed");
+        await contains(".modal.o_technical_modal", { count: 0 });
     });
 
     QUnit.test(
@@ -721,17 +721,14 @@ QUnit.module("test_mail", {}, function () {
             const { webClient } = await start({ serverData });
             await doAction(webClient, 1);
 
-            assert.containsN(document.body, ".o_m2o_avatar", 2);
+            await contains(".o_m2o_avatar", { count: 2 });
             assert.containsOnce(
                 document.body,
                 `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
                 "should have m2o avatar image"
             );
-            assert.containsNone(
-                document.body,
-                ".o_m2o_avatar > span",
-                "should not have text on many2one_avatar_user if onlyImage node option is passed"
-            );
+            // "should not have text on many2one_avatar_user if onlyImage node option is passed"
+            await contains(".o_m2o_avatar > span", { count: 0 });
         }
     );
 
@@ -1001,7 +998,7 @@ QUnit.module("test_mail", {}, function () {
             res_model: "mail.test.activity",
             views: [[false, "activity"]],
         });
-        assert.containsN(document.body, ".luxon", 2);
+        await contains(".luxon", { count: 2 });
     });
 
     QUnit.test("test displaying image (write_date field)", async (assert) => {
