@@ -1459,9 +1459,6 @@ function makeActionManager(env) {
         get currentController() {
             return _getCurrentController();
         },
-        __legacy__isActionInStack(actionId) {
-            return controllerStack.find((c) => c.action.jsId === actionId);
-        },
     };
 }
 
