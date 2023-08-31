@@ -181,12 +181,12 @@ export function makeLegacyRPC(wowlRPC) {
         const promise = new Promise(function (resolve, reject) {
             rpcPromise = wowlRPC(route, args, options);
             rpcPromise.then(function (result) {
-                throw new Error("wow");
+                if (!target) throw new Error("wow");
                 if (!target.isDestroyed()) {
                     resolve(result);
                 }
             }).guardedCatch(function (reason) {
-                throw new Error("wow");
+                if (!target) throw new Error("wow");
                 if (!target.isDestroyed()) {
                     reject(reason);
                 }
