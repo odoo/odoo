@@ -395,7 +395,19 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     if (error) {
         throw error;
     } else if (hasMobileTest && !isMobileTest) {
-        await testEditor(Editor, spec, { ...options, isMobile: true });
+        const li = document.createElement('li');
+        li.classList.add('test', 'pass', 'pending');
+        const h2 = document.createElement('h2');
+        h2.textContent = 'FIXME: [Mobile Test] skipped';
+        li.append(h2);
+        const mochaSuite = [...document.querySelectorAll('#mocha-report li.suite > ul')].pop();
+        if (mochaSuite) {
+            mochaSuite.append(li);
+        }
+        // Mobile tests are temporarily disabled because they are not
+        // representative of reality. They will be re-enabled when the mobile
+        // editor will be ready.
+        // await testEditor(Editor, spec, { ...options, isMobile: true });
     }
 }
 
