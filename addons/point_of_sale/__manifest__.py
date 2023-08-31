@@ -156,7 +156,6 @@
             'web/static/tests/patch_translations.js',
             'web/static/src/libs/owl.js',
             'web/static/lib/jquery/jquery.js',
-            'web/static/lib/jquery/jquery.browser.js',
             'web/static/src/legacy/js/**/*',
             ('remove', 'web/static/src/legacy/js/libs/**/*'),
             ('remove', 'web/static/src/legacy/js/public/**/*'),
