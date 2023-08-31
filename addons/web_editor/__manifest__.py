@@ -89,7 +89,6 @@ Odoo Web Editor widget.
             'web/static/lib/jSignature/jSignatureCustom.js',
             'web/static/src/legacy/js/libs/autocomplete.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
-            'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
