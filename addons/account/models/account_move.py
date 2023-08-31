@@ -394,7 +394,6 @@ class AccountMove(models.Model):
     exchange_rate = fields.Float(
         string="Currency rate",
         tracking=True,
-        digits=[12,7],
     )
     system_exchange_rate = fields.Float(
         compute='_compute_system_exchange_rate',
@@ -4609,35 +4608,39 @@ class AccountMove(models.Model):
 
     def _mail_track(self, tracked_fields, initial):
         # EXTENDS base (mail)
-        # Refactor this
-        # this is probably the only solution: a manual _message_log
-        # this avoids having to set the digits on the field, as we don't want to limit the number of decimals
-        new_tracking_values_commands = []
-        values = []
-        msg = None
+        # Log a custom message since mail tracking values does not handle float decimal precision well.
         changes, original_tracking_values = super()._mail_track(tracked_fields, initial)
-        if 'exchange_rate' in changes:
-            # changes.remove('exchange_rate')  # add this if using the message
-            for tracking_val_command in original_tracking_values:
-                print(tracking_val_command)
-                if tracking_val_command[2]['field_desc'] == self._fields['exchange_rate'].string:
-                    values = tracking_val_command[2]
-                    if not values['old_value_float']:
-                        msg = _("Exchange rate changed to: %s", values['new_value_float'])
-                        values['old_value_float'] = self.system_exchange_rate # remove this if using the message
-                    elif not values['new_value_float']:
-                        msg = _("Exchange rate has been reset to the default system rate of %s", self.system_exchange_rate)
-                        values['new_value_float'] = self.system_exchange_rate # remove this if using the message
-                    else:
-                        msg = _("Exchange rate changed from %s to %s", values['old_value_float'], values['new_value_float'])
-                    new_tracking_values_commands.append([0, 0, values])  # remove this if using the message
-                else:
-                    new_tracking_values_commands.append(tracking_val_command)
+        new_tracking_values = []
+        msg = None
+        msg_html = """
+        <ul class="mb-0 ps-4">
+            <li class="o-mail-Message-tracking mb-1" role="group">
+                <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold">{}</span>
+                <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
+                <span class="o-mail-Message-trackingNew me-1 fw-bold text-info">{}</span>
+                <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">({})</span>
+            </li>
+        </ul>"""
+        for tracking_val_command in original_tracking_values:
+            values = tracking_val_command[2]
+            if values['field_desc'] == self._fields['exchange_rate'].string:
+                changes.remove('exchange_rate')
+                if not values['old_value_float']:
+                    msg = msg_html.format(self.system_exchange_rate, values['new_value_float'], self._fields['display_rate'].string)
+                elif not values['new_value_float']:
+                    msg = msg_html.format(values['old_value_float'], _("System rate"), self._fields['display_rate'].string)
+                elif values['old_value_float'] != values['new_value_float']:
+                    msg = msg_html.format(values['old_value_float'], values['new_value_float'], self._fields['display_rate'].string)
+            else:
+                new_tracking_values.append(tracking_val_command)
         if msg:
-            self._message_log(
-                body=msg,
-            )
-        return changes, new_tracking_values_commands
+            if changes:
+                self._track_set_log_message(Markup(msg))
+            else:
+                self._message_log(
+                    body=Markup(msg),
+                )
+        return changes, new_tracking_values
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
