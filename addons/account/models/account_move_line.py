@@ -49,7 +49,7 @@ class AccountMoveLine(models.Model):
     )
     company_currency_id = fields.Many2one(
         string='Company Currency',
-        related='move_id.company_currency_id', readonly=True, store=True, precompute=True,
+        related='company_id.currency_id', readonly=True, store=True, precompute=True,
     )
     move_name = fields.Char(
         string='Number',
