@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, groupby
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -152,15 +152,14 @@ class AccountInvoiceSend(models.TransientModel):
         if self.composition_mode == 'mass_mail' and self.template_id:
             active_ids = self.env.context.get('active_ids', self.res_id)
             active_records = self.env[self.model].browse(active_ids)
-            langs = active_records.mapped('partner_id.lang')
-            default_lang = get_lang(self.env)
-            for lang in sorted((set(langs)) or [default_lang]):
-                active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
-                self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
+            for lang, records in sorted(groupby(active_records, key=lambda rec: rec.partner_id.lang or '')):
+                self_lang = self.with_context(active_ids=[r.id for r in records], lang=get_lang(self.env, lang).code)
                 self_lang.onchange_template_id()
                 self_lang._send_email()
         else:
-            self._send_email()
+            active_record = self.env[self.model].browse(self.res_id)
+            lang = get_lang(self.env, active_record.partner_id.lang).code
+            self.with_context(lang=lang)._send_email()
         if self.is_print:
             return self._print_document()
         return {'type': 'ir.actions.act_window_close'}
