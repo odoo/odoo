@@ -66,6 +66,13 @@
                                 <t t-set="unitIndex" t-value="1" />
                                 <t t-set="unitList" t-value="availableMinutes" />
                             </t>
+                            <t t-if="availableSeconds.length">
+                                <span>:</span>
+                                <t t-call="web.DateTimePicker.Select">
+                                    <t t-set="unitIndex" t-value="2" />
+                                    <t t-set="unitList" t-value="availableSeconds" />
+                                </t>
+                            </t>
                             <t t-if="meridiems">
                                 <t t-call="web.DateTimePicker.Select">
                                     <t t-set="unitIndex" t-value="3" />
