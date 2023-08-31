@@ -3572,3 +3572,29 @@ class TestMrpOrder(TestMrpCommon):
         # Force the warning
         consumption_warning.action_confirm()
         self.assertEqual(mo.state, 'done')
+
+    def test_cancel_return(self):
+        """
+        check that the return picking is not created on done state transfer when reducing MO quantity.
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm'
+
+        mo, _bom, _p_final, p1, p2 = self.generate_mo(qty_final=5.0, qty_base_1=1.0, qty_base_2=1.0)
+        mo.action_confirm()
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5.0)
+
+        mo.picking_ids.move_ids[0].quantity = 5.0
+        mo.picking_ids.move_ids[1].quantity = 5.0
+        mo.picking_ids.button_validate()
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 4.0,
+        })
+        update_quantity_wizard.change_prod_qty()
+        new_picking = mo.picking_ids
+        self.assertEqual(len(new_picking), 1, "Return picking should not be created in done Transfer")
