@@ -142,6 +142,7 @@ echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 update-rc.d -f hostapd remove
 update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
+update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
 systemctl enable led-status.service
