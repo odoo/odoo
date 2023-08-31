@@ -517,7 +517,7 @@ class TestEmailTools(BaseCase):
         ]
         expected_list = [
             'deboulonneur@example.com',
-            'Déboulonneur deboulonneur@example.com',
+            'deboulonneur@example.com',
             'deboulonneur@example.comdéboulonneur',
             False,
             '@example.com',  # funny
@@ -527,7 +527,7 @@ class TestEmailTools(BaseCase):
         ]
         expected_fmt_utf8_list = [
             f'"{format_name}" <deboulonneur@example.com>',
-            f'"{format_name}" <Déboulonneur deboulonneur@example.com>',
+            f'"{format_name}" <deboulonneur@example.com>',
             f'"{format_name}" <deboulonneur@example.comdéboulonneur>',
             f'"{format_name}" <@>',
             f'"{format_name}" <@example.com>',
@@ -537,7 +537,7 @@ class TestEmailTools(BaseCase):
         ]
         expected_fmt_ascii_list = [
             f'{format_name_ascii} <deboulonneur@example.com>',
-            f'{format_name_ascii} <Déboulonneur deboulonneur@example.com>',
+            f'{format_name_ascii} <deboulonneur@example.com>',
             f'{format_name_ascii} <deboulonneur@example.xn--comdboulonneur-ekb>',
             f'{format_name_ascii} <@>',
             f'{format_name_ascii} <@example.com>',
@@ -624,7 +624,7 @@ class TestEmailTools(BaseCase):
             ['"Super Déboulonneur" <deboulonneur@example.com>'],
             # wrong formatting
             ['"Déboulonneur" <deboulonneur@example.com>'],
-            ['Déboulonneur deboulonneur@example.com'],  # returned as it, a bit strange but hey
+            ['"Déboulonneur" <deboulonneur@example.com>'],  # extra part correctly considered as a name
             ['deboulonneur@example.comDéboulonneur'],  # concatenated, not sure why
             # multi
             ['deboulonneur@example.com'],
@@ -657,14 +657,14 @@ class TestEmailTools(BaseCase):
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('Evelyne The Goat', 'evelyne.gargouillis@test.example.com')],
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
             [('Fredo The Great', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
-            # text containing email -> probably not designed for that
-            [('', 'Hello alfred.astaire@test.example.comhowareyou?')],
-            [('', 'Hello alfred.astaire@test.example.com')],
-            # text containing emails -> probably not designed for that
+            # text containing email -> fallback on parsing to extract text from email
+            [('Hello', 'alfred.astaire@test.example.comhowareyou?')],
+            [('Hello', 'alfred.astaire@test.example.com')],
             [('Hello Fredo', 'alfred.astaire@test.example.com'), ('', 'evelyne.gargouillis@test.example.com')],
-            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('', 'and evelyne.gargouillis@test.example.com')],
+            [('Hello Fredo', 'alfred.astaire@test.example.com'), ('and', 'evelyne.gargouillis@test.example.com')],
             # falsy -> probably not designed for that
-            [], [('', "j'adore écrire des@gmail.comou"), ('', '@gmail.com')], [],
+            [],
+            [('j\'adore écrire', "des@gmail.comou"), ('', '@gmail.com')], [],
         ]
 
         for src, exp in zip(self.sources, expected):
