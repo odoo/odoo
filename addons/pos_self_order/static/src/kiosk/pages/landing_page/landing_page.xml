@@ -7,12 +7,11 @@
                     <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}" />
                     <span t-esc="currentLanguage.display_name" class="ms-3"></span>
                 </div>
-                <div t-if="selfOrder.kiosk_image_home" t-on-click="start" class="o_kiosk_home_page d-flex flex-column vh-100 align-items-center overflow-hidden">
-                    <!-- Carousel ready, just need to add a way to add more than 1 image in the setting. -->
-                    <div id="imageCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+                <div t-if="selfOrder.kiosk_image_home.length > 0" t-on-click="start" class="o_kiosk_home_page d-flex flex-column vh-100 align-items-center overflow-hidden">
+                    <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide h-100" data-bs-ride="true">
                         <div class="carousel-inner h-100">
-                            <div class="carousel-item active h-100">
-                                <img t-attf-src="data:image/png;base64,{{selfOrder.kiosk_image_home}}" class="o_kiosk-landing_image d-block h-100 w-100" />
+                            <div t-foreach="selfOrder.kiosk_image_home" t-as="image" t-key="image.id" t-attf-class="carousel-item h-100 {{activeImage}}">
+                                <img t-attf-src="data:image/png;base64,{{image.data}}" class="o_kiosk-landing_image d-block h-100 w-100" />
                             </div>
                         </div>
                     </div>

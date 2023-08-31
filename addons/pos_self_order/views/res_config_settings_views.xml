@@ -58,9 +58,8 @@
                     <setting string="Kiosk Images" help="Allow customers to customize kiosk images" invisible="not is_kiosk_mode">
                         <div class="content-group mt-3">
                             <div class="d-flex flex-column align-items-start">
-                                <field name="pos_self_order_kiosk_image_home_name" invisible ="1"/>
                                 <label for="pos_self_order_image" string="Home background"/>
-                                <field name="pos_self_order_kiosk_image_home" class="w-100" filename="pos_self_order_kiosk_image_home_name"/>
+                                <field name="pos_self_order_kiosk_image_home_ids" class="w-100" widget="many2many_binary" />
                             </div>
                             <div class="d-flex flex-column align-items-start">
                                 <field name="pos_self_order_kiosk_image_eat_name" invisible ="1"/>
