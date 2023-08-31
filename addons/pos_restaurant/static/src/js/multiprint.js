@@ -111,9 +111,27 @@ const PosResMultiprintOrderline = (Orderline) => class PosResMultiprintOrderline
         } else {
             return '' + this.id;
         }
+<<<<<<< HEAD
     }
 }
 Registries.Model.extend(Orderline, PosResMultiprintOrderline);
+||||||| parent of eaec7130e80 (temp)
+    },
+});
+=======
+    },
+    getProductResumeKey: function(){
+        return this.get_product().id + " - " + this.get_full_product_name();
+    },
+    getLineResume: function(){
+        return {
+            pid: this.get_product().id,
+            product_name_wrapped: this.generate_wrapped_product_name(),
+            qties: {},
+        };
+    },
+});
+>>>>>>> eaec7130e80 (temp)
 
 
 const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Order {
@@ -125,21 +143,32 @@ const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Ord
             }
             var qty  = Number(line.get_quantity());
             var note = line.get_note();
-            var product_id = line.get_product().id;
-            var product_name = line.get_full_product_name();
-            var p_key = product_id + " - " + product_name;
-            var product_resume = p_key in resume ? resume[p_key] : {
-                pid: product_id,
-                product_name_wrapped: line.generate_wrapped_product_name(),
-                qties: {},
-            };
+            const p_key = line.getProductResumeKey()
+            let product_resume = p_key in resume ? resume[p_key] : line.getLineResume();
             if (note in product_resume['qties']) product_resume['qties'][note] += qty;
             else product_resume['qties'][note] = qty;
             resume[p_key] = product_resume;
         });
         return resume;
+<<<<<<< HEAD
     }
     saveChanges(){
+||||||| parent of eaec7130e80 (temp)
+    },
+    saveChanges: function(){
+=======
+    },
+    getResumeInfo: function(pid, curr, note, qty){
+        return {
+            'id': pid,
+            'name': this.pos.db.get_product_by_id(pid).display_name,
+            'name_wrapped': curr.product_name_wrapped,
+            'note': note,
+            'qty': qty,
+        }
+    },
+    saveChanges: function(){
+>>>>>>> eaec7130e80 (temp)
         this.saved_resume = this.build_line_resume();
         this.orderlines.forEach(function(line){
             line.set_dirty(false);
@@ -168,31 +197,12 @@ const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Ord
                 var old  = old_res[p_key] || {};
                 var pid = curr.pid;
                 var found = p_key in old_res && note in old_res[p_key]['qties'];
-
                 if (!found) {
-                    add.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      curr['qties'][note],
-                    });
+                    add.push(this.getResumeInfo(pid, curr, note, curr['qties'][note]));
                 } else if (old['qties'][note] < curr['qties'][note]) {
-                    add.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      curr['qties'][note] - old['qties'][note],
-                    });
+                    add.push(this.getResumeInfo(pid, curr, note, curr['qties'][note] - old['qties'][note]));
                 } else if (old['qties'][note] > curr['qties'][note]) {
-                    rem.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      old['qties'][note] - curr['qties'][note],
-                    });
+                    rem.push(this.getResumeInfo(pid, curr, note, old['qties'][note] - curr['qties'][note]));
                 }
             }
         }
@@ -203,13 +213,7 @@ const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Ord
                 if (!found) {
                     var old = old_res[p_key];
                     var pid = old.pid;
-                    rem.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': old.product_name_wrapped,
-                        'note':     note,
-                        'qty':      old['qties'][note],
-                    });
+                    rem.push(this.getResumeInfo(pid, old, note, old['qties'][note]));
                 }
             }
         }
