@@ -9,7 +9,7 @@
         <xpath expr="//button[hasclass('validation')]" position="after">
             <button
                 t-if="this.swapButton"
-                t-attf-class="submit-order w-100 h-100 {{getMainButtonClasses()}}"
+                t-attf-class="submit-order w-100 {{getMainButtonClasses()}}"
                 t-att-class="swapButtonClasses"
                 t-on-click="submitOrder">
                 <i class="fa fa-cutlery"></i>

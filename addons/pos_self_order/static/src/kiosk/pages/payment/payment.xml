@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.Payment" owl="1">
         <KioskTemplate headerHeight="0" contentHeight="showFooterBtn ? 92 : 100" footerHeight="showFooterBtn ? 8 : 0">
             <t t-set-slot="content">
-                <div t-if="state.selection" class="h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
+                <div t-if="state.selection" class="o_kiosk-payment h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
                     <div
                         t-foreach="selfOrder.pos_payment_methods"
                         t-as="payment_method"

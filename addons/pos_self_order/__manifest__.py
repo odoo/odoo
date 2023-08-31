@@ -64,7 +64,8 @@
             'web/static/lib/bootstrap/js/dist/base-component.js',
             "web/static/lib/bootstrap/js/dist/carousel.js",
             ('include', 'pos_self_order.assets_common'),
-            "pos_self_order/static/src/kiosk/**/*",
+            'point_of_sale/static/src/app/generic_components/numpad/**',
+            'pos_self_order/static/src/kiosk/**/*',
         ],
         # Assets tests
         "pos_self_order.assets_common_tests": [
@@ -72,10 +73,16 @@
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
+            "pos_self_order/static/tests/utils/**/*",
+            "point_of_sale/static/tests/tours/helpers/NumpadTourMethods.js",
         ],
         "pos_self_order.assets_mobile_tests": [
             ('include', 'pos_self_order.assets_common_tests'),
-            "pos_self_order/static/tests/tours/**/*",
+            "pos_self_order/static/tests/tours/mobile/**/*",
+        ],
+        "pos_self_order.assets_kiosk_tests": [
+            ('include', 'pos_self_order.assets_common_tests'),
+            "pos_self_order/static/tests/tours/kiosk/**/*",
         ],
     },
     "license": "LGPL-3",

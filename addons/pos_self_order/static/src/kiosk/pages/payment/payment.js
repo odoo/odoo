@@ -25,13 +25,17 @@ export class Payment extends Component {
 
         onWillStart(async () => {
             if (this.selfOrder.pos_payment_methods.length === 0) {
-                const order = await this.rpc("/pos-self-order/process-new-order/kiosk", {
+                await this.rpc("/pos-self-order/process-new-order/kiosk", {
                     order: this.selfOrder.currentOrder,
                     access_token: this.selfOrder.access_token,
                     table_identifier: null,
-                });
-                this.selfOrder.updateOrderFromServer(order);
-                this.router.navigate("payment_success");
+                })
+                    .then((order) => {
+                        this.selfOrder.updateOrderFromServer(order);
+                    })
+                    .finally(() => {
+                        this.router.navigate("payment_success");
+                    });
             } else if (this.selfOrder.pos_payment_methods.length === 1) {
                 this.selectMethod(this.selfOrder.pos_payment_methods[0].id);
             }

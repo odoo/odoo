@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center w-100 p-3 bg-white shadow-lg">
                 <div t-attf-class="{{ state.cancelConfirmation ? 'flex-row-reverse' : '' }} d-flex mt-2 flex-fill">
                     <button
-                        t-if="order.hasNotAllLinesSent() and order.lines.length > 0"
+                        t-if="!order.isSavedOnServer and order.lines.length > 0"
                         t-on-click.prevent="cancelToggle"
                         t-attf-class="{{ state.cancelConfirmation ? 'btn-primary' : 'btn-secondary' }} o_self-cancel-toggle-btn btn"
                         t-attf-style="{{ state.cancelConfirmation ? 'margin-left: 10px;' : 'margin-right: 10px;' }}"

@@ -25,6 +25,6 @@ export class ActionpadWidget extends Component {
         return this.pos.get_order()?.orderlines?.length;
     }
     getMainButtonClasses() {
-        return "button btn d-flex flex-column flex-fill align-items-center justify-content-center fw-bolder btn-lg py-5 rounded-0";
+        return "button btn d-flex flex-column flex-fill align-items-center justify-content-center fw-bolder btn-lg rounded-0";
     }
 }

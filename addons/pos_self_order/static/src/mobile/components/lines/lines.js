@@ -36,7 +36,9 @@ export class Lines extends Component {
     }
 
     getNameAndDescription(line) {
-        const productInfos = extractProductNameAndAttributes(line.full_product_name);
+        const productInfos = extractProductNameAndAttributes(
+            line.getProductName(this.selfOrder.productByIds)
+        );
         return productInfos;
     }
 }

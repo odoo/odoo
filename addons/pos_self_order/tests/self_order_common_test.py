@@ -57,6 +57,16 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             }
         )
 
+        self.pos_config_kiosk = self.env["pos.config"].create(
+            {
+                "name": "BarTest",
+                "self_order_kiosk_takeaway": False,
+                "self_order_kiosk_mode": "counter",
+                "payment_method_ids": [],
+                "self_order_kiosk": True,
+            }
+        )
+
         # we need a default tax fixed at 15% to all product because in the test prices are based on this tax.
         # some time with the localization this may not be the case. So we force it.
         self.env['product.product'].search([]).taxes_id = self.env['account.tax'].create({

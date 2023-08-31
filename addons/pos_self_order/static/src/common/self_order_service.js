@@ -28,6 +28,8 @@ export class selfOrderCommon extends Reactive {
         this.priceLoading = false;
         this.productByIds = {};
         this.comboByIds = {};
+        this.attributeById = {};
+        this.attributeValueById = {};
         this.productsGroupedByCategory = {};
         this.currentProduct = 0;
         this.lastEditedProductId = null;
@@ -49,6 +51,17 @@ export class selfOrderCommon extends Reactive {
         this.products = this.products.map((p) => {
             const product = new Product(p, this.show_prices_with_tax_included);
             this.productByIds[product.id] = product;
+
+            if (product.attributes.length > 0) {
+                for (const atr of product.attributes) {
+                    this.attributeById[atr.id] = atr;
+                    for (const val of atr.values) {
+                        val.attribute_id = atr.id;
+                        this.attributeValueById[val.id] = val;
+                    }
+                }
+            }
+
             return product;
         });
 
@@ -66,18 +79,20 @@ export class selfOrderCommon extends Reactive {
             if (!this.currentOrder) {
                 return;
             }
+            if (this.priceLoading) {
+                this.priceLoading.abort(false);
+            }
 
-            this.priceLoading = true;
-            const taxes = await this.rpc(`/pos-self-order/get-orders-taxes/`, {
+            this.priceLoading = this.rpc(`/pos-self-order/get-orders-taxes/`, {
                 order: this.currentOrder,
                 access_token: this.access_token,
             });
-
-            this.currentOrder.updateDataFromServer(taxes);
+            this.priceLoading.then((taxes) => {
+                this.currentOrder.updateDataFromServer(taxes);
+                this.priceLoading = false;
+            });
         } catch (error) {
             this.handleErrorNotification(error);
-        } finally {
-            this.priceLoading = false;
         }
     }
 

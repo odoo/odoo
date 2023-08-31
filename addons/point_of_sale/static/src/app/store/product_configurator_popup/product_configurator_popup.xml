@@ -6,7 +6,7 @@
             <div class="d-flex flex-column gap-3">
                 <t t-foreach="values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell form-check">
-                        <input class="form-check-input" type="radio" t-model="state.selected_value" t-att-name="attribute.id"
+                        <input class="form-check-input" type="radio" t-model="state.selected_values" t-att-name="attribute.id"
                                 t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
                         <label class="form-check-label" t-att-name="value.name" t-attf-for="{{ attribute.id }}_{{ value.id }}">
                             <span t-esc="value.name"/>
@@ -17,10 +17,28 @@
                             </span>
                         </div>
                     </div>
-                    <div t-if="value.id == state.selected_value &amp;&amp; value.is_custom" class="custom-value-cell">
+                    <div t-if="value.id == state.selected_values &amp;&amp; value.is_custom" class="custom-value-cell">
                         <input class="custom_value form-control form-control-lg mt-2" type="text" t-model="state.custom_value"/>
                     </div>
                 </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.CheckboxProductAttribute">
+        <div>
+            <div t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id" class="d-flex align-items-center my-2">
+                <input type="checkbox"
+                    t-att-id="value.id"
+                    t-att-name="value.name"
+                    t-att-checked="state.selected_values[value.id]"
+                    t-model="state.selected_values[value.id]"/>
+                <label t-att-for="value.id" class="ms-2" t-esc="value.name" />
+                <div t-if="value.price_extra" t-att-for="value.id" class="price-extra-cell d-inline-block ms-3">
+                    <span class="price_extra px-2 py-1 rounded-pill bg-info">
+                        + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
+                    </span>
+                </div>
             </div>
         </div>
     </t>
@@ -29,9 +47,9 @@
         <div>
             <t t-set="is_custom" t-value="false"/>
 
-            <select class="configurator_select form-select form-select-lg" t-model="state.selected_value">
+            <select class="configurator_select form-select form-select-lg" t-model="state.selected_values">
                 <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id">
-                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_values)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
                         + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
@@ -49,10 +67,10 @@
 
             <ul class="color_attribute_list d-flex gap-3">
                 <li t-foreach="values" t-as="value" t-key="value.id" class="color_attribute_list_item">
-                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
-                    <label t-attf-class="configurator_color rounded border {{ value.id == state.selected_value ? 'active border-3 border-primary' : 'border-3 border-secondary' }}"
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_values)"/>
+                    <label t-attf-class="configurator_color rounded border {{ value.id == state.selected_values ? 'active border-3 border-primary' : 'border-3 border-secondary' }}"
                         t-attf-style="background-color: {{ value.html_color }};" t-att-data-color="value.name">
-                        <input class="m-4 opacity-0" type="radio" t-model="state.selected_value" t-att-value="value.id" t-att-name="attribute.id"/>
+                        <input class="m-4 opacity-0" type="radio" t-model="state.selected_values" t-att-value="value.id" t-att-name="attribute.id"/>
                     </label>
                 </li>
             </ul>
@@ -74,6 +92,7 @@
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                        <CheckboxProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
                     </div>
                 </main>
     

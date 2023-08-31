@@ -166,6 +166,10 @@ export class SelfOrder extends selfOrderCommon {
                 );
                 if (orderFromServer) {
                     order.updateDataFromServer(orderFromServer);
+                    const newLine = this.currentOrder.lines.find((l) => !l.id);
+                    if (!newLine) {
+                        order.updateLastChanges();
+                    }
                 }
             }
         }

@@ -39,6 +39,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
             "self_order_menu_only_tour",
             login=None,
         )
+
     def test_self_order_my_orders_tour(self):
         self.pos_config.self_order_table_mode = True
         self.pos_config.self_order_pay_after = "meal"
@@ -46,5 +47,36 @@ class TestFrontendMobile(SelfOrderCommonTest):
         self.start_tour(
             self.pos_config._get_self_order_route(),
             "test_self_order_my_orders_tour",
+            login=None,
+        )
+
+    def test_kiosk_order_tour(self):
+        self.pos_config_kiosk.with_user(self.pos_user).action_open_wizard()
+        self.start_tour(
+            self.pos_config_kiosk.self_order_kiosk_url,
+            "kiosk_order_tour",
+            login=None,
+        )
+        order_count = self.env['pos.order'].search_count([('tracking_number', '=', 'A1')])
+        self.assertEqual(order_count, 1)
+
+    def test_kiosk_order_table_service_tour(self):
+        self.pos_config_kiosk.self_order_kiosk_mode = "table"
+        self.pos_config_kiosk.with_user(self.pos_user).action_open_wizard()
+        self.start_tour(
+            self.pos_config_kiosk.self_order_kiosk_url,
+            "kiosk_order_tour_table_service",
+            login=None,
+        )
+        order_count = self.env['pos.order'].search_count([('tracking_number', '=', 'A1')])
+        self.assertEqual(order_count, 1)
+
+    def test_kiosk_order_takeaway_tour(self):
+        self.pos_config_kiosk.self_order_kiosk_mode = "table"
+        self.pos_config_kiosk.self_order_kiosk_takeaway = True
+        self.pos_config_kiosk.with_user(self.pos_user).action_open_wizard()
+        self.start_tour(
+            self.pos_config_kiosk.self_order_kiosk_url,
+            "kiosk_order_tour_takeaway",
             login=None,
         )

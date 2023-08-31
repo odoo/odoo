@@ -77,7 +77,7 @@ export class Order extends Reactive {
         this.lastChangesSent = this.lines.reduce((acc, line) => {
             acc[line.uuid] = {
                 qty: line.qty,
-                selected_attributes: { ...line.selected_attributes },
+                selected_attributes: line.selected_attributes,
                 customer_note: line.customer_note,
             };
             return acc;
@@ -103,24 +103,22 @@ export class Order extends Reactive {
             }
         }
 
-        const foundLines = [];
-        for (const lines of this.lines) {
-            const lineFound = data.lines.find((line) => line.uuid === lines.uuid);
+        for (const line of this.lines) {
+            const lineFound = data.lines.find((l) => l.uuid === line.uuid);
 
             if (lineFound) {
-                lines.updateDataFromServer(lineFound);
-                foundLines.push(lines);
+                line.updateDataFromServer(lineFound);
+            } else if (line.id) {
+                this.removeLine(line.uuid);
             }
         }
 
-        for (const lines of data.lines) {
-            const lineFound = foundLines.find((line) => line.uuid === lines.uuid);
+        for (const line of data.lines) {
+            const lineFound = this.lines.find((l) => l.uuid === line.uuid);
 
-            if (!lineFound) {
-                foundLines.push(new Line(lines));
+            if (!lineFound && line.product_id) {
+                this.lines.push(new Line(line));
             }
         }
-
-        this.lines = foundLines;
     }
 }

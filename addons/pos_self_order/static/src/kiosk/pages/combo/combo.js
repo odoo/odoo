@@ -58,7 +58,7 @@ export class Combo extends Component {
                 product: {
                     id: this.state.selectedProduct.id,
                     name: this.state.selectedProduct.name,
-                    variants: Object.entries(this.state.selectedVariants),
+                    variants: Object.values(this.state.selectedVariants),
                 },
             };
         } else {
@@ -68,7 +68,7 @@ export class Combo extends Component {
                 product: {
                     id: this.state.selectedProduct.id,
                     name: this.state.selectedProduct.name,
-                    variants: Object.entries(this.state.selectedVariants),
+                    variants: Object.values(this.state.selectedVariants),
                 },
             });
         }
@@ -105,8 +105,8 @@ export class Combo extends Component {
             qty: this.state.qty,
             price_unit: this.props.product.price_info.price_without_tax,
             product_id: this.props.product.id,
-            full_product_name: this.props.product.name,
-            selected_attributes: {},
+            price_subtotal_incl: this.props.product.price_info.display_price,
+            selected_attributes: [],
             combo_parent_uuid: null,
             combo_id: null,
         });
@@ -117,8 +117,7 @@ export class Combo extends Component {
                 uuid: null,
                 qty: this.state.qty,
                 product_id: combo.product.id,
-                full_product_name: combo.product.name,
-                selected_attributes: Object.fromEntries(combo.product.variants),
+                selected_attributes: Object.values(combo.product.variants),
                 combo_parent_uuid: parent_line.uuid,
                 combo_id: combo.id,
             });

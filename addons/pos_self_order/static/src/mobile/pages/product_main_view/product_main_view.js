@@ -7,6 +7,7 @@ import { NavBar } from "@pos_self_order/mobile/components/navbar/navbar";
 import { Product } from "@pos_self_order/common/models/product";
 import { Line } from "@pos_self_order/common/models/line";
 import { useService } from "@web/core/utils/hooks";
+import { flattenSelectedAttribute } from "@pos_self_order/common/utils";
 
 export class ProductMainView extends Component {
     static template = "pos_self_order.ProductMainView";
@@ -37,8 +38,41 @@ export class ProductMainView extends Component {
                 ]) || []
             ),
             /** this will be an object that will have the attribute id as key and the value id as value
-             *  ex: selectedVariants: {4: 9, 5: 11} */
-            selectedVariants: {},
+             *  ex: selectedVariants: {4: 9, 5: 11, 6: Set()} */
+            selectedVariants: Object.fromEntries(
+                this.product.attributes.map((att) => {
+                    let selectedValue =
+                        att.display_type == "multi" ? {} : att.values[0].id.toString();
+
+                    if (this.selfOrder.editedLine) {
+                        selectedValue = att.values
+                            .filter((v) =>
+                                Object.values(
+                                    this.selfOrder.editedLine.selected_attributes
+                                ).includes(v.id)
+                            )
+                            .map((v) => v.id);
+                        selectedValue =
+                            att.display_type == "multi" ? {} : selectedValue[0].toString();
+
+                        if (att.display_type == "multi") {
+                            for (const value of att.values) {
+                                selectedValue[value.id] = selectedValue.includes(value.id)
+                                    ? true
+                                    : false;
+                            }
+                        }
+                    } else {
+                        if (att.display_type == "multi") {
+                            for (const value of att.values) {
+                                selectedValue[value.id] = false;
+                            }
+                        }
+                    }
+
+                    return [att.id, selectedValue];
+                })
+            ),
         });
 
         onWillUnmount(() => {
@@ -54,9 +88,9 @@ export class ProductMainView extends Component {
         }));
         return { ...attribute, values };
     }
-
     get disableAttributes() {
         const order = this.selfOrder.currentOrder;
+
         return (
             this.selfOrder.editedLine &&
             this.selfOrder.editedLine.uuid &&
@@ -70,31 +104,9 @@ export class ProductMainView extends Component {
         if (editedLine) {
             this.state.customer_note = editedLine.customer_note;
             this.state.cartQty = editedLine.qty - 1;
-
-            if (editedLine.selected_attributes) {
-                this.state.selectedVariants = editedLine.selected_attributes;
-            }
-        } else {
-            this.state.selectedVariants = Object.fromEntries(
-                this.product.attributes.map((att) => [att.id, att.values[0].id.toString()])
-            );
         }
 
         return 0;
-    }
-
-    get fullProductName() {
-        if (!this.product.attributes.length) {
-            return this.product.name;
-        }
-
-        const findAttribute = (id) => this.product.attributes.find((attr) => attr.id == id);
-        const findValue = (attr, id) => attr.values.find((value) => value.id == id);
-        const productAttributeString = Object.entries(this.state.selectedVariants)
-            .map(([attrId, valueId]) => findValue(findAttribute(attrId), valueId).name)
-            .join(", ");
-
-        return `${this.product.name} (${productAttributeString})`;
     }
 
     changeQuantity(increase) {
@@ -117,7 +129,7 @@ export class ProductMainView extends Component {
         return increase ? this.state.qty++ : this.state.qty--;
     }
 
-    orderlineCanBeMerged(newLine) {
+    orderlineCanBeMerged() {
         if (this.props.product.pos_combo_ids.length) {
             return false;
         }
@@ -129,7 +141,8 @@ export class ProductMainView extends Component {
 
         const line = this.selfOrder.currentOrder.lines.find(
             (l) =>
-                l.full_product_name === this.fullProductName &&
+                JSON.stringify(l.selected_attributes.sort()) ===
+                    JSON.stringify(flattenSelectedAttribute(this.state.selectedVariants).sort()) &&
                 l.customer_note === this.state.customer_note &&
                 l.product_id === this.product.id
         );
@@ -145,9 +158,8 @@ export class ProductMainView extends Component {
             const editedLine = this.selfOrder.editedLine;
             const gap = editedLine ? -1 : 0;
 
-            lineToMerge.selected_attributes = this.state.selectedVariants;
+            lineToMerge.selected_attributes = flattenSelectedAttribute(this.state.selectedVariants);
             lineToMerge.customer_note = this.state.customer_note;
-            lineToMerge.full_product_name = this.fullProductName;
             lineToMerge.qty += this.state.qty + gap;
         } else {
             const mainLine = new Line({
@@ -155,9 +167,8 @@ export class ProductMainView extends Component {
                 uuid: lineToMerge ? lineToMerge.uuid : null,
                 qty: this.state.qty,
                 product_id: this.product.id,
-                full_product_name: this.fullProductName,
                 customer_note: this.state.customer_note,
-                selected_attributes: this.state.selectedVariants,
+                selected_attributes: flattenSelectedAttribute(this.state.selectedVariants),
             });
             lines.push(mainLine);
             for (const [combo_id, combo_line_id] of Object.entries(this.state.selectedCombos)) {
@@ -166,7 +177,6 @@ export class ProductMainView extends Component {
                 const child_line = new Line({
                     qty: this.state.qty,
                     product_id: combo_line.product_id[0],
-                    full_product_name: this.selfOrder.productByIds[combo_line.product_id[0]].name,
                     combo_parent_uuid: mainLine.uuid,
                     combo_id: combo.id,
                 });

@@ -46,8 +46,8 @@ export class SelfOrderBus {
         this.selfOrder.changeOrderState(access_token, state);
     }
 
-    ws_syncOrder(order, state) {
-        this.selfOrder.updateOrdersFromServer([order], [order.access_token]);
+    async ws_syncOrder(order, state) {
+        await this.selfOrder.updateOrdersFromServer([order], [order.access_token]);
     }
 }
 

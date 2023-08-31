@@ -6,6 +6,7 @@ import { AttributeSelection } from "@pos_self_order/kiosk/components/attribute_s
 import { KioskTemplate } from "@pos_self_order/kiosk/template/kiosk_template";
 import { Line } from "@pos_self_order/common/models/line";
 import { useService } from "@web/core/utils/hooks";
+import { flattenSelectedAttribute } from "@pos_self_order/common/utils";
 
 export class Product extends Component {
     static template = "pos_self_order.Product";
@@ -49,17 +50,6 @@ export class Product extends Component {
         return increase ? this.state.qty++ : this.state.qty--;
     }
 
-    get fullProductName() {
-        const productAttributeString = Object.values(this.state.selectedVariants).join(", ");
-        let name = `${this.product.name}`;
-
-        if (productAttributeString) {
-            name += ` (${productAttributeString})`;
-        }
-
-        return name;
-    }
-
     async addToCart() {
         const lines = this.selfOrder.currentOrder.lines;
 
@@ -69,13 +59,12 @@ export class Product extends Component {
                 uuid: null,
                 qty: this.state.qty,
                 product_id: this.product.id,
-                full_product_name: this.fullProductName,
                 customer_note: this.state.customer_note,
-                selected_attributes: this.state.selectedVariants,
+                price_subtotal_incl: this.product.price_info.display_price,
+                selected_attributes: flattenSelectedAttribute(this.state.selectedVariants),
             })
         );
 
-        // If a command line does not have a quantity greater than 0, we consider it deleted
         await this.selfOrder.getPricesFromServer();
         this.router.back();
     }

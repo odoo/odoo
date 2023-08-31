@@ -280,10 +280,23 @@ class PosConfig(models.Model):
 
     def _get_available_products(self):
         self.ensure_one()
-        return (
+
+        combo_product_ids = self.env["product.product"].search([
+            ("detailed_type", "=", 'combo'),
+            *(
+                self.limit_categories
+                and self.iface_available_categ_ids
+                and [("pos_categ_ids", "in", self.iface_available_categ_ids.ids)]
+                or []
+            ),
+        ])
+        product_ids = combo_product_ids.combo_ids.combo_line_ids.product_id
+
+        available_product_ids = (
             self.env["product.product"]
             .search(
                 [
+                    ("id", "not in", product_ids.ids),
                     ("available_in_pos", "=", True),
                     *(
                         self.limit_categories
@@ -294,6 +307,8 @@ class PosConfig(models.Model):
                 ],
             )
         )
+
+        return product_ids + available_product_ids
 
     def _get_available_categories(self):
         self.ensure_one()

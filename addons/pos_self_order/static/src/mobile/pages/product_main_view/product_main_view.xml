@@ -34,7 +34,7 @@
                             <t t-set="attribute" t-value="getAttributeWithStringIds(attribute)"/>
                             <t t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'">
                                 <t t-foreach="attribute.values" t-as="value" t-key="value.id">
-                                    <div class="d-flex align-items-center justify-content-between py-2">
+                                    <div class="d-flex align-items-center py-2">
                                         <input
                                             type="radio"
                                             class="form-check-input my-1 me-2"
@@ -44,11 +44,11 @@
                                             t-att-disabled="disableAttributes"
                                             t-model="state.selectedVariants[attribute.id]"
                                             />
-                                        <span class="flex-grow-1">
+                                        <span class="d-flex align-items-center">
                                             <t t-esc="value.name"/>
-                                            <t t-if="value.price_extra.list_price">
-                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
-                                            </t>
+                                            <div t-if="value.price_extra.display_price" class="px-2 py-1 ms-2 rounded-pill text-bg-info fs-6">
+                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.display_price)" />
+                                            </div>
                                         </span>
                                     </div>
                                 </t>
@@ -57,8 +57,8 @@
                                 t-model="state.selectedVariants[attribute.id]">
                                 <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-name="value.name" t-att-value="value.id" t-att-disabled="disableAttributes">
                                     <t t-esc="value.name"/>
-                                    <t t-if="value.price_extra.list_price">
-                                        + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                    <t t-if="value.price_extra.display_price">
+                                        + <t t-esc="selfOrder.formatMonetary(value.price_extra.display_price)" />
                                     </t>
                                 </option>
                             </select>
@@ -78,14 +78,30 @@
                                                 t-model="state.selectedVariants[attribute.id]"
                                                 />
                                         </label>
-                                        <span class="flex-grow-1">
+                                        <span class="px-2 py-1 ms-2 rounded-pill text-bg-info fs-6">
                                             <t t-esc="value.name"/>
-                                            <t t-if="value.price_extra.list_price">
-                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                                            <t t-if="value.price_extra.display_price">
+                                                + <t t-esc="selfOrder.formatMonetary(value.price_extra.display_price)" />
                                             </t>
                                         </span>
                                     </li>
                                 </ul>
+                            </div>
+                            <div t-elif="attribute.display_type === 'multi'">
+                                <div t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.id" class="d-flex align-items-center my-2">
+                                    <input type="checkbox"
+                                        t-att-id="value.id"
+                                        t-att-name="value.name"
+                                        t-model="state.selectedVariants[attribute.id][value.id]"
+                                        t-att-checked="state.selectedVariants[attribute.id][value.id]"
+                                        t-att-disabled="disableAttributes"/>
+                                    <label t-att-for="value.id" class="ms-2" t-esc="value.name" />
+                                    <div class="px-2 py-1 ms-2 rounded-pill text-bg-info fs-6">
+                                        <t t-if="value.price_extra.lst_price">
+                                            + <t t-esc="selfOrder.formatMonetary(value.price_extra.display_price)" />
+                                        </t>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>

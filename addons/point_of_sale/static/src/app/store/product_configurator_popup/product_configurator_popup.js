@@ -9,24 +9,33 @@ export class BaseProductAttribute extends Component {
         this.attribute = this.props.attribute;
         this.values = this.attribute.values;
         this.state = useState({
-            selected_value: parseFloat(this.values[0].id),
+            selected_values:
+                this.props.attribute.display_type === "multi" ? {} : parseFloat(this.values[0].id),
             custom_value: "",
         });
     }
 
     getValue() {
-        const selected_value = this.values.find(
-            (val) => val.id === parseFloat(this.state.selected_value)
-        );
-        let value = selected_value.name;
-        if (selected_value.is_custom && this.state.custom_value) {
-            value += `: ${this.state.custom_value}`;
-        }
+        const selected_values =
+            this.attribute.display_type === "multi"
+                ? this.values.filter((val) => this.state.selected_values[val.id])
+                : [this.values.find((val) => val.id === parseInt(this.state.selected_values))];
+
+        const extra = selected_values.reduce((acc, val) => acc + val.price_extra, 0);
+        const valueIds = selected_values.map((val) => val.id);
+        const value = selected_values
+            .map((val) => {
+                if (val.is_custom && this.state.custom_value) {
+                    return `${val.name}: ${this.state.custom_value}`;
+                }
+                return val.name;
+            })
+            .join(", ");
 
         return {
             value,
-            valueId: selected_value.id,
-            extra: selected_value.price_extra,
+            valueIds,
+            extra,
         };
     }
 }
@@ -56,11 +65,23 @@ export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
 }
 
+export class CheckboxProductAttribute extends BaseProductAttribute {
+    static template = "point_of_sale.CheckboxProductAttribute";
+
+    setup() {
+        super.setup();
+        for (const value of this.values) {
+            this.state.selected_values[value.id] = false;
+        }
+    }
+}
+
 export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
         RadioProductAttribute,
         SelectProductAttribute,
+        CheckboxProductAttribute,
         ColorProductAttribute,
     };
 
@@ -74,18 +95,19 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     }
 
     getPayload() {
-        var selected_attributes = [];
-        const attribute_value_ids = [];
+        const selected_attributes = [];
+        let attribute_value_ids = [];
         var price_extra = 0.0;
         const quantity = this.state.quantity;
 
         this.env.attribute_components.forEach((attribute_component) => {
-            const { value, valueId, extra } = attribute_component.getValue();
+            const { value, valueIds, extra } = attribute_component.getValue();
             selected_attributes.push(value);
-            attribute_value_ids.push(valueId);
+            attribute_value_ids.push(valueIds);
             price_extra += extra;
         });
 
+        attribute_value_ids = attribute_value_ids.flat();
         return {
             selected_attributes,
             attribute_value_ids,

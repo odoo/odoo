@@ -199,14 +199,16 @@ class PosSelfOrderController(http.Controller):
             config_fiscal_pos = pos_config.default_fiscal_position_id
 
         for line in lines:
+            attribute_value = pos_config.env['product.template.attribute.value'].browse(line.get('selected_attributes'))
             if line.get('uuid') in appended_uuid or not line.get('product_id'):
                 continue
 
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
-            # todo take into account the price extra
+            context = product._get_product_price_context(attribute_value)
+            product = product.with_context(**context)
             price_unit = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
-            selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
 
+            selected_account_tax = config_fiscal_pos.map_tax(product.taxes_id) if config_fiscal_pos else product.taxes_id
             # parent_product_taxe_ids = None
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             if len(children) > 0:
@@ -247,7 +249,7 @@ class PosSelfOrderController(http.Controller):
                         'product_id': child.get('product_id'),
                         'qty': child.get('qty'),
                         'customer_note': child.get('customer_note'),
-                        'attribute_value_ids': child.get('selected_attributes') and [int(v) for v in child['selected_attributes'].values()] or [],
+                        'attribute_value_ids': child.get('selected_attributes') or [],
                         'full_product_name': child.get('full_product_name'),
                         'combo_parent_uuid': child.get('combo_parent_uuid'),
                         'combo_id': child.get('combo_id'),
@@ -273,7 +275,7 @@ class PosSelfOrderController(http.Controller):
                 'product_id': line.get('product_id'),
                 'qty': line.get('qty'),
                 'customer_note': line.get('customer_note'),
-                'attribute_value_ids': line.get('selected_attributes') and [int(v) for v in line['selected_attributes'].values()] or [],
+                'attribute_value_ids': line.get('selected_attributes') or [],
                 'full_product_name': line.get('full_product_name'),
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
@@ -281,6 +283,10 @@ class PosSelfOrderController(http.Controller):
             appended_uuid.append(line.get('uuid'))
 
         return newLines
+
+    def _compute_price_extra(self, selected_attributes):
+        attribute_value = request.env['product.attribute.value'].browse(selected_attributes)
+        return sum(attribute_value.mapped('default_extra_price'))
 
     def _get_order_prices(self, lines):
         amount_untaxed = sum([line.get('price_subtotal') for line in lines])

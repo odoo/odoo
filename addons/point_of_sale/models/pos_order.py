@@ -1162,6 +1162,9 @@ class PosOrderLine(models.Model):
             product = self.env['product.product'].browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
 
+        if line and line[2].get('attribute_value_ids'):
+            line[2]['attribute_value_ids'] = line[2].get('attribute_value_ids')
+
         # Clean up fields sent by the JS
         line = [
             line[0], line[1], {k: v for k, v in line[2].items() if self._is_field_accepted(k)}
@@ -1323,6 +1326,7 @@ class PosOrderLine(models.Model):
             'full_product_name': orderline.full_product_name,
             'refunded_orderline_id': orderline.refunded_orderline_id.id,
             'combo_parent_id': orderline.combo_parent_id.id,
+            'attribute_value_ids': orderline.attribute_value_ids.ids,
             'combo_line_ids': orderline.combo_line_ids.mapped('id'),
         }
 
