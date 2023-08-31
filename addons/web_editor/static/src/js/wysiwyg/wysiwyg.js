@@ -647,7 +647,7 @@ const Wysiwyg = Widget.extend({
             const clientsInfos = Object.values(this.ptp.clientsInfos);
             const couldBeDisconnected =
                 Boolean(clientsInfos.length) &&
-                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection.connectionState));
+                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection && x.peerConnection.connectionState));
 
             if (couldBeDisconnected) {
                 this._offlineTimeout = setTimeout(() => {
