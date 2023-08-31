@@ -3526,6 +3526,31 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move.journal_id = second_journal
         self.assertEqual(move.currency_id, self.currency_data['currency'])
 
+    def test_currency_change_journal(self):
+        """
+        Test that the currency does not change when changing the journal if no currency is set on the new journal
+        """
+        second_journal = self.company_data['default_journal_sale'].copy()
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                    'tax_ids': False,
+                })
+            ],
+        })
+
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+        move.journal_id = second_journal
+        self.assertEqual(move.currency_id, self.currency_data['currency'])
+
     @freeze_time('2023-01-01')
     def test_change_first_journal_move_sequence(self):
         """Invoice name should not be reset when posting the invoice"""
