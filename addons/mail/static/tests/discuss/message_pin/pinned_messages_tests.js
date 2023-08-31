@@ -23,7 +23,7 @@ QUnit.test("Pin message", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message-content", 1, {
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message-content", {
         text: "Hello world!",
     });
 });
@@ -44,7 +44,7 @@ QUnit.test("Unpin message", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Unpin" });
     await click(".modal-footer button", { text: "Yes, remove it please" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", 0);
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
 QUnit.test("Deleted messages are not pinned", async () => {
@@ -64,7 +64,7 @@ QUnit.test("Deleted messages are not pinned", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item", { text: "Delete" });
     await click("button", { text: "Confirm" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", 0);
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
 QUnit.test("Open pinned panel from notification", async () => {
@@ -80,7 +80,7 @@ QUnit.test("Open pinned panel from notification", async () => {
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
-    await contains(".o-discuss-PinnedMessagesPanel", 0);
+    await contains(".o-discuss-PinnedMessagesPanel", { count: 0 });
     await click(".o_mail_notification a", { text: "See all pinned messages" });
     await contains(".o-discuss-PinnedMessagesPanel");
 });

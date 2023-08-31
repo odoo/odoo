@@ -17,8 +17,8 @@ QUnit.test("Messages are received cross-tab", async () => {
     tab2.openDiscuss(channelId);
     await tab1.insertText(".o-mail-Composer-input", "Hello World!");
     await click("button:contains(Send):not(:disabled)", { target: tab1.target });
-    await contains(".o-mail-Message-content", 1, { target: tab1.target, text: "Hello World!" });
-    await contains(".o-mail-Message-content", 1, { target: tab2.target, text: "Hello World!" });
+    await contains(".o-mail-Message-content", { target: tab1.target, text: "Hello World!" });
+    await contains(".o-mail-Message-content", { target: tab2.target, text: "Hello World!" });
 });
 
 QUnit.test("Delete starred message updates counter", async () => {
@@ -36,14 +36,14 @@ QUnit.test("Delete starred message updates counter", async () => {
     const tab2 = await start({ asTab: true });
     tab1.openDiscuss(channelId);
     tab2.openDiscuss(channelId);
-    await contains("button", 1, { target: tab2.target, text: "Starred1" });
+    await contains("button", { target: tab2.target, text: "Starred1" });
 
     tab1.env.services.rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
         attachment_ids: [],
     });
-    await contains("button", 0, { target: tab2.target, text: "Starred1" });
+    await contains("button", { count: 0, target: tab2.target, text: "Starred1" });
 });
 
 QUnit.test("Thread rename", async () => {
@@ -58,8 +58,8 @@ QUnit.test("Thread rename", async () => {
     tab2.openDiscuss(channelId);
     await tab1.insertText(".o-mail-Discuss-threadName:not(:disabled)", "Sales", { replace: true });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadName[title='Sales']", 1, { target: tab2.target });
-    await contains(".o-mail-DiscussSidebarChannel span", 1, { target: tab2.target, text: "Sales" });
+    await contains(".o-mail-Discuss-threadName[title='Sales']", { target: tab2.target });
+    await contains(".o-mail-DiscussSidebarChannel span", { target: tab2.target, text: "Sales" });
 });
 
 QUnit.test("Thread description update", async () => {
@@ -76,7 +76,7 @@ QUnit.test("Thread description update", async () => {
         replace: true,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", 1, {
+    await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", {
         target: tab2.target,
     });
 });
@@ -98,7 +98,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
         partner_ids: [pyEnv.currentPartnerId],
     });
-    await contains(".o-mail-DiscussSidebarChannel", 2);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });
@@ -114,7 +114,7 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
     });
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel .btn[title='Leave this channel']");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });
@@ -141,7 +141,7 @@ QUnit.test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard div", 1, { target: tab2.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard div", { target: tab2.target, text: "test.txt" });
 });
 
 QUnit.test("Remove attachment from message", async () => {
@@ -162,11 +162,15 @@ QUnit.test("Remove attachment from message", async () => {
     const tab2 = await start({ asTab: true });
     tab1.openDiscuss(channelId);
     tab2.openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard div", 1, { target: tab1.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard div", { target: tab1.target, text: "test.txt" });
 
     await click(".o-mail-AttachmentCard-unlink", { target: tab2.target });
     await click(".modal-footer .btn:contains(Ok)", { target: tab2.target });
-    await contains(".o-mail-AttachmentCard div", 0, { target: tab1.target, text: "test.txt" });
+    await contains(".o-mail-AttachmentCard div", {
+        count: 0,
+        target: tab1.target,
+        text: "test.txt",
+    });
 });
 
 QUnit.test("Message delete notification", async () => {
@@ -193,7 +197,7 @@ QUnit.test("Message delete notification", async () => {
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/delete", {
         message_ids: [messageId],
     });
-    await contains(".o-mail-Message", 0);
-    await contains("button:contains(Inbox) .badge", 0);
-    await contains("button:contains(Starred) .badge", 0);
+    await contains(".o-mail-Message", { count: 0 });
+    await contains("button:contains(Inbox) .badge", { count: 0 });
+    await contains("button:contains(Starred) .badge", { count: 0 });
 });

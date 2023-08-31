@@ -41,7 +41,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         views: [[false, "list"]],
     });
     await contains(".o-mail-ActivityButton i.text-muted");
-    await contains(".o-mail-ListActivity-summary:eq(0)", 1, { text: "" });
+    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "" });
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -141,7 +141,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
         views: [[false, "list"]],
     });
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
-    await contains(".o-mail-ListActivity-summary:eq(0)", 1, { text: "Warning" });
+    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Warning" });
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
 
@@ -220,12 +220,12 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o-mail-ListActivity-summary:eq(0)", 1, { text: "Call with Al" });
+    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Call with Al" });
 
     await click(".o-mail-ActivityButton"); // open the popover
     await click(".o-mail-ActivityListPopoverItem-markAsDone:eq(0)"); // mark the first activity as done
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']"); // confirm
-    await contains(".o-mail-ListActivity-summary:eq(0)", 1, { text: "Meet FP" });
+    await contains(".o-mail-ListActivity-summary:eq(0)", { text: "Meet FP" });
     assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
 });
 
@@ -275,7 +275,9 @@ QUnit.test("list activity exception widget with activity", async () => {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o_data_row", 2);
-    await contains(".o_data_row .o_activity_exception_cell:eq(0) .o-mail-ActivityException", 0);
+    await contains(".o_data_row", { count: 2 });
+    await contains(".o_data_row .o_activity_exception_cell:eq(0) .o-mail-ActivityException", {
+        count: 0,
+    });
     await contains(".o_data_row .o_activity_exception_cell:eq(1) .o-mail-ActivityException");
 });

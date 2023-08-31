@@ -18,7 +18,7 @@ QUnit.test("Do not ask feedback if empty", async () => {
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await click("[title='Close Chat Window']");
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
 QUnit.test("Close without feedback", async (assert) => {
@@ -38,10 +38,10 @@ QUnit.test("Close without feedback", async (assert) => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", 1, { text: "Hello World!" });
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
     await click("button", { text: "Close conversation" });
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-livechat-LivechatButton", { count: 0 });
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
 });
 
@@ -64,13 +64,13 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", 1, { text: "Hello World!" });
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send):not(:disabled)");
-    await contains("p", 1, { text: "Thank you for your feedback" });
+    await contains("p", { text: "Thank you for your feedback" });
     assert.verifySteps(["/im_livechat/feedback"]);
 });
 
@@ -81,10 +81,10 @@ QUnit.test("Closing folded chat window should open it with feedback", async () =
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", 1, { text: "Hello World!" });
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Fold']");
     await contains(".o-mail-ChatWindow.o-folded");
     await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow.o-folded", 0);
-    await contains(".o-mail-ChatWindow p", 1, { text: "Did we correctly answer your question?" });
+    await contains(".o-mail-ChatWindow.o-folded", { count: 0 });
+    await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });
 });

@@ -29,8 +29,8 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
     const { openFormView } = await start();
     openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
-    await contains(".o-mail-SuggestedRecipient", 2);
-    await contains("button", 0, { text: "Show more" });
+    await contains(".o-mail-SuggestedRecipient", { count: 2 });
+    await contains("button", { count: 0, text: "Show more" });
 });
 
 QUnit.test(
@@ -66,8 +66,8 @@ QUnit.test(
             },
         });
         await click("button", { text: "Send message" });
-        await contains(".o-mail-SuggestedRecipient", 1, { text: "john@test.be (john@test.be)" });
-        await contains(".o-mail-SuggestedRecipient", 1, { text: "John Jane" });
+        await contains(".o-mail-SuggestedRecipient", { text: "john@test.be (john@test.be)" });
+        await contains(".o-mail-SuggestedRecipient", { text: "John Jane" });
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -106,8 +106,8 @@ QUnit.test(
             },
         });
         await click("button", { text: "Send message" });
-        await contains(".o-mail-SuggestedRecipient", 1, { text: "john@test.be (john@test.be)" });
-        await contains(".o-mail-SuggestedRecipient", 1, { text: "John Jane" });
+        await contains(".o-mail-SuggestedRecipient", { text: "john@test.be (john@test.be)" });
+        await contains(".o-mail-SuggestedRecipient", { text: "John Jane" });
         assert.ok(
             $(".o-mail-SuggestedRecipient:contains(john@test.be) input[type=checkbox]")[0].checked
         );
@@ -135,7 +135,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
-    await contains("button", 1, { text: "Show more" });
+    await contains("button", { text: "Show more" });
 });
 
 QUnit.test(
@@ -155,7 +155,7 @@ QUnit.test(
         openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
-        await contains(".o-mail-SuggestedRecipient", 4);
+        await contains(".o-mail-SuggestedRecipient", { count: 4 });
     }
 );
 
@@ -176,7 +176,7 @@ QUnit.test(
         openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
-        await contains("button", 1, { text: "Show less" });
+        await contains("button", { text: "Show less" });
     }
 );
 
@@ -198,8 +198,8 @@ QUnit.test(
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
         await click("button", { text: "Show less" });
-        await contains(".o-mail-SuggestedRecipient", 3);
-        await contains("button", 1, { text: "Show more" });
+        await contains(".o-mail-SuggestedRecipient", { count: 3 });
+        await contains("button", { text: "Show more" });
     }
 );
 
@@ -218,7 +218,7 @@ QUnit.test(
         const { openFormView } = await start({ serverData: { views } });
         openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
-        await contains(".o-mail-SuggestedRecipient input:checked", 2);
+        await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
         assert.ok(
             $(".o-mail-SuggestedRecipient:not([data-partner-id]) input[type=checkbox]")[0].checked
         );

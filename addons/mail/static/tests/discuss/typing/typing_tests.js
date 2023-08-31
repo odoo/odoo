@@ -21,7 +21,7 @@ QUnit.test('receive other member typing status "is typing"', async () => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     // simulate receive typing notification from demo
     pyEnv.withUser(userId, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -29,7 +29,7 @@ QUnit.test('receive other member typing status "is typing"', async () => {
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
 });
 
 QUnit.test(
@@ -48,7 +48,7 @@ QUnit.test(
         const { env, openDiscuss } = await start();
         await openDiscuss(channelId);
         await contains(".o-discuss-Typing");
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
         // simulate receive typing notification from demo "is typing"
         pyEnv.withUser(userId, () =>
             env.services.rpc("/discuss/channel/notify_typing", {
@@ -56,7 +56,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        await contains(".o-discuss-Typing", 1, { text: "Demo is typing..." });
+        await contains(".o-discuss-Typing", { text: "Demo is typing..." });
         // simulate receive typing notification from demo "is no longer typing"
         pyEnv.withUser(userId, () =>
             env.services.rpc("/discuss/channel/notify_typing", {
@@ -65,7 +65,7 @@ QUnit.test(
             })
         );
         await contains(".o-discuss-Typing");
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     }
 );
 
@@ -85,7 +85,7 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await contains(".o-discuss-Typing");
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
         // simulate receive typing notification from demo "is typing"
         pyEnv.withUser(userId, () =>
             env.services.rpc("/discuss/channel/notify_typing", {
@@ -93,9 +93,9 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        await contains(".o-discuss-Typing", 1, { text: "Demo is typing..." });
+        await contains(".o-discuss-Typing", { text: "Demo is typing..." });
         advanceTime(OTHER_LONG_TYPING);
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     }
 );
 
@@ -115,7 +115,7 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await contains(".o-discuss-Typing");
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
         // simulate receive typing notification from demo "is typing"
         pyEnv.withUser(userId, () =>
             env.services.rpc("/discuss/channel/notify_typing", {
@@ -123,7 +123,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        await contains(".o-discuss-Typing", 1, { text: "Demo is typing..." });
+        await contains(".o-discuss-Typing", { text: "Demo is typing..." });
         // simulate receive typing notification from demo "is typing" again after long time.
         await advanceTime(LONG_TYPING);
         await pyEnv.withUser(userId, () =>
@@ -133,9 +133,9 @@ QUnit.test(
             })
         );
         await advanceTime(LONG_TYPING);
-        await contains(".o-discuss-Typing", 1, { text: "Demo is typing..." });
+        await contains(".o-discuss-Typing", { text: "Demo is typing..." });
         advanceTime(OTHER_LONG_TYPING - LONG_TYPING);
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     }
 );
 
@@ -163,7 +163,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     // simulate receive typing notification from other 10 (is typing)
     pyEnv.withUser(userId_1, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -171,7 +171,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Other 10 is typing..." });
+    await contains(".o-discuss-Typing", { text: "Other 10 is typing..." });
     // simulate receive typing notification from other 11 (is typing)
     pyEnv.withUser(userId_2, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -179,7 +179,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Other 10 and Other 11 are typing..." });
+    await contains(".o-discuss-Typing", { text: "Other 10 and Other 11 are typing..." });
     // simulate receive typing notification from other 12 (is typing)
     pyEnv.withUser(userId_3, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -187,7 +187,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Other 10, Other 11 and more are typing..." });
+    await contains(".o-discuss-Typing", { text: "Other 10, Other 11 and more are typing..." });
     // simulate receive typing notification from other 10 (no longer is typing)
     pyEnv.withUser(userId_1, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -195,7 +195,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             is_typing: false,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Other 11 and Other 12 are typing..." });
+    await contains(".o-discuss-Typing", { text: "Other 11 and Other 12 are typing..." });
     // simulate receive typing notification from other 10 (is typing again)
     pyEnv.withUser(userId_1, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -203,7 +203,7 @@ QUnit.test('receive several other members typing status "is typing"', async () =
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", 1, { text: "Other 11, Other 12 and more are typing..." });
+    await contains(".o-discuss-Typing", { text: "Other 11, Other 12 and more are typing..." });
 });
 
 QUnit.test("current partner notify is typing to other thread members", async (assert) => {
@@ -289,7 +289,7 @@ QUnit.test(
         await insertText(".o-mail-Composer-input", "a");
         assert.verifySteps(["notify_typing:true"]);
         await contains(".o-discuss-Typing");
-        await contains(".o-discuss-Typing", 0, { text: "Demo is typing...)" });
+        await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     }
 );
 
@@ -348,7 +348,7 @@ QUnit.test("chat: correspondent is typing in chat window", async () => {
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains("[title='Demo is typing...']", 0);
+    await contains("[title='Demo is typing...']", { count: 0 });
     // simulate receive typing notification from demo "is typing"
     pyEnv.withUser(userId, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
@@ -364,5 +364,5 @@ QUnit.test("chat: correspondent is typing in chat window", async () => {
             is_typing: false,
         })
     );
-    await contains("[title='Demo is typing...']", 0);
+    await contains("[title='Demo is typing...']", { count: 0 });
 });

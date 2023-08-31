@@ -32,7 +32,7 @@ QUnit.test("Notification Sent", async (assert) => {
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
     assert.hasClass($(".o-mail-MessageNotificationPopover i"), "fa-check");
-    await contains(".o-mail-MessageNotificationPopover", 1, { text: "Someone" });
+    await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
 QUnit.test("Notification Error", async (assert) => {

@@ -190,14 +190,14 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss();
-        await contains(".o-mail-DiscussSidebarChannel:eq(0)", 1, { text: "Visitor 12" });
-        await contains(".o-mail-DiscussSidebarChannel:eq(1)", 1, { text: "Visitor 11" });
+        await contains(".o-mail-DiscussSidebarChannel:eq(0)", { text: "Visitor 12" });
+        await contains(".o-mail-DiscussSidebarChannel:eq(1)", { text: "Visitor 11" });
         // post a new message on the last channel
         await click(".o-mail-DiscussSidebarChannel:eq(1)");
         await insertText(".o-mail-Composer-input", "Blabla");
         await click(".o-mail-Composer-send:not(:disabled)");
-        await contains(".o-mail-DiscussSidebarChannel", 2);
-        await contains(".o-mail-DiscussSidebarChannel:eq(0) span", 1, { text: "Visitor 11" });
-        await contains(".o-mail-DiscussSidebarChannel:eq(1) span", 1, { text: "Visitor 12" });
+        await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
+        await contains(".o-mail-DiscussSidebarChannel:eq(0) span", { text: "Visitor 11" });
+        await contains(".o-mail-DiscussSidebarChannel:eq(1) span", { text: "Visitor 12" });
     }
 );

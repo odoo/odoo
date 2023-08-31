@@ -19,8 +19,8 @@ QUnit.test("No call buttons", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-command i.fa-phone", 0);
-    await contains(".o-mail-ChatWindow-command i.fa-gear", 0);
+    await contains(".o-mail-ChatWindow-command i.fa-phone", { count: 0 });
+    await contains(".o-mail-ChatWindow-command i.fa-gear", { count: 0 });
 });
 
 QUnit.test("closing a chat window with no message from admin side unpins it", async (assert) => {

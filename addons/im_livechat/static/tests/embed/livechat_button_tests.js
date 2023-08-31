@@ -14,10 +14,10 @@ QUnit.test("open/close temporary channel", async () => {
     start();
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-livechat-LivechatButton", { count: 0 });
     await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", 0);
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
 QUnit.test("open/close persisted channel", async () => {
@@ -27,14 +27,14 @@ QUnit.test("open/close persisted channel", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message-content", 1, { text: "How can I help?" });
+    await contains(".o-mail-Message-content", { text: "How can I help?" });
     await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow-content p", 1, {
+    await contains(".o-mail-ChatWindow-content p", {
         text: "Did we correctly answer your question?",
     });
     await click("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", 0);
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-livechat-LivechatButton", { count: 0 });
 });
 
 QUnit.test("livechat not available", async () => {
@@ -48,5 +48,5 @@ QUnit.test("livechat not available", async () => {
         },
     });
     await contains(".o-mail-ChatWindowContainer");
-    await contains(".o-livechat-LivechatButton", 0);
+    await contains(".o-livechat-LivechatButton", { count: 0 });
 });

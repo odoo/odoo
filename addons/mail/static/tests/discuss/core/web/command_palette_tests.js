@@ -43,12 +43,12 @@ QUnit.test("open the chatWindow of a channel from the command palette", async ()
     // Switch to channels
     await editSearchBar("#");
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
-    await contains(".o_command", 1, { text: "general" });
-    await contains(".o_command", 1, { text: "project" });
+    await contains(".o_command", { text: "general" });
+    await contains(".o_command", { text: "project" });
 
     await click(".o_command.focused");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "general" });
+    await contains(".o-mail-ChatWindow-name", { text: "general" });
 });
 
 QUnit.test("Channel mentions in the command palette of Discuss app with @", async () => {
@@ -78,19 +78,19 @@ QUnit.test("Channel mentions in the command palette of Discuss app with @", asyn
     await nextTick();
     await editSearchBar("@");
     advanceTime(commandSetupRegistry.get("@").debounceDelay);
-    await contains(".o_command_palette span.fw-bold", 1, { text: "Mentions" });
+    await contains(".o_command_palette span.fw-bold", { text: "Mentions" });
     await contains(
         ".o_command_category:contains('Mentions') .o_command:contains('Mitchell Admin and Mario')"
     );
-    await contains(".o_command_category:not(:contains('Mentions')) .o_command", 1, {
+    await contains(".o_command_category:not(:contains('Mentions')) .o_command", {
         text: "Mario",
     });
     await contains(
         ".o_command_category:not(:contains('Mentions')) .o_command:contains('Mitchell Admin')"
     );
-    await contains(".o_command.focused .o_command_name", 1, { text: "Mitchell Admin and Mario" });
+    await contains(".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow-name", 1, { text: "Mitchell Admin and Mario" });
+    await contains(".o-mail-ChatWindow-name", { text: "Mitchell Admin and Mario" });
 });
 
 QUnit.test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
@@ -104,6 +104,6 @@ QUnit.test("Max 3 most recent channels in command palette of Discuss app with #"
     await nextTick();
     await editSearchBar("#");
     advanceTime(commandSetupRegistry.get("#").debounceDelay);
-    await contains(".o_command_palette span.fw-bold", 1, { text: "Recent" });
-    await contains(".o_command_category:contains('Recent') .o_command", 3);
+    await contains(".o_command_palette span.fw-bold", { text: "Recent" });
+    await contains(".o_command_category:contains('Recent') .o_command", { count: 3 });
 });

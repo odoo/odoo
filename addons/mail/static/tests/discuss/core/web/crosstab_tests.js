@@ -19,7 +19,7 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
     await click("[title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector", "General");
     await click(".o-discuss-ChannelSelector-suggestion:eq(0)");
-    await contains(".o-mail-DiscussSidebarChannel", 1);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 1 });
     await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
     assert.verifySteps(["update-channels"]);
 });

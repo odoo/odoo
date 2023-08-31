@@ -18,7 +18,7 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow-name[title='Gandalf']");
 });
@@ -33,7 +33,7 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
     await click(".o-discuss-ChannelSelector-suggestion:eq(0)");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     await contains(".o-mail-ChatWindow-name[title='Gryffindors']");
 });
 
@@ -45,7 +45,7 @@ QUnit.test('"New channel" item selection opens channel (new)', async () => {
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "slytherins");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", 0);
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     await contains(".o-mail-ChatWindow-name[title='slytherins']");
 });
 

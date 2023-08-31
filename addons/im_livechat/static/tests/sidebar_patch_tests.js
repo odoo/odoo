@@ -20,7 +20,7 @@ QUnit.test("Unknown visitor", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarChannel span", 1, { text: "Visitor 11" });
+    await contains(".o-mail-DiscussSidebarChannel span", { text: "Visitor 11" });
 });
 
 QUnit.test("Known user with country", async () => {
@@ -70,8 +70,8 @@ QUnit.test("Do not show channel when visitor is typing", async () => {
     });
     const { env, openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory", 2);
-    await contains(".o-mail-DiscussSidebarCategory-livechat", 0);
+    await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
+    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await pyEnv.withUser(pyEnv.publicUserId, () =>
@@ -82,7 +82,7 @@ QUnit.test("Do not show channel when visitor is typing", async () => {
     );
     // weak test, no guaranteed that we waited long enough for the livechat to potentially appear
     await nextTick();
-    await contains(".o-mail-DiscussSidebarCategory-livechat", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
 });
 
 QUnit.test("Close should update the value on the server", async (assert) => {
@@ -169,7 +169,9 @@ QUnit.test("Open from the bus", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
         "res.users.settings": {
             id: settingsId,
@@ -203,7 +205,9 @@ QUnit.test("Close from the bus", async () => {
             is_discuss_sidebar_category_livechat_open: false,
         },
     });
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
 });
 
 QUnit.test("Smiley face avatar for an anonymous livechat item", async () => {
@@ -263,7 +267,9 @@ QUnit.test("No counter if the category is unfolded and with unread messages", as
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat .o-mail-Discuss-category-counter", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat .o-mail-Discuss-category-counter", {
+        count: 0,
+    });
 });
 
 QUnit.test("No counter if category is folded and without unread messages", async () => {
@@ -284,7 +290,7 @@ QUnit.test("No counter if category is folded and without unread messages", async
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { count: 0 });
 });
 
 QUnit.test(
@@ -313,7 +319,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         openDiscuss();
-        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", 1, {
+        await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", {
             text: "1",
         });
     }
@@ -339,7 +345,7 @@ QUnit.test("Close manually by clicking the title", async () => {
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     // fold the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
 QUnit.test("Open manually by clicking the title", async () => {
@@ -360,7 +366,9 @@ QUnit.test("Open manually by clicking the title", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
     // open the livechat category
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
@@ -381,7 +389,9 @@ QUnit.test("Category item should be invisible if the category is closed", async 
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebarCategory-livechat .btn");
-    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", 0);
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
+        count: 0,
+    });
 });
 
 QUnit.test("Active category item should be visible even if the category is closed", async () => {
@@ -420,7 +430,7 @@ QUnit.test("Clicking on unpin button unpins the channel", async () => {
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
-    await contains(".o_notification_content", 1, {
+    await contains(".o_notification_content", {
         text: "You unpinned your conversation with Visitor 11",
     });
 });
@@ -444,5 +454,5 @@ QUnit.test("Message unread counter", async () => {
             uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
         })
     );
-    await contains(".o-mail-DiscussSidebarChannel .badge", 1, { text: "1" });
+    await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });

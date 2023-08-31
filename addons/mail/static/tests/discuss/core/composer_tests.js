@@ -46,7 +46,7 @@ QUnit.test(
         openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
         await click(".o-mail-Composer-suggestion:eq(0)");
-        await contains(".o-mail-Composer-suggestion strong", 0);
+        await contains(".o-mail-Composer-suggestion strong", { count: 0 });
         await insertText(".o-mail-Composer-input", " is user?");
         assert.verifySteps([], "No rpc done");
     }
@@ -60,11 +60,11 @@ QUnit.test("add an emoji after a command", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Composer-input", 1, { value: "" });
+    await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await contains(".o-mail-Composer-input", 1, { value: "/who " });
+    await contains(".o-mail-Composer-input", { value: "/who " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", 1, { value: "/who 😊" });
+    await contains(".o-mail-Composer-input", { value: "/who 😊" });
 });

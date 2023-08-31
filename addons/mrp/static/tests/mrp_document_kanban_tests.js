@@ -222,7 +222,7 @@ QUnit.module('MrpDocumentsKanbanView', {
         await click(".o_kanban_previewer");
         await contains(".o-FileViewer");
         await click(".o-FileViewer-headerButton .fa-times");
-        await contains(".o-FileViewer", 0);
+        await contains(".o-FileViewer", { count: 0 });
     });
 });
 

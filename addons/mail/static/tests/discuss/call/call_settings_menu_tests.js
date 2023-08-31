@@ -36,7 +36,7 @@ QUnit.test("Renders the call settings", async () => {
     await contains(".o-discuss-CallSettings");
     await contains("label[aria-label='Input device']");
     await contains("option[value=mockAudioDeviceId]");
-    await contains("option[value=mockVideoDeviceId]", 0);
+    await contains("option[value=mockVideoDeviceId]", { count: 0 });
     await contains("input[title='toggle push-to-talk']");
     await contains("label[aria-label='Voice detection threshold']");
     await contains("input[title='Show video participants only']");
@@ -60,7 +60,7 @@ QUnit.test("activate push to talk", async () => {
     await click("input[title='toggle push-to-talk']");
     await contains("i[aria-label='Register new key']");
     await contains("label[aria-label='Delay after releasing push-to-talk']");
-    await contains("label[aria-label='Voice detection threshold']", 0);
+    await contains("label[aria-label='Voice detection threshold']", { count: 0 });
 });
 
 QUnit.test("activate blur", async () => {
@@ -87,7 +87,7 @@ QUnit.test("Inbox should not have any call settings menu", async () => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_inbox");
     await contains(".o-mail-Thread");
-    await contains("button[title='Show Call Settings']", 0);
+    await contains("button[title='Show Call Settings']", { count: 0 });
 });
 
 QUnit.test(
@@ -107,7 +107,7 @@ QUnit.test(
         openDiscuss(channelId);
         await click("button[title='Show Call Settings']");
         await click("button div", { text: "Inbox" });
-        await contains("button[title='Hide Call Settings']", 0);
-        await contains(".o-discuss-CallSettings", 0);
+        await contains("button[title='Hide Call Settings']", { count: 0 });
+        await contains(".o-discuss-CallSettings", { count: 0 });
     }
 );

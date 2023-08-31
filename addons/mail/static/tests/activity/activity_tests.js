@@ -39,7 +39,7 @@ QUnit.test("activity upload document is available", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info span", 1, { text: "Upload Document" });
+    await contains(".o-mail-Activity-info span", { text: "Upload Document" });
     await contains(".btn .fa-upload");
     await contains(".o-mail-Activity .o_input_file");
 });
@@ -62,10 +62,10 @@ QUnit.test("activity can upload a document", async () => {
         contentType: "text/plain",
         name: "text.txt",
     });
-    await contains(".o-mail-Activity-info span", 1, { text: "Upload Document" });
+    await contains(".o-mail-Activity-info span", { text: "Upload Document" });
     inputFiles($(".o-mail-Activity .o_input_file")[0], [file]);
-    await contains(".o-mail-Activity-info span", 0, { text: "Upload Document" });
-    await contains("button[aria-label='Attach files']", 1, { text: "1" });
+    await contains(".o-mail-Activity-info span", { count: 0, text: "Upload Document" });
+    await contains("button[aria-label='Attach files']", { text: "1" });
 });
 
 QUnit.test("activity simplest layout", async () => {
@@ -81,13 +81,13 @@ QUnit.test("activity simplest layout", async () => {
     await contains(".o-mail-Activity-sidebar");
     await contains(".o-mail-Activity-user");
     await contains(".o-mail-Activity-info");
-    await contains(".o-mail-Activity-note", 0);
-    await contains(".o-mail-Activity-details", 0);
-    await contains(".o-mail-Activity-mailTemplates", 0);
-    await contains(".btn", 0, { text: "Edit" });
-    await contains(".o-mail-Activity span", 0, { text: "Cancel" });
-    await contains(".btn", 0, { text: "Mark Done" });
-    await contains(".o-mail-Activity-info span", 0, { text: "Upload Document" });
+    await contains(".o-mail-Activity-note", { count: 0 });
+    await contains(".o-mail-Activity-details", { count: 0 });
+    await contains(".o-mail-Activity-mailTemplates", { count: 0 });
+    await contains(".btn", { count: 0, text: "Edit" });
+    await contains(".o-mail-Activity span", { count: 0, text: "Cancel" });
+    await contains(".btn", { count: 0, text: "Mark Done" });
+    await contains(".o-mail-Activity-info span", { count: 0, text: "Upload Document" });
 });
 
 QUnit.test("activity with note layout", async (assert) => {
@@ -120,7 +120,7 @@ QUnit.test("activity info layout when planned after tomorrow", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-success", 1, { text: "Due in 5 days:" });
+    await contains(".o-mail-Activity span.text-success", { text: "Due in 5 days:" });
 });
 
 QUnit.test("activity info layout when planned tomorrow", async () => {
@@ -138,7 +138,7 @@ QUnit.test("activity info layout when planned tomorrow", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-success", 1, { text: "Tomorrow:" });
+    await contains(".o-mail-Activity span.text-success", { text: "Tomorrow:" });
 });
 
 QUnit.test("activity info layout when planned today", async () => {
@@ -153,7 +153,7 @@ QUnit.test("activity info layout when planned today", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-warning", 1, { text: "Today:" });
+    await contains(".o-mail-Activity span.text-warning", { text: "Today:" });
 });
 
 QUnit.test("activity info layout when planned yesterday", async () => {
@@ -171,7 +171,7 @@ QUnit.test("activity info layout when planned yesterday", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-danger", 1, { text: "Yesterday:" });
+    await contains(".o-mail-Activity span.text-danger", { text: "Yesterday:" });
 });
 
 QUnit.test("activity info layout when planned before yesterday", async () => {
@@ -189,7 +189,7 @@ QUnit.test("activity info layout when planned before yesterday", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-danger", 1, { text: "5 days overdue:" });
+    await contains(".o-mail-Activity span.text-danger", { text: "5 days overdue:" });
 });
 
 /**
@@ -213,11 +213,11 @@ QUnit.skip("activity info layout change at midnight", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity span.text-success", 1, { text: "Tomorrow:" });
+    await contains(".o-mail-Activity span.text-success", { text: "Tomorrow:" });
 
     patchDate(2023, 11, 8, 0, 0, 1); // OXP is coming!
     await mock.advanceTime(2000);
-    await contains(".o-mail-Activity span.text-warning", 1, { text: "Today:" });
+    await contains(".o-mail-Activity span.text-warning", { text: "Today:" });
 });
 
 QUnit.test("activity with a summary layout", async () => {
@@ -230,7 +230,7 @@ QUnit.test("activity with a summary layout", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info span", 1, { text: "“test summary”" });
+    await contains(".o-mail-Activity-info span", { text: "“test summary”" });
 });
 
 QUnit.test("activity without summary layout", async () => {
@@ -243,7 +243,7 @@ QUnit.test("activity without summary layout", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity-info span", 1, { text: "Email" });
+    await contains(".o-mail-Activity-info span", { text: "Email" });
 });
 
 QUnit.test("activity details toggle", async () => {
@@ -264,14 +264,14 @@ QUnit.test("activity details toggle", async () => {
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity-details", 0);
+    await contains(".o-mail-Activity-details", { count: 0 });
     await contains(".o-mail-Activity-info i[aria-label='Info']");
 
     await click(".o-mail-Activity-info i[aria-label='Info']");
     await contains(".o-mail-Activity-details");
 
     await click(".o-mail-Activity-info i[aria-label='Info']");
-    await contains(".o-mail-Activity-details", 0);
+    await contains(".o-mail-Activity-details", { count: 0 });
 });
 
 QUnit.test("activity with mail template layout", async (assert) => {
@@ -290,7 +290,7 @@ QUnit.test("activity with mail template layout", async (assert) => {
     await contains(".o-mail-Activity");
     await contains(".o-mail-Activity-sidebar");
     await contains(".o-mail-Activity-mailTemplates");
-    await contains(".o-mail-ActivityMailTemplate-name", 1, { text: "Dummy mail template" });
+    await contains(".o-mail-ActivityMailTemplate-name", { text: "Dummy mail template" });
     await contains(".o-mail-ActivityMailTemplate-preview");
     await contains(".o-mail-ActivityMailTemplate-send");
 });
@@ -373,7 +373,7 @@ QUnit.test("activity click on mark as done", async () => {
     await click(".btn", { text: "Mark Done" });
     await contains(".o-mail-ActivityMarkAsDone");
     await click(".btn", { text: "Mark Done" });
-    await contains(".o-mail-ActivityMarkAsDone", 0);
+    await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
 QUnit.test(
@@ -447,7 +447,7 @@ QUnit.test("activity click on cancel", async (assert) => {
     });
     openFormView("res.partner", partnerId);
     await click(".o-mail-Activity span", { text: "Cancel" });
-    await contains(".o-mail-Activity", 0);
+    await contains(".o-mail-Activity", { count: 0 });
     assert.verifySteps(["unlink"]);
 });
 
@@ -469,7 +469,7 @@ QUnit.test("activity mark done popover close on ESCAPE", async () => {
     await contains(".o-mail-ActivityMarkAsDone");
 
     triggerHotkey("Escape");
-    await contains(".o-mail-ActivityMarkAsDone", 0);
+    await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
 QUnit.test("activity mark done popover click on discard", async () => {
@@ -487,7 +487,7 @@ QUnit.test("activity mark done popover click on discard", async () => {
     openFormView("res.partner", partnerId);
     await click(".btn", { text: "Mark Done" });
     await click(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
-    await contains(".o-mail-ActivityMarkAsDone", 0);
+    await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
 QUnit.test("Activity are sorted by deadline", async () => {
@@ -519,7 +519,7 @@ QUnit.test("Activity are sorted by deadline", async () => {
     });
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity:eq(0) span", 1, { text: "5 days overdue:" });
-    await contains(".o-mail-Activity:eq(1) span", 1, { text: "Today:" });
-    await contains(".o-mail-Activity:eq(2) span", 1, { text: "Due in 4 days:" });
+    await contains(".o-mail-Activity:eq(0) span", { text: "5 days overdue:" });
+    await contains(".o-mail-Activity:eq(1) span", { text: "Today:" });
+    await contains(".o-mail-Activity:eq(2) span", { text: "Due in 4 days:" });
 });

@@ -26,21 +26,22 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     }
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message", 20);
+    await contains(".o-mail-Message", { count: 20 });
     assert.ok(
         (await contains(".o-mail-Thread"))[0].scrollHeight > PRESENT_THRESHOLD,
         "should have enough scroll height to trigger jump to present"
     );
-    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread-jumpPresent", 1, {
+    await contains(".o-mail-Thread-jumpPresent", {
         text: "You're viewing older messagesJump to Present",
     });
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread-jumpPresent", 0, {
+    await contains(".o-mail-Thread-jumpPresent", {
+        count: 0,
         text: "You're viewing older messagesJump to Present",
     });
-    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
 QUnit.test("Jump to old reply should prompt jump to presence", async (assert) => {
@@ -80,23 +81,24 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-Message", 30);
+    await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Message", 46);
+    await contains(".o-mail-Message", { count: 46 });
     assert.isVisible((await contains(".o-mail-Message:contains(Hello world!):eq(0)"))[0]);
     assert.strictEqual(
         $(".o-mail-Message-body:contains(Hello world!):eq(0)").text(),
         "Hello world!",
         "should correctly execute HTML tags in parent message when using 'load around' feature"
     );
-    await contains(".o-mail-Thread-jumpPresent", 1, {
+    await contains(".o-mail-Thread-jumpPresent", {
         text: "You're viewing older messagesJump to Present",
     });
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread-jumpPresent", 0, {
+    await contains(".o-mail-Thread-jumpPresent", {
+        count: 0,
         text: "You're viewing older messagesJump to Present",
     });
 
-    await contains(".o-mail-Message", 30);
-    await contains(".o-mail-Thread", 1, { scroll: "bottom" });
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
 });

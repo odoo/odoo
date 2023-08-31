@@ -26,7 +26,7 @@ QUnit.test("activity mark done popover simplest layout", async () => {
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await contains(".o-mail-ActivityMarkAsDone button", 1, { text: "Discard" });
+    await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
 });
 
 QUnit.test("activity with force next mark done popover simplest layout", async () => {
@@ -49,8 +49,8 @@ QUnit.test("activity with force next mark done popover simplest layout", async (
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']", 0);
-    await contains(".o-mail-ActivityMarkAsDone button", 1, { text: "Discard" });
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']", { count: 0 });
+    await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
 });
 
 QUnit.test("activity mark done popover mark done without feedback", async (assert) => {

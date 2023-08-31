@@ -24,7 +24,7 @@ QUnit.test("No add attachments button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer");
-    await contains("button[title='Attach files']", 0);
+    await contains("button[title='Attach files']", { count: 0 });
 });
 
 QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
@@ -40,7 +40,7 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     await contains(".o-mail-Composer");
     dragenterFiles($(".o-mail-Composer-input")[0]);
     await nextTick();
-    await contains(".o-mail-Dropzone", 0);
+    await contains(".o-mail-Dropzone", { count: 0 });
 });
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
@@ -94,7 +94,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
             })
         )
     );
-    await contains(".o-discuss-Typing", 1, { text: "Visitor 20 is typing..." });
+    await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async () => {
@@ -115,7 +115,7 @@ QUnit.test('display canned response suggestions on typing ":"', async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Composer-suggestionList .o-open", 0);
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", ":");
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
@@ -138,11 +138,11 @@ QUnit.test("use a canned response", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", 0);
-    await contains(".o-mail-Composer-input", 1, { value: "" });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? " });
+    await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
 
 QUnit.test("use a canned response some text", async (assert) => {
@@ -168,7 +168,7 @@ QUnit.test("use a canned response some text", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", 1, { value: "bluhbluh Hello! How are you? " });
+    await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
 });
 
 QUnit.test("add an emoji after a canned response", async () => {
@@ -189,11 +189,11 @@ QUnit.test("add an emoji after a canned response", async () => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-input", 1, { value: "" });
+    await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? " });
+    await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "😊" });
-    await contains(".o-mail-Composer-input", 1, { value: "Hello! How are you? 😊" });
+    await contains(".o-mail-Composer-input", { value: "Hello! How are you? 😊" });
 });

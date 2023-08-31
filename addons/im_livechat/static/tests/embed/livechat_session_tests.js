@@ -35,10 +35,10 @@ QUnit.test("Unsuccessful message post shows session expired", async () => {
     });
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o_notification_content", 1, {
+    await contains(".o_notification_content", {
         text: "Session expired... Please refresh and try again.",
     });
-    await contains(".o-mail-ChatWindow", 0);
+    await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
 QUnit.test("Session is reset after failing to persist the channel", async () => {
@@ -55,7 +55,7 @@ QUnit.test("Session is reset after failing to persist the channel", async () => 
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o_notification_content", 1, {
+    await contains(".o_notification_content", {
         text: "No available collaborator, please try again later.",
     });
     await contains(".o-livechat-LivechatButton");
@@ -72,7 +72,7 @@ QUnit.test("Thread state is saved on the session", async (assert) => {
     await contains(".o-mail-ChatWindow-content");
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
     await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-content", 0);
+    await contains(".o-mail-ChatWindow-content", { count: 0 });
     assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatWindow-content");
@@ -87,7 +87,7 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     assert.notOk(env.services["im_livechat.livechat"].sessionCookie.seen_message_id);
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o-mail-Message", 2);
+    await contains(".o-mail-Message", { count: 2 });
     assert.strictEqual(
         env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
         env.services["im_livechat.livechat"].thread.newestMessage.id

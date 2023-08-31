@@ -53,13 +53,15 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     // add an other existing tag
     await selectDropdownItem(document.body, "partner_ids", "silver");
     await contains(".modal-content .o_form_view");
-    await contains(".modal-content .o_form_view .o_input#name_0", 1, { value: "silver" });
+    await contains(".modal-content .o_form_view .o_input#name_0", { value: "silver" });
     await contains(".modal-content .o_form_view .o_input#email_0");
 
     // set the email and save the modal (will rerender the form view)
     await insertText(".modal-content .o_form_view .o_input#email_0", "coucou@petite.perruche");
     await click(".modal-content .o_form_button_save");
-    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', 2);
+    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', {
+        count: 2,
+    });
     const firstTag = $('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0')[0];
     assert.strictEqual(
         firstTag.querySelector(".o_badge_text").innerText,
@@ -90,10 +92,10 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async ()
         views: [[false, "form"]],
     });
 
-    await contains('.o_field_widget[name="partner_ids"] .badge', 100);
+    await contains('.o_field_widget[name="partner_ids"] .badge', { count: 100 });
     await contains(".o_form_editable");
 
     // add a record to the relation
     await selectDropdownItem(document.body, "partner_ids", "Public user");
-    await contains('.o_field_widget[name="partner_ids"] .badge', 101);
+    await contains('.o_field_widget[name="partner_ids"] .badge', { count: 101 });
 });

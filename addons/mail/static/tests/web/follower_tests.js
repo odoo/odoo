@@ -34,7 +34,7 @@ QUnit.test("base rendering not editable", async () => {
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
     await contains(".o-mail-Follower-avatar");
-    await contains(".o-mail-Follower-action", 0);
+    await contains(".o-mail-Follower-action", { count: 0 });
 });
 
 QUnit.test("base rendering editable", async () => {
@@ -121,7 +121,7 @@ QUnit.test("click on edit follower", async (assert) => {
     await contains("button[title='Edit subscription']");
 
     await click("button[title='Edit subscription']");
-    await contains(".o-mail-Follower", 0);
+    await contains(".o-mail-Follower", { count: 0 });
     assert.verifySteps(["fetch_subtypes"]);
     await contains(".o-mail-FollowerSubtypeDialog");
 });
@@ -156,7 +156,7 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
     assert.verifySteps(["fetch_subtypes"]);
 
     await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
-    await contains(".o-mail-FollowerSubtypeDialog", 0);
+    await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 
 QUnit.test("remove a follower in a dirty form view", async (assert) => {
@@ -184,14 +184,14 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
     openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
-    await contains(".o_tag", 1, { text: "General" });
-    await contains(".o-mail-Followers-counter", 1, { text: "1" });
+    await contains(".o_tag", { text: "General" });
+    await contains(".o-mail-Followers-counter", { text: "1" });
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter", 1, { text: "0" });
-    await contains(".o_field_char[name=name] input", 1, { value: "some value" });
-    await contains(".o_tag", 1, { text: "General" });
+    await contains(".o-mail-Followers-counter", { text: "0" });
+    await contains(".o_field_char[name=name] input", { value: "some value" });
+    await contains(".o_tag", { text: "General" });
 });
 
 QUnit.test("removing a follower should reload form view", async function (assert) {
@@ -215,6 +215,6 @@ QUnit.test("removing a follower should reload form view", async function (assert
     assert.verifySteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter", 1, { text: "0" });
+    await contains(".o-mail-Followers-counter", { text: "0" });
     assert.verifySteps([`read ${threadId}`]);
 });

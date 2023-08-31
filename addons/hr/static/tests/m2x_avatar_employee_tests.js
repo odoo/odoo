@@ -159,7 +159,7 @@ QUnit.test(
             res_id: avatarId,
             views: [[false, "form"]],
         });
-        await contains(".o_field_widget[name=employee_id] input", 1, { value: "Mario" });
+        await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
         await dom.click(document.querySelector(".o_m2o_avatar > img"));
         await contains(
             ".o_notification.border-info:contains(You can only chat with employees that have a dedicated user.)"

@@ -23,9 +23,9 @@ QUnit.test("base rendering", async () => {
         views: [[false, "form"]],
     });
     await contains(".o-mail-Chatter-topbar");
-    await contains("button", 1, { text: "Send message" });
-    await contains("button", 1, { text: "Log note" });
-    await contains("button", 1, { text: "Activities" });
+    await contains("button", { text: "Send message" });
+    await contains("button", { text: "Log note" });
+    await contains("button", { text: "Activities" });
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-Followers");
 });
@@ -61,7 +61,7 @@ QUnit.test("rendering with multiple partner followers", async (assert) => {
 
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
-    await contains(".o-mail-Follower", 2);
+    await contains(".o-mail-Follower", { count: 2 });
     assert.strictEqual($(".o-mail-Follower:eq(0)").text().trim(), "Jean Michang");
     assert.strictEqual($(".o-mail-Follower:eq(1)").text().trim(), "Eden Hazard");
 });
@@ -75,9 +75,9 @@ QUnit.test("log note toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", 1, { text: "Log note" });
+    await contains("button", { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
-    await contains(".o-mail-Composer", 0);
+    await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Log note" });
     await contains("button:contains(Log note).active");
@@ -85,7 +85,7 @@ QUnit.test("log note toggling", async () => {
 
     await click("button", { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
-    await contains(".o-mail-Composer", 0);
+    await contains(".o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("send message toggling", async () => {
@@ -97,9 +97,9 @@ QUnit.test("send message toggling", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", 1, { text: "Send message" });
+    await contains("button", { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
-    await contains(".o-mail-Composer", 0);
+    await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Send message" });
     await contains("button:contains(Send message).active");
@@ -107,7 +107,7 @@ QUnit.test("send message toggling", async () => {
 
     await click("button", { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
-    await contains(".o-mail-Composer", 0);
+    await contains(".o-mail-Composer", { count: 0 });
 });
 
 QUnit.test("log note/send message switching", async () => {
@@ -119,11 +119,11 @@ QUnit.test("log note/send message switching", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button", 1, { text: "Send message" });
+    await contains("button", { text: "Send message" });
     await contains("button:contains(Send message):not(.active)");
-    await contains("button", 1, { text: "Log note" });
+    await contains("button", { text: "Log note" });
     await contains("button:contains(Log note):not(.active)");
-    await contains(".o-mail-Composer", 0);
+    await contains(".o-mail-Composer", { count: 0 });
 
     await click("button", { text: "Send message" });
     await contains("button:contains(Send message).active");
@@ -146,7 +146,7 @@ QUnit.test("attachment counter without attachments", async () => {
         views: [[false, "form"]],
     });
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']", 0, { text: "0" });
+    await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
 QUnit.test("attachment counter with attachments", async () => {
@@ -172,7 +172,7 @@ QUnit.test("attachment counter with attachments", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button[aria-label='Attach files']", 1, { text: "2" });
+    await contains("button[aria-label='Attach files']", { text: "2" });
 });
 
 QUnit.test("attachment counter while loading attachments", async () => {
@@ -194,7 +194,7 @@ QUnit.test("attachment counter while loading attachments", async () => {
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
-    await contains("button[aria-label='Attach files']", 0, { text: "0" });
+    await contains("button[aria-label='Attach files']", { count: 0, text: "0" });
 });
 
 QUnit.test("attachment counter transition when attachments become loaded", async () => {
@@ -218,7 +218,7 @@ QUnit.test("attachment counter transition when attachments become loaded", async
     await advanceTime(DELAY_FOR_SPINNER);
     await contains("button[aria-label='Attach files'] .fa-spin");
     deferred.resolve();
-    await contains("button[aria-label='Attach files'] .fa-spin", 0);
+    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });
 
 QUnit.test(
@@ -233,7 +233,7 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await contains(".o-mail-Chatter-fileUploader");
-        await contains(".o-mail-AttachmentBox", 0);
+        await contains(".o-mail-AttachmentBox", { count: 0 });
     }
 );
 
@@ -257,8 +257,8 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await contains("button[aria-label='Attach files']");
-        await contains(".o-mail-AttachmentBox", 0);
-        await contains(".o-mail-Chatter-fileUploader", 0);
+        await contains(".o-mail-AttachmentBox", { count: 0 });
+        await contains(".o-mail-Chatter-fileUploader", { count: 0 });
         await click("button[aria-label='Attach files']");
         await contains(".o-mail-AttachmentBox");
         await contains(".o-mail-Chatter-fileUploader");
@@ -271,16 +271,16 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
-    await contains("button", 1, { text: "Send message" });
-    await contains("button", 1, { text: "Log note" });
+    await contains("button", { text: "Send message" });
+    await contains("button", { text: "Log note" });
     await contains("button[aria-label='Attach files']");
 
     await click("button", { text: "Log note" });
     await contains("button:contains(Log note).active");
-    await contains("button:contains(Send message).active", 0);
+    await contains("button:contains(Send message).active", { count: 0 });
 
     $(`button[aria-label='Attach files']`)[0].click();
     await nextAnimationFrame();
     await contains("button:contains(Log note).active");
-    await contains("button:contains(Send message).active", 0);
+    await contains("button:contains(Send message).active", { count: 0 });
 });

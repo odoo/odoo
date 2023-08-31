@@ -31,7 +31,7 @@ QUnit.test("simplest layout", async (assert) => {
     await contains(".o-mail-AttachmentCard-image");
     assert.hasClass($(".o-mail-AttachmentCard-image"), "o_image"); // required for mimetype.scss style
     assert.hasAttrValue($(".o-mail-AttachmentCard-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
-    await contains(".o-mail-AttachmentCard-aside button", 2);
+    await contains(".o-mail-AttachmentCard-aside button", { count: 2 });
     await contains(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");
 });
@@ -55,8 +55,8 @@ QUnit.test("layout with card details and filename and extension", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-AttachmentCard div", 1, { text: "test.txt" });
-    await contains(".o-mail-AttachmentCard small", 1, { text: "txt" });
+    await contains(".o-mail-AttachmentCard div", { text: "test.txt" });
+    await contains(".o-mail-AttachmentCard small", { text: "txt" });
 });
 
 QUnit.test(
@@ -90,7 +90,7 @@ QUnit.test(
         click(".modal-footer .btn-primary");
         click(".modal-footer .btn-primary");
         click(".modal-footer .btn-primary");
-        await contains(".o-mail-AttachmentCard-unlink", 0);
+        await contains(".o-mail-AttachmentCard-unlink", { count: 0 });
         assert.verifySteps(["attachment_unlink"], "The unlink method must be called once");
     }
 );
@@ -144,7 +144,7 @@ QUnit.test("close attachment viewer", async () => {
     await contains(".o-FileViewer");
 
     await click(".o-FileViewer div[aria-label='Close']");
-    await contains(".o-FileViewer", 0);
+    await contains(".o-FileViewer", { count: 0 });
 });
 
 QUnit.test(
@@ -309,13 +309,13 @@ QUnit.test(
         const { openDiscuss } = await start();
         openDiscuss(channelId);
         await contains(".o-mail-AttachmentImage[title='test.png']");
-        await contains(".o-mail-AttachmentCard div", 1, { text: "test.odt" });
+        await contains(".o-mail-AttachmentCard div", { text: "test.odt" });
         assert.hasClass($(".o-mail-AttachmentImage[title='test.png'] img"), "o-viewable");
         assert.doesNotHaveClass($(".o-mail-AttachmentCard:contains(test.odt)"), "o-viewable");
 
         click(".o-mail-AttachmentCard:contains(test.odt)").catch(() => {});
         await nextTick();
-        await contains(".o-FileViewer", 0);
+        await contains(".o-FileViewer", { count: 0 });
 
         await click(".o-mail-AttachmentImage[title='test.png']");
         await contains(".o-FileViewer");

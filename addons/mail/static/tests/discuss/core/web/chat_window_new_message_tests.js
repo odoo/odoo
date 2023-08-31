@@ -26,13 +26,13 @@ QUnit.test("basic rendering", async () => {
     await click("button", { text: "New Message" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-name", 1, { text: "New message" });
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", 2);
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-name", { text: "New message" });
+    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command", { count: 2 });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Fold']");
     await contains(
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']"
     );
-    await contains("span", 1, { text: "To :" });
+    await contains("span", { text: "To :" });
     await contains(".o-discuss-ChannelSelector");
 });
 
@@ -48,7 +48,7 @@ QUnit.test("close", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow", 0);
+    await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
 QUnit.test("fold", async () => {
@@ -59,8 +59,8 @@ QUnit.test("fold", async () => {
     await contains(".o-discuss-ChannelSelector");
 
     await click(".o-mail-ChatWindow-command[title='Fold']");
-    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", 0);
-    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector", 0);
+    await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content", { count: 0 });
+    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector", { count: 0 });
 
     await click(".o-mail-ChatWindow-command[title='Open']");
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-content");
@@ -106,8 +106,8 @@ QUnit.test(
         // open "new message" chat window
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button", { text: "New Message" });
-        await contains(".o-mail-ChatWindow-name", 1, { text: "New message" });
-        await contains(".o-mail-ChatWindow", 2);
+        await contains(".o-mail-ChatWindow-name", { text: "New message" });
+        await contains(".o-mail-ChatWindow", { count: 2 });
         await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector");
         assert.ok(
             Array.from(document.querySelectorAll(".o-mail-ChatWindow"))
@@ -117,10 +117,8 @@ QUnit.test(
 
         // open channel-2
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem .o-mail-NotificationItem-name", {
-            text: "channel-2",
-        });
-        await contains(".o-mail-ChatWindow", 3);
+        await click(".o-mail-NotificationItem-name", { text: "channel-2" });
+        await contains(".o-mail-ChatWindow", { count: 3 });
         assert.ok(
             Array.from(document.querySelectorAll(".o-mail-ChatWindow"))[1].textContent.includes(
                 "New message"
@@ -133,7 +131,7 @@ QUnit.test(
             await imSearchDef;
         });
         await click(".o-discuss-ChannelSelector-suggestion a", { text: "Partner 131" });
-        await contains(".o-mail-ChatWindow-name", 0, { text: "New message" });
+        await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
 
         assert.strictEqual($(".o-mail-ChatWindow-name:eq(1)").text(), "Partner 131");
     }
@@ -166,7 +164,7 @@ QUnit.test(
         await click("button", { text: "New Message" });
         await insertText(".o-discuss-ChannelSelector", "131");
         await click(".o-discuss-ChannelSelector-suggestion a");
-        await contains(".o-mail-ChatWindow-name", 0, { text: "New message" });
+        await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
 
         await contains(".o-mail-ChatWindow");
     }

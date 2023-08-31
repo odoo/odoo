@@ -32,7 +32,7 @@ QUnit.test("openChat: open new chat for user", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { env } = await start();
     await contains(".o-mail-ChatWindowContainer");
-    await contains(".o-mail-ChatWindow", 0);
+    await contains(".o-mail-ChatWindow", { count: 0 });
     env.services["mail.thread"].openChat({ partnerId });
     await contains(".o-mail-ChatWindow");
 });

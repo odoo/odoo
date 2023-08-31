@@ -31,7 +31,7 @@ QUnit.test("persisted session history", async () => {
         message_type: "comment",
     });
     start();
-    await contains(".o-mail-Message-content", 1, { text: "Old message in history" });
+    await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
 QUnit.test("previous operator prioritized", async () => {
@@ -43,5 +43,5 @@ QUnit.test("previous operator prioritized", async () => {
     setCookie("im_livechat_previous_operator_pid", JSON.stringify(previousOperatorId));
     start();
     click(".o-livechat-LivechatButton");
-    await contains(".o-mail-Message-author", 1, { text: "John Doe" });
+    await contains(".o-mail-Message-author", { text: "John Doe" });
 });
