@@ -30,7 +30,9 @@
                                     <div class="row mt16">
                                         <label for="chart_template" string="Package" class="col-2 o_light_label"/>
                                         <field name="chart_template" attrs="{'readonly': [('has_accounting_entries','!=', False)], 'required': [('chart_template', '!=', False)]}"/>
-                                        <button name="reload_template" type="object" string="Reload" class="btn-secondary" icon="fa-refresh" attrs="{'invisible': [('has_accounting_entries','=', False)]}"/>
+                                        <button name="reload_template" type="object" string="Reload" class="btn-secondary" icon="fa-refresh"
+                                                title="Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. This action is irreversible."
+                                                attrs="{'invisible': ['|', ('has_accounting_entries','=', False), ('chart_template', '=', False)]}"/>
                                     </div>
                                 </div>
                             </setting>
