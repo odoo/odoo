@@ -24,55 +24,6 @@ import {
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
-class LegacyDialogContainer extends Component {
-    static template = xml`<div class="o_dialog_container"/>`;
-    static props = [];
-}
-
-/**
- * Returns a service that maps legacy dialogs
- * to new environment services behavior.
- *
- * @param {object} legacyEnv
- * @returns a wowl deployable service
- */
-export function makeLegacyDialogMappingService(legacyEnv) {
-    return {
-        dependencies: ["ui", "hotkey", "overlay"],
-        start(_, { ui, hotkey, overlay }) {
-            overlay.add(LegacyDialogContainer, {});
-
-            function getModalEl(dialog) {
-                return dialog.modalRef ? dialog.modalRef.el : dialog.$modal[0];
-            }
-
-            function getCloseCallback(dialog) {
-                return dialog.modalRef ? () => dialog._close() : () => dialog.$modal.modal("hide");
-            }
-
-            const dialogHotkeyRemoveMap = new Map();
-
-            function onOpenDialog(dialog) {
-                ui.activateElement(getModalEl(dialog));
-                const remove = hotkey.add("escape", getCloseCallback(dialog));
-                dialogHotkeyRemoveMap.set(dialog, remove);
-            }
-
-            function onCloseDialog(dialog) {
-                ui.deactivateElement(getModalEl(dialog));
-                if (dialogHotkeyRemoveMap.has(dialog)) {
-                    const removeHotkey = dialogHotkeyRemoveMap.get(dialog);
-                    removeHotkey();
-                    dialogHotkeyRemoveMap.delete(dialog);
-                }
-            }
-
-            legacyEnv.bus.on("legacy_dialog_opened", null, onOpenDialog);
-            legacyEnv.bus.on("legacy_dialog_destroyed", null, onCloseDialog);
-        },
-    };
-}
-
 /**
  * Deploys a service allowing legacy to add/remove commands.
  *
