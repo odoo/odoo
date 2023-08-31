@@ -71,6 +71,10 @@ export class DynamicList extends DataPoint {
         return this.model.mutex.exec(() => this._deleteRecords(records));
     }
 
+    duplicateRecords(records = []) {
+        return this.model.mutex.exec(() => this._duplicateRecords(records));
+    }
+
     async enterEditMode(record) {
         if (this.editedRecord === record) {
             return true;
@@ -179,6 +183,23 @@ export class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
+
+    async _duplicateRecords(records) {
+        let resIds;
+        if (records.length) {
+            resIds = records.map((r) => r.resId);
+        } else {
+            resIds = await this.getResIds(true);
+        }
+
+        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds]);
+        if (resIds.length > duplicated.length) {
+            this.model.notification.add(_t("Some records could not be duplicated"), {
+                title: _t("Warning"),
+            });
+        }
+        return this.model.load();
+    }
 
     async _deleteRecords(records) {
         let resIds;

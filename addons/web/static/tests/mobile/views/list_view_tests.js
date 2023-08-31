@@ -87,8 +87,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await toggleActionMenu(fixture);
         assert.deepEqual(
             getMenuItemTexts(fixture.querySelector(".o_cp_action_menus")),
-            ["Delete"],
-            "action menu should contain the Delete action"
+            ["Duplicate", "Delete"],
+            "action menu should contain the Duplicate and Delete actions"
         );
 
         // unselect all
@@ -134,8 +134,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await toggleActionMenu(fixture);
         assert.deepEqual(
             getMenuItemTexts(fixture.querySelector(".o_cp_action_menus")),
-            ["Delete"],
-            "action menu should contain the Delete action"
+            ["Duplicate", "Delete"],
+            "action menu should contain the Duplicate and Delete actions"
         );
 
         // select all records of first page

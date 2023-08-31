@@ -589,6 +589,8 @@ export class MockServer {
                 return this.mockWrite(args.model, [args.args[0], { active: true }]);
             case "copy":
                 return this.mockCopy(args.model, args.args);
+            case "copy_multi":
+                return this.mockCopyMulti(args.model, args.args);
             case "create":
                 return this.mockCreate(args.model, args.args[0], args.kwargs);
             case "fields_get":
@@ -655,6 +657,21 @@ export class MockServer {
         duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
         model.records.push(duplicatedRecord);
         return newID;
+    }
+
+    /**
+     * Simulate a 'copy_multi' operation, so we simply try to duplicate records in
+     * memory
+     *
+     * @private
+     * @param {string} modelName
+     * @param {[number[], Record<string, any>]} params the ID of a valid record
+     * @returns {number} the ID of the duplicated record
+     */
+    mockCopyMulti(modelName, [ids, defaultData]) {
+        const newIDs = [];
+        ids.forEach((id) => newIDs.push(this.mockCopy(modelName, [id, defaultData])));
+        return newIDs;
     }
 
     mockCreate(modelName, valsList, kwargs = {}) {

@@ -707,7 +707,7 @@ QUnit.module("Views", (hooks) => {
                 getNodesTextContent(
                     target.querySelectorAll(".o_control_panel .o_cp_action_menus .o_menu_item")
                 ),
-                ["Delete"],
+                ["Duplicate", "Delete"],
                 "action menu should not contain the Export button"
             );
         }
@@ -740,7 +740,7 @@ QUnit.module("Views", (hooks) => {
             getNodesTextContent(
                 target.querySelectorAll(".o_control_panel .o_cp_action_menus .o_menu_item")
             ),
-            ["Export", "Delete"],
+            ["Export", "Duplicate", "Delete"],
             "action menu should have Export button"
         );
     });
@@ -2303,7 +2303,7 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_cp_action_menus .o_menu_item")].map(
                 (el) => el.innerText
             ),
-            ["Delete"]
+            ["Duplicate", "Delete"]
         );
     });
 
@@ -5928,6 +5928,48 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["notify"]);
     });
 
+    QUnit.test("duplicate one record", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            actionMenus: {},
+        });
+
+        // Initial state: there should be 4 records
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+
+        // Duplicate one record
+        await click(target.querySelector(".o_data_row input"));
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Duplicate");
+
+        // Final state: there should be 5 records
+        assert.containsN(target, "tbody tr", 5, "should have 5 rows");
+    });
+
+    QUnit.test("duplicate all records", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree editable="top"><field name="foo"/></tree>`,
+            actionMenus: {},
+        });
+
+        // Initial state: there should be 4 records
+        assert.containsN(target, "tbody tr", 4, "should have 4 rows");
+
+        // Duplicate all records
+        await click(target.querySelector(".o_list_record_selector input"));
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Duplicate");
+
+        // Final state: there should be 8 records
+        assert.containsN(target, "tbody tr", 8, "should have 8 rows");
+    });
+
     QUnit.test("archiving one record", async function (assert) {
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
@@ -6239,7 +6281,7 @@ QUnit.module("Views", (hooks) => {
         await toggleActionMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
-            ["Custom Default Available", "Export", "Custom Available", "Delete"]
+            ["Custom Default Available", "Export", "Duplicate", "Custom Available", "Delete"]
         );
 
         await toggleMenuItem(target, "Custom Available");
@@ -7958,6 +8000,63 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "empty editable list with sample data: create and duplicate record",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                    <tree editable="top" sample="1">
+                        <field name="foo"/>
+                        <field name="bar"/>
+                        <field name="int_field"/>
+                    </tree>`,
+                domain: [["int_field", "=", 0]],
+                noContentHelp: "click to add a partner",
+                actionMenus: {},
+            });
+
+            // Initial state: sample data and nocontent helper displayed
+            assert.hasClass(target.querySelector(".o_list_view .o_content"), "o_view_sample_data");
+            assert.containsOnce(target, ".o_list_table");
+            assert.containsN(target, ".o_data_row", 10);
+            assert.containsOnce(target, ".o_nocontent_help");
+
+            // Start creating a record
+            await click($(".o_list_button_add:visible").get(0));
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
+            assert.containsOnce(target, ".o_data_row");
+
+            // Save temporary record
+            await clickSave(target);
+            assert.doesNotHaveClass(
+                target.querySelector(".o_list_view .o_content"),
+                "o_view_sample_data"
+            );
+            assert.containsOnce(target, ".o_list_table");
+            assert.containsOnce(target, ".o_data_row");
+            assert.containsNone(target, ".o_nocontent_help");
+
+            // Duplicate newly created record
+            await click(target.querySelector(".o_data_row input"));
+            await toggleActionMenu(target);
+            await toggleMenuItem(target, "Duplicate");
+
+            // Final state: there should be 2 records
+            assert.containsN(
+                target.querySelector(".o_list_view .o_content"),
+                ".o_data_row",
+                2,
+                "there should be 2 records"
+            );
+        }
+    );
+
     QUnit.test("groupby node with a button", async function (assert) {
         assert.expect(17);
 
@@ -9511,7 +9610,7 @@ QUnit.module("Views", (hooks) => {
         await toggleActionMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_cp_action_menus .dropdown-item")),
-            ["Export", "Delete", "Action event"]
+            ["Export", "Duplicate", "Delete", "Action event"]
         );
     });
 
