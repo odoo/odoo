@@ -40,6 +40,10 @@ class LivechatController(http.Controller):
     def fontawesome(self, **kwargs):
         return http.Stream.from_path('web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2').get_response()
 
+    @http.route('/im_livechat/odoo_ui_icons', type='http', auth='none', cors="*")
+    def odoo_ui_icons(self, **kwargs):
+        return http.Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
+
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):
         bundle = 'web.assets_emoji'

@@ -95,6 +95,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/tours/**/*',
         ],
         'im_livechat.assets_core': [
+            'web/static/lib/odoo_ui_icons/style.css',
             'mail/static/src/core/common/**/*',
             'mail/static/src/discuss/core/common/*',
             'mail/static/src/utils/common/**/*',
