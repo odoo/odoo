@@ -91,6 +91,13 @@ class TestItEdiDDT(TestItEdi):
             }
         ])
 
+    @classmethod
+    def setup_company_data(cls, company_name, **kwargs):
+        return super().setup_company_data(company_name, **{
+            **kwargs,
+            'country_id': cls.env.ref('base.it').id,
+        })
+
     def test_deferred_invoice(self):
         """ Create a sale order with multiple DDTs, and create an invoice with a later date.
             The export has to have the TipoDocumento TD24 for Deferred Invoice.
