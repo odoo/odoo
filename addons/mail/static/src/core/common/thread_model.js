@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
+import { AND, Record } from "@mail/core/common/record";
 import { ScrollPosition } from "@mail/core/common/scroll_position";
-import { createLocalId, onChange } from "@mail/utils/common/misc";
+import { onChange } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -22,8 +22,20 @@ import { Deferred } from "@web/core/utils/concurrency";
  */
 
 export class Thread extends Record {
+    static id = AND("model", "id");
     /** @type {Object.<string, Thread>} */
     static records = {};
+    /**
+     * @param {Thread.localId} localId
+     * @returns {string}
+     */
+    static localIdToActiveId(localId) {
+        if (!localId) {
+            return undefined;
+        }
+        // Transform "Thread,<model> AND <id>" to "<model>_<id>""
+        return localId.split(",").slice(1).join("_").replace(" AND ", "_");
+    }
     /**
      * @param {Object} data
      * @returns {Thread}
@@ -35,13 +47,12 @@ export class Thread extends Record {
         if (!("model" in data)) {
             throw new Error("Cannot insert thread: model is missing in data");
         }
-        const localId = createLocalId(data.model, data.id);
-        if (localId in this.records) {
-            const thread = this.records[localId];
+        let thread = this.get(data);
+        if (thread) {
             this.env.services["mail.thread"].update(thread, data);
             return thread;
         }
-        let thread = new Thread();
+        thread = this.new(data);
         Object.assign(thread, {
             id: data.id,
             model: data.model,
@@ -192,7 +203,7 @@ export class Thread extends Record {
     }
 
     get activeRtcSession() {
-        return this._store.RtcSession.records[this.activeRtcSessionId];
+        return this._store.RtcSession.get(this.activeRtcSessionId);
     }
 
     set activeRtcSession(session) {
@@ -263,7 +274,7 @@ export class Thread extends Record {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
                 this.customName ||
-                this._store.Persona.records[createLocalId("partner", this.chatPartnerId)]
+                this._store.Persona.get({ type: "partner", id: this.chatPartnerId })
                     .nameOrDisplayName
             );
         }
@@ -327,10 +338,6 @@ export class Thread extends Record {
             return editableMessagesBySelf.at(-1);
         }
         return null;
-    }
-
-    get localId() {
-        return createLocalId(this.model, this.id);
     }
 
     get needactionCounter() {
@@ -460,7 +467,7 @@ export class Thread extends Record {
     }
 
     get rtcInvitingSession() {
-        return this._store.RtcSession.records[this.invitingRtcSessionId];
+        return this._store.RtcSession.get(this.invitingRtcSessionId);
     }
 
     get hasNeedactionMessages() {
@@ -493,7 +500,7 @@ export class Thread extends Record {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.Message.records[Math.max(...previousMessages.map((m) => m.id))];
+        return this._store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
     }
 }
 

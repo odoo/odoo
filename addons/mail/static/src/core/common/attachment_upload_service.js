@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -83,8 +82,7 @@ export class AttachmentUploadService {
                 }
                 const threadId = parseInt(upload.data.get("thread_id"));
                 const threadModel = upload.data.get("thread_model");
-                const originThread =
-                    this.store.Thread.records[createLocalId(threadModel, threadId)];
+                const originThread = this.store.Thread.get({ model: threadModel, id: threadId });
                 const attachment = this.store.Attachment.insert({
                     ...response,
                     extension: upload.title.split(".").pop(),
@@ -99,7 +97,7 @@ export class AttachmentUploadService {
                     }
                 }
                 const def = this.deferredByAttachmentId.get(tmpId);
-                this.unlink(this.store.Attachment.records[tmpId]);
+                this.unlink(this.store.Attachment.get(tmpId));
                 if (def) {
                     def.resolve(attachment);
                     this.deferredByAttachmentId.delete(tmpId);
