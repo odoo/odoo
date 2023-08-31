@@ -202,7 +202,7 @@ export class Thread extends Component {
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(
-                this.store.Message.records[Number(oeId)],
+                this.store.Message.get(Number(oeId)),
                 this.props.thread
             );
         }

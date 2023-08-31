@@ -554,8 +554,9 @@ export class Composer extends Component {
      * @param {postData} postData Message meta data info
      */
     async _sendMessage(value, postData) {
+        const thread = this.props.composer.thread;
         await this.threadService.post(this.thread, value, postData);
-        if (this.props.composer.thread.type === "mailbox") {
+        if (thread.type === "mailbox") {
             this.notifySendFromMailbox();
         }
         this.suggestion?.clearRawMentions();

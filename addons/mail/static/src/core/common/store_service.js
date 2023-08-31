@@ -7,7 +7,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { modelRegistry } from "./record";
+import { Record, modelRegistry } from "./record";
 
 export class Store {
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
@@ -56,6 +56,17 @@ export class Store {
     setup(env) {
         this.env = env;
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
+    }
+
+    get(localId) {
+        if (typeof localId !== "string") {
+            return undefined;
+        }
+        const modelName = Record.modelFromLocalId(localId);
+        if (Array.isArray(this[modelName].records)) {
+            return this[modelName].records.find((r) => r.localId === localId);
+        }
+        return this[modelName].get(localId);
     }
 
     updateBusSubscription() {
@@ -187,6 +198,7 @@ export const storeService = {
             // work-around: make an object whose prototype is the class, so that static props become
             // instance props.
             const entry = Object.assign(Object.create(Model), { env, store: res });
+            entry.Class = Model;
             entry.records = JSON.parse(JSON.stringify(Model.records));
             res[name] = entry;
         }

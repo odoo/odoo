@@ -7,6 +7,7 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Composer extends Record {
+    static id = Record.OR("threadLocalId", "messageLocalId");
     /**
      * @param {Object} data
      * @returns {Composer}
@@ -18,7 +19,7 @@ export class Composer extends Record {
         }
         let composer = (thread ?? message)?.composer;
         if (!composer) {
-            composer = new Composer();
+            composer = this.new(data);
             const { message, thread } = data;
             if (thread) {
                 composer.thread = thread;
@@ -51,8 +52,8 @@ export class Composer extends Record {
 
     /** @type {import("@mail/core/common/attachment_model").Attachment[]} */
     attachments = [];
-    /** @type {import("@mail/core/common/message_model").Message} */
-    message;
+    /** @type {import("@mail/core/common/message_model").Message.localId} */
+    messageLocalId;
     /** @type {RawMentions} */
     rawMentions = {
         partnerIds: new Set(),
@@ -62,8 +63,8 @@ export class Composer extends Record {
     cannedResponseIds = new Set();
     /** @type {string} */
     textInputContent;
-    /** @type {import("@mail/core/common/thread_model").Thread */
-    thread;
+    /** @type {import("@mail/core/common/thread_model").Thread.localId} */
+    threadLocalId;
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,
@@ -75,6 +76,26 @@ export class Composer extends Record {
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     isFocused = false;
+
+    /** @type {import("@mail/core/common/message_model").Message} */
+    get message() {
+        return this._store.Message.records[this.messageLocalId];
+    }
+
+    /** @param {import("@mail/core/common/message_model").Message} */
+    set message(newMessage) {
+        this.messageLocalId = newMessage?.localId;
+    }
+
+    /** @type {import("@mail/core/common/thread_model").Thread} */
+    get thread() {
+        return this._store.Thread.records[this.threadLocalId];
+    }
+
+    /** @param {import("@mail/core/common/thread_model").Thread} */
+    set thread(newThread) {
+        this.threadLocalId = newThread?.localId;
+    }
 }
 
 Composer.register();

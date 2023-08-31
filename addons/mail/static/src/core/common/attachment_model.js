@@ -7,6 +7,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { url } from "@web/core/utils/urls";
 
 export class Attachment extends Record {
+    static id = "id";
     /** @type {Object.<number, Attachment>} */
     static records = {};
 
@@ -18,10 +19,11 @@ export class Attachment extends Record {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        let attachment = this.records[data.id];
+        let attachment = this.get(data);
         if (!attachment) {
-            this.records[data.id] = new Attachment();
-            attachment = this.records[data.id];
+            attachment = this.new(data);
+            this.records[attachment.localId] = attachment;
+            attachment = this.records[attachment.localId];
             Object.assign(attachment, { _store: this.store, id: data.id });
         }
         this.env.services["mail.attachment"].update(attachment, data);

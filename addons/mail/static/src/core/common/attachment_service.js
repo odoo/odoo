@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { registry } from "@web/core/registry";
 
@@ -46,7 +46,7 @@ export class AttachmentService {
                 model: threadData.model,
                 id: threadData.id,
             });
-            attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
+            attachment.originThreadLocalId = this.store.Thread.localId(threadData);
             const thread = attachment.originThread;
             if (attachment.notIn(thread.attachments)) {
                 thread.attachments.push(attachment);
@@ -64,7 +64,7 @@ export class AttachmentService {
         if (attachment.tmpUrl) {
             URL.revokeObjectURL(attachment.tmpUrl);
         }
-        delete this.store.Attachment.records[attachment.id];
+        delete this.store.Attachment.records[attachment.localId];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
                 att.eq(attachment)

@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
 import { Command } from "@mail/../tests/helpers/command";
 import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -174,8 +173,10 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     openDiscuss(channelId);
-    const thread =
-        env.services["mail.store"].Thread.records[createLocalId("discuss.channel", channelId)];
+    const thread = env.services["mail.store"].Thread.get({
+        model: "discuss.channel",
+        id: channelId,
+    });
     assert.strictEqual(thread.memberCount, 2);
     await pyEnv.withUser(userId, () =>
         env.services.orm.call("discuss.channel", "action_unfollow", [channelId])

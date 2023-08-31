@@ -2,13 +2,13 @@
 
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Thread } from "@mail/core/common/thread_model";
-import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread, {
     insert(data) {
-        const isUnknown = !(createLocalId(data.model, data.id) in this.records);
+        const isUnknown = !this.get(data);
         const thread = super.insert(data);
         if (thread.type === "livechat") {
             if (data?.channel) {
