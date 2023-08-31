@@ -879,7 +879,9 @@ class Partner(models.Model):
 
           * Raoul <raoul@grosbedon.fr>
           * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from
+            df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
+            in 'email_split_tuples';
 
         Otherwise: default, everything is set as the name. Starting from 13.3
         returned email will be normalized to have a coherent encoding.
@@ -888,12 +890,6 @@ class Partner(models.Model):
         split_results = tools.email_split_tuples(text)
         if split_results:
             name, email = split_results[0]
-
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
 
         if email:
             email = tools.email_normalize(email)
