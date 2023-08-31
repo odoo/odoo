@@ -372,7 +372,7 @@ QUnit.test("Other messages are grayed out when replying to another one", async (
     });
 });
 
-QUnit.test("Parent message body is displayed on replies", async (assert) => {
+QUnit.test("Parent message body is displayed on replies", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -388,13 +388,12 @@ QUnit.test("Parent message body is displayed on replies", async (assert) => {
     await click(".o-mail-Message [title='Reply']");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-MessageInReply-message");
-    assert.ok($(".o-mail-MessageInReply-message")[0].innerText, "Hello world");
+    await contains(".o-mail-MessageInReply-message", { text: "Hello world" });
 });
 
 QUnit.test(
     "Updating the parent message of a reply also updates the visual of the reply",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
@@ -421,7 +420,6 @@ QUnit.test(
         insertText(input, "Goodbye World", { replace: true });
         triggerHotkey("Enter", false);
         await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
-        assert.strictEqual($(".o-mail-MessageInReply-message")[0].innerText, "Goodbye World");
     }
 );
 
@@ -765,7 +763,7 @@ QUnit.test("toggle_star message", async (assert) => {
 
 QUnit.test(
     "Name of message author is only displayed in chat window for partners others than the current user",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
         const partnerId = pyEnv["res.partner"].create({ name: "Not the current user" });
@@ -785,8 +783,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        await contains(".o-mail-Message-author");
-        assert.equal($(".o-mail-Message-author").text(), "Not the current user");
+        await contains(".o-mail-Message-author", { text: "Not the current user" });
     }
 );
 
@@ -1047,7 +1044,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("allow attachment delete on authored message", async (assert) => {
+QUnit.test("allow attachment delete on authored message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
@@ -1071,13 +1068,8 @@ QUnit.test("allow attachment delete on authored message", async (assert) => {
     });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage");
-    await contains(".o-mail-AttachmentImage div[title='Remove']");
-
     await click(".o-mail-AttachmentImage div[title='Remove']");
-    await contains(".modal-dialog");
-    assert.strictEqual($(".modal-body").text(), 'Do you really want to delete "BLAH"?');
-
+    await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
 });

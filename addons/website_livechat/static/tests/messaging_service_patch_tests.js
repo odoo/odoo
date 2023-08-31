@@ -1,10 +1,10 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { startServer, start, afterNextRender } from "@mail/../tests/helpers/test_utils";
+import { contains, startServer, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("messaging service (patch)");
 
-QUnit.test("Should open chat window on send chat request to website visitor", async (assert) => {
+QUnit.test("Should open chat window on send chat request to website visitor", async () => {
     const pyEnv = await startServer();
     const visitorId = pyEnv["website.visitor"].create({
         display_name: "Visitor #11",
@@ -26,15 +26,12 @@ QUnit.test("Should open chat window on send chat request to website visitor", as
         waitUntilDataLoaded: false,
         waitUntilMessagesLoaded: false,
     });
-    await afterNextRender(async () => {
-        await env.services.rpc("/web/dataset/call_button", {
-            args: [visitorId],
-            kwargs: { context: env.context },
-            method: "action_send_chat_request",
-            model: "website.visitor",
-        });
+    await env.services.rpc("/web/dataset/call_button", {
+        args: [visitorId],
+        kwargs: { context: env.context },
+        method: "action_send_chat_request",
+        model: "website.visitor",
     });
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.ok(document.activeElement, $(".o-mail-ChatWindow .o-mail-Composer-input")[0]);
-    assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Visitor #11");
+    await contains(".o-mail-ChatWindow-name", { text: "Visitor #11" });
+    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
 });

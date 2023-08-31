@@ -30,7 +30,7 @@ QUnit.test("base rendering", async () => {
     await contains(".o-mail-Followers");
 });
 
-QUnit.test("rendering with multiple partner followers", async (assert) => {
+QUnit.test("rendering with multiple partner followers", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
         { name: "Eden Hazard" },
@@ -55,15 +55,13 @@ QUnit.test("rendering with multiple partner followers", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-
     await contains(".o-mail-Followers");
     await contains(".o-mail-Followers-button");
-
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Followers-dropdown");
     await contains(".o-mail-Follower", { count: 2 });
-    assert.strictEqual($(".o-mail-Follower:eq(0)").text().trim(), "Jean Michang");
-    assert.strictEqual($(".o-mail-Follower:eq(1)").text().trim(), "Eden Hazard");
+    await contains(".o-mail-Follower:eq(0)", { text: "Jean Michang" });
+    await contains(".o-mail-Follower:eq(1)", { text: "Eden Hazard" });
 });
 
 QUnit.test("log note toggling", async () => {

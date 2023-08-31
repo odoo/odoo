@@ -90,7 +90,7 @@ QUnit.test("activity simplest layout", async () => {
     await contains(".o-mail-Activity-info span", { count: 0, text: "Upload Document" });
 });
 
-QUnit.test("activity with note layout", async (assert) => {
+QUnit.test("activity with note layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
@@ -101,8 +101,7 @@ QUnit.test("activity with note layout", async (assert) => {
     const { openFormView } = await start();
     openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity-note");
-    assert.strictEqual($(".o-mail-Activity-note").text(), "There is no good or bad note");
+    await contains(".o-mail-Activity-note", { text: "There is no good or bad note" });
 });
 
 QUnit.test("activity info layout when planned after tomorrow", async () => {

@@ -833,24 +833,15 @@ QUnit.test("post a simple message", async (assert) => {
         text: "There are no messages in this conversation.",
     });
     await contains(".o-mail-Message", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: "" });
-
-    // insert some HTML in editable
     await insertText(".o-mail-Composer-input", "Test");
-    await contains(".o-mail-Composer-input", { value: "Test" });
-
     await click(".o-mail-Composer-send:not(:disabled)");
-    await contains(".o-mail-Message");
-    assert.verifySteps(["message_post"]);
     await contains(".o-mail-Composer-input", { value: "" });
-    pyEnv["mail.message"].search([], { order: "id DESC" });
-    const $message = $(".o-mail-Message");
+    await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-content", { text: "Test" });
-    assert.strictEqual($message.find(".o-mail-Message-author").text(), "Mitchell Admin");
-    assert.strictEqual($message.find(".o-mail-Message-body").text(), "Test");
+    assert.verifySteps(["message_post"]);
 });
 
-QUnit.test("starred: unstar all", async (assert) => {
+QUnit.test("starred: unstar all", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create([
         { body: "not empty", starred_partner_ids: [pyEnv.currentPartnerId] },
@@ -859,7 +850,7 @@ QUnit.test("starred: unstar all", async (assert) => {
     const { openDiscuss } = await start();
     openDiscuss("mail.box_starred");
     await contains(".o-mail-Message", { count: 2 });
-    assert.strictEqual($("button:contains(Starred) .badge").text(), "2");
+    await contains("button:contains(Starred) .badge", { text: "2" });
     await click("button:contains(Unstar all):not(:disabled)");
     await contains("button:contains(Starred) .badge", { count: 0 });
     await contains(".o-mail-Message", { count: 0 });

@@ -37,7 +37,7 @@ QUnit.test("messaging menu should have topbar buttons", async () => {
     await contains("button:contains(Channels).fw-bolder", { count: 0 });
 });
 
-QUnit.test("counter is taking into account failure notification", async (assert) => {
+QUnit.test("counter is taking into account failure notification", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
@@ -58,15 +58,14 @@ QUnit.test("counter is taking into account failure notification", async (assert)
         notification_type: "email",
     });
     await start();
-    await contains(".o-mail-MessagingMenu-counter");
-    assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "1");
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
 QUnit.test("rendering with OdooBot has a request (default)", async (assert) => {
     patchBrowserNotification("default");
     await start();
     await contains(".o-mail-MessagingMenu-counter");
-    assert.strictEqual($(".o-mail-MessagingMenu-counter").text(), "1");
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
     assert.ok(
@@ -292,8 +291,8 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await contains(".o-mail-NotificationItem", { count: 2 });
-        assert.ok($(".o-mail-NotificationItem:eq(0)").text().includes("Company"));
-        assert.ok($(".o-mail-NotificationItem:eq(1)").text().includes("Partner"));
+        await contains(".o-mail-NotificationItem-name:eq(0)", { text: "Company" });
+        await contains(".o-mail-NotificationItem-name:eq(1)", { text: "Partner" });
     }
 );
 
@@ -818,46 +817,43 @@ QUnit.test(
     }
 );
 
-QUnit.test(
-    "single preview for channel if it has unread and needaction messages",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
-        const channelId = pyEnv["discuss.channel"].create({
-            name: "Test",
-            channel_member_ids: [
-                Command.create({ message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }),
-            ],
-        });
-        const messageId = pyEnv["mail.message"].create({
-            author_id: partnerId,
-            body: "Message with needaction",
-            model: "discuss.channel",
-            needaction: true,
-            needaction_partner_ids: [pyEnv.currentPartnerId],
-            res_id: channelId,
-        });
-        pyEnv["mail.notification"].create({
-            mail_message_id: messageId,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: pyEnv.currentPartnerId,
-        });
-        pyEnv["mail.message"].create({
-            author_id: partnerId,
-            body: "Most-recent Message",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
+QUnit.test("single preview for channel if it has unread and needaction messages", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Test",
+        channel_member_ids: [
+            Command.create({ message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }),
+        ],
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Message with needaction",
+        model: "discuss.channel",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Most-recent Message",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
 
-        await start();
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await contains(".o-mail-NotificationItem");
-        assert.ok($(".o-mail-NotificationItem").text().includes("Test"));
-        assert.ok($(".o-mail-NotificationItem .badge").text().includes("1"));
-        assert.ok($(".o-mail-NotificationItem").text().includes("Message with needaction"));
-    }
-);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem-name", { text: "Test" });
+    await contains(".o-mail-NotificationItem .badge", { text: "1" });
+    await contains(".o-mail-NotificationItem-text", { text: "Partner1: Message with needaction" });
+});
 
 QUnit.test("chat should show unread counter on receiving new messages", async () => {
     // unread and needaction are conceptually the same in chat

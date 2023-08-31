@@ -62,7 +62,7 @@ QUnit.test("command suggestion should only open if command is the first characte
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
 
-QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
+QUnit.test("Sort partner suggestions by recent chats", async () => {
     const pyEnv = await startServer();
     const [partner_1, partner_2, partner_3] = pyEnv["res.partner"].create([
         { name: "User 1" },
@@ -117,9 +117,9 @@ QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
     await insertText(".o-mail-Composer-input[placeholder='Message #General…']", "@");
     await insertText(".o-mail-Composer-input", "User");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
-    assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
-    assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
-    assert.strictEqual($(".o-mail-Composer-suggestion").eq(2).text(), "User 3");
+    await contains(".o-mail-Composer-suggestion:eq(0) strong", { text: "User 2" });
+    await contains(".o-mail-Composer-suggestion:eq(1) strong", { text: "User 1" });
+    await contains(".o-mail-Composer-suggestion:eq(2) strong", { text: "User 3" });
 });
 
 QUnit.test("mention suggestion are shown after deleting a character", async () => {

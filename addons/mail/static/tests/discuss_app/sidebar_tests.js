@@ -309,7 +309,7 @@ QUnit.test("sidebar: unpin channel from bus", async () => {
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "General" });
 });
 
-QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (assert) => {
+QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -330,9 +330,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await contains(".o-discuss-badge");
-    assert.strictEqual($(".o-discuss-badge").text(), "1");
-
+    await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel span", { text: "Demo" });
     await contains(".o-discuss-badge", { count: 0 });
 });
