@@ -1,7 +1,5 @@
 /* @odoo-module */
 
-import { createLocalId } from "@mail/utils/common/misc";
-
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, useState } from "@odoo/owl";
@@ -26,8 +24,6 @@ export class ThreadIcon extends Component {
     }
 
     get chatPartner() {
-        return this.store.Persona.records[
-            createLocalId("partner", this.props.thread.chatPartnerId)
-        ];
+        return this.store.Persona.get({ type: "partner", id: this.props.thread.chatPartnerId });
     }
 }

@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 /** @typedef {{ thread?: import("@mail/core/common/thread_model").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
 export class ChatWindow extends Record {
+    static id = "threadLocalId";
     /** @type {ChatWindow[]} */
     static records = [];
     /**
@@ -17,7 +18,7 @@ export class ChatWindow extends Record {
     static insert(data = {}) {
         const chatWindow = this.records.find((c) => c.threadLocalId === data.thread?.localId);
         if (!chatWindow) {
-            const chatWindow = new ChatWindow();
+            const chatWindow = this.new(data);
             Object.assign(chatWindow, {
                 thread: data.thread,
                 _store: this.store,

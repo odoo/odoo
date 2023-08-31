@@ -187,6 +187,7 @@ export const storeService = {
             // work-around: make an object whose prototype is the class, so that static props become
             // instance props.
             const entry = Object.assign(Object.create(Model), { env, store: res });
+            entry.Class = Model;
             entry.records = JSON.parse(JSON.stringify(Model.records));
             res[name] = entry;
         }

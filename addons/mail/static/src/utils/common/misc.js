@@ -2,10 +2,6 @@
 
 import { reactive } from "@odoo/owl";
 
-export function createLocalId(...args) {
-    return args.join(",");
-}
-
 export function nullifyClearCommands(data) {
     for (const key in data) {
         if (!Array.isArray(data[key])) {

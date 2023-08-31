@@ -78,7 +78,7 @@ export class ActivityService {
     }
 
     delete(activity, { broadcast = true } = {}) {
-        delete this.store.Activity.records[activity.id];
+        delete this.store.Activity.records[this.store.Activity.localId(activity.id)];
         if (broadcast) {
             this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
         }

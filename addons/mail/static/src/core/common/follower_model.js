@@ -11,6 +11,7 @@ import { Record } from "@mail/core/common/record";
  */
 
 export class Follower extends Record {
+    static id = "id";
     /** @type {Object.<number, Follower>} */
     static records = {};
     /**
@@ -18,10 +19,11 @@ export class Follower extends Record {
      * @returns {Follower}
      */
     static insert(data) {
-        let follower = this.records[data.id];
+        let follower = this.get(data);
         if (!follower) {
-            this.records[data.id] = new Follower();
-            follower = this.records[data.id];
+            follower = this.new(data);
+            this.records[follower.localId] = follower;
+            follower = this.records[follower.localId];
         }
         Object.assign(follower, {
             followedThread: data.followedThread,
