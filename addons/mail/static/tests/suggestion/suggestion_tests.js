@@ -39,7 +39,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", 3);
+    await contains(".o-mail-Composer-suggestion strong", 3);
 });
 
 QUnit.test(
@@ -70,7 +70,7 @@ QUnit.test(
         await click("button:contains(Send):not(:disabled)");
         await contains(".o-mail-Message");
         await insertText(".o-mail-Composer-input", "@");
-        await contains(".o-mail-Composer-suggestion", 3);
+        await contains(".o-mail-Composer-suggestion strong", 3);
     }
 );
 
@@ -78,9 +78,9 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     const pyEnv = await startServer();
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "Mitchell Admin" });
 });
 
 QUnit.test("show other channel member in @ mention", async () => {
@@ -99,7 +99,7 @@ QUnit.test("show other channel member in @ mention", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion:contains(TestPartner)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "TestPartner" });
 });
 
 QUnit.test("select @ mention insert mention text in composer", async () => {
@@ -118,7 +118,7 @@ QUnit.test("select @ mention insert mention text in composer", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await click(".o-mail-Composer-suggestion:contains(TestPartner)");
+    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-input", 1, { value: "@TestPartner " });
 });
 
@@ -138,8 +138,8 @@ QUnit.test("select @ mention closes suggestions", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
-    await click(".o-mail-Composer-suggestion:contains(TestPartner)");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
+    await contains(".o-mail-Composer-suggestion strong", 0);
 });
 
 QUnit.test('display channel mention suggestions on typing "#"', async () => {
@@ -204,9 +204,9 @@ QUnit.test("Suggestions are shown after delimiter was used in text (@)", async (
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingUser");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-suggestion strong", 0);
     await insertText(".o-mail-Composer-input", " @");
-    await contains(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "Mitchell Admin" });
 });
 
 QUnit.test("Suggestions are shown after delimiter was used in text (#)", async () => {
@@ -217,9 +217,9 @@ QUnit.test("Suggestions are shown after delimiter was used in text (#)", async (
     await insertText(".o-mail-Composer-input", "#");
     await contains(".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "NonExistingChannel");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-suggestion strong", 0);
     await insertText(".o-mail-Composer-input", " #");
-    await contains(".o-mail-Composer-suggestion:contains(General)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "#General" });
 });
 
 QUnit.test("display partner mention when typing more than 2 words if they match", async () => {
@@ -240,12 +240,12 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
     ]);
     const { openFormView } = await start();
     openFormView("res.partner", pyEnv.currentPartnerId);
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@My ");
-    await contains(".o-mail-Composer-suggestion", 3);
+    await contains(".o-mail-Composer-suggestion strong", 3);
     await insertText(".o-mail-Composer-input", "Test ");
-    await contains(".o-mail-Composer-suggestion", 2);
+    await contains(".o-mail-Composer-suggestion strong", 2);
     await insertText(".o-mail-Composer-input", "Partner");
     await contains(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-suggestion:contains(My Test Partner)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "My Test Partner" });
 });

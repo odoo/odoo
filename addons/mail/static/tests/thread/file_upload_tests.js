@@ -25,7 +25,7 @@ QUnit.test("no conflicts between file uploads", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     const file1 = await createFile({
         name: "text1.txt",
         content: "hello, world",

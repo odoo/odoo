@@ -155,7 +155,7 @@ QUnit.test("edit follower and close subtype dialog", async (assert) => {
     await contains(".o-mail-FollowerSubtypeDialog");
     assert.verifySteps(["fetch_subtypes"]);
 
-    await click(".o-mail-FollowerSubtypeDialog button:contains(Cancel)");
+    await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
     await contains(".o-mail-FollowerSubtypeDialog", 0);
 });
 
@@ -183,15 +183,15 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
     const { openFormView } = await start({ serverData: { views } });
     openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
-    await click(".dropdown-item:contains(General)");
-    await contains(".o_tag:contains(General)");
-    await contains(".o-mail-Followers-counter:contains(1)");
+    await click(".dropdown-item", { text: "General" });
+    await contains(".o_tag", 1, { text: "General" });
+    await contains(".o-mail-Followers-counter", 1, { text: "1" });
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter:contains(0)");
+    await contains(".o-mail-Followers-counter", 1, { text: "0" });
     await contains(".o_field_char[name=name] input", 1, { value: "some value" });
-    await contains(".o_tag:contains(General)");
+    await contains(".o_tag", 1, { text: "General" });
 });
 
 QUnit.test("removing a follower should reload form view", async function (assert) {
@@ -215,6 +215,6 @@ QUnit.test("removing a follower should reload form view", async function (assert
     assert.verifySteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("button[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter:contains(0)");
+    await contains(".o-mail-Followers-counter", 1, { text: "0" });
     assert.verifySteps([`read ${threadId}`]);
 });

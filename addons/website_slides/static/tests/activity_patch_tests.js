@@ -35,7 +35,7 @@ QUnit.test("grant course access", async (assert) => {
     assert.containsOnce($, ".o-mail-Activity");
     assert.containsOnce($, "button:contains(Grant Access)");
 
-    await click("button:contains(Grant Access)");
+    await click("button", { text: "Grant Access" });
     assert.verifySteps(["access_grant"]);
 });
 
@@ -70,6 +70,6 @@ QUnit.test("refuse course access", async (assert) => {
     assert.containsOnce($, ".o-mail-Activity");
     assert.containsOnce($, "button:contains(Refuse Access)");
 
-    await click("button:contains(Refuse Access)");
+    await click("button", { text: "Refuse Access" });
     assert.verifySteps(["access_refuse"]);
 });

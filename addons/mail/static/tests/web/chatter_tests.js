@@ -68,10 +68,10 @@ QUnit.test("can post a message on a record thread", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await contains("button:contains(Send message)");
+    await contains("button", 1, { text: "Send message" });
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
 
     await insertText(".o-mail-Composer-input", "hey");
@@ -109,10 +109,10 @@ QUnit.test("can post a note on a record thread", async (assert) => {
         },
     });
     openFormView("res.partner", partnerId);
-    await contains("button:contains(Log note)");
+    await contains("button", 1, { text: "Log note" });
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains(".o-mail-Composer");
 
     await insertText(".o-mail-Composer-input", "hey");
@@ -156,7 +156,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
@@ -168,7 +168,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "Hello world !");
     patchUiSize({ size: SIZES.LG });
@@ -182,7 +182,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     openFormView("res.partner", partnerId);
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
     await contains(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
@@ -249,7 +249,9 @@ QUnit.test("should display subject when subject isn't infered from the record", 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Message:contains(Subject: Salutations, voyageur)");
+    await contains(".o-mail-Message-content", 1, {
+        text: "Subject: Salutations, voyageurnot empty",
+    });
 });
 
 QUnit.test("should not display user notification messages in chatter", async () => {
@@ -279,7 +281,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Message", 0);
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
@@ -321,7 +323,8 @@ QUnit.test("base rendering when chatter has no record", async (assert) => {
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Message");
     assert.strictEqual($(".o-mail-Message-body").text(), "Creating a new record...");
-    await contains("button:contains(Load More)", 0);
+    await contains("button", 0, { text: "Load More" });
+
     await contains(".o-mail-Message-actions");
     await contains(".o-mail-Message-actions i", 0);
 });
@@ -380,7 +383,7 @@ QUnit.test("show attachment box", async () => {
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files']:contains(2)");
+    await contains("button[aria-label='Attach files']", 1, { text: "2" });
     await contains(".o-mail-AttachmentBox", 0);
 
     await click("button[aria-label='Attach files']");
@@ -396,25 +399,25 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains("button:contains(Send message)");
-    await contains("button:contains(Log note)");
+    await contains("button", 1, { text: "Send message" });
+    await contains("button", 1, { text: "Log note" });
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains(".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
 
-    await click("button:contains(Log note)");
+    await click("button", { text: "Log note" });
     await contains(".o-mail-Composer", 0);
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
 
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Composer", 0);
 });
 
@@ -427,7 +430,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await contains(".o-mail-Message", 0);
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("Enter");
@@ -452,7 +455,12 @@ QUnit.test("should not display subject when subject is the same as the thread na
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await contains(".o-mail-Message:not(:contains(Salutations, voyageur))");
+    await contains(".o-mail-Message .o-mail-Message-content", 1, {
+        text: "not empty",
+    });
+    await contains(".o-mail-Message .o-mail-Message-content", 0, {
+        text: "Subject: Salutations, voyageurnot empty",
+    });
 });
 
 QUnit.test("scroll position is kept when navigating from one record to another", async () => {
@@ -534,7 +542,8 @@ QUnit.test("basic chatter rendering without activities", async () => {
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
-    await contains("button:contains(Activities)", 0);
+    await contains("button", 0, { text: "Activities" });
+
     await contains(".o-mail-Followers");
     await contains(".o-mail-Thread");
 });
@@ -563,7 +572,26 @@ QUnit.test(
         });
         await click(".o_form_button_create:eq(0)");
         await contains(".o-mail-Message");
-        await contains(".o-mail-Message-body:contains(Creating a new record...)");
+        await contains(".o-mail-Message-body", 1, { text: "Creating a new record..." });
+    }
+);
+
+QUnit.test(
+    "should display subject when subject is not the same as the default subject",
+    async () => {
+        const pyEnv = await startServer();
+        const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
+        pyEnv["mail.message"].create({
+            body: "not empty",
+            model: "res.fake",
+            res_id: fakeId,
+            subject: "Another Subject",
+        });
+        const { openFormView } = await start();
+        openFormView("res.fake", fakeId);
+        await contains(".o-mail-Message .o-mail-Message-content", 1, {
+            text: "Subject: Another Subjectnot empty",
+        });
     }
 );
 
@@ -576,11 +604,16 @@ QUnit.test(
             body: "not empty",
             model: "res.fake",
             res_id: fakeId,
-            subject: "Custom Default Subject", // default subject for res.fake, set on the model
+            subject: "Custom Default Subject",
         });
         const { openFormView } = await start();
         openFormView("res.fake", fakeId);
-        await contains(".o-mail-Message:not(:contains(Custom Default Subject))");
+        await contains(".o-mail-Message .o-mail-Message-content", 1, {
+            text: "not empty",
+        });
+        await contains(".o-mail-Message .o-mail-Message-content", 0, {
+            text: "Subject: Custom Default Subjectnot empty",
+        });
     }
 );
 
@@ -597,7 +630,12 @@ QUnit.test(
         });
         const { openFormView } = await start();
         openFormView("res.fake", fakeId);
-        await contains(".o-mail-Message:not(:contains(Custom Default Subject))");
+        await contains(".o-mail-Message .o-mail-Message-content", 1, {
+            text: "not empty",
+        });
+        await contains(".o-mail-Message .o-mail-Message-content", 0, {
+            text: "Subject: Custom Default Subjectnot empty",
+        });
     }
 );
 
@@ -626,7 +664,7 @@ QUnit.test("basic chatter rendering without followers", async () => {
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
-    await contains("button:contains(Activities)");
+    await contains("button", 1, { text: "Activities" });
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Followers", 0);
 });
@@ -656,7 +694,7 @@ QUnit.test("basic chatter rendering without messages", async () => {
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
-    await contains("button:contains(Activities)");
+    await contains("button", 1, { text: "Activities" });
     await contains(".o-mail-Followers");
     await contains(".o-mail-Chatter .o-mail-Thread", 0);
 });
@@ -708,11 +746,11 @@ QUnit.test("post message on draft record", async () => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click("button:contains(Send message)");
+    await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button:contains(Send):not(:disabled)");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message:contains(Test)");
+    await contains(".o-mail-Message-content", 1, { text: "Test" });
 });
 
 QUnit.test(
@@ -731,8 +769,8 @@ QUnit.test(
         };
         const { openFormView } = await start({ serverData: { views } });
         openFormView("res.partner");
-        await click("button:contains(Activities)");
-        await contains(".o_dialog:contains(Schedule Activity)");
+        await click("button", { text: "Activities" });
+        await contains(".o_dialog h4", 1, { text: "Schedule Activity" });
     }
 );
 
@@ -761,14 +799,15 @@ QUnit.test("upload attachment on draft record", async () => {
             name: "text.txt",
         }),
     ]);
-    await contains(".button[aria-label='Attach files']:contains(1)", 0);
+    await contains(".button[aria-label='Attach files']", 0, { text: "1" });
+
     dragenterFiles(chatter[0]);
     dropFiles((await contains(".o-mail-Dropzone"))[0], [file]);
-    await contains("button[aria-label='Attach files']:contains(1)");
+    await contains("button[aria-label='Attach files']", 1, { text: "1" });
 });
 
 QUnit.test("Follower count of draft record is set to 0", async (assert) => {
     const { openView } = await start();
     await openView({ res_model: "res.partner", views: [[false, "form"]] });
-    await contains(".o-mail-Followers:contains(0)");
+    await contains(".o-mail-Followers", 1, { text: "0" });
 });

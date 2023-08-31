@@ -67,9 +67,9 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     });
     await contains(".o-mail-ChatWindow", 2);
     await contains(".o-mail-ChatWindowHiddenToggler");
-    await contains(".o-mail-Message:contains(Orange)");
-    await contains(".o-mail-Message:contains(Apple)", 0);
-    await contains(".o-mail-Message:contains(Banana)");
+    await contains(".o-mail-Message-content", 1, { text: "Orange" });
+    await contains(".o-mail-Message-content", 0, { text: "Apple" });
+    await contains(".o-mail-Message-content", 1, { text: "Banana" });
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
 });
 
@@ -129,15 +129,15 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     });
     await contains(".o-mail-ChatWindow", 2);
     await contains(".o-mail-ChatWindowHiddenToggler");
-    await contains(".o-mail-Message:contains(Orange)");
-    await contains(".o-mail-Message:contains(Apple)", 0);
-    await contains(".o-mail-Message:contains(Banana)");
+    await contains(".o-mail-Message-content", 1, { text: "Orange" });
+    await contains(".o-mail-Message-content", 0, { text: "Apple" });
+    await contains(".o-mail-Message-content", 1, { text: "Banana" });
     assert.verifySteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");
     await click(".o-mail-ChatWindowHiddenMenu-item .o-mail-ChatWindow-command[title='Open']");
-    await contains(".o-mail-Message:contains(Orange)");
-    await contains(".o-mail-Message:contains(Apple)");
-    await contains(".o-mail-Message:contains(Banana)", 0);
+    await contains(".o-mail-Message-content", 1, { text: "Orange" });
+    await contains(".o-mail-Message-content", 1, { text: "Apple" });
+    await contains(".o-mail-Message", 0, { text: "Banana" });
     assert.verifySteps(["fetch_messages"]);
 });
 
@@ -164,24 +164,23 @@ QUnit.test(
         );
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem:contains(channel-A)");
+        await click(".o-mail-NotificationItem-name", { text: "channel-A" });
+        await contains(".o-mail-ChatWindow");
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem:contains(channel-B)");
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem:contains(channel-C)");
-        await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem:contains(channel-D)");
-        await contains(
-            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
-        );
+        await click(".o-mail-NotificationItem-name", { text: "channel-B" });
         await contains(".o-mail-ChatWindow", 2);
-        await contains(".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        await contains(".o-mail-ChatWindow:eq(1):contains(channel-D)");
-        await contains(".o-mail-ChatWindowHiddenToggler:contains(2)");
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem-name", { text: "channel-C" });
+        await contains(".o-mail-ChatWindowHiddenToggler", 1, { text: "1" });
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem-name", { text: "channel-D" });
+        await contains(".o-mail-ChatWindowHiddenToggler", 1, { text: "2" });
+        await contains(".o-mail-ChatWindow-name:eq(0)", 1, { text: "channel-A" });
+        await contains(".o-mail-ChatWindow-name:eq(1)", 1, { text: "channel-D" });
         await click(
             ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
-        await contains(".o-mail-ChatWindow:eq(0):contains(channel-A)");
-        await contains(".o-mail-ChatWindow:eq(1):contains(channel-C)");
+        await contains(".o-mail-ChatWindow-name:eq(0)", 1, { text: "channel-A" });
+        await contains(".o-mail-ChatWindow-name:eq(1)", 1, { text: "channel-C" });
     }
 );

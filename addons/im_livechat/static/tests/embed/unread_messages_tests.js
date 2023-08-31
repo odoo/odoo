@@ -9,7 +9,7 @@ import { contains } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("thread service");
 
-QUnit.test("new message from operator displays unread counter", async (assert) => {
+QUnit.test("new message from operator displays unread counter", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
@@ -32,10 +32,10 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow-header:contains(1)");
+    await contains(".o-mail-ChatWindow-counter", 1, { text: "1" });
 });
 
-QUnit.test("focus on unread livechat marks it as read", async (assert) => {
+QUnit.test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultConfig();
     const channelId = pyEnv["discuss.channel"].create({
@@ -58,7 +58,9 @@ QUnit.test("focus on unread livechat marks it as read", async (assert) => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:contains(Are you there?)");
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message .o-mail-Message-content", 1, {
+        text: "Are you there?",
+    });
     $(".o-mail-Composer-input").trigger("focus");
     await contains(".o-mail-Thread-newMessage", 0);
 });

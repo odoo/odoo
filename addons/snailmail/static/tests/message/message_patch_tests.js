@@ -144,8 +144,8 @@ QUnit.test("No Price Available", async (assert) => {
         $(".o-snailmail-SnailmailError .modal-body").text().trim(),
         "The country to which you want to send the letter is not supported by our service."
     );
-    await contains("button:contains(Cancel letter)");
-    await click("button:contains(Cancel letter)");
+    await contains("button", 1, { text: "Cancel letter" });
+    await click("button", { text: "Cancel letter" });
     await contains(".o-snailmail-SnailmailError", 0);
     assert.verifySteps(["cancel_letter"]);
 });
@@ -192,9 +192,9 @@ QUnit.test("Credit Error", async (assert) => {
         $(".o-snailmail-SnailmailError p").text().trim(),
         "The letter could not be sent due to insufficient credits on your IAP account."
     );
-    await contains("button:contains(Re-send letter)");
-    await contains("button:contains(Cancel letter)");
-    await click("button:contains(Re-send letter)");
+    await contains("button", 1, { text: "Re-send letter" });
+    await contains("button", 1, { text: "Cancel letter" });
+    await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", 0);
     assert.verifySteps(["send_letter"]);
 });
@@ -241,9 +241,9 @@ QUnit.test("Trial Error", async (assert) => {
         $(".o-snailmail-SnailmailError p").text().trim(),
         "You need credits on your IAP account to send a letter."
     );
-    await contains("button:contains(Re-send letter)");
-    await contains("button:contains(Cancel letter)");
-    await click("button:contains(Re-send letter)");
+    await contains("button", 1, { text: "Re-send letter" });
+    await contains("button", 1, { text: "Cancel letter" });
+    await click("button", { text: "Re-send letter" });
     await contains(".o-snailmail-SnailmailError", 0);
     assert.verifySteps(["send_letter"]);
 });

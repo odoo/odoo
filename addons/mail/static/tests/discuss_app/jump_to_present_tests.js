@@ -33,9 +33,13 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
     );
     await contains(".o-mail-Thread", 1, { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    await contains(".o-mail-Thread-jumpPresent", 1, {
+        text: "You're viewing older messagesJump to Present",
+    });
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
+    await contains(".o-mail-Thread-jumpPresent", 0, {
+        text: "You're viewing older messagesJump to Present",
+    });
     await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });
 
@@ -85,9 +89,14 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
         "Hello world!",
         "should correctly execute HTML tags in parent message when using 'load around' feature"
     );
-    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)");
+    await contains(".o-mail-Thread-jumpPresent", 1, {
+        text: "You're viewing older messagesJump to Present",
+    });
     await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread:contains(You're viewing older messagesJump to Present)", 0);
+    await contains(".o-mail-Thread-jumpPresent", 0, {
+        text: "You're viewing older messagesJump to Present",
+    });
+
     await contains(".o-mail-Message", 30);
     await contains(".o-mail-Thread", 1, { scroll: "bottom" });
 });

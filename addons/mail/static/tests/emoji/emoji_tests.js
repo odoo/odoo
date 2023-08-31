@@ -14,7 +14,7 @@ QUnit.test("search emoji from keywords", async () => {
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
-    await contains(".o-Emoji:contains(🌮)");
+    await contains(".o-Emoji", 1, { text: "🌮" });
 });
 
 QUnit.test("search emoji from keywords should be case insensitive", async () => {
@@ -24,7 +24,7 @@ QUnit.test("search emoji from keywords should be case insensitive", async () => 
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "ok");
-    await contains(".o-Emoji:contains(🆗)"); // all search terms are uppercase OK
+    await contains(".o-Emoji", 1, { text: "🆗" }); // all search terms are uppercase OK
 });
 
 QUnit.test("search emoji from keywords with special regex character", async () => {
@@ -34,7 +34,7 @@ QUnit.test("search emoji from keywords with special regex character", async () =
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
-    await contains(".o-Emoji:contains(🆎)");
+    await contains(".o-Emoji", 1, { text: "🆎" });
 });
 
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async () => {
@@ -75,7 +75,7 @@ QUnit.test("recent category (basic)", async () => {
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']", 0);
-    await click(".o-EmojiPicker-content .o-Emoji:contains(😀)");
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(
@@ -89,11 +89,11 @@ QUnit.test("emoji usage amount orders frequent emojis", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji:contains(😀)");
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "😀" });
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji:contains(👽)");
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "👽" });
     await click("button[aria-label='Emojis']");
-    await click(".o-EmojiPicker-content .o-Emoji:contains(👽)");
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "👽" });
     await click("button[aria-label='Emojis']");
     await contains(
         "span:contains(Frequently used) ~ .o-Emoji:contains(😀) ~ span:contains(Smileys & Emotion)"

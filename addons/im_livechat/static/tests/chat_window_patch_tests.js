@@ -4,7 +4,7 @@ import { click, contains, start, startServer } from "@mail/../tests/helpers/test
 
 QUnit.module("chat window (patch)");
 
-QUnit.test("No call buttons", async (assert) => {
+QUnit.test("No call buttons", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -19,8 +19,8 @@ QUnit.test("No call buttons", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command i.fa-phone", 0);
-    await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-command i.fa-gear", 0);
+    await contains(".o-mail-ChatWindow-command i.fa-phone", 0);
+    await contains(".o-mail-ChatWindow-command i.fa-gear", 0);
 });
 
 QUnit.test("closing a chat window with no message from admin side unpins it", async (assert) => {
@@ -45,7 +45,7 @@ QUnit.test("closing a chat window with no message from admin side unpins it", as
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']");
+    await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
     const [channel] = await env.services.rpc(
         "/discuss/channel/info",
         { channel_id: channelId },

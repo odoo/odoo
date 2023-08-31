@@ -49,7 +49,7 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await contains(".o-mail-MessagingMenu-counter:contains(1)");
+        await contains(".o-mail-MessagingMenu-counter", 1, { text: "1" });
         await contains(".o-mail-ChatWindow", 0);
     }
 );
@@ -94,14 +94,16 @@ QUnit.test("Message post in chat window of chatter should log a note", async () 
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Message:contains(A needaction message to have it in messaging menu)");
+    await contains(".o-mail-Message-content", 1, {
+        text: "A needaction message to have it in messaging menu",
+    });
     await contains(
         ".o-mail-Message:contains(A needaction message to have it in messaging menu) .o-mail-Message-bubble.border"
     ); // bordered bubble = "Send message" mode
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
-    await contains(".o-mail-Message:contains(Test)");
+    await contains(".o-mail-Message-content", 1, { text: "Test" });
     await contains(".o-mail-Message:contains(Test) .o-mail-Message-bubble.border", 0); // non-bordered bubble = "Log note" mode
 });
 
@@ -125,7 +127,7 @@ QUnit.test("load messages from opening chat window from messaging menu", async (
     await contains(".o-mail-Message", 21);
 });
 
-QUnit.test("chat window: basic rendering", async (assert) => {
+QUnit.test("chat window: basic rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -134,17 +136,15 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar");
-    await contains(".o-mail-ChatWindow-name:contains(General)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "General" });
     await contains(".o-mail-ChatWindow-command", 4);
     await contains("[title='Start a Call']");
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title='Close Chat Window']");
-    await contains(".o-mail-ChatWindow-content .o-mail-Thread");
-    assert.strictEqual(
-        $(".o-mail-ChatWindow-content .o-mail-Thread").text().trim(),
-        "There are no messages in this conversation."
-    );
+    await contains(".o-mail-ChatWindow-content .o-mail-Thread .o-mail-Thread-empty", 1, {
+        text: "There are no messages in this conversation.",
+    });
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", 10);
     await contains("[title='Pinned Messages']");
@@ -358,24 +358,24 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
     );
     await start();
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Channel_1)");
+    await click(".o-mail-NotificationItem-name", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Channel_1" });
     assert.strictEqual(
         document.activeElement,
-        $(".o-mail-ChatWindow-header:contains(Channel_1)")
+        $(".o-mail-ChatWindow-name:contains(Channel_1)")
             .closest(".o-mail-ChatWindow")
             .find(".o-mail-Composer-input")[0]
     );
 
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Channel_2)");
+    await click(".o-mail-NotificationItem-name", { text: "Channel_2" });
     await contains(".o-mail-ChatWindow", 2);
-    await contains(".o-mail-ChatWindow-header:contains(Channel_2)");
-    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Channel_2" });
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Channel_1" });
     assert.strictEqual(
         document.activeElement,
-        $(".o-mail-ChatWindow-header:contains(Channel_2)")
+        $(".o-mail-ChatWindow-name:contains(Channel_2)")
             .closest(".o-mail-ChatWindow")
             .find(".o-mail-Composer-input")[0]
     );
@@ -402,24 +402,24 @@ QUnit.test("open 3 different chat windows: not enough screen width", async (asse
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Channel_1)");
+    await click(".o-mail-NotificationItem-name", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindowHiddenToggler", 0);
 
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Channel_2)");
+    await click(".o-mail-NotificationItem-name", { text: "Channel_2" });
     await contains(".o-mail-ChatWindow", 2);
     await contains(".o-mail-ChatWindowHiddenToggler", 0);
 
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Channel_3)");
+    await click(".o-mail-NotificationItem-name", { text: "Channel_3" });
     await contains(".o-mail-ChatWindow", 2);
     await contains(".o-mail-ChatWindowHiddenToggler");
-    await contains(".o-mail-ChatWindow-header:contains(Channel_1)");
-    await contains(".o-mail-ChatWindow-header:contains(Channel_3)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Channel_1" });
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Channel_3" });
     assert.strictEqual(
         document.activeElement,
-        $(".o-mail-ChatWindow-header:contains(Channel_3)")
+        $(".o-mail-ChatWindow-name:contains(Channel_3)")
             .closest(".o-mail-ChatWindow")
             .find(".o-mail-Composer-input")[0]
     );
@@ -445,27 +445,36 @@ QUnit.test("closing hidden chat window", async (assert) => {
     );
     await start();
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_1)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_1" });
     await contains(".o-mail-ChatWindow");
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_2" });
     await contains(".o-mail-ChatWindow", 2);
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_3)");
-    await contains(".o-mail-ChatWindowHiddenToggler:contains(1)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_3" });
+    await contains(".o-mail-ChatWindowHiddenToggler", 1, { text: "1" });
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_4)");
-    await contains(".o-mail-ChatWindowHiddenToggler:contains(2)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_4" });
+    await contains(".o-mail-ChatWindowHiddenToggler", 1, { text: "2" });
     await click(".o-mail-ChatWindowHiddenToggler");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
-    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_2)");
-    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_1",
+    });
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", 1, { text: "Ch_2" });
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", 1, { text: "Ch_3" });
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_4",
+    });
     await click(".o-mail-ChatWindow:contains(Ch_2) [title='Close Chat Window']");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
-    await contains(".o-mail-ChatWindow:contains(Ch_2)", 0);
-    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_4)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_1",
+    });
+    await contains(".o-mail-ChatWindow-name", 0, { text: "Ch_2" });
+
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", 1, { text: "Ch_3" });
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_4",
+    });
 });
 
 QUnit.test("Opening hidden chat window from messaging menu", async (assert) => {
@@ -483,21 +492,29 @@ QUnit.test("Opening hidden chat window from messaging menu", async (assert) => {
     );
     await start();
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_1)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_1" });
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_2" });
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_3)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_3" });
     await click(".o-mail-ChatWindowHiddenToggler");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
-    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_2)");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_3)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_1",
+    });
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", 1, { text: "Ch_2" });
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_3",
+    });
     await click("i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(Ch_2)");
+    await click(".o-mail-NotificationItem-name", { text: "Ch_2" });
     await click(".o-mail-ChatWindowHiddenToggler");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_1)");
-    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow:contains(Ch_2)");
-    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow:contains(Ch_3)");
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_1",
+    });
+    await contains(":not(.o-mail-ChatWindowHiddenMenu) .o-mail-ChatWindow-name", 1, {
+        text: "Ch_2",
+    });
+    await contains(".o-mail-ChatWindowHiddenMenu .o-mail-ChatWindow-name", 1, { text: "Ch_3" });
 });
 
 QUnit.test(
@@ -568,7 +585,7 @@ QUnit.test("chat window: switch on TAB [REQUIRE FOCUS]", async (assert) => {
     );
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(channel1)");
+    await click(".o-mail-NotificationItem-name", { text: "channel1" });
     await contains(".o-mail-ChatWindow", 1);
     await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
 
@@ -576,7 +593,7 @@ QUnit.test("chat window: switch on TAB [REQUIRE FOCUS]", async (assert) => {
     await contains(".o-mail-ChatWindow:contains(channel1) .o-mail-Composer-input:focus");
 
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:contains(channel2)");
+    await click(".o-mail-NotificationItem-name", { text: "channel2" });
     await contains(".o-mail-ChatWindow", 2);
     await contains(".o-mail-ChatWindow:contains(channel2) .o-mail-Composer-input:focus");
 
@@ -693,7 +710,7 @@ QUnit.test(
         );
         await contains(".o-mail-ChatWindow");
         await contains(".o-mail-Message", 2);
-        await contains("hr + span:contains(New messages)");
+        await contains(".o-mail-Thread-newMessage hr + span", 1, { text: "New messages" });
     }
 );
 
@@ -722,7 +739,7 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await contains("hr + span:contains(New messages)");
+        await contains(".o-mail-Thread-newMessage hr + span", 1, { text: "New messages" });
     }
 );
 
@@ -836,7 +853,7 @@ QUnit.test("chat window should remain folded when new message is received", asyn
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow-counter:contains(1)");
+    await contains(".o-mail-ChatWindow-counter", 1, { text: "1" });
     await contains(".o-mail-ChatWindow.o-folded");
 });
 
@@ -866,11 +883,11 @@ QUnit.test(
         openDiscuss();
         // open, from systray menu, chat windows of channels with id 1, 2, 3
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name:contains(Channel-1)");
+        await click(".o-mail-NotificationItem-name", { text: "Channel-1" });
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name:contains(Channel-2)");
+        await click(".o-mail-NotificationItem-name", { text: "Channel-2" });
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-NotificationItem-name:contains(Channel-3)");
+        await click(".o-mail-NotificationItem-name", { text: "Channel-3" });
         // simulate resize to go into mobile
         patchUiSize({ size: SIZES.SM });
         window.dispatchEvent(new UIEvent("resize"));
@@ -962,9 +979,9 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await contains("hr + span:contains(New messages)");
+        await contains(".o-mail-Thread-newMessage hr + span", 1, { text: "New messages" });
         $(".o-mail-Composer-input")[0].focus();
-        await contains("hr + span:contains(New messages)", 0);
+        await contains(".o-mail-Thread-newMessage hr + span", 0, { text: "New messages" });
     }
 );
 
@@ -1141,7 +1158,7 @@ QUnit.test("Open chat window of new inviter", async () => {
         username: "Newbie",
         partnerId,
     });
-    await contains(".o-mail-ChatWindow:contains(Newbie)");
+    await contains(".o-mail-ChatWindow-name", 1, { text: "Newbie" });
     await contains(
         ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"
     );

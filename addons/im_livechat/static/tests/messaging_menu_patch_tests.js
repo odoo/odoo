@@ -19,10 +19,10 @@ QUnit.test('livechats should be in "chat" filter', async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu button:contains(All).fw-bolder");
-    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
-    await click(".o-mail-MessagingMenu button:contains(Chat)");
+    await contains(".o-mail-NotificationItem-name", 1, { text: "Visitor 11" });
+    await click(".o-mail-MessagingMenu button", { text: "Chats" });
     await contains(".o-mail-MessagingMenu button:contains(Chat).fw-bolder");
-    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
+    await contains(".o-mail-NotificationItem-name", 1, { text: "Visitor 11" });
 });
 
 QUnit.test('livechats should be in "livechat" tab in mobile', async () => {
@@ -39,8 +39,8 @@ QUnit.test('livechats should be in "livechat" tab in mobile', async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button:contains(Livechat)");
-    await contains(".o-mail-NotificationItem:contains(Visitor 11)");
-    await click("button:contains(Chat)");
-    await contains(".o-mail-NotificationItem:contains(Visitor 11)", 0);
+    await click("button", { text: "Livechat" });
+    await contains(".o-mail-NotificationItem", 1, { text: "Visitor 11" });
+    await click("button", { text: "Chat" });
+    await contains(".o-mail-NotificationItem", 0, { text: "Visitor 11" });
 });

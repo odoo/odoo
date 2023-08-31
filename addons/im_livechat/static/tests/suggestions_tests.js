@@ -22,9 +22,9 @@ QUnit.test("Suggestions are shown after delimiter was used in text (:)", async (
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":");
-    await contains(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "hello" });
     await insertText(".o-mail-Composer-input", ")");
-    await contains(".o-mail-Composer-suggestion", 0);
+    await contains(".o-mail-Composer-suggestion strong", 0);
     await insertText(".o-mail-Composer-input", " :");
-    await contains(".o-mail-Composer-suggestion:contains(hello)");
+    await contains(".o-mail-Composer-suggestion strong", 1, { text: "hello" });
 });

@@ -21,7 +21,8 @@ QUnit.test("sidebar find shows channels matching search term", async () => {
     // One for the existing channel itself
     // One for creating a channel with the search term
     await contains(".o-mail-NavigableList-item", 2);
-    await contains(".o-mail-NavigableList-item:contains(test)", 2);
+    await contains(".o-mail-NavigableList-item", 1, { text: "test" });
+    await contains(".o-mail-NavigableList-item", 1, { text: "Create: # test" });
 });
 
 QUnit.test(
@@ -42,6 +43,7 @@ QUnit.test(
         // One for the existing channel itself
         // One for creating a channel with the search term
         await contains(".o-mail-NavigableList-item", 2);
-        await contains(".o-mail-NavigableList-item:contains(test)", 2);
+        await contains(".o-mail-NavigableList-item", 1, { text: "test" });
+        await contains(".o-mail-NavigableList-item", 1, { text: "Create: # test" });
     }
 );

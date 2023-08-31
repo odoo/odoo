@@ -31,7 +31,7 @@ QUnit.test("Can invite a partner to a livechat channel", async () => {
     await click("button:contains(Invite):not(:disabled)");
     await contains(".o-discuss-ChannelInvitation", 0);
     await click("button[title='Show Member List']");
-    await contains(".o-discuss-ChannelMember:contains(James)");
+    await contains(".o-discuss-ChannelMember", 1, { text: "James" });
 });
 
 QUnit.test("Available operators come first", async (assert) => {
@@ -99,11 +99,11 @@ QUnit.test("Partners invited most frequently by the current user come first", as
 
     const { openDiscuss } = await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #1)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #1" });
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(John) input");
     await click("button:contains(Invite):not(:disabled)");
-    await click(".o-mail-DiscussSidebarChannel:contains(Visitor #2)");
+    await click(".o-mail-DiscussSidebarChannel span", { text: "Visitor #2" });
     await click("button[title='Add Users']");
     const partnerSuggestions = await contains(".o-discuss-ChannelInvitation-selectable", 2);
     assert.ok(partnerSuggestions[0].textContent.includes("John"));

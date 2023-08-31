@@ -35,11 +35,13 @@ QUnit.test("Unsuccessful message post shows session expired", async () => {
     });
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o_notification:contains(Session expired)");
+    await contains(".o_notification_content", 1, {
+        text: "Session expired... Please refresh and try again.",
+    });
     await contains(".o-mail-ChatWindow", 0);
 });
 
-QUnit.test("Session is reset after failing to persist the channel", async (assert) => {
+QUnit.test("Session is reset after failing to persist the channel", async () => {
     await startServer();
     await loadDefaultConfig();
     const { advanceTime } = mockTimeout();
@@ -53,7 +55,9 @@ QUnit.test("Session is reset after failing to persist the channel", async (asser
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
-    await contains(".o_notification:contains(No available collaborator, please try again later.)");
+    await contains(".o_notification_content", 1, {
+        text: "No available collaborator, please try again later.",
+    });
     await contains(".o-livechat-LivechatButton");
     await advanceTime(LivechatButton.DEBOUNCE_DELAY + 10);
     await click(".o-livechat-LivechatButton");

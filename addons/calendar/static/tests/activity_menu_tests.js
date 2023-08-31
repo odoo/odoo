@@ -2,15 +2,8 @@
 
 import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-let target;
-
-QUnit.module("calender activity menu", {
-    async beforeEach() {
-        target = getFixture();
-    },
-});
 QUnit.test("activity menu widget:today meetings", async function (assert) {
     patchDate(2018, 3, 20, 6, 0, 0);
     const pyEnv = await startServer();
@@ -38,12 +31,10 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
             assert.step("action");
         },
     });
-    await contains(".o-mail-ActivityGroup:contains(Today's Meetings)");
-    await contains(".o-mail-ActivityGroup .o-calendar-metting", 2);
-    await contains(".o-calendar-metting:contains(meeting1)");
-    await contains(".o-calendar-metting:contains(meeting2)");
-    assert.hasClass($(target).find("span:contains(meeting1)"), "fw-bold");
-    assert.doesNotHaveClass($(target).find("span:contains(meeting2)"), "fw-bold");
+    await contains(".o-mail-ActivityGroup span", 1, { text: "Today's Meetings" });
+    await contains(".o-mail-ActivityGroup .o-calendar-meeting", 2);
+    await contains(".o-calendar-meeting span.fw-bold", 1, { text: "meeting1" });
+    await contains(".o-calendar-meeting span:not(.fw-bold)", 1, { text: "meeting2" });
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup");
     assert.verifySteps(["action"]);
 });
