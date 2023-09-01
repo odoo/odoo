@@ -65,7 +65,6 @@
             'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
             'website_sale/static/src/xml/website_sale.xml',
-            'website_sale/static/src/js/website_sale_cart.js',
             'website_sale/static/src/js/website_sale_offcanvas.js',
             'website_sale/static/src/js/website_sale_price_range_option.js',
             'website_sale/static/src/js/website_sale_utils.js',
@@ -83,6 +82,9 @@
             'website_sale/static/src/js/website_sale_reorder.js',
             'website_sale/static/src/js/website_sale_delivery.js',
             'website_sale/static/src/scss/product_configurator.scss',
+            'website_sale/static/src/js/notification/cart_notification/cart_notification.js',
+            'website_sale/static/src/js/notification/cart_notification/cart_notification.xml',
+            'website_sale/static/src/js/notification/notification_service.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',

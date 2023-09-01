@@ -166,11 +166,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addOrMoveWish: function (e) {
-        var $navButton = $('header .o_wsale_my_cart').first();
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
         $('.o_wsale_my_cart').removeClass('d-none');
-        wSaleUtils.animateClone($navButton, tr, 25, 40);
 
         if ($('#b2b_wish').is(':checked')) {
             return this._addToCart(product, tr.find('add_qty').val() || 1);
@@ -190,6 +188,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             productTrackingInfo.quantity = qty;
             $tr.trigger('add_to_cart_event', [productTrackingInfo]);
         }
+        const callService = this.call.bind(this)
         return this._rpc({
             route: "/shop/cart/update_json",
             params: {
@@ -197,8 +196,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                 display: false,
             },
         }).then(function (data) {
-            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             wSaleUtils.updateCartNavBar(data);
+            wSaleUtils.showCartNotification(callService, data.notification_info);
             wSaleUtils.showWarning(data.warning);
         });
     },
