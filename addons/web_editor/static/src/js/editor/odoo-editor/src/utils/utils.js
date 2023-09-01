@@ -890,7 +890,7 @@ export function preserveCursor(document) {
         replace = replace || new Map();
         cursorPos[0] = replace.get(cursorPos[0]) || cursorPos[0];
         cursorPos[2] = replace.get(cursorPos[2]) || cursorPos[2];
-        return setSelection(...cursorPos);
+        return setSelection(...cursorPos, false);
     };
 }
 
