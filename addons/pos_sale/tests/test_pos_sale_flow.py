@@ -5,6 +5,7 @@ import odoo
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests.common import Form
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSale(TestPointOfSaleHttpCommon):
@@ -248,7 +249,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderRealTime', login="accountman")
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(self.main_pos_config.current_session_id)
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].qty_done, 2)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].location_id.id, self.shelf_1.id)

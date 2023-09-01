@@ -614,8 +614,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(orders[0]['data']['amount_return'], 0, msg='The amount return should be 0')
         self.assertEqual(orders[1]['data']['amount_return'], 0, msg='The amount return should be 0')
 
-        # close the session
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         # check values after the session is closed
         session_account_move = self.pos_session.move_id
@@ -819,8 +818,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['data']['amount_paid']
         self.env['pos.order'].create_from_ui([order_data])
-        session.post_closing_cash_details(amount_paid)
-        session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(session, counted_cash=amount_paid)
 
         self.assertEqual(session.cash_register_balance_start, 0)
         self.assertEqual(session.cash_register_balance_end_real, amount_paid)
@@ -828,8 +826,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         # Open/Close session without any order in cash control
         self.open_new_session(amount_paid)
         session = self.pos_session
-        session.post_closing_cash_details(amount_paid)
-        session.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(session, counted_cash=amount_paid)
         self.assertEqual(session.cash_register_balance_start, amount_paid)
         self.assertEqual(session.cash_register_balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
@@ -839,10 +836,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         def open_and_check(pos_data):
             self.config = pos_data['config']
-            self.open_new_session()
-            session = self.pos_session
-            session.set_cashbox_pos(pos_data['amount_paid'], False)
-            self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
+            self.open_new_session(opening_cash=pos_data['amount_paid'])
+            self.assertEqual(self.pos_session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
         self.cash_journal = self.env['account.journal'].create(
@@ -867,8 +862,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             pos_data['amount_paid'] += order_data['data']['amount_paid']
             self.env['pos.order'].create_from_ui([order_data])
 
-            session.post_closing_cash_details(pos_data['amount_paid'])
-            session.close_session_from_ui()
+            TestPoSCommon._close_from_ui_and_process_session(session, counted_cash=pos_data['amount_paid'])
 
         open_and_check(pos01_data)
         open_and_check(pos02_data)

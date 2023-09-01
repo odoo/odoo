@@ -4,6 +4,7 @@
 import odoo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSController(TestPointOfSaleHttpCommon):
@@ -24,6 +25,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'taxes_id': False,
         })
         self.main_pos_config.open_ui()
+        TestPoSCommon._open_session_if_needed(self.main_pos_config.current_session_id)
         self.pos_order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
             'session_id': self.main_pos_config.current_session_id.id,
@@ -44,7 +46,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'amount_paid': 10.0,
             'amount_return': 10.0,
         })
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(self.main_pos_config.current_session_id)
         get_invoice_data = {
             'access_token': self.pos_order.access_token,
             'name': self.new_partner.name,
@@ -85,6 +87,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'taxes_id': False,
         })
         self.main_pos_config.open_ui()
+        TestPoSCommon._open_session_if_needed(self.main_pos_config.current_session_id)
         self.pos_order = self.env['pos.order'].create({
             'session_id': self.main_pos_config.current_session_id.id,
             'company_id': self.env.company.id,
@@ -104,7 +107,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'amount_paid': 10.0,
             'amount_return': 10.0,
         })
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        TestPoSCommon._close_from_ui_and_process_session(self.main_pos_config.current_session_id)
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', timeout=30000)
         self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
         self.assertTrue("my/invoices" in res.url)

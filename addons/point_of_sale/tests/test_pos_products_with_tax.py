@@ -348,7 +348,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             (product1, 1),
             (product2, -1),
         ])])
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         lines = self.pos_session.move_id.line_ids.sorted('balance')
         self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
@@ -394,7 +394,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             (product1, 1),
             (product2, -1),
         ])])
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         lines = self.pos_session.move_id.line_ids.sorted('balance')
         self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
@@ -440,7 +440,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             (product1, 1, 10),
             (product2, -1, 10),
         ])])
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         lines = self.pos_session.move_id.line_ids.sorted('balance')
 
@@ -487,7 +487,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             (product1, 6, 5),
             (product2, -6, 5),
         ])])
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         lines = self.pos_session.move_id.line_ids.sorted('balance')
 
@@ -532,7 +532,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.env['pos.order'].create_from_ui([self.create_ui_order_data([
             (zero_amount_product, 1),
         ])])
-        self.pos_session.action_pos_session_validate()
+        TestPoSCommon._close_and_process_session(self.pos_session)
 
         lines = self.pos_session.move_id.line_ids.sorted('balance')
 

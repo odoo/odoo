@@ -10,7 +10,7 @@
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             invisible="state != 'paid'"/>
                     <button name="refund" string="Return Products" type="object"
-                        invisible="state == 'draft' or not has_refundable_lines"/>
+                        invisible="state in ['draft', 'cancel'] or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                     <field name="has_refundable_lines" invisible="1" />
                     <field name="refunded_orders_count" invisible="1" />

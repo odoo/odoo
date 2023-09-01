@@ -29,7 +29,7 @@ class TestPoSSaleReport(TestPoSCommon):
         # Duplicate the first line of the first order
         session.order_ids[0].lines.copy()
 
-        session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(session)
 
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id', limit=2)
@@ -72,7 +72,7 @@ class TestPoSSaleReport(TestPoSCommon):
         order = self.create_ui_order_data([(product_1, 3), (product_2, 3)])
         self.env['pos.order'].create_from_ui([order])
 
-        session.action_pos_session_closing_control()
+        TestPoSCommon._close_and_process_session(session)
 
         report = self.env['sale.report'].sudo().search([('product_id', '=', product_1.id)], order='id', limit=1)
         self.assertEqual(report.weight, 3)

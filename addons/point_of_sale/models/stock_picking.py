@@ -120,10 +120,17 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
+        print("\n #### stock_picking.py:121 - ():  _action_done :")
         for rec in self:
             if rec.picking_type_id.code != 'outgoing':
+                print("\n # stock_picking.py:125 - _action_done():  rec.picking_type_id.code :", rec.picking_type_id.code)
                 continue
+            print("\n # stock_picking.py:127 - _action_done():  after continue")
             if rec.pos_order_id.shipping_date and not rec.pos_order_id.to_invoice:
+                print("\n # stock_picking.py:129 - _action_done():  in if")
+## TODO is this check really needed ? depends on the decision taken below
+                if rec.pos_order_id.session_id.is_being_processed:
+                    raise UserError(_('Cannot validate the picking of a POS order while its session is being processed.'))
                 cost_per_account = defaultdict(lambda: 0.0)
                 for line in rec.pos_order_id.lines:
                     if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
@@ -152,9 +159,19 @@ class StockPicking(models.Model):
                             }),
                         ],
                     })
+## Here we are potentially "creating" an empty move when move_vals is empty... (and then we "action_post" it)
                 move = self.env['account.move'].create(move_vals)
-                rec.pos_order_id.write({'account_move': move.id})
+## TODO an invoice is made for the POS order, but the state is not changed to "invoiced" ?
+## Steps to reproduce:
+## account_accountant
+## - In inventory settings: enable Automatic Accounting
+## - In the product to use for test: In his product category (not pos category but product): Inventory Valuation: Automated
+## - In POS: Ship later, picking real time, order without invoice, then in the backend open the created picking and validate
+## (After closing the POS session, open a new one) or (just create new empty order then), open that previous order
+## The "Reprint invoice" button shows "Only invoices could be printed" error
+                rec.pos_order_id.with_context(bypass_pos_session_modifiable_check=True).write({'account_move': move.id})
                 move.action_post()
+                print("\n # stock_picking.py:166 - ():  move :", move)
         return res
 
 class StockPickingType(models.Model):

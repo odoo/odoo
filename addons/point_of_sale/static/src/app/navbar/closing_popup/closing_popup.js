@@ -127,6 +127,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         );
     }
     hasDifference() {
+        //// Why not this.state.payments.find((pm) => pm.difference != 0); ?
         return Object.entries(this.state.payments).find((pm) => pm[1].difference != 0);
     }
     hasUserAuthority() {
@@ -150,38 +151,38 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                 this.customerDisplay.update({ closeUI: true });
             }
 
-            if (this.cashControl) {
-                const response = await this.orm.call(
-                    "pos.session",
-                    "post_closing_cash_details",
-                    [this.pos.pos_session.id],
-                    {
-                        counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
-                    }
-                );
+            // if (this.cashControl) {
+            //     const response = await this.orm.call(
+            //         "pos.session",
+            //         "post_closing_cash_details",
+            //         [this.pos.pos_session.id],
+            //         {
+            //             counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
+            //         }
+            //     );
 
-                if (!response.successful) {
-                    return this.handleClosingError(response);
-                }
-            }
+            //     if (!response.successful) {
+            //         return this.handleClosingError(response);
+            //     }
+            // }
 
-            try {
-                await this.orm.call("pos.session", "update_closing_control_state_session", [
-                    this.pos.pos_session.id,
-                    this.state.notes,
-                ]);
-            } catch (error) {
-                // We have to handle the error manually otherwise the validation check stops the script.
-                // In case of "rescue session", we want to display the next popup with "handleClosingError".
-                // FIXME
-                if (
-                    !error.message &&
-                    !error.message.data &&
-                    error.message.data.message !== "This session is already closed."
-                ) {
-                    throw error;
-                }
-            }
+            // try {
+            //     await this.orm.call("pos.session", "update_closing_control_state_session", [
+            //         this.pos.pos_session.id,
+            //         this.state.notes,
+            //     ]);
+            // } catch (error) {
+            //     // We have to handle the error manually otherwise the validation check stops the script.
+            //     // In case of "rescue session", we want to display the next popup with "handleClosingError".
+            //     // FIXME
+            //     if (
+            //         !error.message &&
+            //         !error.message.data &&
+            //         error.message.data.message !== "This session is already closed."
+            //     ) {
+            //         throw error;
+            //     }
+            // }
 
             try {
                 const bankPaymentMethodDiffPairs = this.otherPaymentMethods
@@ -190,6 +191,10 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                 const response = await this.orm.call("pos.session", "close_session_from_ui", [
                     this.pos.pos_session.id,
                     bankPaymentMethodDiffPairs,
+                    this.state.notes,
+                    this.cashControl
+                        ? this.state.payments[this.defaultCashDetails.id].counted
+                        : null,
                 ]);
                 if (!response.successful) {
                     return this.handleClosingError(response);

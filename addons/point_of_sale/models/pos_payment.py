@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.tools import formatLang, float_is_zero
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class PosPayment(models.Model):
@@ -94,3 +94,25 @@ class PosPayment(models.Model):
             self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
             payment_move._post()
         return result
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        pos_order_ids = {vals['pos_order_id'] for vals in vals_list if vals.get('pos_order_id', False) is not False}
+        if pos_order_ids and not self.env['pos.order'].browse(pos_order_ids)._is_modifiable():
+            raise UserError(_('Cannot create a POS payment with an unmodifiable POS order.'))
+        return super().create(vals_list)
+
+    def write(self, vals):
+        pos_order_id = vals.get('pos_order_id', False)
+        pos_orders = self.pos_order_id
+        if pos_order_id is not False:
+            pos_orders |= self.env['pos.order'].browse(pos_order_id)
+        if not pos_orders._is_modifiable():
+            raise UserError(_('Cannot (un)link/edit a POS payment with an unmodifiable POS order.'))
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_unmodifiable_order(self):
+## TODO is it ok not to be able to delete a POS payment if the session is closed ?
+        if not self.pos_order_id._is_modifiable():
+            raise UserError(_('A POS payment can only be deleted if its order is modifiable.'))
