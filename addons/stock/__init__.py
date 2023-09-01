@@ -24,3 +24,7 @@ def _assign_default_mail_template_picking_id(env):
         company_ids_without_default_mail_template_id.write({
             'stock_mail_confirmation_template_id': default_mail_template_id.id,
         })
+
+def uninstall_hook(env):
+    picking_type_ids = env["stock.picking.type"].with_context({"active_test": False}).search([])
+    picking_type_ids.sequence_id.unlink()
