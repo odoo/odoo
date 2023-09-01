@@ -4,7 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
 
 /** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
-/** @typedef {DraggableHandlerParams & { group: HTMLElement | null }} SortableListHandlerParams */
+/** @typedef {DraggableHandlerParams & { group: HTMLElement | null }} NestedSortableHandlerParams */
 
 /**
  *
@@ -33,19 +33,19 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  *
  * HANDLERS (also optional)
  *
- * @property {(params: SortableListHandlerParams) => any} [onDragStart] called when a
+ * @property {(params: NestedSortableHandlerParams) => any} [onDragStart] called when a
  * dragging sequence is initiated.
  * @property {(params: MoveParams) => any} [onMove] called when the element has moved
  * (changed position) (@see MoveParams).
- * @property {(params: SortableListHandlerParams) => any} [onGroupEnter] called when
+ * @property {(params: NestedSortableHandlerParams) => any} [onGroupEnter] called when
  * the element enters a group.
- * @property {(params: SortableListHandlerParams) => any} [onGroupLeave] called when
+ * @property {(params: NestedSortableHandlerParams) => any} [onGroupLeave] called when
  * the element leaves a group.
  * @property {(params: MoveParams) => any} [onDrop] called when the dragging sequence
  *  ends on a mouseup action AND the dragged element has been moved elsewhere. The
  *  callback will be given an object with any useful element regarding the new position
  *  of the dragged element (@see MoveParams).
- * @property {(params: SortableListHandlerParams) => any} [onDragEnd] called when the
+ * @property {(params: NestedSortableHandlerParams) => any} [onDragEnd] called when the
  * dragging sequence ends, regardless of the reason.
  */
 
@@ -66,8 +66,8 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  */
 
 /** @type {(params: SortableParams) => SortableState} */
-export const useSortableList = makeDraggableHook({
-    name: "useSortableList",
+export const useNestedSortable = makeDraggableHook({
+    name: "useNestedSortable",
     acceptedParams: {
         groups: [String, Function],
         connectGroups: [Boolean, Function],
