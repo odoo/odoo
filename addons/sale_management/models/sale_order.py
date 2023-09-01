@@ -69,6 +69,12 @@ class SaleOrder(models.Model):
             if validity_days > 0:
                 order.validity_date = fields.Date.context_today(order) + timedelta(validity_days)
 
+    @api.depends('sale_order_template_id')
+    def _compute_journal_id(self):
+        super()._compute_journal_id()
+        for order in self.filtered('sale_order_template_id'):
+            order.journal_id = order.sale_order_template_id.journal_id
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('company_id', 'sale_order_option_ids')

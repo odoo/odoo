@@ -121,6 +121,12 @@ class SaleOrder(models.Model):
         string="Expiration",
         compute='_compute_validity_date',
         store=True, readonly=False, copy=False, precompute=True)
+    journal_id = fields.Many2one(
+        'account.journal', string="Invoicing Journal",
+        compute="_compute_journal_id", store=True, readonly=False, precompute=True,
+        domain=[('type', '=', 'sale')], check_company=True,
+        help="If set, the SO will invoice in this journal; "
+             "otherwise the sales journal with the lowest sequence is used.")
 
     # Partner-based computes
     note = fields.Html(
@@ -322,6 +328,9 @@ class SaleOrder(models.Model):
                 order.validity_date = today + timedelta(days)
             else:
                 order.validity_date = False
+
+    def _compute_journal_id(self):
+        self.journal_id = False
 
     @api.depends('partner_id')
     def _compute_note(self):
@@ -1121,7 +1130,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        return {
+        values = {
             'ref': self.client_order_ref or '',
             'move_type': 'out_invoice',
             'narration': self.note,
@@ -1142,6 +1151,9 @@ class SaleOrder(models.Model):
             'invoice_line_ids': [],
             'user_id': self.user_id.id,
         }
+        if self.journal_id:
+            values['journal_id'] = self.journal_id.id
+        return values
 
     def action_view_invoice(self, invoices=False):
         if not invoices:
