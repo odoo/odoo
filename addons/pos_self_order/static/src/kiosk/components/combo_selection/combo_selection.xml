@@ -23,8 +23,8 @@
                                         onerror="this.remove()" />
                                     <div class="name d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 pt-3 text-center">
                                         <h2 class="m-0" t-esc="line.product_id[1]" />
-                                        <span t-if="line.price" class="position-absolute top-0 end-0 m-1 px-2 rounded border border-white text-bg-primary bg-opacity-75 fs-4">
-                                            + <t t-esc="selfOrder.formatMonetary(line.price)" />
+                                        <span t-if="line.combo_price" class="position-absolute top-0 end-0 m-1 px-2 rounded border border-white text-bg-primary bg-opacity-75 fs-4">
+                                            + <t t-esc="selfOrder.formatMonetary(line.combo_price)" />
                                         </span>
                                     </div>
                                 </div>

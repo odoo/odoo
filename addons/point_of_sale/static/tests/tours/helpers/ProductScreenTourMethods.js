@@ -8,12 +8,12 @@ class Do {
         return [
             {
                 content: `click product '${name}'`,
-                trigger: `.product-list .product-name:contains("${name}")`,
+                trigger: `article.product .product-content .product-name:contains("${name}")`,
             },
         ];
     }
 
-    clickOrderline(name, quantity) {
+    clickOrderline(name, quantity = "1.0") {
         return [
             {
                 content: "click review button",
@@ -321,7 +321,7 @@ class Check {
             },
         ];
     }
-    selectedOrderlineHas(name, quantity, price) {
+    selectedOrderlineHas(name, quantity, price, comboParent) {
         const res = [
             {
                 content: "click review button",
@@ -352,6 +352,13 @@ class Check {
                 content: `selected line has total price of ${price}`,
                 trigger: `.order .orderline.selected .product-name:contains("${name}") ~ .price:contains("${price}")`,
                 run: function () {}, // it's a check
+            });
+        }
+        if (comboParent) {
+            res.push({
+                content: `selected line has ${comboParent} as combo parent`,
+                trigger: `.order .orderline.selected .info-list .combo-parent-name:contains("${comboParent}")`,
+                isCheck: true,
             });
         }
         res.push({
@@ -401,6 +408,25 @@ class Check {
                 content: `order total amount is '${amount}'`,
                 trigger: `.order-container .order .summary .value:contains("${amount}")`,
                 run: () => {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".pos-rightheader .floor-button",
+                mobile: true,
+            },
+        ];
+    }
+    totalTaxIs(amount) {
+        return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                content: `order total tax is '${amount}'`,
+                trigger: `.summary .subentry .value:contains("${amount}")`,
+                isCheck: true,
             },
             {
                 content: "go back to the products",
@@ -534,7 +560,7 @@ class Execute {
      * @param {string} unitPrice
      * @param {string} expectedTotal
      */
-    addOrderline(productName, quantity, unitPrice = undefined, expectedTotal = undefined) {
+    addOrderline(productName, quantity = 1, unitPrice = undefined, expectedTotal = undefined) {
         const res = this._do.clickDisplayedProduct(productName);
         res.push(...this._check.selectedOrderlineHas(productName, "1.00"));
         if (unitPrice) {

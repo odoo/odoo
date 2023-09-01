@@ -213,33 +213,38 @@ export class TicketScreen extends Component {
             return this.numberBuffer.reset();
         }
 
-        const toRefundDetail = this._getToRefundDetail(orderline);
-        // When already linked to an order, do not modify the to refund quantity.
-        if (toRefundDetail.destinationOrderUid) {
-            return this.numberBuffer.reset();
-        }
+        const toRefundDetails = orderline
+            .getAllLinesInCombo()
+            .map((line) => this._getToRefundDetail(line));
+        for (const toRefundDetail of toRefundDetails) {
+            // When already linked to an order, do not modify the to refund quantity.
+            if (toRefundDetail.destinationOrderUid) {
+                return this.numberBuffer.reset();
+            }
 
-        const refundableQty = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
-        if (refundableQty <= 0) {
-            return this.numberBuffer.reset();
-        }
+            const refundableQty =
+                toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
+            if (refundableQty <= 0) {
+                return this.numberBuffer.reset();
+            }
 
-        if (buffer == null || buffer == "") {
-            toRefundDetail.qty = 0;
-        } else {
-            const quantity = Math.abs(parseFloat(buffer));
-            if (quantity > refundableQty) {
-                this.numberBuffer.reset();
-                this.popup.add(ErrorPopup, {
-                    title: _t("Maximum Exceeded"),
-                    body: _t(
-                        "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                        quantity,
-                        refundableQty
-                    ),
-                });
+            if (buffer == null || buffer == "") {
+                toRefundDetail.qty = 0;
             } else {
-                toRefundDetail.qty = quantity;
+                const quantity = Math.abs(parseFloat(buffer));
+                if (quantity > refundableQty) {
+                    this.numberBuffer.reset();
+                    this.popup.add(ErrorPopup, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            refundableQty
+                        ),
+                    });
+                } else {
+                    toRefundDetail.qty = quantity;
+                }
             }
         }
     }

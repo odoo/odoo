@@ -19,7 +19,7 @@ class PosController(PortalAccount):
 
         The right pos session will be selected to open, if non is open yet a new session will be created.
 
-        /pos/ui and /pos/web both can be used to acces the POS. On the SaaS,
+        /pos/ui and /pos/web both can be used to access the POS. On the SaaS,
         /pos/ui uses HTTPS while /pos/web uses HTTP.
 
         :param debug: The debug mode to load the session in.

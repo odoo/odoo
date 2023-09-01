@@ -6,14 +6,14 @@ import { useService } from "@web/core/utils/hooks";
 import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
-import { ProductItem } from "@point_of_sale/app/screens/product_screen/product/product";
+import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_screen/product_list/control_panel/control_panel";
 import { Component, useState } from "@odoo/owl";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 export class ProductsWidget extends Component {
-    static components = { ProductItem, ProductsWidgetControlPanel };
+    static components = { ProductCard, ProductsWidgetControlPanel };
     static template = "point_of_sale.ProductsWidget";
 
     /**

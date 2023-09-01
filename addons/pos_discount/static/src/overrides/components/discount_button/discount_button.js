@@ -45,7 +45,7 @@ export class DiscountButton extends Component {
         // Remove existing discounts
         lines
             .filter((line) => line.get_product() === product)
-            .forEach((line) => order.remove_orderline(line));
+            .forEach((line) => order._unlinkOrderline(line));
 
         // Add one discount line per tax group
         const linesByTax = order.get_orderlines_grouped_by_tax_ids();

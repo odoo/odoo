@@ -99,11 +99,22 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     body: _t("Customer tips, cannot be modified directly"),
                 });
             }
-        } else if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
-            const order = this.pos.get_order();
-            if (!order.orderlines.length) {
-                return;
+            return;
+        }
+        if (this.pos.numpadMode === "quantity" && selectedLine?.isPartOfCombo()) {
+            if (key === "Backspace") {
+                this._setValue("remove");
+            } else {
+                this.popup.add(ErrorPopup, {
+                    title: _t("Invalid action"),
+                    body: _t(
+                        "The quantity of a combo item cannot be changed. A combo can only be deleted."
+                    ),
+                });
             }
+            return;
+        }
+        if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
@@ -123,29 +134,33 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             } else if (parsedInput < currentQuantity) {
                 this._showDecreaseQuantityPopup();
             }
-        } else {
-            const val = buffer === null ? "remove" : buffer;
-            this._setValue(val);
-            if (val == "remove") {
-                this.numberBuffer.reset();
-                this.pos.numpadMode = "quantity";
-            }
+            return;
+        }
+        const val = buffer === null ? "remove" : buffer;
+        this._setValue(val);
+        if (val == "remove") {
+            this.numberBuffer.reset();
+            this.pos.numpadMode = "quantity";
         }
     }
     _setValue(val) {
         const { numpadMode } = this.pos;
-        if (this.currentOrder.get_selected_orderline()) {
+        const selectedLine = this.currentOrder.get_selected_orderline();
+        if (selectedLine) {
             if (numpadMode === "quantity") {
-                const result = this.currentOrder.get_selected_orderline().set_quantity(val);
-                if (!result) {
-                    this.numberBuffer.reset();
+                if (val === "remove") {
+                    this.currentOrder.removeOrderline(selectedLine);
+                } else {
+                    const result = selectedLine.set_quantity(val);
+                    if (!result) {
+                        this.numberBuffer.reset();
+                    }
                 }
             } else if (numpadMode === "discount") {
-                this.currentOrder.get_selected_orderline().set_discount(val);
+                selectedLine.set_discount(val);
             } else if (numpadMode === "price") {
-                var selected_orderline = this.currentOrder.get_selected_orderline();
-                selected_orderline.price_type = "manual";
-                selected_orderline.set_unit_price(val);
+                selectedLine.price_type = "manual";
+                selectedLine.set_unit_price(val);
             }
         }
     }
@@ -279,7 +294,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
             if (newQuantity >= selectedLine.saved_quantity) {
                 if (newQuantity == 0) {
-                    order.remove_orderline(selectedLine);
+                    order._unlinkOrderline(selectedLine);
                 }
                 selectedLine.set_quantity(newQuantity);
                 return true;

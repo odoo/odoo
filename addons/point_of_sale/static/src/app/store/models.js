@@ -17,6 +17,7 @@ import {
 } from "@web/core/utils/numbers";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
+import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { _t } from "@web/core/l10n/translation";
@@ -101,6 +102,16 @@ export class Product extends PosModel {
         const productUnit = this.get_unit();
         return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
     }
+    /**
+     * @returns {string}
+     */
+    getImageUrl() {
+        return (
+            (this.image_128 &&
+                `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
+            ""
+        );
+    }
     get_unit() {
         var unit_id = this.uom_id;
         if (!unit_id) {
@@ -116,10 +127,19 @@ export class Product extends PosModel {
     get isScaleAvailable() {
         return true;
     }
+    getFormattedUnitPrice() {
+        const formattedUnitPrice = this.env.utils.formatCurrency(this.get_display_price());
+        if (this.to_weight) {
+            return `${formattedUnitPrice}/${this.get_unit().name}`;
+        } else {
+            return formattedUnitPrice;
+        }
+    }
     async getAddProductOptions(code) {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
         let quantity = 1;
+        let comboLines = [];
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
@@ -145,6 +165,16 @@ export class Product extends PosModel {
             } else {
                 return;
             }
+        }
+        if (this.combo_ids.length) {
+            const { confirmed, payload } = await this.env.services.popup.add(
+                ComboConfiguratorPopup,
+                { product: this }
+            );
+            if (!confirmed) {
+                return;
+            }
+            comboLines = payload;
         }
         // Gather lot information if required.
         if (
@@ -224,7 +254,14 @@ export class Product extends PosModel {
             }
         }
 
-        return { draftPackLotLines, quantity, weight, description, price_extra };
+        return {
+            draftPackLotLines,
+            quantity,
+            weight,
+            description,
+            price_extra,
+            comboLines,
+        };
     }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
@@ -311,16 +348,18 @@ export class Product extends PosModel {
         // pricelist that have base == 'pricelist'.
         return price;
     }
-    get_display_price(pricelist, quantity) {
+    get_display_price({
+        pricelist = this.pos.getDefaultPricelist(),
+        quantity = 1,
+        price = this.get_price(pricelist, quantity),
+        iface_tax_included = this.pos.config.iface_tax_included,
+    } = {}) {
         const order = this.pos.get_order();
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
-        const priceAfterFp = this.pos.computePriceAfterFp(
-            this.get_price(pricelist, quantity),
-            currentTaxes
-        );
+        const priceAfterFp = this.pos.computePriceAfterFp(price, currentTaxes);
         const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
-        if (this.pos.config.iface_tax_included === "total") {
+        if (iface_tax_included === "total") {
             return allPrices.total_included;
         } else {
             return allPrices.total_excluded;
@@ -387,7 +426,7 @@ export class Orderline extends PosModel {
         this.set_description(json.description);
         this.set_price_extra(json.price_extra);
         this.set_full_product_name(json.full_product_name);
-        this.id = json.id ? json.id : orderline_id++;
+        this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
@@ -405,6 +444,8 @@ export class Orderline extends PosModel {
         this.saved_quantity = json.qty;
         this.uuid = json.uuid;
         this.skipChange = json.skip_change;
+        this.combo_line_ids = json.combo_line_ids;
+        this.combo_parent_id = json.combo_parent_id;
     }
     clone() {
         var orderline = new Orderline(
@@ -538,61 +579,51 @@ export class Orderline extends PosModel {
     // Return true if successfully set the quantity, otherwise, return false.
     set_quantity(quantity, keep_price) {
         this.order.assert_editable();
-        if (quantity === "remove") {
-            if (this.refunded_orderline_id in this.pos.toRefundLines) {
-                delete this.pos.toRefundLines[this.refunded_orderline_id];
-            }
-            this.order.remove_orderline(this);
-            return true;
-        } else {
-            var quant =
-                typeof quantity === "number"
-                    ? quantity
-                    : oParseFloat("" + (quantity ? quantity : 0));
-            if (this.refunded_orderline_id in this.pos.toRefundLines) {
-                const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
-                const maxQtyToRefund =
-                    toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
-                if (quant > 0) {
-                    this.env.services.popup.add(ErrorPopup, {
-                        title: _t("Positive quantity not allowed"),
-                        body: _t(
-                            "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
-                        ),
-                    });
-                    return false;
-                } else if (quant == 0) {
-                    toRefundDetail.qty = 0;
-                } else if (-quant <= maxQtyToRefund) {
-                    toRefundDetail.qty = -quant;
-                } else {
-                    this.env.services.popup.add(ErrorPopup, {
-                        title: _t("Greater than allowed"),
-                        body: _t(
-                            "The requested quantity to be refunded is higher than the refundable quantity of %s.",
-                            this.env.utils.formatProductQty(maxQtyToRefund)
-                        ),
-                    });
-                    return false;
-                }
-            }
-            var unit = this.get_unit();
-            if (unit) {
-                if (unit.rounding) {
-                    var decimals = this.pos.dp["Product Unit of Measure"];
-                    var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
-                    this.quantity = round_pr(quant, rounding);
-                    this.quantityStr = formatFloat(this.quantity, {
-                        digits: [69, decimals],
-                    });
-                } else {
-                    this.quantity = round_pr(quant, 1);
-                    this.quantityStr = this.quantity.toFixed(0);
-                }
+        var quant =
+            typeof quantity === "number" ? quantity : oParseFloat("" + (quantity ? quantity : 0));
+        if (this.refunded_orderline_id in this.pos.toRefundLines) {
+            const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
+            const maxQtyToRefund =
+                toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
+            if (quant > 0) {
+                this.env.services.popup.add(ErrorPopup, {
+                    title: _t("Positive quantity not allowed"),
+                    body: _t(
+                        "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
+                    ),
+                });
+                return false;
+            } else if (quant == 0) {
+                toRefundDetail.qty = 0;
+            } else if (-quant <= maxQtyToRefund) {
+                toRefundDetail.qty = -quant;
             } else {
-                this.quantity = quant;
-                this.quantityStr = "" + this.quantity;
+                this.env.services.popup.add(ErrorPopup, {
+                    title: _t("Greater than allowed"),
+                    body: _t(
+                        "The requested quantity to be refunded is higher than the refundable quantity of %s.",
+                        this.env.utils.formatProductQty(maxQtyToRefund)
+                    ),
+                });
+                return false;
             }
+        }
+        var unit = this.get_unit();
+        if (unit) {
+            if (unit.rounding) {
+                var decimals = this.pos.dp["Product Unit of Measure"];
+                var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
+                this.quantity = round_pr(quant, rounding);
+                this.quantityStr = formatFloat(this.quantity, {
+                    digits: [69, decimals],
+                });
+            } else {
+                this.quantity = round_pr(quant, 1);
+                this.quantityStr = this.quantity.toFixed(0);
+            }
+        } else {
+            this.quantity = quant;
+            this.quantityStr = "" + this.quantity;
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
@@ -616,9 +647,8 @@ export class Orderline extends PosModel {
         return this.quantityStr;
     }
     get_quantity_str_with_unit() {
-        var unit = this.get_unit();
-        if (unit && !unit.is_pos_groupable) {
-            return this.quantityStr + " " + unit.name;
+        if (this.is_pos_groupable()) {
+            return this.quantityStr + " " + this.get_unit().name;
         } else {
             return this.quantityStr;
         }
@@ -708,7 +738,7 @@ export class Orderline extends PosModel {
             orderline.getNote() === this.getNote() &&
             this.get_product().id === orderline.get_product().id &&
             this.get_unit() &&
-            this.get_unit().is_pos_groupable &&
+            this.is_pos_groupable() &&
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
             floatIsZero(
@@ -721,8 +751,13 @@ export class Orderline extends PosModel {
             ) &&
             this.description === orderline.description &&
             orderline.get_customer_note() === this.get_customer_note() &&
-            !this.refunded_orderline_id
+            !this.refunded_orderline_id &&
+            !this.isPartOfCombo() &&
+            !orderline.isPartOfCombo()
         );
+    }
+    is_pos_groupable() {
+        return this.get_unit()?.is_pos_groupable && !this.isPartOfCombo();
     }
     merge(orderline) {
         this.order.assert_editable();
@@ -753,6 +788,8 @@ export class Orderline extends PosModel {
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
             price_type: this.price_type,
+            combo_line_ids: this.comboLines?.map((line) => line.id || line.cid),
+            combo_parent_id: this.comboParent?.id || this.comboParent?.cid,
         };
     }
     //used to create a json of the ticket, to be sent to the printer
@@ -1051,6 +1088,32 @@ export class Orderline extends PosModel {
         const tipProduct = this.pos.config.tip_product_id;
         return tipProduct && this.product.id === tipProduct[0];
     }
+
+    /**
+     * @returns {Orderline[]} all the lines that are in the same combo tree as the given line
+     * (including the given line), or just the given line if it is not part of a combo.
+     */
+    getAllLinesInCombo() {
+        if (this.comboParent) {
+            // having a `comboParent` means that we are not
+            // at the root node of the combo tree.
+            // Thus, we first navigate to the root
+            return this.comboParent.getAllLinesInCombo();
+        }
+        const lines = [];
+        const stack = [this];
+        while (stack.length) {
+            const n = stack.pop();
+            lines.push(n);
+            if (n.comboLines) {
+                stack.push(...n.comboLines);
+            }
+        }
+        return lines;
+    }
+    isPartOfCombo() {
+        return Boolean(this.comboParent || this.comboLines?.length);
+    }
 }
 
 export class Packlotline extends PosModel {
@@ -1243,6 +1306,7 @@ export class Order extends PosModel {
         this.finalized = false; // if true, cannot be modified.
         this.shippingDate = null;
         this.firstDraft = true;
+        this.combos = [];
 
         this.partner = null;
 
@@ -1262,6 +1326,14 @@ export class Order extends PosModel {
 
         if (options.json) {
             this.init_from_JSON(options.json);
+            const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
+            for (const line of this.orderlines) {
+                line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);
+                const combo_parent_id = line.combo_parent_id?.[0] || line.combo_parent_id;
+                if (combo_parent_id) {
+                    line.comboParent = linesById[combo_parent_id];
+                }
+            }
         } else {
             this.set_pricelist(this.pos.default_pricelist);
             this.sequence_number = this.pos.pos_session.sequence_number++;
@@ -1331,7 +1403,7 @@ export class Order extends PosModel {
                 this.fiscal_position = fiscal_position;
             } else {
                 this.fiscal_position_not_found = true;
-                console.error('ERROR: trying to load a fiscal position not available in the pos');
+                console.error("ERROR: trying to load a fiscal position not available in the pos");
             }
         }
 
@@ -1789,7 +1861,7 @@ export class Order extends PosModel {
     add_orderline(line) {
         this.assert_editable();
         if (line.order) {
-            line.order.remove_orderline(line);
+            line.order._unlinkOrderline(line);
         }
         line.order = this;
         this.orderlines.add(line);
@@ -1923,10 +1995,34 @@ export class Order extends PosModel {
             self.fix_tax_included_price(line);
         });
     }
-    remove_orderline(line) {
+
+    /**
+     * Performs the basic unlinking of the `line` from the order.
+     * @param {Orderline} line
+     */
+    _unlinkOrderline(line) {
         this.assert_editable();
         this.orderlines.remove(line);
+        line.order = null;
+    }
+
+    /**
+     * A wrapper around _unlinkOrderline that may potentially remove multiple orderlines.
+     * In core pos, it removes the linked combo lines. In other modules, it may remove
+     * other related lines, e.g. multiple reward lines in pos_loyalty module.
+     * @param {Orderline} line
+     * @returns {boolean} true if the line was removed, false otherwise
+     */
+    removeOrderline(line) {
+        const linesToRemove = line.getAllLinesInCombo();
+        for (const lineToRemove of linesToRemove) {
+            this._unlinkOrderline(lineToRemove);
+            if (lineToRemove.refunded_orderline_id in this.pos.toRefundLines) {
+                delete this.pos.toRefundLines[lineToRemove.refunded_orderline_id];
+            }
+        }
         this.select_orderline(this.get_last_orderline());
+        return true;
     }
 
     isFirstDraft() {
@@ -1989,8 +2085,48 @@ export class Order extends PosModel {
         if (options.draftPackLotLines) {
             this.selected_orderline.setPackLotLines(options.draftPackLotLines);
         }
+
+        if (options.comboLines?.length) {
+            await this.addComboLines(line, options);
+            // Make sure the combo parent is selected.
+            this.select_orderline(line);
+        }
+    }
+    async addComboLines(comboParent, options) {
+        const pricelist = this.pos.getDefaultPricelist();
+        const originalPrices = {};
+
+        let [originalTotal, targetExtra] = [0, 0];
+        for (const comboLine of options.comboLines) {
+            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
+            const originalPrice = product.get_price(pricelist, 1, comboLine.combo_price);
+            originalTotal += product.get_display_price({ price: originalPrice });
+            targetExtra += product.get_display_price({ price: comboLine.combo_price });
+
+            // Keep track of the original price of each product for the subsequent for loop.
+            originalPrices[product.id] = originalPrice;
+        }
+
+        const targetPrice = comboParent.product.lst_price + targetExtra;
+        const childPriceFactor = targetPrice / originalTotal;
+        for (const comboLine of options.comboLines) {
+            const product = this.pos.db.product_by_id[comboLine.product_id[0]];
+            const childUnitPrice = originalPrices[product.id] * childPriceFactor;
+            await this.pos.addProductToCurrentOrder(product, {
+                price: childUnitPrice,
+                comboParent,
+            });
+        }
     }
     set_orderline_options(orderline, options) {
+        if (options.comboLines?.length) {
+            options.price = 0;
+            orderline.comboLines = [];
+        }
+        if (options.comboParent) {
+            orderline.comboParent = options.comboParent;
+            orderline.comboParent.comboLines.push(orderline);
+        }
         if (options.quantity !== undefined) {
             orderline.set_quantity(options.quantity);
         }

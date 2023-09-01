@@ -324,7 +324,7 @@ class PosConfig(models.Model):
         return[{
             'id': combo.id,
             'name': combo.name,
-            'combo_line_ids': combo.combo_line_ids.read(['product_id', 'price', 'lst_price', 'combo_id'])
+            'combo_line_ids': combo.combo_line_ids.read(['product_id', 'combo_price', 'lst_price', 'combo_id'])
         } for combo in combos]
 
     def _get_self_order_mobile_data(self):

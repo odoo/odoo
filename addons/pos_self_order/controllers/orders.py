@@ -227,7 +227,7 @@ class PosSelfOrderController(http.Controller):
                     child_line_combo = pos_config.env['pos.combo'].browse(int(child.get('combo_id')))
                     child_line_combo_line = child_line_combo.combo_line_ids.filtered(lambda l: l.product_id.id == child.get('product_id'))[0]
                     child_product = pos_config.env["product.product"].browse(int(child.get('product_id')))
-                    child_price_unit = ratio * unit_price_by_id[child['uuid']] + child_line_combo_line.price
+                    child_price_unit = ratio * unit_price_by_id[child['uuid']] + child_line_combo_line.combo_price
                     child_selected_account_tax = config_fiscal_pos.map_tax(child_product.taxes_id) if config_fiscal_pos else child_product.taxes_id
                     child_tax_results = child_selected_account_tax.compute_all(
                         child_price_unit,

@@ -103,26 +103,6 @@ patch(Orderline.prototype, {
         this.eWalletGiftCardProgram = this.pos.program_by_id[json.eWalletGiftCardProgramId];
         super.init_from_JSON(...arguments);
     },
-    set_quantity(quantity, keep_price) {
-        if (quantity === "remove" && this.is_reward_line) {
-            // Remove any line that is part of that same reward aswell.
-            const linesToRemove = [];
-            this.order.get_orderlines().forEach((line) => {
-                if (
-                    line != this &&
-                    line.reward_id === this.reward_id &&
-                    line.coupon_id === this.coupon_id &&
-                    line.reward_identifier_code === this.reward_identifier_code
-                ) {
-                    linesToRemove.push(line);
-                }
-            });
-            for (const line of linesToRemove) {
-                this.order.orderlines.remove(line);
-            }
-        }
-        return super.set_quantity(...arguments);
-    },
     getEWalletGiftCardProgramType() {
         return this.eWalletGiftCardProgram && this.eWalletGiftCardProgram.program_type;
     },
@@ -1588,5 +1568,23 @@ patch(Order.prototype, {
             this._get_reward_lines(),
         ];
         return array.some((elem) => elem.length > 0);
+    },
+    removeOrderline(lineToRemove) {
+        if (lineToRemove.is_reward_line) {
+            // Remove any line that is part of that same reward aswell.
+            const linesToRemove = this.get_orderlines().filter((line) => {
+                return (
+                    line.reward_id === lineToRemove.reward_id &&
+                    line.coupon_id === lineToRemove.coupon_id &&
+                    line.reward_identifier_code === lineToRemove.reward_identifier_code
+                );
+            });
+            for (const line of linesToRemove) {
+                this._unlinkOrderline(line);
+            }
+            return true;
+        } else {
+            return super.removeOrderline(lineToRemove);
+        }
     },
 });

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(odoo.tests.HttpCase):
@@ -221,3 +222,9 @@ class TestFrontend(odoo.tests.HttpCase):
     def test_08_refund_stay_current_table(self):
         self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'RefundStayCurrentTableTour', login="demo")
+
+    def test_09_combo_split_bill(self):
+        combo_product = setup_pos_combo_items(self)
+        combo_product.write({'lst_price': 40})
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'SplitBillScreenTour4PosCombo', login="demo")

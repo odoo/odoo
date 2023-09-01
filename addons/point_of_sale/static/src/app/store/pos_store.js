@@ -187,6 +187,13 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+    getDefaultPricelist() {
+        const current_order = this.get_order();
+        if (current_order) {
+            return current_order.pricelist;
+        }
+        return this.default_pricelist;
+    }
     async load_product_uom_unit() {
         const uom_id = await this.orm.call("ir.model.data", "check_object_reference", [
             "uom",
@@ -241,6 +248,8 @@ export class PosStore extends Reactive {
         this.default_pricelist = loadedData["default_pricelist"];
         this.currency = loadedData["res.currency"];
         this.db.add_categories(loadedData["pos.category"]);
+        this.db.add_combos(loadedData["pos.combo"]);
+        this.db.add_combo_lines(loadedData["pos.combo.line"]);
         this._loadProductProduct(loadedData["product.product"]);
         this.db.add_packagings(loadedData["product.packaging"]);
         this.attributes_by_ptal_id = loadedData["attributes_by_ptal_id"];
@@ -958,17 +967,17 @@ export class PosStore extends Reactive {
         return this.orders;
     }
 
-    computePriceAfterFp(price, taxes){
+    computePriceAfterFp(price, taxes) {
         const order = this.get_order();
-        if(order && order.fiscal_position) {
-            let mapped_included_taxes = [];
+        if (order && order.fiscal_position) {
+            const mapped_included_taxes = [];
             let new_included_taxes = [];
-            taxes.forEach(tax => {
+            taxes.forEach((tax) => {
                 const line_taxes = this.get_taxes_after_fp([tax.id], order.fiscal_position);
-                if (line_taxes.length && line_taxes[0].price_include){
+                if (line_taxes.length && line_taxes[0].price_include) {
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }
-                if(tax.price_include && !line_taxes.includes(tax)){
+                if (tax.price_include && !line_taxes.includes(tax)) {
                     mapped_included_taxes.push(tax);
                 }
             });
@@ -981,16 +990,15 @@ export class PosStore extends Reactive {
                         1,
                         this.currency.rounding,
                         true
-                    ).total_excluded
+                    ).total_excluded;
                     return this.compute_all(
                         new_included_taxes,
                         price_without_taxes,
                         1,
                         this.currency.rounding,
                         false
-                    ).total_included
-                }
-                else{
+                    ).total_included;
+                } else {
                     return this.compute_all(
                         mapped_included_taxes,
                         price,
@@ -1005,7 +1013,7 @@ export class PosStore extends Reactive {
     }
 
     getTaxesByIds(taxIds) {
-        let taxes = [];
+        const taxes = [];
         for (let i = 0; i < taxIds.length; i++) {
             if (this.taxes_by_id[taxIds[i]]) {
                 taxes.push(this.taxes_by_id[taxIds[i]]);
@@ -1795,23 +1803,20 @@ export class PosStore extends Reactive {
     async addProductFromUi(product, options) {
         this.get_order().add_product(product, options);
     }
-    async addProductToCurrentOrder(product) {
+    async addProductToCurrentOrder(product, options = {}) {
         if (Number.isInteger(product)) {
             product = this.db.get_product_by_id(product);
         }
-        const currentOrder = this.get_order();
+        this.get_order() || this.add_new_order();
 
-        if (!currentOrder) {
-            this.add_new_order();
-        }
+        options = { ...options, ...(await product.getAddProductOptions()) };
 
-        const options = await product.getAddProductOptions();
-
-        if (!options) {
+        if (!Object.keys(options).length) {
             return;
         }
+
         // Add the product after having the extra information.
-        this.addProductFromUi(product, options);
+        await this.addProductFromUi(product, options);
         this.numberBuffer.reset();
     }
     // FIXME POSREF get rid of temp screens entirely?

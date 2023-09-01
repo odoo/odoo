@@ -5,7 +5,7 @@
         <li t-on-click="selectLine" class="orderline w-100 m-0 py-2 px-3 lh-sm cursor-pointer transition-base" t-att-class="addedClasses">
             <span class="product-name d-inline-block flex-grow-1 fw-bolder text-truncate">
                 <t t-esc="props.line.get_full_product_name()"/>
-                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (pos.picking_type.use_create_lots || pos.picking_type.use_existing_lots)">
+                <t t-if="props.line.get_product().tracking!=='none' and (pos.picking_type.use_create_lots || pos.picking_type.use_existing_lots)">
                     <t t-if="props.line.has_valid_product_lot()">
                         <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon ms-1 text-success"
@@ -64,6 +64,7 @@
                         <t t-esc="customerNote" />
                     </li>
                 </t>
+                <t t-if="props.line.comboParent" t-call="point_of_sale.ComboParentName"/>
             </ul>
             <t t-if="props.line.pack_lot_lines">
                 <ul class="info-list ms-2">
@@ -77,4 +78,10 @@
         </li>
     </t>
 
+    <t t-name="point_of_sale.ComboParentName" owl="1">
+        <li class="info ms-2 combo-parent-name">
+            <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
+            <t t-esc="props.line.comboParent.get_full_product_name()" />
+        </li>
+    </t>
 </templates>

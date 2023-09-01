@@ -1,0 +1,31 @@
+.combo-configurator-popup input{
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.combo-configurator-popup input:checked +label{
+    -webkit-filter: none;
+        -moz-filter: none;
+            filter: none;
+    border: 2px solid #000;
+    border-radius: 5%;
+
+}
+
+.combo-configurator-popup label{
+    cursor:pointer;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: opacity(.7);
+       -moz-filter: opacity(.7);
+            filter: opacity(.7);
+}
+.combo-configurator-popup label:hover{
+    -webkit-filter: opacity(1);
+       -moz-filter: opacity(1);
+            filter: opacity(1);
+    border: 1px solid #000;
+    border-radius: 5%;
+}
