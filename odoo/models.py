@@ -1652,13 +1652,26 @@ class BaseModel(metaclass=MetaModel):
         it can be made field-dependent using :attr:`~odoo.api.depends` and
         context-dependent using :attr:`~odoo.api.depends_context`.
         """
+        description_model = None
+        def get_fallback_name(record):
+            nonlocal description_model
+            if description_model is None:
+                description_model = self.env['ir.model']._get(self._name).name
+
+            if origin_id := record._origin.id:
+                return f'{description_model} ({origin_id})'
+            return _('%s (New)', description_model)
+
         if self._rec_name:
             convert = self._fields[self._rec_name].convert_to_display_name
             for record in self:
-                record.display_name = convert(record[self._rec_name], record) or f"{record._name},{record.id}"
+                if value := record[self._rec_name]:
+                    record.display_name = convert(value, record)
+                else:
+                    record.display_name = get_fallback_name(record)
         else:
             for record in self:
-                record.display_name = f"{record._name},{record.id}"
+                record.display_name = get_fallback_name(record)
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
