@@ -49,7 +49,7 @@ export class MailCoreCommon {
                     if (!message) {
                         continue;
                     }
-                    delete this.store.Message.records[this.store.Message.localId(messageId)];
+                    message.delete();
                     if (message.originThread) {
                         removeFromArrayWithPredicate(message.originThread.messages, (msg) =>
                             msg.eq(message)

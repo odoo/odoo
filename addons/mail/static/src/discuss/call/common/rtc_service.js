@@ -1402,7 +1402,7 @@ export class Rtc {
                 ?.rtcSessions[id];
             this.disconnect(session);
         }
-        delete this.store.RtcSession.records[this.store.RtcSession.localId(id)];
+        session.delete();
     }
 
     /**

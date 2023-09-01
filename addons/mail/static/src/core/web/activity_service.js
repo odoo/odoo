@@ -78,7 +78,7 @@ export class ActivityService {
     }
 
     delete(activity, { broadcast = true } = {}) {
-        delete this.store.Activity.records[this.store.Activity.localId(activity.id)];
+        activity.delete();
         if (broadcast) {
             this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
         }
@@ -106,6 +106,7 @@ export class ActivityService {
     _serialize(activity) {
         const data = { ...activity };
         delete data._store;
+        delete data.Model;
         return JSON.parse(JSON.stringify(data));
     }
 }

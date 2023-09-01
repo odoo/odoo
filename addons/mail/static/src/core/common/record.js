@@ -73,7 +73,7 @@ export class Record {
      */
     static new(data) {
         const obj = new this.Class();
-        let record = Object.assign(obj, { localId: this.localId(data) });
+        let record = Object.assign(obj, { localId: this.localId(data), Model: this });
         Object.assign(record, { _store: this.store });
         if (!Array.isArray(this.records)) {
             this.records[record.localId] = record;
@@ -91,6 +91,26 @@ export class Record {
 
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
+    /**
+     * Technical attribute, contains the Model entry in the store.
+     * This is almost the same as the class, except it's an object
+     * (so it works with OWL reactivity), and it's the actual object
+     * that store the records.
+     *
+     * Indeed, `this.constructor.records` is there to initiate `records`
+     * on the store entry, but the class `static records` is not actually
+     * used because it's non-reactive, and we don't want to persistently
+     * store records on class, to make sure different tests do not share
+     * records.
+     *
+     * @type {typeof Record}
+     */
+    Model;
+
+    delete() {
+        delete this.Model.records[this.localId];
+        this.Model = null;
+    }
 
     /** @param {Record} record */
     eq(record) {
