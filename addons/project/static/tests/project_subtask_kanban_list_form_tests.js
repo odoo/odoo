@@ -51,14 +51,13 @@ QUnit.module('Subtask Kanban List tests', {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="name"/>
+                                <field name="display_name"/>
                                 <field name="user_ids" invisible="1" widget="many2many_avatar_user"/>
                                 <field name="state" invisible="1" widget="project_task_state_selection"/>
-                                <a t-if="record.closed_subtask_count.raw_value">
-                                    <span title="See Subtasks" class="subtask_list_button fa fa-check-square-o me-1"/>
-                                    <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
-                                </a>
-                                <div class="kanban_bottom_subtasks_section"/>
+                                <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
+                                    <widget name="subtask_counter"/>
+                                </t>
+                                <widget name="subtask_kanban_list" />
                             </div>
                         </t>
                     </templates>
@@ -126,12 +125,46 @@ QUnit.module('Subtask Kanban List tests', {
         assert.containsOnce(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)", "The state of the subtask should be in progress");
         await click(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)");
         assert.containsNone(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)", "The state of the subtask should no longer be in progress");
-        assert.containsOnce(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .fa-check-circle.text-success", "The state of the subtask should be Done");
         assert.verifySteps([
-            "project.task/search_read",
+            "project.task/web_read",
+            "project.task/onchange",
             "project.task/web_save",
-            "project.task/search_read",
-            "project.task/web_read", // read the parent task to recompute the subtask count
+        ]);
+    });
+
+    QUnit.test("Create a subtask from the kanban view", async function (assert) {
+        let checkSteps = false;
+        const pyEnv = await startServer();
+        const { openView } = await start({
+            serverData: { views: this.views },
+            mockRPC(route, { args, model, method }) {
+                if (checkSteps) {
+                    assert.step(`${model}/${method}`);
+                }
+                if (route === '/web/dataset/call_kw/project.task/create') {
+                    const [{ display_name, parent_id }] = args[0];
+                    assert.strictEqual(display_name, 'foo')
+                    assert.strictEqual(parent_id, 1)
+                    return pyEnv['project.task'].create({ name: display_name, parent_id: parent_id, state: '01_in_progress' });
+                }
+            },
+        });
+        await openView({
+            res_model: "project.task",
+            views: [[false, "kanban"]],
+        });
+
+        assert.strictEqual(target.querySelector(".subtask_list_button").parentElement.textContent, "1/4");
+        checkSteps = true;
+        await click(target.querySelector('.subtask_list_button'));
+        await click(target.querySelector('.subtask_create'));
+        await editInput(target.querySelector('.subtask_create_input'), "input", "foo");
+
+        assert.containsN(target, '.subtask_list_row', 4, "The subtasks list should now display the subtask created on the card, thus we are looking for 4 in total");
+        assert.verifySteps([
+            "project.task/web_read",
+            "project.task/create",
+            "project.task/web_read",
         ]);
     });
 

@@ -1,49 +1,60 @@
 /** @odoo-module */
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
-import { Record } from "@web/model/record";
-import { KanbanMany2ManyTagsAvatarUserField } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Field, getFieldFromRegistry } from "@web/views/fields/field";
+import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { SubtaskCreate } from "./subtask_kanban_create/subtask_kanban_create";
 
 export class SubtaskKanbanList extends Component {
     static components = {
-        Record,
         Field,
-        KanbanMany2ManyTagsAvatarUserField,
+        SubtaskCreate,
     };
     static props = {
         ...standardWidgetProps,
+        isReadonly: {
+            type: Boolean,
+            optional: true,
+        },
     };
     static template = "project.SubtaskKanbanList";
 
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.subTasksRead = [];
-        this.subTaskClosed = new Set();
-
-        onWillStart(this.onWillStart);
+        this.subtaskCreate = useState({
+            open: false,
+            name: "",
+        });
     }
 
-    async onWillStart() {
-        this.subTasksRead = await this.orm.searchRead(
-            this.props.record.resModel, [
-                ["parent_id", "=", this.props.record.resId],
-                ["state", "not in", ["1_done", "1_canceled"]],
-            ],
-            this.fieldNames
-        );
+    get list() {
+        return this.props.record.data.child_ids;
+    }
+
+    get closedList() {
+        return this.list.records.filter((child) => {
+            return !["1_done", "1_canceled"].includes(child.data.state);
+        });
+    }
+
+    get fieldInfo() {
+        return {
+            state: {
+                ...getPropertyFieldInfo({ name: "state", type: "project_task_state_selection" }),
+                viewType: "kanban",
+            },
+        };
     }
 
     async goToSubtask(subtask_id) {
         return this.actionService.doAction({
             type: "ir.actions.act_window",
-            res_model: this.props.record.resModel,
+            res_model: this.list.resModel,
             res_id: subtask_id,
             views: [[false, "form"]],
             target: "current",
@@ -53,61 +64,24 @@ export class SubtaskKanbanList extends Component {
         });
     }
 
-    get fieldNames() {
-        return Object.keys(this.fields);
+    async onSubTaskCreated(ev) {
+        this.subtaskCreate.open = true;
     }
 
-    get fields() {
-        const { display_name, state, user_ids, project_id } = this.props.record.fields;
-        return {
-            display_name,
-            state,
-            user_ids,
-            project_id,
-        };
+    async _onBlur() {
+        this.subtaskCreate.open = false;
     }
 
-    get activeFields() {
-        return {
-            display_name: {},
-            state: {
-                name: "state",
-                viewType: "kanban",
-                field: getFieldFromRegistry(this.fields.state.type, "project_task_state_selection", "kanban"),
-            },
-            user_ids: {
-                name: "user_ids",
-                field: getFieldFromRegistry(this.fields.user_ids.type, "many2many_avatar_user", "kanban"),
-            },
-            project_id: {
-                field: getFieldFromRegistry(this.fields.project_id.type, "project", "kanban")
-            },
-        };
-    }
-
-    async onSubTaskSaved(subTask) {
-        const ids = this.subTasksRead.map((t) => t.id);
-        this.subTasksRead = await this.orm.searchRead(
-            this.props.record.resModel,
-            [["id", "in", ids]],
-            this.fieldNames
-        );
-        const isKnownAsClosed = this.subTaskClosed.has(subTask.resId);
-        const isClosed = subTask.data.state.startsWith("1_");
-        if (isKnownAsClosed && !isClosed) {
-            this.subTaskClosed.delete(subTask.resId);
-        } else if (!isKnownAsClosed && isClosed) {
-            this.subTaskClosed.add(subTask.resId);
-        } else { // nothing to do
-            return;
-        }
-        await this.props.record.load();
+    async _onSubtaskCreateNameChanged(name) {
+        await this.orm.create("project.task", [{ display_name: name, parent_id: this.props.record.resId, user_ids: this.props.record.data.user_ids.resIds }]);
+        this.subtaskCreate.open = false;
+        this.subtaskCreate.name = "";
+        this.props.record.load();
     }
 }
 
 const subtaskKanbanList = {
     component: SubtaskKanbanList,
-    fieldDependencies: [{ name: "child_ids", type: "one2many" }],
 };
 
 registry.category("view_widgets").add("subtask_kanban_list", subtaskKanbanList);
