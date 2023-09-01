@@ -50,6 +50,11 @@ class SaleOrderTemplate(models.Model):
         comodel_name='sale.order.template.option', inverse_name='sale_order_template_id',
         string="Optional Products",
         copy=True)
+    journal_id = fields.Many2one(
+        'account.journal', string="Invoicing Journal",
+        domain=[('type', '=', 'sale')], company_dependent=True, check_company=True,
+        help="If set, SO with this template will invoice in this journal; "
+             "otherwise the sales journal with the lowest sequence is used.")
 
     #=== COMPUTE METHODS ===#
 
