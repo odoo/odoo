@@ -1119,17 +1119,22 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.display_rate = 2.2
                 move_form.invoice_date = '2017-01-01'
                 self.assertEqual(move_form.display_rate, 2.2, "Immediate date change should not replace the rate")
-
-        self.assertIn('The previous rate was 3.0', log_catcher.output[0])
+                self.assertIn('The previous rate was 3.0', log_catcher.output[0])
 
         # Clear the display rate should reset to system rate
         with Form(self.invoice) as move_form:
             with self.assertNoLogs('odoo.tests.form', level='WARNING'):
                 move_form.display_rate = False
+
+        self.invoice.action_post()
+        self.assertTrue(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.0 }
             for _ in self.invoice.line_ids
         ])
+
+        self.invoice.button_draft()
+        self.invoice.name = ""
 
         # Fix the rate (difference less than 20%)
         with Form(self.invoice) as move_form:
@@ -1153,6 +1158,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             with self.assertNoLogs('odoo.tests.form', level='WARNING'):
                 move_form.invoice_date = fields.Date.from_string('2019-01-01')
 
+        self.invoice.action_post()
+        self.assertFalse(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.3 }
             for _ in self.invoice.line_ids
@@ -1165,6 +1172,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             rate2016=4.0,
             rate2017=5.0,
         )
+        self.invoice.button_draft()
 
         # Changing the currency should change the rates (even though they've been fixed on another currency)
         with Form(self.invoice) as move_form:
