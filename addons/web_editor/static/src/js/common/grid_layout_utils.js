@@ -255,7 +255,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 export function _reloadLazyImages(columnEl) {
     const imageEls = columnEl.querySelectorAll('img');
     for (const imageEl of imageEls) {
-        const src = imageEl.src;
+        const src = imageEl.getAttribute("src");
         imageEl.src = '';
         imageEl.src = src;
     }
