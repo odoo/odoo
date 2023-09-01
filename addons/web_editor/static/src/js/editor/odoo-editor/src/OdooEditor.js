@@ -109,6 +109,7 @@ const IS_KEYBOARD_EVENT_UNDERLINE = ev => ev.key === 'u' && (ev.ctrlKey || ev.me
 const IS_KEYBOARD_EVENT_STRIKETHROUGH = ev => ev.key === '5' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_LEFT_ARROW = ev => ev.key === 'ArrowLeft' && !(ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_RIGHT_ARROW = ev => ev.key === 'ArrowRight' && !(ev.ctrlKey || ev.metaKey);
+const IS_SHIFT_ARROW = ev => ev.shiftKey && ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].some(key => ev.key === key) && !ev.metaKey;
 
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
@@ -2575,6 +2576,131 @@ export class OdooEditor extends EventTarget {
     // ================
 
     /**
+     * Sets selection in table cells in order to select the cells
+     * rectangularly when pressing shift + arrow key (just like
+     * google docs).
+     * 
+     * @private
+     * @param {KeyboardEvent}
+     */
+    _setSelectionInTable(ev) {
+        const selection = this.document.getSelection();
+        let startTable = closestElement(selection.anchorNode, 'table');
+        let endTable = closestElement(selection.focusNode, 'table');
+        if (!startTable || !endTable || !(startTable.contains(endTable) || endTable.contains(startTable))) {
+            return;
+        }
+        let [startTd, endTd] = [closestElement(selection.anchorNode, 'td'), closestElement(selection.focusNode, 'td')];
+        if (startTable !== endTable) {
+            if (endTable.contains(startTable)) {
+                startTd = endTd;
+                startTable = endTable;
+            } else {
+                endTd = startTd;
+                endTable = startTable;
+            }
+        }
+        const endPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
+        const tds = [...startTable.querySelectorAll('tr')]
+                    .filter(tr => closestElement(tr, 'table') === startTable)
+                    .map(tr => [...tr.querySelectorAll('td')].filter(td => closestElement(td, 'table') === startTable));
+        let targetTd;
+        if (startTd === endTd && !startTd.classList.contains('o_selected_td')) {
+            const range = getDeepRange(this.editable, {range: selection.rangeCount && selection.getRangeAt(0), select: true});
+            const {focusNode, focusOffset} = selection;
+            let shouldPreventDefault = true;
+            //Do not prevent default when there is a text in cell.
+            if (focusNode.nodeType === Node.TEXT_NODE) {
+                const nextTd = closestElement(nextLeaf(focusNode),'td');
+                const previousTd = closestElement(previousLeaf(focusNode),'td');
+                switch (ev.key) {
+                    case 'ArrowRight': {
+                        if (!(nodeSize(focusNode) === focusOffset && nextTd !== startTd)) {
+                            shouldPreventDefault = false;
+                        }
+                        break;
+                    }
+                    case 'ArrowLeft': {
+                        if (!(focusOffset === 0 && previousTd !== startTd)) {
+                            shouldPreventDefault = false;
+                        }
+                        break;
+                    }
+                    case 'ArrowUp': {
+                        if (previousTd === startTd) {
+                            shouldPreventDefault = false;
+                        }
+                        break;
+                    }
+                    case 'ArrowDown': {
+                        if (nextTd === startTd) {
+                            shouldPreventDefault = false;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (shouldPreventDefault) {
+                ev.preventDefault();
+                this._selectTableCells(range);
+                return;
+            }
+        }
+        else {
+            let targetNode;
+            switch (ev.key) {
+                case 'ArrowUp': {
+                    if (endPosition.x > 0) {
+                        targetTd = tds[endPosition.x - 1][endPosition.y];
+                    } else {
+                        if (previousLeaf(startTable, this.editable)) {
+                            targetNode = previousLeaf(startTable, this.editable);
+                        } else {
+                            ev.preventDefault();
+                            return;
+                        }
+                    }
+                    break;
+                }
+                case 'ArrowDown': {
+                    if (endPosition.x < tds.length - 1) {
+                        targetTd = tds[endPosition.x + 1][endPosition.y];
+                    } else {
+                        targetNode = nextLeaf(startTable, this.editable);
+                    }
+                    break;
+                }
+                case 'ArrowRight': {
+                    if (endPosition.y === tds[0].length - 1) {
+                        ev.preventDefault();
+                        return;
+                    } else {
+                        targetTd = tds[endPosition.x][endPosition.y + 1];
+                    }
+                    break;
+                }
+                case 'ArrowLeft': {
+                    if (endPosition.y === 0) {
+                        ev.preventDefault();
+                        return;
+                    } else {
+                        targetTd = tds[endPosition.x][endPosition.y - 1];
+                    }
+                    break;
+                }
+            }
+            if (targetTd) {
+                ev.preventDefault();
+                setSelection(startTd, 0, targetTd, 0);
+                return;
+            }
+            if (targetNode) {
+                ev.preventDefault();
+                setSelection(selection.anchorNode, selection.anchorOffset, targetNode, 0);
+            }
+        }
+    }
+    /**
      * Handle the selection of table cells rectangularly (as opposed to line by
      * line from left to right then top to bottom). If such a special selection
      * was indeed applied, return true (and false otherwise).
@@ -2590,6 +2716,7 @@ export class OdooEditor extends EventTarget {
         if (anchorNode && !ancestors(anchorNode).includes(this.editable)) {
             return false;
         }
+        const selectSingleCell  = this._currentKeyPress?.isShiftKey && hasTableSelection(this.editable);
         this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td') && !isProtected(node))) {
@@ -2617,7 +2744,7 @@ export class OdooEditor extends EventTarget {
         // Get the top table ancestors at range bounds.
         const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || selectSingleCell) && startTable && startTable === endTable) {
             if (!isProtected(startTable)) {
                 // The selection goes through at least two different cells ->
                 // select cells.
@@ -3815,7 +3942,7 @@ export class OdooEditor extends EventTarget {
         }
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
-        this._currentKeyPress = ev.key;
+        this._currentKeyPress = { key: ev.key, isShiftKey: ev.shiftKey};
         // If the pressed key has a printed representation, the returned value
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
@@ -4038,13 +4165,15 @@ export class OdooEditor extends EventTarget {
                 setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
+        if(IS_SHIFT_ARROW(ev)) {
+            this._setSelectionInTable(ev);
+        }
     }
     /**
      * @private
      */
     _onSelectionChange() {
         const currentKeyPress = this._currentKeyPress;
-        delete this._currentKeyPress;
         const selection = this.document.getSelection();
         if (!selection) {
             // Because the `selectionchange` event is async, the selection can
@@ -4059,7 +4188,7 @@ export class OdooEditor extends EventTarget {
             anchorNode === this.editable &&
             !this.options.allowInlineAtRoot
         ) {
-            this._fixSelectionOnEditableRoot(selection, currentKeyPress);
+            this._fixSelectionOnEditableRoot(selection, currentKeyPress?.key);
             // The _onSelectionChange handler is going to be triggered again.
             return;
         }
@@ -4472,6 +4601,7 @@ export class OdooEditor extends EventTarget {
     }
 
     _onMouseDown(ev) {
+        delete this._currentKeyPress;
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
@@ -4620,6 +4750,7 @@ export class OdooEditor extends EventTarget {
     }
 
     _onMousemove(ev) {
+        delete this._currentKeyPress;
         if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
             this._handleSelectionInTable(ev);
         }
