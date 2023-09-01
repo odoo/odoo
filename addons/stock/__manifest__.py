@@ -95,6 +95,7 @@
     'application': True,
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': '_assign_default_mail_template_picking_id',
+    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.report_assets_common': [
             'web/static/src/legacy/scss/views.scss',
