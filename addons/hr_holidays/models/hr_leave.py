@@ -1555,7 +1555,7 @@ class HolidaysRequest(models.Model):
 
     def _to_utc(self, date, hour, resource):
         hour = float_to_time(float(hour))
-        holiday_tz = timezone(resource.tz or self.env.user.tz)
+        holiday_tz = timezone(resource.tz or self.env.user.tz or 'UTC')
         return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
     def _get_attendances(self, request_date_from, request_date_to):
