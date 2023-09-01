@@ -360,7 +360,8 @@ class TestCRMPLS(TransactionCase):
         Lead._cron_update_automated_probabilities()
         leads_with_tags.invalidate_cache()
 
-        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0,
+                        f'PLS: failed with {leads[3].automated_probability}, should be 4.21')
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
 
         # remove all pls fields
