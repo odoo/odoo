@@ -48,7 +48,46 @@ registry.category("web_tour.tours").add('project_test_tour', {
         run: 'text New task'
     }, {
         trigger: '.o_kanban_quick_create .o_kanban_add',
-        extra_trigger: '.o_kanban_project_tasks',
+    }, {
+        trigger: '.o_kanban_record span:contains("New task")',
+    }, {
+        trigger: 'a[name="sub_tasks_page"]',
+        content: 'Open sub-tasks notebook section',
+        run: 'click',
+    }, {
+        trigger: '.o_field_subtasks_one2many .o_list_renderer a[role="button"]',
+        content: 'Add a subtask',
+        run: 'click',
+    }, {
+        trigger: '.o_field_subtasks_one2many div[name="name"] input',
+        content: 'Set subtask name',
+        run: 'text new subtask'
+    }, {
+        trigger: ".o_breadcrumb .o_back_button",
+        content: 'Go back to kanban view',
+        position: "right",
+    }, {
+        trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button",
+        content: 'open sub-tasks from kanban card',
+    }, {
+        trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create",
+        extra_trigger: ".o_widget_subtask_kanban_list .subtask_list",
+        content: 'Create a new sub-task',
+    }, {
+        trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
+        extra_trigger: ".subtask_create_input",
+        content: 'Give the sub-task a name',
+        run: 'text newer subtask'
+    }, {
+        trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
+        content: 'Change the subtask state',
+    }, {
+        trigger: ".o_widget_subtask_kanban_list .o_field_project_task_state_selection .dropdown-menu span.text-danger",
+        extra_trigger: ".o_field_project_task_state_selection .dropdown-menu",
+        content: 'Mark the task as Canceled',
+    }, {
+        trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
+        content: 'Close the sub-tasks list',
         id: "quick_create_tasks",
     }, {
         trigger: '.o_field_text[name="name"] textarea',

@@ -664,17 +664,7 @@
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
                                         <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
-                                            <a t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
-                                               t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
-                                               class="subtask_list_button btn-link text-dark"
-                                               role="button">
-                                                <span class="fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
-                                            </a>
-                                            <div t-else="" t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}" class="text-muted">
-                                                <span class="fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
-                                            </div>
+                                            <widget name="subtask_counter"/>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
@@ -684,9 +674,7 @@
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
                                     </div>
                                 </div>
-                                <t t-if="record.project_id.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value">
-                                    <div class="kanban_bottom_subtasks_section"/>
-                                </t>
+                                <widget name="subtask_kanban_list" />
                             </div>
                             <div class="clearfix"></div>
                         </div>
