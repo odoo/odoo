@@ -19,3 +19,12 @@ class ResPartner(models.Model):
         partners_data = {partner.id: count for partner, count in payments_data}
         for partner in self:
             partner.payment_token_count = partners_data.get(partner.id, 0)
+
+    def _get_default_payment_link_values(self):
+        self.ensure_one()
+        return {
+            'description': 'advance',
+            'amount': 1,
+            'currency_id': self.currency_id or self.env.company.currency_id,
+            'partner_id': self.id,
+        }

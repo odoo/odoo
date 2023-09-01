@@ -3,7 +3,6 @@
 from werkzeug import urls
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -58,19 +57,20 @@ class PaymentLinkWizard(models.TransientModel):
     @api.depends('amount', 'amount_max')
     def _compute_warning_message(self):
         self.warning_message = ''
-        for wizard in self:
-            if wizard.amount_max <= 0:
-                wizard.warning_message = _("There is nothing to be paid.")
-            elif wizard.amount <= 0:
-                wizard.warning_message = _("Please set a positive amount.")
-            elif wizard.amount > wizard.amount_max:
-                wizard.warning_message = _("Please set an amount lower than %s.", wizard.amount_max)
+        if self.res_model != 'res.partner':
+            for wizard in self:
+                if wizard.amount_max <= 0:
+                    wizard.warning_message = _("There is nothing to be paid.")
+                elif wizard.amount <= 0:
+                    wizard.warning_message = _("Please set a positive amount.")
+                elif wizard.amount > wizard.amount_max:
+                    wizard.warning_message = _("Please set an amount lower than %s.", wizard.amount_max)
 
     @api.depends('res_model', 'res_id')
     def _compute_company_id(self):
         for link in self:
             record = self.env[link.res_model].browse(link.res_id)
-            link.company_id = record.company_id if 'company_id' in record else False
+            link.company_id = 'company_id' in record and record.company_id or self.env.company
 
     @api.depends('company_id', 'partner_id', 'currency_id')
     def _compute_available_provider_ids(self):

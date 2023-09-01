@@ -12,6 +12,7 @@
         'data/payment_provider_data.xml',
         'data/payment_cron.xml',
 
+        'wizards/payment_link_wizard_views.xml',
         'views/payment_portal_templates.xml',
         'views/payment_templates.xml',
 
@@ -25,7 +26,6 @@
         'security/payment_security.xml',
 
         'wizards/payment_capture_wizard_views.xml',
-        'wizards/payment_link_wizard_views.xml',
         'wizards/payment_onboarding_views.xml',
     ],
     'assets': {
