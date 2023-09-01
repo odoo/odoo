@@ -135,6 +135,7 @@
     <t t-name="web.Breadcrumb.Name">
         <t t-if="breadcrumb.name" t-out="breadcrumb.name"/>
         <em t-else="" class="text-warning">Unnamed</em>
+        <t t-slot="control-panel-additional-breadcrums"/>
     </t>
 
 </templates>

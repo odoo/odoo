@@ -19,6 +19,8 @@ import { browser } from "@web/core/browser/browser";
 
 import { Component, useState } from "@odoo/owl";
 
+const { DateTime } = luxon;
+
 export const SCALE_LABELS = {
     day: _t("Day"),
     week: _t("Week"),
@@ -69,6 +71,29 @@ export class CalendarController extends Component {
         });
 
         this.searchBarToggler = useSearchBarToggler();
+    }
+
+    get currentDate() {
+        const meta = this.model.meta;
+        const scale = meta.scale;
+        if (this.env.isSmall && ["week", "month"].includes(scale)) {
+            const date = meta.date || DateTime.now();
+            let text = "";
+            if (scale === "week") {
+                const startMonth = date.startOf("week");
+                const endMonth = date.endOf("week");
+                if (startMonth.toFormat("LLL") !== endMonth.toFormat("LLL")) {
+                    text = `${startMonth.toFormat("LLL")}-${endMonth.toFormat("LLL")}`;
+                } else {
+                    text = startMonth.toFormat("LLLL");
+                }
+            } else if (scale === "month") {
+                text = date.toFormat("LLLL");
+            }
+            return ` - ${text} ${date.year}`;
+        } else {
+            return "";
+        }
     }
 
     get rendererProps() {

@@ -370,6 +370,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Change scale to month
         await click(target, ".o_calendar_container .o_other_calendar_panel");
         await changeScale(target, "month");
+        assert.containsOnce(target, ".currentDate");
+        assert.strictEqual(document.querySelector(".currentDate").textContent, " - February 2016");
         await click(target, ".o_calendar_container .o_other_calendar_panel");
         assert.containsNone(target, ".fc-timeGridDay-view");
         assert.containsOnce(target, ".fc-dayGridMonth-view");
@@ -378,7 +380,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await tap(target, ".fc-day-top[data-date='2016-02-10']");
         await nextTick(); // await reload & render
         await nextTick(); // await breadcrumb update
-
+        assert.strictEqual(document.querySelector(".currentDate").textContent, "");
         assert.containsNone(target, ".fc-dayGridMonth-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");
