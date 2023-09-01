@@ -44,9 +44,9 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'color'),
-            contentAfterEdit: '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[\u200B</font></p>' +
+            contentAfterEdit: '<p>[<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">]\u200B</font></p>',
+                              '<p>]<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
             contentAfter: '<p>[</p><p></p><p>]</p>',
         });
     });
@@ -54,9 +54,9 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'background-color'),
-            contentAfterEdit: '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">[\u200B</font></p>' +
+            contentAfterEdit: '<p>[<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
                               '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">]\u200B</font></p>',
+                              '<p>]<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
             contentAfter: '<p>[</p><p></p><p>]</p>',
         });
     });
