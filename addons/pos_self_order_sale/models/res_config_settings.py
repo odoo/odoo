@@ -8,6 +8,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange("pos_self_order_kiosk")
     def _self_order_kiosk_change(self):
+        super()._self_order_kiosk_change()
+
         for record in self:
             if record.pos_config_id.self_order_kiosk:
                 if not record.pos_crm_team_id:
