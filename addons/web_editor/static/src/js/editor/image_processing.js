@@ -443,7 +443,7 @@ async function activateCropper(image, aspectRatio, dataset) {
 async function loadImageInfo(img, rpc, attachmentSrc = '') {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
-    if (img.dataset.originalSrc || !src) {
+    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
         return;
     }
 
