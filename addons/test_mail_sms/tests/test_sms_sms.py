@@ -46,7 +46,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
     def test_sms_send_delete_all(self):
         with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
             self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=True, raise_exception=False)
-        self.assertFalse(len(self.sms_all.exists()))
+        self.assertFalse(len(self.sms_all.exists().filtered(lambda s: not s.to_delete)))
 
     def test_sms_send_delete_default(self):
         """ Test default send behavior: keep failed SMS, remove sent. """
@@ -57,7 +57,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
                 '+32456000044': 'unregistered',
         }):
             self.env['sms.sms'].browse(self.sms_all.ids).send(raise_exception=False)
-        remaining = self.sms_all.exists()
+        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
         self.assertEqual(len(remaining), 4)
         self.assertEqual(set(remaining.mapped('state')), {'error'})
 
@@ -67,7 +67,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
                 '+32456000022': 'wrong_number_format',
         }):
             self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=True, unlink_sent=False, raise_exception=False)
-        remaining = self.sms_all.exists()
+        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
         self.assertEqual(len(remaining), 8)
         self.assertEqual(set(remaining.mapped('state')), {'pending'})
 
@@ -89,7 +89,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
                 '+32456000022': 'wrong_number_format',
         }):
             self.env['sms.sms'].browse(self.sms_all.ids).send(unlink_failed=False, unlink_sent=True, raise_exception=False)
-        remaining = self.sms_all.exists()
+        remaining = self.sms_all.exists().filtered(lambda s: not s.to_delete)
         self.assertEqual(len(remaining), 2)
         self.assertEqual(set(remaining.mapped('state')), {'error'})
 

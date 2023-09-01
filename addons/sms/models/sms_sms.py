@@ -63,6 +63,10 @@ class SmsSms(models.Model):
         ('sms_optout', 'Opted Out'),
     ], copy=False)
     sms_tracker_id = fields.Many2one('sms.tracker', string='SMS trackers', compute='_compute_sms_tracker_id')
+    to_delete = fields.Boolean(
+        'Marked for deletion', default=False,
+        help='Will automatically be deleted, while notifications will not be deleted in any case.'
+    )
 
     _sql_constraints = [
         ('uuid_unique', 'unique(uuid)', 'UUID must be unique'),
@@ -93,7 +97,7 @@ class SmsSms(models.Model):
           :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
-        self = self.filtered(lambda sms: sms.state == 'outgoing')
+        self = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
@@ -101,7 +105,7 @@ class SmsSms(models.Model):
                 self._cr.commit()
 
     def resend_failed(self):
-        sms_to_send = self.filtered(lambda sms: sms.state == 'error')
+        sms_to_send = self.filtered(lambda sms: sms.state == 'error' and not sms.to_delete)
         sms_to_send.state = 'outgoing'
         notification_title = _('Warning')
         notification_type = 'danger'
@@ -135,7 +139,7 @@ class SmsSms(models.Model):
        :param list ids: optional list of emails ids to send. If passed no search
          is performed, and these ids are used instead.
         """
-        domain = [('state', '=', 'outgoing')]
+        domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
         filtered_ids = self.search(domain, limit=10000).ids  # TDE note: arbitrary limit we might have to update
         if ids:
@@ -177,30 +181,30 @@ class SmsSms(models.Model):
 
         results_uuids = [result['uuid'] for result in results]
         all_sms_sudo = self.env['sms.sms'].sudo().search([('uuid', 'in', results_uuids)]).with_context(sms_skip_msg_notification=True)
-        mail_message_ids_sudo = all_sms_sudo.mail_message_id
 
         for iap_state, results_group in tools.groupby(results, key=lambda result: result['state']):
             sms_sudo = all_sms_sudo.filtered(lambda s: s.uuid in {result['uuid'] for result in results_group})
             if success_state := self.IAP_TO_SMS_STATE_SUCCESS.get(iap_state):
                 sms_sudo.sms_tracker_id._action_update_from_sms_state(success_state)
-                if unlink_sent:
-                    sms_sudo.unlink()
-                else:
-                    sms_sudo.write({'state': success_state, 'failure_type': False})
+                to_delete = {'to_delete': True} if unlink_sent else {}
+                sms_sudo.write({'state': success_state, 'failure_type': False, **to_delete})
             else:
                 failure_type = self.IAP_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
                 if failure_type != 'unknown':
                     sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type)
                 else:
                     sms_sudo.sms_tracker_id._action_update_from_provider_error(iap_state)
-                if unlink_failed:
-                    sms_sudo.unlink()
-                else:
-                    sms_sudo.write({'state': 'error', 'failure_type': failure_type})
+                to_delete = {'to_delete': True} if unlink_failed else {}
+                sms_sudo.write({'state': 'error', 'failure_type': failure_type, **to_delete})
 
-        mail_message_ids_sudo._notify_message_notification_update()
+        all_sms_sudo.mail_message_id._notify_message_notification_update()
 
     def _update_sms_state_and_trackers(self, new_state, failure_type=None):
         """Update sms state update and related tracking records (notifications, traces)."""
         self.write({'state': new_state, 'failure_type': failure_type})
         self.sms_tracker_id._action_update_from_sms_state(new_state, failure_type=failure_type)
+
+    @api.autovacuum
+    def _gc_device(self):
+        self._cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
+        _logger.info("GC'd %d sms marked for deletion", self._cr.rowcount)
