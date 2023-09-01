@@ -583,7 +583,7 @@ class MrpWorkorder(models.Model):
 
     def button_start(self):
         if any(wo.working_state == 'blocked' for wo in self):
-            raise UserError(_('Some workorders require another workorder to be completed first'))
+            raise UserError(_('Please unblock the work center to start the work order.'))
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
@@ -880,7 +880,7 @@ class MrpWorkorder(models.Model):
     def action_mark_as_done(self):
         for wo in self:
             if wo.working_state == 'blocked':
-                raise UserError(_('Some workorders require another workorder to be completed first'))
+                raise UserError(_('Please unblock the work center to validate the work order'))
             wo.button_finish()
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
