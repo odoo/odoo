@@ -57,7 +57,7 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             record.is_kiosk_mode = record.pos_self_order_kiosk
 
-            if record.pos_config_id.self_order_kiosk:
+            if record.pos_self_order_kiosk:
                 record.pos_config_id.self_order_view_mode = False
                 record.pos_config_id.self_order_table_mode = False
 
