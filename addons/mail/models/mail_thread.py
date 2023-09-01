@@ -2531,9 +2531,9 @@ class MailThread(models.AbstractModel):
                             left join mail_channel c on c.id = mcp.channel_id
                             left join res_users u on p.id = u.partner_id
                                 where (u.notification_type != 'inbox' or u.id is null)
-                                and (p.email != ANY(%s) or p.email is null)
+                                and (p.email != ALL(%s) or p.email is null)
                                 and c.id = ANY(%s)
-                                and p.id != ANY(%s)"""
+                                and p.id != ALL(%s)"""
 
             self.env.cr.execute(sql_query, (([email_from], ), (email_cids, ), (exept_partner, )))
             for partner_id in self._cr.fetchall():
