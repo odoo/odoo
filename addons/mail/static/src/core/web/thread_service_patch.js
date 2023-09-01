@@ -214,7 +214,7 @@ patch(ThreadService.prototype, {
         } else {
             thread.followers.delete(follower);
         }
-        delete this.store.Follower.records[this.store.Follower.localId(follower.id)];
+        follower.delete();
     },
     unpin(thread) {
         const chatWindow = this.store.ChatWindow.records.find(

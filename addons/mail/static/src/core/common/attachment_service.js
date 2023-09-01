@@ -64,7 +64,7 @@ export class AttachmentService {
         if (attachment.tmpUrl) {
             URL.revokeObjectURL(attachment.tmpUrl);
         }
-        delete this.store.Attachment.records[attachment.localId];
+        attachment.delete();
         if (attachment.originThread) {
             removeFromArrayWithPredicate(attachment.originThread.attachments, (att) =>
                 att.eq(attachment)
