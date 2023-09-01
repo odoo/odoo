@@ -14,9 +14,14 @@ class PosSelfOrderController(http.Controller):
         pos_config, table = self._verify_authorization(access_token, table_identifier)
         pos_session = pos_config.current_session_id
 
-        ir_sequence = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        sequence_number = re.findall(r'\d+', ir_sequence)[0]
-        order_reference = self._generate_unique_id(pos_session.id, table.id if table else 0, sequence_number, device_type)
+        date_string = fields.Date.today().isoformat()
+        ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
+        ir_sequence_tracking = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{date_string}')
+
+        sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
+        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
+        tracking_number = f"{'A' if device_type == 'kiosk' else 'B'}{ir_sequence_tracking}"
+
         # Create the order without lines and prices computed
         # We need to remap the order because some required fields are not used in the frontend.
         order = {
@@ -38,7 +43,7 @@ class PosSelfOrderController(http.Controller):
                 'amount_total': 0,
                 'amount_paid': 0,
                 'amount_return': 0,
-                'tracking_number': self._generate_unique_tracking_number(pos_config, order), # FIXME this is not unique
+                'tracking_number': tracking_number,
             },
             'to_invoice': False,
             'session_id': pos_session.id,
@@ -184,14 +189,6 @@ class PosSelfOrderController(http.Controller):
 
         return order_sudo._export_for_self_order()
 
-    def _generate_unique_tracking_number(self, pos_config, order_dict):
-        last_tracking_generated = pos_config.env['pos.order'].search([
-            ('tracking_number', '!=', False),
-            ('date_order', '>=', fields.Datetime.now() - timedelta(days=1)),
-        ], order='tracking_number desc', limit=1)
-
-        return int(last_tracking_generated.tracking_number) + 1 if last_tracking_generated else 1
-
     def _process_lines(self, lines, pos_config, pos_order_id, take_away=False):
         appended_uuid = []
         newLines = []
@@ -294,9 +291,9 @@ class PosSelfOrderController(http.Controller):
     # Last part the sequence number of the order.
     # INFO: This is allow a maximum of 999 tables and 9999 orders per table, so about ~1M orders per session.
     # Example: 'Self-Order 00001-001-0001'
-    def _generate_unique_id(self, pos_session_id, table_id, sequence_number, device_type):
+    def _generate_unique_id(self, pos_session_id, config_id, sequence_number, device_type):
         first_part = "{:05d}".format(int(pos_session_id))
-        second_part = "{:03d}".format(int(table_id))
+        second_part = "{:03d}".format(int(config_id))
         third_part = "{:04d}".format(int(sequence_number))
 
         device = "Kiosk" if device_type == "kiosk" else "Self-Order"
