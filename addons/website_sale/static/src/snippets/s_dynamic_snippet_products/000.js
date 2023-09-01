@@ -140,9 +140,8 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
                 display: false,
             },
         });
-        const $navButton = $('header .o_wsale_my_cart').first();
-        await wSaleUtils.animateClone($navButton, $(ev.currentTarget).parents('.card'), 25, 40);
         wSaleUtils.updateCartNavBar(data);
+        wSaleUtils.showCartNotification(this.call.bind(this), data.notification_info);
         if (this.add2cartRerender) {
             this.trigger_up('widgets_start_request', {
                 $target: this.$el.closest('.s_dynamic'),

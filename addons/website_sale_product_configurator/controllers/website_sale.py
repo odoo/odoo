@@ -15,8 +15,15 @@ class WebsiteSale(main.WebsiteSale):
         values['optional_product_ids'] = [p.with_context(active_id=p.id) for p in product.optional_product_ids]
         return values
 
-    @route('/shop/cart/update_option', type='http', auth="public", methods=['POST'], website=True, multilang=False)
-    def cart_options_update_json(self, product_and_options, goto_shop=None, lang=None, **kwargs):
+    @route(
+        '/shop/cart/update_option',
+        type='json',
+        auth='public',
+        methods=['POST'],
+        website=True,
+        multilang=False,
+    )
+    def cart_options_update_json(self, product_and_options, lang=None, **kwargs):
         """This route is called when submitting the optional product modal.
             The product without parent is the main product, the other are options.
             Options need to be linked to their parents with a unique ID.
@@ -44,7 +51,7 @@ class WebsiteSale(main.WebsiteSale):
         if product_and_options:
             # The main product is the first, optional products are the rest
             main_product = product_and_options[0]
-            value = order._cart_update(
+            values = order._cart_update(
                 product_id=main_product['product_id'],
                 add_qty=main_product['quantity'],
                 product_custom_attribute_values=main_product['product_custom_attribute_values'],
@@ -52,12 +59,14 @@ class WebsiteSale(main.WebsiteSale):
                 **kwargs
             )
 
-            if value['line_id']:
+            line_ids = [values['line_id']]
+
+            if values['line_id']:
                 # Link option with its parent iff line has been created.
-                option_parent = {main_product['unique_id']: value['line_id']}
+                option_parent = {main_product['unique_id']: values['line_id']}
                 for option in product_and_options[1:]:
                     parent_unique_id = option['parent_unique_id']
-                    option_value = order._cart_update(
+                    option_values = order._cart_update(
                         product_id=option['product_id'],
                         set_qty=option['quantity'],
                         linked_line_id=option_parent[parent_unique_id],
@@ -65,8 +74,12 @@ class WebsiteSale(main.WebsiteSale):
                         no_variant_attribute_values=option['no_variant_attribute_values'],
                         **kwargs
                     )
-                    option_parent[option['unique_id']] = option_value['line_id']
+                    option_parent[option['unique_id']] = option_values['line_id']
+                    line_ids.append(option_values['line_id'])
 
+            values['notification_info'] = self._get_cart_notification_information(order, line_ids)
+
+        values['cart_quantity'] = order.cart_quantity
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
-        return str(order.cart_quantity)
+        return values
