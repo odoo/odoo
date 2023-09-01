@@ -34,7 +34,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     isInvisible(fieldNode, record) {
-        return evaluateBooleanExpr(fieldNode.invisible, record.evalContext);
+        return evaluateBooleanExpr(fieldNode.invisible, record.evalContextWithVirtualIds);
     }
 
     computeDateTimeAndDuration() {

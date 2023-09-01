@@ -239,7 +239,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == \\&quot;take\\&quot;&quot;,__comp__.props.record.evalContext)" />
+            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == \\&quot;take\\&quot;&quot;,__comp__.props.record.evalContextWithVirtualIds)" />
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -255,7 +255,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == 'take'&quot;,__comp__.props.record.evalContext)" />
+            <div t-if="!__comp__.evaluateBooleanExpr(&quot;display_name == 'take'&quot;,__comp__.props.record.evalContextWithVirtualIds)" />
         `;
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -484,7 +484,7 @@ QUnit.module("Form Renderer", (hooks) => {
 
         const arch = `<myNode invisible="field == 'value'" />`;
 
-        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContext)" t-ref="compiled_view_root"/></t>`;
+        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContextWithVirtualIds)" t-ref="compiled_view_root"/></t>`;
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 });
