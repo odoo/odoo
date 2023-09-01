@@ -1830,6 +1830,18 @@ export function getColumnIndex(td) {
     return tdSiblings.findIndex(child => child === td);
 }
 
+/**
+ * Get all the cells of given table
+ * (excluding nested table cells).
+ *
+ * @param {HTMLTableElement} table
+ * @returns {Array<HTMLTableCellElement>}
+ */
+export function getTableCells(table) {
+    return [...table.querySelectorAll('td')]
+        .filter(td => closestElement(td, 'table') === table);
+}
+
 // This is a list of "paragraph-related elements", defined as elements that
 // behave like paragraphs.
 export const paragraphRelatedElements = [
