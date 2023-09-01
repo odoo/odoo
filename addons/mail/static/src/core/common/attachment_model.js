@@ -19,19 +19,12 @@ export class Attachment extends Record {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        let attachment = this.get(data);
-        if (!attachment) {
-            attachment = this.new(data);
-            this.records[attachment.localId] = attachment;
-            attachment = this.records[attachment.localId];
-            Object.assign(attachment, { _store: this.store, id: data.id });
-        }
+        const attachment = this.get(data) ?? this.new(data);
+        Object.assign(attachment, { id: data.id });
         this.env.services["mail.attachment"].update(attachment, data);
         return attachment;
     }
 
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
     accessToken;
     checksum;
     extension;

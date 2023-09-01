@@ -21,13 +21,7 @@ export class Persona extends Record {
      * @returns {Persona}
      */
     static insert(data) {
-        let persona = this.get(data);
-        if (!persona) {
-            persona = this.new(data);
-            persona._store = this.store;
-            this.records[persona.localId] = persona;
-            persona = this.records[persona.localId];
-        }
+        const persona = this.get(data) ?? this.new(data);
         this.env.services["mail.persona"].update(persona, data);
         // return reactive version
         return persona;
@@ -54,8 +48,6 @@ export class Persona extends Record {
     /** @type {ImStatus} */
     im_status;
     isAdmin = false;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     get nameOrDisplayName() {
         return this.name || this.displayName;

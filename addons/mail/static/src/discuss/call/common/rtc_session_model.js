@@ -11,11 +11,7 @@ export class RtcSession extends Record {
      * @returns {number, RtcSession}
      */
     static insert(data) {
-        let session = this.get(data);
-        if (!session) {
-            session = this.new(data);
-            session._store = this.store;
-        }
+        const session = this.get(data) ?? this.new(data);
         const { channelMember, ...remainingData } = data;
         for (const key in remainingData) {
             session[key] = remainingData[key];
@@ -31,9 +27,7 @@ export class RtcSession extends Record {
                 channelMemberRecord.thread.rtcSessions[session.id] = session;
             }
         }
-        this.records[session.localId] = session;
-        // return reactive version
-        return this.records[session.localId];
+        return session;
     }
 
     // Server data
@@ -62,8 +56,6 @@ export class RtcSession extends Record {
     videoComponentCount = 0;
     /** @type {MediaStream} */
     videoStream;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
     // RTC stats
     connectionState;
     localCandidateType;

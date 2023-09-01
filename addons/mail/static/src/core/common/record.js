@@ -10,6 +10,8 @@ export class Record {
     static __OR__ = Symbol("or");
     static __AND__ = Symbol("and");
     static records = {};
+    /** @type {import("@mail/core/common/store_service").Store} */
+    static store;
     static get(data) {
         return this.records[this.localId(data)];
     }
@@ -71,7 +73,14 @@ export class Record {
      */
     static new(data) {
         const obj = new this.Class();
-        return Object.assign(obj, { localId: this.localId(data) });
+        let record = Object.assign(obj, { localId: this.localId(data) });
+        Object.assign(record, { _store: this.store });
+        if (!Array.isArray(this.records)) {
+            this.records[record.localId] = record;
+            // return reactive version
+            record = this.records[record.localId];
+        }
+        return record;
     }
 
     /**
@@ -79,6 +88,9 @@ export class Record {
      * @returns {Record}
      */
     static insert(data) {}
+
+    /** @type {import("@mail/core/common/store_service").Store} */
+    _store;
 
     /** @param {Record} record */
     eq(record) {

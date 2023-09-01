@@ -19,13 +19,7 @@ export class ChannelMember extends Record {
      */
     static insert(data) {
         const memberData = Array.isArray(data) ? data[1] : data;
-        let member = this.get(memberData);
-        if (!member) {
-            member = this.new(memberData);
-            this.records[member.localId] = member;
-            member = this.records[member.localId];
-            member._store = this.store;
-        }
+        const member = this.get(memberData) ?? this.new(memberData);
         this.env.services["discuss.channel.member"].update(member, data);
         return member;
     }
@@ -35,8 +29,6 @@ export class ChannelMember extends Record {
     personaLocalId;
     rtcSessionId;
     threadId;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     get persona() {
         return this._store.Persona.records[this.personaLocalId];

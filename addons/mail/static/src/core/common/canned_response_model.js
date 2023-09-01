@@ -11,12 +11,7 @@ export class CannedResponse extends Record {
      * @returns {CannedResponse}
      */
     static insert(data) {
-        let cannedResponse = this.get(data);
-        if (!cannedResponse) {
-            cannedResponse = this.new(data);
-            this.records[cannedResponse.localId] = cannedResponse;
-            cannedResponse = this.records[cannedResponse.localId];
-        }
+        const cannedResponse = this.get(data) ?? this.new(data);
         Object.assign(cannedResponse, {
             id: data.id,
             name: data.source,

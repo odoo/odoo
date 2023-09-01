@@ -19,18 +19,12 @@ export class Follower extends Record {
      * @returns {Follower}
      */
     static insert(data) {
-        let follower = this.get(data);
-        if (!follower) {
-            follower = this.new(data);
-            this.records[follower.localId] = follower;
-            follower = this.records[follower.localId];
-        }
+        const follower = this.get(data) ?? this.new(data);
         Object.assign(follower, {
             followedThread: data.followedThread,
             id: data.id,
             isActive: data.is_active,
             partner: this.store.Persona.insert({ ...data.partner, type: "partner" }),
-            _store: this.store,
         });
         return follower;
     }
@@ -43,8 +37,6 @@ export class Follower extends Record {
     isActive;
     /** @type {import("@mail/core/common/persona_model").Persona} */
     partner;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     /**
      * @returns {boolean}

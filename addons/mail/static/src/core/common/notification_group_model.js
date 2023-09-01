@@ -25,7 +25,7 @@ export class NotificationGroup extends Record {
         if (!group) {
             const id = nextId++;
             group = this.new({ id });
-            Object.assign(group, { id, _store: this.store });
+            Object.assign(group, { id });
             this.store.NotificationGroup.records.push(group);
             // return reactive
             group = this.store.NotificationGroup.records.find((g) => g.eq(group));
@@ -49,8 +49,6 @@ export class NotificationGroup extends Record {
     resIds = new Set();
     /** @type {'sms' | 'email'} */
     type;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     get iconSrc() {
         return "/mail/static/src/img/smiley/mailfailure.jpg";
