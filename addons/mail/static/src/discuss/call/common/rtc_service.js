@@ -1401,8 +1401,8 @@ export class Rtc {
             delete this.store.Thread.get({ model: "discuss.channel", id: session.channelId })
                 ?.rtcSessions[id];
             this.disconnect(session);
+            session.delete();
         }
-        delete this.store.RtcSession.records[this.store.RtcSession.localId(id)];
     }
 
     /**

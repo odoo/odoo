@@ -663,7 +663,7 @@ export class ThreadService {
     remove(thread) {
         removeFromArray(this.store.discuss.chats.threads, thread.localId);
         removeFromArray(this.store.discuss.channels.threads, thread.localId);
-        delete this.store.Thread.records[thread.localId];
+        thread.delete();
     }
 
     /**
@@ -864,7 +864,7 @@ export class ThreadService {
         const data = await this.rpc(this.getMessagePostRoute(thread), params);
         if (thread.type !== "chatter") {
             removeFromArrayWithPredicate(thread.messages, (msg) => msg.eq(tmpMsg));
-            delete this.store.Message.records[this.store.Message.localId(tmpMsg.id)];
+            tmpMsg.delete();
         }
         if (!data) {
             return;

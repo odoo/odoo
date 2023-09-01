@@ -227,7 +227,7 @@ export class DiscussCoreCommon {
             this.threadService.pin(channel);
         }
         removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
-        delete this.store.Message.records[this.store.Message.localId(messageData.temporary_id)];
+        this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
         if ("parentMessage" in messageData && messageData.parentMessage.body) {
             messageData.parentMessage.body = markup(messageData.parentMessage.body);

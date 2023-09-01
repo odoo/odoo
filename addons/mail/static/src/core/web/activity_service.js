@@ -78,7 +78,7 @@ export class ActivityService {
     }
 
     delete(activity, { broadcast = true } = {}) {
-        delete this.store.Activity.records[this.store.Activity.localId(activity.id)];
+        activity.delete();
         if (broadcast) {
             this.broadcastChannel?.postMessage({ type: "delete", payload: { id: activity.id } });
         }
@@ -89,9 +89,11 @@ export class ActivityService {
             case "insert":
                 this.store.Activity.insert(data.payload, { broadcast: false });
                 break;
-            case "delete":
-                this.delete(data.payload, { broadcast: false });
+            case "delete": {
+                const activity = this.store.Activity.insert(data.payload, { broadcast: false });
+                this.delete(activity, { broadcast: false });
                 break;
+            }
             case "reload chatter": {
                 const thread = this.env.services["mail.thread"].getThread(
                     data.payload.resModel,
@@ -106,6 +108,7 @@ export class ActivityService {
     _serialize(activity) {
         const data = { ...activity };
         delete data._store;
+        delete data.Model;
         return JSON.parse(JSON.stringify(data));
     }
 }
