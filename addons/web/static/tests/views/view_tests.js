@@ -8,6 +8,7 @@ import {
     mount,
     nextTick,
     patchWithCleanup,
+    mockTimeout,
 } from "@web/../tests/helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -1107,7 +1108,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("real life banner", async (assert) => {
-        assert.expect(10);
+        assert.expect(8);
 
         serverData.views["animal,1,toy"] = `
             <toy banner_route="/mybody/isacage">
@@ -1132,14 +1133,12 @@ QUnit.module("Views", (hooks) => {
                     </div>
                 </div>
             </div>
-            <div class="o_onboarding_container collapse show">
-                <div class="o_onboarding" />
-                    <div class="o_onboarding_wrap" />
-                        <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="float-end o_onboarding_btn_close">
-                            <i class="fa fa-times" title="Close the onboarding panel" id="closeOnboarding"></i>
-                        </a>
-                        <div class="bannerContent">Content</div>
-                    </div>
+            <div class="o_onboarding" />
+                <div class="o_onboarding_wrap" />
+                    <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="float-end o_onboarding_btn_close">
+                        <i class="fa fa-times" title="Close the onboarding panel" id="closeOnboarding"></i>
+                    </a>
+                    <div class="bannerContent">Content</div>
                 </div>
             </div>`;
 
@@ -1153,6 +1152,7 @@ QUnit.module("Views", (hooks) => {
                 return true;
             }
         };
+        const { execRegisteredTimeouts } = mockTimeout();
         const config = {
             views: [[1, "toy"]],
         };
@@ -1163,31 +1163,17 @@ QUnit.module("Views", (hooks) => {
         };
         await mount(View, target, { env, props });
 
-        const prom = new Promise((resolve) => {
-            const complete = (ev) => {
-                if (ev.target.classList.contains("o_onboarding_container")) {
-                    resolve();
-                }
-            };
-            // We need to handle both events, because the transition is not
-            // always executed
-            target.addEventListener("transitionend", complete);
-            target.addEventListener("transitioncancel", complete);
-        });
-
         assert.verifySteps(["/mybody/isacage"]);
         assert.isNotVisible(target.querySelector(".modal"));
-        assert.hasClass(target.querySelector(".o_onboarding_container"), "collapse show");
+        assert.hasClass(target.querySelector(".o_onboarding_container"), "o-vertical-slide");
 
         await click(target.querySelector("#closeOnboarding"));
         assert.isVisible(target.querySelector(".modal"));
 
         await click(target.querySelector(".modal a[type='action']"));
         assert.verifySteps(["mah_method"]);
-        await prom;
-        assert.doesNotHaveClass(target.querySelector(".o_onboarding_container"), "show");
-        assert.hasClass(target.querySelector(".o_onboarding_container"), "collapse");
-        assert.isNotVisible(target.querySelector(".modal"));
+        execRegisteredTimeouts();
+        assert.containsNone(target, ".o_onboarding_container");
     });
 
     ////////////////////////////////////////////////////////////////////////////
