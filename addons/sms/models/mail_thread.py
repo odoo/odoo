@@ -305,7 +305,7 @@ class MailThread(models.AbstractModel):
                 'res_partner_id': sms.partner_id.id,
                 'sms_number': sms.number,
                 'notification_type': 'sms',
-                'sms_id': sms.id,
+                'sms_id_int': sms.id,
                 'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})] if sms.state == 'outgoing' else False,
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
@@ -323,7 +323,7 @@ class MailThread(models.AbstractModel):
                         notif.write({
                             'notification_type': 'sms',
                             'notification_status': 'ready',
-                            'sms_id': sms.id,
+                            'sms_id_int': sms.id,
                             'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})],
                             'sms_number': sms.number,
                         })

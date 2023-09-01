@@ -6,7 +6,8 @@
         <field name="arch" type="xml">
             <form string="SMS">
                 <header>
-                    <button name="send" string="Send Now" type="object" invisible="state != 'outgoing'" class="oe_highlight"/>
+                    <field name="to_delete" invisible="1"/>
+                    <button name="send" string="Send Now" type="object" invisible="state != 'outgoing' or to_delete" class="oe_highlight"/>
                     <button name="action_set_outgoing" string="Retry" type="object" invisible="state not in ('error', 'canceled')"/>
                     <button name="action_set_canceled" string="Cancel" type="object" invisible="state not in ('error', 'outgoing')"/>
                     <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,error,canceled"/>
@@ -62,6 +63,7 @@
         <field name="name">SMS</field>
         <field name="res_model">sms.sms</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('to_delete', '!=', True)]</field>
     </record>
 
     <menuitem id="sms_sms_menu"
