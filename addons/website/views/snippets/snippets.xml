@@ -124,6 +124,9 @@
                     <t id="mass_mailing_newsletter_popup_hook"/>
                     <t t-snippet="website.s_popup" string="Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/s_popup.svg"/>
                     <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
+                    <t t-snippet="website.s_instagram_page" string="Instagram Page" t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg">
+                        <keywords>social media, ig, feed</keywords>
+                    </t>
                     <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
                         <keywords>celebration, launch</keywords>
                     </t>
@@ -1230,7 +1233,7 @@
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]">
+    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page">
         <!-- Min height of section -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>

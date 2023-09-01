@@ -924,7 +924,13 @@ options.Class.include({
     _select: async function (previewMode, widget) {
         await this._super(...arguments);
 
-        if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length) {
+        // Some blocks flicker when we start their public widgets, so we skip
+        // the refresh for them to avoid the flickering.
+        const targetNoRefreshSelector = ".s_instagram_page";
+        // TODO: we should review the way public widgets are restarted when
+        // converting to OWL and a new API.
+        if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length
+            && !this.$target[0].matches(targetNoRefreshSelector)) {
             // TODO the flag should be retrieved through widget params somehow
             await this._refreshPublicWidgets();
         }
