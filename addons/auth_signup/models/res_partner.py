@@ -59,7 +59,7 @@ class ResPartner(models.Model):
 
     def _inverse_token(self):
         for partner in self:
-            self.env.cr.execute('UPDATE res_partner SET signup_token = %s WHERE id=%s', (partner.signup_token, partner.id))
+            self.env.cr.execute('UPDATE res_partner SET signup_token = %s WHERE id=%s', (partner.signup_token or None, partner.id))
 
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
