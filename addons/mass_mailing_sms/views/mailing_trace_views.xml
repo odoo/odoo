@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_search"/>
         <field name="arch" type="xml">
            <xpath expr="//field[@name='email']" position="after">
-                <field name="sms_sms_id_int"/>
-                <field name="sms_sms_id"/>
+                <field name="sms_id_int"/>
+                <field name="sms_id"/>
                 <field name="sms_number"/>
            </xpath>
         </field>
@@ -68,7 +68,7 @@
                 <field name="sms_number" invisible="trace_type != 'sms'"/>
             </xpath>
             <xpath expr="//field[@name='message_id']" position="after">
-                <field name="sms_sms_id_int" string="SMS ID"
+                <field name="sms_id_int" string="SMS ID"
                     invisible="trace_type != 'sms'"
                     groups="base.group_no_one"/>
                 <field name="sms_code" invisible="trace_type != 'sms'"
@@ -118,14 +118,14 @@
                             <field name="trace_type" invisible="1"/>
                             <field name="sms_number"/>
                             <field name="mass_mailing_id"/>
-                            <field name="sms_sms_id_int" string="SMS ID" groups="base.group_no_one"/>
+                            <field name="sms_id_int" string="SMS ID" groups="base.group_no_one"/>
                             <field name="sms_code" groups="base.group_no_one"/>
                         </group>
                         <group string="Marketing">
                             <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
-                            <field name="sms_sms_id" groups="base.group_no_one"/>
+                            <field name="sms_id" groups="base.group_no_one" invisible="not sms_id"/>
                         </group>
                     </group>
                 </sheet>

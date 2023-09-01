@@ -16,9 +16,9 @@ class MailingTrace(models.Model):
     trace_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
-    sms_sms_id = fields.Many2one('sms.sms', string='SMS', index='btree_not_null', ondelete='set null')
-    sms_sms_id_int = fields.Integer(
-        string='SMS ID (tech)',
+    sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id')
+    sms_id_int = fields.Integer(
+        string='SMS ID',
         index='btree_not_null'
         # Integer because the related sms.sms can be deleted separately from its statistics.
         # However, the ID is needed for several action and controllers.
@@ -46,11 +46,21 @@ class MailingTrace(models.Model):
         ('sms_rejected', 'Rejected'),
     ])
 
+    @api.depends('sms_id_int', 'trace_type')
+    def _compute_sms_id(self):
+        self.sms_id = False
+        sms_traces = self.filtered(lambda t: t.trace_type == 'sms' and bool(t.sms_id_int))
+        if not sms_traces:
+            return
+        existing_sms_ids = self.env['sms.sms'].sudo().search([
+            ('id', 'in', sms_traces.mapped('sms_id_int')), ('to_delete', '!=', True)
+        ]).ids
+        for sms_trace in sms_traces.filtered(lambda n: n.sms_id_int in set(existing_sms_ids)):
+            sms_trace.sms_id = sms_trace.sms_id_int
+
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
-            if 'sms_sms_id' in values:
-                values['sms_sms_id_int'] = values['sms_sms_id']
             if values.get('trace_type') == 'sms' and not values.get('sms_code'):
                 values['sms_code'] = self._get_random_code()
         return super(MailingTrace, self).create(values_list)

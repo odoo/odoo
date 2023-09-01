@@ -138,10 +138,6 @@ class SMSCase(MockSMS):
             raise NotImplementedError()
         return sms
 
-    def assertNoSMS(self):
-        """ Check no sms persisted during mock. """
-        self.assertEqual(len(self._new_sms.exists()), 0)
-
     def assertSMSIapSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.
