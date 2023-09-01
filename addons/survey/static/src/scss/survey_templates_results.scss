@@ -12,10 +12,53 @@
     html {
         height: unset;
     }
+    @page {
+        size: portrait; // force paper orientation to portrait
+        margin: auto 0; // force default left/rigth margins so elements (e.g.: graphs) are centered in the page
+    }
+    .o_frontend_to_backend_nav {
+        display: none !important;
+    }
+    .o_survey_brand_message {
+        border: none !important;
+    }
+    .o_survey_result {
+        canvas {
+            margin-bottom: 2rem;
+        }
+        .o_survey_question_page {
+            page-break-inside: avoid;
+        }
+        .o_survey_results_question_wrapper {
+            .o_survey_results_question_header, .o_survey_question_description {
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+        }
+        .o_survey_results_question_wrapper:has(button.collapsed) {
+            display: none;
+        }
+        .o_survey_user_responses_table_wrapper {
+            height: auto !important;
+        }
+        table {
+            overflow: visible !important;
+            thead {
+                display: table-row-group;
+            }
+            tbody {
+                tr {
+                  break-inside: avoid;  
+                }
+                tr.d-none {
+                    display: table-row !important;
+                }
+            }
+        }
+    }
 }
 
 .o_survey_results_topbar {
-    border: 1px solid rgba(0, 0, 0, 0.125);
 
     .nav-item.dropdown a {
         min-width: 13em;
@@ -119,4 +162,8 @@
     margin-left: auto;
     margin-right: auto;
     z-index: 1;
+}
+
+.o_survey_user_responses_table_wrapper {
+    overflow: auto;
 }
