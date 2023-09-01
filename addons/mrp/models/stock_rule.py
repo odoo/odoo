@@ -58,6 +58,7 @@ class StockRule(models.Model):
                         (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
                 domain = (
                     ('bom_id', '=', bom.id),
+                    ('product_id', '=', procurement.product_id.id),
                     ('state', 'in', ['draft', 'confirmed']),
                     ('is_planned', '=', False),
                     ('picking_type_id', '=', rule.picking_type_id.id),
@@ -198,8 +199,7 @@ class StockRule(models.Model):
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
-        bom_ids = self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
-        bom = values.get('bom') or bom_ids
+        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
         manufacture_delay = bom.produce_delay
         delay += manufacture_delay
         if not bypass_delay_description:
