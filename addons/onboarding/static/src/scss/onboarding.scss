@@ -2,6 +2,16 @@
 // ============================================================================
 $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
 
+.o_onboarding_container {
+    transition: height 0.4s;
+
+    &.o-vertical-slide-enter, &.o-vertical-slide-leave {
+        height: 0 !important;
+        * {
+            display: none;
+        }
+    }
+}
 
 .o_onboarding_main {
     background: linear-gradient(0deg, #{$o-gray-200} 0%, #{$o-gray-100} 100%);
