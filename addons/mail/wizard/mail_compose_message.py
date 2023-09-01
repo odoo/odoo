@@ -478,7 +478,10 @@ class MailComposer(models.TransientModel):
                 for recipient_command in mail_values.get('recipient_ids') or []
                 if recipient_command[1]
             ]
-            mail_to = list(set(mail_to))
+            # uniquify, keep ordering
+            seen = set()
+            mail_to = [email for email in mail_to if email not in seen and not seen.add(email)]
+
             recipients_info[record_id] = {
                 'mail_to': mail_to,
                 'mail_to_normalized': [
