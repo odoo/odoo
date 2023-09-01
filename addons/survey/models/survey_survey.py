@@ -1137,20 +1137,9 @@ class Survey(models.Model):
             else:
                 scoring_failed_count += count
 
-        success_graph = json.dumps([{
-            'text': _('Passed'),
-            'count': scoring_success_count,
-            'color': '#2E7D32'
-        }, {
-            'text': _('Failed'),
-            'count': scoring_failed_count,
-            'color': '#C62828'
-        }])
-
         total = scoring_success_count + scoring_failed_count
         return {
             'global_success_rate': round((scoring_success_count / total) * 100, 1) if total > 0 else 0,
-            'global_success_graph': success_graph,
             'count_all': total,
             'count_finished': completed_count,
             'count_failed': scoring_failed_count,
