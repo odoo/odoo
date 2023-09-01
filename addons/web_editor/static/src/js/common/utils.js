@@ -87,8 +87,6 @@ const DEFAULT_PALETTE = {
 const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
     "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
     "filterOptions",
-    // TODO: remove me in master; introduced in 16.4  as a stable fix.
-    "mimetypeBeforeConversion",
 ]);
 
 /**
