@@ -632,23 +632,23 @@ describe('Link', () => {
         };
         it('should restrict editing to link when clicked', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
                 stepFunction: async editor => {
                     const a = await clickOnLink(editor);
                     window.chai.expect(a.isContentEditable).to.be.equal(true);
                 },
-                contentAfter: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentAfter: '<p>a<a href="#/"><span class="a">b</span></a></p>',
             });
             // The following is a regression test, checking that the link
             // remains non-editable whenever the editable zone is contained by
             // the link.
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
                 stepFunction: async editor => {
                     const a = await clickOnLink(editor);
                     window.chai.expect(a.isContentEditable).to.be.equal(false);
                 },
-                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+                contentAfter: '<p>a<a href="#/"><span class="a" contenteditable="true">b</span></a></p>',
             }, {
                 isRootEditable: false,
                 getContentEditableAreas: function (editor) {
@@ -703,58 +703,58 @@ describe('Link', () => {
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span></a>c</p>',
-                contentAfter: '<p>a<a href="exist"><span>b[]</span></a>c</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
             });
         });
         it('should parse correctly an empty span inside a Link', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist">b[]<span></span></a>c</p>',
-                contentAfter: '<p>a<a href="exist">b[]<span></span></a>c</p>',
+                contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
+                contentAfter: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
             });
         });
         it('should parse correctly a span inside a Link 2', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span>c</a>d</p>',
-                contentAfter: '<p>a<a href="exist"><span>b[]</span>c</a>d</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
             });
         });
         it('should parse correctly an empty span inside a Link then add a char', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist">b[]<span></span></a>c</p>',
+                contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
-                contentAfter: '<p>a<a href="exist">bc[]<span></span></a>c</p>',
+                contentAfter: '<p>a<a href="exist">bc[]<span class="a"></span></a>c</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span></a>d</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>d</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
                 // JW cAfter: '<p>a<span><a href="exist">b</a>c[]</span>d</p>',
-                contentAfter: '<p>a<a href="exist"><span>bc[]</span></a>d</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span></a>d</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char 2', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span>d</a>e</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>d</a>e</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
-                contentAfter: '<p>a<a href="exist"><span>bc[]</span>d</a>e</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span>d</a>e</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char 3', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b</span>c[]</a>e</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b</span>c[]</a>e</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'd');
                 },
-                // JW cAfter: '<p>a<a href="exist"><span>b</span>c</a>d[]e</p>',
-                contentAfter: '<p>a<a href="exist"><span>b</span>cd[]</a>e</p>',
+                // JW cAfter: '<p>a<a href="exist"><span class="a">b</span>c</a>d[]e</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b</span>cd[]</a>e</p>',
             });
         });
         it('should add a character after the link', async () => {
