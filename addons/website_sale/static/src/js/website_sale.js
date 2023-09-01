@@ -180,6 +180,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      */
     _setUrlHash: function ($parent) {
         var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
+        if (!$attributes.length) {
+            return;
+        }
         var attributeIds = $attributes.toArray().map((elem) => $(elem).data("value_id"));
         window.location.replace('#attr=' + attributeIds.join(','));
     },
