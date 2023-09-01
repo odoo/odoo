@@ -451,7 +451,7 @@ class StockMove(models.Model):
         return {
             'name': self.name,
             'amount': amount,
-            'account_id': account,
+            'auto_account_id': account,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_id.uom_id.id,

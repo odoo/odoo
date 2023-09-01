@@ -16,7 +16,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
         cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
         #analytic distribution
-        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': cls.default_plan.id,

@@ -15,7 +15,6 @@ class TestSaleProject(TestSaleProjectCommon):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan Test',
-            'company_id': False,
         })
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
@@ -488,14 +487,11 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_id': self.product_order_service3.id,
             'order_id': sale_order.id,
         })
-        analytic_plan = self.env['account.analytic.plan'].create({
-            'name': 'Plan 1',
-            'default_applicability': 'optional',
-            'company_id': self.env.company.id,
-        })
-        self.env['ir.config_parameter'].sudo().set_param("default_analytic_plan_id_%s" % self.env.company.id, analytic_plan.id)
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+
         self.assertFalse(sale_order.analytic_account_id, "The SO should not have any analytic account before it is confirmed.")
         sale_order.action_confirm()
-        self.assertEqual(sale_order.analytic_account_id.company_id, analytic_plan.company_id, "The company_id of the account created should be the company of the default analytic plan of the setting.")
-        self.assertEqual(sale_order.analytic_account_id.plan_id, analytic_plan, "The plan of the account created should be the default analytic plan of the setting")
+
+        self.assertEqual(sale_order.analytic_account_id.company_id, sale_order.project_ids.company_id, "The company_id of the account created should be the company of the project.")
+        self.assertEqual(sale_order.analytic_account_id.plan_id, project_plan, "The plan of the account created should be the default analytic plan of the setting")
         self.assertEqual(sale_order.analytic_account_id, sale_order.project_ids.analytic_account_id, "The project created for the SO and the SO should have the same account.")

@@ -18,8 +18,7 @@ class ResConfigSettings(models.TransientModel):
     analytic_plan_id = fields.Many2one(
         comodel_name='account.analytic.plan',
         string="Analytic Plan",
-        readonly=False,
-        related='company_id.analytic_plan_id',
+        config_parameter="analytic.analytic_plan_projects",
     )
 
     @api.model

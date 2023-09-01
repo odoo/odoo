@@ -55,7 +55,7 @@ class AnalyticMixin(models.AbstractModel):
         account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
 
         query = f"""
-            SELECT id 
+            SELECT id
             FROM {self._table}
             WHERE analytic_distribution ?| array[%s]
         """
@@ -92,9 +92,10 @@ class AnalyticMixin(models.AbstractModel):
                 return
             decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
             distribution_by_root_plan = {}
-            for analytic_account_id, percentage in (self.analytic_distribution or {}).items():
-                root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
-                distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
+            for analytic_account_ids, percentage in (self.analytic_distribution or {}).items():
+                for analytic_account in self.env['account.analytic.account'].browse(map(int, analytic_account_ids.split(","))):
+                    root_plan = analytic_account.root_plan_id
+                    distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
 
             for plan_id in mandatory_plans_ids:
                 if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=decimal_precision) != 0:

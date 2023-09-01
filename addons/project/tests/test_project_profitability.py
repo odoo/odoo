@@ -16,7 +16,6 @@ class TestProjectProfitabilityCommon(TransactionCase):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan A',
-            'company_id': False,
         })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Project - AA',

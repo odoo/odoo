@@ -129,6 +129,7 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
         timesheet = self.env['account.analytic.line'].create({
             'name': 'Test Line',
             'unit_amount': 1,
+            'auto_account_id': self.analytic_account_sale.id,
             'employee_id': self.employee_manager.id,
             'project_id': self.project_employee_rate.id,
             'task_id': task.id,

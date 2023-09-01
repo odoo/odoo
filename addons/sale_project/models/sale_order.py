@@ -261,5 +261,6 @@ class SaleOrder(models.Model):
 
     def _prepare_analytic_account_data(self, prefix=None):
         result = super(SaleOrder, self)._prepare_analytic_account_data(prefix=prefix)
-        result['plan_id'] = self.company_id.analytic_plan_id.id or result['plan_id']
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        result['plan_id'] = project_plan.id or result['plan_id']
         return result

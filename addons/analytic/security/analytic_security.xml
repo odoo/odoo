@@ -8,7 +8,7 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
-     
+
     <record id="analytic_line_comp_rule" model="ir.rule">
         <field name="name">Analytic line multi company rule</field>
         <field name="model_id" ref="model_account_analytic_line"/>
@@ -16,9 +16,9 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record id="analytic_plan_comp_rule" model="ir.rule">
-        <field name="name">Analytic plan multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_plan"/>
+    <record id="analytic_applicability_comp_rule" model="ir.rule">
+        <field name="name">Analytic applicability multi company rule</field>
+        <field name="model_id" ref="model_account_analytic_applicability"/>
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
