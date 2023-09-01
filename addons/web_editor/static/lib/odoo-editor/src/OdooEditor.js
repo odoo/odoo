@@ -1386,8 +1386,11 @@ export class OdooEditor extends EventTarget {
                     link &&
                     !isBlock(link) &&
                     link.textContent !== '' &&
+                    !(
                         // Ignore links wrapped around a single image.
-                    [...link.childNodes].filter(isVisible).length > 1
+                        link.children.length === 1 &&
+                        link.firstElementChild.nodeName === 'IMG'
+                    )
                 ) {
                     link.prepend(this._createLinkZws('start'));
                     // Only add the ZWS at the end if the link is in selection.
