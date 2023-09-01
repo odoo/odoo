@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Netherlands - Accounting',
-    'version': '3.1',
+    'version': '3.2',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
