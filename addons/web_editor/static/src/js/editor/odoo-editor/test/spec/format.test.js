@@ -539,7 +539,7 @@ describe('Format', () => {
                 contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
             });
         });
-        it('should insert new character inside strikethrough at first position', async () => {
+        it('should insert before strikethrough', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>d[a${s('bc]<br><br>')}</p>`,
                 stepFunction: async editor => {
