@@ -62,7 +62,12 @@ export class Line extends Reactive {
 
     updateDataFromServer(data) {
         for (const key in data) {
-            this[key] = data[key];
+            let updatedValue = data[key];
+            if (key === "selected_attributes") {
+                updatedValue ||= {};
+            }
+
+            this[key] = updatedValue;
         }
     }
 }
