@@ -11,6 +11,9 @@ const clearDbSocialValuesCache = () => {
     dbSocialValuesProm = undefined;
     dbSocialValues = undefined;
 };
+const getDbSocialValuesCache = () => {
+    return dbSocialValues;
+};
 
 options.registry.SocialMedia = options.Class.extend({
     init() {
@@ -365,4 +368,5 @@ options.registry.SocialMedia = options.Class.extend({
 export default {
     SocialMedia: options.registry.SocialMedia,
     clearDbSocialValuesCache,
+    getDbSocialValuesCache,
 };

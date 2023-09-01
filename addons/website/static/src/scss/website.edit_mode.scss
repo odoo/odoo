@@ -20,6 +20,11 @@ $-editor-messages-margin-x: 2%;
         display: block;
     }
 }
+%o-disable-iframes {
+    iframe {
+        pointer-events: none;
+    }
+}
 .o_we_snippet_area_animation {
     animation-delay: 999ms; // Disable it but allow to inherit the animation
 
@@ -203,12 +208,15 @@ table.editorbar-panel {
 
 // Facebook Page
 .editor_enable .o_facebook_page:not(.o_facebook_preview) {
-    iframe {
-        pointer-events: none;
-    }
+    @extend %o-disable-iframes;
     .o_facebook_alert .o_add_facebook_page {
         cursor: pointer;
     }
+}
+
+// Prevent Instagram block to open Instagram in edit mode.
+.editor_enable .s_instagram_page {
+    @extend %o-disable-iframes;
 }
 
 // s_countdown preview classes
