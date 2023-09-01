@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import url_join
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -68,7 +70,10 @@ class Product(models.Model):
     def _compute_product_website_url(self):
         for product in self:
             attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
-            product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
+            url = product.product_tmpl_id.website_url
+            if attributes:
+                url = url_join(url, f"#attr={attributes}")
+            product.website_url = url
 
     #=== CONSTRAINT METHODS ===#
 
