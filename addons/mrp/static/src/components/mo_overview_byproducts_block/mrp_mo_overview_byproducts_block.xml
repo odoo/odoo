@@ -17,6 +17,7 @@
                 <td class="text-end" t-if="props.showOptions.availabilities"/>
                 <td class="text-end" t-if="props.showOptions.availabilities"/>
                 <td class="text-end" t-if="props.showOptions.receipts"/>
+                <td class="text-end" t-if="props.showOptions.unitCosts"/>
                 <td class="text-end" t-if="props.showOptions.moCosts" t-out="formatMonetary(props.summary.mo_cost)"/>
                 <td t-attf-class="text-end {{ getColorClass(props.summary.real_cost_decorator) }}" t-if="props.showOptions.realCosts" t-out="formatMonetary(props.summary.real_cost)"/>
             </tr>
