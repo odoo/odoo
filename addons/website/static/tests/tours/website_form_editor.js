@@ -33,7 +33,8 @@ odoo.define('website.tour.form_editor', function (require) {
     const getQuotesEncodedName = function (name) {
             return name.replaceAll(/"/g, character => `&quot;`)
                        .replaceAll(/'/g, character => `&apos;`)
-                       .replaceAll(/`/g, character => `&lsquo;`);
+                       .replaceAll(/`/g, character => `&lsquo;`)
+                       .replaceAll("\\", character => `&bsol;`);
     };
 
     const triggerFieldByLabel = (label) => {
@@ -110,6 +111,9 @@ odoo.define('website.tour.form_editor', function (require) {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
             const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
             testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
+            // Because 'testText' will be used as selector to verify the content
+            // of the label, the `\` character needs to be escaped.
+            testText = testText.replaceAll("\\", "\\\\");
         }
         ret.push({
             content: "Check the resulting field",
@@ -496,9 +500,12 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        // The next four calls to "addCustomField" are there to ensure such
+        // characters do not make the form editor crash.
         ...addCustomField("char", "text", "''", false),
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
+        ...addCustomField("char", "text", "\\", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
