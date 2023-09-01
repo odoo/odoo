@@ -77,7 +77,10 @@
     .o_kanban_record {
         position: relative;
         min-width: 150px;
-        margin: 0 0 (-$border-width);
+
+        & ~ .o_kanban_record .oe_kanban_card {
+            border-top: none;
+        }
 
         > div:not(.o_dropdown_kanban) {
             padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
