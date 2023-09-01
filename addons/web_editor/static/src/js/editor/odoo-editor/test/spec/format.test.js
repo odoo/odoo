@@ -581,7 +581,7 @@ describe('Format', () => {
                 contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
             });
         });
-        it('should insert new character inside strikethrough at first position', async () => {
+        it('should insert before strikethrough', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>d[a${s('bc]<br><br>')}</p>`,
                 stepFunction: async editor => {
@@ -641,7 +641,6 @@ describe('Format', () => {
             });
         });
         it('should remove underline, write, restore underline, write, remove underline again, write (collapsed, strikeThrough)', async () => {
-            const uselessS = s(u('\u200B', 'first'), 'first'); // TODO: clean
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
@@ -652,7 +651,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${uselessS}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${u(s(`ef`))}</p>`,
             });
         });
         it('should remove only underline decoration on a span', async () => {
