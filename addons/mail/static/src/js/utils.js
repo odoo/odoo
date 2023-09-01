@@ -155,7 +155,8 @@ function parseEmail(text) {
     if (text){
         var result = text.match(/(.*)<(.*@.*)>/);
         if (result) {
-            return [_.str.trim(result[1]), _.str.trim(result[2])];
+            name = _.str.trim(result[1]).replace(/(^"|"$)/g, '')
+            return [name, _.str.trim(result[2])];
         }
         result = text.match(/(.*@.*)/);
         if (result) {
