@@ -152,6 +152,13 @@ STATES = [
 ]
 
 
+XML_DECLARATION = (
+    '<?xml version='.encode('utf-8'),
+    '<?xml version='.encode('utf-16-be'),
+    '<?xml version='.encode('utf-16-le'),
+)
+
+
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
@@ -188,6 +195,11 @@ class Module(models.Model):
             if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
+                    if not doc.startswith(XML_DECLARATION):
+                        try:
+                            doc = doc.decode('utf-8')
+                        except UnicodeDecodeError:
+                            pass
                     html = lxml.html.document_fromstring(doc)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):

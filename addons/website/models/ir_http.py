@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import functools
 import logging
 from lxml import etree
 import os
@@ -9,8 +10,6 @@ import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
-
-from functools import partial
 
 import odoo
 from odoo import api, models
@@ -104,9 +103,12 @@ class Http(models.AbstractModel):
 
                     if url != url_to:
                         logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
-                        _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
-                        endpoint.routing['redirect_to'] = _slug_matching
-                        yield url, endpoint  # yield original redirected to new url
+                        # duplicate the endpoint to only register the redirect_to for this specific url
+                        redirect_endpoint = functools.partial(endpoint)
+                        functools.update_wrapper(redirect_endpoint, endpoint)
+                        _slug_matching = functools.partial(cls._slug_matching, endpoint=endpoint)
+                        redirect_endpoint.routing = dict(endpoint.routing, redirect_to=_slug_matching)
+                        yield url, redirect_endpoint  # yield original redirected to new url
                 elif rewrite.redirect_type == '404':
                     logger.debug('Return 404 for %s for website %s' % (url, website_id))
                     continue

@@ -1681,7 +1681,17 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         order_payment.with_context(**payment_context).check()
         session_id = self.pos_config.current_session_id
-        self.pos_config.current_session_id.action_pos_session_closing_control()
+
+        # closing the session with basic pos access
+        pos_user = self.env['res.users'].create({
+            'name': "PoS user",
+            'login': "pos_user",
+            'email': "pos_user@yourcompany.com",
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('point_of_sale.group_pos_user')])],
+        })
+
+        self.pos_config.current_session_id.with_user(pos_user).action_pos_session_closing_control()
+
         #get journal entries created
         aml = session_id.move_id.line_ids.filtered(lambda x: x.account_id == self.account1 and x.tax_ids == self.tax1)
         self.assertEqual(aml.price_total, 220)
