@@ -57,11 +57,7 @@ export class Thread extends Record {
             id: data.id,
             model: data.model,
             type: data.type,
-            _store: this.store,
         });
-        this.records[thread.localId] = thread;
-        // return reactive version.
-        thread = this.records[thread.localId];
         onChange(thread, "message_unread_counter", () => {
             if (thread.channel) {
                 thread.channel.message_unread_counter = thread.message_unread_counter;
@@ -176,8 +172,6 @@ export class Thread extends Record {
     transientMessages = [];
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
     type;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
     /** @type {string} */
     defaultDisplayMode;
     /** @type {SeenInfo[]} */

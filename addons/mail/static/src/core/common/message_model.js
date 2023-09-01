@@ -21,22 +21,14 @@ export class Message extends Record {
      * @returns {Message}
      */
     static insert(data) {
-        let message;
         if (data.res_id) {
             this.store.Thread.insert({
                 model: data.model,
                 id: data.res_id,
             });
         }
-        message = this.get(data);
-        if (!message) {
-            message = this.new(data);
-            message._store = this.store;
-            this.records[message.localId] = message;
-            message = this.records[message.localId];
-        }
+        const message = this.get(data) ?? this.new(data);
         this.env.services["mail.message"].update(message, data);
-        // return reactive version
         return message;
     }
 
@@ -102,8 +94,6 @@ export class Message extends Record {
      * have them. Message without date like transient message can be missordered
      */
     now = DateTime.now().set({ milliseconds: 0 });
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     /**
      * @returns {boolean}

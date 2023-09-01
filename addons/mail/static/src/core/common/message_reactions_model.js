@@ -14,7 +14,6 @@ export class MessageReactions extends Record {
         );
         if (!reaction) {
             reaction = this.new(data);
-            reaction._store = this.store;
         }
         const personasToUnlink = new Set();
         const alreadyKnownPersonaIds = new Set(reaction.personaLocalIds);
@@ -57,8 +56,6 @@ export class MessageReactions extends Record {
     personaLocalIds = [];
     /** @type {number} */
     messageId;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
 
     /** @type {import("@mail/core/common/persona_model").Persona[]} */
     get personas() {
