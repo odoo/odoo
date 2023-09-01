@@ -57,7 +57,7 @@ describe('List', () => {
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
                             stepFunction: toggleUnorderedList,
                             contentAfter:
-                                '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
+                                '<ul><li><b>ab</b> <i>cd</i> ef[]gh</li></ul>',
                         });
                     });
                     it('should turn an empty paragraph of multiple table cells into a list', async () => {
@@ -149,7 +149,7 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             stepFunction: toggleUnorderedList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn nested list items into paragraphs', async () => {
@@ -298,7 +298,7 @@ describe('List', () => {
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
                             stepFunction: toggleOrderedList,
                             contentAfter:
-                                '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
+                                '<ol><li><b>ab</b> <i>cd</i> ef[]gh</li></ol>',
                         });
                     });
                     it('should turn an empty paragraph of multiple table cells into a list', async () => {
@@ -390,7 +390,7 @@ describe('List', () => {
                                 '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
                             stepFunction: toggleOrderedList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn an list of multiple table cells into a empty paragraph', async () => {
@@ -494,7 +494,7 @@ describe('List', () => {
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             contentAfter:
-                                '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
+                                '<ul class="o_checklist"><li><b>ab</b> <i>cd</i> ef[]gh</li></ul>',
                         });
                     });
                     it('should turn a paragraph between 2 checklist into a checklist item', async () => {
@@ -712,7 +712,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                             stepFunction: toggleCheckList,
                             contentAfter:
-                                '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                                '<p><b>ab</b> <i>cd</i> ef[]gh</p>',
                         });
                     });
                     it('should turn nested list items into paragraphs', async () => {

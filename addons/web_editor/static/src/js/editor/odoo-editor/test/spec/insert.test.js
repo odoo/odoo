@@ -6,6 +6,7 @@ import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '.
 const span = text => {
     const span = document.createElement('span');
     span.innerText = text;
+    span.classList.add('a');
     return span;
 }
 
@@ -146,7 +147,7 @@ describe('insert HTML', () => {
                     <p>k]l</p>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: '<p>a<span>TEST</span>[]l</p>',
+                contentAfter: '<p>a<span class="a">TEST</span>[]l</p>',
             });
         });
         it('should only remove the text content of cells in a partly selected table', async () => {
@@ -161,7 +162,7 @@ describe('insert HTML', () => {
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: unformat(
                     `<table><tbody>
-                        <tr><td>cd</td><td><span>TEST</span>[]<br></td><td>gh</td></tr>
+                        <tr><td>cd</td><td><span class="a">TEST</span>[]<br></td><td>gh</td></tr>
                         <tr><td>ij</td><td><br></td><td>mn</td></tr>
                         <tr><td>op</td><td>qr</td><td>st</td></tr>
                     </tbody></table>`,
@@ -180,7 +181,7 @@ describe('insert HTML', () => {
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: unformat(
-                    `<p>a<span>TEST</span>[]</p>
+                    `<p>a<span class="a">TEST</span>[]</p>
                     <p>kl</p>`,
                 ),
             });
@@ -198,7 +199,7 @@ describe('insert HTML', () => {
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: unformat(
                     `<p>ab</p>
-                    <p><span>TEST</span>[]l</p>`,
+                    <p><span class="a">TEST</span>[]l</p>`,
                 ),
             });
         });
@@ -213,7 +214,7 @@ describe('insert HTML', () => {
                     <p>k]l</p>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p>a<span>TEST</span>[]l</p>`,
+                contentAfter: `<p>a<span class="a">TEST</span>[]l</p>`,
             });
         });
         it('should remove a selection of several tables', async () => {
@@ -233,7 +234,7 @@ describe('insert HTML', () => {
                     </tbody></table>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p><span>TEST</span>[]<br></p>`,
+                contentAfter: `<p><span class="a">TEST</span>[]<br></p>`,
             });
         });
         it('should remove a selection including several tables', async () => {
@@ -257,7 +258,7 @@ describe('insert HTML', () => {
                     <p>67]</p>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p>0<span>TEST</span>[]</p>`,
+                contentAfter: `<p>0<span class="a">TEST</span>[]</p>`,
             });
         });
         it('should remove everything, including several tables', async () => {
@@ -281,7 +282,7 @@ describe('insert HTML', () => {
                     <p>67]</p>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p><span>TEST</span>[]<br></p>`,
+                contentAfter: `<p><span class="a">TEST</span>[]<br></p>`,
             });
         });
     });

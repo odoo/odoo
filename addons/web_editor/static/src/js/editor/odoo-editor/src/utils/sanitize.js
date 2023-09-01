@@ -139,7 +139,15 @@ function sanitizeNode(node, root) {
         }
     }
 
-    if (
+    if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+        // Unwrap the contents of SPAN and FONT elements without attributes.
+        getDeepRange(root, { select: true });
+        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        const parent = node.parentElement;
+        unwrapContents(node);
+        restoreCursor?.();
+        node = parent; // The node has been removed, update the reference.
+    } else if (
         areSimilarElements(node, node.previousSibling) &&
         !isUnbreakable(node) &&
         !isEditorTab(node) &&
