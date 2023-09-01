@@ -35,6 +35,7 @@
                 <a href="#" role="button" t-on-click.prevent="openForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart ms-1 {{getColorClass(data.receipt.decorator)}}"/>
             </t>
         </td>
+        <td class="text-end" t-if="props.showOptions.unitCosts" t-out="formatMonetary(data.unit_cost)"/>
         <td t-attf-class="text-end {{ getColorClass(data.mo_cost_decorator) }}" t-if="props.showOptions.moCosts" t-out="formatMonetary(data.mo_cost)"/>
         <td class="text-end" t-if="props.showOptions.realCosts" t-out="formatMonetary(data.real_cost)"/>
     </tr>

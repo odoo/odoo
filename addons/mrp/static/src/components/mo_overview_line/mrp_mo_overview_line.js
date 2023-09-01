@@ -158,6 +158,7 @@ MoOverviewLine.props = {
                 },
                 optional: true,
             },
+            unit_cost: { type: Number, optional: true },
             mo_cost: Number,
             mo_cost_decorator: { type: [String, Boolean], optional: true },
             real_cost: Number,
