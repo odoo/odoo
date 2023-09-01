@@ -798,10 +798,6 @@ class WebsiteSale(http.Controller):
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
-        if post.get('type') == 'popover':
-            # force no-cache so IE11 doesn't cache this XHR
-            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
-
         values.update(self._cart_values(**post))
         return request.render("website_sale.cart", values)
 
@@ -874,6 +870,7 @@ class WebsiteSale(http.Controller):
             **kw
         )
 
+        values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
         if not order.cart_quantity:
@@ -919,6 +916,44 @@ class WebsiteSale(http.Controller):
         order = request.website.sale_get_order()
         for line in order.order_line:
             line.unlink()
+
+    def _get_cart_notification_information(self, order, line_ids):
+        """ Get the information about the sale order line to show in the notification.
+
+        :param recordset order: The sale order containing the lines.
+        :param list(int) line_ids: The ids of the lines to display in the notification.
+        :rtype: dict
+        :return: A dict with the following structure:
+            {
+                'currency_id': int
+                'lines': [{
+                    'id': int
+                    'image_url': int
+                    'quantity': float
+                    'name': str
+                    'description': str
+                    'line_price_total': float
+                }],
+            }
+        """
+        lines = order.order_line.filtered(lambda line: line.id in line_ids)
+        if not lines:
+            return {}
+
+        show_tax = order.website_id.show_line_subtotals_tax_selection == 'tax_included'
+        return {
+            'currency_id': order.currency_id.id,
+            'lines': [
+                { # For the cart_notification
+                    'id': line.id,
+                    'image_url': order.website_id.image_url(line.product_id, 'image_128'),
+                    'quantity': line.product_uom_qty,
+                    'name': line.name_short,
+                    'description': line._get_sale_order_line_multiline_description_variants(),
+                    'line_price_total': line.price_total if show_tax else line.price_subtotal,
+                } for line in lines
+            ],
+        }
 
     # ------------------------------------------------------
     # Checkout

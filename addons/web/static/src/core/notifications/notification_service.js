@@ -25,14 +25,16 @@ const AUTOCLOSE_DELAY = 4000;
  */
 
 export const notificationService = {
+    notificationContainer: NotificationContainer,
+
     start() {
         let notifId = 0;
         const notifications = reactive({});
 
         registry.category("main_components").add(
-            "NotificationContainer",
+            this.notificationContainer.name,
             {
-                Component: NotificationContainer,
+                Component: this.notificationContainer,
                 props: { notifications },
             },
             { sequence: 100 }

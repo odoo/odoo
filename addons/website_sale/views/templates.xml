@@ -1669,46 +1669,6 @@
         </t>
     </template>
 
-    <!-- this template is the one when we mouse over "My Cart" on the top right -->
-    <template id="cart_popover" name="Cart Popover">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
-          Your cart is empty!
-        </div>
-        <t t-if="website_sale_order and website_sale_order.website_order_line">
-            <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="row mb8 cart_line">
-                    <div class="col-3 text-center">
-                        <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                            <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
-                        </span>
-                        <span t-else=""
-                            t-field="line.product_id.image_128"
-                            t-options="{'widget': 'image', 'qweb_img_responsive': True, 'class': 'rounded o_image_64_max mb-2'}"
-                        />
-                    </div>
-                    <div class="col-9">
-                        <div>
-                            <t t-call="website_sale.cart_line_product_link">
-                                <span class="h6" t-esc="line.name_short" />
-                            </t>
-                        </div>
-                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                    </div>
-                </div>
-            </t>
-            <div class="text-center">
-                <span class="h6">
-                    <t t-call="website_sale.total">
-                        <t t-set="hide_promotions" t-value="True"/>
-                    </t>
-                </span>
-                <a role="button" class="btn btn-primary" href="/shop/cart">
-                    View Cart (<span class="o_wsale_cart_quantity" t-esc="website_sale_order.cart_quantity" /> item(s))
-                </a>
-            </div>
-        </t>
-    </template>
-
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>

@@ -220,7 +220,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 $input.trigger('change');
                 return;
             }
-            sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
