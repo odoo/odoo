@@ -119,11 +119,18 @@ class TestChannelAccessRights(MailCommon):
         # Read a chat when being a member: ok
         self.env['discuss.channel'].browse(self.chat_user_employee.id).read()
 
-        # Update channel/group/chat when being a member: ok
-        self.env['discuss.channel'].browse(self.public_channel.id).write({'name': 'modified again'})
-        self.env['discuss.channel'].browse(self.group_restricted_channel.id).write({'name': 'modified again'})
-        self.env['discuss.channel'].browse(self.private_group.id).write({'name': 'modified again'})
+        # Update (not owned)channel when being a member: ko, no access rights
+        with self.assertRaises(AccessError):
+            self.env['discuss.channel'].browse(self.public_channel.id).write({'name': 'modified again'})
+        with self.assertRaises(AccessError):
+            self.env['discuss.channel'].browse(self.group_restricted_channel.id).write({'name': 'modified again'})
+
+        # update owned channel
+        self.env['discuss.channel'].create({'name': 'Test', 'channel_type': 'channel'}).write({'name': 'modified again'})
+
+        # Update chat/group when being a member: ok
         self.env['discuss.channel'].browse(self.chat_user_employee.id).write({'name': 'modified again'})
+        self.env['discuss.channel'].browse(self.private_group.id).write({'name': 'modified again'})
 
         # Create channel/group/chat: ok
         new_channel = self.env['discuss.channel'].create(

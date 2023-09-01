@@ -343,16 +343,23 @@ class Channel(models.Model):
                 'memberCount': self.member_count,
             }
         })
+    def check_add_members_right(self):
+        if self.env.user._is_internal():
+            self.check_access_rights('read')
+            self.check_access_rule('read')
+        else:
+            self.check_access_rights('write')
+            self.check_access_rule('write')
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
-        self.check_access_rights('write')
-        self.check_access_rule('write')
+        self.check_add_members_right()
+
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
         notifications = []
-        for channel in self:
+        for channel in self.sudo():
             members_to_create = []
             if channel.group_public_id:
                 invalid_partners = partners.filtered(lambda partner: channel.group_public_id not in partner.user_ids.groups_id)
