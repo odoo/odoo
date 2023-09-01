@@ -899,7 +899,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
                 stepFunction: editor => editor.execCommand('removeFormat'),
-                contentAfter: '<div><p><span>[ab]</span></p></div>',
+                contentAfter: '<div><p>[ab]</p></div>',
             });
         });
     });
