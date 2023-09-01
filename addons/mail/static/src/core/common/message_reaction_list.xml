@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="mail.MessageReaction.List">
+    <div class="o-mail-MessageReactionList p-2">
+        <t t-if="this.props.reaction.count > 3">
+            <span>
+                <t t-out="getReactionSummary()"/>
+                <a href="#" t-on-click="() => this.manageReactionMenu()">
+                    <t t-esc="this.props.reaction.count - 3"/> other people</a>
+                     has reacted with 
+                    <t t-esc="this.props.reaction.content"/>
+            </span>
+        </t>
+        <t t-else="">
+            <t t-out="getReactionSummary()"/>
+        </t>
+    </div>
+</t>
+</templates>

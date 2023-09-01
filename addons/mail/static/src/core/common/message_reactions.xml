@@ -6,19 +6,25 @@
             'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
             'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.isDiscussion),
         }"
-        t-attf-class="{{ props.message.isDiscussion ? 'mt-n2' : 'mt-1' }}">
-        <button t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" class="o-mail-MessageReaction btn d-flex p-0 border rounded-1 mb-1"
-            t-on-click="() => this.onClickReaction(reaction)"
-            t-on-contextmenu="onContextMenu"
-            t-att-class="{
-                'o-selfReacted border-primary text-primary fw-bolder': hasSelfReacted(reaction),
-                'bg-view': !hasSelfReacted(reaction),
-                'ms-1': env.inChatWindow and env.alignedRight,
-                'me-1': !(env.inChatWindow and env.alignedRight),
-         }" t-att-title="getReactionSummary(reaction)">
-            <span class="mx-1" t-esc="reaction.content"/>
-            <span class="mx-1" t-esc="reaction.count"/>
-        </button>
+        t-attf-class="{{ props.message.isDiscussion ? 'mt-n2' : 'mt-1' }}"
+        >
+        <div t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" class="o-mail-MessageReaction"
+            t-on-mouseover="(ev) => this.openCard({ev: ev, reaction: reaction,})"
+            t-on-mouseleave="() => this.clearTimeout()"
+            >
+            <button class="o-mail-MessageReaction-btn btn p-0 border rounded-1 mb-1"
+                t-on-click="() => this.onClickReaction(reaction)"
+                t-on-contextmenu="onContextMenu"
+                t-att-class="{
+                    'o-selfReacted border-primary text-primary fw-bolder': hasSelfReacted(reaction),
+                    'bg-view': !hasSelfReacted(reaction),
+                    'ms-1': env.inChatWindow and env.alignedRight,
+                    'me-1': !(env.inChatWindow and env.alignedRight),
+            }">
+                <span class="mx-1" t-esc="reaction.content"/>
+                <span class="mx-1" t-esc="reaction.count"/>
+            </button>
+        </div>
     </div>
 </t>
 </templates>
