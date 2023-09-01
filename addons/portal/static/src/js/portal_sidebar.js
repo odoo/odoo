@@ -50,12 +50,6 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @param {string} href
      */
     _printIframeContent: function (href) {
-        // due to this issue : https://bugzilla.mozilla.org/show_bug.cgi?id=911444
-        // open a new window with pdf for print in Firefox (in other system: http://printjs.crabbly.com)
-        if ($.browser.mozilla) {
-            window.open(href, '_blank');
-            return;
-        }
         if (!this.printContent) {
             this.printContent = $('<iframe id="print_iframe_content" src="' + href + '" style="display:none"></iframe>');
             this.$el.append(this.printContent);
