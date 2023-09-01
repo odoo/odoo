@@ -65,13 +65,14 @@ class HrEmployeePrivate(models.Model):
         ('female', 'Female'),
         ('other', 'Other')
     ], groups="hr.group_hr_user", tracking=True)
-    marital = fields.Selection([
-        ('single', 'Single'),
-        ('married', 'Married'),
-        ('cohabitant', 'Legal Cohabitant'),
-        ('widower', 'Widower'),
-        ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
+    marital = fields.Selection(
+        selection='_get_marital_status_selection',
+        string='Marital Status',
+        groups="hr.group_hr_user",
+        default='single',
+        required=True,
+        tracking=True)
+
     spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
@@ -517,6 +518,15 @@ class HrEmployeePrivate(models.Model):
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         return self.resource_calendar_id.get_work_duration_data(date_from, date_to)
+
+    def _get_marital_status_selection(self):
+        return [
+            ('single', 'Single'),
+            ('married', 'Married'),
+            ('cohabitant', 'Legal Cohabitant'),
+            ('widower', 'Widower'),
+            ('divorced', 'Divorced')
+        ]
 
     # ---------------------------------------------------------
     # Business Methods
