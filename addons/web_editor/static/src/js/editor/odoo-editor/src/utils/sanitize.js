@@ -291,8 +291,19 @@ class Sanitize {
                 }
             }
 
-            if (node.firstChild) {
-                this._parse(node.firstChild);
+            let firstChild = node.firstChild;
+            // Unwrap the contents of SPAN and FONT elements without attributes.
+            if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = node.isConnected && preserveCursor(this.root.ownerDocument);
+                firstChild = unwrapContents(node)[0];
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            if (firstChild) {
+                this._parse(firstChild);
             }
 
             // Update link URL if label is a new valid link.
