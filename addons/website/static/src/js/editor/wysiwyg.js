@@ -217,12 +217,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             // menu itself.
             // FIXME normally removing the 'show' class should not be necessary here
             // TODO check that editor classes are removed here as well
-            var classes = $el
-                .attr("class")
-                .split(" ")
-                .filter((attr) => {
-                    ["dropdown-menu", "o_mega_menu", "show"].indexOf(attr) < 0;
-                });
+            const classes = [...$el[0].classList].filter(megaMenuClass =>
+                ["dropdown-menu", "o_mega_menu", "show"].indexOf(megaMenuClass) < 0);
             promises.push(this._rpc({
                 model: 'website.menu',
                 method: 'write',
