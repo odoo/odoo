@@ -352,7 +352,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
+            <calendar js_class="attendee_calendar" string="Meetings" banner_route="/onboarding/calendar" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                 event_open_popup="true"
                 event_limit="5"
                 quick_add="%(calendar.view_calendar_event_form_quick_create)d"
@@ -468,6 +468,14 @@
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_calendar_event_form"/>
+    </record>
+
+    <record id="action_view_start_calendar_sync" model="ir.actions.act_window">
+        <field name="name">Connect your Calendar</field>
+        <field name="res_model">calendar.provider.config</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
     </record>
 
     <!-- Menus -->
