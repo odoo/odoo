@@ -234,7 +234,7 @@ export class ViewCompiler {
         const recordExpr = params.recordExpr || "__comp__.props.record";
         let isVisileExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
             invisible
-        )},${recordExpr}.evalContext)`;
+        )},${recordExpr}.evalContextWithVirtualIds)`;
         if (compiled.hasAttribute("t-if")) {
             const formerTif = compiled.getAttribute("t-if");
             isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;

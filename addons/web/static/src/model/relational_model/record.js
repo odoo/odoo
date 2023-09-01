@@ -46,8 +46,14 @@ export class Record extends DataPoint {
                     return parentRecord.evalContext;
                 },
             };
+            this.evalContextWithVirtualIds = {
+                get parent() {
+                    return parentRecord.evalContextWithVirtualIds;
+                },
+            };
         } else {
             this.evalContext = {};
+            this.evalContextWithVirtualIds = {};
         }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };
@@ -384,14 +390,21 @@ export class Record extends DataPoint {
 
     _computeDataContext() {
         const dataContext = {};
+        const x2manyDataContext = {
+            withVirtualIds: {},
+            withoutVirtualIds: {},
+        };
         const data = toRaw(this.data);
         for (const fieldName in data) {
             const value = data[fieldName];
             const field = this.fields[fieldName];
             if (["char", "text", "html"].includes(field.type)) {
                 dataContext[fieldName] = this._textValues[fieldName];
-            } else if (["one2many", "many2many"].includes(field.type)) {
-                dataContext[fieldName] = value.currentIds.filter((id) => typeof id === "number");
+            } else if (field.type === "one2many" || field.type === "many2many") {
+                x2manyDataContext.withVirtualIds[fieldName] = value.currentIds;
+                x2manyDataContext.withoutVirtualIds[fieldName] = value.currentIds.filter(
+                    (id) => typeof id === "number"
+                );
             } else if (value && field.type === "date") {
                 dataContext[fieldName] = serializeDate(value);
             } else if (value && field.type === "datetime") {
@@ -409,7 +422,10 @@ export class Record extends DataPoint {
             }
         }
         dataContext.id = this.resId || false;
-        return dataContext;
+        return {
+            withVirtualIds: { ...dataContext, ...x2manyDataContext.withVirtualIds },
+            withoutVirtualIds: { ...dataContext, ...x2manyDataContext.withoutVirtualIds },
+        };
     }
 
     _createStaticListDatapoint(data, fieldName) {
@@ -558,17 +574,17 @@ export class Record extends DataPoint {
 
     _isInvisible(fieldName) {
         const invisible = this.activeFields[fieldName].invisible;
-        return invisible ? evaluateBooleanExpr(invisible, this.evalContext) : false;
+        return invisible ? evaluateBooleanExpr(invisible, this.evalContextWithVirtualIds) : false;
     }
 
     _isReadonly(fieldName) {
         const readonly = this.activeFields[fieldName].readonly;
-        return readonly ? evaluateBooleanExpr(readonly, this.evalContext) : false;
+        return readonly ? evaluateBooleanExpr(readonly, this.evalContextWithVirtualIds) : false;
     }
 
     _isRequired(fieldName) {
         const required = this.activeFields[fieldName].required;
-        return required ? evaluateBooleanExpr(required, this.evalContext) : false;
+        return required ? evaluateBooleanExpr(required, this.evalContextWithVirtualIds) : false;
     }
 
     async _load(nextConfig = {}) {
@@ -871,14 +887,16 @@ export class Record extends DataPoint {
      * be uselessly re-rendered if we replace it by a brand new object.
      */
     _setEvalContext() {
-        Object.assign(this.evalContext, {
+        const evalContext = {
             ...this.context,
             active_id: this.resId || false,
             active_ids: this.resId ? [this.resId] : [],
             active_model: this.resModel,
             current_company_id: this.model.company.currentCompany.id,
-            ...this._computeDataContext(),
-        });
+        };
+        const dataContext = this._computeDataContext();
+        Object.assign(this.evalContext, evalContext, dataContext.withoutVirtualIds);
+        Object.assign(this.evalContextWithVirtualIds, evalContext, dataContext.withVirtualIds);
 
         for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
             if (

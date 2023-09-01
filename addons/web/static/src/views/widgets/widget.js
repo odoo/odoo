@@ -38,13 +38,15 @@ export class Widget extends Component {
     }
     get widgetProps() {
         const record = this.props.record;
-        const evalContext = record.evalContext;
 
         let readonlyFromModifiers = false;
         let propsFromNode = {};
         if (this.props.widgetInfo) {
             const widgetInfo = this.props.widgetInfo;
-            readonlyFromModifiers = evaluateBooleanExpr(widgetInfo.attrs.readonly, evalContext);
+            readonlyFromModifiers = evaluateBooleanExpr(
+                widgetInfo.attrs.readonly,
+                record.evalContextWithVirtualIds
+            );
             propsFromNode = this.widget.extractProps ? this.widget.extractProps(widgetInfo) : {};
         }
 

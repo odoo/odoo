@@ -36,7 +36,12 @@ class CopyClipboardField extends Component {
         return this.props.record.fields[this.props.name].type;
     }
     get disabled() {
-        return this.props.disabledExpr ? evaluateBooleanExpr(this.props.disabledExpr, this.props.record.evalContext) : false;
+        return this.props.disabledExpr
+            ? evaluateBooleanExpr(
+                  this.props.disabledExpr,
+                  this.props.record.evalContextWithVirtualIds
+              )
+            : false;
     }
 }
 
