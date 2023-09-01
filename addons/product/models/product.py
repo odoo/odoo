@@ -609,7 +609,7 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _get_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
@@ -636,7 +636,12 @@ class ProductProduct(models.Model):
                 continue
             if not res or res.name == seller.name:
                 res |= seller
-        return res.sorted('price')[:1]
+        return res
+
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+        self.ensure_one()
+        sellers = self._get_sellers(partner_id, quantity, date, uom_id, params)
+        return sellers.sorted('price')[:1]
 
     def price_compute(self, price_type, uom=False, currency=False, company=None):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
