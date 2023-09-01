@@ -33,8 +33,10 @@ export class SplitBillScreen extends Component {
         return this.currentOrder.get_orderlines();
     }
     onClickLine(line) {
-        this._splitQuantity(line);
-        this._updateNewOrder(line);
+        for (const l of line.getAllLinesInCombo()) {
+            this._splitQuantity(l);
+            this._updateNewOrder(l);
+        }
     }
     back() {
         this.pos.showScreen("ProductScreen");
@@ -87,9 +89,17 @@ export class SplitBillScreen extends Component {
         }
         return splitlines;
     }
+    /**
+     * @param {Orderline} line
+     * side effect: update `this.splitlines[line.id].quantity` depending on
+     * - it's current value
+     * - the total quantity of the product in the order
+     * - the value of `line.is_pos_groupable()`
+     */
     _splitQuantity(line) {
         const split = this.splitlines[line.id];
-
+        // total quantity of the product in this line
+        // we add up the quantities of all the lines that have this product
         let totalQuantity = 0;
 
         this.pos
@@ -102,7 +112,7 @@ export class SplitBillScreen extends Component {
             });
 
         if (line.get_quantity() > 0) {
-            if (!line.get_unit().is_pos_groupable) {
+            if (!line.is_pos_groupable()) {
                 if (split.quantity !== line.get_quantity()) {
                     split.quantity = line.get_quantity();
                 } else {
@@ -110,9 +120,8 @@ export class SplitBillScreen extends Component {
                 }
             } else {
                 if (split.quantity < totalQuantity) {
-                    split.quantity += line.get_unit().is_pos_groupable
-                        ? 1
-                        : line.get_unit().rounding;
+                    split.quantity += 1;
+                    // TODO: why do we need this `if`?
                     if (split.quantity > line.get_quantity()) {
                         split.quantity = line.get_quantity();
                     }
@@ -133,7 +142,7 @@ export class SplitBillScreen extends Component {
             }
             orderline.set_quantity(split.quantity, "do not recompute unit price");
         } else if (orderline) {
-            this.newOrder.remove_orderline(orderline);
+            this.newOrder.removeOrderline(orderline);
             this.newOrderLines[line.id] = null;
         }
     }
@@ -172,9 +181,6 @@ export class SplitBillScreen extends Component {
                     line.get_quantity() - split.quantity,
                     "do not recompute unit price"
                 );
-                if (Math.abs(line.get_quantity()) < 0.00001) {
-                    this.currentOrder.remove_orderline(line);
-                }
             } else {
                 if (split.quantity) {
                     const decreaseLine = line.clone();
@@ -182,6 +188,14 @@ export class SplitBillScreen extends Component {
                     decreaseLine.noDecrease = true;
                     decreaseLine.set_quantity(-split.quantity);
                     order.add_orderline(decreaseLine);
+                }
+            }
+        }
+        if (!this.props.disallow) {
+            for (id in this.splitlines) {
+                line = this.currentOrder.get_orderline(parseInt(id));
+                if (line && Math.abs(line.get_quantity()) < 0.00001) {
+                    this.currentOrder.removeOrderline(line);
                 }
             }
         }

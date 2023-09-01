@@ -217,19 +217,6 @@
           <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_pad.png"/>
         </record>
 
-        <record id="whiteboard" model="product.product">
-          <field name="available_in_pos">True</field>
-          <field name="list_price">1.70</field>
-          <field name="name">Whiteboard</field>
-          <field name="to_weight">True</field>
-          <field name="type">product</field>
-          <field name="weight">0.01</field>
-          <field name="categ_id" ref="product.product_category_5"/>
-          <field name="uom_id" ref="uom.product_uom_unit"/>
-          <field name="uom_po_id" ref="uom.product_uom_unit"/>
-          <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard.png"/>
-        </record>
-
         <record id="led_lamp" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.90</field>
@@ -274,6 +261,21 @@
           <field name="uom_po_id" ref="uom.product_uom_unit"/>
           <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
         </record>
+
+        <record id="whiteboard" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.70</field>
+          <field name="name">Whiteboard</field>
+          <field name="to_weight">True</field>
+          <field name="type">product</field>
+          <field name="weight">0.01</field>
+          <field name="categ_id" ref="product.product_category_5"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard.png"/>
+        </record>
+
+
 
         <record id="product.product_product_1" model="product.product">
           <field name="available_in_pos" eval="True"/>
@@ -378,5 +380,65 @@
         <record id="product.consu_delivery_01" model="product.product">
           <field name="available_in_pos" eval="True"/>
           <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+        </record>
+        
+        <record id="desk_organizer_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="desk_organizer"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="desk_pad_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="desk_pad"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="monitor_stand_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="monitor_stand"/>
+            <field name="combo_price">2</field>
+        </record>
+        <record id="desk_accessories_combo" model="pos.combo">
+            <field name="name">Desk Accessories Combo</field>
+            <field name="combo_line_ids" eval="[(6, 0, [ref('desk_organizer_combo_line'), ref('desk_pad_combo_line'), ref('monitor_stand_combo_line')])]"/>
+        </record>
+
+        <record id="product_3_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="product_5_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="desks_combo" model="pos.combo">
+            <field name="name">Desks Combo</field>
+            <field name="combo_line_ids" eval="[(6, 0, [ref('product_3_combo_line'), ref('product_5_combo_line')])]"/>
+        </record>
+
+        <record id="product_11_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="product_11b_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="product.product_product_11b"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="product_12_combo_line" model="pos.combo.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="combo_price">0</field>
+        </record>
+        <record id="chairs_combo" model="pos.combo">
+            <field name="name">Chairs Combo</field>
+            <field name="combo_line_ids" eval="[(6, 0, [ref('product_11_combo_line'), ref('product_11b_combo_line'), ref('product_12_combo_line')])]"/>
+        </record> 
+
+        <record id="office_combo" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">160</field>
+          <field name="name">Office combo</field>
+          <field name="type">combo</field>
+          <field name="categ_id" ref="product.product_category_5"/>
+          <field name="uom_id" ref="uom.product_uom_unit"/>
+          <field name="uom_po_id" ref="uom.product_uom_unit"/>
+          <field name="image_1920" type="base64" file="point_of_sale/static/img/office_combo.png"/>
+          <field name="combo_ids" eval="[(6, 0, [ref('desks_combo'), ref('chairs_combo'), ref('desk_accessories_combo')])]"/>
+          <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
         </record>
 </odoo>

@@ -145,10 +145,22 @@ class PosOrder(models.Model):
             order['user_id'] = pos_order.user_id.id
             pos_order.write(self._order_fields(order))
 
+        pos_order._link_combo_items(order)
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
         return pos_order._process_saved_order(draft)
+
+    def _link_combo_items(self, order_vals):
+        self.ensure_one()
+
+        lines = [l[2] for l in order_vals['lines'] if l[2].get('combo_parent_id') or l[2].get('combo_line_ids')]
+        uuid_by_cid = {line['id']: line['uuid'] for line in lines}
+        line_by_uuid = {line.uuid: line for line in  self.lines.filtered_domain([("uuid", "in", [line['uuid'] for line in lines])])}
+
+        for line in lines:
+            if line.get('combo_parent_id'):
+                line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[uuid_by_cid[line['combo_parent_id']]]
 
     def _process_saved_order(self, draft):
         self.ensure_one()
@@ -896,12 +908,12 @@ class PosOrder(models.Model):
         """ Create and update Orders from the frontend PoS application.
 
         Create new orders and update orders that are in draft status. If an order already exists with a status
-        diferent from 'draft'it will be discareded, otherwise it will be saved to the database. If saved with
+        different from 'draft'it will be discarded, otherwise it will be saved to the database. If saved with
         'draft' status the order can be overwritten later by this function.
 
         :param orders: dictionary with the orders to be created.
         :type orders: dict.
-        :param draft: Indicate if the orders are ment to be finalised or temporarily saved.
+        :param draft: Indicate if the orders are meant to be finalized or temporarily saved.
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
@@ -1152,7 +1164,7 @@ class PosOrderLine(models.Model):
 
         # Clean up fields sent by the JS
         line = [
-            line[0], line[1], {k: v for k, v in line[2].items() if k in self.env['pos.order.line']._fields}
+            line[0], line[1], {k: v for k, v in line[2].items() if self._is_field_accepted(k)}
         ]
         return line
 
@@ -1185,6 +1197,12 @@ class PosOrderLine(models.Model):
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
+    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent')
+    combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
+
+    @api.model
+    def _is_field_accepted(self, field):
+        return field in self._fields and not field in ['combo_parent_id', 'combo_line_ids']
 
     @api.depends('refund_orderline_ids')
     def _compute_refund_qty(self):
@@ -1287,6 +1305,7 @@ class PosOrderLine(models.Model):
 
     def _export_for_ui(self, orderline):
         return {
+            'id': orderline.id,
             'qty': orderline.qty,
             'price_unit': orderline.price_unit,
             'skip_change': orderline.skip_change,
@@ -1296,13 +1315,14 @@ class PosOrderLine(models.Model):
             'product_id': orderline.product_id.id,
             'discount': orderline.discount,
             'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
-            'id': orderline.id,
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
             'full_product_name': orderline.full_product_name,
             'refunded_orderline_id': orderline.refunded_orderline_id.id,
+            'combo_parent_id': orderline.combo_parent_id.id,
+            'combo_line_ids': orderline.combo_line_ids.mapped('id'),
         }
 
     def export_for_ui(self):
@@ -1321,7 +1341,7 @@ class PosOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
-        comming from a sale order line. This method could be override in order to add other custom key that could
+        coming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
         self.ensure_one()

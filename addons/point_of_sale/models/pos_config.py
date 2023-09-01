@@ -654,7 +654,7 @@ class PosConfig(models.Model):
             if invoice_journal_id:
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
 
-    def _get_availlable_product_domain(self):
+    def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
             ('available_in_pos', '=', True),
@@ -668,7 +668,7 @@ class PosConfig(models.Model):
 
     def get_limited_products_loading(self, fields):
         tables, where_clause, params = self.env['product.product']._where_calc(
-            self._get_availlable_product_domain()
+            self._get_available_product_domain()
         ).get_sql()
         query = f"""
             WITH pm AS (

@@ -22,15 +22,11 @@ export class NumpadWidget extends Component {
     }
     get hasPriceControlRights() {
         return (
-            this.pos.cashierHasPriceControlRights() &&
-            !this.props.disabledModes.includes("price")
+            this.pos.cashierHasPriceControlRights() && !this.props.disabledModes.includes("price")
         );
     }
     get hasManualDiscount() {
-        return (
-            this.pos.config.manual_discount &&
-            !this.props.disabledModes.includes("discount")
-        );
+        return this.pos.config.manual_discount && !this.props.disabledModes.includes("discount");
     }
     changeMode(mode) {
         if (!this.hasPriceControlRights && mode === "price") {

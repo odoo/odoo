@@ -1676,6 +1676,8 @@ class PosSession(models.Model):
             'res.currency',
             'pos.category',
             'product.product',
+            'pos.combo',
+            'pos.combo.line',
             'product.packaging',
             'account.cash.rounding',
             'pos.payment.method',
@@ -1960,20 +1962,35 @@ class PosSession(models.Model):
         domain = []
         if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
             domain = [('id', 'in', self.config_id.iface_available_categ_ids.ids)]
-
         return {'search_params': {'domain': domain, 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date', 'has_image']}}
 
     def _get_pos_ui_pos_category(self, params):
         return self.env['pos.category'].search_read(**params['search_params'])
 
+    def _loader_params_pos_combo(self):
+        products = self._context.get('loaded_data')['product.product']
+        combo_ids = set().union(*[product.get('combo_ids') for product in products])
+        return {'search_params': {'fields': ['id', 'name', 'combo_line_ids']}, 'ids': combo_ids}
+
+    def _get_pos_ui_pos_combo(self, params):
+        return self.env['pos.combo'].browse(params['ids']).read(**params['search_params'])
+
+    def _loader_params_pos_combo_line(self):
+        combo_ids = self._context.get('loaded_data')['pos.combo']
+        combo_line_ids = set().union(*[combo.get('combo_line_ids') for combo in combo_ids])
+        return {'search_params': {'fields': ['id', 'product_id', 'combo_price']}, 'ids': combo_line_ids}
+
+    def _get_pos_ui_pos_combo_line(self, params):
+        return self.env['pos.combo.line'].browse(params['ids']).read(**params['search_params'])
+
     def _loader_params_product_product(self):
         return {
             'search_params': {
-                'domain': self.config_id._get_availlable_product_domain(),
+                'domain': self.config_id._get_available_product_domain(),
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128'
+                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids',
                 ],
                 'order': 'sequence,default_code,name',
             },

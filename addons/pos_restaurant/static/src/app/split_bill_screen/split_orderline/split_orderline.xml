@@ -12,14 +12,14 @@
             <ul class="info-list ms-2">
                 <t t-if="props.line.get_quantity_str() !== '1'">
                     <li class="info">
-                        <t t-if="isSelected and props.line.get_unit().is_pos_groupable">
+                        <t t-if="isSelected and props.line.is_pos_groupable()">
                             <em class="big fs-3 fst-normal fw-bolder me-1">
                                 <t t-esc="props.split.quantity" />
                             </em>
                             /
                             <t t-esc="props.line.get_quantity_str()" />
                         </t>
-                        <t t-if="!(isSelected and props.line.get_unit().is_pos_groupable)">
+                        <t t-else="">
                             <em class="fst-normal fw-bolder me-1">
                                 <t t-esc="props.line.get_quantity_str()" />
                             </em>
