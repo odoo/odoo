@@ -58,6 +58,7 @@ class StockRule(models.Model):
                         (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
                 domain = (
                     ('bom_id', '=', bom.id),
+                    ('product_id', '=', procurement.product_id.id),
                     ('state', 'in', ['draft', 'confirmed']),
                     ('is_planned', '=', False),
                     ('picking_type_id', '=', rule.picking_type_id.id),
