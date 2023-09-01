@@ -13,6 +13,9 @@
                 <t t-set-slot="layout-actions">
                     <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
                 </t>
+                <t t-set-slot="control-panel-additional-breadcrums">
+                    <span class="currentDate"><t t-out="currentDate"/></span>
+                </t>
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
