@@ -66,7 +66,7 @@ class Project(models.Model):
         profitability_items = super()._get_profitability_items(with_action)
         mrp_category = 'manufacturing_order'
         mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
-            [('account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
+            [('auto_account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
             ['currency_id'],
             ['amount:sum'],
         )

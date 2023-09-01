@@ -12,22 +12,6 @@ class TestAnalyticAccount(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.analytic_plan_offset = cls.env['account.analytic.plan'].search_count([('company_id', '=', False)])
-        cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({
-            'name': 'Plan 1',
-            'default_applicability': 'unavailable',
-            'company_id': False,
-        })
-        cls.analytic_plan_child = cls.env['account.analytic.plan'].create({
-            'name': 'Plan Child',
-            'parent_id': cls.analytic_plan_1.id,
-            'company_id': False,
-        })
-        cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({
-            'name': 'Plan 2',
-            'company_id': False,
-        })
-
         # Create new user to avoid demo data.
         user = cls.env['res.users'].create({
             'name': 'The anal(ytic) expert!',
@@ -53,6 +37,19 @@ class TestAnalyticAccount(TransactionCase):
         user.write({
             'company_ids': [(6, 0, cls.company_data.ids)],
             'company_id': cls.company_data.id,
+        })
+        cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
+
+        cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({
+            'name': 'Plan 1',
+            'default_applicability': 'unavailable',
+        })
+        cls.analytic_plan_child = cls.env['account.analytic.plan'].create({
+            'name': 'Plan Child',
+            'parent_id': cls.analytic_plan_1.id,
+        })
+        cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({
+            'name': 'Plan 2',
         })
 
         cls.partner_a = cls.env['res.partner'].create({'name': 'partner_a', 'company_id': False})
@@ -174,19 +171,18 @@ class TestAnalyticAccount(TransactionCase):
         """
         self.analytic_plan = self.env['account.analytic.plan'].create({
             'name': 'Parent Plan',
-            'company_id': False,
         })
         self.analytic_sub_plan = self.env['account.analytic.plan'].create({
             'name': 'Sub Plan',
             'parent_id': self.analytic_plan.id,
-            'company_id': False,
         })
         self.analytic_sub_sub_plan = self.env['account.analytic.plan'].create({
             'name': 'Sub Sub Plan',
             'parent_id': self.analytic_sub_plan.id,
-            'company_id': False,
         })
-        self.analytic_account_1 = self.env['account.analytic.account'].create({'name': 'Child Account', 'plan_id': self.analytic_sub_sub_plan.id})
+        self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': self.analytic_plan.id})
+        self.env['account.analytic.account'].create({'name': 'Child Account', 'plan_id': self.analytic_sub_plan.id})
+        self.env['account.analytic.account'].create({'name': 'Grand Child Account', 'plan_id': self.analytic_sub_sub_plan.id})
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
         self.assertEqual(2, len(plans_json) - self.analytic_plan_offset,
                          "The parent plan should be available even if the analytic account is set on child of third generation")

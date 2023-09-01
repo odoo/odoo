@@ -2,11 +2,6 @@
 <odoo>
     <data noupdate="1">
 
-        <record id="default_analytic_plan_id" model="ir.config_parameter">
-            <field name="key" eval="'default_analytic_plan_id_' + str(ref('base.main_company'))"/>
-            <field name="value" ref="analytic.analytic_plan_projects"/>
-        </record>
-
         <!-- Users -->
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[
@@ -49,19 +44,19 @@
         <record id="analytic_office_design" model="account.analytic.account">
             <field name="name">Office Design</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="analytic_research_development" model="account.analytic.account">
             <field name="name">Research &amp; Development</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="analytic_renovations" model="account.analytic.account">
             <field name="name">Renovations</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
-            <field name="company_id" model="account.analytic.plan" eval="obj().search([('id', '=', ref('analytic.analytic_plan_projects'))]).company_id"/>
+            <field name="company_id" eval="False"/>
         </record>
 
         <!-- Stage templates -->

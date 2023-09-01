@@ -5,7 +5,6 @@
         <field name="model">account.analytic.plan</field>
         <field name="arch" type="xml">
             <form string="Analytic Plans">
-                <field name="company_id" invisible="1"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_children_plans" type="object" class="oe_stat_button" icon="fa-bars">
@@ -31,7 +30,6 @@
                         <field name="color" widget="color_picker"/>
                         </group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
 
@@ -42,6 +40,7 @@
                                 <tree editable="bottom">
                                     <field name="business_domain"/>
                                     <field name="applicability"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </tree>
                             </field>
                         </page>
@@ -56,10 +55,10 @@
         <field name="model">account.analytic.plan</field>
         <field name="arch" type="xml">
             <tree string="Analytic Plans" multi_edit="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="default_applicability"/>
                 <field name="color" widget="color_picker"/>
-                <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>

@@ -30,6 +30,7 @@ class TestEditSoLineTimesheet(TestCommonSaleTimesheet):
         # 1) create some timesheets on this task
         timesheet = self.env['account.analytic.line'].create({
             'name': 'Test Line',
+            'auto_account_id': self.analytic_account_sale.id,
             'project_id': self.project_task_rate.id,
             'task_id': self.task_rate_task.id,
             'unit_amount': 5,

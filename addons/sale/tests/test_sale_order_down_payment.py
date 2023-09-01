@@ -338,7 +338,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_analytic_distribution(self):
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
         an_acc_02 = str(self.env['account.analytic.account'].create({'name': 'Account 02', 'plan_id': analytic_plan.id}).id)
         self.sale_order.order_line[0].tax_id = self.tax_15 + self.tax_10
@@ -369,7 +369,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
     def test_tax_fixed_amount_analytic_distribution(self):
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
         an_acc_02 = str(self.env['account.analytic.account'].create({'name': 'Account 02', 'plan_id': analytic_plan.id}).id)
         tax_10_fix_a = self.create_tax(10, {'amount_type': 'fixed', 'include_base_amount': True})

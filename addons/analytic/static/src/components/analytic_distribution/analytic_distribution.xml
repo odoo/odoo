@@ -3,7 +3,7 @@
 
     <t t-name="analytic.AnalyticDistribution">
         <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
-            <TagsList tags="this.tags"/>
+            <TagsList tags="planSummaryTags()"/>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
                 <span class="analytic_distribution_placeholder"/>
                 <span class="o_dropdown_button" />
@@ -13,56 +13,54 @@
     </t>
 
     <t t-name="analytic.AnalyticDistributionPopup">
-        <div class="analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
+        <div class="analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header sticky-top">
                 <div class="d-flex">
                     <div class="h5 mt-2 me-auto">Analytic</div>
                     <div class="popupButtons">
-                        <span t-if="tags.length and allowSave" class="btn o_button" t-on-click="onSaveNew"><i class="fa fa-save"/></span>
-                        <span class="o_button ms-2 cursor-pointer" t-on-click.stop="() => this.closeAnalyticEditor()"><span class="fa fa-close"/></span>
+                        <span t-if="allowSave" class="btn o_button" t-on-click="onSaveNew" title="Save as new analytic distribution model"><i class="fa fa-save"/></span>
+                        <span class="btn o_button" t-on-click.stop="() => this.closeAnalyticEditor()" title="Close"><span class="fa fa-close"/></span>
                     </div>
                 </div>
             </div>
-            <div class="p-2">
-                <span t-if="!sortedList.length">No plans available</span>
-                <t t-foreach="sortedList" t-as="plan" t-key="plan.id">
-                    <table class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-borderless" t-attf-id="plan_{{plan.id}}">
+            <div class="p-2 table-responsive">
+                <span t-if="!allPlans.length">No analytic plans found</span>
+                <table t-else="" class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-striped">
+                    <t t-set="totals" t-value="planTotals()"/>
+                    <thead>
                         <tr class="border-bottom">
-                            <th class="o_analytic_account_name">
-                                <t t-out="plan.name"/>
-                                <t t-if="plan.account_count === 0"> (no accounts)</t>
-                                <span t-if="plan.applicability === 'mandatory'" t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="statusDescription(plan.id)"/>
+                            <th t-foreach="allPlans" t-as="plan" t-key="plan.id">
+                                <span t-out="plan.name"/>(<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)
                             </th>
+                            <th t-out="'Percentage'" class="numeric_column_width"/>
+                            <th t-if="valueColumnEnabled" class="numeric_column_width" t-out="props.record.fields[props.amount_field].string"/>
+                            <th class="deleteColumn w-20px"/>
                         </tr>
-                        <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">
-                            <tr t-attf-class="{{tagIsReady(dist_tag) and 'ready' or !!dist_tag.analytic_account_id and 'to_remove' or 'incomplete'}} tag_{{dist_tag.id}}">
-                                <td class="o_analytic_account_name">
-                                    <AutoComplete
-                                        id="dist_tag.id.toString()"
-                                        placeholder="'Search Analytic Account'"
-                                        value="dist_tag.analytic_account_name"
-                                        sources="sourcesAnalyticAccount(plan.id)"
-                                        autoSelect="true"
-                                        onSelect.alike="(option, params) => this.onSelect(option, params, dist_tag)"
-                                        onChange.alike="({inputValue}) => this.autoCompleteInputChanged(dist_tag, inputValue)"/>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.formattedData" t-as="line" t-key="line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
+                            <Record t-props="recordProps(line)" t-slot-scope="data">
+                                <td t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan'))" t-as="field" t-key="field">
+                                    <Field id="field" name="field" record="data.record" domain="data.record.fields[field].domain" canOpen="false" canCreate="false" canCreateEdit="false" canQuickCreate="false"/>
                                 </td>
-                                <td class="o_analytic_percentage">
-                                    <input
-                                        class="o_input"
-                                        inputmode="numeric"
-                                        type="text"
-                                        t-att-value="dist_tag.analytic_account_id or dist_tag.percentage ? formatPercentage(dist_tag.percentage) : ''"
-                                        t-on-click.stop=""
-                                        t-on-change="(ev) => this.percentageChanged(dist_tag, ev)"/>
+                                <td class="numeric_column_width">
+                                    <Field id="'percentage'" name="'percentage'" record="data.record"/>
                                 </td>
-                                <td>
-                                    <span t-if="dist_tag.analytic_account_id" class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteTag(dist_tag.id, dist_tag.group_id)"/>
+                                <td t-if="valueColumnEnabled" class="numeric_column_width">
+                                    <Field id="props.amount_field" name="props.amount_field" record="data.record"/>
                                 </td>
-                            </tr>
-                        </t>
-                    </table>
-                </t>
-                <div tabindex="0" class="hidden-focus"/>
+                                <td class="w-20px">
+                                    <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteLine(line_index)"/>
+                                </td>
+                            </Record>
+                        </tr>
+                        <tr>
+                            <td t-on-click.stop.prevent="addLine" class="o_field_x2many_list_row_add" t-att-colspan="allPlans.length + 2 + valueColumnEnabled">
+                                <a href="#" t-ref="addLineButton" tabindex="0">Add a Line</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </t>

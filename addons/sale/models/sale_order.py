@@ -1708,13 +1708,10 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].sudo().search([
-            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)
-        ], limit=1)
+        plan = self.env['account.analytic.plan'].sudo().search([], limit=1)
         if not plan:
             plan = self.env['account.analytic.plan'].sudo().create({
                 'name': 'Default',
-                'company_id': self.company_id.id,
             })
         return {
             'name': name,
