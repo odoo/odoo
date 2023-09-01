@@ -186,7 +186,8 @@
         </div>
     </t>
     <t t-name="point_of_sale.OrderLinesReceipt">
-        <div t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
+        <div t-foreach="receipt.orderlines" t-as="line" t-key="line.id"
+             t-att-class="{'border-start border-3 ps-1': lineIsPartOfCombo(line.id)}">
             <div t-esc="line.product_name_wrapped[0]" />
             <WrappedProductNameLines line="line" />
             <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
@@ -217,7 +218,7 @@
                 x
                 <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
                 <div class="price_display pos-receipt-right-align">
-                    <span t-esc="env.utils.formatCurrency(line.price_display, false)" />
+                    <span t-if="!(lineIsPartOfCombo(line.id) and line.price_display===0)" t-esc="env.utils.formatCurrency(line.price_display, false)" />
                     <span t-esc="getTaxLetter(...getOrderlineTaxes(line))" class="tax-letter" /> 
                 </div>
             </div>

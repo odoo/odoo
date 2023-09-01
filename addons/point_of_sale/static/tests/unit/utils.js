@@ -11,6 +11,8 @@ registry.category("mock_server").add("pos.session/load_pos_data", async function
         "res.partner": [...(this.models["res.partner"]?.records || [])],
         "pos.category": [...(this.models["pos.category"]?.records || [])],
         "product.product": [...(this.models["product.product"]?.records || [])],
+        "pos.combo": [...(this.models["pos.combo"]?.records || [])],
+        "pos.combo.line": [...(this.models["pos.combo.line"]?.records || [])],
         "product.pricelist": [...(this.models["product.pricelist"]?.records || [])],
         "pos.payment.method": [...(this.models["pos.payment.method"]?.records || [])],
         "res.currency": {

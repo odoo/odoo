@@ -2,7 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.OrderlineDetails">
-        <li class="orderline w-100 m-0 py-2 px-3 lh-sm cursor-pointer" t-on-click="() => this.props.onClickOrderline(props.line)" t-att-class="{ selected: props.isSelected }">
+        <li class="orderline w-100 m-0 py-2 px-3 lh-sm cursor-pointer" 
+            t-on-click="() => this.props.onClickOrderline(props.line)" 
+            t-att-class="{ 
+                            'selected': props.isSelected,
+                            'ps-3': this.props.line.isPartOfCombo()
+                        }">
             <span class="product-name d-inline-block flex-grow-1 fw-bolder text-truncate">
                 <t t-esc="productName" />
             </span>
@@ -22,6 +27,7 @@
                         <t t-esc="customerNote" />
                     </li>
                 </t>
+                <t t-if="props.line.comboParent" t-call="point_of_sale.ComboParentName"/>
                 <t t-if="hasRefundedQty()">
                     <li class="info refund-note mt-1">
                         <strong>

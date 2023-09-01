@@ -34,6 +34,13 @@ export class OrderReceipt extends Component {
     get shippingDate() {
         return this.receiptEnv.shippingDate;
     }
+    /**
+     * @param {number} lineId
+     * @returns {boolean} true if the line is part of a combo
+     */
+    lineIsPartOfCombo(lineId) {
+        return this.orderlines.find((l) => l.id === lineId || l.cid === lineId).isPartOfCombo();
+    }
 
     /**
      * @param {object} line item of the array given by `this.receiptEnv.orderlines`

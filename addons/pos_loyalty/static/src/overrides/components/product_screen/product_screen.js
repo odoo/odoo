@@ -99,7 +99,7 @@ patch(ProductScreen.prototype, {
             }
         }
         if (!selectedLine.is_reward_line || (selectedLine.is_reward_line && val === "remove")) {
-            selectedLine.order._updateRewards();
+            this.currentOrder._updateRewards();
         }
     },
     async _barcodeProductAction(code) {
