@@ -17,9 +17,7 @@
 
     <t t-name="web.CalendarCommonPopover.popover">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
-            <h4 class="p-0 pt-1">
-                <span class="popover-header border-0" t-esc="props.record.title" />
-            </h4>
+            <span class="popover-header border-0" t-esc="props.record.title" />
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
                 <i class="fa fa-close" />
             </span>
@@ -36,11 +34,11 @@
         <ul class="list-group list-group-flush">
             <li t-if="date" class="list-group-item">
                 <i class="fa fa-fw fa-calendar-o" />
-                <b class="text-capitalize" t-esc="date" /> <small t-if="dateDuration"><b t-esc="`(${dateDuration})`" /></small>
+                <b class="text-capitalize ms-2" t-esc="date" /> <small t-if="dateDuration"><b t-esc="`(${dateDuration})`" /></small>
             </li>
             <li t-if="time" class="list-group-item">
                 <i class="fa fa-fw fa-clock-o" />
-                <b t-esc="time" /> <small t-if="timeDuration"><b t-esc="`(${timeDuration})`" /></small>
+                <b class="ms-2" t-esc="time" /> <small t-if="timeDuration"><b t-esc="`(${timeDuration})`" /></small>
             </li>
         </ul>
         <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
@@ -52,7 +50,7 @@
                             <strong class="me-2" t-if="!fieldInfo.options.noLabel">
                                 <t t-if="fieldInfo.options.icon">
                                     <b>
-                                        <i t-att-class="fieldInfo.options.icon" />
+                                        <i t-attf-class="fa-fw {{fieldInfo.options.icon}}" />
                                     </b>
                                 </t>
                                 <t t-else="">

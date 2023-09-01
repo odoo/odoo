@@ -315,15 +315,11 @@
                         <h1 class="w-100"><field name="name" nolabel="1" placeholder="Add title" colspan="2"/></h1>
                     </div>
                     <group>
-                        <field name="start_date" string="From" invisible="not allday" required="allday"/>
-                        <field name="stop_date" string="To" invisible="not allday" required="allday"/>
-                        <field name="start" string="From" invisible="allday" required="not allday" options="{'block': True, 'icon': 'fa fa-users'}"/>
-                        <field name="stop" string="To" invisible="allday"/>
-                    </group>
-                    <group>
+                        <field name="start_date" widget="daterange" options="{'end_date_field': 'stop_date'}" invisible="not allday" required="allday"/>
+                        <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday"/>
+                        <field name="stop_date" invisible="1" />
+                        <field name="stop" invisible="1" />
                         <field name="allday"/>
-                    </group>
-                    <group>
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Add attendees..."
                             context="{'force_email':True}"
@@ -332,19 +328,19 @@
                         <label for="videocall_location" class="opacity-100"/>
                         <div col="2">
                             <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>
-                            <button name="clear_videocall_location" type="object" class="btn btn-link"
+                            <button name="clear_videocall_location" type="object" class="btn btn-link p-0"
                                 invisible="not videocall_location" context="{'recurrence_update': recurrence_update}">
                                 <span class="fa fa-times"></span><span> Clear meeting</span>
                             </button>
-                            <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
+                            <button name="set_discuss_videocall_location" type="object" class="btn btn-link p-0"
                                 invisible="videocall_location" context="{'recurrence_update': recurrence_update}">
-                                <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
+                                <span class="fa fa-plus"></span> <span>Odoo meeting</span>
                             </button>
                             <button name="action_join_video_call" class="btn btn-link" help="Join Video Call" type="object" invisible="not videocall_location">
                                 <span class="oi oi-arrow-right"></span><span> Join video call</span>
                             </button>
                         </div>
-                        <field name="description"/>
+                        <field name="description" placeholder="Describe your meeting"/>
                     </group>
                 </sheet>
             </form>
