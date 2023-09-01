@@ -146,13 +146,6 @@ class PosConfig(models.Model):
         self.access_token = self._get_access_token()
         self.floor_ids.table_ids._update_identifier()
 
-    @api.onchange("self_order_kiosk")
-    def _self_order_kiosk_change(self):
-        for record in self:
-            if record.self_order_kiosk:
-                record.self_order_view_mode = False
-                record.self_order_table_mode = False
-
     @api.model
     def _init_access_token(self):
         pos_config_ids = self.env["pos.config"].search([])
