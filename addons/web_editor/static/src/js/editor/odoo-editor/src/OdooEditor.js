@@ -82,6 +82,7 @@ import {
     ZERO_WIDTH_CHARS_REGEX,
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
+    getTableCells,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -113,6 +114,7 @@ const IS_KEYBOARD_EVENT_LEFT_ARROW = ev => ev.key === 'ArrowLeft' && !(ev.ctrlKe
 const IS_KEYBOARD_EVENT_RIGHT_ARROW = ev => ev.key === 'ArrowRight' && !(ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_UP_ARROW = ev => ev.key === 'ArrowUp' && !(ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_DOWN_ARROW = ev => ev.key === 'ArrowDown' && !(ev.ctrlKey || ev.metaKey);
+const IS_SHIFT_ARROW = ev => ev.shiftKey && ['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'].some(key => ev.key === key) && !ev.metaKey;
 
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
@@ -2672,6 +2674,77 @@ export class OdooEditor extends EventTarget {
     // ================
 
     /**
+     * Sets selection in table to make cell selection
+     * rectangular when pressing shift + arrow key.
+     *
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _setSelectionInTable(ev) {
+        const selection = this.document.getSelection();
+        const startTable = closestElement(selection.anchorNode, 'table');
+        const endTable = closestElement(selection.focusNode, 'table');
+        if (!(startTable && endTable) || startTable !== endTable) {
+            return;
+        }
+        if (selection.rangeCount > 1) {
+            // Handle multiple ranges in firefox.
+            const startRange = getDeepRange(this.editable, {
+                range: selection.getRangeAt(0),
+                correctTripleClick: selection.anchorNode && selection.anchorNode.nodeName === 'TR'
+            });
+            const endRange = getDeepRange(this.editable, {
+                range: selection.getRangeAt(selection.rangeCount - 1),
+                correctTripleClick: selection.anchorNode && selection.anchorNode.nodeName === 'TR'
+            });
+            const range = this.document.createRange();
+            range.setStart(startRange.startContainer, 0);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            selection.extend(endRange.startContainer, 0);
+        } else {
+            getDeepRange(this.editable, { select: true });
+        }
+        const [startTd, endTd] = [closestElement(selection.anchorNode, 'td'), closestElement(selection.focusNode, 'td')];
+        const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
+        const tds = [...startTable.rows].map((row) => [...row.cells]);
+        let targetTd, targetNode;
+        switch (ev.key) {
+            case 'ArrowUp': {
+                if (endCellPosition.x > 0) {
+                    targetTd = tds[endCellPosition.x - 1][endCellPosition.y];
+                } else {
+                    targetNode = previousLeaf(startTable, this.editable);
+                }
+                break;
+            }
+            case 'ArrowDown': {
+                if (endCellPosition.x < tds.length - 1) {
+                    targetTd = tds[endCellPosition.x + 1][endCellPosition.y];
+                } else {
+                    targetNode = nextLeaf(startTable, this.editable);
+                }
+                break;
+            }
+            case 'ArrowRight': {
+                if (endCellPosition.y < tds[0].length - 1) {
+                    targetTd = tds[endCellPosition.x][endCellPosition.y + 1];
+                }
+                break;
+            }
+            case 'ArrowLeft': {
+                if (endCellPosition.y > 0) {
+                    targetTd = tds[endCellPosition.x][endCellPosition.y - 1];
+                }
+                break;
+            }
+        }
+        if (targetTd || startTd) {
+            setSelection(selection.anchorNode, selection.anchorOffset, targetTd || targetNode, 0);
+        }
+        ev.preventDefault();
+    }
+    /**
      * Handle the selection of table cells rectangularly (as opposed to line by
      * line from left to right then top to bottom). If such a special selection
      * was indeed applied, return true (and false otherwise).
@@ -2745,7 +2818,7 @@ export class OdooEditor extends EventTarget {
                 // Don't apply several nested levels of selection.
                 if (table && !ancestors(table, this.editable).some(node => [...traversedTables].includes(node))) {
                     table.classList.toggle('o_selected_table', true);
-                    for (const td of [...table.querySelectorAll('td')].filter(td => closestElement(td, 'table') === table)) {
+                    for (const td of getTableCells(table)) {
                         td.classList.toggle('o_selected_td', true);
                     }
                     appliedCustomSelection = true;
@@ -2795,7 +2868,7 @@ export class OdooEditor extends EventTarget {
         const alreadyHadSelection = table.classList.contains('o_selected_table');
         this.deselectTable(); // Undo previous selection.
         table.classList.toggle('o_selected_table', true);
-        const columns = [...table.querySelectorAll('td')].filter(td => closestElement(td, 'table') === table);
+        const columns = getTableCells(table);
         const startCol = [range.startContainer, ...ancestors(range.startContainer, this.editable)]
             .find(node => node.nodeName === 'TD' && closestElement(node, 'table') === table) || columns[0];
         const endCol = [range.endContainer, ...ancestors(range.endContainer, this.editable)]
@@ -4146,6 +4219,9 @@ export class OdooEditor extends EventTarget {
             if (selection && !selection.isCollapsed && this.isSelectionInEditable(selection)) {
                 this.deleteRange(selection);
             }
+        }
+        if (IS_SHIFT_ARROW(ev)) {
+            this._setSelectionInTable(ev);
         }
         if (ev.key === 'Backspace') {
             // backspace
