@@ -590,19 +590,6 @@ var RootWidget = PublicWidget.extend({
  */
 var registry = {};
 
-/**
- * This is a fix for apple device (<= IPhone 4, IPad 2)
- * Standard bootstrap requires data-bs-toggle='collapse' element to be <a/> tags.
- * Unfortunately some layouts use a <div/> tag instead. The fix forces an empty
- * click handler on these div, which allows standard bootstrap to work.
- */
-registry._fixAppleCollapse = PublicWidget.extend({
-    selector: 'div[data-bs-toggle="collapse"]',
-    events: {
-        'click': function () {},
-    },
-});
-
 export default {
     RootWidget: RootWidget,
     Widget: PublicWidget,
