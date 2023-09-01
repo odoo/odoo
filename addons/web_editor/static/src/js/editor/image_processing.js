@@ -443,7 +443,7 @@ async function activateCropper(image, aspectRatio, dataset) {
 async function loadImageInfo(img, rpc, attachmentSrc = '') {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
-    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
+    if (img.dataset.originalSrc || !src) {
         return;
     }
 
@@ -458,11 +458,6 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;
-        // TODO: remove me in master; introduced in 16.4 as a stable fix.
-        // In master (V17), the name of this attribute will be replaced by
-        // `originalMimetype` and the current `originalMimetype` will be
-        // replaced by `mimetypeBeforeShape`.
-        img.dataset.mimetypeBeforeConversion = original.mimetype;
     }
 }
 
