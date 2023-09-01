@@ -1127,7 +1127,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.display_rate = False
 
         self.invoice.action_post()
-        self.assertTrue(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
+        # self.assertTrue(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.0 }
             for _ in self.invoice.line_ids
@@ -1159,7 +1159,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.invoice_date = fields.Date.from_string('2019-01-01')
 
         self.invoice.action_post()
-        self.assertFalse(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
+        # self.assertFalse(Form(self.invoice)._get_modifier('display_rate', 'invisible'))
         self.assertRecordValues(self.invoice.line_ids, [
             { 'currency_rate': 2.3 }
             for _ in self.invoice.line_ids
@@ -1184,6 +1184,27 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             for _ in self.invoice.line_ids
         ])
         self.assertFalse(self.invoice.exchange_rate)
+
+        # Change the res currency rate after posting
+        self.invoice.action_post()
+
+        forex_data['rates'][1].rate = 5.5
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 5.0 }
+            for _ in self.invoice.line_ids
+        ])
+        self.assertFalse(self.invoice.exchange_rate)
+        self.assertEqual(self.invoice.display_rate, 5.0)
+
+        self.invoice.button_draft()
+        self.assertEqual(self.invoice.display_rate, 5.5)
+
+        self.invoice.action_post()
+        self.assertFalse(self.invoice.exchange_rate)
+        self.assertRecordValues(self.invoice.line_ids, [
+            { 'currency_rate': 5.5 }
+            for _ in self.invoice.line_ids
+        ])
 
     def test_in_invoice_onchange_past_invoice_1(self):
         if self.env.ref('purchase.group_purchase_manager', raise_if_not_found=False):

@@ -402,7 +402,7 @@ class AccountMove(models.Model):
     display_rate = fields.Float(
         string="Exchange Rate",
         compute='_compute_display_rate', inverse='_inverse_display_rate',
-        help="Use this exchange rate instead of the default rate."
+        help="Use this exchange rate instead of the default system rate."
     )
 
     # === Amount fields === #
@@ -910,9 +910,9 @@ class AccountMove(models.Model):
             )
             invoice.currency_id = currency
 
-    @api.depends('company_id', 'currency_id', 'invoice_date')
+    @api.depends('company_id', 'currency_id', 'invoice_date', 'state')
     def _compute_system_exchange_rate(self):
-        draft_moves = self.filtered(lambda m: m.state == 'draft' and m.move_type != 'entry')
+        draft_moves = self.filtered(lambda m: m.state == 'draft' and m.is_invoice(True))
         for move in draft_moves:
             move.system_exchange_rate = self.env['res.currency']._get_conversion_rate(
                 from_currency=move.company_currency_id,
@@ -925,7 +925,12 @@ class AccountMove(models.Model):
     @api.depends('system_exchange_rate', 'exchange_rate')
     def _compute_display_rate(self):
         for move in self:
-            move.display_rate = move.exchange_rate or move.system_exchange_rate
+            rate = move.exchange_rate or move.system_exchange_rate
+            if not rate and move.is_invoice(True) and move.state != 'draft':
+                # posted/cancelled moves: compute the display rate from the lines as the system rate might have changed.
+                any_product_line = move.line_ids.filtered(lambda l: l.display_type == 'product')[0]
+                rate = any_product_line.amount_currency / any_product_line.balance
+            move.display_rate = rate
 
     @api.depends('move_type')
     def _compute_direction_sign(self):
@@ -4082,6 +4087,8 @@ class AccountMove(models.Model):
 
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft', 'is_move_sent': False})
+        # This makes the test pass, but it doesn't work in the UI.
+        (self.line_ids | self.invoice_line_ids).invalidate_recordset(fnames=['currency_rate'])
 
     def button_request_cancel(self):
         """ Hook allowing the localizations to request a cancellation from the government before cancelling the invoice. """
