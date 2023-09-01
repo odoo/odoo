@@ -29,10 +29,7 @@ export class Composer extends Record {
                 Object.assign(composer, { message });
                 Object.assign(message, { composer });
             }
-            Object.assign(composer, {
-                textInputContent: "",
-                _store: this.store,
-            });
+            Object.assign(composer, { textInputContent: "" });
         }
         if ("textInputContent" in data) {
             composer.textInputContent = data.textInputContent;
@@ -73,8 +70,6 @@ export class Composer extends Record {
     };
     /** @type {boolean} */
     forceCursorMove;
-    /** @type {import("@mail/core/common/store_service").Store} */
-    _store;
     isFocused = false;
 
     /** @type {import("@mail/core/common/message_model").Message} */
