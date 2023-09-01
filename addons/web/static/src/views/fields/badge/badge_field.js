@@ -26,7 +26,7 @@ export class BadgeField extends Component {
     }
 
     get classFromDecoration() {
-        const evalContext = this.props.record.evalContext;
+        const evalContext = this.props.record.evalContextWithVirtualIds;
         for (const decorationName in this.props.decorations) {
             if (evaluateBooleanExpr(this.props.decorations[decorationName], evalContext)) {
                 return `text-bg-${decorationName}`;

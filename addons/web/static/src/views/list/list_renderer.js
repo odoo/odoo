@@ -814,7 +814,9 @@ export class ListRenderer extends Component {
     getRowClass(record) {
         // classnames coming from decorations
         const classNames = this.props.archInfo.decorations
-            .filter((decoration) => evaluateBooleanExpr(decoration.condition, record.evalContext))
+            .filter((decoration) =>
+                evaluateBooleanExpr(decoration.condition, record.evalContextWithVirtualIds)
+            )
             .map((decoration) => decoration.class);
         if (record.selected) {
             classNames.push("table-info");
@@ -858,7 +860,7 @@ export class ListRenderer extends Component {
         }
         const classNames = [...this.cellClassByColumn[column.id]];
         if (column.type === "field") {
-            if (evaluateBooleanExpr(column.required, record.evalContext)) {
+            if (evaluateBooleanExpr(column.required, record.evalContextWithVirtualIds)) {
                 classNames.push("o_required_modifier");
             }
             if (record.isFieldInvalid(column.name)) {
@@ -873,7 +875,9 @@ export class ListRenderer extends Component {
                 // only handle the text-decoration.
                 const { decorations } = column;
                 for (const decoName in decorations) {
-                    if (evaluateBooleanExpr(decorations[decoName], record.evalContext)) {
+                    if (
+                        evaluateBooleanExpr(decorations[decoName], record.evalContextWithVirtualIds)
+                    ) {
                         classNames.push(getClassNameFromDecoration(decoName));
                     }
                 }
@@ -895,7 +899,7 @@ export class ListRenderer extends Component {
         return !!(
             this.isRecordReadonly(record) ||
             (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
-            evaluateBooleanExpr(column.readonly, record.evalContext)
+            evaluateBooleanExpr(column.readonly, record.evalContextWithVirtualIds)
         );
     }
 
@@ -928,7 +932,7 @@ export class ListRenderer extends Component {
     }
 
     evalInvisible(invisible, record) {
-        return evaluateBooleanExpr(invisible, record.evalContext);
+        return evaluateBooleanExpr(invisible, record.evalContextWithVirtualIds);
     }
 
     evalColumnInvisible(columnInvisible) {

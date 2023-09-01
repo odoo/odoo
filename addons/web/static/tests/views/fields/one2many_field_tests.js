@@ -4361,14 +4361,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.containsNone(target, "tr.o_data_row");
 
-        assert.verifySteps([
-            "get_views",
-            "web_read",
-            "onchange",
-            "onchange",
-            "write",
-            "web_read",
-        ]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "write", "web_read"]);
     });
 
     QUnit.test("discard O2M field with close button", async function (assert) {
@@ -4823,14 +4816,7 @@ QUnit.module("Fields", (hooks) => {
             "9"
         );
 
-        assert.verifySteps([
-            "get_views",
-            "web_read",
-            "onchange",
-            "onchange",
-            "write",
-            "web_read",
-        ]);
+        assert.verifySteps(["get_views", "web_read", "onchange", "onchange", "write", "web_read"]);
     });
 
     QUnit.test("editable o2m, pressing ESC discard current changes", async function (assert) {
@@ -14063,5 +14049,39 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target.querySelector(".o_dialog"));
         await clickSave(target);
+    });
+
+    QUnit.test("modifiers based on x2many", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" >
+                        <tree editable="bottom">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                    <field name="display_name" readonly="p"/>
+                    <field name="int_field" required="p"/>
+                    <button name="abc" string="Do it" class="my_button" invisible="not p"/>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsNone(target, "button.my_button");
+        assert.containsNone(target, "[name='display_name'].o_readonly_modifier");
+        assert.containsNone(target, "[name='int_field'].o_required_modifier");
+
+        await addRow(target);
+        await editInput(target, "[name='foo'] input", "Test");
+        assert.containsOnce(target, "button.my_button");
+        assert.containsOnce(target, "[name='display_name'].o_readonly_modifier");
+        assert.containsOnce(target, "[name='int_field'].o_required_modifier");
+
+        await click(target, "button.fa-trash-o");
+        assert.containsNone(target, "button.my_button");
+        assert.containsNone(target, "[name='display_name'].o_readonly_modifier");
+        assert.containsNone(target, "[name='int_field'].o_required_modifier");
     });
 });

@@ -146,7 +146,7 @@ export class FormCompiler extends ViewCompiler {
             } else {
                 isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                     invisible
-                )},__comp__.props.record.evalContext)`;
+                )},__comp__.props.record.evalContextWithVirtualIds)`;
             }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
@@ -349,7 +349,7 @@ export class FormCompiler extends ViewCompiler {
                 } else {
                     isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                         invisible
-                    )},__comp__.props.record.evalContext)`;
+                    )},__comp__.props.record.evalContextWithVirtualIds)`;
                 }
                 mainSlot.setAttribute("isVisible", isVisibleExpr);
                 if (itemSpan > 0) {
@@ -549,7 +549,7 @@ export class FormCompiler extends ViewCompiler {
             } else {
                 isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                     invisible
-                )},__comp__.props.record.evalContext)`;
+                )},__comp__.props.record.evalContextWithVirtualIds)`;
             }
             pageSlot.setAttribute("isVisible", isVisibleExpr);
 

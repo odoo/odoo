@@ -19,7 +19,7 @@ export class ProjectSharingListRenderer extends ListRenderer {
             const allColumns = [];
             const firstRecord = this.props.list.records[0];
             for (const column of columns) {
-                if (evaluateBooleanExpr(column.column_invisible, firstRecord.evalContext)) {
+                if (evaluateBooleanExpr(column.column_invisible, firstRecord.evalContextWithVirtualIds)) {
                     continue;
                 }
                 allColumns.push(column);

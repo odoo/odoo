@@ -220,7 +220,7 @@ class SetDefaultDialog extends Component {
                 const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
                 const value = valueDisplayed[0];
                 const displayed = valueDisplayed[1];
-                const evalContext = this.props.record.evalContext;
+                const evalContext = this.props.record.evalContextWithVirtualIds;
                 // ignore fields which are empty, invisible, readonly, o2m or m2m
                 if (
                     !value ||

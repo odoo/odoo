@@ -5,11 +5,7 @@ import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { getFieldContext } from "@web/model/relational_model/utils";
-import {
-    archParseBoolean,
-    getClassNameFromDecoration,
-    X2M_TYPES,
-} from "@web/views/utils";
+import { archParseBoolean, getClassNameFromDecoration, X2M_TYPES } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
@@ -43,8 +39,8 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
-    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContext);
-    const required = evaluateBooleanExpr(fieldInfo.required, record.evalContext);
+    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
+    const required = evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds);
     const inEdit = record.isInEdition;
 
     let empty = !record.isNew;
@@ -154,9 +150,11 @@ export class Field extends Component {
         // only handle the text-decoration.
         if (fieldInfo && fieldInfo.decorations) {
             const { decorations } = fieldInfo;
-            const evalContext = record.evalContext;
             for (const decoName in decorations) {
-                const value = evaluateBooleanExpr(decorations[decoName], evalContext);
+                const value = evaluateBooleanExpr(
+                    decorations[decoName],
+                    record.evalContextWithVirtualIds
+                );
                 classNames[getClassNameFromDecoration(decoName)] = value;
             }
         }
@@ -174,9 +172,10 @@ export class Field extends Component {
 
         let propsFromNode = {};
         if (this.props.fieldInfo) {
-            const evalContext = record.getEvalContext?.(false) || record.evalContext;
             let fieldInfo = this.props.fieldInfo;
-            readonly = readonly || evaluateBooleanExpr(fieldInfo.readonly, evalContext);
+            readonly =
+                readonly ||
+                evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
 
             if (this.field.extractProps) {
                 if (this.props.attrs) {
@@ -191,7 +190,7 @@ export class Field extends Component {
                         return getFieldContext(record, fieldInfo.name, fieldInfo.context);
                     },
                     domain() {
-                        const evalContext = record.getEvalContext?.(true) || record.evalContext;
+                        const evalContext = record.evalContext;
                         if (fieldInfo.domain) {
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
@@ -200,7 +199,10 @@ export class Field extends Component {
                             ? new Domain(evaluateExpr(domain, evalContext)).toList()
                             : domain || [];
                     },
-                    required: evaluateBooleanExpr(fieldInfo.required, evalContext),
+                    required: evaluateBooleanExpr(
+                        fieldInfo.required,
+                        record.evalContextWithVirtualIds
+                    ),
                     readonly: readonly,
                 };
                 propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);
@@ -296,7 +298,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         }
     }
     if (name === "id") {
-        fieldInfo.readonly = 'True';
+        fieldInfo.readonly = "True";
     }
 
     if (widget === "handle") {
