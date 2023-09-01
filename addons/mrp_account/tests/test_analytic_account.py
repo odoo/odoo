@@ -19,7 +19,6 @@ class TestMrpAnalyticAccount(TransactionCase):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan',
-            'company_id': False,
         })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
@@ -122,7 +121,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # Required for `workorder_ids` to be visible in the view
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         # set wc analytic account to be different from the one on the bom
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         wc_analytic_account = self.env['account.analytic.account'].create({'name': 'wc_analytic_account', 'plan_id': analytic_plan.id})
         self.workcenter.analytic_distribution = {str(wc_analytic_account.id): 100.0}
 
@@ -142,18 +141,18 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
             line_edit.duration = 60.0
         mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # change duration to 120
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 120.0
         mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # mark as done
         mo_form.qty_producing = 10.0
@@ -161,9 +160,9 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.account_id, wc_analytic_account)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
     def test_changing_mo_analytic_account(self):
         """ Check if the MO account analytic lines are correctly updated
@@ -188,7 +187,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 60.0
         mo_form.save()
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id, self.analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
 
         # Mark as done
         mo.button_mark_done()
@@ -196,12 +195,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_ids), 1)
 
         # Create a new analytic account
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         new_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account_2', 'plan_id': analytic_plan.id})
         # Change the MO analytic account
         mo.analytic_distribution = {str(new_analytic_account.id): 100.0}
-        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.account_id.id, new_analytic_account.id)
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.account_id.id, new_analytic_account.id)
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids[analytic_plan._column_name()], new_analytic_account)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[analytic_plan._column_name()], new_analytic_account)
 
         #Get the MO analytic account lines
         mo_analytic_account_raw_lines = mo.move_raw_ids.analytic_account_line_ids
@@ -225,7 +224,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         analytic_account_no_company = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account_no_company',
             'plan_id': self.analytic_plan.id,
-        })
+        }).with_context(analytic_plan_id=self.analytic_plan.id)
         analytic_account_no_company.company_id = False
 
         # Create a mo linked to an analytic account with no associated company

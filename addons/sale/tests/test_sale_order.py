@@ -483,7 +483,7 @@ class TestSalesTeam(SaleCommon):
     def test_sale_order_analytic_distribution_change(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
         analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account', 'plan_id': analytic_plan.id})
         super_product = self.env['product.product'].create({'name': 'Super Product'})

@@ -29,8 +29,7 @@ class TestCommonTimesheet(TransactionCase):
         })
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
-            'name': 'Plan Test',
-            'company_id': False,
+            'name': 'Timesheet Plan Test',
         })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'Analytic Account for Test Customer',
@@ -416,7 +415,6 @@ class TestTimesheet(TestCommonTimesheet):
 
         analytic_plan = self.env['account.analytic.plan'].create({
             'name': 'Plan Test',
-            'company_id': company_3.id
         })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'Aa Aa',

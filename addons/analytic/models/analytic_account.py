@@ -34,18 +34,15 @@ class AccountAnalyticAccount(models.Model):
         default=True,
         tracking=True,
     )
-
     plan_id = fields.Many2one(
         'account.analytic.plan',
         string='Plan',
-        check_company=True,
         required=True,
     )
     root_plan_id = fields.Many2one(
         'account.analytic.plan',
         string='Root Plan',
-        check_company=True,
-        compute="_compute_root_plan",
+        related="plan_id.root_id",
         store=True,
     )
     color = fields.Integer(
@@ -55,7 +52,7 @@ class AccountAnalyticAccount(models.Model):
 
     line_ids = fields.One2many(
         'account.analytic.line',
-        'account_id',
+        'auto_account_id',  # magic link to the right column (plan) by using the context in the view
         string="Analytic Lines",
     )
 
@@ -99,7 +96,7 @@ class AccountAnalyticAccount(models.Model):
     def _check_company_consistency(self):
         for company, accounts in groupby(self, lambda account: account.company_id):
             if company and self.env['account.analytic.line'].search([
-                ('account_id', 'in', [account.id for account in accounts]),
+                ('auto_account_id', 'in', [account.id for account in accounts]),
                 '!', ('company_id', 'child_of', company.id),
             ], limit=1):
                 raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
@@ -142,43 +139,40 @@ class AccountAnalyticAccount(models.Model):
 
     @api.depends('line_ids.amount')
     def _compute_debit_credit_balance(self):
-        analytic_line_obj = self.env['account.analytic.line']
-        domain = [
-            ('account_id', 'in', self.ids),
-            ('company_id', 'in', [False] + self.env.companies.ids)
-        ]
+        def convert(amount, from_currency):
+            return from_currency._convert(
+                from_amount=amount,
+                to_currency=self.env.company.currency_id,
+                company=self.env.company,
+                date=fields.Date.today(),
+            )
+
+        domain = [('company_id', 'in', [False] + self.env.companies.ids)]
         if self._context.get('from_date', False):
             domain.append(('date', '>=', self._context['from_date']))
         if self._context.get('to_date', False):
             domain.append(('date', '<=', self._context['to_date']))
 
-        user_currency = self.env.company.currency_id
-        credit_groups = analytic_line_obj._read_group(
-            domain=domain + [('amount', '>=', 0.0)],
-            groupby=['account_id', 'currency_id'],
-            aggregates=['amount:sum'],
-        )
-        data_credit = defaultdict(float)
-        for account, currency, amount_sum in credit_groups:
-            data_credit[account.id] += currency._convert(
-                amount_sum, user_currency, self.env.company, fields.Date.today())
+        for plan, accounts in self.grouped('plan_id').items():
+            credit_groups = self.env['account.analytic.line']._read_group(
+                domain=domain + [(plan._column_name(), 'in', self.ids), ('amount', '>=', 0.0)],
+                groupby=[plan._column_name(), 'currency_id'],
+                aggregates=['amount:sum'],
+            )
+            data_credit = defaultdict(float)
+            for account, currency, amount_sum in credit_groups:
+                data_credit[account.id] += convert(amount_sum, currency)
 
-        debit_groups = analytic_line_obj._read_group(
-            domain=domain + [('amount', '<', 0.0)],
-            groupby=['account_id', 'currency_id'],
-            aggregates=['amount:sum'],
-        )
-        data_debit = defaultdict(float)
-        for account, currency, amount_sum in debit_groups:
-            data_debit[account.id] += currency._convert(
-                amount_sum, user_currency, self.env.company, fields.Date.today())
+            debit_groups = self.env['account.analytic.line']._read_group(
+                domain=domain + [(plan._column_name(), 'in', self.ids), ('amount', '<', 0.0)],
+                groupby=[plan._column_name(), 'currency_id'],
+                aggregates=['amount:sum'],
+            )
+            data_debit = defaultdict(float)
+            for account, currency, amount_sum in debit_groups:
+                data_debit[account.id] += convert(amount_sum, currency)
 
-        for account in self:
-            account.debit = abs(data_debit.get(account.id, 0.0))
-            account.credit = data_credit.get(account.id, 0.0)
-            account.balance = account.credit - account.debit
-
-    @api.depends('plan_id', 'plan_id.parent_path')
-    def _compute_root_plan(self):
-        for account in self:
-            account.root_plan_id = int(account.plan_id.parent_path[:-1].split('/')[0]) if account.plan_id.parent_path else None
+            for account in accounts:
+                account.debit = -data_debit.get(account.id, 0.0)
+                account.credit = data_credit.get(account.id, 0.0)
+                account.balance = account.credit - account.debit

@@ -17,7 +17,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         # By default, tests are run with the current user set on the first company.
         cls.env.user.company_id = cls.company_data['company']
 
-        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': cls.default_plan.id,
@@ -84,12 +84,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         # Analytic lines are created when posting the invoice
         self.assertRecordValues(get_analytic_lines(), [{
             'amount': 100,
-            'account_id': self.analytic_account_b.id,
+            self.default_plan._column_name(): self.analytic_account_b.id,
             'partner_id': self.partner_a.id,
             'product_id': self.product_a.id,
         }, {
             'amount': 200,
-            'account_id': self.analytic_account_a.id,
+            self.default_plan._column_name(): self.analytic_account_a.id,
             'partner_id': self.partner_a.id,
             'product_id': self.product_a.id,
         }])
@@ -101,10 +101,10 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         }
         self.assertRecordValues(get_analytic_lines(), [{
             'amount': 50,
-            'account_id': self.analytic_account_b.id,
+            self.default_plan._column_name(): self.analytic_account_b.id,
         }, {
             'amount': 200,
-            'account_id': self.analytic_account_a.id,
+            self.default_plan._column_name(): self.analytic_account_a.id,
         }])
 
         # Analytic lines are deleted when resetting to draft

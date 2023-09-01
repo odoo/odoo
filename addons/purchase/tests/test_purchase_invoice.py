@@ -374,7 +374,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         """
         # Required for `analytic.group_analytic_accounting` to be visible in the view
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan.id})
         analytic_account_manual = self.env['account.analytic.account'].create({'name': 'manual', 'plan_id': analytic_plan.id})
 
@@ -404,7 +404,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.env.user.groups_id += self.env.ref('account.group_account_readonly')
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})
         analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account', 'plan_id': analytic_plan.id})
 

@@ -1165,7 +1165,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
             'partner_id': self.invoice.partner_id.id,
@@ -1284,7 +1284,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
     def test_out_invoice_line_onchange_analytic_2(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account1',
             'plan_id': analytic_plan.id,

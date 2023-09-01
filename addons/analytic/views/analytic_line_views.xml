@@ -10,7 +10,6 @@
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id"/>
-                <field name="plan_id"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="unit_amount" sum="Quantity" optional="hide"/>
                 <field name="product_uom_id" optional="hide"/>
@@ -31,6 +30,7 @@
                 <separator/>
                 <filter name="month" string="Date" date="date"/>
                 <group string="Group By..." expand="0" name="groupby">
+                    <separator/>
                     <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
                 </group>
             </search>
@@ -109,8 +109,7 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <pivot string="Analytic Items" sample="1">
-                <field name="plan_id" type="row"/>
-                <field name="account_id" type="row"/>
+                <field name="account_id"/>
                 <field name="date" interval="month" type="col"/>
                 <field name="amount" type="measure"/>
             </pivot>

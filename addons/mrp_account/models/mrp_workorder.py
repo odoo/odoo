@@ -29,7 +29,7 @@ class MrpWorkorder(models.Model):
         return {
             'name': _("[WC] %s", self.display_name),
             'amount': amount,
-            'account_id': account,
+            'auto_account_id': account,
             'unit_amount': unit_amount,
             'product_id': self.product_id.id,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,

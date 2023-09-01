@@ -885,41 +885,24 @@ class Project(models.Model):
     @api.model
     def _create_analytic_account_from_values(self, values):
         company = self.env['res.company'].browse(values.get('company_id', False))
-        plan = company.analytic_plan_id
-        if not plan:
-            plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)], limit=1)
-            if not plan:
-                plan = self.env['account.analytic.plan'].sudo().create({
-                    'name': _('Default'),
-                    'company_id': False,
-                })
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
             'company_id': company.id,
             'partner_id': values.get('partner_id'),
-            'plan_id': plan.id,
+            'plan_id': project_plan.id,
         })
         return analytic_account
 
     def _create_analytic_account(self):
-        default_plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)], limit=1)
         for project in self:
-            company_id = False
-            if project.company_id:
-                plan = project.company_id.analytic_plan_id
-                company_id = project.company_id.id
-            elif default_plan:
-                plan = default_plan
-            else:
-                plan = self.env['account.analytic.plan'].create({
-                    'name': _('Default'),
-                    'company_id': False,
-                })
+            company_id = project.company_id.id
+            project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
             analytic_account = self.env['account.analytic.account'].create({
                 'name': project.name,
                 'company_id': company_id,
                 'partner_id': project.partner_id.id,
-                'plan_id': plan.id,
+                'plan_id': project_plan.id,
                 'active': True,
             })
             project.write({'analytic_account_id': analytic_account.id})

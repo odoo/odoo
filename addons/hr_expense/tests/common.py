@@ -45,7 +45,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.env.user.groups_id |= group_expense_manager
 
         # Create analytic account
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({'name': 'Expense Plan Test'})
         cls.analytic_account_1 = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_1',
             'plan_id': cls.analytic_plan.id,

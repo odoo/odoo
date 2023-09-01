@@ -16,10 +16,7 @@ class TestSaleProjectCommon(TestSaleCommon):
         cls.uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.account_sale = cls.company_data['default_account_revenue']
 
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({
-            'name': 'Plan Test',
-            'company_id': cls.company_data['company'].id,
-        })
+        cls.analytic_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
             'code': 'AA-2030',

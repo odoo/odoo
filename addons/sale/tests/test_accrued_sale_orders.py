@@ -25,7 +25,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
             'invoice_policy': 'delivery',
             'property_account_income_id': cls.alt_inc_account.id,
         })
-        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': cls.default_plan.id,

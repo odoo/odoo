@@ -41,7 +41,8 @@
     }
 
     .analytic_distribution_popup {
-        width: 400px;
+        min-width: 400px;
+        max-width: $o-form-sheet-min-width;
         max-height: 50vh;
         cursor: default;
 
@@ -65,6 +66,13 @@
         }
         tr:hover {
             outline: none !important;
+        }
+        .numeric_column_width {
+            max-width: 105px;
+            // width: 88px;
+        }
+        .w-20px {
+            width: 20px;
         }
     }
 }

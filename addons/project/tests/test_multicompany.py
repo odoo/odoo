@@ -224,14 +224,9 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(self.project_company_a.company_id, self.project_company_a.analytic_account_id.company_id, "The analytic account created from a project should be in the same company.")
 
         project_no_company = self.Project.create({'name': 'Project no company'})
-        plans = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)])
         #ensures that all the existing plan have a company_id
-        plans.company_id = self.env.company
         project_no_company._create_analytic_account()
         self.assertFalse(project_no_company.analytic_account_id.company_id, "The analytic account created from a project without company_id should have its company_id field set to False.")
-        self.assertFalse(project_no_company.analytic_account_id.plan_id.company_id, "The analytic plan created from a project without company_id should have its company_id field set to False.")
-        plan = self.env['account.analytic.plan'].sudo().search([('company_id', '=', False)])
-        self.assertEqual(1, len(plan), "Only one analytic plan should have been created.")
 
         project_no_company_2 = self.Project.create({'name': 'Project no company 2'})
         project_no_company_2._create_analytic_account()
@@ -275,7 +270,6 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         self.assertEqual(account_no_company.company_id, self.company_a, "The company of the account should have been updated.")
 
         # The project and its account have the same company (company A)
-        account_a.plan_id.company_id = False
         # set the company of the project to False
         self.project_company_a.company_id = False
         self.assertFalse(self.project_company_a.company_id, "The company of the project should have been updated.")
@@ -315,14 +309,8 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         self.assertFalse(self.project_company_a.company_id, "The company of the project should have been updated.")
         self.assertFalse(account_a.company_id, "The company of the account should not have been updated for it was set to False.")
 
-        account_a.plan_id.company_id = self.company_b
-        account_a.company_id = self.company_b
-        with self.assertRaises(UserError):
-            self.project_company_a.company_id = self.company_a
-        self.assertEqual(self.project_company_a.company_id, self.company_b, "The company of the project is set to a different company from the company of the plan of its account, an error should be raised.")
-        account_a.plan_id.company_id = False
-
         # creates an AAL for the account_a
+        account_a.company_id = self.company_b
         aal = self.env['account.analytic.line'].create({
             'name': 'other revenues line',
             'account_id': account_a.id,

@@ -55,10 +55,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
         # Account and project
         cls.analytic_account_sale.name = 'Project for selling timesheet - AA'
-        cls.analytic_plan = cls.env['account.analytic.plan'].create({
-            'name': 'Plan Test',
-            'company_id': cls.company_data_2['company'].id,
-        })
+        cls.analytic_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_account_sale_company_B = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet Company B - AA',
             'code': 'AA-2030',

@@ -4189,7 +4189,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2019-01-01')
         move_form.partner_id = self.partner_a
         self.cash_basis_tax_a_third_amount.analytic = True
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         test_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account', 'plan_id': analytic_plan.id})
 
         tax = self.cash_basis_tax_a_third_amount

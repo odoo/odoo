@@ -40,7 +40,6 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         """
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
-        self.project_task_rate.analytic_account_id.plan_id.company_id = False
         self.project_task_rate.analytic_account_id.company_id = False
         self.project_task_rate.company_id = False
 
