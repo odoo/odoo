@@ -84,7 +84,7 @@ class Project(models.Model):
     def _compute_warning_employee_rate(self):
         projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets and p.bill_type == 'customer_project' and p.pricing_type == 'employee_rate')
         tasks = projects.task_ids.filtered(lambda t: not t.non_allow_billable)
-        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
+        employees = self.env['account.analytic.line'].read_group([('task_id', 'in', tasks.ids), ('non_allow_billable', '=', False)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
             dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
