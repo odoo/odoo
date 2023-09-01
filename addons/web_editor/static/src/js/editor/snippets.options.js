@@ -5845,15 +5845,48 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             1024: ['1024px', 'image/webp'],
             1920: ['1920px', 'image/webp'],
         };
+<<<<<<< HEAD
         widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
         widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
         const imgMimetype = this._getImageMimetype(img);
         widths[maxWidth] = [_t("%spx (Original)", maxWidth), imgMimetype];
         if (imgMimetype !== 'image/webp') {
+||||||| parent of 4a2d276d53a (temp)
+        widths[img.naturalWidth] = [sprintf(_t("%spx"), img.naturalWidth), 'image/webp'];
+        widths[optimizedWidth] = [sprintf(_t("%spx (Suggested)"), optimizedWidth), 'image/webp'];
+        const mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
+        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), mimetypeBeforeConversion];
+        if (mimetypeBeforeConversion !== "image/webp") {
+=======
+        widths[img.naturalWidth] = [sprintf(_t("%spx"), img.naturalWidth), 'image/webp'];
+        widths[optimizedWidth] = [sprintf(_t("%spx (Suggested)"), optimizedWidth), 'image/webp'];
+        const imgMimetype = this._getImageMimetype(img);
+        widths[maxWidth] = [sprintf(_t("%spx (Original)"), maxWidth), imgMimetype];
+        if (imgMimetype !== 'image/webp') {
+>>>>>>> 4a2d276d53a (temp)
             // Avoid a key collision by subtracting 0.1 - putting the webp
             // above the original format one of the same size.
+<<<<<<< HEAD
             widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
         }
+||||||| parent of 4a2d276d53a (temp)
+            widths[maxWidth - 0.1] = [sprintf(_t("%spx"), maxWidth), 'image/webp'];
+        }
+        const currentMimetype = this._getImageMimetype(img);
+        if (currentMimetype !== "image/webp" &&
+            (!widths[img.naturalWidth] || widths[img.naturalWidth][1] !== currentMimetype)) {
+            // The format of the saved image is not already listed.
+            if (widths[img.naturalWidth]) {
+                // Avoid a key collision by subtracting 0.1 -  putting the webp
+                // above the original format one of the same size.
+                widths[img.naturalWidth - 0.1] = widths[img.naturalWidth];
+            }
+            widths[img.naturalWidth] = [sprintf(_t("%spx (Saved)"), img.naturalWidth), currentMimetype];
+        }
+=======
+            widths[maxWidth - 0.1] = [sprintf(_t("%spx"), maxWidth), 'image/webp'];
+        }
+>>>>>>> 4a2d276d53a (temp)
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
