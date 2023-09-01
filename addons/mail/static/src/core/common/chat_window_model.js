@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 /** @typedef {{ thread?: import("@mail/core/common/thread_model").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
 export class ChatWindow extends Record {
-    static id = "threadLocalId";
+    static id = "thread";
     /** @type {ChatWindow[]} */
     static records = [];
     /**
@@ -16,7 +16,7 @@ export class ChatWindow extends Record {
      * @returns {ChatWindow}
      */
     static insert(data = {}) {
-        const chatWindow = this.records.find((c) => c.threadLocalId === data.thread?.localId);
+        const chatWindow = this.records.find((c) => c.thread?.eq(data.thread));
         if (!chatWindow) {
             const chatWindow = this.new(data);
             Object.assign(chatWindow, { thread: data.thread });
@@ -49,19 +49,11 @@ export class ChatWindow extends Record {
         return chatWindow;
     }
 
-    /** @type {import("@mail/core/common/thread_model").Thread.localId} */
-    threadLocalId;
+    /** @type {import("@mail/core/common/thread_model").Thread} */
+    thread = Record.one();
     autofocus = 0;
     folded = false;
     hidden = false;
-
-    get thread() {
-        return this._store.Thread.records[this.threadLocalId];
-    }
-
-    set thread(thread) {
-        this.threadLocalId = thread?.localId;
-    }
 
     get displayName() {
         return this.thread?.displayName ?? _t("New message");

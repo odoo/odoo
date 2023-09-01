@@ -42,11 +42,10 @@ export class AttachmentService {
             const threadData = Array.isArray(data.originThread)
                 ? data.originThread[0][1]
                 : data.originThread;
-            this.store.Thread.insert({
+            attachment.originThread = this.store.Thread.insert({
                 model: threadData.model,
                 id: threadData.id,
             });
-            attachment.originThreadLocalId = this.store.Thread.localId(threadData);
             const thread = attachment.originThread;
             if (attachment.notIn(thread.attachments)) {
                 thread.attachments.push(attachment);

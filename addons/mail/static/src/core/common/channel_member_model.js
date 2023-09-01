@@ -26,25 +26,12 @@ export class ChannelMember extends Record {
 
     /** @type {number} */
     id;
-    personaLocalId;
-    rtcSessionId;
-    threadId;
-
-    get persona() {
-        return this._store.Persona.records[this.personaLocalId];
-    }
-
-    set persona(persona) {
-        this.personaLocalId = persona?.localId;
-    }
-
-    get rtcSession() {
-        return this._store.RtcSession.get(this.rtcSessionId);
-    }
-
-    get thread() {
-        return this._store.Thread.get({ model: "discuss.channel", id: this.threadId });
-    }
+    /** @type {import("@mail/core/common/persona_model").Persona} */
+    persona = Record.one();
+    /** @type {import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
+    rtcSession = Record.one();
+    /** @type {import("@mail/core/common/thread_model").Thread} */
+    thread = Record.one();
 
     /**
      * @returns {string}

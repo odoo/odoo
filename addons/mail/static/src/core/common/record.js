@@ -7,6 +7,7 @@ export const modelRegistry = registry.category("discuss.model");
 
 export class Record {
     static id;
+    static __ONE__ = Symbol("one");
     static __OR__ = Symbol("or");
     static __AND__ = Symbol("and");
     static records = {};
@@ -36,6 +37,10 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         if (!Array.isArray(expr)) {
+            if (this.Class.__rels__.has(expr)) {
+                // relational field (note: optional when OR)
+                return `(${data[expr]?.localId})`;
+            }
             return data[expr];
         }
         const vals = [];
@@ -65,6 +70,9 @@ export class Record {
     static OR(...args) {
         return [this.__OR__, ...args];
     }
+    static one() {
+        return this.__ONE__;
+    }
     /**
      * This method is almost equivalent to new Class, except that it properly
      * setup relational fields of model with get/set, @see Class
@@ -89,6 +97,14 @@ export class Record {
      */
     static insert(data) {}
 
+    /**
+     * Raw relational values of the record, each of which contains object id(s)
+     * rather than the record(s). This allows data in store and models being normalized,
+     * which eases handling relations notably in when a record gets deleted.
+     *
+     * @type {Map<string, any>}
+     */
+    __rels__ = new Map();
     /** @type {import("@mail/core/common/store_service").Store} */
     _store;
     /**

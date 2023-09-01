@@ -22,7 +22,7 @@ export class Notification extends Record {
     /** @type {number} */
     id;
     /** @type {number} */
-    messageId;
+    message = Record.one();
     /** @type {string} */
     notification_status;
     /** @type {string} */
@@ -30,11 +30,7 @@ export class Notification extends Record {
     /** @type {string} */
     failure_type;
     /** @type {import("@mail/core/common/persona_model").Persona} */
-    persona;
-
-    get message() {
-        return this._store.Message.get(this.messageId);
-    }
+    persona = Record.one();
 
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);

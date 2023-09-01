@@ -3,7 +3,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
-    static id = Record.AND("content", "messageId");
+    static id = Record.AND("content", "message");
     /**
      * @param {Object} data
      * @returns {MessageReactions}
@@ -40,7 +40,7 @@ export class MessageReactions extends Record {
         Object.assign(reaction, {
             count: data.count,
             content: data.content,
-            messageId: data.message.id,
+            message: data.message,
             personaLocalIds: reaction.personaLocalIds.filter(
                 (localId) => !personasToUnlink.has(localId)
             ),
@@ -54,8 +54,8 @@ export class MessageReactions extends Record {
     count;
     /** @type {number[]} */
     personaLocalIds = [];
-    /** @type {number} */
-    messageId;
+    /** @type {import("@mail/core/common/message_model").Message} */
+    message = Record.one();
 
     /** @type {import("@mail/core/common/persona_model").Persona[]} */
     get personas() {

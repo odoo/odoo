@@ -105,7 +105,7 @@ export class Thread extends Record {
     /** @type {integer} */
     chatPartnerId;
     /** @type {import("@mail/core/common/composer_model").Composer} */
-    composer;
+    composer = Record.one();
     counter = 0;
     /** @type {string} */
     customName;
@@ -114,7 +114,7 @@ export class Thread extends Record {
     /** @type {Set<import("@mail/core/common/follower_model").Follower>} */
     followers = new Set();
     /** @type {import("@mail/core/common/follower_model").Follower} */
-    selfFollower;
+    selfFollower = Record.one();
     /** @type {integer|undefined} */
     followersCount;
     isAdmin = false;
@@ -124,7 +124,7 @@ export class Thread extends Record {
     isLoadedDeferred = new Deferred();
     isLoaded = false;
     /** @type {import("@mail/core/common/attachment_model").Attachment} */
-    mainAttachment;
+    mainAttachment = Record.one();
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;

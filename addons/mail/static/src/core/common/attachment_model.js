@@ -32,7 +32,8 @@ export class Attachment extends Record {
     id;
     mimetype;
     name;
-    originThreadLocalId;
+    /** @type {import("@mail/core/common/thread_model").Thread} */
+    originThread = Record.one();
     type;
     /** @type {string} */
     tmpUrl;
@@ -41,14 +42,9 @@ export class Attachment extends Record {
     /** @type {boolean} */
     uploading;
     /** @type {import("@mail/core/common/message_model").Message} */
-    message;
+    message = Record.one();
     /** @type {string} */
     create_date;
-
-    /** @type {import("@mail/core/common/thread_model").Thread} */
-    get originThread() {
-        return this._store.Thread.records[this.originThreadLocalId];
-    }
 
     get isDeletable() {
         return true;

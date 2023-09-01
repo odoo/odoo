@@ -198,9 +198,43 @@ export const storeService = {
             // work-around: make an object whose prototype is the class, so that static props become
             // instance props.
             const entry = Object.assign(Object.create(Model), { env, store: res });
-            entry.Class = Model;
+            // produce another class with changed prototype, so that there are automatic get/set on relational fields
+            const Class = {
+                [Model.name]: class extends Model {
+                    static __rels__ = new Set();
+                    constructor() {
+                        super();
+                        for (const name of this.constructor.__rels__) {
+                            // Relational fields contain symbols for detection in original class.
+                            // This constructor is called on genuine records:
+                            // - 'one' fields => undefined
+                            const newVal = undefined;
+                            this[name] = newVal;
+                            this.__rels__.set(name, newVal);
+                        }
+                    }
+                },
+            }[Model.name];
+            entry.Class = Class;
             entry.records = JSON.parse(JSON.stringify(Model.records));
             res[name] = entry;
+            // Detect relational fields with a dummy record and setup getter/setters on them
+            const obj = new Model();
+            for (const [name, val] of Object.entries(obj)) {
+                if (val !== Record.__ONE__) {
+                    continue;
+                }
+                Class.__rels__.add(name);
+                Object.defineProperty(Class.prototype, name, {
+                    get() {
+                        const localId = this.__rels__.get(name);
+                        return res.get(localId);
+                    },
+                    set(record) {
+                        this.__rels__.set(name, record?.localId);
+                    },
+                });
+            }
         }
         onChange(res.Thread, "records", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
