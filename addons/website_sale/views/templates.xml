@@ -408,6 +408,13 @@
         </t>
     </template>
 
+    <!-- Add the fiscal position in the t-cache key after all overrides -->
+    <template id="products_fiscal_position" inherit_id="website_sale.products" priority="99">
+        <xpath expr="//div[starts-with(@t-cache, 'pricelist,products')]" position="attributes">
+            <attribute name="t-cache" add="fiscal_position_id" separator=","/>
+        </xpath>
+    </template>
+
     <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
     <template id="products_design_card" name="Card Design" inherit_id="website_sale.products" active="False">
         <xpath expr="//table" position="attributes">
