@@ -15,6 +15,7 @@ var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d
 publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
     events: {
         'click li.o_survey_js_results_pagination a': '_onPageClick',
+        "click .o_survey_question_answers_show_btn": "_onShowAllAnswers",
     },
 
     //--------------------------------------------------------------------------
@@ -55,18 +56,32 @@ publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
 
         var $target = $(ev.currentTarget);
         $target.closest('li').addClass('active');
-        this.$questionsEl.find('tbody tr').addClass('d-none');
+        this.$questionsEl.find("tbody tr").addClass("d-none");
 
         var num = $target.text();
-        var min = (this.limit * (num-1))-1;
-        if (min === -1){
-            this.$questionsEl.find('tbody tr:lt('+ this.limit * num +')')
-                .removeClass('d-none');
+        var min = this.limit * (num - 1) - 1;
+        if (min === -1) {
+            this.$questionsEl
+                .find("tbody tr:lt(" + this.limit * num + ")")
+                .removeClass("d-none");
         } else {
-            this.$questionsEl.find('tbody tr:lt('+ this.limit * num +'):gt(' + min + ')')
-                .removeClass('d-none');
+            this.$questionsEl
+                .find("tbody tr:lt(" + this.limit * num + "):gt(" + min + ")")
+                .removeClass("d-none");
         }
+    },
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onShowAllAnswers: function (ev) {
+        const btnEl = ev.currentTarget;
+        const pager = btnEl.previousElementSibling;
+        btnEl.classList.add("d-none");
+        this.$questionsEl.find("tbody tr").removeClass("d-none");
+        pager.classList.add("d-none");
+        this.$questionsEl.parent().addClass("h-auto");
     },
 });
 
@@ -114,10 +129,32 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         self.chartConfig = self._getSectionResultsChartConfig();
                         break;
                 }
-
-                self._loadChart();
+                window.addEventListener("afterprint", self._onAfterPrint.bind(self));
+                window.addEventListener("beforeprint", self._onBeforePrint.bind(self));
+                self.chart = self._loadChart();
             }
         });
+    },
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Prepare chart for media print
+     * @private
+     */
+    _onBeforePrint: function () {
+        const printWidth = 630; // Value to fit any graphic into the width of an A4 portrait page
+        this.chart.resize(printWidth, Math.floor(printWidth / this.chart.aspectRatio));
+    },
+
+    /**
+     * Turn back chart to original size, for media screen
+     * @private
+     */
+    _onAfterPrint: function () {
+        this.chart.resize();
     },
 
     // -------------------------------------------------------------------------
@@ -438,6 +475,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         'click a.filter-passed': '_onFilterPassedClick',
         'click a.filter-passed-and-failed': '_onFilterPassedAndFailedClick',
         'click .o_survey_answer_image': '_onAnswerImgClick',
+        "click .o_survey_results_print": "_onPrintResultsClick",
     },
 
     //--------------------------------------------------------------------------
@@ -460,14 +498,12 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             var allPromises = [];
-
-            self.$('.pagination').each(function (){
+            self.$('.pagination_wrapper').each(function (){
                 var questionId = $(this).data("question_id");
                 allPromises.push(new publicWidget.registry.SurveyResultPagination(self, {
                     'questionsEl': self.$('#survey_table_question_'+ questionId)
                 }).attachTo($(this)));
             });
-
             self.$('.survey_graph').each(function () {
                 allPromises.push(new publicWidget.registry.SurveyResultChart(self)
                     .attachTo($(this)));
@@ -485,7 +521,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     // Handlers
     // -------------------------------------------------------------------------
 
-     /**
+    /**
      * Add an answer filter by updating the URL and redirecting.
      * @private
      * @param {Event} ev
@@ -591,6 +627,14 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         new SurveyImageZoomer({
             sourceImage: $(ev.currentTarget).attr('src')
         }).appendTo(document.body);
+    },
+
+    /**
+     * Call print dialog
+     * @private
+     */
+    _onPrintResultsClick: function () {
+        window.print();
     },
 
     /**

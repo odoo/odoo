@@ -14,7 +14,7 @@
                              else ('background-image: url(' + page.background_image_url + ');')
                              if page and page.background_image_url
                              else ('background-image: url(' + survey.background_image_url + ');')
-                             if survey and survey.background_image_url
+                             if survey and survey.background_image_url and not survey_data
                              else '')"/>
             <attribute name="t-attf-class" add="o_survey_background" separator=" "/>
         </xpath>
@@ -53,7 +53,7 @@
                         <t t-set="_message"></t>
                         <t t-set="_utm_medium" t-valuef="survey"/>
                     </div>
-                    <div class="o_survey_navigation_wrapper d-inline-block" t-call="survey.survey_navigation">
+                    <div class="o_survey_navigation_wrapper d-inline-block d-print-none" t-call="survey.survey_navigation">
                     </div>
                 </div>
             </div>
