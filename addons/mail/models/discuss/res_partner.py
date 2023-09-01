@@ -27,10 +27,10 @@ class ResPartner(models.Model):
                 ("channel_partner_ids", "in", [self.id]),
             ]
         )
-        # get the pinned direct messages
+        # get the pinned direct messages (directly include whatsapp to avoid overrides)
         channels |= self.env["discuss.channel"].search(
             [
-                ("channel_type", "=", "chat"),
+                ("channel_type", "in", ["chat", "whatsapp"]),
                 (
                     "channel_member_ids",
                     "in",
