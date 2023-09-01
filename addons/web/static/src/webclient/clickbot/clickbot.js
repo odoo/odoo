@@ -117,33 +117,19 @@
      * Wait a certain amount of time for a condition to occur
      *
      * @param {function} stopCondition a function that returns a boolean
+     * @param {Number} tl the maximum wait time before stopping, in milliseconds
      * @returns {Promise} that is rejected if the timeout is exceeded
      */
-    function waitForCondition(stopCondition, tl = 30000) {
-        return new Promise(function (resolve, reject) {
-            const interval = 25;
-            let timeLimit = tl;
-
-            function checkCondition() {
-                if (stopCondition()) {
-                    resolve();
-                } else {
-                    timeLimit -= interval;
-                    if (timeLimit > 0) {
-                        // recursive call until the resolve or the timeout
-                        setTimeout(checkCondition, interval);
-                    } else {
-                        console.error(
-                            "Timeout, the clicked element took more than",
-                            tl / 1000,
-                            "seconds to load"
-                        );
-                        reject();
-                    }
-                }
+    async function waitForCondition(stopCondition, tl = 30000) {
+        const interval = 25;
+        let timeLimit = tl;
+        while (!stopCondition()) {
+            if (timeLimit <= 0) {
+                throw new Error(`Timeout, the clicked element took more than ${tl / 1000} seconds to load`)
             }
-            setTimeout(checkCondition, interval);
-        });
+            await new Promise(resolve => setTimeout(resolve, interval));
+            timeLimit -= interval;
+        }
     }
 
     /**
