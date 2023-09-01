@@ -47,7 +47,7 @@ class PosOrderLine(models.Model):
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    tracking_number = fields.Integer(string="Tracking Number")
+    tracking_number = fields.Char(string="Tracking Number")
     take_away = fields.Boolean(string="Take Away", default=False)
 
     @api.model
