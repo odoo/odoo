@@ -769,17 +769,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual Allocation - Test',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': datetime.date(2020, 8, 16),
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2020-8-16'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual Allocation - Test',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': datetime.date(2020, 8, 16),
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
         with freeze_time('2022-1-10'):
             allocation._update_accrual()
         self.assertAlmostEqual(allocation.number_of_days, 30.82, 2, "Invalid number of days")
@@ -817,17 +818,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'first_day': 31,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual Allocation - Test',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': datetime.date(2022, 1, 31),
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2022-1-31'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual Allocation - Test',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': datetime.date(2022, 1, 31),
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
         with freeze_time('2022-7-20'):
             allocation._update_accrual()
         # The first level gives 3 days
@@ -863,17 +865,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 }),
             ],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual Allocation - Test',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': datetime.date(2021, 1, 1),
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2021-1-1'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual Allocation - Test',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': datetime.date(2021, 1, 1),
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
         with freeze_time('2022-4-4'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
@@ -895,17 +898,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })
             ],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual Allocation - Test',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': datetime.date(2019, 1, 1),
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2019-1-1'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual Allocation - Test',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': datetime.date(2019, 1, 1),
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+
         with freeze_time('2022-4-1'):
             allocation._update_accrual()
         self.assertAlmostEqual(allocation.number_of_days, 3, 2, "Invalid number of days")
@@ -923,15 +928,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2021-09-03',
-        })
+        with freeze_time("2021-9-3"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2021-09-03',
+            })
 
         with freeze_time("2021-10-3"):
             allocation.action_confirm()
@@ -952,15 +958,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2021-09-03',
-        })
+        with freeze_time("2021-9-3"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2021-09-03',
+            })
 
         with freeze_time("2021-10-3"):
             allocation.action_confirm()
@@ -983,17 +990,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2022-01-01',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time("2022-1-1"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2022-01-01',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time("2022-3-2"):
             allocation._update_accrual()
@@ -1013,7 +1021,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 10, "Should accrue 5 additional days")
 
-    def test_aaaccrual_leaves_taken_maximum_hours(self):
+    def test_accrual_leaves_taken_maximum_hours(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'level_ids': [(0, 0, {
@@ -1027,17 +1035,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type_hour.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2022-01-01',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time(datetime.date(2022, 1, 1)):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type_hour.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2022-01-01',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time(datetime.date(2022, 4, 1)):
             allocation._update_accrual()
@@ -1072,37 +1081,37 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-24',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-
         with freeze_time("2023-4-24"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-24',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+
             allocation._update_accrual()
 
         self.assertEqual(allocation.number_of_days, 0, "Should accrue 0 days, because the period is not done yet.")
 
         accrual_plan.accrued_gain_time = 'start'
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-24',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-
         with freeze_time("2023-4-24"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-24',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
+
             allocation._update_accrual()
 
         self.assertEqual(allocation.number_of_days, 1, "Should accrue 1 day, at the start of the period.")
@@ -1122,19 +1131,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 15,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-13',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-
         with freeze_time("2023-4-13"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-13',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
             allocation._update_accrual()
 
         self.assertAlmostEqual(allocation.number_of_days, 1.5, 2)
@@ -1170,19 +1178,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })
             ],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-26',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-
         with freeze_time("2023-4-26"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-26',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 1, "Should accrue 1 day, at the start of the period.")
 
@@ -1211,19 +1218,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'lost',
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-26',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
-
         with freeze_time("2023-4-26"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-26',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 0, "Should accrue 0 days, days are added on 27th.")
 
@@ -1262,17 +1268,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'postpone_max_days': 69,
             })],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 0,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-20',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time("2023-04-20"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-20',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time("2024-04-20"):
             allocation._update_accrual()
@@ -1325,18 +1332,54 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 }),
             ],
         })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 9,
-            'allocation_type': 'accrual',
-            'date_from': '2023-04-4',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time("2023-04-04"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 9,
+                'allocation_type': 'accrual',
+                'date_from': '2023-04-4',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time("2026-08-01"):
             allocation._update_accrual()
         self.assertAlmostEqual(allocation.number_of_days, 1.315, 3)
+
+    def test_accrual_creation_on_anterior_date(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Weekly accrual',
+            'carryover_date': 'allocation',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 1,
+                'frequency': 'weekly',
+                'cap_accrued_time': False,
+                'action_with_unused_accruals': 'lost',
+            })],
+        })
+        with freeze_time('2023-09-01'):
+            accrual_allocation = self.env['hr.leave.allocation'].new({
+                'name': 'Employee allocation',
+                'holiday_status_id': self.leave_type.id,
+                'date_from': '2023-01-01',
+                'employee_id': self.employee_emp.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+            })
+            # As the duration is set to a onchange, we need to force that onchange to run
+            accrual_allocation._onchange_date_from()
+            accrual_allocation.action_validate()
+            # The amount of days should be computed as if it was accrued since
+            # the start date of the allocation.
+            self.assertAlmostEqual(accrual_allocation.number_of_days, 34.0, places=0)
+            self.assertFalse(accrual_allocation.lastcall == accrual_allocation.date_from)
+            accrual_allocation._update_accrual()
+            # The amount being already computed, the amount should stay the same after the cron
+            # running on the same day.
+            self.assertAlmostEqual(accrual_allocation.number_of_days, 34.0, places=0)

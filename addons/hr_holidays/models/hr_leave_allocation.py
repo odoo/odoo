@@ -586,9 +586,8 @@ class HolidaysAllocation(models.Model):
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-            # default `lastcall` to `nextcall`
-            if 'date_from' in values and 'lastcall' not in values:
-                values['lastcall'] = values['date_from']
+            if 'lastcall' not in values:
+                values['lastcall'] = fields.Date.today()
         holidays = super(HolidaysAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         for holiday in holidays:
             partners_to_subscribe = set()
