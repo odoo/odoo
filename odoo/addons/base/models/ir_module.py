@@ -134,6 +134,13 @@ STATES = [
 ]
 
 
+XML_DECLARATION = (
+    '<?xml version='.encode('utf-8'),
+    '<?xml version='.encode('utf-16-be'),
+    '<?xml version='.encode('utf-16-le'),
+)
+
+
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
@@ -170,15 +177,25 @@ class Module(models.Model):
             if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
-                    try:
-                        contents = doc.decode()
-                    except UnicodeDecodeError:
+                    if doc.startswith(XML_DECLARATION):
                         warnings.warn(
-                            f"Non-UTF8 module descriptions are deprecated since Odoo 17 ({module.name}'s description is not)",
+                            f"XML declarations in HTML module descriptions are "
+                            f"deprecated since Odoo 17, {module.name} can just "
+                            f"have a UTF8 description with not need for a "
+                            f"declaration.",
                             category=DeprecationWarning,
                         )
-                        contents = doc
-                    html = lxml.html.document_fromstring(contents)
+                    else:
+                        try:
+                            doc = doc.decode()
+                        except UnicodeDecodeError:
+                            warnings.warn(
+                                f"Non-UTF8 module descriptions are deprecated "
+                                f"since Odoo 17 ({module.name}'s description "
+                                f"is not utf-8)",
+                                category=DeprecationWarning,
+                            )
+                    html = lxml.html.document_fromstring(doc)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
