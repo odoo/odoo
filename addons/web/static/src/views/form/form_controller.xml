@@ -58,7 +58,7 @@
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <div class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
+        <div class="o_cp_buttons d-flex align-items-baseline w-100" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
             <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
                 <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
                     Save
