@@ -2,7 +2,7 @@
 
 import { Component, useState } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
-import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
@@ -57,6 +57,13 @@ export class MoOverviewOperationsBlock extends Component {
     get index() {
         return this.props.summary.index;
     }
+
+    get totalQuantity() {
+        // Float for Hours when displaying done productions, FloatTime for Minutes otherwise.
+        return this.props.summary?.done ?
+            formatFloat(this.props.summary.quantity, { digits: [false, this.props.operations[0].uom_precision || undefined] }) :
+            formatFloatTime(this.props.summary.quantity)
+    }
 }
 
 MoOverviewOperationsBlock.components = {
@@ -77,6 +84,7 @@ MoOverviewOperationsBlock.props = {
             uom_name: { type: String, optional: true },
             currency_id: { type: Number, optional: true },
             currency: { type: String, optional: true },
+            done: { type: Boolean, optional: true },
         },
     },
     showOptions: SHOW_OPTIONS,

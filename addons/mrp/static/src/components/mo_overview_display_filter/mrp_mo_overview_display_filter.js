@@ -10,6 +10,7 @@ export const SHOW_OPTIONS = {
         replenishments: Boolean,
         availabilities: Boolean,
         receipts: Boolean,
+        unitCosts: Boolean,
         moCosts: Boolean,
         realCosts: Boolean,
     },
@@ -26,6 +27,7 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
         }
         this.displayOptions = {
             ...(this.displayOptions || {}),
+            unitCosts: _t("Unit Costs"),
             moCosts: _t("MO Costs"),
             realCosts: _t("Real Costs"),
         };
