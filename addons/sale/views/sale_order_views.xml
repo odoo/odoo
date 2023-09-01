@@ -720,6 +720,7 @@
                                 </div>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
                                 <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" readonly="invoice_count != 0 and state == 'sale'" groups="analytic.group_analytic_accounting" force_save="1"/>
+                                <field name="journal_id" groups="base.group_no_one" readonly="invoice_count != 0 and state == 'sale'"/>
                                 <field name="invoice_status" invisible="state != 'sale'" groups="base.group_no_one"/>
                                 <!-- test_event_configurator -->
                                 <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
