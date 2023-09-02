@@ -3759,7 +3759,7 @@ msgstr "Perda de Diferença de Caixa"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
-msgstr "Ganho de diferença de caixa"
+msgstr "Ganho de desconto de caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -13257,8 +13257,8 @@ msgstr "Conta transitória"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Mudar para reembolso/nota de crédito"
+msgid "Switch into invoice/credit note"
+msgstr "Alternar para fatura/nota de crédito"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -17040,6 +17040,13 @@ msgid ""
 msgstr ""
 "Você não pode alternar uma conta para impedir a reconciliação se algumas "
 "reconciliações parciais ainda estiverem pendentes."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Não é possível alterar o tipo de um documento lançado."
 
 #. module: account
 #. odoo-python

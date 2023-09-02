@@ -146,7 +146,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr "%(warehouse)s: Produkt beschaffen von %(supplier)s"
+msgstr "%(warehouse)s: Produkt nachliefern aus %(supplier)s"
 
 #. module: stock
 #. odoo-python
@@ -569,7 +569,7 @@ msgstr "<span>Pakettyp: </span> "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr "<span>Produkte ohne Verpackung</span> "
+msgstr "<span>Produkte ohne Paket</span> "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -673,7 +673,7 @@ msgstr "<strong>Pakettyp:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr "<strong>Verpackung</strong>"
+msgstr "<strong>Paket</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1181,7 +1181,7 @@ msgstr "Auto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Aufträge automatisieren"
+msgstr "Bestellungen automatisieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1534,7 +1534,7 @@ msgstr "Verfügbarkeit prüfen"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
 msgid "Check the existence of destination packages on move lines"
-msgstr "Überprüfen Sie die Existenz von Zielverpackungen in Buchungszeilen"
+msgstr "Überprüfen Sie die Existenz von Zielpaketen in Buchungszeilen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
@@ -1770,7 +1770,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Konsignationslager"
+msgstr "Konsignation"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
@@ -2086,12 +2086,12 @@ msgstr "Erstellungsdatum, vermutlich das Datum des Auftrags"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
-msgstr "Lagerumschlag"
+msgstr "Kreuzverkupplung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Lagerumschlagsroute"
+msgstr "Kreuzverkupplungsroute"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -2342,7 +2342,7 @@ msgid ""
 msgstr ""
 "Definieren Sie Ihre Standorte, um Ihre Lagerstruktur und\n"
 "-organisation zu reflektieren. Odoo ist in der Lage, physische Standorte \n"
-"(Lagerhallen, Regale, Abfallsysteme usw.), Partnerstandorte (Kunden, \n"
+"(Lagerhallen, Regale, Abfallsysteme usw.), Partnerlagerorte (Kunden, \n"
 "Verkäufer) und virtuelle Standorte zu verwalten, die das Gegenstück \n"
 "zu den Vorräten wie der Fertigungsaufträge, Lagerbestände usw. sind."
 
@@ -2593,12 +2593,12 @@ msgstr "Zielbewegungen"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Destination Package"
-msgstr "Zielverpackung"
+msgstr "Zielpaket"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr "Zielverpackung:"
+msgstr "Zielpaket:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
@@ -4005,7 +4005,7 @@ msgstr "Ist Follower"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_fresh_package
 msgid "Is Fresh Package"
-msgstr "Ist eine frische Verpackung"
+msgstr "Ist ein Frischepaket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_locked
@@ -4689,8 +4689,8 @@ msgstr "Lagerkategorien verwalten"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
-"Produktverpackungen verwalten (z. B. Packung mit 6 Flaschen, Karton mit 10 "
-"Stück)"
+"Verwalten Sie Produktverpackungen (z. B. Packung mit 6 Flaschen, Karton mit "
+"10 Stück)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -4903,7 +4903,7 @@ msgstr "Mehrstufige Routen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr "Mehrere Mengen"
+msgstr "Mehrfache Menge"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5393,7 +5393,7 @@ msgstr "Vorgangsarten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr "Vorgänge ohne Verpackung"
+msgstr "Vorgänge ohne Paket"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -5436,7 +5436,7 @@ msgstr "Optionen"
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
-msgstr "Auftrag"
+msgstr "Bestellen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -5641,7 +5641,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_tree
 msgid "Package"
-msgstr "Verpackung"
+msgstr "Paket"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -5675,12 +5675,12 @@ msgstr "Paketinhalt"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids
 msgid "Package Level"
-msgstr "Verpackungslevel"
+msgstr "Paketlevel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr "Details zu den Verpackungslevel-IDs"
+msgstr "Details zu den Paketlevel-IDs"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -5792,7 +5792,7 @@ msgstr "Verpackungsort"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Packing Zone"
-msgstr "Verpackungszone"
+msgstr "Packzone"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -6536,7 +6536,7 @@ msgstr "Erledigte Menge"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr "Mehrere Mengen"
+msgstr "Mehrfache Menge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
@@ -7051,7 +7051,7 @@ msgstr "Beschaffung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr "Beschaffung von"
+msgstr "Nachlieferung aus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -7557,7 +7557,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #, python-format
 msgid "Set"
-msgstr "Einstellen"
+msgstr "Festlegen"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__set
@@ -7879,12 +7879,12 @@ msgstr "Quelllagerort:"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr "Quellverpackung"
+msgstr "Quellpaket"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package :"
-msgstr "Quellverpackung:"
+msgstr "Quellpaket:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8606,7 +8606,7 @@ msgstr ""
 "Wenn Sie manuell über diese Vorgangsart eine Kommissionierung erstellen, ist"
 " dies der Standard-Quellstandort. Es ist jedoch möglich, diesen zu ändern "
 "oder in den Routen einen anderen Standort anzugeben. Wenn das Feld leer ist,"
-" wird nach dem Lieferanten-Standort des Partners gesucht."
+" wird nach dem Lieferantenstandort des Partners gesucht."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id

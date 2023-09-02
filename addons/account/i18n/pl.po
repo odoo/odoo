@@ -13253,8 +13253,8 @@ msgstr "Rachunek przejściowy"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Przełączenie na notę refundacyjną/kredytową"
+msgid "Switch into invoice/credit note"
+msgstr "Przełączenie na fakturę/notę kredytową"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13894,13 +13894,6 @@ msgid ""
 msgstr ""
 "Kolejność wpisów w dzienniku nie jest zgodna z obowiązującym formatem. Tylko"
 " Księgowy może ją zmienić."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "Miesiące i dni w wierszach warunków płatności muszą być dodatnie."
 
 #. module: account
 #. odoo-python
@@ -17022,6 +17015,13 @@ msgid ""
 msgstr ""
 "Nie można przełączyć konta, aby zapobiec uzgodnieniu, jeśli niektóre "
 "częściowe uzgodnienia są nadal w toku."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Nie można zmienić typu zaksięgowanego dokumentu."
 
 #. module: account
 #. odoo-python

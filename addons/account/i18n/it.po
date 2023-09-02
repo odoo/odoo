@@ -13129,8 +13129,8 @@ msgstr "Conto provvisorio"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Cambia in rimborso/nota di credito"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -16830,6 +16830,13 @@ msgid ""
 msgstr ""
 "Impossibile cambiare conto per evitare la riconciliazione, alcune "
 "riconciliazioni parziali sono ancora in sospeso."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #. odoo-python

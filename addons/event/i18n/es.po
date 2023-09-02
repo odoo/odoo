@@ -9,9 +9,9 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Jolien De Paepe, 2023
 # Ana Sanjuán, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ana Sanjuán, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +270,7 @@ msgid ""
 "title=\"Confirm Registration\"/>"
 msgstr ""
 "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Botón de "
-"confirmación\" title=\"Confirmar registro\"/>"
+"confirmación\" title=\"Confirmar inscripción\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -278,8 +278,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Botón de confirmar\" "
-"title=\"Confirmar registro\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirmar inscripción\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -898,7 +898,7 @@ msgstr "Patrocinadores avanzados"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_sub
 msgid "After each registration"
-msgstr "Después de cada registro"
+msgstr "Después de cada inscripción"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
@@ -1031,8 +1031,8 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
-"Autoconfirmar registros: Los registros serán confirmados automáticamente al "
-"momento de su creación."
+"Autoconfirmar inscripciones: Las inscripciones serán confirmadas "
+"automáticamente en el momento de su creación."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
@@ -1043,7 +1043,7 @@ msgstr "Autoconfirmación"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr "Confirma registros automáticamente"
+msgstr "Confirmar inscripciones automáticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1143,7 +1143,7 @@ msgstr "Cancelar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Cancel Registration"
-msgstr "Cancelar registro"
+msgstr "Cancelar inscripción"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_cancelled
@@ -1192,7 +1192,7 @@ msgstr "Comunicación"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr "Comunicación relacionada con los registros al evento"
+msgstr "Comunicación relacionada con las inscripciones del evento"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1255,7 +1255,7 @@ msgstr "Confirmar asistencia"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Registration"
-msgstr "Confirmación registro"
+msgstr "Confirmar inscripción"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -1375,8 +1375,8 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
-"Define el número de entradas disponibles. Si tienes demasiados registros no "
-"podrás vender más entradas. Marca 0 para ignorar esta regla y hacer el "
+"Define el número de entradas disponibles. Si tiene demasiadas inscripciones,"
+" no podrá vender más entradas. Marque 0 para ignorar esta regla y hacer el "
 "número ilimitado."
 
 #. module: event
@@ -1562,7 +1562,7 @@ msgstr "Organizador del evento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Registro al evento"
+msgstr "Inscripción del evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -1691,7 +1691,7 @@ msgstr "Tipo de evento"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr "Registros al evento"
+msgstr "Inscripciones del evento"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1716,7 +1716,7 @@ msgstr "Evento: Programador de correo"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "Evento: Insignia del registro"
+msgstr "Evento: Credencial de inscripción"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
@@ -1757,8 +1757,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
-"Los eventos y los registros serán confirmados automáticamente después de su "
-"creación, lo que facilitará el flujo para eventos simples."
+"Los eventos y las inscripciones serán confirmados automáticamente después de"
+" su creación, lo que facilitará el flujo para eventos simples."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
@@ -1876,8 +1876,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Para cada evento puedes definir un máximo de registros de asientos (número "
-"de asistentes) por encima de estos números no se aceptan registros."
+"Para cada evento, puede definir un máximo de inscripciones (número de "
+"asistentes). Por encima de estos números, no se aceptan más inscripciones."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -1915,8 +1915,8 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
-"Desde este tablero puede reportar, analizar y detectar tendencias sobre los "
-"registros a su evento."
+"Desde este tablero puede consultar, analizar y detectar tendencias sobre las"
+" inscripciones a su evento."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
@@ -2323,7 +2323,7 @@ msgstr "Límite de asistentes"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr "Limitar registros"
+msgstr "Limitar inscripciones"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2354,7 +2354,7 @@ msgstr "Correo"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr "Registro de correo"
+msgstr "Correo para una inscripción"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
@@ -2418,7 +2418,7 @@ msgstr "Asistentes máximos"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr "Registros máximos"
+msgstr "Inscripciones máximas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
@@ -2792,66 +2792,66 @@ msgstr "Etiqueta Kanban roja"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #, python-format
 msgid "Registration"
-msgstr "Registro"
+msgstr "Inscripción"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr "Fecha de registro"
+msgstr "Fecha de inscripción"
 
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr "Módulo de registro"
+msgstr "Mesa de inscripción"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr "Fin del registro"
+msgstr "Fin de inscripción"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr "ID de registro"
+msgstr "ID de inscripción"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Programador de correos de registro"
+msgstr "Programador de correos de inscripciones"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr "Correos de registro"
+msgstr "Correos de inscripciones"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr "Inicio del registro"
+msgstr "Inicio de la inscripción"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr "Encuesta de registro"
+msgstr "Encuesta de inscripción"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "Registration for %s"
-msgstr "Registro para %s"
+msgstr "Inscripción para %s"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr "Registro de Correo Electrónico"
+msgstr "Correo de inscripción"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr "Registro abierto"
+msgstr "Inscripción abierta"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
@@ -2861,7 +2861,7 @@ msgstr "Estadísticas de registro"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr "Registros"
+msgstr "Inscripciones"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_open
@@ -2871,7 +2871,7 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
-"Los registros están abiertos si:\n"
+"Las inscripciones están abiertas si:\n"
 "- el evento no ha terminado\n"
 "- hay asientos disponibles en el evento\n"
 "- las entradas son vendibles (si se utilizan entradas)"
@@ -2879,7 +2879,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr "Los registros empezaron"
+msgstr "La inscripción comenzó"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2936,7 +2936,7 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
-"Programe y organice sus eventos: gestione registros, envíe correos "
+"Programe y organice sus eventos: gestione inscripciones, envíe correos "
 "electrónicos de confirmación automatizados, envíe entradas, etc."
 
 #. module: event
@@ -3239,7 +3239,7 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
-"Las siguientes entradas no pueden borrarse mientras tengan uno o más registros vinculados a ellas:\n"
+"Las siguientes entradas no pueden borrarse mientras tenga una o más inscripciones vinculadas a ellas:\n"
 "- %s"
 
 #. module: event
@@ -3310,7 +3310,7 @@ msgstr "Esta información se imprimirá en sus entradas."
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr "Este es el <b>nombre</b> que tus invitados verán al registrarse."
+msgstr "Éste es el <b>nombre</b> que sus invitados verán al inscribirse."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3410,7 +3410,7 @@ msgstr "Total"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr "Registros totales para este evento"
+msgstr "Inscripciones totales para este evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -3566,8 +3566,8 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
-"Espere hasta que los asistentes se registren a su evento o cree sus "
-"registros de forma manual."
+"Esperar hasta que los asistentes se inscriban a su evento o cree las "
+"inscripciones de forma manual."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3655,7 +3655,7 @@ msgstr "Su insignia para {{ object.event_id.name }}"
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr "Su registro a {{ object.event_id.name }}"
+msgstr "Su inscripción a {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -3731,8 +3731,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
-"los registros han empezado si la fecha y hora actuales son después de la "
-"fecha de inicio de las entradas más recientes."
+"las inscripciones han empezado si la fecha y hora actuales son después de la"
+" fecha de inicio de las entradas más recientes."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
