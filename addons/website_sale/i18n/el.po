@@ -6,8 +6,8 @@
 # Giota Dandidou <giotadandidou@gmail.com>, 2022
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2022
 # Martin Trigaux, 2022
-# Kostas Goutoudis <goutoudis@gmail.com>, 2022
 # George Tarasidis <george_tarasidis@yahoo.com>, 2022
+# Kostas Goutoudis <goutoudis@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2022\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2023\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -983,7 +983,10 @@ msgid "Companies"
 msgstr "Εταιρίες"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Επωνυμία Εταιρίας"
 
@@ -1560,6 +1563,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr "Όνομα Εικόνας"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2146,6 +2158,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Τηλέφωνο"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Αριθμός τηλεφώνου"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3488,6 +3507,20 @@ msgid ""
 msgstr ""
 "Η Διεύθυνσή σας\n"
 "                                        <small> ή </small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Το email σας"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Το Όνομά σας"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

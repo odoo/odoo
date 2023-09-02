@@ -3715,12 +3715,12 @@ msgstr "È una chat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
 msgid "Is discuss sidebar category channel open?"
-msgstr ""
+msgstr "Il menu Canali è aperto?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_chat_open
 msgid "Is discuss sidebar category chat open?"
-msgstr ""
+msgstr "Il menu Discussione è aperto?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
@@ -3806,7 +3806,7 @@ msgstr "Ultimi prelevati"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__last_interest_dt
 msgid "Last Interest"
-msgstr ""
+msgstr "Ultimo interesse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity____last_update
@@ -4096,7 +4096,7 @@ msgstr "Modulo email per il canale"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
 msgid "Mail Composer Mixin"
-msgstr ""
+msgstr "Mixin compositore e-mail"
 
 #. module: mail
 #. openerp-web
@@ -5110,6 +5110,8 @@ msgid ""
 "Only messages type comment can have their content updated on model "
 "'mail.channel'"
 msgstr ""
+"Sul il modello \"mail.channel\" solo i messaggi di tipo commento possono "
+"avere il proprio contenuto aggiornato"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -5523,6 +5525,8 @@ msgid ""
 "Posting a message should be done on a business document. Use message_notify "
 "to send a notification to an user."
 msgstr ""
+"La pubblicazione di un messaggio deve avvenire su un documento aziendale. "
+"Utilizza message_notify per inviare una notifica ad un utente."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5531,6 +5535,8 @@ msgid ""
 "Posting a message with channels as listeners is not supported since Odoo "
 "14.3+. Please update code accordingly."
 msgstr ""
+"A partire da Odoo 14.3 in poi, la pubblicazione di un messaggio con canali "
+"per ascoltatori non è supportata. Aggiorna il codice."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -5682,6 +5688,8 @@ msgstr "Sessioni RTC"
 msgid ""
 "Ranges between 0.0 and 1.0, scale depends on the browser implementation"
 msgstr ""
+"Numeri tra 0.0 e 0.1, la scalabilità dipende dall'implementazione del "
+"browser"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:0
@@ -5993,7 +6001,7 @@ msgstr "Partner richiedente"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
 msgid "Res Users Settings"
-msgstr ""
+msgstr "Ripr. impostazioni utenti"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -6624,7 +6632,7 @@ msgstr "Non aggiungere più utenti"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Stop camera"
-msgstr ""
+msgstr "Interrompi fotocamera"
 
 #. module: mail
 #. openerp-web
@@ -6646,6 +6654,8 @@ msgid ""
 "String formatted to represent a key with modifiers following this pattern: "
 "shift.ctrl.alt.key, e.g: truthy.1.true.b"
 msgstr ""
+"Stringa formattata per rappresentare una chiave con modificatori che seguono"
+" questo schema: shift.ctrl.alt.key, e.g: truthy.1.true.b"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__sub_model_object_field
@@ -6816,6 +6826,7 @@ msgstr ""
 #, python-format
 msgid "Template rendering should be called on a valid record IDs."
 msgstr ""
+"Il rendering del modello deve essere eseguito su ID di registrazioni valide."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6832,6 +6843,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw)."
 msgstr ""
+"Il rendering del modello supporta solo inline_template, qweb, o qweb_view "
+"(vista o riga)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7380,7 +7393,7 @@ msgstr "Motivo rimozione da lista nera: %s"
 #: code:addons/mail/static/src/components/rtc_controller/rtc_controller.xml:0
 #, python-format
 msgid "Undeafen"
-msgstr ""
+msgstr "Annulla assordare"
 
 #. module: mail
 #. openerp-web
@@ -7577,7 +7590,7 @@ msgstr "Impostazioni utente"
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes
 msgid "User Settings Volumes"
-msgstr ""
+msgstr "Volumi impostazioni utente"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__user_notification
@@ -8479,7 +8492,7 @@ msgstr "restricted to known authors"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "results out of"
-msgstr ""
+msgstr "deriva da"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
@@ -8502,7 +8515,7 @@ msgstr "alcuni indirizzi specifici"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__stun
 msgid "stun:"
-msgstr ""
+msgstr "stun:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -8533,12 +8546,12 @@ msgstr "da chiudere entro il"
 #: code:addons/mail/static/src/components/rtc_configuration_menu/rtc_configuration_menu.xml:0
 #, python-format
 msgid "toggle push-to-talk"
-msgstr ""
+msgstr "attiva premi per parlare"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__turn
 msgid "turn:"
-msgstr ""
+msgstr "turn:"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

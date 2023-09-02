@@ -12413,8 +12413,8 @@ msgstr "Rachunek przejściowy"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Przełączenie na notę refundacyjną/kredytową"
+msgid "Switch into invoice/credit note"
+msgstr "Przełączenie na fakturę/notę kredytową"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -16255,6 +16255,12 @@ msgid ""
 msgstr ""
 "Nie można przełączyć konta, aby zapobiec uzgodnieniu, jeśli niektóre "
 "częściowe uzgodnienia są nadal w toku."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Nie można zmienić typu zaksięgowanego dokumentu."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

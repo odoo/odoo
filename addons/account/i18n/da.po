@@ -6,7 +6,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
 # Jesper Carstensen <info@danodoo.dk>, 2021
 # Mads Søndergaard, 2021
-# Lærke Hedegaard Mathiasen <lhm@flexerp.dk>, 2021
+# lhmflexerp <lhm@flexerp.dk>, 2021
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2023
@@ -12534,8 +12534,8 @@ msgstr "Mellemregningskonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Skift til refunderings-/kreditnota"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -16486,6 +16486,12 @@ msgid ""
 msgstr ""
 "Du kan ikke skifte en konto for at forhindre en afstemning hvis visse "
 "delvise afstemninger stadig afventes."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

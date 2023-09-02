@@ -12348,8 +12348,8 @@ msgstr "Pozastavený účet"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Prejdite na vrátenie platby / dobropis"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -16175,6 +16175,12 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové párovania."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

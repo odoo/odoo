@@ -27,7 +27,7 @@
 # Quim - eccit <quim@eccit.com>, 2022
 # martioodo hola, 2023
 # Martin Trigaux, 2023
-# jabelchi, 2023
+# Josep Anton Belchi, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Ivan Espinola, 2023
 # 
@@ -12637,8 +12637,8 @@ msgstr "Compte Suspicós"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Canviar a reemborsament/factura rectificativa"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -14217,6 +14217,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__carry_over_condition_method
 msgid "The method used to determine if this line should be carried over."
 msgstr "El mètode usat per determinar si s' ha de portar aquesta línia."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -16625,6 +16632,12 @@ msgid ""
 msgstr ""
 "No pots canviar un compte per evitar la reconciliació si algunes "
 "reconciliació parcial segueixen pendents."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -3,7 +3,6 @@
 # 	* website_sale
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Julian Dumitrascu, 2021
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
 # sharkutz <sharkutz4life@yahoo.com>, 2021
@@ -11,6 +10,7 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1134,7 +1134,10 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Numele companiei"
 
@@ -1731,6 +1734,15 @@ msgstr "Nume imagine"
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "E-mail invalid! Te rog introdu o adresă de email validă."
 
@@ -2320,6 +2332,13 @@ msgstr "Sistem de deschidere bazat pe pedală"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Număr telefon"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3690,6 +3709,20 @@ msgid ""
 msgstr ""
 "Adresa dumneavoastră \n"
 "<small>sau</small>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Email dvs."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Nume dvs."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
