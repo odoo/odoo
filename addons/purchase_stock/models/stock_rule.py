@@ -60,7 +60,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=schedule_date.date(),
+                    date=max(schedule_date.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than
@@ -259,17 +259,16 @@ class StockRule(models.Model):
             res['orderpoint_id'] = orderpoint_id.id
         return res
 
-    def _get_po_date(self, company_id, values):
-        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
-        return purchase_date - relativedelta(days=company_id.po_lead)
-
     def _prepare_purchase_order(self, company_id, origins, values):
         """ Create a purchase order for procuremets that share the same domain
         returned by _make_po_get_domain.
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        purchase_date = max(self._get_po_date(company_id, values), fields.Datetime.now())
+        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
+
+        purchase_date = (purchase_date - relativedelta(days=company_id.po_lead))
+
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
