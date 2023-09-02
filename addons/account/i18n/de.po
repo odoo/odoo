@@ -12,6 +12,7 @@
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
 # Martin Trigaux, 2023
+# Wil Odoo, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -62,9 +63,9 @@ msgstr ""
 "- Steuergruppen: Die Steuer ist eine Gruppe von Untersteuern.\n"
 "- Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
 "- Prozentsatz des Preises: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
-"   z. B. 100 * (1 + 10 %) = 110 (ohne Preis)\n"
+"   z. B. 100 * (1 + 10 %) = 110 (nicht im Preis enthalten)\n"
 "   z. B. 110 / (1 + 10 %) = 100 (im Preis enthalten)\n"
-"- Prozentsatz des Preises mit eingeschlossener Steuer: Der Steuerbetrag ist eine Division des Preises:\n"
+"- Prozentsatz des Preises inkusive Steuern: Der Steuerbetrag ist eine Division des Preises:\n"
 "   z. B. 180 / (1 - 10 %) = 200 (nicht im Preis enthalten)\n"
 "   z. B. 200 * (1 - 10 %) = 180 (im Preis enthalten)"
 
@@ -7643,7 +7644,7 @@ msgstr "In Kostenstellenkosten einbeziehen"
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 #: model:ir.model.fields,field_description:account.field_account_tax_template__price_include
 msgid "Included in Price"
-msgstr "Beinhaltet im Preis"
+msgstr "Im Preis inbegriffen"
 
 #. module: account
 #. odoo-javascript
@@ -9268,7 +9269,7 @@ msgid ""
 msgstr ""
 "Manuell: Bezahlen Sie mit einer beliebigen Methode außerhalb von Odoo.\n"
 "Zahlungsanbieter: Jeder Zahlungsanbieter hat seine eigene Zahlungsmethode. Beantragen Sie eine Transaktion auf/zu einer Karte dank eines Zahlungstokens, das der Partner beim Online-Kauf oder -Abonnement gespeichert hat.\n"
-"Sammelverarbeitung: Erfassen Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammeleinzahlung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
+"Sammeleinzahlung: Erfassen Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammeleinzahlung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
 "SEPA-Lastschrift: Erhalten Sie Zahlungen im SEPA-Raum dank eines Mandats, das Ihnen Ihr Partner erteilt hat. Das Modul account_sepa ist erforderlich.\n"
 
 #. module: account
@@ -9296,7 +9297,7 @@ msgstr ""
 "Manuell: Bezahlen oder bezahlt werden mit einer beliebigen Methode außerhalb von Odoo.\n"
 "Zahlungsanbieter: Jeder Zahlungsanbieter hat seine eigene Zahlungsmethode. Beantragen Sie eine Transaktion mithilfe eines Zahlungstokens, das der Partner beim Online-Kauf oder -Abonnement gespeichert hat.\n"
 "Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie ihn aus Odoo aus.\n"
-"Sammelverarbeitung: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammelverarbeitung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
+"Sammeleinzahlung: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie eine Sammeleinzahlung erstellen und an Ihre Bank übermitteln. Das Modul account_batch_payment ist erforderlich.\n"
 "SEPA-Überweisung: Zahlen Sie im SEPA-Raum, indem Sie eine SEPA-Überweisungsdatei an Ihre Bank übermitteln. Das Modul account_sepa ist erforderlich.\n"
 "SEPA-Lastschrift: Bezahlen Sie in der SEPA-Zone dank eines Mandats, das Ihnen Ihr Partner erteilt hat. Das Modul account_sepa ist erforderlich.\n"
 "\n"
@@ -9430,7 +9431,7 @@ msgstr "Mai"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__communication
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Memo"
-msgstr "Memo"
+msgstr "Vermerk"
 
 #. module: account
 #. odoo-javascript
@@ -9439,7 +9440,7 @@ msgstr "Memo"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #, python-format
 msgid "Memo:"
-msgstr "Memo:"
+msgstr "Vermerk:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
@@ -10522,7 +10523,7 @@ msgstr "Ausgangskonto für Bestandsbewertung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Konten für offene Rechnungen"
+msgstr "Konto für offene Rechnungen"
 
 #. module: account
 #. odoo-python
@@ -10563,7 +10564,7 @@ msgstr "Konten für ausstehende Eingänge"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding credits"
-msgstr "Ausstehende Forderungen"
+msgstr "Ausstehende Verbindlichkeiten"
 
 #. module: account
 #. odoo-python
@@ -11094,7 +11095,7 @@ msgstr "Prozentsatz des Preis"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "Prozentsatz des Preis inklusive Steuern"
+msgstr "Prozentsatz des Preises inklusive Steuern"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -13305,8 +13306,8 @@ msgstr "Zwischenkonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "In Erstattung/Gutschrift umwandeln"
+msgid "Switch into invoice/credit note"
+msgstr "In Rechnung/Gutschrift umwandeln"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13487,7 +13488,7 @@ msgstr "Inklusive Steuern"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__force_tax_included
 msgid "Tax Included in Price"
-msgstr "Steuer im Preis enthalten"
+msgstr "Steuer im Preis inbegriffen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
@@ -17138,6 +17139,13 @@ msgid ""
 msgstr ""
 "Sie können das Konto für die Kontenabstimmung nicht wechseln, solange sie "
 "noch offene Teilabstimmungen offen haben."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Sie können die Art eines gebuchten Dokuments nicht ändern."
 
 #. module: account
 #. odoo-python

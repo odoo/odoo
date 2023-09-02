@@ -13045,8 +13045,8 @@ msgstr "บัญชีพัก"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "เปลี่ยนเป็นการคืนเงิน/ใบลดหนี้"
+msgid "Switch into invoice/credit note"
+msgstr "เปลี่ยนเป็น ใบแจ้งหนี้/ใบลดหนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -16739,6 +16739,13 @@ msgid ""
 msgstr ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "คุณไม่สามารถเปลี่ยนประเภทของเอกสารที่ผ่านรายการได้"
 
 #. module: account
 #. odoo-python

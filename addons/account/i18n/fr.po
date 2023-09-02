@@ -17,6 +17,7 @@
 # Martin Trigaux, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13326,8 +13327,8 @@ msgstr "Compte d'attente"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Transformer en remboursement/avoir"
+msgid "Switch into invoice/credit note"
+msgstr "Transformer en facture/avoir"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13967,14 +13968,6 @@ msgid ""
 msgstr ""
 "La séquence de pièces comptables n'est pas conforme au format actuel. Seul "
 "le comptable peut le modifier."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"Les lignes Mois et Jours des conditions de paiement doivent être positives."
 
 #. module: account
 #. odoo-python
@@ -17140,6 +17133,13 @@ msgid ""
 msgstr ""
 "Vous ne pouvez changer de compte pour empêcher la réconciliation dans le cas"
 " où des rapprochements partiels sont toujours en suspens. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Vous ne pouvez pas changer le type d'un document comptabilisé."
 
 #. module: account
 #. odoo-python

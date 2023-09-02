@@ -13205,8 +13205,8 @@ msgstr "Tài khoản tạm thời"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Chuyển đổi thành khoản hoàn tiền/giấy báo có"
+msgid "Switch into invoice/credit note"
+msgstr "Chuyển đổi thành hoá đơn/giấy báo có"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13842,13 +13842,6 @@ msgid ""
 msgstr ""
 "Mã bút toán không phù hợp với định dạng hiện tại. Chỉ Kế toán mới có thể "
 "thay đổi nó."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "Tháng và Ngày của dòng Điều khoản thanh toán phải là số dương."
 
 #. module: account
 #. odoo-python
@@ -16953,6 +16946,13 @@ msgid ""
 msgstr ""
 "Bạn không thể chuyển tài khoản để ngăn việc đối soát nếu vẫn có đối soát "
 "chưa thực hiện."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Bạn không thể chuyển đổi loại chứng từ đã vào sổ."
 
 #. module: account
 #. odoo-python
