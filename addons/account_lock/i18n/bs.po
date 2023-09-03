@@ -27,6 +27,8 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"Svaki novi datum zaključavanja za sve korisnike mora biti nakon (ili jednak)"
+" prethodnom."
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -39,6 +41,7 @@ msgstr "Kompanije"
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
 msgstr ""
+"Datum zaključavanja za računovodje je nepovratno i ne može se ukloniti."
 
 #. module: account_lock
 #. odoo-python
@@ -46,13 +49,15 @@ msgstr ""
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"Novi datum blokade poreza mora biti postavljen nakon prethodnog datuma "
+"blokade."
 
 #. module: account_lock
 #. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "Datum zaključavanja poreza je nepovratno i ne može se ukloniti."
 
 #. module: account_lock
 #. odoo-python
@@ -62,6 +67,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Ne možete blokirati period koji još nije završen. Zato datum blokiranja za "
+"sve korisnike mora biti prije (ili jednaka) zadnjem danu prethodnog mjeseca."
 
 #. module: account_lock
 #. odoo-python
@@ -71,6 +78,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Ne možete blokirati period koji još nije završen. Stoga, datum zaključavanja"
+" poreza mora biti prije (ili jednak) posljednjem danu prethodnog mjeseca."
 
 #. module: account_lock
 #. odoo-python
@@ -81,3 +90,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Ne možete postaviti strože restrikcije za računovođe od korisnika. Zbog "
+"toga, Datum zaključavanja za sve korisnike mora biti prije (ili jednak) "
+"Datumu zaključavanja računa/računa."

@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-19 08:03+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,7 +138,7 @@ msgstr "Pagos cancelados"
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "No se puede crear un pago en línea para el PdV sin un pago contable."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -148,6 +148,8 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"No se puede crear un pago para el PdV con un método de pago que no está en "
+"línea y un pago contable en línea."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -155,6 +157,7 @@ msgstr ""
 #, python-format
 msgid "Cannot edit a POS online payment essential data."
 msgstr ""
+"No se puede editar la información esencial del pago en línea para el PdV."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -163,6 +166,8 @@ msgstr ""
 msgid ""
 "Could not create an online payment method (company_id=%d, pos_config_id=%d)"
 msgstr ""
+"No se pudo crear un método de pago en línea (company_id=%d, "
+"pos_config_id=%d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider

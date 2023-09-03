@@ -51,14 +51,14 @@ msgstr "Um novo pedido foi criado."
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment (fixed amount)"
-msgstr "Aplicar um pagamento inicial (valor fixo)"
+msgstr "Aplicar um pagamento de entrada (valor fixo)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment (percentage)"
-msgstr "Aplicar um pagamento inicial (porcentagem)"
+msgstr "Aplicar um pagamento de entrada (porcentagem)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -117,7 +117,7 @@ msgstr "Entregue de"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr "Deseja carregar os SN/Lotes vinculados ao pedido de vendas?"
+msgstr "Deseja carregar os NS/lotes vinculados ao pedido de venda?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -125,12 +125,12 @@ msgstr "Deseja carregar os SN/Lotes vinculados ao pedido de vendas?"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Down Payment"
-msgstr "Entrada"
+msgstr "Pagamento de entrada"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Antecipação (PDV)"
+msgstr "Pagamento de entrada (PDV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
@@ -142,7 +142,7 @@ msgstr "Informações do pagamento de entrada"
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Down Payment Product"
-msgstr "Baixar pagamento do produto"
+msgstr "Produto de pagamento de entrada"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -179,8 +179,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
-"Parece que você não configurou um produto de antecipação em seu ponto de venda.\n"
-"                         Você pode ir para a configuração do seu ponto de venda para escolher um."
+"Parece que você não configurou um produto de pagamento de entrada em seu ponto de venda.\n"
+"                         Acesse a configuração do seu ponto de venda para escolher um."
 
 #. module: pos_sale
 #. odoo-python
@@ -192,21 +192,21 @@ msgstr "Pedidos de PDV vinculados"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr "Pedido de venda vinculada"
+msgstr "Pedido de venda vinculado"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
-msgstr "Pedidos de venda vinculada"
+msgstr "Pedidos de venda vinculados"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Locked"
-msgstr "Trancado"
+msgstr "Travado"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -341,7 +341,7 @@ msgstr "Pedido relacionado"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr "Carregamento de SN/Lotes"
+msgstr "Carregamento de NS/lotes"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -349,12 +349,12 @@ msgstr "Carregamento de SN/Lotes"
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
-msgstr "PED"
+msgstr "PV"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
 msgid "Sale Order Count"
-msgstr "Contagem do pedido de venda"
+msgstr "Contagem de pedidos de venda"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -377,7 +377,7 @@ msgstr "Pedido de venda"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linha do pedido de vendas"
+msgstr "Linha do pedido de venda"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -440,7 +440,7 @@ msgstr "Definir pedido de venda"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Settle the order"
-msgstr "Resolva o pedido"
+msgstr "Pagar o pedido"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -464,7 +464,7 @@ msgstr "Linha de origem de pedido de venda"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "State"
-msgstr "Estado"
+msgstr "Situação"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -488,7 +488,7 @@ msgstr "A taxa da moeda para a moeda da taxa aplicável na data do pedido"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
-msgstr "Houve um problema ao carregar o %s cliente."
+msgstr "Houve um problema ao carregar o cliente %s."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -502,13 +502,14 @@ msgstr ""
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied when down payment is made"
-msgstr "Este produto será aplicado quando o pagamento for feito"
+msgstr "Este produto será aplicado quando o pagamento de entrada for feito"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr "Este produto será utilizado como entrada em um pedido de venda."
+msgstr ""
+"Este produto será utilizado como pagamento de entrada em um pedido de venda."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -530,7 +531,7 @@ msgid ""
 "                                from Sale"
 msgstr ""
 "Transferido<br/> \n"
-"                                 para venda"
+"                                 da venda"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -551,7 +552,7 @@ msgstr "Valor não pago"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "What do you want to do?"
-msgstr "O que você quer fazer?"
+msgstr "O que você deseja fazer?"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -569,5 +570,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
-"Você tentou cobrar um adiantamento de %s , mas só restam %s a serem pagos, "
-"%s serão aplicados à linha do pedido de compra."
+"Você tentou cobrar um pagamento de entrada de %s, mas só restam %s a serem "
+"pagos, %s serão aplicados à linha do pedido de compra."

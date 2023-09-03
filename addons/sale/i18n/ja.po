@@ -618,7 +618,7 @@ msgstr ""
 "        <br><br>\n"
 "        お客様の\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            見積送状： <t t-out=\"doc_name or ''\">見積書</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>用\n"
+"            見積送状： <t t-out=\"doc_name or ''\">見積書</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                （参照番号 <t t-out=\"object.origin or ''\"></t> ）\n"
 "            </t>\n"
@@ -829,7 +829,7 @@ msgstr "<span class=\"o_stat_text\">販売</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr "<span>次の組織を代表:</span>"
+msgstr "<span>以下の代理で受理済:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -847,7 +847,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
-msgstr "<span>この提案へ支払うことにより、私は以下の条件に同意します。</span>"
+msgstr "<span>本提案を支払うことにより、私は以下の条件に同意します: </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2010,7 +2010,7 @@ msgstr "前受金製品"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "前受金: %(date)s (下書き)"
 
 #. module: sale
 #. odoo-python
@@ -2026,7 +2026,7 @@ msgstr "前受金"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment"
-msgstr "頭金"
+msgstr "前受金"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed

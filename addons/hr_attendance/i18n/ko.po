@@ -262,7 +262,7 @@ msgstr "바코드 / RFID 및 수동 선택"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
 msgid "Barcode Source"
-msgstr "바코드 소스"
+msgstr "바코드 인식"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_base
@@ -356,7 +356,7 @@ msgstr "퇴근함"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Choose how long the greeting message will be displayed."
-msgstr "인사말 메시지가 표시되는 기간을 선택합니다."
+msgstr "인사말 메시지가 표시되는 시간을 선택합니다."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_company
@@ -379,7 +379,7 @@ msgstr "회사 로고"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Compare attendance with working hours set on employee."
-msgstr "직원에게 설정된 근무 시간과 출석을 비교합니다."
+msgstr "직원에게 설정된 근무 시간과 실제 출퇴근 시간을 비교합니다."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -434,7 +434,7 @@ msgstr "일"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Define the camera used for the barcode scan."
-msgstr "바코드 스캔에 사용될 카메라를 정의합니다."
+msgstr "바코드 스캔에 사용될 카메라를 설정합니다."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -495,7 +495,7 @@ msgstr "임직원"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 msgid "Employee PIN"
-msgstr "사원번호"
+msgstr "사원 번호"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -511,7 +511,7 @@ msgstr "임직원 관리"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr "사원번호 사용 활성화"
+msgstr "사원 번호 사용 활성화"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -561,7 +561,7 @@ msgstr "다시 오셔서 기뻐요, 오랜만이에요!"
 #: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
 #, python-format
 msgid "Good afternoon"
-msgstr "좋은 오후예요."
+msgstr "좋은 하루입니다."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -601,7 +601,7 @@ msgstr "인사 근태 검색"
 #: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
 #, python-format
 msgid "Have a good afternoon"
-msgstr "좋은 오후 되세요."
+msgstr "좋은 하루 되세요."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -788,7 +788,7 @@ msgstr "스캐너"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "직원 상세 양식에서 사원번호 선택(인사 설정 탭에서)."
+msgstr "직원 서식에서 사원 번호를 설정합니다. (인사 관리 설정 탭에서 확인 가능)"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -831,7 +831,7 @@ msgstr "사용자는 인사 담당자 출석 메뉴에 접근할 수 있으므�
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
-msgstr "회사 화면에서 수동으로 출근하거나 퇴근하려면 사용자가 사원번호를 입력해야 합니다."
+msgstr "수동으로 출근이나 퇴근을 기록하려면 사용자가 사원 번호를 입력해야 합니다."
 
 #. module: hr_attendance
 #. odoo-python
@@ -875,7 +875,7 @@ msgstr "총 초과 근무"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "PIN 코드(직원 프로필에 정의됨)를 사용하여 출근을 확인합니다."
+msgstr "사원 번호(직원 프로필에 정의됨)를 사용하여 출퇴근을 확인합니다."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -893,7 +893,7 @@ msgstr "사용자: 키오스크 모드 전용"
 #: code:addons/hr_attendance/static/src/client_action/my_attendances/my_attendances.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr "퇴근하실래요?"
+msgstr "퇴근하시겠습니까?"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -937,7 +937,7 @@ msgstr "지난 달 업무 시간"
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Wrong PIN"
-msgstr "사원번호가 잘못되었습니다."
+msgstr "사원 번호가 잘못되었습니다."
 
 #. module: hr_attendance
 #. odoo-python

@@ -108,7 +108,7 @@ msgstr "<strong>직원 : </strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr "<strong>결제자 :</strong>"
+msgstr "<strong>지출자 :</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -191,7 +191,7 @@ msgstr "전체 승인하기"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "모든 지출 결의서"
+msgstr "모든 지출결의서"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
@@ -239,7 +239,7 @@ msgstr "동일한 카테고리, 금액 및 날짜의 비용이 이미 존재합�
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "An expense report must contain only lines from the same company."
-msgstr "비용 보고서에는 동일한 회사의 내역만 포함되어야 합니다."
+msgstr "지출결의서에는 동일한 회사의 내역만 포함되어야 합니다."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -460,13 +460,13 @@ msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다.
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
 msgid "Create Report"
-msgstr "지출 결의서로 만들기"
+msgstr "지출결의서 생성"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "새 지출 결의서 만들기"
+msgstr "새 지출결의서 생성"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -478,7 +478,7 @@ msgstr "하나 이상의 경비를 청구하기 위한 경비 보고서를 작�
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr "수신 메일에서 비용 만들기"
+msgstr "수신된 이메일에서 경비를 생성합니다."
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -554,12 +554,12 @@ msgstr "기본 경비 분개장"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr "직원이 지불한 비용에 대한 기본 분개장."
+msgstr "직원이 지불한 비용에 대한 기본 분개장입니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default expense categories for uploaded expenses"
-msgstr "업로드된 비용의 기본 경비 카테고리"
+msgstr "업로드된 비용의 기본 경비 카테고리입니다."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -577,12 +577,12 @@ msgstr "설명"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Did you try the mobile app?"
-msgstr "모바일 앱을 사용해 보셨나요?"
+msgstr "모바일 앱으로 업로드하기가 가능합니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
-msgstr "OCR 및 인공 지능을 활용하여 영수증을 디지털로 변환합니다"
+msgstr "OCR 및 인공 지능을 활용하여 영수증을 디지털로 변환합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
@@ -630,7 +630,7 @@ msgstr "미결"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Drag and drop files to create expenses"
-msgstr "파일을 끌어다 놓아 경비 생성"
+msgstr "영수증 파일을 드래그 하여 불러오기"
 
 #. module: hr_expense
 #. odoo-python
@@ -653,7 +653,7 @@ msgstr "임직원"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (to reimburse)"
-msgstr "직원 (환불 목적)"
+msgstr "직원 (청구 가능)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -729,7 +729,7 @@ msgstr "경비 카테고리"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense Date"
-msgstr "비용 지출일"
+msgstr "경비 지출일"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -767,12 +767,12 @@ msgstr "경비 반려 사유 마법사"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr "지출 결의서"
+msgstr "지출결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "지출 결의서 요약"
+msgstr "지출결의서 요약"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -780,17 +780,17 @@ msgstr "지출 결의서 요약"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "지출 결의서"
+msgstr "지출결의서"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "지출 결의서 분석"
+msgstr "지출결의서 분석"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "승인할 지출 결의서"
+msgstr "승인할 지출결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -839,17 +839,17 @@ msgstr "경비 반려 사유"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "지출 결의서 승인 완료"
+msgstr "지출결의서 승인 완료"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "지출 결의서 결제 완료"
+msgstr "지출결의서 결제 완료"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "지출 결의서 반려됨"
+msgstr "지출결의서 반려됨"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
@@ -860,7 +860,7 @@ msgstr "경비 보고서를 초안으로 재설정"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
-msgstr "경비 보고서는 특정 이벤트 기간 동안 발생한 모든 비용을 재구성합니다."
+msgstr "행사경비 보고서는 특정 행사 기간 동안 발생한 모든 비용을 분류합니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -882,7 +882,7 @@ msgstr "비용 분할"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Expenses"
-msgstr "비용"
+msgstr "경비"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
@@ -898,12 +898,12 @@ msgstr "경비 분석"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "지출 결의서"
+msgstr "지출결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "승인할 지출 결의서"
+msgstr "승인할 지출결의서"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -917,7 +917,7 @@ msgstr "일별 경비 현황"
 msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
-msgstr "비용 보고서가 제출되고 결재권자의 승인을 기다리고 있는 비용입니다."
+msgstr "지출결의서가 제출되고 결재권자의 승인을 기다리고 있는 비용입니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1287,7 +1287,7 @@ msgstr "내 경비"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "My Reports"
-msgstr "내 지출 결의서"
+msgstr "내 지출결의서"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1305,7 +1305,7 @@ msgstr "이름"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr "신규 비용 보고서"
+msgstr "신규 지출결의서"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1352,12 +1352,12 @@ msgstr "비용 카테고리를 찾을 수 없습니다. 새로 작성해주세�
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr "비용 보고서를 찾을 수 없습니다. 새로 작성해주세요!"
+msgstr "지출결의서를 찾을 수 없습니다. 새로 작성해주세요!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr "비용 보고서를 찾을 수 없습니다. 새로 작성해주세요!"
+msgstr "지출결의서를 찾을 수 없습니다. 새로 작성해주세요!"
 
 #. module: hr_expense
 #. odoo-python
@@ -1455,12 +1455,12 @@ msgstr "또는"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr "또는 영수증을 다음 주소로 보내세요. "
+msgstr "다음 이메일 주소로 영수증을 제출할 수도 있습니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "Original Amount"
-msgstr "원본 금액"
+msgstr "원금"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_no_cost_product_template
@@ -1477,7 +1477,7 @@ msgstr "지불됨"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
-msgstr "결제자"
+msgstr "지출자"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1504,7 +1504,7 @@ msgstr "결제가 생성됨: %s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr "회사가 지불한 비용에 대해 허용되는 결제 수단."
+msgstr "회사에서 지불하는 비용에 대해 허용되는 결제 수단입니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
@@ -1648,7 +1648,7 @@ msgstr "반려"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr "지출 결의서 반려"
+msgstr "지출결의서 반려"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
@@ -1662,7 +1662,7 @@ msgstr "반려됨"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr "반려된 지출 결의서"
+msgstr "반려된 지출결의서"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1676,12 +1676,12 @@ msgstr "결제 등록"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
 msgid "Reimburse Expenses in Payslip"
-msgstr "급여 명세서 상의 상환 비용"
+msgstr "급여 명세서에서 비용을 상환합니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr "급여 명세서 상의 상환 비용"
+msgstr "급여 명세서에서 비용을 상환합니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1822,7 +1822,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
-msgstr "영수증을 사진으로 찍어 Odoo<br>가 자동으로 경비를 생성하도록 해보세요."
+msgstr "영수증을 사진으로 찍어 올리면 Odoo가<br>자동으로 경비를 생성합니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -1841,14 +1841,14 @@ msgstr "품목 비용으로 선택할 수 있는지 여부를 지정합니다."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr "분할 비용"
+msgstr "비용 분할"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
 #, python-format
 msgid "Split Expenses"
-msgstr "분할 비용"
+msgstr "비용 분할"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
@@ -1923,7 +1923,7 @@ msgstr "세액"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__amount_tax
 msgid "Tax amount in Currency"
-msgstr "통화 환산 세액"
+msgstr "통화 환산 세금"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
@@ -1933,7 +1933,7 @@ msgstr "회사 통화 기준 세액"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr "통화 환산 세액"
+msgstr "통화 환산 세금"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1942,7 +1942,7 @@ msgstr "통화 환산 세액"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Taxes"
-msgstr "세무"
+msgstr "세금"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
@@ -1977,8 +1977,8 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"승인 처리 된 다음 비용은 이 보고서의 일부 비용과 직원, 금액 및 카테고리가 유사합니다. 해당 비용 보고서에 중복되는 항목이 없는지 "
-"다시 한번 확인해주세요."
+"승인 처리 된 다음 비용은 이 보고서의 일부 비용과 직원, 금액 및 카테고리가 유사합니다. 해당 지출결의서에 중복되는 항목이 없는지 다시"
+" 한번 확인해주세요."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2036,7 +2036,7 @@ msgstr "보고하기"
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__reported
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
 msgid "To Submit"
-msgstr "제출하기"
+msgstr "기안 작성"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2056,7 +2056,7 @@ msgstr "총계"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
-msgstr "합계 금액"
+msgstr "총 금액"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
@@ -2077,7 +2077,7 @@ msgstr "통화 환산 총 미과세 금액"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr "분할할 원래비용의 총액"
+msgstr "분할 대상인 원 지출의 총 금액"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_original
@@ -2159,7 +2159,7 @@ msgstr "비용 보기"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr "지출 결의서 보기"
+msgstr "지출결의서 보기"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2209,14 +2209,14 @@ msgstr "마법사"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
-msgstr "귀하는 이 비용 보고서의 참조를 편집할 권한이 없습니다."
+msgstr "귀하는 이 지출결의서의 참조를 편집할 권한이 없습니다."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr "이 비용 보고서를 편집할 권한이 없습니다."
+msgstr "이 지출결의서를 편집할 권한이 없습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -2260,14 +2260,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or approved expense."
-msgstr "회계 처리가 끝났거나 승인된 지출 결의서는 삭제할 수 없습니다."
+msgstr "회계 처리가 끝났거나 승인된 지출결의서는 삭제할 수 없습니다."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr "회계 처리가 끝났거나 결제된 지출 결의서는 삭제할 수 없습니다."
+msgstr "회계 처리가 끝났거나 결제된 지출결의서는 삭제할 수 없습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -2292,7 +2292,7 @@ msgstr "경비 보고서에 연결된 일부 항목만 삭제할 수는 없습�
 msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
-msgstr "비용 보고서에 연결된 일부 결제만 삭제할 수는 없습니다. 모든 결제를 동시에 삭제해 주십시오."
+msgstr "지출결의서에 연결된 일부 결제만 삭제할 수는 없습니다. 모든 결제를 동시에 삭제해 주십시오."
 
 #. module: hr_expense
 #. odoo-python
@@ -2301,7 +2301,7 @@ msgstr "비용 보고서에 연결된 일부 결제만 삭제할 수는 없습�
 msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
-msgstr "비용 보고서에 연결되어 있는 결제는 수정할 수 없습니다."
+msgstr "지출결의서에 연결되어 있는 결제는 수정할 수 없습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -2319,14 +2319,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
-msgstr "같은 지출 결의서 내에 다른 직원에 대한 비용을 보고할 순 없습니다."
+msgstr "같은 지출결의서 내에 다른 직원에 대한 비용을 보고할 순 없습니다."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr "금액이 없는 경비는 보고서로 작성할 수 없습니다."
+msgstr "금액이 없는 경비 지출은 보고서로 작성할 수 없습니다."
 
 #. module: hr_expense
 #. odoo-python
@@ -2400,7 +2400,7 @@ msgstr "환급 대상"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr "제출하기"
+msgstr "기안 작성"
 
 #. module: hr_expense
 #. odoo-python

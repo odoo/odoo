@@ -561,7 +561,7 @@ msgstr "다음 %s 추가"
 msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
-msgstr "할당되지 않은 영업제안을 팀에 배정하기 위해 가져오는 경우 사용하는 추가 필터 도메인입니다."
+msgstr "미배정 영업제안을 가져올 때 팀에 배정하기 위해 사용하는 추가 필터 도메인입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -602,7 +602,7 @@ msgstr "별칭 도메인"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "최근 받은메일에서 확인한 별칭 상태입니다."
+msgstr "별칭 상태는 마지막으로 수신한 메시지를 기준으로 평가합니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -645,7 +645,7 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"영업팀이 없으므로 <b>첫번째 팀이 기본으로</b> 파이프라인에 표시되도록 합니다. \n"
+"영업팀 소속이 아니므로 <b>기본값으로 첫 번째 팀</b>의 파이프라인에 표시됩니다. \n"
 "                                  CRM을 사용하려면, <a name=\"%d\" type=\"action\" tabindex=\"-1\">팀에 소속</a>되어 있어야 합니다."
 
 #. module: crm
@@ -656,7 +656,7 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
-"영업팀이 없으므로 <b>첫번째 팀이 기본으로</b> 파이프라인에 표시되도록 합니다. \n"
+"영업팀 소속이 아니므로 <b>기본값으로 첫 번째 팀</b>의 파이프라인에 표시됩니다. \n"
 "                                  CRM을 사용하려면, 팀에 소속되어 있어야 합니다."
 
 #. module: crm
@@ -2499,7 +2499,7 @@ msgstr "업무 유형 유형"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Next Run"
-msgstr "다음 실행"
+msgstr "다음 실행일"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__green
@@ -3273,7 +3273,7 @@ msgstr "영업 기회 검색"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
-msgstr "영업제안/영업 기회 선택"
+msgstr "영업제안/영업기회 선택"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3466,7 +3466,7 @@ msgstr "도로명 주소"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Street 2..."
-msgstr "상세 주소..."
+msgstr "상세 주소"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3529,7 +3529,7 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
-"아래 연락처는 연락한 지 30일이 지나지 않았기 때문에\n"
+"아래의 연락처는 연락한 지 30일이 지나지 않았기 때문에\n"
 "                          이 영업제안의 팔로워로 추가되었습니다."
 
 #. module: crm
@@ -3537,7 +3537,7 @@ msgstr ""
 msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
-msgstr "이 채널과 연결된 이메일 주소입니다. 새로운 이메일을 수신하면 채널에 배정된 새 영업제안이 자동으로 작성됩니다."
+msgstr "이 채널과 연결되어 있는 이메일 주소입니다. 새로 이메일을 받으면 채널에 배정된 신규 영업제안을 자동으로 생성합니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -3546,8 +3546,8 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 레코드로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. "
-"(예. 프로젝트 작업)"
+"이 별칭에 해당하는 모델 (Odoo 문서 종류)입니다. 수신되는 메일 중 기존 레코드에 답신하는 것이 아닌 경우에는 모두 이 모델에서 "
+"새로운 레코드로 생성됩니다 (예: 프로젝트 작업)."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_name
@@ -3562,12 +3562,12 @@ msgstr ""
 msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
-msgstr "영업제안을 영업 기회로 전환하면서 만들어지는 미래의 협력사 이름"
+msgstr "영업제안을 영업기회로 전환할 때 생성할 미래의 협력사 이름"
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
-msgstr "개월은 음의 값이 될수 없습니다."
+msgstr "월을 나타내는 숫자는 음수가 될 수 없습니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
@@ -3577,25 +3577,25 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"이 별칭으로 이메일을 받을 때 생성되는 레코드의 소유자. 이 필드를 시스템에 설정하지 않으면 보낸 사람 주소를 기준으로 올바른 소유자를 "
-"찾기 위해 시도하거나 주소에서 해당하는 사용자를 찾지 못한 경우 관리자 계정을 사용합니다."
+"이 별칭으로 이메일을 받게 되면 만들어지는 레코드의 소유자입니다. 시스템에 필드가 설정되어 있지 않는 경우 발신자 이메일 주소를 기준으로"
+" 알맞은 소유자가 지정되며 주소에서 사용자를 찾지 못한 경우에는 관리자 계정을 사용합니다."
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr "거래 마감 확률은 0 %에서 100 % 사이여야 합니다!"
+msgstr "마감 가능성은 0%에서 100% 사이여야 합니다!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr "성공률은 다음을 기준으로 계산됩니다: "
+msgstr "성공률 계산 기준은 다음과 같습니다:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid ""
 "The success rate is computed based on the stage, but you can add more fields"
 " in the statistical analysis."
-msgstr "성공률은 단계를 기반으로 계산되지만 통계 분석에서 더 많은 필드를 추가 할 수 있습니다."
+msgstr "성공률은 단계를 기준으로 계산하지만 통계 분석 시 필드를 추가 할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
@@ -3606,7 +3606,7 @@ msgstr "분석 자료에서 영업제안 생성 건수를 월별로 확인해보
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr "이 막대를 사용하면 예약된 활동을 기준으로 영업 기회를 필터링할 수 있습니다."
+msgstr "이 표를 사용하면 예약된 활동을 기준으로 영업기회를 필터할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3618,98 +3618,97 @@ msgstr "규칙에 따라 영업 담당자에게 영업제안을 자동으로 배
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
-msgstr "영업제안을 마감하기 위한 통계적 확률을 계산하는 데 사용할 수 있습니다."
+msgstr "영업제안이 마감되는 수치적인 확률 계산에 사용할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "이 메일은 대량메일에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하세요."
+msgstr "대량 메일 블랙리스트에 올라 있는 이메일입니다. 블랙리스트에서 해제하려면 클릭하세요."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
 msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
-msgstr "이 필드는 기본 이메일 필드에 이메일 주소 이상을 포함할 수 있으므로 이메일 주소를 검색하는 데 사용됩니다."
+msgstr "기본 이메일 필드에는 반드시 이메일 주소만 포함되어야 하므로 이 필드를 사용하여 이메일 주소를 검색할 수 있습니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
 msgid "This field is used to set/get locales for user"
-msgstr "이 필드는 사용자에 대한 로컬 설정을 설정하거나 가져 오는 데 사용됩니다."
+msgstr "사용자에 대한 로케일을 설정하거나 가져오는 데 사용하는 필드입니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
-msgstr ""
-"이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시 : Fall_Drive, Christmas_Special"
+msgstr "다양한 캠페인을 진행할 때 쉽게 추적할 수 있도록 이름을 붙입니다 (예: 가을_드라이브, 크리스마스_스페셜)."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "이것은 배송 방법입니다. 예시 : 엽서, 이메일 또는 배너광고"
+msgstr "커뮤니케이션 방식입니다 (예: 우편엽서, 이메일 또는 배너 광고)."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "이것은 링크의 소스입니다. 예시 : 검색엔진, 다른 도메인 또는 이메일 목록의 이름"
+msgstr "링크 경로입니다 (예: 검색 엔진, 외부 도메인 또는 이메일 목록명)."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr "이 전화번호는 SMS 마케팅에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하려면 클릭하세요."
+msgstr "SMS 마케팅에서 블랙리스트에 올라 있는 전화번호입니다. 블랙리스트에서 해제하려면 클릭하세요."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "이 단계에 표시할 레코드가 없으면 칸반 화면은 접혀 있습니다."
+msgstr "표시할 레코드가 없을 경우 이 단계는 칸반 화면에서 접혀 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
-msgstr "이렇게 하면 모든 구성원에게 영업제안이 배정됩니다. 진행하시겠습니까?"
+msgstr "영업제안을 모두에게 배정합니다. 진행하시겠습니까?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Tip: Convert incoming emails into opportunities"
-msgstr "도움말: 받은 메일을 영업기회로 전환시킵니다"
+msgstr "도움말: 받은 메일을 영업기회로 전환합니다."
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr "도움말: Odoo에 영업제안 발굴 기능이 있다는 사실을 알고 있으셨나요?"
+msgstr "도움말: Odoo에서 영업제안 발굴 기능이 기본으로 제공된다는 사실을 알고 있으셨나요?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
 msgid "Tip: Do not waste time recording customers' data"
-msgstr "도움말: 고객 정보 입력에 시간을 낭비하지 마십시오"
+msgstr "도움말: 고객 정보를 입력하느라 시간을 낭비할 필요가 없습니다."
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
-msgstr "도움말: 파이프라인 관리"
+msgstr "도움말: 파이프라인을 관리해 보세요."
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_2
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
 msgid "Tip: Opportunity win rate is predicted with AI"
-msgstr "도움말: AI를 활용한 영업기회 성공률 예측"
+msgstr "도움말: AI를 영업기회 성공률 예측에 활용할 수 있습니다."
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
 msgid "Tip: Turn a selection of opportunities into a map"
-msgstr "도움말: 다양한 영업기회를 지도 화면으로 변환"
+msgstr "도움말: 선정된 영업기회를 지도 화면으로 변환합니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
@@ -3724,7 +3723,7 @@ msgstr "제목"
 msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
-msgstr "데이터 손실을 막기 위해 영업제안이나 영업기회는 %(max_length)s 그룹으로만 통합할 수 있습니다."
+msgstr "데이터 손실 방지를 위해 영업제안이나 영업기회는 %(max_length)s 그룹으로만 통합할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3753,12 +3752,12 @@ msgstr "향후 12개월"
 msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
-msgstr "월별 영업제안 할당 숫자가 최대 할당 한도보다 크면 True 이고, 그렇지 않은 경우에는 False 입니다."
+msgstr "월별 영업제안 배정 숫자가 최대 배정 한도보다 크면 예를 선택하고, 그렇지 않은 경우에는 아니오를 선택합니다."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr "이메일 보내기 시도"
+msgstr "이메일을 전송해 보세요."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -3770,17 +3769,17 @@ msgstr "유형"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "유형은 영업제안과 영업 기회를 분리하는 데 사용됩니다"
+msgstr "유형은 영업제안과 영업기회를 구분하는 데 사용합니다"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "레코드에 있는 예외 활동의 유형입니다."
+msgstr "레코드에 있는 예외적인 활동의 유형입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Type:"
-msgstr "유형 :"
+msgstr "유형:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign
@@ -3790,13 +3789,13 @@ msgstr "UTM 캠페인"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr "UX: 영업제안 대상 회사 또는 회사가 없는 경우 전체 회사"
+msgstr "UX: 영업제안 대상 회사로 제한되거나 회사가 없는 경우 전체 회사입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
-msgstr "미지정"
+msgstr "미배정"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -3821,18 +3820,18 @@ msgstr "예정된 마감"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Update"
-msgstr "갱신"
+msgstr "업데이트"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr "성공률 업데이트"
+msgstr "가능성 업데이트"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
 msgid "Update the probabilities"
-msgstr "성공률 업데이트"
+msgstr "가능성 업데이트"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3844,12 +3843,12 @@ msgstr "영업제안 사용"
 msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
-msgstr "보고서에 영업기회 실패에 대한 실패 사유 기재 (예: 경쟁사의 가격 덤핑)"
+msgstr "보고서에 영업기회 실패와 관련된 실패 사유를 기재합니다 (예: 경쟁사의 가격 덤핑)."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
 msgid "Use existing partner or create"
-msgstr "기존 협력사를 사용하거나 작성"
+msgstr "기존 협력사를 선택하거나 새로 생성합니다."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -3859,10 +3858,10 @@ msgid ""
 "                    a contact form filled in your website, or a file of unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"영업 기회 또는 고객을 만들기 전에 자격 단계가 필요한 경우 \n"
-"                         영업제안을 사용 하십시오. \n"
-"                         귀하가 받은 명함, 귀하의 웹 사이트에 기입된 연락처 양식, 또는 \n"
-"                         귀하가 가져온 부적격의 잠재 고객, 등."
+"영업기회나 고객으로 만들기 전에 검증 단계를 거쳐야 할 경우\n"
+"                         영업제안 단계를 사용하세요. 받아오신 명함이나\n"
+"                         웹사이트에 제출한 연락처 양식 또는 가져오기를 통한 부적격 고객\n"
+"                         파일 등이 될 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3873,14 +3872,14 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"영업 기회 또는 고객을 만들기 전에 자격 증명 단계가 필요한 경우 영업제안을 사용합니다. 받은 명함, 웹 사이트에 기재된 연락처 양식 "
-"또는 가져온 부적격 잠재 고객의 파일 등이 될 수 있습니다. 자격을 갖추면 잠재 고객을 비즈니스 기회 및 주소록에서 신규 고객으로 전환할"
-" 수 있습니다."
+"영업기회나 고객으로 만들기 전에 검증 단계가 필요한 경우 영업제안 단계를 사용하세요. 받아오신 명함이나, 웹사이트에 제출한 연락처 양식 "
+"또는 가져오기를 통한 부적격 고객 파일 등이 될 수 있습니다. 검증을 마치면 영업제안을 비즈니스 영업기회 및 신규 고객으로 전환하여 "
+"주소록에 등록할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr "왼쪽 상단의 <i>만들기</i> 버튼을 누르거나, 다음 주소로 이메일을 보내십시오."
+msgstr "왼쪽 상단의 <i>만들기</i> 버튼을 누르거나, 다음 주소로 이메일을 보내주세요."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4095,7 +4094,7 @@ msgstr "우편번호"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"0123456789\""
-msgstr "예; \"0123456789\""
+msgstr "예: 0123456789"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4122,12 +4121,12 @@ msgstr "예 : 제품 가격"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "e.g. Too expensive"
-msgstr "예. 너무 비싸다"
+msgstr "예: 가격이 너무 높음"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. https://www.odoo.com"
-msgstr "예 : https://www.odoo.com"
+msgstr "예: https://www.odoo.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form

@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1798,7 +1798,7 @@ msgstr "쉼표로 구분한 참조 대상자 주소"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr "쉼표로 구분된 수신자 id"
+msgstr "쉼표로 수신인의 id 구분"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
@@ -1810,7 +1810,7 @@ msgstr "쉼표로 구분된 수신 협력사 ID (사전 표시 문자를 여기�
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr "쉼표로 구분된 수신자 주소"
+msgstr "쉼표로 수신인의 이메일 주소 구분"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
@@ -2150,7 +2150,7 @@ msgstr "작성일자"
 #: code:addons/mail/static/src/core/web/thread_service_patch.js:0
 #, python-format
 msgid "Creating a new record..."
-msgstr "새로운 자료를 생성합니다"
+msgstr "새로운 레코드를 생성했습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2328,7 +2328,7 @@ msgstr "기본값"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
-msgstr "기본 수신자"
+msgstr "기본 수신인"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -2337,7 +2337,7 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"레코드의 기본 수신자 :\n"
+"레코드의 기본 수신인 :\n"
 "- 협력사 (협력사 ID 또는 partner_id 필드 사용) 또는\n"
 "- 이메일 (email_from 또는 email field 사용)"
 
@@ -2855,7 +2855,7 @@ msgstr "보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 �
 msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
-msgstr "대량 메일에 대한 답신이 리디렉트될 이메일 주소"
+msgstr "대량 메일에 대한 회신이 전송될 이메일 주소"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -2863,8 +2863,7 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
-msgstr ""
-"대량 메일에 대한 답신이 리디렉트될 이메일 주소입니다. 답신 메일이 원본 대화 스레드에 기록되어 있지 않은 경우에만 사용됩니다."
+msgstr "대량 메일에 대한 회신이 전송될 이메일 주소입니다. 회신 메일이 원본 대화 스레드에 기록되어 있지 않은 경우에만 사용됩니다."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -3349,7 +3348,7 @@ msgstr "서식있는 이메일"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "시작 시간"
+msgstr "발신인"
 
 #. module: mail
 #. odoo-javascript
@@ -4863,7 +4862,7 @@ msgstr "읽은 상태로 표시"
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #, python-format
 msgid "Mark Done"
-msgstr "완료 표시"
+msgstr "완료"
 
 #. module: mail
 #. odoo-javascript
@@ -4875,7 +4874,7 @@ msgstr "모두 읽음 표시"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Mark as Done"
-msgstr "완료로 표시"
+msgstr "완료"
 
 #. module: mail
 #. odoo-javascript
@@ -4906,7 +4905,7 @@ msgstr "읽지 않은 상태로 표시"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr "완료로 표시"
+msgstr "완료"
 
 #. module: mail
 #. odoo-javascript
@@ -5929,7 +5928,7 @@ msgstr "선택 사항인 mail_mail ID입니다. 주로 검색을 최적화하기
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr "발신 메일에 대한 선호 서버 선택. 설정되어 있지 않은 경우 가장 높은 우선 순위의 서버가 사용됩니다."
+msgstr "발신 메일에 대해 선호하는 서버를 설정합니다. 설정되어 있지 않은 경우 가장 높은 우선 순위의 서버가 사용됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__lang
@@ -5942,8 +5941,8 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경우, 영어 버전을 사용합니다. 적절한 언어를 "
-"선택할 수 있도록 다음과 같은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
+"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경우, 영어가 기본 언어로 사용됩니다. 적절한 "
+"언어를 선택할 수 있도록 다음과 같은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -5972,7 +5971,7 @@ msgstr "출고"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr "이메일 발신 서버"
+msgstr "발신 메일 서버"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
@@ -6004,7 +6003,7 @@ msgstr "기한이 지난"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr "작성자 이메일 재정의"
+msgstr "작성자 이메일"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_user_id
@@ -7839,9 +7838,7 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr ""
-"세금 식별용 번호. 여기에 해당하는 값은 국가별로 인정되는 형식을 기준으로 확인합니다. '/' 기호를 사용하여 협력업체가 과세 대상이 "
-"아닌 경우 표시할 수 있습니다."
+msgstr "납세자용 식별 번호로, 국가별 양식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우 '/'를 입력하세요."
 
 #. module: mail
 #. odoo-python
@@ -7934,7 +7931,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
 #: model:ir.model.fields,help:mail.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr "연락처 담당 내부 사용자를 담당합니다."
+msgstr "해당 연락처를 담당하는 내부 담당자입니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -8116,7 +8113,7 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"Odoo 데이터베이스 저장 공간 확보를 위하여, 이 옵션을 통해 설정에 있는 기술 메뉴에서 발신된 것을 포함하여 보낸 메일 기록 전체를 "
+"이 옵션은 Odoo 데이터베이스의 저장 공간을 확보하기 위해 설정에 있는 기술 메뉴에서 발신된 것을 포함하여 보낸 메일 기록 전체를 "
 "영구적으로 삭제합니다."
 
 #. module: mail

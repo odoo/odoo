@@ -133,7 +133,7 @@ msgstr "إلغاء الدفع "
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "لا يمكن إنشاء نقطة بيع أونلاين دون دفع المحاسبة. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -143,13 +143,15 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"لا يمكن إنشاء دفع في نقطة البيع باستخدام دفع غير أونلاين مع طريقة دفع محاسبة"
+" أونلاين. "
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot edit a POS online payment essential data."
-msgstr ""
+msgstr "لا يمكنك تحرير البيانات الأساسية للدفع أونلاين في نقطة البيع. "
 
 #. module: pos_online_payment
 #. odoo-python
@@ -157,7 +159,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Could not create an online payment method (company_id=%d, pos_config_id=%d)"
-msgstr ""
+msgstr "تعذر إنشاء طريقة دفع عبر الإنترنت (company_id=%d، pos_config_id=%d) "
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider

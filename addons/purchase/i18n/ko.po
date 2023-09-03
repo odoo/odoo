@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and '견적요청서 - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') 및 '견적요청서 - %s' % (object.name) 또는\n"
 "                '발주서 - %s' % (object.name))"
 
 #. module: purchase
@@ -48,7 +48,7 @@ msgstr "# 내역"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s 납부마감일 %(date)s"
+msgstr "%(amount)s 납부 마감일 %(date)s"
 
 #. module: purchase
 #. odoo-python
@@ -56,21 +56,21 @@ msgstr "%(amount)s 납부마감일 %(date)s"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
-msgstr "%(product)s %(original_receipt_date)s부터 %(new_receipt_date)s 까지"
+msgstr "%(product)s 시작일 %(original_receipt_date)s 종료일 %(new_receipt_date)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s confirmed the receipt will take place on %s."
-msgstr "%s 에서 입고 승인했으며  %s 예정입니다."
+msgstr "%s에서 입고 승인했으며 %s 예정입니다."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr "%s아래 품목에 대한 수정된 입고일:"
+msgstr "%s 다음 품목에 대한 입고 변경일:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -97,7 +97,7 @@ msgstr "3단계 매칭"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr "3가지 일치 : 구매, 영수증 및 청구서"
+msgstr "3단계 매칭: 매입, 입고 및 청구"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
@@ -136,7 +136,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        다음의 구매주문서에 대한 배송 일정 관련하여 연락드립니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        다음의 발주서에 대한 배송 일정 관련하여 연락드립니다: <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>.\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
@@ -147,7 +147,7 @@ msgstr ""
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">미확정</span>.\n"
 "        </t>\n"
-"        정시에 배송될지 확인해주실 수 있을까요?\n"
+"        정시 배송될지 여부를 확인해 주실 수 있을까요?\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
 "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
@@ -193,17 +193,17 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        다음의 구매주문서 첨부 파일을 확인 부탁드립니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        다음의 발주서 첨부 파일을 확인 부탁드립니다: <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>.\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            참조번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        금액 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        발행인 <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        발행인 <t t-out=\"object.company_id.name or ''\">YourCompany</t> \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            예상 입고 일자는 다음과 같습니다 <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
-"            해당 주문에 대한 입고 확인을 해주실 수 있을까요?\n"
+"            해당 주문에 대한 입고 확인을 해 주실 수 있을까요?\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
@@ -246,7 +246,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        다음의 견적요청서 첨부 파일을 확인 부탁드립니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        다음의 견적요청서 첨부 파일을 확인해 주시기 바랍니다. <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            참조 번호: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
@@ -796,8 +796,7 @@ msgstr "공급업체에 자동으로 알림메일을 보냅니다"
 msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
-msgstr ""
-"예상 입고일 기준으로 여기에 설정한 날짜 이전에 공급업체에 자동으로 확인 이메일을 전송하여 정확한 날짜를 확정하도록 요청합니다."
+msgstr "정확한 날짜를 확정하도록 예상 입고일 X일 전에 공급업체에 자동으로 이메일을 보냅니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -2832,7 +2831,7 @@ msgstr ""
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "현재 거래하는 협력사로부터 매입할 경우 기본 통화 대신 이 통화가 사용됩니다. "
+msgstr "거래 협력사로부터 매입할 경우 이 통화를 기본 통화 대신 사용합니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
