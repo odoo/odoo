@@ -63,16 +63,16 @@
 </t>
 
 <t t-name="mail.ActivityViewRow">
-    <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
-        <t t-set="record" t-value="getRecord(resId)"/>
-        <t t-if="record">
-            <ActivityRecord archInfo="props.archInfo" record="record" openRecord="props.openRecord" />
-            <t t-foreach="activeColumns" t-as="type" t-key="type[0]">
-                <t t-call="mail.ActivityViewCell"/>
-            </t>
-        </t>
-        <td/>
-    </tr>
+    <t t-set="record" t-value="getRecord(resId)"/>
+    <t t-if="record">
+        <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
+                <ActivityRecord archInfo="props.archInfo" record="record" openRecord="props.openRecord" />
+                <t t-foreach="activeColumns" t-as="type" t-key="type[0]">
+                    <t t-call="mail.ActivityViewCell"/>
+                </t>
+            <td/>
+        </tr>
+    </t>
 </t>
 
 <t t-name="mail.ActivityViewCell">

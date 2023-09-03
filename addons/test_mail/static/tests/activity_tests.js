@@ -214,14 +214,14 @@ QUnit.module("test_mail", {}, function () {
     });
 
     QUnit.test(
-        "activity view: there is no default limit of 80 in the relationalModel",
+        "activity view: a pager can be used when there are more than the limit of 100 activities to display",
         async function (assert) {
             const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
 
             const recordsToCreate = [];
             const activityToCreate = [];
 
-            for (let i = 0; i < 81; i++) {
+            for (let i = 0; i < 101; i++) {
                 activityToCreate.push({
                     display_name: "An activity " + i,
                     date_deadline: serializeDate(DateTime.now().plus({ days: 3 })),
@@ -231,28 +231,53 @@ QUnit.module("test_mail", {}, function () {
                 });
             }
             const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
-            for (let i = 0; i < 81; i++) {
-                // The default limit of the RelationalModel is 80, test if it is overwrited by creating more than 80 records
+            for (let i = 0; i < 101; i++) {
+                // The default limit of the RelationalModel is 80, test if it is overwrited to display up to 100 records
                 recordsToCreate.push({ name: i + "", activity_ids: [createdActivity[i]] });
             }
             pyEnv["mail.test.activity"].create(recordsToCreate);
 
             const { openView } = await start({
                 serverData,
+                mockRPC: function (route, args) {
+                    if (args.method === "get_activity_data") {
+                        assert.step(
+                            `get activities records starting with a ${args.kwargs.offset} offset`
+                        );
+                        assert.strictEqual(
+                            args.kwargs.limit,
+                            100,
+                            "a limit of 100 records is used when fetching activity data"
+                        );
+                    }
+                },
             });
             await openView({
                 res_model: "mail.test.activity",
                 views: [[false, "activity"]],
             });
 
-            const activityRecords = document.querySelectorAll(".o_activity_record");
-            // 81 test.activity records in tests
-            // + 2 in global of all tests in this file
-            // = 83 records
-            assert.strictEqual(
-                activityRecords.length,
-                83,
-                "The 83 records should have been loaded"
+            assert.verifySteps(
+                ["get activities records starting with a 0 offset"],
+                "'get_activity_data' has been called correctly"
+            );
+            assert.containsN(
+                document.body,
+                ".o_activity_record",
+                100,
+                "Only 100 records should have been displayed"
+            );
+
+            await click(document.querySelector(".o_pager_next"));
+            assert.verifySteps(
+                ["get activities records starting with a 100 offset"],
+                "'get_activity_data' has been called correctly"
+            );
+            assert.containsN(
+                document.body,
+                ".o_activity_record",
+                3,
+                "Only 3 records are now displayed"
             );
         }
     );
