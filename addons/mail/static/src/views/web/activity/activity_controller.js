@@ -10,6 +10,7 @@ import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { usePager } from "@web/search/pager_hook";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
@@ -39,6 +40,19 @@ export class ActivityController extends Component {
         this.action = useService("action");
         this.activity = useService("mail.activity");
         this.ui = useState(useService("ui"));
+        usePager(() => {
+            const { count, hasLimitedCount, limit, offset } = this.model.root;
+            return {
+                offset: offset,
+                limit: limit,
+                total: count,
+                onUpdate: async (params) => {
+                    await this.model.root.load(params);
+                    this.model.fetchActivityData(params);
+                },
+                updateTotal: hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
+            };
+        });
     }
 
     scheduleActivity() {
