@@ -66,6 +66,7 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
+# Chloe Wang, 2023
 # 
 msgid ""
 msgstr ""
@@ -73,7 +74,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13444,6 +13445,12 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "计算方法不能依赖于字段 \"id\""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr "计算分数并且自动分配线索"
@@ -15801,6 +15808,18 @@ msgstr "错误"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "违反约束时返回的错误信息。"
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
+"解析视图时出错：\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18774,6 +18793,12 @@ msgstr "指定的无效\"订单\"（%s）。有效的\"订单\"规范是有效�
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "无效的“分组”参数"
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr "默认值字段中的 JSON 格式无效。"
 
 #. module: base
 #: code:addons/models.py:0
@@ -31333,6 +31358,12 @@ msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "不能禁用你当前正在使用的用户。"
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr "您不能删除 %s 记录。"
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -31353,6 +31384,12 @@ msgstr "不能删除用户的默认语言。"
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "您不能把联系人和其父项合并。"
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr "不能重命名键值为%s的配置参数"
 
 #. module: base
 #: code:addons/models.py:0

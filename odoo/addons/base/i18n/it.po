@@ -22,10 +22,10 @@
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
-# Francesco Foresti <francesco.foresti@ooops404.com>, 2022
+# francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5950,6 +5950,9 @@ msgid ""
 "Send KPI Digests periodically\n"
 "=============================\n"
 msgstr ""
+"\n"
+"Invia periodicamente riepiloghi dei KPI\n"
+"=============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_bpost
@@ -6541,6 +6544,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modulo di base per la gestione del piano contabile in Belgio con Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Dopo aver installato il modulo, verrà lanciata la procedura guidata per la configurazione della contabilità.\n"
+"    *Abbiamo modelli che possono essere utili per creari piani dei conti.\n"
+"    *Durante la particolare procedura, ti verrà chiesto di comunicare il nome dell'azienda,\n"
+"      il modello di piano da seguire, il n. di cifre da generare, i codice per il tuo\n"
+"      account e conto bancario e la valuta per creare i registri.\n"
+"\n"
+"In questo modo viene generata una copia pura del modello di piano.\n"
+"\n"
+"Procedure guidate previste nel modulo:\n"
+"--------------------------------\n"
+"    *IVA Intra partner: elenco dei partner con i rispettivi numeri di partita IVA e importo\n"
+"      fatturato. Prepara un file in formato XML.\n"
+"\n"
+"        **Percorso per accedere:** Fatturazione/Rendicontazione/Resoconti legali/Dichiarazioni Belgio/IVA Intra partner\n"
+"    *Dichiarazione IVA periodica: prepara un file XML per la dichiarazione dell'IVA della\n"
+"      principale azienda dell'utente attualmente connesso.\n"
+"\n"
+"        **Percorso per accedere:** Fatturazione/Rendicontazione/Resoconti legali/Dichiarazioni Belgio/Dichiarazione IVA periodica\n"
+"    *Elenco annuale dei clienti soggetti a IVA: prepara un file XML per la dichiarazione\n"
+"      ell'IVA dell'azienda principlae dell'utente attualmente connesso in base\n"
+"      all'anno fiscale.\n"
+"\n"
+"        **Percorso per accedere:** Fatturazione/Rendicontazione/Resoconti legali/Dichiarazioni Belgio/Elenco annuale dei clienti soggetti a IVA\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -14987,6 +15019,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Errore durante l'analisi della vista:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -26193,7 +26228,7 @@ msgstr "Nessuna autorizzazione per accedere al documento."
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you must provide fields to read on attachments"
-msgstr ""
+msgstr "È necessario fornire campi per leggere gli allegati"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__sort
