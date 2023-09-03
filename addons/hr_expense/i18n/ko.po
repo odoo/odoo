@@ -110,7 +110,7 @@ msgstr "<strong>직원 : </strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr "<strong>결제자 :</strong>"
+msgstr "<strong>지출자:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -712,7 +712,7 @@ msgstr "경비 카테고리"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense Date"
-msgstr "비용 지출일"
+msgstr "경비 지출일"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1436,7 +1436,7 @@ msgstr "또는 영수증을 다음 주소로 보내세요. "
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "Original Amount"
-msgstr "원본 금액"
+msgstr "원금"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_no_cost_product_template
@@ -1453,7 +1453,7 @@ msgstr "지불됨"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
 msgid "Paid By"
-msgstr "결제자"
+msgstr "지출자"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1903,7 +1903,7 @@ msgstr "세액"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__amount_tax
 msgid "Tax amount in Currency"
-msgstr "통화 환산 세액"
+msgstr "통화 환산 세금"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
@@ -1913,7 +1913,7 @@ msgstr "회사 통화 기준 세액"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr "통화 환산 세액"
+msgstr "통화 환산 세금"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1922,7 +1922,7 @@ msgstr "통화 환산 세액"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Taxes"
-msgstr "세무"
+msgstr "세금"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
@@ -2016,7 +2016,7 @@ msgstr "보고하기"
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__reported
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
 msgid "To Submit"
-msgstr "제출하기"
+msgstr "기안 작성"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2057,7 +2057,7 @@ msgstr "통화 환산 총 미과세 금액"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr "분할할 원래비용의 총액"
+msgstr "분할 대상인 원 지출의 총 금액"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_original
@@ -2355,7 +2355,7 @@ msgstr "환급 대상"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr "제출하기"
+msgstr "기안 작성"
 
 #. module: hr_expense
 #. odoo-python

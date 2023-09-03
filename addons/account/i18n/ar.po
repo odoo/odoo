@@ -2276,8 +2276,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
 msgstr ""
-"يكون المبلغ المتعلق بهذه المطابقة إيجابياً دائماً حتى يتم إظهاره بعملة "
-"الشركة. "
+"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بعملة الشركة."
+" "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -2285,7 +2285,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
-"يكون المبلغ المتعلق بهذه المطابقة إيجابياً دائماً حتى يتم إظهاره بالعملة "
+"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة "
 "الأجنبية لبند الرصيد. "
 
 #. module: account
@@ -2294,7 +2294,7 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr ""
-"يكون المبلغ المتعلق بهذه المطابقة إيجابياً دائماً حتى يتم إظهاره بالعملة "
+"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة "
 "الأجنبية لبند الخصم. "
 
 #. module: account
@@ -3537,7 +3537,7 @@ msgstr "الكشف النقدي"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Cash basis rounding difference"
-msgstr " الأساس النقدي التقريب فرق"
+msgstr "فرق التقريب على الأساس النقدي "
 
 #. module: account
 #. odoo-python
@@ -8514,7 +8514,7 @@ msgstr "قم بإقفال القيود المرحّلة باستخدام الت�
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
 msgid "Lock Trust Fields"
-msgstr ""
+msgstr "قفل الحقول الآمنة "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11042,6 +11042,13 @@ msgstr "متعلق بـ"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reload"
 msgstr "إعادة تحميل"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
+" This action is irreversible."
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard

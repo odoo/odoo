@@ -49,6 +49,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                将地址添加到新人列表\n"
+"            </p><p>\n"
+"                为防止垃圾邮件和回复循环，\n"
+"                Odoo 会每隔<b>%(minutes)i</b>自动阻止超过<b>%(threshold)i</b>的电子邮件进入您的网关。 \n"
+"                如您需要频繁从一些地址接收更新信息，\n"
+"                您可以在下方添加它们，Odoo 会对其放行。\n"
+"            </p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -82,7 +91,7 @@ msgstr ""
 #: code:addons/mail/static/src/rtc/call_context_menu.js:0
 #, python-format
 msgid "%(candidateType)s (%(protocol)s)"
-msgstr ""
+msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-python
@@ -98,7 +107,7 @@ msgstr "%(email)s不是有效的电子邮件。需要创建新的客户。"
 #: code:addons/mail/static/src/rtc/rtc_service.js:0
 #, python-format
 msgid "%(name)s: %(message)s)"
-msgstr ""
+msgstr "%(name)s: %(message)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -3166,6 +3175,13 @@ msgstr "您真的要删除“%s”吗？"
 #, python-format
 msgid "Do you really want to delete this preview?"
 msgstr "您确定要删除这个预览吗？"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.js:0
+#, python-format
+msgid "Don't show Original Email"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
@@ -8717,6 +8733,13 @@ msgstr "显示关注者"
 #, python-format
 msgid "Show Member List"
 msgstr "显示成员列表"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.js:0
+#, python-format
+msgid "Show Original Email"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript

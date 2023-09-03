@@ -819,6 +819,8 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">ドキュメントのフォロワーと</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -1406,7 +1408,7 @@ msgstr "find_or_createを機能させるにはメールが必要です"
 #: code:addons/mail/static/src/core/notification_group_model.js:0
 #, python-format
 msgid "An error occurred when sending an email"
-msgstr ""
+msgstr "Eメールを送信中にエラーが発生しました"
 
 #. module: mail
 #. odoo-javascript
@@ -3157,6 +3159,13 @@ msgid "Do you really want to delete this preview?"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.js:0
+#, python-format
+msgid "Don't show Original Email"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -3574,7 +3583,7 @@ msgstr ""
 #: code:addons/mail/static/src/web/messaging_menu/messaging_menu.js:0
 #, python-format
 msgid "Enable desktop notifications to chat"
-msgstr ""
+msgstr "デスクトップ通知を有効にしてチャットする"
 
 #. module: mail
 #. odoo-javascript
@@ -8697,6 +8706,13 @@ msgstr "フォロワーを表示"
 #: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
 #, python-format
 msgid "Show Member List"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core_ui/message.js:0
+#, python-format
+msgid "Show Original Email"
 msgstr ""
 
 #. module: mail
@@ -26340,7 +26356,7 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "package"
-msgstr ""
+msgstr "梱包"
 
 #. module: mail
 #. odoo-javascript

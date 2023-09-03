@@ -28,7 +28,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
 msgid "# Registrations"
-msgstr "# Registros"
+msgstr "Nº inscripciones"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -476,7 +476,7 @@ msgstr "Conferencia para arquitectos"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Confirm Registration"
-msgstr "Confirmación registro"
+msgstr "Confirmar inscripción"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_0
@@ -629,17 +629,17 @@ msgstr "Respuesta a la pregunta del evento"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
 msgid "Event Registration"
-msgstr "Registro de eventos"
+msgstr "Inscripción del evento"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr "Respuesta de Registro del Evento"
+msgstr "Respuesta de inscripción de evento"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
-msgstr "Registro eventos"
+msgstr "Inscripciones del evento"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -715,7 +715,7 @@ msgstr "Expirado"
 #: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Extra Register Button"
-msgstr "Botón de registro adicional"
+msgstr "Botón de inscripcional adicional"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -990,7 +990,7 @@ msgstr "No se encontraron eventos."
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
 msgid "No registration linked to this visitor"
-msgstr "No hay registro vinculado a este visitante"
+msgstr "No hay inscripción enlazada a este visitante"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1128,27 +1128,27 @@ msgstr "Ref:"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
-msgstr "Registro"
+msgstr "Inscribirse"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Register Button"
-msgstr "Botón de registro"
+msgstr "Botón de inscripción"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 msgid "Register Menu"
-msgstr "Menú de registro"
+msgstr "Menú de inscripción"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu_ids
 msgid "Register Menus"
-msgstr "Menús de registro"
+msgstr "Menús de inscripción"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
 msgid "Registered Events"
-msgstr "Eventos registrados"
+msgstr "Eventos inscritos"
 
 #. module: website_event
 #. odoo-python
@@ -1157,35 +1157,35 @@ msgstr "Eventos registrados"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Registration"
-msgstr "Registro"
+msgstr "Inscripción"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
-msgstr "Registro confirmado!"
+msgstr "¡Inscripción confirmada!"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.event_registration_action_from_visitor
 #: model_terms:ir.ui.view,arch_db:website_event.website_visitor_view_form
 msgid "Registrations"
-msgstr "Registros"
+msgstr "Inscripciones"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations Closed"
-msgstr "Registros cerrados"
+msgstr "Inscripciones cerradas"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations are <b>closed</b>"
-msgstr "Los registros están <b>cerrados</b>"
+msgstr "Las inscripciones están <b>cerradas</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
-msgstr "Registro aún no comenzado"
+msgstr "Las inscripciones aún no han comenzado"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
@@ -1369,6 +1369,13 @@ msgstr "La URL completa para acceder al documento a través del sitio web."
 #: model:ir.model.constraint,message:website_event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
 msgstr "Debe haber un valor sugerido o un valor de texto."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr ""
 
 #. module: website_event
 #. odoo-python
@@ -1600,7 +1607,7 @@ msgid ""
 "see when registering."
 msgstr ""
 "Con el botón de editar, puede <b>personalizar</b> la página web que los "
-"visitantes verán al registrarse."
+"visitantes verán al inscribirse."
 
 #. module: website_event
 #. odoo-python
