@@ -50,16 +50,40 @@ def handle_history_divergence(record, html_field_name, vals):
     # comes from the odoo editor or the collaboration was not activated. In
     # project, it could come from the collaboration pad. In that case, we do not
     # handle history divergences.
+    if request:
+        channel = (request.db, 'editor_collaboration', record._name, html_field_name, record.id)
     if incoming_history_matches is None:
+        if request:
+            bus_data = {
+                'model_name': record._name,
+                'field_name': html_field_name,
+                'res_id': record.id,
+                'notificationName': 'document_write',
+                'notificationPayload': {'last_step_id': None},
+            }
+            request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
         return
     incoming_history_ids = incoming_history_matches[1].split(',')
-    incoming_last_history_id = incoming_history_ids[-1]
+    last_step_id = incoming_history_ids[-1]
+
+    bus_data = {
+        'model_name': record._name,
+        'field_name': html_field_name,
+        'res_id': record.id,
+        'notificationName': 'document_write',
+        'notificationPayload': {'last_step_id': last_step_id},
+    }
+    if request:
+        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
     if record[html_field_name]:
         ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
 
     # Save only the latest id.
-    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
+
+def can_use_instrumentation():
+    return request.env['ir.config_parameter'].sudo().get_param('web_editor.use_instrumentation').lower().strip() == 'true'
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -747,6 +771,13 @@ class Web_Editor(http.Controller):
     def get_ice_servers(self):
         return request.env['mail.ice.server']._get_ice_servers()
 
+    @http.route("/web_editor/get_collaboration_config", type='json', auth="user")
+    def get_collaboration_config(self):
+        return {
+            'use_instrumentation': can_use_instrumentation(),
+            'ice_servers': request.env['mail.ice.server']._get_ice_servers()
+        }
+
     @http.route("/web_editor/bus_broadcast", type="json", auth="user")
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):
         document = request.env[model_name].browse([res_id])
@@ -762,6 +793,32 @@ class Web_Editor(http.Controller):
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
+    # todo: do not include it in the commit: it's for development only
+    @http.route("/web_editor/get_collaboration_instrument",  auth="public")
+    def get_collaboration_instrument(self):
+        logs = []
+        for log in request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')]):
+            l = {
+                'type': log.type,
+                'name': log.name,
+                'message': log.message,
+            }
+            import pprint; print('l: ',end='');pprint.pprint(l)
+
+            logs.append(l)
+        return json.dumps(logs)
+        # return logs
+        # return request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')])
+        # return {
+        #     'use_instrumentation': .sudo().get_param('web_editor.use_instrumentation').lower().strip() == 'true',
+        #     'ice_servers': request.env['mail.ice.server']._get_ice_servers()
+        # }
+
+    # todo: do not include it in the commit: it's for development only
+    @http.route("/web_editor/remove_collaboration_instrument", auth="public")
+    def remove_collaboration_instrument(self):
+        request.env['ir.logging'].sudo().search([('name', '=', 'ODOO_PEER_TO_PEER_LOGS')]).unlink()
+
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
@@ -773,3 +830,17 @@ class Web_Editor(http.Controller):
             ensure_no_history_divergence(record, field_name, history_ids)
         except ValidationError:
             return record[field_name]
+
+    @http.route("/web_editor/peer_to_peer_log", type="json", auth="user")
+    def peer_to_peer_log(self, message):
+        if request.env.user.has_group('base.group_user') and can_use_instrumentation():
+            request.env['ir.logging'].sudo().create({
+                'name': 'ODOO_PEER_TO_PEER_LOGS',
+                'type': 'server',
+                'level': 'DEBUG',
+                'dbname': request.env.cr.dbname,
+                'message': message,
+                'func': '',
+                'path': '',
+                'line': '0',
+            })
