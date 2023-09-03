@@ -576,7 +576,7 @@ class MailActivity(models.Model):
         return activities
 
     @api.model
-    def get_activity_data(self, res_model, domain):
+    def get_activity_data(self, res_model, domain, limit=None, offset=0):
         activity_domain = [('res_model', '=', res_model)]
         if domain:
             res = self.env[res_model].search(domain)
@@ -584,7 +584,7 @@ class MailActivity(models.Model):
         grouped_activities = self.env['mail.activity']._read_group(
             activity_domain,
             ['res_id', 'activity_type_id'],
-            ['id:array_agg', 'date_deadline:min', '__count'])
+            ['id:array_agg', 'date_deadline:min', '__count'], limit=limit, offset=offset)
         # filter out unreadable records
         if not domain:
             res_ids = tuple(res_id for res_id, *_ in grouped_activities)
