@@ -4,6 +4,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.osv.expression import normalize_domain
 from odoo.addons.resource.models import utils
+from odoo.tests import tagged
 
 
 class TestExpression(TransactionCase):
@@ -57,3 +58,10 @@ class TestExpression(TransactionCase):
                 field_name_mapping={'field2': 'field3'},
             ))
         )
+
+    @tagged('post_install', '-at_install')
+    def test_project_domain_to_comodel(self):
+        domain = [('id', '=', 2), ('user_id.name', 'ilike', 'admin'), ('user_id', 'in', [1, 2, 3])]
+        domain = utils.project_domain_to_comodel(domain, self.env['ir.model'].search([('model','=','resource.resource')]), self.env['ir.model'].search([('model','=','res.users')]))
+        print('end test')
+        breakpoint()
