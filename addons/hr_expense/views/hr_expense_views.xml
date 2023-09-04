@@ -167,8 +167,8 @@
                                 <field name="total_amount_company" style="vertical-align: top;" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                                 <field name="label_convert_rate"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly"
-                                attrs="{'readonly': [('is_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"
+                            <field name="tax_ids" widget="many2many_tags"
+                                attrs="{'readonly': [('is_editable', '=', False)]}"
                                 context="{'default_company_id': company_id, 'default_type_tax_use': 'purchase', 'default_price_include': 1}" placeholder="Included in price taxes" />
                         </group><group>
                             <field name="reference" groups="account.group_account_readonly" attrs="{'readonly': [('is_ref_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"/>
