@@ -276,15 +276,14 @@ async function scrollTo(el, scrollParam) {
 }
 
 export function findPickedDate(target) {
-    return target.querySelector(".ui-datepicker-current-day");
+    return target.querySelector(".o_datetime_picker .o_selected");
 }
 
 export async function pickDate(target, date) {
-    const [year, month, day] = date.split("-");
-    const iMonth = parseInt(month, 10) - 1;
+    const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
     const el = target.querySelectorAll(
-        `.ui-datepicker-calendar td[data-year="${year}"][data-month="${iMonth}"]`
+        `.o_datetime_picker .o_date_item_cell:not(.o_out_of_range)`
     )[iDay];
     el.scrollIntoView();
     await click(el);

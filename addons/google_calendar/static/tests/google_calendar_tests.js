@@ -136,8 +136,8 @@ QUnit.module('Google Calendar', {
         // sync_data was called a first time without filter, event from google calendar was created twice
         assert.containsN(target, '.fc-event-container', 4, "should display 4 events on the month");
 
-        await click(target.querySelector('.ui-datepicker-next'));
-        await click(target.querySelector('.ui-datepicker-calendar > tbody > tr:nth-child(2) > td:nth-child(4) > a'));
+        await click(target.querySelector('.o_datetime_picker_header .o_next'));
+        await click(target.querySelector('.o_datetime_picker .o_date_item_cell'));
         await click(target.querySelector('.o_view_scale_selector .dropdown-toggle'));
         await click(target.querySelector('.o_scale_button_month'));
         await click(target.querySelector('.o_calendar_button_today'));

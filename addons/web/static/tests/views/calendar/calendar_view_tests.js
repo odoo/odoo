@@ -312,7 +312,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.module("CalendarView");
 
     QUnit.test(`simple calendar rendering`, async (assert) => {
-        assert.expect(25);
+        assert.expect(23);
 
         serverData.models.event.records.push(
             {
@@ -374,12 +374,6 @@ QUnit.module("Views", ({ beforeEach }) => {
             6,
             "should display 6 events on the week (4 event + 1 allday + 1 >24h allday)"
         );
-        assert.containsN(
-            target,
-            ".o_calendar_sidebar tr:has(.ui-state-active) td",
-            7,
-            "week scale should highlight 7 days in mini calendar"
-        );
 
         assert.containsOnce(
             target,
@@ -391,8 +385,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o_scale_button_day"); // display only one day
         assert.containsN(target, ".fc-event", 2, "should display 2 events on the day");
         assert.containsOnce(
-            target,
-            ".o_calendar_sidebar .o_selected_range",
+            target.querySelector(".o_calendar_sidebar .o_datetime_picker"),
+            ".o_highlight_start, .o_highlight_end",
             "should highlight the target day in mini calendar"
         );
         await click(target, ".scale_button_selection");
@@ -408,12 +402,6 @@ QUnit.module("Views", ({ beforeEach }) => {
             ".fc-event",
             8,
             "should display 7 events on the month (6 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')"
-        );
-        assert.containsN(
-            target,
-            ".o_calendar_sidebar td a",
-            31,
-            "month scale should highlight all days in mini calendar"
         );
         // test filters
         assert.containsN(
@@ -781,7 +769,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     );
 
     QUnit.test(`create and change events`, async (assert) => {
-        assert.expect(30);
+        assert.expect(29);
 
         await makeView({
             type: "calendar",
@@ -962,12 +950,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         await navigate(target, "next");
         assert.containsN(target, ".fc-event-container .fc-event", 0, "should display 0 events");
         await pickDate(target, "2017-01-01");
-        assert.containsN(
-            target,
-            ".o_calendar_sidebar tr:has(.ui-state-active) td",
-            7,
-            "week scale should highlight 7 days in mini calendar"
-        );
 
         await changeScale(target, "month");
         assert.containsNone(target, ".fc-event-container .fc-event", "should display 0 events");
@@ -4716,7 +4698,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
 
-        await click(target, ".ui-datepicker-today");
+        await click(target, ".o_datetime_picker .o_today");
         // test would fail here if we went to week mode
         assert.containsOnce(target, ".fc-dayGridMonth-view");
     });
@@ -4742,10 +4724,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         });
         const date = target.querySelector(".fc-day-grid td");
         await clickAllDaySlot(target, date.dataset.date);
-        const datepicker = document.querySelector("#ui-datepicker-div");
-        if (datepicker) {
-            datepicker.remove();
-        }
     });
 
     QUnit.test("check onWillStartModel is exectuted", async (assert) => {
@@ -4872,5 +4850,231 @@ QUnit.module("Views", ({ beforeEach }) => {
             ),
             ["My Charhello", "My SelectionB"]
         );
+    });
+
+    QUnit.module("CalendarView - DatePicker", ({ beforeEach }) => {
+        beforeEach(() => {
+            target = getFixture();
+            patchDate(2021, 7, 14, 8, 0, 0);
+        });
+
+        QUnit.test("Mount a CalendarDatePicker", async (assert) => {
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="day"/>
+                `,
+            });
+            assert.containsOnce(target, ".o_datetime_picker");
+            assert.containsOnce(target.querySelector(".o_datetime_picker"), ".o_selected");
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_selected").textContent,
+                "14"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker_header .o_datetime_button").textContent,
+                "August 2021"
+            );
+            assert.deepEqual(
+                Array.from(target.querySelectorAll(".o_datetime_picker .o_day_of_week_cell")).map(
+                    (c) => c.textContent
+                ),
+                ["S", "M", "T", "W", "T", "F", "S"]
+            );
+        });
+
+        QUnit.test("Scale: init with day", async (assert) => {
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="day"/>
+                `,
+            });
+            assert.containsOnce(target.querySelector(".o_datetime_picker"), ".o_highlighted");
+            assert.containsOnce(
+                target.querySelector(".o_datetime_picker"),
+                ".o_highlight_start, .o_highlight_end"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_highlighted").textContent,
+                "14"
+            );
+        });
+
+        QUnit.test("Scale: init with week", async (assert) => {
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="week"/>
+                `,
+            });
+            assert.containsOnce(target.querySelector(".o_datetime_picker"), ".o_highlighted");
+            assert.containsOnce(
+                target.querySelector(".o_datetime_picker"),
+                ".o_highlight_start, .o_highlight_end"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_highlighted").textContent,
+                "14"
+            );
+        });
+
+        QUnit.test("Scale: init with month", async (assert) => {
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="month"/>
+                `,
+            });
+            assert.containsOnce(target.querySelector(".o_datetime_picker"), ".o_highlighted");
+            assert.containsOnce(
+                target.querySelector(".o_datetime_picker"),
+                ".o_highlight_start, .o_highlight_end"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_highlighted").textContent,
+                "14"
+            );
+        });
+
+        QUnit.test("Scale: init with year", async (assert) => {
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="year"/>
+                `,
+            });
+            assert.containsOnce(target.querySelector(".o_datetime_picker"), ".o_highlighted");
+            assert.containsOnce(
+                target.querySelector(".o_datetime_picker"),
+                ".o_highlight_start, .o_highlight_end"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_highlighted").textContent,
+                "14"
+            );
+        });
+
+        QUnit.test("First day: 0 = Sunday", async (assert) => {
+            // the week start depends on the locale
+            patchWithCleanup(localization, { weekStart: 7 });
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="day"/>
+                `,
+            });
+            assert.deepEqual(
+                Array.from(target.querySelectorAll(".o_datetime_picker .o_day_of_week_cell")).map(
+                    (c) => c.textContent
+                ),
+                ["S", "M", "T", "W", "T", "F", "S"]
+            );
+        });
+
+        QUnit.test("First day: 1 = Monday", async (assert) => {
+            // the week start depends on the locale
+            patchWithCleanup(localization, { weekStart: 1 });
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="day"/>
+                `,
+            });
+            assert.deepEqual(
+                Array.from(target.querySelectorAll(".o_datetime_picker .o_day_of_week_cell")).map(
+                    (c) => c.textContent
+                ),
+                ["M", "T", "W", "T", "F", "S", "S"]
+            );
+        });
+
+        QUnit.test("Click on active day should change scale : day -> month", async (assert) => {
+            assert.expect(2);
+
+            const calendar = await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="day"/>
+                `,
+            });
+
+            await click(target.querySelector(".o_datetime_picker"), ".o_selected");
+
+            assert.strictEqual(calendar.model.scale, "month");
+            assert.ok(calendar.model.date.equals(luxon.DateTime.local(2021, 8, 14)));
+        });
+
+        QUnit.test("Click on active day should change scale : month -> week", async (assert) => {
+            assert.expect(2);
+
+            const calendar = await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="month"/>
+                `,
+            });
+
+            await click(target.querySelector(".o_datetime_picker"), ".o_selected");
+
+            assert.strictEqual(calendar.model.scale, "week");
+            assert.ok(calendar.model.date.equals(luxon.DateTime.local(2021, 8, 14)));
+        });
+
+        QUnit.test("Click on active day should change scale : week -> day", async (assert) => {
+            assert.expect(2);
+
+            const calendar = await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="week"/>
+                `,
+            });
+
+            await click(target.querySelector(".o_datetime_picker"), ".o_selected");
+
+            assert.strictEqual(calendar.model.scale, "day");
+            assert.ok(calendar.model.date.equals(luxon.DateTime.local(2021, 8, 14)));
+        });
+
+        QUnit.test("Scale: today is correctly highlighted", async (assert) => {
+            patchDate(2021, 6, 4, 8, 0, 0);
+            await makeView({
+                type: "calendar",
+                resModel: "event",
+                serverData,
+                arch: `
+                    <calendar date_start="start" mode="month"/>
+                `,
+            });
+            assert.containsOnce(
+                target.querySelector(".o_datetime_picker"),
+                ".o_highlighted.o_today"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_datetime_picker .o_highlighted.o_today").textContent,
+                "4"
+            );
+        });
     });
 });

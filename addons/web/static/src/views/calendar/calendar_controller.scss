@@ -30,127 +30,23 @@ $o-cw-filter-avatar-size: 20px;
     }
 
     .o_calendar_sidebar {
+        .o_datetime_picker {
+            --DateTimePicker__Cell-size-md: 1.8rem;
+            @include media-breakpoint-up(xl){
+                --DateTimePicker__Cell-size-md: 2.2rem;
+            }
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+
+            .o_day_of_week_cell {
+                --background-color: transparent;
+                border: none !important;
+            }
+        }
+
         // sync buttons are only displayed on calendar.event views
         .o_calendar_sync {
             padding-bottom: 0.5em;
-        }
-    }
-
-    .ui-datepicker {
-        margin: 0;
-        width: 100%;
-        padding: 0;
-        background-color: $o-view-background-color;
-
-        &,
-        td,
-        .ui-datepicker-header,
-        td a,
-        td span {
-            border: 0;
-        }
-
-        th {
-            padding: 0.7em 0.2em;
-            width: 14%;
-
-            > span {
-                color: #666666;
-            }
-        }
-
-        td {
-            position: relative;
-            padding: 0;
-
-            a,
-            span {
-                position: relative;
-                display: flex;
-                width: 100%;
-                align-items: center;
-                justify-content: center;
-                aspect-ratio: 4/3;
-                background: none;
-                line-height: 1;
-            }
-
-            &:before {
-                @include o-position-absolute(0, $left: 50%);
-                transform: translateX(-50%);
-                display: none;
-                height: 100%;
-                aspect-ratio: 1;
-                border-radius: 100%;
-                border: var(--ui-datepicker-badge-border, 1px solid #{$o-component-active-border});
-                background: var(--ui-datepicker-badge-background, #{$o-component-active-bg});
-                content: "";
-            }
-
-            &:hover:before {
-                display: block;
-            }
-
-            &.ui-datepicker-today, &.ui-datepicker-current-day {
-                &, a, span{
-                    color: var(--ui-datepicker-badge-color, #{$o-component-active-color});
-                }
-
-                &:before {
-                    display: block;
-                }
-            }
-
-            &.ui-datepicker-today {
-                --ui-datepicker-badge-border: 1px solid #{$o-cw-color-today-accent};
-                --ui-datepicker-badge-background: #{$o-cw-color-today-accent};
-                --ui-datepicker-badge-color: #{color-contrast($o-cw-color-today-accent)};
-            }
-        }
-
-        .ui-datepicker-header {
-            background: none;
-        }
-
-        .ui-datepicker-header {
-            border-radius: 0;
-
-            .ui-datepicker-title {
-                color: map-get($grays, "600");
-                font-size: 1.2rem;
-                font-weight: normal;
-            }
-
-            .ui-icon {
-                background-image: none;
-                text-indent: 0;
-                color: transparent;
-
-                &:before {
-                    font: normal normal normal 13px/1 FontAwesome;
-                    content: "\f053";
-                    color: map-get($grays, "400");
-                }
-                &.ui-icon-circle-triangle-e:before {
-                    content: "\f054";
-                }
-            }
-
-            .ui-state-hover.ui-datepicker-next-hover,
-            .ui-state-hover.ui-datepicker-prev-hover {
-                background: none;
-                border: none;
-                cursor: pointer;
-
-                span:before {
-                    color: map-get($grays, "800");
-                }
-            }
-        }
-
-        .o_selected_range.o_color:not(.ui-datepicker-unselectable) {
-            background-color: $info;
-            animation: backgroundfade 2s forwards;
         }
     }
 
