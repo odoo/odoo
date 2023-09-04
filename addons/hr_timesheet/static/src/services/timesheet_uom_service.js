@@ -2,7 +2,8 @@
 
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
-import { formatFloatTime, formatFloatFactor, formatFloat } from "@web/views/fields/formatters";
+import { formatFloatTime, formatFloatFactor } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { FloatFactorField } from "@web/views/fields/float_factor/float_factor_field";
 
 export const timesheetUOMService = {

@@ -5,7 +5,6 @@ import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { currencies } from "@web/core/currency";
 import { localization } from "@web/core/l10n/localization";
-import { session } from "@web/session";
 import {
     formatFloat,
     formatFloatFactor,
@@ -29,135 +28,6 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("formatFloat", function (assert) {
         assert.strictEqual(formatFloat(false), "");
-        assert.strictEqual(formatFloat(null), "0.00");
-        assert.strictEqual(formatFloat(1000000), "1,000,000.00");
-
-        const options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
-        assert.strictEqual(formatFloat(106500, options), "1€06€500?00");
-
-        assert.strictEqual(formatFloat(1500, { thousandsSep: "" }), "1500.00");
-        assert.strictEqual(formatFloat(-1.01), "-1.01");
-        assert.strictEqual(formatFloat(-0.01), "-0.01");
-
-        assert.strictEqual(formatFloat(38.0001, { noTrailingZeros: true }), "38");
-        assert.strictEqual(formatFloat(38.1, { noTrailingZeros: true }), "38.1");
-
-        patchWithCleanup(localization, { grouping: [3, 3, 3, 3] });
-        assert.strictEqual(formatFloat(1000000), "1,000,000.00");
-
-        patchWithCleanup(localization, { grouping: [3, 2, -1] });
-        assert.strictEqual(formatFloat(106500), "1,06,500.00");
-
-        patchWithCleanup(localization, { grouping: [1, 2, -1] });
-        assert.strictEqual(formatFloat(106500), "106,50,0.00");
-
-        patchWithCleanup(localization, {
-            grouping: [2, 0],
-            decimalPoint: "!",
-            thousandsSep: "@",
-        });
-        assert.strictEqual(formatFloat(6000), "60@00!00");
-    });
-
-    QUnit.test("formatFloat (humanReadable=true)", async (assert) => {
-        assert.strictEqual(
-            formatFloat(1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1.02k"
-        );
-        assert.strictEqual(
-            formatFloat(1020000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "1,020k"
-        );
-        assert.strictEqual(
-            formatFloat(10200000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "10.20M"
-        );
-        assert.strictEqual(
-            formatFloat(1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1.02k"
-        );
-        assert.strictEqual(
-            formatFloat(1002, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1.00k"
-        );
-        assert.strictEqual(
-            formatFloat(101, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "101.00"
-        );
-        assert.strictEqual(
-            formatFloat(64.2, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "64.20"
-        );
-        assert.strictEqual(formatFloat(1e18, { humanReadable: true }), "1E");
-        assert.strictEqual(
-            formatFloat(1e21, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1e+21"
-        );
-        assert.strictEqual(
-            formatFloat(1.0045e22, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1e+22"
-        );
-        assert.strictEqual(
-            formatFloat(1.0045e22, { humanReadable: true, decimals: 3, minDigits: 1 }),
-            "1.005e+22"
-        );
-        assert.strictEqual(
-            formatFloat(1.012e43, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "1.01e+43"
-        );
-        assert.strictEqual(
-            formatFloat(1.012e43, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "1.01e+43"
-        );
-        assert.strictEqual(
-            formatFloat(-1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1.02k"
-        );
-        assert.strictEqual(
-            formatFloat(-1020000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "-1,020k"
-        );
-        assert.strictEqual(
-            formatFloat(-10200000, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "-10.20M"
-        );
-        assert.strictEqual(
-            formatFloat(-1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1.02k"
-        );
-        assert.strictEqual(
-            formatFloat(-1002, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1.00k"
-        );
-        assert.strictEqual(
-            formatFloat(-101, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-101.00"
-        );
-        assert.strictEqual(
-            formatFloat(-64.2, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-64.20"
-        );
-        assert.strictEqual(formatFloat(-1e18, { humanReadable: true }), "-1E");
-        assert.strictEqual(
-            formatFloat(-1e21, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1e+21"
-        );
-        assert.strictEqual(
-            formatFloat(-1.0045e22, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1e+22"
-        );
-        assert.strictEqual(
-            formatFloat(-1.0045e22, { humanReadable: true, decimals: 3, minDigits: 1 }),
-            "-1.004e+22"
-        );
-        assert.strictEqual(
-            formatFloat(-1.012e43, { humanReadable: true, decimals: 2, minDigits: 1 }),
-            "-1.01e+43"
-        );
-        assert.strictEqual(
-            formatFloat(-1.012e43, { humanReadable: true, decimals: 2, minDigits: 2 }),
-            "-1.01e+43"
-        );
     });
 
     QUnit.test("formatFloatFactor", function (assert) {
@@ -278,67 +148,24 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(formatMonetary(false), "");
-        assert.strictEqual(formatMonetary(200), "200.00");
 
-        assert.deepEqual(formatMonetary(1234567.654, { currencyId: 10 }), "1,234,567.65\u00a0€");
-        assert.deepEqual(formatMonetary(1234567.654, { currencyId: 11 }), "$\u00a01,234,567.65");
-        assert.deepEqual(formatMonetary(1234567.654, { currencyId: 44 }), "1,234,567.65");
-        assert.deepEqual(
-            formatMonetary(1234567.654, { currencyId: 10, noSymbol: true }),
-            "1,234,567.65"
-        );
-        assert.deepEqual(
-            formatMonetary(8.0, { currencyId: 10, humanReadable: true }),
-            "8.00\u00a0€"
-        );
-        assert.deepEqual(
-            formatMonetary(1234567.654, { currencyId: 10, humanReadable: true }),
-            "1.23M\u00a0€"
-        );
-        assert.deepEqual(
-            formatMonetary(1990000.001, { currencyId: 10, humanReadable: true }),
-            "1.99M\u00a0€"
-        );
-        assert.deepEqual(
-            formatMonetary(1234567.654, { currencyId: 44, digits: [69, 1] }),
-            "1,234,567.7"
-        );
-        assert.deepEqual(
-            formatMonetary(1234567.654, { currencyId: 11, digits: [69, 1] }),
-            "$\u00a01,234,567.7",
-            "options digits should take over currency digits when both are defined"
-        );
+        const field = {
+            type: "monetary",
+            currency_field: "c_x",
+        };
+        let data = {
+            c_x: [11],
+            c_y: 12,
+        };
+        assert.deepEqual(formatMonetary(200, { field, currencyId: 10, data }), "200.00\u00a0€");
+        assert.deepEqual(formatMonetary(200, { field, data }), "$\u00a0200.00");
+        assert.deepEqual(formatMonetary(200, { field, currencyField: "c_y", data }), "200.00\u00a0&");
 
-        // GES TODO do we keep below behavior ?
-        // with field and data
-        // const field = {
-        //     type: "monetary",
-        //     currency_field: "c_x",
-        // };
-        // let data = {
-        //     c_x: { res_id: 11 },
-        //     c_y: { res_id: 12 },
-        // };
-        // assert.strictEqual(formatMonetary(200, { field, currencyId: 10, data }), "200.00 €");
-        // assert.strictEqual(formatMonetary(200, { field, data }), "$ 200.00");
-        // assert.strictEqual(formatMonetary(200, { field, currencyField: "c_y", data }), "200.00 &");
-        //
-        // const floatField = { type: "float" };
-        // data = {
-        //     currency_id: { res_id: 11 },
-        // };
-        // assert.strictEqual(formatMonetary(200, { field: floatField, data }), "$ 200.00");
-    });
-
-    QUnit.test("formatMonetary without currency", function (assert) {
-        patchWithCleanup(session, {
-            currencies: {},
-        });
-        assert.deepEqual(
-            formatMonetary(1234567.654, { currencyId: 10, humanReadable: true }),
-            "1.23M"
-        );
-        assert.deepEqual(formatMonetary(1234567.654, { currencyId: 10 }), "1,234,567.65");
+        const floatField = { type: "float" };
+        data = {
+            currency_id: [11],
+        };
+        assert.deepEqual(formatMonetary(200, { field: floatField, data }), "$\u00a0200.00");
     });
 
     QUnit.test("formatPercentage", function (assert) {

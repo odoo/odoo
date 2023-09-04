@@ -3,61 +3,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { localization as l10n } from "@web/core/l10n/localization";
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
-import { intersperse, nbsp } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
-/**
- * Inserts "thousands" separators in the provided number.
- *
- * @private
- * @param {string} string representing integer number
- * @param {string} [thousandsSep=","] the separator to insert
- * @param {number[]} [grouping=[]]
- *   array of relative offsets at which to insert `thousandsSep`.
- *   See `strings.intersperse` method.
- * @returns {string}
- */
-function insertThousandsSep(number, thousandsSep = ",", grouping = []) {
-    const negative = number[0] === "-";
-    number = negative ? number.slice(1) : number;
-    return (negative ? "-" : "") + intersperse(number, grouping, thousandsSep);
-}
-
-export function formatFloat(value, digits = 2) {
-    if (value === false) {
-        return "";
-    }
-    const grouping = l10n.grouping;
-    const thousandsSep = l10n.thousandsSep;
-    const decimalPoint = l10n.decimalPoint;
-    let precision = digits;
-    const formatted = (value || 0).toFixed(precision).split(".");
-    formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
-    return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
-}
-
-export function formatMonetary(value, currency) {
-    // Monetary fields want to display nothing when the value is unset.
-    // You wouldn't want a value of 0 euro if nothing has been provided.
-    if (value === false) {
-        return "";
-    }
-
-    const digits = (currency && currency.decimal_places) || 2;
-
-    let formattedValue = formatFloat(value, digits);
-
-    if (!currency) {
-        return formattedValue;
-    }
-    const formatted = [currency.symbol, formattedValue];
-    if (currency.position === "after") {
-        formatted.reverse();
-    }
-    return formatted.join(nbsp);
-}
+import { formatCurrency } from "@web/core/currency";
 
 // Widget responsible for openingn the modal (giving out the sale order id)
 
@@ -108,7 +56,7 @@ export class ReorderDialog extends Component {
         this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
-        this.formatMonetary = formatMonetary;
+        this.formatCurrency = formatCurrency;
 
         onWillStart(this.onWillStartHandler.bind(this));
     }

@@ -2,8 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
-import { formatFloat } from "@web/views/fields/formatters";
-import { roundPrecision as round_pr } from "@web/core/utils/numbers";
+import { formatFloat, roundPrecision as round_pr } from "@web/core/utils/numbers";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 /**
