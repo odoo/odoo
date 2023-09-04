@@ -293,11 +293,6 @@ class LinkTrackerClick(models.Model):
         if not tracker_code:
             return None
 
-        ip = route_values.get('ip', False)
-        existing = self.search_count(['&', ('link_id', '=', tracker_code.link_id.id), ('ip', '=', ip)])
-        if existing:
-            return None
-
         route_values['link_id'] = tracker_code.link_id.id
         click_values = self._prepare_click_values_from_route(**route_values)
 
