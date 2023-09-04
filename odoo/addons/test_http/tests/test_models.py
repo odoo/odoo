@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from http import HTTPStatus
 
+import json
 import markupsafe
 
 import odoo.http
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user, Like
-from odoo.tools import mute_logger
+from odoo.tools.misc import mute_logger, submap
 from odoo.addons.test_http.utils import HtmlTokenizer
+from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
 
@@ -112,3 +114,35 @@ class TestHttpModels(TestHttpBase):
             'name': "too much data" * 1000  # 1.3kB
         })
         self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+
+    @mute_logger('odoo.http', 'odoo.sql_db')
+    def test_models4_integer_overflow(self):
+        max_int = 2_147_483_647
+
+        payload = {
+            'id': 0,
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'params': {
+                'model': 'res.users',
+                'method': 'write',
+                'args': [
+                    [self.jackoneill.id],
+                    {
+                        'color': max_int + 1,
+                    }
+                ],
+                'kwargs': {},
+            },
+        }
+
+        self.authenticate('admin', 'admin')
+        res = self.url_open('/web/dataset/call_kw', json.dumps(payload), headers=CT_JSON)
+        res.raise_for_status()
+        self.assertEqual(
+            submap(res.json()['error']['data'], ('name', 'message')),
+            {
+                'name': 'odoo.exceptions.ValidationError',
+                'message': "The operation cannot be completed: a numeric value is out of range.\n\n"
+            }
+        )

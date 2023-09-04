@@ -6,7 +6,7 @@ import time
 from collections.abc import Mapping, Sequence
 from functools import partial
 
-from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
+from psycopg2 import DataError, IntegrityError, OperationalError, errorcodes, errors
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
@@ -109,6 +109,11 @@ def _as_validation_error(env, exc):
                 constraint=exc.diag.constraint_name,
             ))
 
+    if exc.pgcode == errorcodes.NUMERIC_VALUE_OUT_OF_RANGE:
+        return ValidationError(env._(
+            "The operation cannot be completed: a numeric value is out of range.\n\n"
+        ))
+
     if exc.diag.constraint_name in env.registry._sql_constraints:
         return ValidationError(env._(
             "The operation cannot be completed: %s",
@@ -138,7 +143,7 @@ def retrying(func, env):
                 if not env.cr._closed:
                     env.cr.flush()  # submit the changes to the database
                 break
-            except (IntegrityError, OperationalError) as exc:
+            except (IntegrityError, OperationalError, DataError) as exc:
                 if env.cr._closed:
                     raise
                 env.cr.rollback()
@@ -152,7 +157,7 @@ def retrying(func, env):
                             file.seek(0)
                         else:
                             raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
-                if isinstance(exc, IntegrityError):
+                if isinstance(exc, (IntegrityError, DataError)):
                     raise _as_validation_error(env, exc) from exc
                 if not isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
                     raise
