@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
+import { attachComponent } from "@web/legacy/utils";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
@@ -1413,6 +1413,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
+        this.resetTabCount = 0;
+
         if (!this.options.dataAttributes.lazyPalette === 'true') {
             await this._renderColorPalette();
         }
@@ -1444,7 +1446,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             this.colorPaletteWrapper?.update({
                 selectedCC: this._ccValue,
                 selectedColor: this._value,
-                resetTabCount: this.colorPaletteWrapper.node.component.props.props.resetTabCount + 1,
+                resetTabCount: ++this.resetTabCount,
             });
         } else {
             // TODO review in master, this does async stuff. Maybe the open
@@ -1591,9 +1593,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      * @returns {Promise}
      */
-    _renderColorPalette: function () {
+    _renderColorPalette: async function () {
+        this.resetTabCount = 0;
         const options = {
-            resetTabCount: 0,
+            resetTabCount: this.resetTabCount,
             selectedCC: this._ccValue,
             selectedColor: this._value,
             onSetColorNames: (colorNames) => {
@@ -1636,12 +1639,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             options.document = this.$target[0].ownerDocument;
             options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
         }
-        if (this.colorPaletteWrapper) {
-            this.colorPaletteWrapper.destroy();
-        }
-        this.colorPaletteWrapper = new ComponentWrapper(this, ColorPalette, options);
-
-        return this.colorPaletteWrapper.mount(this.colorPaletteEl);
+        this.colorPaletteWrapper?.destroy();
+        this.colorPaletteWrapper = await attachComponent(this, this.colorPaletteEl, ColorPalette, options);
     },
     /**
      * @override
@@ -6017,15 +6016,14 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
         const document = this.$el[0].ownerDocument;
-        const imageCropWrapper = new ComponentWrapper(this, ImageCrop, {
+        const imageCropWrapperElement = document.createElement('div');
+        document.body.append(imageCropWrapperElement);
+        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             rpc: this._rpc.bind(this),
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
         });
-        const imageCropWrapperElement = document.createElement('div');
-        document.body.append(imageCropWrapperElement);
-        await imageCropWrapper.mount(imageCropWrapperElement);
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
@@ -6034,9 +6032,10 @@ registry.ImageTools = ImageHandlerOption.extend({
                 }
                 await this._reapplyCurrentShape();
                 resolve();
-                imageCropWrapperElement.remove();
             });
         });
+        imageCropWrapperElement.remove();
+        imageCropWrapper.destroy();
         this.trigger_up('enable_loading_effect');
     },
     /**
@@ -6080,18 +6079,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Mount the ImageCrop to call the reset method. As we need the state of
         // the component to be mounted before calling reset, mount it
         // temporarily into the body.
-        const imageCropWrapper = new ComponentWrapper(this, ImageCrop, {
+        const imageCropWrapperElement = document.createElement('div');
+        document.body.append(imageCropWrapperElement);
+        const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             rpc: this._rpc.bind(this),
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
         });
-        const imageCropWrapperElement = document.createElement('div');
-        document.body.append(imageCropWrapperElement);
-        await imageCropWrapper.mount(imageCropWrapperElement);
-        await imageCropWrapper.componentRef.comp.mountedPromise;
-        await imageCropWrapper.componentRef.comp.reset();
-        imageCropWrapper.unmount();
+        await imageCropWrapper.component.mountedPromise;
+        await imageCropWrapper.component.reset();
+        imageCropWrapper.destroy();
         imageCropWrapperElement.remove();
 
         await this._reapplyCurrentShape();

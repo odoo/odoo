@@ -142,7 +142,6 @@
             # FIXME POSREF legacy dependencies to remove
             'web/static/lib/moment/moment.js',
             'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/legacy/legacy_component.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

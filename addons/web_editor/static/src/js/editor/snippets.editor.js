@@ -16,7 +16,7 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy, unique } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
+import { attachComponent } from "@web/legacy/utils";
 import { Toolbar } from "@web_editor/js/editor/toolbar";
 import {
     Component,
@@ -4296,14 +4296,13 @@ var SnippetsMenu = Widget.extend({
                     wysiwygState: Object,
                 };
             }
-            const toolbarWrapper = new ComponentWrapper(this, WebsiteToolbar, {
-                wysiwygState: this.options.wysiwyg.state,
-            });
             // Add the toolbarWrapperEl to the dom for owl to properly mount the
             // Toolbar.
             document.body.append(this._toolbarWrapperEl);
             this._toolbarWrapperEl.style.display = 'none';
-            await toolbarWrapper.mount(this._toolbarWrapperEl);
+            await attachComponent(this, this._toolbarWrapperEl, WebsiteToolbar, {
+                wysiwygState: this.options.wysiwyg.state,
+            });
             this._toolbarWrapperEl.style.display = 'contents';
 
             const toolbarEl = this._toolbarWrapperEl.firstChild;

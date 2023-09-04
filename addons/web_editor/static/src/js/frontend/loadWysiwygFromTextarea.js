@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { loadBundle } from "@web/core/assets";
-import { useWowlService } from '@web/legacy/utils';
+import { useWowlService, attachComponent } from '@web/legacy/utils';
 import { requireLegacyModule } from '@web_editor/js/frontend/loader';
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
@@ -16,7 +16,6 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         currentOptions.value = '<p><br></p>';
     }
 
-    const { ComponentWrapper } = await requireLegacyModule('@web/legacy/js/owl_compatibility')
     const { Wysiwyg } = await requireLegacyModule('@web_editor/js/wysiwyg/wysiwyg', async () => {
         await loadBundle("web_editor.assets_wysiwyg");
     });
@@ -40,11 +39,10 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
     $form.append($textarea);
     $wysiwygWrapper.html('');
     const wysiwygWrapper = $wysiwygWrapper[0];
-    const componentWrapper = new ComponentWrapper(parent, LegacyWysiwyg, {
+    await attachComponent(parent, wysiwygWrapper, LegacyWysiwyg, {
         options: currentOptions,
         editingValue: currentOptions.value,
     });
-    componentWrapper.mount(wysiwygWrapper);
 
     $form.find('.note-editable').data('wysiwyg', wysiwyg);
 
