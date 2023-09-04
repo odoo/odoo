@@ -14,6 +14,8 @@ import {
 import { localization } from "../l10n/localization";
 import { ensureArray } from "../utils/arrays";
 
+const { DateTime, Info } = luxon;
+
 /**
  * @typedef DateItem
  * @property {string} id
@@ -32,6 +34,8 @@ import { ensureArray } from "../utils/arrays";
  *
  * @typedef DateTimePickerProps
  * @property {number} [focusedDateIndex=0]
+ * @property {boolean} [showWeekNumbers]
+ * @property {DaysOfWeekFormat} [daysOfWeekFormat="short"]
  * @property {DateLimit} [maxDate]
  * @property {PrecisionLevel} [maxPrecision="decades"]
  * @property {DateLimit} [minDate]
@@ -68,12 +72,12 @@ import { ensureArray } from "../utils/arrays";
  *
  * @typedef {"days" | "months" | "years" | "decades"} PrecisionLevel
  *
+ * @typedef {"short" | "narrow"} DaysOfWeekFormat
+ *
  * @typedef WeekItem
  * @property {DateItem[]} days
  * @property {number} number
  */
-
-const { DateTime } = luxon;
 
 /**
  * @param {NullableDateTime} date1
@@ -210,9 +214,10 @@ const PRECISION_LEVELS = new Map()
                 const daysOfWeek = weeks[0].days.map((d) => [
                     d.range[0].weekdayShort,
                     d.range[0].weekdayLong,
+                    Info.weekdays("narrow", { locale: d.range[0].locale })[d.range[0].weekday - 1],
                 ]);
                 if (showWeekNumbers) {
-                    daysOfWeek.unshift(["#", _t("Week numbers")]);
+                    daysOfWeek.unshift(["#", _t("Week numbers"), "#"]);
                 }
 
                 return {
@@ -293,6 +298,8 @@ const NULLABLE_DATETIME_PROPERTY = [DateTime, { value: false }, { value: null }]
 export class DateTimePicker extends Component {
     static props = {
         focusedDateIndex: { type: Number, optional: true },
+        showWeekNumbers: { type: Boolean, optional: true },
+        daysOfWeekFormat: { type: String, optional: true },
         maxDate: { type: [NULLABLE_DATETIME_PROPERTY, { value: "today" }], optional: true },
         maxPrecision: {
             type: [...PRECISION_LEVELS.keys()].map((value) => ({ value })),
@@ -325,6 +332,7 @@ export class DateTimePicker extends Component {
 
     static defaultProps = {
         focusedDateIndex: 0,
+        daysOfWeekFormat: "short",
         maxPrecision: "decades",
         minPrecision: "days",
         rounding: 5,
@@ -436,7 +444,7 @@ export class DateTimePicker extends Component {
             additionalMonth: this.additionalMonth,
             maxDate: this.maxDate,
             minDate: this.minDate,
-            showWeekNumbers: !this.props.range,
+            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
             isDateValid: this.props.isDateValid,
             dayCellClass: this.props.dayCellClass,
         };

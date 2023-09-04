@@ -7,7 +7,7 @@ import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupView } from "@web/views/view_hook";
-import { CalendarDatePicker } from "./date_picker/calendar_date_picker";
+import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
@@ -113,7 +113,35 @@ export class CalendarController extends Component {
     }
     get datePickerProps() {
         return {
-            model: this.model,
+            type: "date",
+            showWeekNumbers: false,
+            maxPrecision: "days",
+            daysOfWeekFormat: "narrow",
+            onSelect: (date) => {
+                let scale = "week";
+
+                if (this.model.date.hasSame(date, "day")) {
+                    const scales = ["month", "week", "day"];
+                    scale = scales[(scales.indexOf(this.model.scale) + 1) % scales.length];
+                } else {
+                    // Check if dates are on the same week
+                    // As a.hasSame(b, "week") does not depend on locale and week always starts on Monday,
+                    // we are comparing derivated dates instead to take this into account.
+                    const currentDate =
+                        this.model.date.weekday === 7
+                            ? this.model.date.plus({ day: 1 })
+                            : this.model.date;
+                    const pickedDate = date.weekday === 7 ? date.plus({ day: 1 }) : date;
+
+                    // a.hasSame(b, "week") does not depend on locale and week alway starts on Monday
+                    if (currentDate.hasSame(pickedDate, "week")) {
+                        scale = "day";
+                    }
+                }
+
+                this.model.load({ scale, date });
+            },
+            value: this.model.date,
         };
     }
     get filterPanelProps() {
@@ -290,7 +318,7 @@ export class CalendarController extends Component {
     }
 }
 CalendarController.components = {
-    DatePicker: CalendarDatePicker,
+    DatePicker: DateTimePicker,
     FilterPanel: CalendarFilterPanel,
     MobileFilterPanel: CalendarMobileFilterPanel,
     QuickCreate: CalendarQuickCreate,

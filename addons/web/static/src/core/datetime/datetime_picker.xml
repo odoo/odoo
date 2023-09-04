@@ -12,11 +12,11 @@
                             class="o_day_of_week_cell o_text_sm o_cell_md fw-bolder bg-100 border-bottom border-2 d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
-                            <div class="text-nowrap overflow-hidden" t-esc="dayOfWeek[0]" />
+                            <div class="text-nowrap overflow-hidden" t-esc="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
                         </div>
                     </t>
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
-                        <t t-if="!props.range">
+                        <t t-if="props.showWeekNumbers ?? !props.range">
                             <div
                                 class="o_week_number_cell o_center o_cell_md o_text_sm bg-100 fw-bolder"
                                 t-att-class="{ 'border-bottom': !week_last }"
@@ -137,7 +137,7 @@
     <t t-name="web.DateTimePicker">
         <div
             class="o_datetime_picker d-flex flex-column gap-2 p-2 p-lg-3 user-select-none"
-            t-attf-style="--DateTimePicker__Day-template-columns: {{ props.range ? 7 : 8 }}"
+            t-attf-style="--DateTimePicker__Day-template-columns: {{ !props.showWeekNumbers or props.range ? 7 : 8 }}"
         >
             <nav class="o_datetime_picker_header btn-group">
                 <button class="o_previous btn btn-light flex-grow-0" t-on-click="previous">
