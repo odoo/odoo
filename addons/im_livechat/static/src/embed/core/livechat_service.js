@@ -66,11 +66,14 @@ export class LivechatService {
     }
 
     async initialize() {
-        const init = await this.rpc("/im_livechat/init", {
-            channel_id: this.options.channel_id,
-        });
-        this.available = init.available_for_me ?? this.available;
-        this.rule = init.rule;
+        let init;
+        if (!this.options.isTestChatbot) {
+            init = await this.rpc("/im_livechat/init", {
+                channel_id: this.options.channel_id,
+            });
+        }
+        this.available = init?.available_for_me ?? this.available;
+        this.rule = init?.rule ?? {};
         this.initialized = true;
         this.initializedDeferred.resolve();
     }
