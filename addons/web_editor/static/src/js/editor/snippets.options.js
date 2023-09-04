@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import rpc from "@web/legacy/js/core/rpc";
@@ -1747,7 +1747,7 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
     _openDialog(el, {images = false, videos = false, save}) {
         el.src = this._value;
         const $editable = this.$target.closest('.o_editable');
-        const mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
+        this.call("dialog", "add", MediaDialog, {
             noImages: !images,
             noVideos: !videos,
             noIcons: true,
@@ -1760,7 +1760,6 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             save,
             media: el,
         });
-        return mediaDialogWrapper.mount(this.el);
     },
 
     //--------------------------------------------------------------------------
