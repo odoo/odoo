@@ -23,6 +23,7 @@ class PurchaseOrder(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
+    _check_company_auto = True
 
     @api.depends('order_line.price_total')
     def _amount_all(self):

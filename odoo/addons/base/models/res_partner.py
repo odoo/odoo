@@ -134,6 +134,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name"
+    _check_company_auto = True
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -172,7 +173,7 @@ class Partner(models.Model):
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
-    user_id = fields.Many2one('res.users', string='Salesperson',
+    user_id = fields.Many2one('res.users', string='Salesperson', check_company=True,
       help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
