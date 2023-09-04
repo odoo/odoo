@@ -1,17 +1,17 @@
 /* @odoo-module */
 
-import { Discuss } from "@mail/core/common/discuss";
+import { ChatWindow } from "@mail/core/common/chat_window";
 
 import { patch } from "@web/core/utils/patch";
 
 import { useEffect } from "@odoo/owl";
 
-patch(Discuss.prototype, {
+patch(ChatWindow.prototype, {
     setup(...args) {
         super.setup(...args);
         useEffect(
             () => {
-                if (this.thread && this.thread === this.store.openInviteThread) {
+                if (this.props.chatWindow.thread === this.store.openInviteThread) {
                     this.threadActions.actions
                         .find((action) => action.id === "add-users")
                         ?.onSelect();
