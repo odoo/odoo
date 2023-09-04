@@ -281,7 +281,7 @@ patch(MockServer.prototype, {
     _mockRouteMailLinkPreview(message_id, clear = false) {
         const linkPreviews = [];
         const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", message_id]]);
-        if (message.body === "https://make-link-preview.com") {
+        if (message.body.includes("https://make-link-preview.com")) {
             if (clear) {
                 const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
                     ["message_id", "=", message_id],
@@ -297,6 +297,7 @@ patch(MockServer.prototype, {
             }
 
             const linkPreviewId = this.pyEnv["mail.link.preview"].create({
+                message_id: message.id,
                 og_description: "test description",
                 og_title: "Article title",
                 og_type: "article",
