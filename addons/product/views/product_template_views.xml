@@ -76,6 +76,9 @@
                     </p>
                 </page>
             </xpath>
+            <xpath expr="//group[@name='group_standard_price']" position="after">
+                <field name="custom_properties" nolabel="1" columns="2" hideAddButton="1"/>
+            </xpath>
         </field>
     </record>
 
@@ -88,6 +91,8 @@
                 <field name="product_variant_count"/>
                 <field name="currency_id"/>
                 <field name="activity_state"/>
+                <field name="categ_id"/>
+                <field name="custom_properties"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
@@ -112,6 +117,9 @@
                                 </div>
                                 <div name="product_lst_price" class="mt-1">
                                     Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"></field>
+                                </div>
+                                <div>
+                                    <field name="custom_properties" widget="properties"/>
                                 </div>
                             </div>
                         </div>
