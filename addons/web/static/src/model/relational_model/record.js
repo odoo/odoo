@@ -826,7 +826,10 @@ export class Record extends DataPoint {
         this._activeFieldsToRestore = undefined;
     }
 
-    async _save({ noReload, onError } = {}) {
+    async _save({ noReload, onError, nextId } = {}) {
+        if (nextId) {
+            noReload = false;
+        }
         // before saving, abandon new invalid, untouched records in x2manys
         for (const fieldName in this.activeFields) {
             const field = this.fields[fieldName];
@@ -858,6 +861,7 @@ export class Record extends DataPoint {
         const kwargs = {
             context: this.context,
             specification: fieldSpec,
+            next_id: nextId,
         };
         let records = [];
         try {
@@ -876,9 +880,9 @@ export class Record extends DataPoint {
             }
             throw e;
         }
-        if (creation && records.length) {
+        if ((creation || nextId) && records.length) {
             const resId = records[0].id;
-            const resIds = this.resIds.concat([resId]);
+            const resIds = resId in this.resIds ? this.resIds : this.resIds.concat([resId]);
             this.model._updateConfig(this.config, { resId, resIds }, { noReload: true });
         }
         if (!noReload) {
