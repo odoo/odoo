@@ -300,8 +300,8 @@
                                 <div class="o_kanban_record_top">
                                     <img t-att-src="kanban_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" t-att-alt="record.vehicle_id.value" class="o_image_24_cover float-start"/>
                                     <div class="o_kanban_record_headings ps-2 pe-2">
-                                        <div class="text-truncate o_kanban_record_title">
-                                            <strong>
+                                        <div class="text-truncate">
+                                            <strong class="o_kanban_record_title">
                                                 <field name="vehicle_id"/>
                                                 <span t-attf-class="float-end badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
                                                     <field name="state"/>
