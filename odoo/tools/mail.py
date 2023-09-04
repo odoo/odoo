@@ -465,7 +465,6 @@ mail_header_msgid_re = re.compile('<[^<>]+>')
 
 email_addr_escapes_re = re.compile(r'[\\"]')
 
-
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
 
@@ -483,14 +482,35 @@ def email_split_tuples(text):
     """ Return a list of (name, email) address tuples found in ``text`` . Note
     that text should be an email header or a stringified email list as it may
     give broader results than expected on actual text. """
+    def _parse_based_on_spaces(pair):
+        """ With input 'name email@domain.com' (missing quotes for a formatting)
+        getaddresses returns ('', 'name email@domain.com). This when having no
+        name and an email a fallback to enhance parsing is to redo a getaddresses
+        by replacing spaces by commas. The new email will be split into sub pairs
+        allowing to find the email and name parts, allowing to make a new name /
+        email pair. Emails should not contain spaces thus this is coherent with
+        email formation. """
+        name, email = pair
+        if not name and email and ' ' in email:
+            inside_pairs = getaddresses([email.replace(' ', ',')])
+            name_parts, found_email = [], False
+            for pair in inside_pairs:
+                if pair[1] and '@' not in pair[1]:
+                    name_parts.append(pair[1])
+                if pair[1] and '@' in pair[1]:
+                    found_email = pair[1]
+            name, email = (' '.join(name_parts), found_email) if found_email else (name, email)
+        return (name, email)
+
     if not text:
         return []
-    return [(addr[0], addr[1]) for addr in getaddresses([text])
-                # getaddresses() returns '' when email parsing fails, and
-                # sometimes returns emails without at least '@'. The '@'
-                # is strictly required in RFC2822's `addr-spec`.
-                if addr[1]
-                if '@' in addr[1]]
+    return list(map(_parse_based_on_spaces, [
+        (addr[0], addr[1]) for addr in getaddresses([text])
+        # getaddresses() returns '' when email parsing fails, and
+        # sometimes returns emails without at least '@'. The '@'
+        # is strictly required in RFC2822's `addr-spec`.
+        if addr[1] and '@' in addr[1]
+    ]))
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
@@ -505,20 +525,62 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
-def email_normalize(text):
-    """ Sanitize and standardize email address entries.
-        A normalized email is considered as :
-        - having a left part + @ + a right part (the domain can be without '.something')
-        - being lower case
-        - having no name before the address. Typically, having no 'Name <>'
-        Ex:
-        - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
-        - Normalized Output Email : 'name@domain.com'
+def email_normalize(text, force_single=True):
+    """ Sanitize and standardize email address entries. As of rfc5322 section
+    3.4.1 local-part is case-sensitive. However most main providers do consider
+    the local-part as case insensitive. With the introduction of smtp-utf8
+    within odoo, this assumption is certain to fall short for international
+    emails. We now consider that
+
+      * if local part is ascii: normalize still 'lower' ;
+      * else: use as it, SMTP-UF8 is made for non-ascii local parts;
+
+    Concerning domain part of the address, as of v14 international domain (IDNA)
+    are handled fine. The domain is always lowercase, lowering it is fine as it
+    is probably an error. With the introduction of IDNA, there is an encoding
+    that allow non-ascii characters to be encoded to ascii ones, using 'idna.encode'.
+
+    A normalized email is considered as :
+    - having a left part + @ + a right part (the domain can be without '.something')
+    - having no name before the address. Typically, having no 'Name <>'
+    Ex:
+    - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
+    - Normalized Output Email : 'name@domain.com'
+
+    :param boolean force_single: if True, text should contain a single email
+      (default behavior in stable 14+). If more than one email is found no
+      normalized email is returned. If False the first found candidate is used
+      e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com>', result is either
+      False (force_single=True), either 'tony@e.com' (force_single=False).
     """
     emails = email_split(text)
-    if not emails or len(emails) != 1:
+    if not emails or (len(emails) != 1 and force_single):
         return False
-    return emails[0].lower()
+
+    local_part, at, domain = emails[0].rpartition('@')
+    try:
+        local_part.encode('ascii')
+    except UnicodeEncodeError:
+        pass
+    else:
+        local_part = local_part.lower()
+
+    return local_part + at + domain.lower()
+
+
+def email_normalize_all(text):
+    """ Tool method allowing to extract email addresses from a text input and returning
+    normalized version of all found emails. If no email is found, a void list
+    is returned.
+
+    e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com' returned result is ['tony@e.com, tony2@e.com']
+
+    :return list: list of normalized emails found in text
+    """
+    if not text:
+        return []
+    emails = email_split(text)
+    return list(filter(None, [email_normalize(email) for email in emails]))
 
 
 def email_domain_extract(email):
@@ -531,12 +593,14 @@ def email_domain_extract(email):
         return normalized_email.split('@')[1]
     return False
 
+
 def email_domain_normalize(domain):
     """Return the domain normalized or False if the domain is invalid."""
     if not domain or '@' in domain:
         return False
 
     return domain.lower()
+
 
 def url_domain_extract(url):
     """ Extract the company domain to be used by IAP services notably. Domain
@@ -548,6 +612,7 @@ def url_domain_extract(url):
     if company_hostname and '.' in company_hostname:
         return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains
     return False
+
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
