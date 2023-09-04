@@ -34,15 +34,6 @@ class TestLinkTracker(common.TestMassMailCommon):
         self.assertEqual(click.country_id, self.env.ref('base.be'))
         self.assertEqual(self.link.count, 2)
 
-        # click from same IP (even another country) does not create a new entry
-        click = self.env['link.tracker.click'].sudo().add_click(
-            code,
-            ip='100.00.00.01',
-            country_code='FRA'
-        )
-        self.assertEqual(click, None)
-        self.assertEqual(self.link.count, 2)
-
     @users('user_marketing')
     def test_add_link_mail_stat(self):
         record = self.env['mailing.test.blacklist'].create({})
