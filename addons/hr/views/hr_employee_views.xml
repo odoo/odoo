@@ -115,7 +115,7 @@
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
-                                        <group string="Location">
+                                        <group name="location" string="Location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"highlight_first_line": True}'/>
@@ -160,7 +160,7 @@
                                         </div>
                                         <field name="private_car_plate" />
                                     </group>
-                                    <group string="Family Status">
+                                    <group name="family_status" string="Family Status">
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>

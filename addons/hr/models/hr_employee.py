@@ -65,13 +65,7 @@ class HrEmployeePrivate(models.Model):
         ('female', 'Female'),
         ('other', 'Other')
     ], groups="hr.group_hr_user", tracking=True)
-    marital = fields.Selection([
-        ('single', 'Single'),
-        ('married', 'Married'),
-        ('cohabitant', 'Legal Cohabitant'),
-        ('widower', 'Widower'),
-        ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
+    marital = fields.Selection(selection="_get_marital_selection", string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
     spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
@@ -183,6 +177,16 @@ class HrEmployeePrivate(models.Model):
             name = employee.name.replace(' ', '_') + '_' if employee.name else ''
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
+
+    @api.depends('company_id')
+    def _get_marital_selection(self):
+        return [
+            ('single', 'Single'),
+            ('married', 'Married'),
+            ('cohabitant', 'Legal Cohabitant'),
+            ('widower', 'Widower'),
+            ('divorced', 'Divorced')
+        ]
 
     def action_create_user(self):
         self.ensure_one()
