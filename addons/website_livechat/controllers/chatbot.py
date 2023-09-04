@@ -37,5 +37,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'channel_data': discuss_channel._channel_info()[0],
-            'chatbot_data': chatbot_script._format_for_frontend()
+            'chatbot_data': chatbot_script._format_for_frontend(),
+            'current_partner_id': request.env.user.partner_id.id,
         })
