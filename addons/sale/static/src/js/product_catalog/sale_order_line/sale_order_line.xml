@@ -12,7 +12,7 @@
         <div t-else="" class="d-flex justify-content-end">
             <div t-if="isInSaleOrder()"
                     class="input-group o_sale_product_catalog_quantity o_sale_product_catalog_cancel_global_click w-50">
-                <button class="btn btn-light border"
+                <button class="btn btn-primary border"
                         t-on-click="this.env.decreaseQuantity">
                     <i class="fa fa-minus center"/>
                 </button>
@@ -20,7 +20,7 @@
                         type="number"
                         t-att-value="props.quantity"
                         t-on-change="this.env.setQuantity"/>
-                <button class="btn btn-light border"
+                <button class="btn btn-primary border"
                         t-on-click="this.env.increaseQuantity">
                     <i class="fa fa-plus"/>
                 </button>
@@ -28,7 +28,7 @@
             <div class="ms-auto o_sale_product_catalog_cancel_global_click">
                 <button t-if="!isInSaleOrder()"
                         t-on-click="this.env.addProduct"
-                        class="btn btn-primary">
+                        class="btn btn-secondary">
                     <i class="fa fa-shopping-cart"/>
                     Add
                 </button>
