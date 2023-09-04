@@ -7,11 +7,7 @@
                     <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
                     <ds:Reference t-att-Id="reference_uri" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
                         <ds:Transforms>
-                            <ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                             <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                            <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
-                                <ds:XPath>not(ancestor-or-self::ds:Signature)</ds:XPath>
-                            </ds:Transform>
                         </ds:Transforms>
                         <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                         <ds:DigestValue></ds:DigestValue>
@@ -42,7 +38,7 @@
                         <xades:SignedProperties t-att-Id="sigproperties_id">
                             <xades:SignedSignatureProperties>
                                 <xades:SigningTime t-out="iso_now"/>
-                                <xades:SigningCertificateV2>
+                                <xades:SigningCertificate>
                                     <xades:Cert>
                                         <xades:CertDigest>
                                             <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
@@ -53,7 +49,7 @@
                                             <ds:X509SerialNumber t-out="x509_serial_number"/>
                                         </xades:IssuerSerial>
                                     </xades:Cert>
-                                </xades:SigningCertificateV2>
+                                </xades:SigningCertificate>
                                 <xades:SignaturePolicyIdentifier>
                                     <xades:SignaturePolicyId>
                                         <xades:SigPolicyId>
