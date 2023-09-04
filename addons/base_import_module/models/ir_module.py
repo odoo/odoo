@@ -92,6 +92,18 @@ class IrModule(models.Model):
                 to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
+        immediate_install_modules = self
+        to_install_modules = set()
+        for unmet_dependencie in unmet_dependencies:
+            if unmet_dependencie in known_mods_names:
+                immediate_install_modules += known_mods_names[unmet_dependencie]
+                to_install_modules.add(unmet_dependencie)
+        unknown_dependencies = unmet_dependencies.difference(to_install_modules)
+        if unknown_dependencies:
+            err = _("Unknown module dependencies: \n\n - %s") % '\n - '.join(unknown_dependencies)
+            raise UserError(err)
+        if immediate_install_modules:
+            immediate_install_modules.button_immediate_install()
 
         mod = known_mods_names.get(module)
         if mod:
