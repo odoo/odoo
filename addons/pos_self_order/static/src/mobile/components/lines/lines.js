@@ -16,6 +16,11 @@ export class Lines extends Component {
     get lines() {
         return this.props.order.lines;
     }
+    getPrice(line) {
+        return this.selfOrder.show_prices_with_tax_included
+            ? line.price_subtotal_incl
+            : line.price_subtotal;
+    }
 
     clickOnLine(line) {
         const order = this.props.order;

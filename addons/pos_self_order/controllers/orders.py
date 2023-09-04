@@ -236,7 +236,7 @@ class PosSelfOrderController(http.Controller):
                         child_product,
                     )
                     newLines.append({
-                        'price_unit': price_unit,
+                        'price_unit': child_price_unit,
                         'price_subtotal': child_tax_results.get('total_excluded'),
                         'price_subtotal_incl': child_tax_results.get('total_included'),
                         'id': child.get('id'),

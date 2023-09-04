@@ -86,6 +86,24 @@
                             </div>
                         </div>
                     </t>
+                <div t-foreach="props.product.pos_combo_ids or []" t-as="combo_id" t-key="combo_id" class="mb-3">
+                        <t t-set="combo" t-value="selfOrder.comboByIds[combo_id]"/>
+                        <h3 class="py-1" t-esc="combo.name"/>
+                        <div t-foreach="combo.combo_line_ids" t-as="combo_line" t-key="combo_line.id" class="d-flex align-items-center form-control py-3">
+                            <input type="radio" class="form-check-input my-1 me-2"
+                                t-att-name="combo.name"
+                                t-attf-id="{{ combo.name }}_{{ combo_line.product_id[1] }}"
+                                t-att-value="combo_line.id"
+                                t-model="state.selectedCombos[combo.id]" />
+                            <label t-attf-for="{{ combo.name }}_{{ combo_line.product_id[1] }}" class="d-flex flex-grow-1">
+                                <div class="" t-esc="selfOrder.productByIds[combo_line.product_id[0]].name"/>
+                                <div class="ms-auto pe-3" t-if="combo_line.combo_price">
+                                    + <t t-esc="selfOrder.formatMonetary(combo_line.combo_price)" />
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div t-if="selfOrder.ordering and (!disableAttributes || state.customer_note)">
                         <label class="form-label fw-bold" for="note">Add a note:</label>
                         <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="state.customer_note" t-att-disabled="disableAttributes" />
