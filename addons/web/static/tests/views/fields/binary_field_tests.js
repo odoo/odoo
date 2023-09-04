@@ -13,6 +13,8 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc_service";
+import { MAX_FILENAME_SIZE_BYTES } from "@web/views/fields/binary/binary_field";
+import { toBase64Length } from "@web/core/utils/binary";
 
 const BINARY_FILE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
@@ -430,6 +432,28 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         assert.containsNone(target, "button.fa-download");
+    });
+
+    QUnit.test("Binary filename doesn't exceed 255 bytes", async function (assert) {
+        const LARGE_BINARY_FILE = BINARY_FILE.repeat(5);
+        assert.ok((LARGE_BINARY_FILE.length / 4 * 3) > MAX_FILENAME_SIZE_BYTES,
+            "The initial binary file should be larger than max bytes that can represent the filename");
+        serverData.models.partner.fields.document.default = LARGE_BINARY_FILE;
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document"/>
+                </form>
+            `,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value.length,
+            toBase64Length(MAX_FILENAME_SIZE_BYTES),
+            "The filename shouldn't exceed the maximum size in bytes in base64"
+        );
     });
 
     QUnit.test("BinaryField filename is updated when using the pager", async function (assert) {
