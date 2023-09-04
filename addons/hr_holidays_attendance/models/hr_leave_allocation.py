@@ -31,6 +31,15 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.overtime_deductible = allocation.hr_attendance_overtime and allocation.holiday_status_id.overtime_deductible
 
+    def _compute_from_holiday_type(self):
+        if not self.env.context.get("deduct_extra_hours"):
+            super()._compute_from_holiday_type()
+        else:
+            # user clicked on "deduct extra hours", the allocation should be created for the employee.
+            self.ensure_one()
+            if self.holiday_type == 'employee':
+                self.employee_ids = self.employee_id
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -46,6 +55,10 @@ class HolidaysAllocation(models.Model):
                         'adjustment': True,
                         'duration': -1 * duration,
                     })
+                if allocation.state == "draft" and self.env.context.get('deduct_extra_hours'):
+                    allocation.action_confirm()
+                    if allocation.validation_type == "no":
+                        allocation.action_validate()
         return res
 
     def write(self, vals):
@@ -61,6 +74,10 @@ class HolidaysAllocation(models.Model):
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
                 allocation.overtime_id.sudo().duration = -1 * duration
         return res
+
+    def unlink(self):
+        self.overtime_id.sudo().unlink()
+        return super().unlink()
 
     def action_draft(self):
         overtime_allocations = self.filtered('overtime_deductible')
