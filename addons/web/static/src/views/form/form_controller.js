@@ -318,14 +318,12 @@ export class FormController extends Component {
 
     async onPagerUpdate({ offset, resIds }) {
         const dirty = await this.model.root.isDirty();
-        let canProceed = true;
         if (dirty) {
-            canProceed = await this.model.root.save({
-                noReload: true,
+            return this.model.root.save({
                 onError: this.onSaveError.bind(this),
+                nextId: resIds[offset],
             });
-        }
-        if (canProceed) {
+        } else {
             return this.model.load({ resId: resIds[offset] });
         }
     }

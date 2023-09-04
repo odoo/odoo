@@ -5477,6 +5477,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
+        assert.strictEqual(target.querySelector(".o_input").value, "yop");
 
         // edit the foo field
         await editInput(target, ".o_field_widget[name=foo] input", "new value");
@@ -5484,7 +5485,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_pager_next"));
 
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
-        assert.verifySteps(["get_views", "web_read", "web_save", "web_read"]);
+        assert.strictEqual(target.querySelector(".o_input").value, "blip");
+        assert.verifySteps(["get_views", "web_read", "web_save"]);
     });
 
     QUnit.test("switching to another record from an invalid one", async function (assert) {
