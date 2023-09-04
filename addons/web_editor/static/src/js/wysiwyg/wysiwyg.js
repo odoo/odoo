@@ -1522,8 +1522,12 @@ export class Wysiwyg extends Component {
      */
     // todo: review me
     async destroyLinkTools() {
-        if (this.state.linkToolProps) {
-            const selection = this.odooEditor.document.getSelection();
+        const selection = this.odooEditor.document.getSelection();
+        if (this.state.linkToolProps
+            && (selection.type === "None"
+                || (selection.type === "Caret"
+                    && !closestElement(selection.anchorNode, "input[type='text']"))
+            )) {
             const link = this.linkToolsInfos.link;
             let anchorNode
             let focusNode;
@@ -1555,6 +1559,8 @@ export class Wysiwyg extends Component {
                     setSelection(anchorNode, anchorOffset, focusNode, focusOffset, false);
                 }
             }
+        }
+        if (this.state.linkToolProps) {
             this.state.linkToolProps = undefined;
         }
     }

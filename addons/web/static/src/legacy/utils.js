@@ -180,17 +180,17 @@ export function makeLegacyRPC(wowlRPC) {
         let rpcPromise = null;
         const promise = new Promise(function (resolve, reject) {
             rpcPromise = wowlRPC(route, args, options);
-            rpcPromise
-                .then(function (result) {
-                    if (!target.isDestroyed()) {
-                        resolve(result);
-                    }
-                })
-                .guardedCatch(function (reason) {
-                    if (!target.isDestroyed()) {
-                        reject(reason);
-                    }
-                });
+            rpcPromise.then(function (result) {
+                if (!target) throw new Error("wow");
+                if (!target.isDestroyed()) {
+                    resolve(result);
+                }
+            }).guardedCatch(function (reason) {
+                if (!target) throw new Error("wow");
+                if (!target.isDestroyed()) {
+                    reject(reason);
+                }
+            });
         });
         promise.abort = rpcPromise.abort.bind(rpcPromise);
         return promise;
