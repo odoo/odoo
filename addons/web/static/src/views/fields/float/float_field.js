@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
-import { formatFloat } from "../formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -31,7 +31,7 @@ export class FloatField extends Component {
 
     setup() {
         this.state = useState({
-            hasFocus: false, 
+            hasFocus: false,
         })
         this.inputRef = useInputField({
             getValue: () => this.formattedValue,

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { formatMonetary, formatFloat } from "@web/views/fields/formatters";
-import { roundDecimals } from "@web/core/utils/numbers";
+import { formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat, roundDecimals } from "@web/core/utils/numbers";
 import { escapeRegExp } from '@web/core/utils/strings';
 import { registry } from "@web/core/registry";
 

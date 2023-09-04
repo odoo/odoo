@@ -1888,13 +1888,8 @@ class CustomerPortal(sale_portal.CustomerPortal):
             return request.redirect('/my')
 
         pricelist = request.env['website'].get_current_website().get_current_pricelist()
-        currency = pricelist.currency_id
         result = {
-            'currency': {
-                'symbol': currency.symbol,
-                'decimal_places': currency.decimal_places,
-                'position': currency.position,
-            },
+            'currency': pricelist.currency_id.id,
             'products': [],
         }
         for line in sale_order.order_line:

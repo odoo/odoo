@@ -56,17 +56,27 @@ class Currency(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         self._toggle_group_multi_currency()
+        # Currency info is cached to reduce the number of SQL queries when building the session
+        # info. See `ir_http.get_currencies`.
+        self.env.registry.clear_cache()
         return res
 
     def unlink(self):
         res = super().unlink()
         self._toggle_group_multi_currency()
+        # Currency info is cached to reduce the number of SQL queries when building the session
+        # info. See `ir_http.get_currencies`.
+        self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
         res = super().write(vals)
         if 'active' not in vals:
             return res
+        if set(vals.keys()) & {'active', 'digits', 'position', 'symbol'}:
+            # Currency info is cached to reduce the number of SQL queries when building the session
+            # info. See `ir_http.get_currencies`.
+            self.env.registry.clear_cache()
         self._toggle_group_multi_currency()
         return res
 

@@ -2,16 +2,13 @@
 
 import hashlib
 import json
-import logging
 
 import odoo
-from odoo import api, http, models
+from odoo import api, models
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
-from odoo.tools import file_open, image_process, ustr
+from odoo.tools import ormcache, ustr
 from odoo.tools.misc import str2bool
 
-
-_logger = logging.getLogger(__name__)
 
 """
 Debug mode is stored in session and should always be a string.
@@ -167,6 +164,7 @@ class Http(models.AbstractModel):
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
             'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'currencies': self.get_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
@@ -181,6 +179,7 @@ class Http(models.AbstractModel):
             })
         return session_info
 
+    @ormcache()
     def get_currencies(self):
         Currency = self.env['res.currency']
         currencies = Currency.search_fetch([], ['symbol', 'position', 'decimal_places'])

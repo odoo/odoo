@@ -4,12 +4,16 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, nbsp } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
-import { humanNumber, insertThousandsSep } from "@web/core/utils/numbers";
+import {
+    formatFloat as formatFloatNumber,
+    humanNumber,
+    insertThousandsSep,
+} from "@web/core/utils/numbers";
 
 import { markup } from "@odoo/owl";
-import { getCurrency } from "@web/core/currency";
+import { formatCurrency } from "@web/core/currency";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -92,7 +96,7 @@ export function formatChar(value, options) {
  * @param {number[]} [options.grouping] array of relative offsets at which to
  *   insert `thousandsSep`. See `insertThousandsSep` method.
  * @param {number} [options.decimals] used for humanNumber formmatter
- * @param {boolean} [options.noTrailingZeros=false] if true, the decimal part
+ * @param {boolean} [options.trailingZeros=true] if false, the decimal part
  *   won't contain unnecessary trailing zeros.
  * @returns {string}
  */
@@ -100,24 +104,7 @@ export function formatFloat(value, options = {}) {
     if (value === false) {
         return "";
     }
-    if (options.humanReadable) {
-        return humanNumber(value, options);
-    }
-    const grouping = options.grouping || l10n.grouping;
-    const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
-    const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
-    let precision;
-    if (options.digits && options.digits[1] !== undefined) {
-        precision = options.digits[1];
-    } else {
-        precision = 2;
-    }
-    const formatted = (value || 0).toFixed(precision).split(".");
-    formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
-    if (options.noTrailingZeros) {
-        formatted[1] = formatted[1].replace(/0+$/, "");
-    }
-    return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
+    return formatFloatNumber(value, options);
 }
 
 /**
@@ -134,7 +121,7 @@ export function formatFloatFactor(value, options = {}) {
         return "";
     }
     const factor = options.factor || 1;
-    return formatFloat(value * factor, options);
+    return formatFloatNumber(value * factor, options);
 }
 
 /**
@@ -291,24 +278,7 @@ export function formatMonetary(value, options = {}) {
         const dataValue = options.data[currencyField];
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
-    const currency = getCurrency(currencyId);
-    const digits = options.digits || (currency && currency.digits);
-
-    let formattedValue;
-    if (options.humanReadable) {
-        formattedValue = humanNumber(value, { decimals: digits ? digits[1] : 2 });
-    } else {
-        formattedValue = formatFloat(value, { digits });
-    }
-
-    if (!currency || options.noSymbol) {
-        return formattedValue;
-    }
-    const formatted = [currency.symbol, formattedValue];
-    if (currency.position === "after") {
-        formatted.reverse();
-    }
-    return formatted.join(nbsp);
+    return formatCurrency(value, currencyId, options)
 }
 
 /**
@@ -322,8 +292,8 @@ export function formatMonetary(value, options = {}) {
  */
 export function formatPercentage(value, options = {}) {
     value = value || 0;
-    options = Object.assign({ noTrailingZeros: true, thousandsSep: "" }, options);
-    const formatted = formatFloat(value * 100, options);
+    options = Object.assign({ trailingZeros: false, thousandsSep: "" }, options);
+    const formatted = formatFloatNumber(value * 100, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
 

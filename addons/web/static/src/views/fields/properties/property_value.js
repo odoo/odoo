@@ -18,7 +18,8 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
-import { formatFloat, formatInteger, formatMany2one } from "@web/views/fields/formatters";
+import { formatInteger, formatMany2one } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";

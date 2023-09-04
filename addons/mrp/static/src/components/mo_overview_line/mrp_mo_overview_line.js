@@ -3,7 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { getStateDecorator } from "./mo_overview_colors";
 
 export class MoOverviewLine extends Component {
@@ -87,7 +88,7 @@ export class MoOverviewLine extends Component {
     }
 
     //---- Getters ----
-    
+
     get data() {
         return this.props.data;
     }

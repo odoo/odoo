@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency } from "@web/core/currency";
 import { Product } from "../product/product";
 
 export class ProductList extends Component {
@@ -21,11 +21,11 @@ export class ProductList extends Component {
      * @return {String} - The sum of all items in the list, in the currency of the `sale.order`.
      */
     getFormattedTotal() {
-        return formatMonetary(
+        return formatCurrency(
             this.props.products.reduce(
                 (totalPrice, product) => totalPrice + product.price * product.quantity, 0
             ),
-            {currencyId: this.env.currencyId},
+            this.env.currencyId,
         )
     }
 }

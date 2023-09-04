@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 
 const { Component } = owl;
 

@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { formatFloat } from "@web/views/fields/formatters";
 import { uuidv4 } from "@point_of_sale/utils";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
@@ -12,6 +11,7 @@ import {
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import {
+    formatFloat,
     roundDecimals as round_di,
     roundPrecision as round_pr,
     floatIsZero,

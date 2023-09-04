@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
+import { formatMonetary } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";

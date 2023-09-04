@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency } from "@web/core/currency";
 import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";
 
 export class ProductTemplateAttributeLine extends Component {
@@ -110,8 +110,8 @@ export class ProductTemplateAttributeLine extends Component {
     getPTAVSelectName(ptav) {
         if (ptav.price_extra) {
             const sign = ptav.price_extra > 0 ? '+' : '-';
-            const price = formatMonetary(
-                Math.abs(ptav.price_extra),{currencyId: this.env.currencyId}
+            const price = formatCurrency(
+                Math.abs(ptav.price_extra), this.env.currencyId
             );
             return ptav.name +" ("+ sign + " " + price + ")";
         } else {
