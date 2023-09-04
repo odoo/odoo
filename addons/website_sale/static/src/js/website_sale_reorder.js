@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formatCurrency } from "@web/core/currency";
 
@@ -22,31 +21,19 @@ publicWidget.registry.SaleOrderPortalReorderWidget = publicWidget.Widget.extend(
             return;
         }
         // Open the modal
-        const dialogWrapper = new ComponentWrapper(this, ReorderDialogWrapper, {
+        this.call("dialog", "add", ReorderDialog, {
             orderId: orderId,
             accessToken: urlSearchParams.get("access_token"),
         });
-        dialogWrapper.mount(document.body);
     },
 });
 
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 
-const { Component, onRendered, onWillStart, xml } = owl;
+const { Component, onWillStart } = owl;
 
 // Reorder Dialog
-
-export class ReorderDialogWrapper extends Component {
-    setup() {
-        this.dialogService = useService("dialog");
-
-        onRendered(() => {
-            this.dialogService.add(ReorderDialog, this.props);
-        });
-    }
-}
-ReorderDialogWrapper.template = xml``;
 
 export class ReorderConfirmationDialog extends ConfirmationDialog {}
 ReorderConfirmationDialog.template = "website_sale.ReorderConfirmationDialog";
