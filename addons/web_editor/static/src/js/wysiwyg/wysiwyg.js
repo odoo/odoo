@@ -1166,9 +1166,21 @@ export class Wysiwyg extends Component {
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
+                if (el.closest(".o_dirty") !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `_saveB64Image()` call with
+                    // the correct "resModel" and "resId" parameters.
+                    return;
+                }
                 await this._saveB64Image(el, resModel, resId);
             });
             const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
+                if (el.closest(".o_dirty") !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `_saveModifiedImage()` call
+                    // with the correct "resModel" and "resId" parameters.
+                    return;
+                }
                 await this._saveModifiedImage(el, resModel, resId);
             });
             return Promise.all([...b64Proms, ...modifiedProms]);
