@@ -418,138 +418,10 @@ class Website(models.Model):
 
     @api.model
     def configurator_apply(self, **kwargs):
-        def set_colors(selected_palette):
-            url = '/website/static/src/scss/options/user_values.scss'
-            selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
-            values = {'color-palettes-name': "'%s'" % selected_palette_name}
-            self.env['web_editor.assets'].make_scss_customization(url, values)
-
-            if isinstance(selected_palette, list):
-                url = '/website/static/src/scss/options/colors/user_color_palette.scss'
-                values = {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
-                self.env['web_editor.assets'].make_scss_customization(url, values)
-
-        def set_features(selected_features):
-            features = self.env['website.configurator.feature'].browse(selected_features)
-
-            menu_company = self.env['website.menu']
-            if len(features.filtered('menu_sequence')) > 5 and len(features.filtered('menu_company')) > 1:
-                menu_company = self.env['website.menu'].create({
-                    'name': _('Company'),
-                    'parent_id': website.menu_id.id,
-                    'website_id': website.id,
-                    'sequence': 40,
-                })
-
-            pages_views = {}
-            modules = self.env['ir.module.module']
-            module_data = {}
-            for feature in features:
-                add_menu = bool(feature.menu_sequence)
-                if feature.module_id:
-                    if feature.module_id.state != 'installed':
-                        modules += feature.module_id
-                    if add_menu:
-                        if feature.module_id.name != 'website_blog':
-                            module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
-                        else:
-                            blogs = module_data.setdefault('#blog', [])
-                            blogs.append({'name': feature.name, 'sequence': feature.menu_sequence})
-                elif feature.page_view_id:
-                    result = self.env['website'].new_page(
-                        name=feature.name,
-                        add_menu=add_menu,
-                        page_values=dict(url=feature.feature_url, is_published=True),
-                        menu_values=add_menu and {
-                            'url': feature.feature_url,
-                            'sequence': feature.menu_sequence,
-                            'parent_id': feature.menu_company and menu_company.id or website.menu_id.id,
-                        },
-                        template=feature.page_view_id.key
-                    )
-                    pages_views[feature.iap_page_code] = result['view_id']
-
-            if modules:
-                modules.button_immediate_install()
-                assert self.env.registry is registry()
-
-            self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
-
-            return pages_views
-
-        def configure_page(page_code, snippet_list, pages_views, cta_data):
-            if page_code == 'homepage':
-                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
-            else:
-                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
-            rendered_snippets = []
-            nb_snippets = len(snippet_list)
-            for i, snippet in enumerate(snippet_list, start=1):
-                try:
-                    IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-                    render = IrQweb._render('website.' + snippet, cta_data)
-                    if render:
-                        el = html.fromstring(render)
-
-                        # Add the data-snippet attribute to identify the snippet
-                        # for compatibility code
-                        el.attrib['data-snippet'] = snippet
-
-                        # Tweak the shape of the first snippet to connect it
-                        # properly with the header color in some themes
-                        if i == 1:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
-
-                        # Tweak the shape of the last snippet to connect it
-                        # properly with the footer color in some themes
-                        if i == nb_snippets:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-                        rendered_snippet = pycompat.to_text(etree.tostring(el))
-                        rendered_snippets.append(rendered_snippet)
-                except ValueError as e:
-                    logger.warning(e)
-            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
-
-        def set_images(images):
-            names = self.env['ir.model.data'].search([
-                ('name', '=ilike', f'configurator\\_{website.id}\\_%'),
-                ('module', '=', 'website'),
-                ('model', '=', 'ir.attachment')
-            ]).mapped('name')
-            for name, url in images.items():
-                extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
-                if extn_identifier in names:
-                    continue
-                try:
-                    response = requests.get(url, timeout=3)
-                    response.raise_for_status()
-                except Exception as e:
-                    logger.warning("Failed to download image: %s.\n%s", url, e)
-                else:
-                    attachment = self.env['ir.attachment'].create({
-                        'name': name,
-                        'website_id': website.id,
-                        'key': name,
-                        'type': 'binary',
-                        'raw': response.content,
-                        'public': True,
-                    })
-                    self.env['ir.model.data'].create({
-                        'name': extn_identifier,
-                        'module': 'website',
-                        'model': 'ir.attachment',
-                        'res_id': attachment.id,
-                        'noupdate': True,
-                    })
-
         website = self.get_current_website()
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
-        url = theme.button_choose_theme()
+        redirect_url = theme.button_choose_theme()
 
         # Force to refresh env after install of module
         assert self.env.registry is registry()
@@ -573,10 +445,20 @@ class Website(models.Model):
         elif not logo_attachment_id and not company.uses_default_logo:
             website.logo = company.logo.decode('utf-8')
 
-        # palette
-        palette = kwargs.get('selected_palette')
-        if palette:
-            set_colors(palette)
+        # Configure the color palette
+        selected_palette = kwargs.get('selected_palette')
+        if selected_palette:
+            Assets = self.env['web_editor.assets']
+            selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
+            Assets.make_scss_customization(
+                '/website/static/src/scss/options/user_values.scss',
+                {'color-palettes-name': "'%s'" % selected_palette_name}
+            )
+            if isinstance(selected_palette, list):
+                Assets.make_scss_customization(
+                    '/website/static/src/scss/options/colors/user_color_palette.scss',
+                    {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
+                )
 
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
@@ -613,14 +495,59 @@ class Website(models.Model):
             except ValueError as e:
                 logger.warning(e)
 
-        # modules
-        pages_views = set_features(kwargs.get('selected_features'))
-        # We need to refresh the environment of website because set_features installed some new module
-        # and we need the overrides of these new menus e.g. for .get_cta_data()
+        # Configure the features
+        features = self.env['website.configurator.feature'].browse(kwargs.get('selected_features'))
+
+        menu_company = self.env['website.menu']
+        if len(features.filtered('menu_sequence')) > 5 and len(features.filtered('menu_company')) > 1:
+            menu_company = self.env['website.menu'].create({
+                'name': _('Company'),
+                'parent_id': website.menu_id.id,
+                'website_id': website.id,
+                'sequence': 40,
+            })
+
+        pages_views = {}
+        modules = self.env['ir.module.module']
+        module_data = {}
+        for feature in features:
+            add_menu = bool(feature.menu_sequence)
+            if feature.module_id:
+                if feature.module_id.state != 'installed':
+                    modules += feature.module_id
+                if add_menu:
+                    if feature.module_id.name != 'website_blog':
+                        module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
+                    else:
+                        blogs = module_data.setdefault('#blog', [])
+                        blogs.append({'name': feature.name, 'sequence': feature.menu_sequence})
+            elif feature.page_view_id:
+                result = self.env['website'].new_page(
+                    name=feature.name,
+                    add_menu=add_menu,
+                    page_values=dict(url=feature.feature_url, is_published=True),
+                    menu_values=add_menu and {
+                        'url': feature.feature_url,
+                        'sequence': feature.menu_sequence,
+                        'parent_id': feature.menu_company and menu_company.id or website.menu_id.id,
+                    },
+                    template=feature.page_view_id.key
+                )
+                pages_views[feature.iap_page_code] = result['view_id']
+
+        if modules:
+            modules.button_immediate_install()
+            assert self.env.registry is registry()
+
+        self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
+
+        # We need to refresh the environment of the website because we installed
+        # some new module and we need the overrides of these new menus e.g. for
+        # the call to `get_cta_data`.
         website = self.env['website'].browse(website.id)
 
-        # Update footers links, needs to be done after `set_features` to go
-        # through module overide of `configurator_get_footer_links`
+        # Update footers links, needs to be done after "Features" addition to go
+        # through module overrides of `configurator_get_footer_links`.
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
             'website.template_footer_contact', 'website.template_footer_headline',
@@ -650,15 +577,81 @@ class Website(models.Model):
             {'theme': theme_name}
         )
 
-        # Update pages
+        # Configure the pages
         requested_pages = list(pages_views.keys()) + ['homepage']
         snippet_lists = website.get_theme_snippet_lists(theme_name)
         for page_code in requested_pages:
-            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data)
+            snippet_list = snippet_lists.get(page_code, [])
+            if page_code == 'homepage':
+                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
+            else:
+                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
+            rendered_snippets = []
+            nb_snippets = len(snippet_list)
+            for i, snippet in enumerate(snippet_list, start=1):
+                try:
+                    IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
+                    render = IrQweb._render('website.' + snippet, cta_data)
+                    if render:
+                        el = html.fromstring(render)
 
+                        # Add the data-snippet attribute to identify the snippet
+                        # for compatibility code
+                        el.attrib['data-snippet'] = snippet
+
+                        # Tweak the shape of the first snippet to connect it
+                        # properly with the header color in some themes
+                        if i == 1:
+                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                            if shape_el:
+                                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+
+                        # Tweak the shape of the last snippet to connect it
+                        # properly with the footer color in some themes
+                        if i == nb_snippets:
+                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                            if shape_el:
+                                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+                        rendered_snippet = pycompat.to_text(etree.tostring(el))
+                        rendered_snippets.append(rendered_snippet)
+                except ValueError as e:
+                    logger.warning(e)
+            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+
+        # Configure the images
         images = custom_resources.get('images', {})
-        set_images(images)
-        return {'url': url, 'website_id': website.id}
+        names = self.env['ir.model.data'].search([
+            ('name', '=ilike', f'configurator\\_{website.id}\\_%'),
+            ('module', '=', 'website'),
+            ('model', '=', 'ir.attachment')
+        ]).mapped('name')
+        for name, image_src in images.items():
+            extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
+            if extn_identifier in names:
+                continue
+            try:
+                response = requests.get(image_src, timeout=3)
+                response.raise_for_status()
+            except Exception as e:
+                logger.warning("Failed to download image: %s.\n%s", image_src, e)
+            else:
+                attachment = self.env['ir.attachment'].create({
+                    'name': name,
+                    'website_id': website.id,
+                    'key': name,
+                    'type': 'binary',
+                    'raw': response.content,
+                    'public': True,
+                })
+                self.env['ir.model.data'].create({
+                    'name': extn_identifier,
+                    'module': 'website',
+                    'model': 'ir.attachment',
+                    'res_id': attachment.id,
+                    'noupdate': True,
+                })
+
+        return {'url': redirect_url, 'website_id': website.id}
 
     # ----------------------------------------------------------
     # Page Management
