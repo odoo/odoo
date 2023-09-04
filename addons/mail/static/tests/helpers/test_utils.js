@@ -77,14 +77,6 @@ async function nextTick() {
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function getMouseenter({ afterNextRender }) {
-    return async function mouseenter(selector) {
-        await afterNextRender(() =>
-            document.querySelector(selector).dispatchEvent(new window.MouseEvent("mouseenter"))
-        );
-    };
-}
-
 function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {}) {
     return async function openDiscuss(pActiveId, { waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
@@ -366,7 +358,6 @@ async function start(param0 = {}) {
         afterNextRender,
         env: webClient.env,
         insertText,
-        mouseenter: getMouseenter({ afterNextRender }),
         openDiscuss: getOpenDiscuss(webClient, discuss),
         openView,
         openFormView: getOpenFormView(openView),
