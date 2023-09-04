@@ -13,58 +13,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
+              'tag_ids': [ref('pl_jpk_K_19')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_23_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_20')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_23_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
+              'tag_ids': [ref('pl_jpk_K_19')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_23_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_20')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_23_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_23"/>
         </record>
-        <record id="vs_kraj_22" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-22%</field>
-            <field name="description">V22</field>
-            <field name="amount">22</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030100'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030100'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_22"/>
-        </record>
+        
         <record id="vs_kraj_8" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT-8%</field>
@@ -75,58 +49,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_7_lub_8_tag')],
+              'tag_ids': [ref('pl_jpk_K_17')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_8_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030500'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_7_lub_8_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_18')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_8_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_7_lub_8_tag')],
+              'tag_ids': [ref('pl_jpk_K_17')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_8_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030500'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_7_lub_8_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_18')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_8_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_8"/>
         </record>
-        <record id="vs_kraj_7" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-7%</field>
-            <field name="description">V7</field>
-            <field name="amount">7</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_7_lub_8_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030200'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_7_lub_8_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_7_lub_8_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030200'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_7_lub_8_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_7"/>
-        </record>
+       
         <record id="vs_kraj_5" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT-5%</field>
@@ -137,58 +85,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_3_lub_5_tag')],
+              'tag_ids': [ref('pl_jpk_K_15')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_5_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030600'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_3_lub_5_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_16')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_5_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_3_lub_5_tag')],
+              'tag_ids': [ref('pl_jpk_K_15')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_5_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030600'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_3_lub_5_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_16')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_5_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_5"/>
         </record>
-        <record id="vs_kraj_3" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-3%</field>
-            <field name="description">V3</field>
-            <field name="amount">3</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_3_lub_5_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030300'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_3_lub_5_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_3_lub_5_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030300'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_3_lub_5_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_3"/>
-        </record>
+
         <record id="vs_kraj_0" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT-0%</field>
@@ -199,6 +121,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_13')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslugi_kraj_0_tag')],
           }),
           (0,0, {
@@ -208,6 +131,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_13')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslugi_kraj_0_tag')],
           }),
           (0,0, {
@@ -216,7 +140,8 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
-        <record id="vs_zwrot_podróżnych_0" model="account.tax.template">
+
+        <record id="vs_zwrot_podroznych_0" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">0% Zwrot podróżnych</field>
             <field name="description">0%</field>
@@ -225,24 +150,27 @@
             <field name="type_tax_use">sale</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                   (0,0, {
-                      'repartition_type': 'base',
-                      'plus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
+                        'repartition_type': 'base',
+                        'tag_ids': [ref('pl_jpk_K_14')],
+                        'plus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
                   }),
                   (0,0, {
-                      'repartition_type': 'tax',
+                        'repartition_type': 'tax',
                   }),
                         ]"/>
                     <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                   (0,0, {
-                      'repartition_type': 'base',
-                      'minus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
+                        'repartition_type': 'base',
+                        'tag_ids': [ref('pl_jpk_K_14')],
+                        'minus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
                   }),
                   (0,0, {
-                      'repartition_type': 'tax',
+                        'repartition_type': 'tax',
                   }),
             ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vs_kraj_zw" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT-ZW</field>
@@ -253,6 +181,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_10')],
               'plus_report_expression_ids': [ref('account_tax_report_line_kraj_zwolnione_tag')],
           }),
           (0,0, {
@@ -262,6 +191,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_10')],
               'minus_report_expression_ids': [ref('account_tax_report_line_kraj_zwolnione_tag')],
           }),
           (0,0, {
@@ -270,6 +200,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vs_kraj_usl_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT usł-23%</field>
@@ -281,59 +212,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
+              'tag_ids': [ref('pl_jpk_K_19')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_23_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_20')],
+              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_23_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
+              'tag_ids': [ref('pl_jpk_K_19')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_23_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_20')],
+              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_23_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_23"/>
         </record>
-        <record id="vs_kraj_usl_22" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł-22%</field>
-            <field name="description">VU22</field>
-            <field name="amount">22</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
-            <field name="tax_scope">service</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030100'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_22_lub_23_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22030100'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_kraj_22_lub_23_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_22"/>
-        </record>
+       
         <!-- VAT domestic purchase -->
         <record id="vz_kraj_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
@@ -347,57 +251,31 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
       ]"/>
         </record>
-        <record id="vz_kraj_22" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-22%</field>
-            <field name="description">Z22</field>
-            <field name="amount">22</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tax_group_id" ref="tax_group_vat_22"/>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020100'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020100'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-      ]"/>
-        </record>
+        
         <record id="vz_kraj_8" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT naliczony-8%</field>
@@ -408,58 +286,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020500'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020500'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_8"/>
         </record>
-        <record id="vz_kraj_7" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-7%</field>
-            <field name="description">Z7</field>
-            <field name="amount">7</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020200'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020200'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_7"/>
-        </record>
+
         <record id="vz_kraj_5" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT naliczony-5%</field>
@@ -470,58 +322,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020600'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020600'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_5"/>
         </record>
-        <record id="vz_kraj_3" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-3%</field>
-            <field name="description">Z3</field>
-            <field name="amount">3</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020300'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020300'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_3"/>
-        </record>
+
         <record id="vz_kraj_0" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT naliczony-0%</field>
@@ -532,6 +358,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
@@ -541,6 +368,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
@@ -549,6 +377,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_kraj_zw" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT naliczony-ZW</field>
@@ -559,6 +388,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
@@ -568,6 +398,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
@@ -576,6 +407,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_kraj_usl_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT usł nalicz-23%</field>
@@ -587,59 +419,32 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_23"/>
         </record>
-        <record id="vz_kraj_usl_22" model="account.tax.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł nalicz-22%</field>
-            <field name="description">ZU22</field>
-            <field name="amount">22</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tax_scope">service</field>
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020100'),
-              'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-                ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-          (0,0, {
-              'repartition_type': 'base',
-              'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
-          }),
-          (0,0, {
-              'repartition_type': 'tax',
-              'account_id': ref('chart22020100'),
-              'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
-          }),
-      ]"/>
-            <field name="tax_group_id" ref="tax_group_vat_22"/>
-        </record>
+        
         <!-- Vehicle leasing -->
         <!-- ================================================ -->
         <record id="vp_leas_sale" model="account.tax.template">
@@ -653,39 +458,44 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 60,
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 40,
               'repartition_type': 'tax',
-              'account_id': ref('chart76140000'),
+              'account_id': ref('chart76010000'),
           }),
                 ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 60,
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 40,
               'repartition_type': 'tax',
-              'account_id': ref('chart76140000'),
+              'account_id': ref('chart76010000'),
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_23"/>
         </record>
+
         <record id="vp_leas_purchase" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">VAT - leasing pojazdu(purchase)</field>
@@ -697,39 +507,44 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 60,
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 40,
               'repartition_type': 'tax',
-              'account_id': ref('chart76140000'),
+              'account_id': ref('chart76010000'),
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 60,
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': 40,
               'repartition_type': 'tax',
-              'account_id': ref('chart76140000'),
+              'account_id': ref('chart76010000'),
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_23"/>
         </record>
+
         <!-- Steel trade -->
         <record id="vs_stal" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
@@ -742,6 +557,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_31')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatnik_nabywca_tag')],
           }),
           (0,0, {
@@ -751,6 +567,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_31')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatnik_nabywca_tag')],
           }),
           (0,0, {
@@ -759,6 +576,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_stal" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Zakup stali</field>
@@ -770,39 +588,46 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_31')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_podatnik_nabywca_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_32')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_podatnik_nabywca_tag')],
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_31')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_podatnik_nabywca_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_32')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_podatnik_nabywca_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <!-- European Union -->
         <!-- =========================================================== -->
         <record id="vs_unia" model="account.tax.template">
@@ -816,6 +641,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_21')],
               'plus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag')],
           }),
           (0,0, {
@@ -825,6 +651,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_21')],
               'minus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag')],
           }),
           (0,0, {
@@ -844,39 +671,46 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_23'), ref('pl_jpk_K_45')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_nabycie_towarow_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_24')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_nabycie_towarow_tag')],
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_23'), ref('pl_jpk_K_45')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_nabycie_towarow_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_24')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_nabycie_towarow_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vs_dostu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Świad Usł</field>
@@ -888,6 +722,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_12')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslugi_art_100_1_4_tag')],
           }),
           (0,0, {
@@ -897,6 +732,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_12')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslugi_art_100_1_4_tag')],
           }),
           (0,0, {
@@ -905,6 +741,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_nabu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Nab Usł</field>
@@ -916,39 +753,46 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_29')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_art_28b_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_30')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_art_28b_tag')],
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_29')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_art_28b_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_30')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_art_28b_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <!-- Export / Import -->
         <!-- ================================================ -->
         <record id="vs_eksp_tow" model="account.tax.template">
@@ -962,6 +806,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_22')],
               'plus_report_expression_ids': [ref('account_tax_report_line_eksport_towarow_tag')],
           }),
           (0,0, {
@@ -971,6 +816,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_22')],
               'minus_report_expression_ids': [ref('account_tax_report_line_eksport_towarow_tag')],
           }),
           (0,0, {
@@ -979,6 +825,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_imp_tow" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Imp Tow</field>
@@ -990,39 +837,46 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_27')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_art_33a_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_28')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_art_33a_tag')],
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_27')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_art_33a_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_28')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_art_33a_tag')],
           }),
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vs_ekspu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Eksp Usł</field>
@@ -1034,6 +888,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_11')],
               'plus_report_expression_ids': [ref('account_tax_report_line_poza_kraj_tag')],
           }),
           (0,0, {
@@ -1043,6 +898,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_11')],
               'minus_report_expression_ids': [ref('account_tax_report_line_poza_kraj_tag')],
           }),
           (0,0, {
@@ -1051,6 +907,7 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+
         <record id="vz_impu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="name">Imp Usł</field>
@@ -1062,34 +919,40 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_27')],
               'plus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_import_uslug_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_28')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_import_uslug_tag')],
           }),
       ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
+              'tag_ids': [ref('pl_jpk_K_45'), ref('pl_jpk_K_27')],
               'minus_report_expression_ids': [ref('account_tax_report_line_uslug_pozostalych_tag'), ref('account_tax_report_line_import_uslug_tag')],
           }),
           (0,0, {
               'repartition_type': 'tax',
-              'account_id': ref('chart22020400'),
+              'account_id': ref('chart22010000'),
+              'tag_ids': [ref('pl_jpk_K_46')],
               'minus_report_expression_ids': [ref('account_tax_report_line_podatek_uslug_pozostalych_tag')],
           }),
           (0,0, {
               'factor_percent': -100,
               'repartition_type': 'tax',
-              'account_id': ref('chart22030400'),
+              'account_id': ref('chart22020000'),
+              'tag_ids': [ref('pl_jpk_K_28')],
               'plus_report_expression_ids': [ref('account_tax_report_line_podatek_import_uslug_tag')],
           }),
       ]"/>
