@@ -113,3 +113,8 @@ class CalendarController(http.Controller):
             event._create_videocall_channel()
 
         return request.redirect(event.videocall_channel_id.invitation_url)
+
+    @http.route('/calendar/check_credentials', type='json', auth='user')
+    def check_calendar_credentials(self):
+        # method should be overwritten by sync providers
+        return {}

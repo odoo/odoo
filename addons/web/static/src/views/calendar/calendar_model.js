@@ -843,4 +843,4 @@ export class CalendarModel extends Model {
         };
     }
 }
-CalendarModel.services = ["user"];
+CalendarModel.services = ["user", "rpc"];
