@@ -181,6 +181,12 @@ $-seen-urls: ();
     }
 };
 
+// Manage custom offcanvas such as the one used for mobile mega menu nav
+// where a dropdown behaves as offcanvas.
+$o-mega-menu-nav-height: 3rem !default;
+$o-mega-menu-zindex: $zindex-offcanvas !default;
+$o-mega-menu-btn-close-zindex: $o-mega-menu-zindex + 1 !default;
+
 body {
     // The color behind the boxed layout is forced by Odoo. The box background
     // color uses the `$body-bg` variable.
@@ -379,6 +385,11 @@ body {
 .o_navbar_mobile {
     height: 100dvh;
     background-color: o-color('menu-custom') or o-color('menu');
+
+    // Make offcanvas close btn above mega menu
+    .btn-close {
+        z-index: $o-mega-menu-btn-close-zindex;
+    }
 }
 
 $-header-nav-link-height: $nav-link-height;
@@ -1474,6 +1485,10 @@ header {
                 width: o-website-value('sidebar-width');
                 transform: none !important;
 
+                .o_mega_menu, .o_mega_nav {
+                    width: o-website-value('sidebar-width') !important;
+                }
+
                 .navbar {
                     width: 100%;
                     align-items: start;
@@ -1578,13 +1593,71 @@ header {
     border-radius: 0;
     background-clip: unset; // Remove the 1px gap introduced by BS4
     background-color: transparent; // In order to allow the mega menu to be transparent
-    border: 1px solid $gray-200; // Prevent to see the color of the block behind.
+    border: $border-width solid $border-color; // Prevent to see the color of the block behind.
 
     .container, .container-fluid {
         // Need to reforce those because they are removed since its a container
         // inside another container (the one in the navbar)
         padding-left: $grid-gutter-width / 2;
         padding-right: $grid-gutter-width / 2;
+    }
+}
+
+// Offcanvas mega menu on mobile or in sidebar/hamburger header
+.o_mega_menu_is_offcanvas {
+    .o_mega_nav, .o_mega_menu {
+        @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
+        z-index: $o-mega-menu-zindex;
+        max-width: $offcanvas-horizontal-width;
+        opacity: 0;
+
+        section {
+            @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
+            transform: translateX(5%);
+        }
+    }
+
+    .o_mega_menu.show, .o_mega_menu.show ~ .o_mega_nav {
+        @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
+        visibility: visible !important;
+        opacity: 1;
+
+        section {
+            @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
+            transform: translateX(0);
+        }
+    }
+
+    .o_mega_nav {
+        padding-left: $grid-gutter-width * .5;
+        height: $o-mega-menu-nav-height;
+    }
+
+    // Div needed for selector specificity to apply mh
+    div.o_mega_menu {
+        position: fixed !important;
+        inset: 0 0 0 auto !important;
+        display: block;
+        visibility: hidden;
+        margin-top: $o-mega-menu-nav-height !important;
+        border: none;
+        max-height: 100vh;
+        background-color: o-color('menu-custom') or o-color('menu');
+        overflow-x: hidden;
+    }
+
+    .o_mega_menu_toggle::after {
+        content: '\e83b';
+        border: none;
+        font-family: 'odoo_ui_icons';
+    }
+
+    .o_mega_menu_left .o_mega_menu {
+        inset: 0 auto 0 0 !important;
+    }
+
+    .list-group-item-action.active {
+        color: var(--o-cc1-btn-primary-text) !important;
     }
 }
 
