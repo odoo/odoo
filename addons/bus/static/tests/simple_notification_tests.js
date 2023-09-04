@@ -5,6 +5,7 @@ import { busParametersService } from "@bus/bus_parameters_service";
 import { multiTabService } from "@bus/multi_tab_service";
 import { simpleNotificationService } from "@bus/simple_notification_service";
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
+import { contains } from "@bus/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -22,62 +23,50 @@ QUnit.module("simple_notification", {
     },
 });
 
-QUnit.test("receive and display simple notification with message", async (assert) => {
+QUnit.test("receive and display simple notification with message", async () => {
     await createWebClient({});
     const pyEnv = await getPyEnv();
-    const { afterNextRender } = owl.App;
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
-            message: "simple notification",
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
+        message: "simple notification",
     });
-    assert.strictEqual($(".o_notification_content").text(), "simple notification");
+    await contains(".o_notification_content", { text: "simple notification" });
 });
 
-QUnit.test("receive and display simple notification with title", async (assert) => {
+QUnit.test("receive and display simple notification with title", async () => {
     await createWebClient({});
     const pyEnv = await getPyEnv();
-    const { afterNextRender } = owl.App;
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
-            message: "simple notification",
-            title: "simple title",
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
+        message: "simple notification",
+        title: "simple title",
     });
-    assert.strictEqual($(".o_notification_title").text(), "simple title");
+    await contains(".o_notification_title", { text: "simple title" });
 });
 
-QUnit.test("receive and display simple notification with specific type", async (assert) => {
+QUnit.test("receive and display simple notification with specific type", async () => {
     await createWebClient({});
     const pyEnv = await getPyEnv();
-    const { afterNextRender } = owl.App;
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
-            message: "simple notification",
-            type: "info",
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
+        message: "simple notification",
+        type: "info",
     });
-    assert.containsOnce($, ".o_notification.border-info");
+    await contains(".o_notification.border-info");
 });
 
-QUnit.test("receive and display simple notification as sticky", async (assert) => {
+QUnit.test("receive and display simple notification as sticky", async () => {
     await createWebClient({});
     const pyEnv = await getPyEnv();
-    const { afterNextRender } = owl.App;
     patchWithCleanup(browser, {
         setTimeout(fn) {
             /**
-             * Sticky notifications are removed after a delay. If the notification is still
+             * Non-sticky notifications are removed after a delay. If thenotification is still
              * present when this delay is set to 0 it means it is a sticky one.
              */
             return super.setTimeout(fn, 0);
         },
     });
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
-            message: "simple notification",
-            sticky: true,
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "simple_notification", {
+        message: "simple notification",
+        sticky: true,
     });
-    assert.containsOnce($, ".o_notification");
+    await contains(".o_notification");
 });

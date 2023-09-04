@@ -2,16 +2,15 @@
 
 import { Command } from "@mail/../tests/helpers/command";
 import {
-    afterNextRender,
     click,
     contains,
     insertText,
+    nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss sidebar");
 
@@ -669,12 +668,10 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
         `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=101010']`,
         { count: 2 }
     );
-    await afterNextRender(() => {
-        env.services.orm.call("discuss.channel", "write", [
-            [channelId],
-            { image_128: "This field does not matter" },
-        ]);
-    });
+    await env.services.orm.call("discuss.channel", "write", [
+        [channelId],
+        { image_128: "This field does not matter" },
+    ]);
     const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
     await contains(
@@ -743,13 +740,11 @@ QUnit.test("channel - states: close from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-            "res.users.settings": {
-                id: userSettingsId,
-                is_discuss_sidebar_category_channel_open: false,
-            },
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        "res.users.settings": {
+            id: userSettingsId,
+            is_discuss_sidebar_category_channel_open: false,
+        },
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { count: 0, text: "channel1" });
@@ -764,13 +759,11 @@ QUnit.test("channel - states: open from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-            "res.users.settings": {
-                id: userSettingsId,
-                is_discuss_sidebar_category_channel_open: true,
-            },
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        "res.users.settings": {
+            id: userSettingsId,
+            is_discuss_sidebar_category_channel_open: true,
+        },
     });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
     await contains("button", { text: "channel1" });
@@ -890,13 +883,11 @@ QUnit.test("chat - states: open from the bus", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
-            "res.users.settings": {
-                id: userSettingsId,
-                is_discuss_sidebar_category_chat_open: true,
-            },
-        });
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+        "res.users.settings": {
+            id: userSettingsId,
+            is_discuss_sidebar_category_chat_open: true,
+        },
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains("button", { text: "Mitchell Admin" });
@@ -1037,17 +1028,16 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
     });
     openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
-    await afterNextRender(() => {
-        env.services.rpc("/mail/message/post", {
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-            post_data: {
-                body: "Hello world",
-                message_type: "comment",
-            },
-        });
+    env.services.rpc("/mail/message/post", {
+        thread_id: channelId,
+        thread_model: "discuss.channel",
+        post_data: {
+            body: "Hello world",
+            message_type: "comment",
+        },
     });
-    await nextTick();
+    await nextAnimationFrame();
+    // weak test, no guarantee that we waited long enough for the potential rpc to be done
     assert.verifySteps([]);
 });
 
