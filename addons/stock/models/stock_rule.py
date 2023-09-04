@@ -410,6 +410,7 @@ class ProcurementGroup(models.Model):
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
+    orderpoint_ids = fields.One2many('stock.warehouse.orderpoint', 'group_id', string='Related Minimum Stock Rules')
 
     @api.model
     def _skip_procurement(self, procurement):
