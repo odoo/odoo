@@ -715,3 +715,22 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable'), [{
             'balance': 686.54,
         }])
+
+    def test_fixed_tax_with_zero_price(self):
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Test 5 fixed',
+            'amount_type': 'fixed',
+            'amount': 5,
+        })
+        invoice = self._create_invoice([
+            (0, fixed_tax),
+        ])
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'credit': 5.0,
+            'debit': 0,
+        }])
+        invoice.invoice_line_ids.quantity = 2
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'credit': 10.0,
+            'debit': 0,
+        }])
