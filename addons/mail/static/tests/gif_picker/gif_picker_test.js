@@ -194,7 +194,7 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         patchUiSize({ size: SIZES.SM });
         const { openDiscuss } = await start();
-        openDiscuss(channelId, { waitUntilMessagesLoaded: false });
+        openDiscuss(channelId);
         await click("span", { text: "General" });
         await click("button[aria-label='GIFs']");
         await contains(".popover .o-discuss-GifPicker", { count: 0 });
@@ -202,7 +202,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("Searching for a GIF with a failling RPC should display an error", async (assert) => {
+QUnit.test("Searching for a GIF with a failling RPC should display an error", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start({
