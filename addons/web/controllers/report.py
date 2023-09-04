@@ -84,7 +84,10 @@ class ReportController(http.Controller):
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
-        return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
+        return request.make_response(barcode, headers=[
+            ('Content-Type', 'image/png'),
+            ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}, immutable'),
+        ])
 
     @http.route(['/report/download'], type='http', auth="user")
     # pylint: disable=unused-argument
