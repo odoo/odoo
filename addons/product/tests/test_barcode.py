@@ -31,6 +31,13 @@ class TestProductBarcode(TransactionCase):
         with self.assertRaises(ValidationError):
             self.env['product.product'].create({'name': 'BC3', 'barcode': '1'})
 
+    def test_duplicated_barcode_archived(self):
+        """Test uniqueness of barcode for archived products."""
+        with self.assertRaises(ValidationError):
+            product = self.env['product.product'].create({'name': 'BC3', 'barcode': '3'})
+            product.active = False
+            self.env['product.product'].create({'name': 'BC4', 'barcode': '3'})
+
     def test_duplicated_barcode_in_batch_edit(self):
         """Tests for duplication in batch edits."""
         batch = [

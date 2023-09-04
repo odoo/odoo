@@ -175,7 +175,7 @@ class ProductProduct(models.Model):
         to ensure the uniqueness between products' barcodes and packagings' ones"""
         all_barcode = [b for b in self.mapped('barcode') if b]
         domain = [('barcode', 'in', all_barcode)]
-        matched_products = self.sudo().search(domain, order='id')
+        matched_products = self.sudo().with_context(active_test=False).search(domain, order='id')
         if len(matched_products) > len(all_barcode):  # It means that you find more than `self` -> there are duplicates
             products_by_barcode = defaultdict(list)
             for product in matched_products:
