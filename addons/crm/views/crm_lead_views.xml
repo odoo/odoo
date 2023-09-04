@@ -1009,8 +1009,9 @@
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <separator/>
-                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
-                    <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
+                    <filter string="Won" name="filter_won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
+                    <filter string="Ongoing" name="filter_ongoing" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', False)]"/>
+                    <filter string="Lost" name="filter_lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
                     <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="['&amp;', ('date_closed', '=', False), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -1021,7 +1022,6 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
