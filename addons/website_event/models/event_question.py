@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from random import randint
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -11,7 +13,11 @@ class EventQuestion(models.Model):
     _order = 'sequence,id'
     _description = 'Event Question'
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     title = fields.Char(required=True, translate=True)
+    color = fields.Integer(string='Color', default=_get_default_color)
     question_type = fields.Selection([
         ('simple_choice', 'Selection'),
         ('text_box', 'Text Input'),

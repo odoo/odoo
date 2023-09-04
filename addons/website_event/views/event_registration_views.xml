@@ -60,7 +60,7 @@
         <field name="inherit_id" ref="event.event_registration_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='event_ticket_id']" position="before">
-                <field name="registration_selection_answer_ids" class="mt-1" widget="many2many_tags"/>
+                <field name="registration_selection_answer_ids" class="mt-1" widget="many2many_tags" options="{'color_field':'question_color'}"/>
             </xpath>
         </field>
     </record>
