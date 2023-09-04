@@ -52,6 +52,12 @@ class LoyaltyProgram(models.Model):
                 program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
+        if not self.env['pos.order.line'].check_access_rights('read', raise_exception=False):
+            for program in self:
+                program.pos_order_count = 0
+
+            return
+
         read_group_res = self.env['pos.order.line']._read_group(
             [('reward_id', 'in', self.reward_ids.ids)], ['order_id'], ['reward_id:array_agg'])
         for program in self:

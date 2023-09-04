@@ -901,7 +901,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'points': 30,
         })
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
@@ -965,7 +965,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_product_ids': (self.product_a | self.product_b).ids,
             })],
         })
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "PosLoyaltySpecificDiscountTour", login="pos_user")
 
     def test_discount_specific_product_with_free_product(self):
@@ -1032,7 +1032,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour('/pos/web?config_id=%d' % self.main_pos_config.id, 'PosLoyaltySpecificDiscountWithFreeProductTour', login='pos_user')
 
     def test_point_per_money_spent(self):
@@ -1074,7 +1074,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'points': 100,
         })
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour6",
@@ -1116,7 +1116,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.coupon1 = loyalty_program.coupon_ids
         self.coupon1.write({"code": "abcda"})
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour7",
@@ -1194,7 +1194,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'points': 500,
         })
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
@@ -1253,7 +1253,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
 
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltySpecificDiscountWithRewardProductDomainTour",
