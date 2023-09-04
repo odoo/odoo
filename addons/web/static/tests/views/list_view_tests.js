@@ -12587,6 +12587,74 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("grouped list with expand attribute set to false but with opened group", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree expand="0"><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            async mockRPC(route, { method }, rpc) {
+                assert.step(method || route);
+                if (method === "web_read_group") {
+                    const response = await rpc(...arguments);
+                    response.groups = response.groups.map((group, index) => ({
+                        ...group,
+                        __fold: index,
+                    }));
+                    return response;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+            ["blip"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+        ]);
+    });
+
+    QUnit.test("grouped list without expand attribute but with opened group", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            async mockRPC(route, { method }, rpc) {
+                assert.step(method || route);
+                if (method === "web_read_group") {
+                    const response = await rpc(...arguments);
+                    response.groups = response.groups.map((group, index) => ({
+                        ...group,
+                        __fold: index,
+                    }));
+                    return response;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+            ["blip"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+        ]);
+    });
+
     QUnit.test("grouped list with dynamic expand attribute (eval true)", async function (assert) {
         await makeView({
             type: "list",
@@ -17559,4 +17627,86 @@ QUnit.module("Views", (hooks) => {
             "Monetary cells should have ltr direction"
         );
     })
+
+    QUnit.test("remove group when they become empty after aplying a filter", async (assert) => {
+        let filtered = false;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["m2o", "bar"],
+            mockRPC(route, { method, kwargs }) {
+                if (filtered && method === "web_read_group" && kwargs.groupby[0] === "m2o") {
+                    return {
+                        groups: [
+                            { m2o: [1, "Value 1"], __domain: [["m2o", "=", 1]], m2o_count: 0 },
+                            { m2o: [2, "Value 2"], __domain: [["m2o", "=", 2]], m2o_count: 0 },
+                        ],
+                        length: 2,
+                    };
+                }
+            },
+            irFilters: [
+                {
+                    context: "{}",
+                    domain: "[('foo', '=', '$')]",
+                    id: 7,
+                    string: "filter",
+                    name: "filter",
+                },
+            ],
+        });
+
+        assert.containsN(target, ".o_group_header", 2, "start with 2 groups");
+        await click(target.querySelectorAll(".o_group_header")[0], null, "open 1st group");
+        await click(
+            target.querySelectorAll(".o_group_header")[1],
+            null,
+            "open 1st inner group in 1st group"
+        );
+        await click(
+            target.querySelectorAll(".o_group_header")[2],
+            null,
+            "open 2nd inner group in 1st group"
+        );
+        await click(target.querySelectorAll(".o_group_header")[3], null, "open 2nd group");
+        await click(
+            target.querySelectorAll(".o_group_header")[4],
+            null,
+            "open 1st inner group in 2nd group"
+        );
+        assert.containsN(target, ".o_group_header", 5);
+
+        filtered = true;
+        await toggleFavoriteMenu(target);
+        await toggleMenuItem(target, "filter");
+        assert.containsN(target, ".o_group_header", 2, "outer groups are closed");
+    });
+
+    QUnit.test("show no content helper when groups are empty", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            noContentHelp: '<p class="hello">click to add a foo</p>',
+            mockRPC(route, { method }) {
+                if (method === "web_read_group") {
+                    return {
+                        groups: [
+                            { bar: true, bar_count: 0, __domain: [["bar", "=", true]] },
+                            { bar: false, bar_count: 0, __domain: [["bar", "=", false]] },
+                        ],
+                        length: 2,
+                    };
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_nocontent_help");
+        assert.containsN(target, ".o_group_header", 2);
+    });
 });
