@@ -273,6 +273,12 @@ class ProductTemplate(models.Model):
                     fields.Date.today())
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
             prevent_zero_price_sale = not price and current_website.prevent_zero_price_sale
+
+            compare_list_price = self.compare_list_price
+            if pricelist and pricelist.currency_id != product.currency_id:
+                compare_list_price = self.currency_id._convert(self.compare_list_price, pricelist.currency_id, self.env.company,
+                                                  fields.Datetime.now(), round=False)
+
             combination_info.update(
                 base_unit_name=product.base_unit_name,
                 base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
@@ -281,6 +287,7 @@ class ProductTemplate(models.Model):
                 price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
                 prevent_zero_price_sale=prevent_zero_price_sale,
+                compare_list_price=compare_list_price
             )
 
         return combination_info
@@ -529,6 +536,10 @@ class ProductTemplate(models.Model):
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
+            )
+        if combination_info['compare_list_price']:
+            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['compare_list_price'], monetary_options
             )
 
         return price, list_price if combination_info['has_discounted_price'] else None
