@@ -42,6 +42,7 @@ export class ThreadService {
         this.notificationService = services.notification;
         this.router = services.router;
         this.ui = services.ui;
+        this.user = services.user;
         this.messageService = services["mail.message"];
         this.personaService = services["mail.persona"];
     }
@@ -814,7 +815,7 @@ export class ThreadService {
             thread,
         });
         const tmpId = this.messageService.getNextTemporaryId();
-        params.context = { ...params.context, temporary_id: tmpId };
+        params.context = { ...this.user.context, ...params.context, temporary_id: tmpId };
         if (parentId) {
             params.post_data.parent_id = parentId;
         }
@@ -1088,6 +1089,7 @@ export const threadService = {
         "mail.message",
         "mail.persona",
         "ui",
+        "user",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env
