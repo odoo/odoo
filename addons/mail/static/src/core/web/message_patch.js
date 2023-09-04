@@ -7,11 +7,11 @@ import { deserializeDateTime, formatDate, formatDateTime } from "@web/core/l10n/
 import { _t } from "@web/core/l10n/translation";
 import {
     formatChar,
-    formatFloat,
     formatInteger,
     formatMonetary,
     formatText,
 } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { useState } from "@odoo/owl";

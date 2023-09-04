@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency } from "@web/core/currency";
 import {
     ProductTemplateAttributeLine as PTAL
 } from "../product_template_attribute_line/product_template_attribute_line";
@@ -62,6 +62,6 @@ export class Product extends Component {
      * @return {String} - The price, in the format of the given currency.
      */
     getFormattedPrice() {
-        return formatMonetary(this.props.price, {currencyId: this.env.currencyId});
+        return formatCurrency(this.props.price, this.env.currencyId);
     }
 }

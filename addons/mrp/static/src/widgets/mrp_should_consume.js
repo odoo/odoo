@@ -2,7 +2,7 @@
 
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
-import { formatFloat } from "@web/views/fields/formatters";
+import { formatFloat } from "@web/core/utils/numbers";;
 
 /**
  * This widget is used to display alongside the total quantity to consume of a production order,
@@ -41,7 +41,7 @@ export class MrpShouldConsumeOwl extends FloatField {
             ...this.nodeOptions,
         });
     }
-} 
+}
 
 MrpShouldConsumeOwl.template = "mrp.ShouldConsume";
 

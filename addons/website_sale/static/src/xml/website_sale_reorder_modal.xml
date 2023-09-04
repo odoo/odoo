@@ -44,7 +44,7 @@
                                     </div>
                                 </td>
                                 <td class="text-end td-price">
-                                    <span t-esc="formatMonetary(product.combinationInfo.price, content.currency)"/>
+                                    <span t-esc="formatCurrency(product.combinationInfo.price, content.currency)"/>
                                 </td>
                             </t>
                             <t t-else="">
@@ -67,7 +67,7 @@
                                 <strong>Total</strong>
                             </td>
                             <td class="text-end">
-                                <span t-out="formatMonetary(total, content.currency)"/>
+                                <span t-out="formatCurrency(total, content.currency)"/>
                             </td>
                         </tr>
                     </table>
