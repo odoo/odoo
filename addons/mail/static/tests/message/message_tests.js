@@ -1,14 +1,7 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    contains,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -1278,9 +1271,8 @@ QUnit.test(
         openDiscuss(channelId);
         await contains(".o-mail-Message-avatar");
         assert.doesNotHaveClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
-
-        click(".o-mail-Message-avatar").catch(() => {});
-        await nextAnimationFrame();
+        await click(".o-mail-Message-avatar");
+        // weak test, no guarantee that we waited long enough for the potential chat window to show
         await contains(".o-mail-ChatWindow", { count: 0 });
     }
 );

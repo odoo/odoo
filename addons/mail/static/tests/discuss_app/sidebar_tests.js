@@ -1,14 +1,7 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    click,
-    contains,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -1036,7 +1029,6 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
             message_type: "comment",
         },
     });
-    await nextAnimationFrame();
     // weak test, no guarantee that we waited long enough for the potential rpc to be done
     assert.verifySteps([]);
 });
