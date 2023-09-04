@@ -994,7 +994,7 @@ QUnit.test("can be marked as read while loading", async function () {
             }
         },
     });
-    openDiscuss(undefined, { waitUntilMessagesLoaded: false });
+    openDiscuss(undefined);
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel span", { text: "Demo" });
     await afterNextRender(loadDeferred.resolve);

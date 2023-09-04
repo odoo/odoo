@@ -1005,7 +1005,7 @@ QUnit.test("chat window: scroll conservation on toggle discuss", async () => {
     await contains(".o-mail-Message", { count: 31 });
     await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
-    openDiscuss(null, { waitUntilMessagesLoaded: false });
+    openDiscuss(null);
     await contains(".o-mail-ChatWindow", { count: 0 });
     openView({
         res_id: channelId,
@@ -1065,7 +1065,7 @@ QUnit.test(
         await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
         // fold chat window
         await click(".o-mail-ChatWindow-command[title='Fold']");
-        openDiscuss(null, { waitUntilMessagesLoaded: false });
+        openDiscuss(null);
         await contains(".o-mail-ChatWindow", { count: 0 });
         openView({
             res_id: channelId,
