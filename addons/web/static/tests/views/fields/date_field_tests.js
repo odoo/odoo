@@ -676,4 +676,32 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=date] input", "+5d");
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "02/20/2021");
     });
+
+    QUnit.test(
+        "DateField: compute last day of month/year when write only month/year",
+        async (assert) => {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="date"></field></form>',
+            });
+            const tests = [
+                ["92023", "09/30/2023"],
+                ["092023", "09/30/2023"],
+                ["9/2023", "09/30/2023"],
+                ["2023", "12/31/2023"],
+                ["102023", "10/31/2023"],
+                ["10.2023", "10/31/2023"],
+                ["10-2023", "10/31/2023"],
+                ["10/2023", "10/31/2023"],
+                ["12023", "01/31/2023"],
+            ];
+            assert.expect(tests.length);
+            for (const [input, value] of tests) {
+                await editInput(target, ".o_field_widget[name=date] input", input);
+                assert.strictEqual(target.querySelector(".o_field_widget input").value, value);
+            }
+        }
+    );
 });

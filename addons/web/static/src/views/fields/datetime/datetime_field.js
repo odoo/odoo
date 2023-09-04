@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, onWillRender, useRef, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import {
     areDatesEqual,
@@ -15,6 +15,7 @@ import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
+const { DateTime } = luxon;
 
 /**
  * @typedef {luxon.DateTime} DateTime
@@ -78,6 +79,7 @@ export class DateTimeField extends Component {
     //-------------------------------------------------------------------------
 
     setup() {
+        this.startDateRef = useRef("start-date");
         const getPickerProps = () => {
             const value = this.getRecordValue();
             /** @type {DateTimePickerProps} */
@@ -107,6 +109,7 @@ export class DateTimeField extends Component {
                 this.state.range = this.isRange(this.state.value);
             },
             onApply: () => {
+                this.formatInput();
                 const toUpdate = {};
                 if (Array.isArray(this.state.value)) {
                     // Value is already a range
@@ -148,6 +151,21 @@ export class DateTimeField extends Component {
         this.state.range = true;
 
         this.openPicker(valueIndex);
+    }
+
+    formatInput() {
+        if (this.inputValue && this.field.type === "date") {
+            const REGEX_CATCH_MONTH_YEAR = /^(?<month>\d{1,2})?(?:[ ./-])?(?<year>\d{4})$/;
+            const match = REGEX_CATCH_MONTH_YEAR.exec(this.inputValue);
+            if (match) {
+                const value = DateTime.fromObject({
+                    year: +match.groups?.year,
+                    month: +match.groups?.month || 12,
+                }).endOf("month");
+                this.state.value = value.isValid ? value : null;
+            }
+            delete this.inputValue;
+        }
     }
 
     /**
@@ -236,6 +254,7 @@ export class DateTimeField extends Component {
     //-------------------------------------------------------------------------
 
     onInput() {
+        this.inputValue = this.startDateRef.el?.value;
         this.triggerIsDirty(true);
     }
 }
