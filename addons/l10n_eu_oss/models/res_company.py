@@ -64,7 +64,9 @@ class Company(models.Model):
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
-                                tg = self.env['account.tax.group'].search([('company_id', '=', company.id)])
+                                tg = self.env['account.tax.group'].search([
+                                    ('company_id', '=', company.id),
+                                    ('tax_payable_account_id', '!=', False)], limit=1)
                                 self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
                                     'module': 'account',
