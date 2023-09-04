@@ -10,7 +10,6 @@ import {
     dragenterFiles,
     dropFiles,
     insertText,
-    nextAnimationFrame,
     pasteFiles,
     scroll,
     start,
@@ -886,6 +885,5 @@ QUnit.test("Message is sent only once when pressing enter twice in a row", async
     triggerHotkey("Enter");
     triggerHotkey("Enter");
     // weak test, no guarantee that we waited long enough for the potential second message to be posted
-    await nextAnimationFrame();
     await contains(".o-mail-Message-content", { text: "Hello World!" });
 });

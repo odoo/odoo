@@ -1,12 +1,6 @@
 /* @odoo-module */
 
-import {
-    click,
-    contains,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
@@ -272,13 +266,10 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
     await contains("button[aria-label='Attach files']");
-
     await click("button", { text: "Log note" });
     await contains("button:contains(Log note).active");
     await contains("button:contains(Send message).active", { count: 0 });
-
-    $(`button[aria-label='Attach files']`)[0].click();
-    await nextAnimationFrame();
+    await click(".o-mail-Chatter-topbar button[aria-label='Attach files']");
     await contains("button:contains(Log note).active");
     await contains("button:contains(Send message).active", { count: 0 });
 });
