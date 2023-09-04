@@ -142,7 +142,7 @@ QUnit.test("chat search should display no result when no matches found", async (
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector", "Rainbow Panda");
+    await insertText(".o-discuss-ChannelSelector input", "Rainbow Panda");
     await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
 });
 
@@ -153,7 +153,7 @@ QUnit.test("chat search should not be visible when clicking outside of the field
     const { openDiscuss } = await start();
     openDiscuss();
     await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector", "Panda");
+    await insertText(".o-discuss-ChannelSelector input", "Panda");
     await contains(".o-discuss-ChannelSelector-suggestion");
     await click(".o-mail-DiscussSidebar");
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });

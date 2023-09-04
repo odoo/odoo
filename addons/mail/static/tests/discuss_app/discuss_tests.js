@@ -6,7 +6,6 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import {
-    afterNextRender,
     click,
     contains,
     createFile,
@@ -1692,6 +1691,8 @@ QUnit.test("restore thread scroll position", async () => {
 QUnit.test("Message shows up even if channel data is incomplete", async () => {
     const { env, openDiscuss, pyEnv } = await start();
     openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat");
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     const correspondentUserId = pyEnv["res.users"].create({ name: "Albert" });
     const correspondentPartnerId = pyEnv["res.partner"].create({
         name: "Albert",
@@ -1717,21 +1718,14 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
             channel_id: channelId,
         })
     );
-    await afterNextRender(() =>
-        pyEnv.withUser(correspondentUserId, () =>
-            env.services.rpc("/mail/message/post", {
-                post_data: { body: "hello world", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
-        )
+    await pyEnv.withUser(correspondentUserId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "hello world", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
     );
-    await click(
-        ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"
-    );
-    await click(
-        ".o-mail-DiscussSidebarCategory-chat + .o-mail-DiscussSidebarChannel:contains(Albert)"
-    );
+    await click(".o-mail-DiscussSidebarChannel:contains(Albert)");
     await contains(".o-mail-Message-content", { text: "hello world" });
 });
 

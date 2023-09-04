@@ -1,18 +1,13 @@
 /* @odoo-module */
 
+import { click, contains, insertText } from "@bus/../tests/helpers/test_utils";
+
 import { Command } from "@mail/../tests/helpers/command";
-import {
-    afterNextRender,
-    click,
-    contains,
-    insertText,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("discuss (patch)");
 
-QUnit.test("No call buttons", async (assert) => {
+QUnit.test("No call buttons", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -25,11 +20,12 @@ QUnit.test("No call buttons", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsNone($, ".o-mail-Discuss-header button[title='Show Call Settings']");
+    await contains(".o-mail-Discuss-header");
+    await contains(".o-mail-Discuss-header button[title='Start a Call']", { count: 0 });
+    await contains(".o-mail-Discuss-header button[title='Show Call Settings']", { count: 0 });
 });
 
-QUnit.test("No reaction button", async (assert) => {
+QUnit.test("No reaction button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -48,10 +44,10 @@ QUnit.test("No reaction button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Add a Reaction']");
+    await contains("[title='Add a Reaction']", { count: 0 });
 });
 
-QUnit.test("No reply button", async (assert) => {
+QUnit.test("No reply button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -70,10 +66,10 @@ QUnit.test("No reply button", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Reply']");
+    await contains("[title='Reply']", { count: 0 });
 });
 
-QUnit.test("add livechat in the sidebar on visitor sending first message", async (assert) => {
+QUnit.test("add livechat in the sidebar on visitor sending first message", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
     const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
@@ -93,29 +89,24 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussSidebarCategory-livechat");
+    await contains(".o-mail-DiscussSidebar");
+    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
-    await afterNextRender(() =>
-        pyEnv.withUser(pyEnv.publicUserId, () =>
-            env.services.rpc("/im_livechat/chat_post", {
-                uuid: channel.uuid,
-                message_content: "new message",
-            })
-        )
+    pyEnv.withUser(pyEnv.publicUserId, () =>
+        env.services.rpc("/im_livechat/chat_post", {
+            uuid: channel.uuid,
+            message_content: "new message",
+        })
     );
-    assert.containsOnce($, ".o-mail-DiscussSidebarCategory-livechat");
-    assert.containsOnce(
-        $,
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel"
-    );
-    assert.containsOnce(
-        $,
+    await contains(".o-mail-DiscussSidebarCategory-livechat");
+    await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel");
+    await contains(
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel:contains(Visitor (Belgium))"
     );
 });
 
-QUnit.test("reaction button should not be present on livechat", async (assert) => {
+QUnit.test("reaction button should not be present on livechat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -131,10 +122,10 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer-send:not(:disabled)");
     await click(".o-mail-Message");
-    assert.containsNone($, "[title='Add a Reaction']");
+    await contains("[title='Add a Reaction']", { count: 0 });
 });
 
-QUnit.test("invite button should be present on livechat", async (assert) => {
+QUnit.test("invite button should be present on livechat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -147,12 +138,12 @@ QUnit.test("invite button should be present on livechat", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-Discuss button[title='Add Users']");
+    await contains(".o-mail-Discuss button[title='Add Users']");
 });
 
 QUnit.test(
     "livechats are sorted by last activity time in the sidebar: most recent at the top",
-    async (assert) => {
+    async () => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create([
             {

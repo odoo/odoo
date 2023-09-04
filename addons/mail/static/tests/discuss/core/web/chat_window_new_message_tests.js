@@ -131,10 +131,9 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button", { text: "New Message" });
-        await insertText(".o-discuss-ChannelSelector", "131");
+        await insertText(".o-discuss-ChannelSelector input", "131");
         await click(".o-discuss-ChannelSelector-suggestion a");
         await contains(".o-mail-ChatWindow-name", { count: 0, text: "New message" });
-
         await contains(".o-mail-ChatWindow");
     }
 );
@@ -146,6 +145,6 @@ QUnit.test("new message autocomplete should automatically select first result", 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await insertText(".o-discuss-ChannelSelector", "131");
+    await insertText(".o-discuss-ChannelSelector input", "131");
     await contains(".o-discuss-ChannelSelector-suggestion a.o-mail-NavigableList-active");
 });

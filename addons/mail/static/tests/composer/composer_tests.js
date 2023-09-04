@@ -4,13 +4,13 @@ import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
-    afterNextRender,
     click,
     contains,
     createFile,
     dragenterFiles,
     dropFiles,
     insertText,
+    nextAnimationFrame,
     pasteFiles,
     scroll,
     start,
@@ -138,7 +138,8 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     openDiscuss(channelId);
-    const textarea = (await insertText(".o-mail-Composer-input", "Blabla"))[0];
+    await insertText(".o-mail-Composer-input", "Blabla");
+    const [textarea] = await contains(".o-mail-Composer-input");
     textarea.setSelectionRange(2, 2);
     await click("button[aria-label='Emojis']");
     await click(".o-Emoji", { text: "🤠" });
@@ -882,12 +883,9 @@ QUnit.test("Message is sent only once when pressing enter twice in a row", async
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello World!");
-    await afterNextRender(async () => {
-        // weak test, no guarantee that we waited long enough for the potential second message to be
-        // posted. afterNextRender is the *minimum* to see the issue (before it was fixed): it
-        // should not be removed even it the test works without it.
-        triggerHotkey("Enter");
-        triggerHotkey("Enter");
-    });
+    triggerHotkey("Enter");
+    triggerHotkey("Enter");
+    // weak test, no guarantee that we waited long enough for the potential second message to be posted
+    await nextAnimationFrame();
     await contains(".o-mail-Message-content", { text: "Hello World!" });
 });
