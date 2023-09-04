@@ -31,6 +31,12 @@ export class ProductMainView extends Component {
             customer_note: "",
             selectedVariants: [],
             cartQty: 0,
+            selectedCombos: Object.fromEntries(
+                this.product.pos_combo_ids?.map?.((id) => [
+                    id,
+                    this.selfOrder.comboByIds[id].combo_line_ids[0].id,
+                ]) || []
+            ),
         });
 
         onWillUnmount(() => {
@@ -91,9 +97,7 @@ export class ProductMainView extends Component {
 
         if (!increase && sentQty === currentQty) {
             this.selfOrder.notification.add(
-                _t(
-                    "You cannot reduce the quantity of an order that has already been sent!"
-                ),
+                _t("You cannot reduce the quantity of an order that has already been sent!"),
                 { type: "danger" }
             );
             return;
@@ -103,6 +107,9 @@ export class ProductMainView extends Component {
     }
 
     orderlineCanBeMerged(newLine) {
+        if (this.props.product.pos_combo_ids.length) {
+            return false;
+        }
         const editedLine = this.selfOrder.editedLine;
 
         if (editedLine) {
@@ -116,7 +123,7 @@ export class ProductMainView extends Component {
                 l.product_id === this.product.id
         );
 
-        return line ? line : false;
+        return line || false;
     }
 
     async addToCart() {
@@ -132,17 +139,29 @@ export class ProductMainView extends Component {
             lineToMerge.full_product_name = this.fullProductName;
             lineToMerge.qty += this.state.qty + gap;
         } else {
-            lines.push(
-                new Line({
-                    id: lineToMerge ? lineToMerge.id : null,
-                    uuid: lineToMerge ? lineToMerge.uuid : null,
+            const mainLine = new Line({
+                id: lineToMerge ? lineToMerge.id : null,
+                uuid: lineToMerge ? lineToMerge.uuid : null,
+                qty: this.state.qty,
+                product_id: this.product.id,
+                full_product_name: this.fullProductName,
+                customer_note: this.state.customer_note,
+                selected_attributes: this.state.selectedVariants,
+            });
+            lines.push(mainLine);
+            for (const [combo_id, combo_line_id] of Object.entries(this.state.selectedCombos)) {
+                const combo = this.selfOrder.comboByIds[combo_id];
+                const combo_line = combo.combo_line_ids.find((l) => l.id == combo_line_id);
+                const child_line = new Line({
                     qty: this.state.qty,
-                    product_id: this.product.id,
-                    full_product_name: this.fullProductName,
-                    customer_note: this.state.customer_note,
-                    selected_attributes: this.state.selectedVariants,
-                })
-            );
+                    product_id: combo_line.product_id[0],
+                    full_product_name: this.selfOrder.productByIds[combo_line.product_id[0]].name,
+                    combo_parent_uuid: mainLine.uuid,
+                    combo_id: combo.id,
+                });
+                lines.push(child_line);
+                mainLine.child_lines.push(child_line);
+            }
         }
 
         // If a command line does not have a quantity greater than 0, we consider it deleted
