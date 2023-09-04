@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="calendar.AttendeeCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
-        <DatePicker position="after">
-            <div id="calendar_sync_wrapper" t-if="isSystemUser">
-                <div id="calendar_sync_title" class="o_calendar_sync text-center">
-                    <span>Synchronize with:</span>
-                </div>
-                <div id="calendar_sync" class="container btn-group justify-content-center align-items-center gap-2">
-                    <div id="google_calendar_sync" class="o_calendar_sync" t-if="isSystemUser">
-                        <button type="button" id="google_sync_activate" class="btn btn-light" t-on-click="() => this.configureCalendarProviderSync('google')">
-                            <b><i class='fa fa-plug fa-fw'/> Google</b>
-                        </button>
-                    </div>
-                    <div id="microsoft_calendar_sync" class="o_calendar_sync" t-if="isSystemUser">
-                        <button type="button" id="microsoft_sync_activate" class="btn btn-light" t-on-click="() => this.configureCalendarProviderSync('microsoft')">
-                            <b><i class='fa fa-plug fa-fw'/> Outlook</b>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </DatePicker>
         <xpath expr="//Layout" position="inside">
             <t t-set-slot="control-panel-create-button">
                 <button class="btn btn-primary o-calendar-button-new me-1" t-on-click="onClickAddButton">New</button>
