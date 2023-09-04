@@ -26,8 +26,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import {
     toggleActionMenu,
-    toggleSearchBarMenu,
     toggleMenuItem,
+    toggleSearchBarMenu,
 } from "@web/../tests/search/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -41,10 +41,11 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
-import { Field } from "@web/views/fields/field";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
+import { Field } from "@web/views/fields/field";
 import { IntegerField } from "@web/views/fields/integer/integer_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
 import { companyService } from "@web/webclient/company_service";
 
@@ -13981,6 +13982,124 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_form_button_save"));
 
             assert.equal(target.querySelectorAll(".o_data_cell")[0].innerText, "updated");
+        }
+    );
+
+    QUnit.test("custom x2many with relatedFields and list view inline", async function (assert) {
+        class MyField extends X2ManyField {}
+        fieldRegistry.add("my_widget", {
+            ...x2ManyField,
+            component: MyField,
+            relatedFields: [
+                { name: "trululu", type: "many2one", relation: "partner" },
+                { name: "int_field", type: "integer" },
+            ],
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" widget='my_widget'>
+                        <tree editable="bottom" >
+                            <field name="foo"/>
+                            <field name="int_field" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+            mockRPC(route, args) {
+                if (args.method === "web_read") {
+                    assert.step("web_read");
+                    assert.deepEqual(args.kwargs.specification.p.fields, {
+                        trululu: { fields: { display_name: {} } },
+                        foo: {},
+                        int_field: {},
+                    });
+                } else if (args.method === "write") {
+                    assert.step("write");
+                    assert.deepEqual(args.args[1].p[0][2], {
+                        foo: "new record",
+                        int_field: 0,
+                    });
+                } else if (args.method === "web_save") {
+                    assert.step("web_save");
+                    assert.deepEqual(args.kwargs.specification.p.fields, {
+                        trululu: { fields: { display_name: {} } },
+                        foo: {},
+                        int_field: {},
+                    });
+                }
+            },
+        });
+
+        await addRow(target);
+        await editInput(target, ".o_data_row [name='foo'] input", "new record");
+        await clickSave(target);
+        assert.verifySteps(["web_read", "web_save"]);
+    });
+
+    QUnit.test(
+        "custom x2many with relatedFields and list view not inline",
+        async function (assert) {
+            class MyField extends X2ManyField {}
+            fieldRegistry.add("my_widget", {
+                ...x2ManyField,
+                component: MyField,
+                relatedFields: [
+                    { name: "trululu", type: "many2one", relation: "partner" },
+                    { name: "int_field", type: "integer" },
+                ],
+            });
+
+            serverData.views = {
+                "partner,false,list": `
+                <tree editable="bottom" >
+                    <field name="foo"/>
+                    <field name="int_field" />
+                </tree>`,
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p" widget='my_widget'/>
+                </form>`,
+                resId: 2,
+                mockRPC(route, args) {
+                    if (args.method === "web_read") {
+                        assert.step("web_read");
+                        assert.deepEqual(args.kwargs.specification.p.fields, {
+                            trululu: { fields: { display_name: {} } },
+                            foo: {},
+                            int_field: {},
+                        });
+                    } else if (args.method === "write") {
+                        assert.step("write");
+                        assert.deepEqual(args.args[1].p[0][2], {
+                            foo: "new record",
+                            int_field: 0,
+                        });
+                    } else if (args.method === "web_save") {
+                        assert.step("web_save");
+                        assert.deepEqual(args.kwargs.specification.p.fields, {
+                            trululu: { fields: { display_name: {} } },
+                            foo: {},
+                            int_field: {},
+                        });
+                    }
+                },
+            });
+
+            await addRow(target);
+            await editInput(target, ".o_data_row [name='foo'] input", "new record");
+            await clickSave(target);
+            assert.verifySteps(["web_read", "web_save"]);
         }
     );
 });
