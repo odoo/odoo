@@ -150,6 +150,7 @@ class AccountMove(models.Model):
             base_line_vals_list,
             self.currency_id,
             tax_lines=tax_line_vals_list,
+            is_company_currency_requested=self.currency_id != self.company_id.currency_id,
         )
 
         if include_sii:
