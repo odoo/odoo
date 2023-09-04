@@ -6,21 +6,12 @@ import {
     useBus,
     useChildRef,
     useForwardRefToParent,
-    useListener,
     useService,
     useSpellCheck,
 } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import {
-    click,
-    destroy,
-    getFixture,
-    makeDeferred,
-    mount,
-    nextTick,
-} from "@web/../tests/helpers/utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { destroy, getFixture, makeDeferred, mount, nextTick } from "@web/../tests/helpers/utils";
 
 import { Component, onMounted, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
@@ -306,85 +297,6 @@ QUnit.module("utils", () => {
             env.bus.trigger("test-event");
             await nextTick();
             assert.verifySteps([]);
-        });
-
-        QUnit.module("useListener");
-
-        QUnit.test("useListener: simple usecase", async function (assert) {
-            class MyComponent extends LegacyComponent {
-                setup() {
-                    useListener("click", () => assert.step("click"));
-                }
-            }
-            MyComponent.template = xml`<button class="root">Click Me</button>`;
-
-            const env = await makeTestEnv();
-            const target = getFixture();
-            await mount(MyComponent, target, { env });
-
-            await click(target.querySelector(".root"));
-            assert.verifySteps(["click"]);
-        });
-
-        QUnit.test("useListener: event delegation", async function (assert) {
-            class MyComponent extends LegacyComponent {
-                setup() {
-                    this.flag = true;
-                    useListener("click", "button", () => assert.step("click"));
-                }
-            }
-            MyComponent.template = xml`
-                <div class="root">
-                    <button t-if="flag">Click Here</button>
-                    <button t-else="">
-                        <span>or Here</span>
-                    </button>
-                </div>`;
-
-            const env = await makeTestEnv();
-            const target = getFixture();
-            const comp = await mount(MyComponent, target, { env });
-
-            await click(target.querySelector(".root"));
-            assert.verifySteps([]);
-            await click(target.querySelector("button"));
-            assert.verifySteps(["click"]);
-
-            comp.flag = false;
-            comp.render();
-            await nextTick();
-            await click(target.querySelector("button span"));
-            assert.verifySteps(["click"]);
-        });
-
-        QUnit.test("useListener: event delegation with capture option", async function (assert) {
-            class MyComponent extends LegacyComponent {
-                setup() {
-                    this.flag = false;
-                    useListener("click", "button", () => assert.step("click"), { capture: true });
-                }
-            }
-            MyComponent.template = xml`
-                <div class="root">
-                    <button t-if="flag">Click Here</button>
-                    <button t-else="">
-                        <span>or Here</span>
-                    </button>
-                </div>`;
-
-            const env = await makeTestEnv();
-            const target = getFixture();
-            const comp = await mount(MyComponent, target, { env });
-
-            await click(target.querySelector(".root"));
-            assert.verifySteps([]);
-            await click(target.querySelector("button"));
-            assert.verifySteps(["click"]);
-
-            comp.flag = false;
-            await comp.render();
-            await click(target.querySelector("button span"));
-            assert.verifySteps(["click"]);
         });
 
         QUnit.module("useService");
