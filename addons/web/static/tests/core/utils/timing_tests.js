@@ -225,6 +225,70 @@ QUnit.module("utils", () => {
                 assert.verifySteps([]);
             });
 
+            QUnit.test(
+                "useDebounced with execBeforeUnmount option (callback not resolved before comp destroy)",
+                async function (assert) {
+                    const { advanceTime } = mockTimeout();
+                    class C extends Component {
+                        static template = xml`<button class="c" t-on-click="() => this.debounced('hello')">C</button>`;
+                        setup() {
+                            this.debounced = useDebounced(
+                                (p) => assert.step(`debounced: ${p}`),
+                                1000,
+                                {
+                                    execBeforeUnmount: true,
+                                }
+                            );
+                        }
+                    }
+                    const fixture = getFixture();
+                    const comp = await mount(C, fixture);
+                    assert.verifySteps([]);
+                    assert.containsOnce(fixture, "button.c");
+
+                    await click(fixture, "button.c");
+                    await advanceTime(999);
+                    assert.verifySteps([]);
+                    await advanceTime(1);
+                    assert.verifySteps(["debounced: hello"]);
+
+                    await click(fixture, "button.c");
+                    await advanceTime(999);
+                    assert.verifySteps([]);
+                    destroy(comp);
+                    assert.verifySteps(["debounced: hello"]);
+                }
+            );
+
+            QUnit.test(
+                "useDebounced with execBeforeUnmount option (callback resolved before comp destroy)",
+                async function (assert) {
+                    const { advanceTime } = mockTimeout();
+                    class C extends Component {
+                        static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+                        setup() {
+                            this.debounced = useDebounced(() => assert.step("debounced"), 1000, {
+                                execBeforeUnmount: true,
+                            });
+                        }
+                    }
+                    const fixture = getFixture();
+                    const comp = await mount(C, fixture);
+                    assert.verifySteps([]);
+                    assert.containsOnce(fixture, "button.c");
+
+                    await click(fixture, "button.c");
+                    await advanceTime(999);
+                    assert.verifySteps([]);
+                    await advanceTime(1);
+                    assert.verifySteps(["debounced"]);
+
+                    destroy(comp);
+                    await advanceTime(1);
+                    assert.verifySteps([]);
+                }
+            );
+
             QUnit.test("useThrottleForAnimation: cancels on comp destroy", async function (assert) {
                 const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
                 class C extends Component {

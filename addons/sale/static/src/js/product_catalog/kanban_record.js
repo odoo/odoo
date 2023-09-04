@@ -12,7 +12,9 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
         this.rpc = useService("rpc");
-        this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500);
+        this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
+            execBeforeUnmount: true,
+        });
 
         useSubEnv({
             currencyId: this.props.record.context.product_catalog_currency_id,
