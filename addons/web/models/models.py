@@ -66,11 +66,13 @@ class Base(models.AbstractModel):
             'records': records,
         }
 
-    def web_save(self, vals, specification: Dict[str, Dict]) -> List[Dict]:
+    def web_save(self, vals, specification: Dict[str, Dict], next_id=None) -> List[Dict]:
         if self:
             self.write(vals)
         else:
             self = self.create(vals)
+        if next_id:
+            self = self.browse(next_id)
         return self.with_context(bin_size=True).web_read(specification)
 
     def web_read(self, specification: Dict[str, Dict]) -> List[Dict]:

@@ -1914,6 +1914,9 @@ export class MockServer {
         } else {
             this.mockWrite(modelName, args);
         }
+        if (kwargs.next_id) {
+            args[0] = kwargs.next_id;
+        }
         return this.mockWebRead(modelName, args, kwargs);
     }
 
