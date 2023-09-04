@@ -177,15 +177,17 @@ class StockLandedCost(models.Model):
             cost.write(cost_vals)
             if cost.account_move_id:
                 move._post()
+            cost.reconcile_landed_cost()
+        return True
 
+    def reconcile_landed_cost(self):
+        for cost in self:
             if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
                 all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
                     all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled).reconcile()
-
-        return True
 
     def get_valuation_lines(self):
         self.ensure_one()
