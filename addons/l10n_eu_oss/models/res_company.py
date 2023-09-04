@@ -65,7 +65,7 @@ class Company(models.Model):
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
                                 tg = self.env['account.tax.group'].search([
                                     *self.env['account.tax.group']._check_company_domain(company),
-                                ])
+                                    ('tax_payable_account_id', '!=', False)], limit=1)
                                 self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
                                     'module': 'account',
