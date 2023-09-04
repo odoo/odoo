@@ -1773,7 +1773,7 @@ export function isEmptyBlock(blockEl) {
     if (!blockEl || blockEl.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
-    if (visibleCharRegex.test(blockEl.textContent)) {
+    if (isFontAwesome(blockEl) || visibleCharRegex.test(blockEl.textContent)) {
         return false;
     }
     if (blockEl.querySelectorAll('br').length >= 2) {
