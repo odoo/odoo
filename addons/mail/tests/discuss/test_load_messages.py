@@ -17,5 +17,6 @@ class TestLoadMessages(odoo.tests.HttpCase):
             "pinned_at": odoo.fields.Datetime.now() if n == 1 else None,
             "res_id": channel_id.id,
             "author_id": partner_admin.id,
+            "message_type": "comment",
         } for n in range(1, 61)])
         self.start_tour("/web#action=mail.action_discuss", "mail.load_message_order", login="admin")
