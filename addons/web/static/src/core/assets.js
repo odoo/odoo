@@ -239,6 +239,8 @@ export const _loadBundle = (assets.loadBundle = async function loadBundle(desc) 
             );
         }
     }
+    console.log("LLLOOOAAAADDDDIIIINNNGGGG", JSON.stringify(desc.jsLibs));
+    odoo.log();
 });
 
 export const loadJS = function (url) {
