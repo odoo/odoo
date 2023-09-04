@@ -13,3 +13,8 @@ class EventRegistration(models.Model):
 
     def _get_website_registration_allowed_fields(self):
         return {'name', 'phone', 'email', 'mobile', 'company_name', 'event_id', 'partner_id', 'event_ticket_id'}
+
+    def _get_registration_summary(self):
+        res = super()._get_registration_summary()
+        res['registration_answers'] = self.registration_answer_ids.filtered('value_answer_id').mapped('display_name')
+        return res
