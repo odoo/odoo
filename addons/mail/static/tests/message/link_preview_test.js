@@ -3,6 +3,7 @@
 import {
     click,
     contains,
+    insertText,
     nextAnimationFrame,
     start,
     startServer,
@@ -342,3 +343,13 @@ QUnit.test(
         await contains(".o-mail-Message-bubble");
     }
 );
+
+QUnit.test("Sending message with link preview URL should show a link preview card", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
+    await click("button:not([disabled])", { text: "Send" });
+    await contains(".o-mail-LinkPreviewCard");
+});

@@ -100,9 +100,7 @@ export class MailCoreCommon {
                 const { LinkPreview: linkPreviews } = payload;
                 if (linkPreviews) {
                     for (const linkPreview of linkPreviews) {
-                        this.store.Message.get(linkPreview.message.id)?.linkPreviews.push(
-                            this.store.LinkPreview.insert(linkPreview)
-                        );
+                        this.store.LinkPreview.insert(linkPreview);
                     }
                 }
                 const { Message: messageData } = payload;
