@@ -920,7 +920,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.tax_key = frozendict({'id': line.id})
 
-    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit')
+    @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit', 'quantity')
     def _compute_all_tax(self):
         for line in self:
             sign = line.move_id.direction_sign
