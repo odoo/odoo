@@ -254,18 +254,14 @@
             <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
             <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="" Id="Reference-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                 <ds:Transforms>
-                    <ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                     <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                    <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
-                        <ds:XPath>not(ancestor-or-self::ds:Signature)</ds:XPath>
-                    </ds:Transform>
                 </ds:Transforms>
                 <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ds:DigestValue>___ignore___</ds:DigestValue>
+                <ds:DigestValue>ZLrDCYSAq93Xpv9PLeS4CSBh4htTOx5j4f7zH0K8ddI=</ds:DigestValue>
             </ds:Reference>
             <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                 <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                <ds:DigestValue>UQH7ea0mtLoqLN/aM5mWssQ38fOK1bxnWT4fKQBYiSI=</ds:DigestValue>
+                <ds:DigestValue>SpcFoWamxWQCsYjqZ/lsru5Ia4MaKBVgXiUWgKKBh2s=</ds:DigestValue>
             </ds:Reference>
             <ds:Reference URI="#KeyInfo-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                 <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
@@ -310,7 +306,7 @@ aWAYAMCL4KhvISclysD+5juDLpGCLHPtKxBXTQ==</ds:Modulus>
                 <xades:SignedProperties Id="SignatureProperties-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
                     <xades:SignedSignatureProperties>
                         <xades:SigningTime>2023-01-01T00:00:00</xades:SigningTime>
-                        <xades:SigningCertificateV2>
+                        <xades:SigningCertificate>
                             <xades:Cert>
                                 <xades:CertDigest>
                                     <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
@@ -321,7 +317,7 @@ aWAYAMCL4KhvISclysD+5juDLpGCLHPtKxBXTQ==</ds:Modulus>
                                     <ds:X509SerialNumber>548631688851000697209704649636588277530075594025</ds:X509SerialNumber>
                                 </xades:IssuerSerial>
                             </xades:Cert>
-                        </xades:SigningCertificateV2>
+                        </xades:SigningCertificate>
                         <xades:SignaturePolicyIdentifier>
                             <xades:SignaturePolicyId>
                                 <xades:SigPolicyId>
