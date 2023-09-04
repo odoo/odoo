@@ -312,39 +312,47 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             if (relatedFields instanceof Function) {
                 relatedFields = relatedFields(fieldInfo);
             }
+            for (const relatedField of relatedFields) {
+                if (!("readonly" in relatedField)) {
+                    relatedField.readonly = true;
+                }
+            }
             relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
             views.default = { fieldNodes: relatedFields, fields: relatedFields };
-            fieldInfo.viewMode = "default";
-        } else {
-            for (const child of node.children) {
-                const viewType = child.tagName === "tree" ? "list" : child.tagName;
-                const { ArchParser } = viewRegistry.get(viewType);
-                const xmlSerializer = new XMLSerializer();
-                const subArch = xmlSerializer.serializeToString(child);
-                const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
-                views[viewType] = {
-                    ...archInfo,
-                    limit: archInfo.limit || 40,
-                    fields: models[fields[name].relation],
-                };
+            if (!fieldInfo.field.useSubView) {
+                fieldInfo.viewMode = "default";
             }
+        }
+        for (const child of node.children) {
+            const viewType = child.tagName === "tree" ? "list" : child.tagName;
+            const { ArchParser } = viewRegistry.get(viewType);
+            const xmlSerializer = new XMLSerializer();
+            const subArch = xmlSerializer.serializeToString(child);
+            const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
+            views[viewType] = {
+                ...archInfo,
+                limit: archInfo.limit || 40,
+                fields: models[fields[name].relation],
+            };
+        }
 
-            let viewMode = node.getAttribute("mode");
-            if (!viewMode) {
-                if (views.list && !views.kanban) {
-                    viewMode = "list";
-                } else if (!views.list && views.kanban) {
-                    viewMode = "kanban";
-                } else if (views.list && views.kanban) {
-                    viewMode = isSmall() ? "kanban" : "list";
-                }
+        let viewMode = node.getAttribute("mode");
+        if (viewMode) {
+            if (viewMode.split(",").length !== 1) {
+                viewMode = isSmall() ? "kanban" : "list";
             } else {
-                if (viewMode.split(",").length !== 1) {
-                    viewMode = isSmall() ? "kanban" : "list";
-                } else {
-                    viewMode = viewMode === "tree" ? "list" : viewMode;
-                }
+                viewMode = viewMode === "tree" ? "list" : viewMode;
             }
+        } else {
+            if (views.list && !views.kanban) {
+                viewMode = "list";
+            } else if (!views.list && views.kanban) {
+                viewMode = "kanban";
+            } else if (views.list && views.kanban) {
+                viewMode = isSmall() ? "kanban" : "list";
+            }
+        }
+        if (viewMode) {
             fieldInfo.viewMode = viewMode;
         }
         if (Object.keys(views).length) {

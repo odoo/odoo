@@ -225,6 +225,22 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                         );
                         Object.assign(activeField.related.fields, formArchInfo.fields);
                     }
+
+                    if (fieldNode.viewMode !== "default" && fieldNode.views.default) {
+                        const defaultArchInfo = extractFieldsFromArchInfo(
+                            fieldNode.views.default,
+                            fieldNode.views.default.fields
+                        );
+                        activeField.related.activeFields = {
+                            ...defaultArchInfo.activeFields,
+                            ...activeField.related.activeFields,
+                        };
+                        activeField.related.fields = Object.assign(
+                            {},
+                            defaultArchInfo.fields,
+                            activeField.related.fields
+                        );
+                    }
                 }
             }
             if (fieldNode.field?.useSubView) {
