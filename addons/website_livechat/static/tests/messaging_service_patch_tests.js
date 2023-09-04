@@ -22,10 +22,7 @@ QUnit.test("Should open chat window on send chat request to website visitor", as
             },
         },
     });
-    await openFormView("website.visitor", visitorId, {
-        waitUntilDataLoaded: false,
-        waitUntilMessagesLoaded: false,
-    });
+    await openFormView("website.visitor", visitorId);
     await env.services.rpc("/web/dataset/call_button", {
         args: [visitorId],
         kwargs: { context: env.context },
