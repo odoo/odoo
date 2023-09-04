@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.Rating = options.Class.extend({
@@ -39,7 +38,7 @@ options.registry.Rating = options.Class.extend({
     customIcon: async function (previewMode, widgetValue, params) {
         const media = document.createElement('i');
         media.className = params.customActiveIcon === 'true' ? this.faClassActiveCustomIcons : this.faClassInactiveCustomIcons;
-        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+        this.call("dialog", "add", MediaDialog, {
             noImages: true,
             noDocuments: true,
             noVideos: true,
@@ -58,7 +57,6 @@ options.registry.Rating = options.Class.extend({
                 this.iconType = 'custom';
             }
         });
-        dialog.mount(document.body);
     },
     /**
      * Sets the number of active icons.

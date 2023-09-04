@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
@@ -414,7 +413,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
         let index = lastImage ? this._getIndex(lastImage) : -1;
         return new Promise(resolve => {
             let savedPromise = Promise.resolve();
-            const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+            const props = {
                 multiImages: true,
                 onlyImages: true,
                 save: images => {
@@ -439,11 +438,12 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                         $newImageToSelect.trigger('image_changed');
                     }
                 },
-                close: () => {
+            };
+            this.call("dialog", "add", MediaDialog, props, {
+                onClose: () => {
                     savedPromise.then(resolve);
                 },
             });
-            dialog.mount(this.el);
         });
     },
     /**

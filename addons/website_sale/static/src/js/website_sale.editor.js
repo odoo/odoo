@@ -2,10 +2,7 @@
 
 import options from "@web_editor/js/editor/snippets.options";
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
-import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
-import { useWowlService } from "@web/legacy/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Markup } from "@web/legacy/js/core/utils";
 import Dialog from "@web/legacy/js/core/dialog";
@@ -13,7 +10,6 @@ import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
 import { renderToElement } from "@web/core/utils/render";
 
-const { onRendered } = owl;
 patch(WysiwygAdapterComponent.prototype, {
     /**
      * @override
@@ -655,7 +651,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     }
 });
 
-// Small override of the MediaDialogWrapper to retrieve the attachment ids instead of img elements
+// Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
     /**
      * @override
@@ -667,16 +663,6 @@ class AttachmentMediaDialog extends MediaDialog {
             await this.props.extraImageSave(selectedMedia);
         }
         this.props.close();
-    }
-}
-
-class AttachmentMediaDialogWrapper extends MediaDialogWrapper {
-    setup() {
-        this.dialogs = useWowlService('dialog');
-
-        onRendered(() => {
-            this.dialogs.add(AttachmentMediaDialog, this.props);
-        });
     }
 }
 
@@ -790,7 +776,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             });
         }
         let extraImageEls;
-        const dialog = new ComponentWrapper(this, AttachmentMediaDialogWrapper, {
+        this.call("dialog", "add", AttachmentMediaDialog, {
             multiImages: true,
             onlyImages: true,
             // Kinda hack-ish but the regular save does not get the information we need
@@ -820,7 +806,6 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 });
             }
         });
-        dialog.mount(document.body);
     },
 
     async _convertAttachmentToWebp(attachment, imageEl) {

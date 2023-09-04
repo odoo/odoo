@@ -8,8 +8,7 @@ const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import dom from "@web/legacy/js/core/dom";
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
-import { ProductImageViewerWrapper } from "@website_sale/js/components/website_sale_image_viewer";
+import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 
@@ -381,11 +380,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                             flyout.remove();
                         }
                     }
-                    const dialog = new ComponentWrapper(this, ProductImageViewerWrapper, {
+                    this.call("dialog", "add", ProductImageViewer, {
                         selectedImageIdx: [...images].indexOf(image),
                         images,
                     });
-                    dialog.mount(document.body);
                 };
                 image.addEventListener("click", handler);
                 this.zoomCleanup.push(() => {
