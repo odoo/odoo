@@ -13,8 +13,8 @@ import {
     makeLegacyDialogMappingService,
     mapLegacyEnvToWowlEnv,
     makeLegacyRPCService,
+    createWidgetParent,
 } from "../../utils";
-import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 
 import { makeEnv, startServices } from "@web/env";
 import { loadJS, templates } from '@web/core/assets';
@@ -24,7 +24,7 @@ import { jsonrpc } from '@web/core/network/rpc_service';
 import { renderToString } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
-import { Component, App, whenReady } from "@odoo/owl";
+import { App, whenReady } from "@odoo/owl";
 import { getOrigin } from '@web/core/utils/urls';
 
 const { Settings } = luxon;
@@ -395,8 +395,7 @@ export async function createPublicRoot(RootWidget) {
 
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-    // The root widget's parent is a standalone adapter so that it has _trigger_up
-    const publicRoot = new RootWidget(standaloneAdapter({ Component }));
+    const publicRoot = new RootWidget(createWidgetParent(legacyEnv));
     const app = new App(MainComponentsContainer, {
         templates,
         env: wowlEnv,

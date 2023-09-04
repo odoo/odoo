@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import {ComponentAdapter} from '@web/legacy/js/owl_compatibility';
+import { useWidget } from "@web/legacy/utils";
 import {useService} from '@web/core/utils/hooks';
 import AceEditor from '@web_editor/js/common/ace';
 
-const {Component} = owl;
+import { Component, xml } from "@odoo/owl";
 
 export const WebsiteAceEditor = AceEditor.extend({
 
@@ -37,12 +37,7 @@ export const WebsiteAceEditor = AceEditor.extend({
                 // specific or because its parent was edited too and the view
                 // got copy/unlink).
                 const selectedView = Object.values(this.views).find(view => view.id === this._getSelectedResource());
-                let context;
-                this.trigger_up('context_get', {
-                    callback: (ctx) => {
-                        context = ctx;
-                    },
-                });
+                const context = this.options.getContext();
                 defs.push(this._rpc({
                     model: 'ir.ui.view',
                     method: 'search_read',
@@ -97,37 +92,19 @@ export const WebsiteAceEditor = AceEditor.extend({
      * @override
      */
     _rpc(options) {
-        let context;
-        this.trigger_up('context_get', {
-            callback: (ctx) => {
-                context = ctx;
-            },
-        });
-        return this._super({...options, context: context});
+        return this._super({ ...options, context: this.options.getContext() });
     },
 });
 
-export class AceEditorAdapterComponent extends ComponentAdapter {
-    setup() {
-        super.setup();
+export class AceEditorAdapterComponent extends Component {
+    static template = xml`<div style="display: contents;" t-ref="wrapper"/>`;
 
+    setup() {
         this.website = useService("website");
         this.user = useService("user");
         this.env = Component.env;
-    }
 
-    _trigger_up(event) {
-        if (event.name === 'context_get') {
-            return event.data.callback({...this.user.context, website_id: this.website.currentWebsite.id});
-        }
-        super._trigger_up(event);
-    }
-
-    /**
-     * @override
-     */
-    get widgetArgs() {
-        return [
+        useWidget("wrapper", WebsiteAceEditor, [
             this.website.pageDocument && this.website.pageDocument.documentElement.dataset.viewXmlid,
             {
                 toggleAceEditor: () => this.website.context.showAceEditor = false,
@@ -139,10 +116,11 @@ export class AceEditorAdapterComponent extends ComponentAdapter {
                 reload: () => {
                     this.website.contentWindow.location.reload();
                 },
-            }
-        ];
+                getContext: () => ({
+                    ...this.user.context,
+                    website_id: this.website.currentWebsite.id,
+                }),
+            },
+        ]);
     }
 }
-AceEditorAdapterComponent.defaultProps = {
-    Component: WebsiteAceEditor,
-};

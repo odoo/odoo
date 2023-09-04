@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ComponentWrapper } from "@web/legacy/js/owl_compatibility";
+import { attachComponent } from "@web/legacy/utils";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestElement } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { Toolbar } from "@web_editor/js/editor/toolbar";
@@ -46,15 +46,13 @@ export class MassMailingWysiwyg extends Wysiwyg {
         if (fold) {
             this.snippetsMenu.setFolded(true);
             if (!this.floatingToolbar) {
-                // Instantiate and configure new toolbar.
-                const toolbarWrapper = new ComponentWrapper({}, Toolbar, this.state.toolbarProps);
-
                 // The wysiwyg can be instanciated inside an iframe. The dialog
                 // component is mounted on the global document.
                 const toolbarWrapperElement = document.createElement('div');
                 toolbarWrapperElement.style.display = 'contents';
                 document.body.append(toolbarWrapperElement);
-                await toolbarWrapper.mount(toolbarWrapperElement);
+                // Instantiate and configure new toolbar.
+                await attachComponent({}, toolbarWrapperElement, Toolbar, this.state.toolbarProps);
                 this.toolbarEl = toolbarWrapperElement.firstChild;
                 this.floatingToolbarEl = this.toolbarEl;
 
