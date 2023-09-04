@@ -78,7 +78,7 @@ async function nextTick() {
 //------------------------------------------------------------------------------
 
 function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {}) {
-    return async function openDiscuss(pActiveId, { waitUntilMessagesLoaded = true } = {}) {
+    return async function openDiscuss(pActiveId) {
         const actionOpenDiscuss = {
             // hardcoded actionId, required for discuss_container props validation.
             id: 104,
@@ -101,31 +101,6 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
                 id: threadId,
             })
         );
-        if (waitUntilMessagesLoaded) {
-            const messagesLoadedPromise = makeDeferred();
-            const store = webClient.env.services["mail.store"];
-            const thread = store.Thread.records[store.discuss.threadLocalId];
-            if (thread.isLoaded) {
-                messagesLoadedPromise.resolve();
-            }
-            let loadMessageRoute = `/mail/${threadId}/messages`;
-            if (Number.isInteger(threadId)) {
-                loadMessageRoute = "/discuss/channel/messages";
-            }
-            registry.category("mock_server_callbacks").add(
-                loadMessageRoute,
-                ({ channel_id: channelId = threadId }) => {
-                    if (channelId === threadId) {
-                        messagesLoadedPromise.resolve();
-                    }
-                },
-                { force: true }
-            );
-            return afterNextRender(async () => {
-                await doAction(webClient, actionOpenDiscuss, { props });
-                await messagesLoadedPromise;
-            });
-        }
         return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }

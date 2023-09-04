@@ -1471,7 +1471,7 @@ QUnit.test("failure on loading messages should display error", async () => {
             }
         },
     });
-    openDiscuss(channelId, { waitUntilMessagesLoaded: false });
+    openDiscuss(channelId);
     await contains(".o-mail-Thread-error", {
         text: "An error occurred while fetching messages.",
     });
@@ -1490,7 +1490,7 @@ QUnit.test("failure on loading messages should prompt retry button", async () =>
             }
         },
     });
-    openDiscuss(channelId, { waitUntilMessagesLoaded: false });
+    openDiscuss(channelId);
     await contains("button", { text: "Click here to retry" });
 });
 
