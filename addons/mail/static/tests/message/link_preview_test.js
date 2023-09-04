@@ -1,13 +1,6 @@
 /* @odoo-module */
 
-import {
-    click,
-    contains,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("link preview");
 
@@ -266,10 +259,8 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
     const { env, openDiscuss } = await start();
     openDiscuss();
     env.services.rpc("/mail/link_preview", { message_id: messageId });
-    await nextAnimationFrame();
     assert.ok(true);
     env.services.rpc("/mail/link_preview/delete", { link_preview_id: linkPreviewId });
-    await nextAnimationFrame();
     assert.ok(true);
 });
 

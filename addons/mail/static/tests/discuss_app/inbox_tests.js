@@ -1,13 +1,6 @@
 /* @odoo-module */
 
-import {
-    click,
-    contains,
-    insertText,
-    nextAnimationFrame,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey, makeDeferred } from "@web/../tests/helpers/utils";
 
@@ -615,7 +608,6 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async () => {
     openDiscuss();
     await click("button", { text: "Mark all read" });
     await contains("button:contains(Inbox) .badge", { count: 0 });
-    await nextAnimationFrame();
     await contains(".o_reward_rainbow");
 });
 
@@ -645,7 +637,6 @@ QUnit.test("emptying inbox doesn't display rainbow man in another thread", async
         needaction_inbox_counter: 0,
     });
     await contains("button:contains(Inbox) .badge", { count: 0 });
-    await nextAnimationFrame();
     // weak test, no guarantee that we waited long enough for the potential rainbow man to show
     await contains(".o_reward_rainbow", { count: 0 });
 });

@@ -5,7 +5,6 @@ import {
     click,
     contains,
     mockGetMedia,
-    nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -105,7 +104,6 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     await contains(".o-discuss-Call");
     // simulate page close
     window.dispatchEvent(new Event("pagehide"), { bubble: true });
-    await nextAnimationFrame();
     assert.verifySteps(["sendBeacon_leave_call"]);
 });
 

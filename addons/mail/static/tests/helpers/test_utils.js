@@ -50,21 +50,6 @@ function _createFakeDataTransfer(files) {
 }
 
 //------------------------------------------------------------------------------
-// Public: rendering timers
-//------------------------------------------------------------------------------
-
-/**
- * Returns a promise resolved at the next animation frame.
- *
- * @returns {Promise}
- */
-function nextAnimationFrame() {
-    return new Promise(function (resolve) {
-        setTimeout(() => requestAnimationFrame(() => resolve()));
-    });
-}
-
-//------------------------------------------------------------------------------
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
@@ -422,7 +407,6 @@ export {
     dragenterFiles,
     dropFiles,
     insertText,
-    nextAnimationFrame,
     pasteFiles,
     scroll,
     start,
