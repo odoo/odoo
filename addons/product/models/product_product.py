@@ -311,7 +311,7 @@ class ProductProduct(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             self.product_tmpl_id._sanitize_vals(vals)
-        products = super(ProductProduct, self).create(vals_list)
+        products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
         return products
