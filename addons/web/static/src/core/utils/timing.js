@@ -45,28 +45,35 @@ export function debounce(func, delay, immediate = false) {
     const useAnimationFrame = delay === "animationFrame";
     const setFnName = useAnimationFrame ? "requestAnimationFrame" : "setTimeout";
     const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
+    let lastArgs;
     return Object.assign(
         {
             /** @type {any} */
             [funcName](...args) {
+                lastArgs = args;
                 return new Promise((resolve) => {
                     const callNow = immediate && !handle;
                     browser[clearFnName](handle);
                     handle = browser[setFnName](() => {
                         handle = null;
                         if (!immediate) {
+                            lastArgs = undefined;
                             Promise.resolve(func.apply(this, args)).then(resolve);
                         }
                     }, delay);
                     if (callNow) {
+                        lastArgs = undefined;
                         Promise.resolve(func.apply(this, args)).then(resolve);
                     }
                 });
             },
         }[funcName],
         {
-            cancel() {
+            cancel(execNow = false) {
                 browser[clearFnName](handle);
+                if (execNow && lastArgs) {
+                    func.apply(this, lastArgs);
+                }
             },
         }
     );
@@ -154,14 +161,21 @@ export function throttleForAnimation(func) {
  * @template {Function} T
  * @param {T} callback
  * @param {number | "animationFrame"} delay
- * @param {boolean} [immediate=false] whether the function should be called on
+ * @param {Object} [options]
+ * @param {string} [options.execBeforeUnmount=false] executes the callback if the debounced function
+ *      has been called and not resolved before destroying the component.
+ * @param {boolean} [options.immediate=false] whether the function should be called on
  *      the leading edge instead of the trailing edge.
  * @returns {T & { cancel: () => void }}
  */
-export function useDebounced(callback, delay, immediate = false) {
+export function useDebounced(
+    callback,
+    delay,
+    { execBeforeUnmount = false, immediate = false } = {}
+) {
     const component = useComponent();
     const debounced = debounce(callback.bind(component), delay, immediate);
-    onWillUnmount(() => debounced.cancel());
+    onWillUnmount(() => debounced.cancel(execBeforeUnmount));
     return debounced;
 }
 

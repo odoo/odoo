@@ -10,7 +10,7 @@ export class CheckInOut extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
 
-        this.onClickSignInOut = useDebounced(this.signInOut, 200, true);
+        this.onClickSignInOut = useDebounced(this.signInOut, 200, { immediate: true });
     }
 
     async signInOut() {
