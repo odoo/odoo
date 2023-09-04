@@ -19,7 +19,7 @@ import {
     registryNamesToCloneWithCleanup,
     prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
-import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
 const { afterNextRender } = App;
@@ -105,84 +105,14 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
     };
 }
 
-/**
- * Wait until the form view corresponding to the given resId/resModel has loaded.
- *
- * @param {Function} func Function expected to trigger form view load.
- * @param {Object} param1
- */
-export function waitFormViewLoaded(
-    func,
-    { resId = false, resModel, waitUntilMessagesLoaded = true, waitUntilDataLoaded = true } = {}
-) {
-    const waitData = (func) => {
-        const dataLoadedPromise = makeDeferred();
-        registry.category("mock_server_callbacks").add(
-            "/mail/thread/data",
-            ({ thread_id: threadId, thread_model: threadModel }) => {
-                if (threadId === resId && threadModel === resModel) {
-                    dataLoadedPromise.resolve();
-                }
-            },
-            { force: true }
-        );
-        return afterNextRender(async () => {
-            await func();
-            await dataLoadedPromise;
-        });
-    };
-    const waitMessages = (func) => {
-        const messagesLoadedPromise = makeDeferred();
-        registry.category("mock_server_callbacks").add(
-            "/mail/thread/messages",
-            ({ thread_id: threadid, thread_model: threadModel }) => {
-                if (threadid === resId && threadModel === resModel) {
-                    messagesLoadedPromise.resolve();
-                }
-            },
-            { force: true }
-        );
-        return afterNextRender(async () => {
-            await func();
-            await messagesLoadedPromise;
-        });
-    };
-    if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
-        return waitData(() => waitMessages(func));
-    }
-    if (waitUntilDataLoaded) {
-        return waitData(func);
-    }
-    if (waitUntilMessagesLoaded) {
-        return waitMessages(func);
-    }
-}
-
 function getOpenFormView(openView) {
-    return async function openFormView(
-        res_model,
-        res_id,
-        {
-            props,
-            waitUntilDataLoaded = Boolean(res_id),
-            waitUntilMessagesLoaded = Boolean(res_id),
-        } = {}
-    ) {
+    return async function openFormView(res_model, res_id, { props } = {}) {
         const action = {
             res_model,
             res_id,
             views: [[false, "form"]],
         };
-        const func = () => openView(action, props);
-        if (waitUntilDataLoaded || waitUntilMessagesLoaded) {
-            return waitFormViewLoaded(func, {
-                resId: res_id,
-                resModel: res_model,
-                waitUntilDataLoaded,
-                waitUntilMessagesLoaded,
-            });
-        }
-        return func();
+        await openView(action, props);
     };
 }
 

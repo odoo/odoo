@@ -142,7 +142,7 @@ QUnit.test(
             },
         });
         const partnerId = pyEnv["res.partner"].create({ name: "John" });
-        openFormView("res.partner", partnerId, { waitUntilDataLoaded: false });
+        openFormView("res.partner", partnerId);
         await contains("button[aria-label='Attach files']");
         await advanceTime(DELAY_FOR_SPINNER);
         await contains("button[aria-label='Attach files'] .fa-spin");
