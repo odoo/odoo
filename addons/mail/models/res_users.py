@@ -164,29 +164,46 @@ class Users(models.Model):
 
     @api.model
     def systray_get_activities(self):
-        activities = self.env["mail.activity"].search([("user_id", "=", self.env.uid)])
-        activities_by_record_by_model_name = defaultdict(lambda: defaultdict(lambda: self.env["mail.activity"]))
-        for activity in activities:
-            record = self.env[activity.res_model].browse(activity.res_id)
-            activities_by_record_by_model_name[activity.res_model][record] += activity
-        model_ids = list({self.env["ir.model"]._get(name).id for name in activities_by_record_by_model_name.keys()})
+        query = """SELECT array_agg(res_id) as res_ids, m.id, count(*),
+                    CASE
+                        WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
+                        WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
+                        WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
+                    END AS states
+                FROM mail_activity AS act
+                JOIN ir_model AS m ON act.res_model_id = m.id
+                WHERE user_id = %(user_id)s
+                GROUP BY m.id, states;
+                """
+        self.env.cr.execute(query, {
+            'today': fields.Date.context_today(self),
+            'user_id': self.env.uid,
+        })
+        activity_data = self.env.cr.dictfetchall()
+        records_by_state_by_model = defaultdict(lambda: {"today": set(), "overdue": set(), "planned": set(), "all": set()})
+        for data in activity_data:
+            records_by_state_by_model[data["id"]][data["states"]] = set(data["res_ids"])
+            records_by_state_by_model[data["id"]]["all"] = records_by_state_by_model[data["id"]]["all"] | set(data["res_ids"])
         user_activities = {}
-        for model_name, activities_by_record in activities_by_record_by_model_name.items():
-            domain = [("id", "in", list({r.id for r in activities_by_record.keys()}))]
-            allowed_records = self.env[model_name].search(domain)
+        for model_id in records_by_state_by_model:
+            model_dic = records_by_state_by_model[model_id]
+            model = self.env["ir.model"].sudo().browse(model_id).with_prefetch(tuple(records_by_state_by_model.keys()))
+            allowed_records = self.env[model.model].search([("id", "in", tuple(model_dic["all"]))])
             if not allowed_records:
                 continue
-            module = self.env[model_name]._original_module
+            module = self.env[model.model]._original_module
             icon = module and modules.module.get_module_icon(module)
-            user_activities[model_name] = {
-                "name": self.env["ir.model"]._get(model_name).with_prefetch(model_ids).name,
-                "model": model_name,
+            today = len(model_dic["today"] & set(allowed_records.ids))
+            overdue = len(model_dic["overdue"] & set(allowed_records.ids))
+            user_activities[model.model] = {
+                "name": model.name,
+                "model": model.model,
                 "type": "activity",
                 "icon": icon,
-                "total_count": 0,
-                "today_count": 0,
-                "overdue_count": 0,
-                "planned_count": 0,
+                "total_count": today + overdue,
+                "today_count": today,
+                "overdue_count": overdue,
+                "planned_count": len(model_dic["planned"] & set(allowed_records.ids)),
                 "actions": [
                     {
                         "icon": "fa-clock-o",
@@ -194,11 +211,4 @@ class Users(models.Model):
                     }
                 ],
             }
-            for record, activities in activities_by_record.items():
-                if record not in allowed_records:
-                    continue
-                for activity in activities:
-                    user_activities[model_name]["%s_count" % activity.state] += 1
-                    if activity.state in ("today", "overdue"):
-                        user_activities[model_name]["total_count"] += 1
         return list(user_activities.values())
