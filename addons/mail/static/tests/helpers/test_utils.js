@@ -64,14 +64,6 @@ function nextAnimationFrame() {
     });
 }
 
-/**
- * Wait a task tick, so that anything in micro-task queue that can be processed
- * is processed.
- */
-async function nextTick() {
-    await new Promise(setTimeout);
-}
-
 //------------------------------------------------------------------------------
 // Public: test lifecycle
 //------------------------------------------------------------------------------
@@ -431,7 +423,6 @@ export {
     dropFiles,
     insertText,
     nextAnimationFrame,
-    nextTick,
     pasteFiles,
     scroll,
     start,
