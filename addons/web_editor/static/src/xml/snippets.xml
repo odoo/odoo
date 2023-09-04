@@ -90,14 +90,16 @@
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="theme-colors"/>
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="custom-colors">
             <div class="o_colorpicker_section_container"/>
-            <Colorpicker
-                document="this.props.document"
-                defaultColor="this.state.customDefaultColor"
-                noTransparency="!!this.props.noTransparency"
-                selectedColor="this.state.customSelectedColor"
-                onColorSelect.bind="_onColorPickerSelect"
-                onColorPreview.bind="_onColorPickerPreview"
-                onInputEnter="props.onInputEnter"/>
+            <t t-if="!this.props.excluded.includes('custom')">
+                <Colorpicker
+                    document="this.props.document"
+                    defaultColor="this.state.customDefaultColor"
+                    noTransparency="!!this.props.noTransparency"
+                    selectedColor="this.state.customSelectedColor"
+                    onColorSelect.bind="_onColorPickerSelect"
+                    onColorPreview.bind="_onColorPickerPreview"
+                    onInputEnter="props.onInputEnter"/>
+            </t>
         </div>
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="gradients">
             <div class="o_colorpicker_section_container"/>
