@@ -25,6 +25,7 @@ export class ChatBotService {
     currentStep;
     /** @type {number} */
     nextStepTimeout;
+    hasPostedWelcomeSteps = false;
     shouldRestore = false;
     isTyping = false;
 
@@ -55,6 +56,16 @@ export class ChatBotService {
             this._processUserAnswer.bind(this),
             MULTILINE_STEP_DEBOUNCE_DELAY
         );
+        if (this.livechatService.options.isTestChatbot) {
+            this.livechatService.rule.chatbot = {
+                ...this.livechatService.options.testChatbotData,
+                welcomeStepIndex: this.livechatService.options.testChatbotData.welcomeSteps.length,
+            };
+            this.currentStep = new ChatbotStep(
+                this.livechatService.options.testChatbotData.welcomeSteps.at(-1)
+            );
+            this.livechatService.updateSession(this.livechatService.options.testChatbotChannelData);
+        }
         this.livechatService.initializedDeferred.then(() => {
             this.chatbot = this.livechatService.rule?.chatbot
                 ? new Chatbot(this.livechatService.rule.chatbot)
@@ -77,7 +88,11 @@ export class ChatBotService {
     /**
      * Start the chatbot script.
      */
-    start() {
+    async start() {
+        if (this.livechatService.options.isTestChatbot && !this.hasPostedWelcomeSteps) {
+            await this.postWelcomeSteps();
+            this.save();
+        }
         if (this.shouldRestore && this.livechatService.state !== SESSION_STATE.PERSISTED) {
             // We need to repost the welcome steps as they were not saved.
             this.chatbot.welcomeStepIndex = 0;
@@ -135,6 +150,7 @@ export class ChatBotService {
                 this.livechatService.thread?.messages.push(message);
             }
         }
+        this.hasPostedWelcomeSteps = true;
     }
 
     // =============================================================================
