@@ -181,16 +181,14 @@
                                 <field name="label_convert_rate" class="ps-0"/>
                             </div>
 
-                            <label for="tax_ids" invisible="not product_has_tax"/>
-                            <div class="o_row" invisible="not product_has_tax">
+                            <label for="tax_ids"/>
+                            <div class="o_row">
                                 <field name="tax_ids"
                                        force_save="1"
                                        widget="many2many_tags"
-                                       invisible="not product_has_tax"
-                                       readonly="not is_editable or product_has_cost"
+                                       readonly="not is_editable"
                                        options="{'no_create': True}"/>
-                                <field name="amount_tax"
-                                    invisible="not product_has_tax"/>
+                                <field name="amount_tax"/>
                             </div>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user" options="{'no_create': True}"  readonly="state in ['approved', 'done']"/>
                             <label id="lo" for="payment_mode" invisible="product_has_cost"/>
