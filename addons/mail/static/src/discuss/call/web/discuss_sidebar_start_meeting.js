@@ -2,8 +2,9 @@
 
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 
-import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+
+import { Component, useState } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
@@ -15,18 +16,11 @@ export class DiscussSidebarStartMeeting extends Component {
     static components = {};
 
     setup() {
-        this.discussCoreCommonService = useState(useService("discuss.core.common"));
-        this.rtc = useState(useService("discuss.rtc"));
         this.store = useState(useService("mail.store"));
     }
 
     async onClickStartMeeting() {
-        const thread = await this.discussCoreCommonService.createGroupChat({
-            default_display_mode: "video_full_screen",
-            partners_to: [this.store.self.id],
-        });
-        this.rtc.toggleCall(thread, { video: true });
-        this.env.onStartMeeting?.();
+        this.store.startMeeting();
     }
 }
 

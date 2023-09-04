@@ -3,6 +3,7 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
+import { SIZES, patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
@@ -250,4 +251,23 @@ QUnit.test("join/leave sounds are only played on main tab", async (assert) => {
     await contains(".o-discuss-Call", { target: tab1.target, count: 0 });
     await contains(".o-discuss-Call", { target: tab2.target, count: 0 });
     assert.verifySteps(["tab1 - play - channel-leave"]);
+});
+
+QUnit.test("'Start a meeting' in mobile", async () => {
+    mockGetMedia();
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["discuss.channel"].create({ name: "Slytherin" });
+    const { openDiscuss } = await start();
+    openDiscuss();
+    await click("button", { text: "Chat" });
+    await click("button", { text: "Start a meeting" });
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });
+    await click("button:not([disabled])", { text: "Invite to Group Chat" });
+    await contains(".o-discuss-Call");
+    await click("[title='Open Actions Menu']");
+    await click("[title='Show Member List']");
+    await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
 });

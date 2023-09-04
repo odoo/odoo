@@ -186,6 +186,17 @@ export class Store extends BaseStore {
     activityCounter = 0;
     isMessagingReady = false;
     settings = Record.one("Settings");
+    openInviteThread = Record.one("Thread");
+
+    async startMeeting() {
+        const thread = await this.env.services["discuss.core.common"].createGroupChat({
+            default_display_mode: "video_full_screen",
+            partners_to: [this.self.id],
+        });
+        this.ChatWindow.get(thread)?.update({ autofocus: 0 });
+        this.env.services["discuss.rtc"].toggleCall(thread, { video: true });
+        this.openInviteThread = thread;
+    }
 
     /**
      * @param {'chat' | 'group'} tab
