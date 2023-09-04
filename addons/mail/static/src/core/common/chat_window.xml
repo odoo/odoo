@@ -41,7 +41,7 @@
             <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.needactionCounter"/>
             </div>
-            <t t-call="mail.ChatWindow.dropdownAction">
+            <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions[0]"/>
             </t>
             <t t-if="!ui.isSmall and threadActions.actions.length > 2">
