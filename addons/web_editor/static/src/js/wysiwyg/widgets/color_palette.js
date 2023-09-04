@@ -136,6 +136,7 @@ export class ColorPalette extends Component {
         this.selectedColor = '';
         this.resetButton = this.props.resetButton;
         this.withCombinations = this.props.withCombinations;
+        this.selectedTab = this.props.selectedTab;
 
         this.tabs = [{
             id: 'theme-colors',
@@ -221,8 +222,8 @@ export class ColorPalette extends Component {
             if (sectionIsEmpty) {
                 sectionEl.classList.add('d-none');
                 switchPaneButtons[index].classList.add('d-none');
-                if (this.props.selectedTab === tab.id) {
-                    this.props.selectedTab = this.tabs[(index + 1) % this.tabs.length].id;
+                if (this.selectedTab === tab.id) {
+                    this.selectedTab = this.tabs[(index + 1) % this.tabs.length].id;
                 }
             }
             this.sections[tab.id] = sectionEl;
@@ -265,7 +266,7 @@ export class ColorPalette extends Component {
         }
 
         // Switch to the correct tab
-        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.props.selectedTab);
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.selectedTab);
         this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
 
         // Remove the buttons display if there is only one
@@ -738,7 +739,7 @@ export class ColorPalette extends Component {
      * @private
      */
     _selectDefaultTab() {
-        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.props.selectedTab);
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.selectedTab);
         this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
     }
     /**
