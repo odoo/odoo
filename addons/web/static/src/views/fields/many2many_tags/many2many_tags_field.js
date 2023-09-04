@@ -274,7 +274,7 @@ export const many2ManyTagsField = {
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
-            relatedFields.push({ name: options.color_field, type: "integer" });
+            relatedFields.push({ name: options.color_field, type: "integer", readonly: false });
         }
         return relatedFields;
     },
