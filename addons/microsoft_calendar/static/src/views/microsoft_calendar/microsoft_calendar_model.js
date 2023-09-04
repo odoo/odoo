@@ -59,4 +59,8 @@ patch(AttendeeCalendarModel.prototype, {
         this.microsoftPendingSync = false;
         return result;
     },
+
+    get microsoftCredentialsSet() {
+        return this.credentialStatus['microsoft_calendar'] ?? false;
+    }
 });
