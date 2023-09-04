@@ -128,6 +128,10 @@ QUnit.module('Google Calendar', {
                     return Promise.resolve([]);
                 } else if (route === '/web/dataset/call_kw/res.users/has_group') {
                     return Promise.resolve(true);
+                } else if (route === '/calendar/check_credentials') {
+                    return Promise.resolve({
+                        google_calendar: true,
+                    });
                 }
             },
         });
