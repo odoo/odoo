@@ -169,22 +169,19 @@
                                 <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" class="oe_inline"/>
                                 <field name="label_convert_rate" class="ps-0"/>
                             </div>
-                            <label for="tax_ids" attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
-                            <div class="d-flex o_row" attrs="{'invisible': [('product_has_tax', '=', False)]}">
+                            <label for="tax_ids"/>
+                            <div class="d-flex o_row">
                                 <div class="p-2">
                                     <field name="tax_ids" force_save="1"
                                         widget="many2many_tags"
-                                        attrs="{'readonly': ['|', ('is_editable', '=', False), ('product_has_cost', '=', True)],
-                                                'invisible': [('product_has_tax', '=', False)]}"
+                                        attrs="{'readonly': [('is_editable', '=', False)]}"
                                         context="{'default_company_id': company_id, 'default_type_tax_use': 'purchase', 'default_price_include': 1}"
                                         options="{'no_create': True}"/>
                                 </div>
                                 <div class="d-flex pt-2">
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-1"> ( </span>
-                                    <field name="amount_tax"
-                                        class="ps-0"
-                                        attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-3"> ) </span>
+                                    <span class="oe_inline o_form_label ms-1 me-1"> ( </span>
+                                    <field name="amount_tax" class="ps-0"/>
+                                    <span class="oe_inline o_form_label ms-1 me-3"> ) </span>
                                 </div>
                             </div>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
