@@ -447,11 +447,6 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_tests'),
             'web/static/tests/ignore_missing_deps_stop.js',
         ],
-        # remove this bundle alongside the owl2 compatibility layer
-        'web.assets_backend_tests': [
-            ('include', 'web.assets_backend'),
-            ('after', 'web/static/src/libs/owl.js', 'web/static/tests/owl2_compatibility_app.js'),
-        ],
         'web.tests_assets': [
             'web/static/tests/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',

@@ -9,7 +9,7 @@ import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notificat
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
-import { App, EventBus } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -22,8 +22,6 @@ import {
 } from "@web/../tests/helpers/mock_env";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
-
-const { afterNextRender } = App;
 
 // load emoji data and lamejs once, when the test suite starts.
 QUnit.begin(loadEmoji);
@@ -102,7 +100,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
                 id: threadId,
             })
         );
-        return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
+        await doAction(webClient, actionOpenDiscuss, { props });
     };
 }
 
@@ -248,20 +246,16 @@ async function start(param0 = {}) {
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
-    let webClient;
-    await afterNextRender(async () => {
-        webClient = await getWebClientReady({ ...param0, messagingBus });
-    });
+    const webClient = await getWebClientReady({ ...param0, messagingBus });
     if (webClient.env.services.ui.isSmall) {
         target.style.width = "100%";
     }
     const openView = async (action, options) => {
         action["type"] = action["type"] || "ir.actions.act_window";
-        await afterNextRender(() => doAction(webClient, action, { props: options }));
+        await doAction(webClient, action, { props: options });
     };
     return {
         advanceTime,
-        afterNextRender,
         env: webClient.env,
         insertText,
         openDiscuss: getOpenDiscuss(webClient, discuss),
