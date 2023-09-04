@@ -19,6 +19,11 @@ class TestImLivechatSupportPage(HttpCase):
                 } else {
                     console.log("test successful");
                 }
+                Object.assign(console, {
+                    log: () => {},
+                    error: () => {},
+                    warn: () => {},
+                });
             }, 1000);
 
         """
