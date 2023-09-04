@@ -236,7 +236,10 @@ class AccountReport(models.Model):
     @api.depends('name', 'country_id')
     def _compute_display_name(self):
         for report in self:
-            report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
+            if report.name:
+                report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
+            else:
+                report.display_name = False
 
 
 class AccountReportLine(models.Model):
