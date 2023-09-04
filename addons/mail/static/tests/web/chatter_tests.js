@@ -2,7 +2,6 @@
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
-    afterNextRender,
     click,
     contains,
     dragenterFiles,
@@ -194,7 +193,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     assert.doesNotHaveClass($("button:contains(Send message)"), "btn-primary");
 });
 
-QUnit.test("chatter: drop attachments", async (assert) => {
+QUnit.test("chatter: drop attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
@@ -215,14 +214,12 @@ QUnit.test("chatter: drop attachments", async (assert) => {
             name: "text2.txt",
         }),
     ];
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
+    await dragenterFiles($(".o-mail-Chatter")[0]);
     await contains(".o-mail-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
+    await dropFiles($(".o-mail-Dropzone")[0], files);
     await contains(".o-mail-AttachmentCard", { count: 2 });
-
-    await afterNextRender(() => dragenterFiles($(".o-mail-Chatter")[0]));
+    await dragenterFiles($(".o-mail-Chatter")[0]);
     files = [
         await createFile({
             content: "hello, world",
@@ -230,7 +227,7 @@ QUnit.test("chatter: drop attachments", async (assert) => {
             name: "text3.txt",
         }),
     ];
-    await afterNextRender(() => dropFiles($(".o-mail-Dropzone")[0], files));
+    await dropFiles($(".o-mail-Dropzone")[0], files);
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 

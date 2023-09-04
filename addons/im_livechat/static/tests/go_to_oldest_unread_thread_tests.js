@@ -1,16 +1,17 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { insertText, contains } from "@bus/../tests/helpers/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 
-import { afterNextRender, insertText, start } from "@mail/../tests/helpers/test_utils";
+import { start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("go to oldest unread livechat");
 
-QUnit.test("tab on discuss composer goes to oldest unread livechat", async (assert) => {
+QUnit.test("tab on discuss composer goes to oldest unread livechat", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([
         {
@@ -70,18 +71,16 @@ QUnit.test("tab on discuss composer goes to oldest unread livechat", async (asse
     const { openDiscuss } = await start();
     await openDiscuss(channelIds[0]);
 
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
-    assert.containsOnce($, ".o-mail-Composer-footer:contains(Tab to next livechat)");
-    await afterNextRender(() => {
-        document.querySelector(".o-mail-Composer-input").focus();
-        triggerHotkey("Tab");
-    });
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 13)");
-    await afterNextRender(() => {
-        document.querySelector(".o-mail-Composer-input").focus();
-        triggerHotkey("Tab");
-    });
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 12)");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
+    await contains(".o-mail-Composer-footer", { text: "Tab to next livechat" });
+    document.querySelector(".o-mail-Composer-input").focus();
+    await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
+    triggerHotkey("Tab");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 13" });
+    document.querySelector(".o-mail-Composer-input").focus();
+    await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
+    triggerHotkey("Tab");
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
 });
 
 QUnit.test("switching to folded chat window unfolds it", async (assert) => {
@@ -119,16 +118,10 @@ QUnit.test("switching to folded chat window unfolds it", async (assert) => {
         },
     ]);
     await start();
-    assert.containsOnce(
-        $,
-        ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-name:contains(Visitor 12)"
-    );
-    await afterNextRender(() => {
-        $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
-        triggerHotkey("Tab");
-    });
-    assert.containsOnce(
-        $,
+    await contains(".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-name:contains(Visitor 12)");
+    $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
+    triggerHotkey("Tab");
+    await contains(
         ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     assert.strictEqual(
@@ -180,12 +173,9 @@ QUnit.test("switching to hidden chat window unhides it", async (assert) => {
         $,
         ".o-mail-ChatWindow.o-folded .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
-    await afterNextRender(() => {
-        $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
-        triggerHotkey("Tab");
-    });
-    assert.containsOnce(
-        $,
+    $(".o-mail-ChatWindow:contains(Visitor 11) .o-mail-Composer-input").trigger("focus");
+    triggerHotkey("Tab");
+    await contains(
         ".o-mail-ChatWindow:not(.o-folded) .o-mail-ChatWindow-name:contains(Visitor 12)"
     );
     assert.strictEqual(
@@ -194,7 +184,7 @@ QUnit.test("switching to hidden chat window unhides it", async (assert) => {
     );
 });
 
-QUnit.test("tab on composer doesn't switch thread if user is typing", async (assert) => {
+QUnit.test("tab on composer doesn't switch thread if user is typing", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([
         {
@@ -228,7 +218,7 @@ QUnit.test("tab on composer doesn't switch thread if user is typing", async (ass
     await insertText(".o-mail-Composer-input", "Hello, ");
     triggerHotkey("Tab");
     await nextTick();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
 });
 
 QUnit.test("tab on composer doesn't switch thread if no unread thread", async (assert) => {
@@ -261,5 +251,5 @@ QUnit.test("tab on composer doesn't switch thread if no unread thread", async (a
     document.querySelector(".o-mail-Composer-input").focus();
     triggerHotkey("Tab");
     await nextTick();
-    assert.containsOnce($, ".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
+    await contains(".o-mail-DiscussSidebarChannel.o-active:contains(Visitor 11)");
 });

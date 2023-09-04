@@ -3,13 +3,7 @@
 import { Command } from "@mail/../tests/helpers/command";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import {
-    afterNextRender,
-    click,
-    contains,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { click, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
@@ -508,20 +502,18 @@ QUnit.test("Counter is updated when receiving new message", async () => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-                post_data: {
-                    body: "Hello world",
-                    message_type: "comment",
-                },
-                context: {
-                    partnerId,
-                },
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+            post_data: {
+                body: "Hello world",
+                message_type: "comment",
+            },
+            context: {
+                partnerId,
+            },
+        })
     );
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
@@ -911,13 +903,11 @@ QUnit.test("preview for channel should show latest non-deleted message", async (
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-2" });
     // Simulate deletion of message-2
-    await afterNextRender(() =>
-        env.services.rpc("/mail/message/update_content", {
-            message_id: messageId_2,
-            body: "",
-            attachment_ids: [],
-        })
-    );
+    env.services.rpc("/mail/message/update_content", {
+        message_id: messageId_2,
+        body: "",
+        attachment_ids: [],
+    });
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-1" });
 });
 

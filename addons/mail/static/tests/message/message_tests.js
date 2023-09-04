@@ -416,9 +416,10 @@ QUnit.test(
         openDiscuss(channelId);
         await click(".o-mail-Message [title='Expand']:eq(0)");
         await click(".o-mail-Message [title='Edit']");
-        const input = (await contains(".o-mail-Message .o-mail-Composer-input"))[0];
-        insertText(input, "Goodbye World", { replace: true });
-        triggerHotkey("Enter", false);
+        await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", {
+            replace: true,
+        });
+        triggerHotkey("Enter");
         await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
     }
 );

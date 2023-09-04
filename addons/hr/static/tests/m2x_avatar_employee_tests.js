@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { afterNextRender, contains, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { dom } from "@web/../tests/legacy/helpers/test_utils";
 
@@ -58,37 +58,31 @@ QUnit.test("many2one_avatar_employee widget in list view", async function (asser
     );
 
     // click on first employee
-    await afterNextRender(() =>
-        dom.click(document.querySelector(".o_data_cell .o_m2o_avatar > img"))
-    );
+    dom.click(document.querySelector(".o_data_cell .o_m2o_avatar > img"));
+    await contains(".o-mail-ChatWindow-name");
     assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
 
     // click on second employee
-    await afterNextRender(() =>
-        dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1])
-    );
+    dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[1]);
+    await contains(".o-mail-ChatWindow-name", { count: 2 });
     assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
     assert.strictEqual(
         document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
         "Luigi"
     );
 
     // click on third employee (same as first)
-    await afterNextRender(() =>
-        dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[2])
-    );
-    assert.verifySteps(
-        [],
-        "employee should not have been read again because we already know its partner"
-    );
+    dom.click(document.querySelectorAll(".o_data_cell .o_m2o_avatar > img")[2]);
     assert.containsN(
         document.body,
         ".o-mail-ChatWindow-name",
         2,
         "should still have only 2 chat windows because third is the same partner as first"
+    );
+    assert.verifySteps(
+        [],
+        "employee should not have been read again because we already know its partner"
     );
 });
 
@@ -121,7 +115,7 @@ QUnit.test("many2one_avatar_employee widget in kanban view", async function (ass
         views: [[false, "kanban"]],
     });
     assert.strictEqual(document.querySelector(".o_kanban_record").innerText.trim(), "");
-    assert.containsOnce(document.body, ".o_m2o_avatar");
+    await contains(".o_m2o_avatar");
     assert.strictEqual(
         document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
         `/web/image/hr.employee.public/${employeeId}/avatar_128`
@@ -226,7 +220,7 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
         `read hr.employee.public ${employeeId_1}`,
         `read hr.employee.public ${employeeId_2}`,
     ]);
-    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
+    await contains(".o-mail-ChatWindow-name", { count: 2 });
 });
 
 QUnit.test("many2many_avatar_employee widget in list view", async function (assert) {
@@ -270,17 +264,15 @@ QUnit.test("many2many_avatar_employee widget in list view", async function (asse
     );
 
     // click on first employee badge
-    await afterNextRender(() => dom.click(document.querySelector(".o_data_cell .o_m2m_avatar")));
+    dom.click(document.querySelector(".o_data_cell .o_m2m_avatar"));
+    await contains(".o-mail-ChatWindow-name");
     assert.verifySteps([`read hr.employee.public ${employeeId_1}`]);
-    assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
     assert.strictEqual(document.querySelector(".o-mail-ChatWindow-name").textContent, "Mario");
 
     // click on second employee
-    await afterNextRender(() =>
-        dom.click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1])
-    );
+    dom.click(document.querySelectorAll(".o_data_cell .o_m2m_avatar")[1]);
+    await contains(".o-mail-ChatWindow-name", { count: 2 });
     assert.verifySteps([`read hr.employee.public ${employeeId_2}`]);
-    assert.containsN(document.body, ".o-mail-ChatWindow-name", 2);
     assert.strictEqual(
         document.querySelectorAll(".o-mail-ChatWindow-name")[1].textContent,
         "Yoshi"
@@ -392,7 +384,7 @@ QUnit.test(
             res_id: avatarId,
             views: [[false, "form"]],
         });
-        assert.containsN(document.body, ".o_field_many2many_avatar_employee .o_tag", 2);
+        await contains(".o_field_many2many_avatar_employee .o_tag", { count: 2 });
         assert.strictEqual(
             document
                 .querySelector(".o_field_many2many_avatar_employee .o_tag img")
@@ -413,6 +405,6 @@ QUnit.test(
             `read hr.employee.public ${employeeId_1}`,
             `read hr.employee.public ${employeeId_2}`,
         ]);
-        assert.containsOnce(document.body, ".o-mail-ChatWindow-name");
+        await contains(".o-mail-ChatWindow-name");
     }
 );

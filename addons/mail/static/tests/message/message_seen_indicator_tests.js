@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
-import { contains, startServer, start, afterNextRender } from "@mail/../tests/helpers/test_utils";
+import { contains, startServer, start } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("message_seen_indicator");
 
@@ -197,12 +197,10 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
 
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-            channel_id: channelId,
-            last_message_id: 100,
-            partner_id: partnerId,
-        });
+    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+        channel_id: channelId,
+        last_message_id: 100,
+        partner_id: partnerId,
     });
     await contains(".o-mail-MessageSeenIndicator i");
 });
@@ -231,12 +229,10 @@ QUnit.test("'channel_seen' notification received is correctly handled", async ()
 
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
-    await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
-            channel_id: channelId,
-            last_message_id: 100,
-            partner_id: partnerId,
-        });
+    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+        channel_id: channelId,
+        last_message_id: 100,
+        partner_id: partnerId,
     });
     await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
 });
@@ -267,22 +263,18 @@ QUnit.test(
 
         const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // Simulate received channel fetched notification
-        await afterNextRender(() => {
-            pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
-                channel_id: channelId,
-                last_message_id: 100,
-                partner_id: partnerId,
-            });
+        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+            channel_id: channelId,
+            last_message_id: 100,
+            partner_id: partnerId,
         });
         await contains(".o-mail-MessageSeenIndicator i");
 
         // Simulate received channel seen notification
-        await afterNextRender(() => {
-            pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
-                channel_id: channelId,
-                last_message_id: 100,
-                partner_id: partnerId,
-            });
+        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+            channel_id: channelId,
+            last_message_id: 100,
+            partner_id: partnerId,
         });
         await contains(".o-mail-MessageSeenIndicator i", { count: 2 });
     }

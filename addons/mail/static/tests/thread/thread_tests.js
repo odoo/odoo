@@ -2,7 +2,6 @@
 
 import { Command } from "@mail/../tests/helpers/command";
 import {
-    afterNextRender,
     click,
     contains,
     dragenterFiles,
@@ -296,7 +295,6 @@ QUnit.test(
                 Command.create({ partner_id: partnerId }),
             ],
         });
-        const deferred = makeDeferred();
         const { env, openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (args.method === "channel_fetched" && args.args[0] === channelId) {
@@ -306,7 +304,6 @@ QUnit.test(
                 } else if (route === "/discuss/channel/set_last_seen_message") {
                     assert.strictEqual(args.channel_id, channelId);
                     assert.step("rpc:set_last_seen_message");
-                    await deferred;
                 }
             },
         });
@@ -320,7 +317,7 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        await afterNextRender(() => deferred.resolve());
+        await contains(".o-mail-Message");
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
@@ -515,14 +512,12 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
 
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
-    await afterNextRender(() =>
-        pyEnv.withUser(userId, () =>
-            env.services.rpc("/mail/message/post", {
-                post_data: { body: "hu", message_type: "comment" },
-                thread_id: channelId,
-                thread_model: "discuss.channel",
-            })
-        )
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "hu", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
     );
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
@@ -997,7 +992,7 @@ QUnit.test("can be marked as read while loading", async function () {
     openDiscuss(undefined);
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel span", { text: "Demo" });
-    await afterNextRender(loadDeferred.resolve);
+    loadDeferred.resolve();
     await contains(".o-discuss-badge", { count: 0 });
 });
 

@@ -1,10 +1,10 @@
 /* @odoo-module */
 
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { contains, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("thread icon (patch)");
 
-QUnit.test("Public website visitor is typing", async (assert) => {
+QUnit.test("Public website visitor is typing", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
@@ -17,20 +17,17 @@ QUnit.test("Public website visitor is typing", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ThreadIcon .fa.fa-comments");
+    await contains(".o-mail-ThreadIcon .fa.fa-comments");
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(pyEnv.publicUserId, () =>
-            env.services.rpc("/im_livechat/notify_typing", {
-                is_typing: true,
-                uuid: channel.uuid,
-            })
-        )
+    pyEnv.withUser(pyEnv.publicUserId, () =>
+        env.services.rpc("/im_livechat/notify_typing", {
+            is_typing: true,
+            uuid: channel.uuid,
+        })
     );
-    assert.containsOnce($, ".o-mail-Discuss-header .o-discuss-Typing-icon");
-    assert.containsOnce(
-        $,
+    await contains(".o-mail-Discuss-header .o-discuss-Typing-icon");
+    await contains(
         ".o-mail-Discuss-header .o-discuss-Typing-icon[title='Visitor 20 is typing...']"
     );
 });

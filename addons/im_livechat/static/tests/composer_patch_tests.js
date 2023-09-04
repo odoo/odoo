@@ -3,7 +3,6 @@
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import {
-    afterNextRender,
     click,
     contains,
     dragenterFiles,
@@ -11,11 +10,9 @@ import {
     start,
 } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-
 QUnit.module("composer (patch)");
 
-QUnit.test("No add attachments button", async (assert) => {
+QUnit.test("No add attachments button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
@@ -27,9 +24,7 @@ QUnit.test("No add attachments button", async (assert) => {
     await contains("button[title='Attach files']", { count: 0 });
 });
 
-QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
-    assert.expect(2);
-
+QUnit.test("Attachment upload via drag and drop disabled", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
@@ -39,13 +34,13 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer");
     dragenterFiles($(".o-mail-Composer-input")[0]);
-    await nextTick();
+    // weak test: no guarantee that we waited long enough for the potential dropzone to show
     await contains(".o-mail-Dropzone", { count: 0 });
 });
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -54,7 +49,7 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    await start({
+    const { openDiscuss } = await start({
         mockRPC(route, args, originalMockRPC) {
             if (args.method === "execute_command_help") {
                 assert.step("execute_command_help");
@@ -63,14 +58,13 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
             return originalMockRPC(route, args);
         },
     });
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
+    await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
-    triggerHotkey("Enter");
+    await click(".o-mail-Composer-send:not(:disabled)");
     assert.verifySteps(["execute_command_help"]);
 });
 
-QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
+QUnit.test('Receives visitor typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
@@ -86,13 +80,11 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     await contains(".o-discuss-Typing", { text: "" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    await afterNextRender(() =>
-        pyEnv.withUser(pyEnv.publicUserId, () =>
-            env.services.rpc("/im_livechat/notify_typing", {
-                is_typing: true,
-                uuid: channel.uuid,
-            })
-        )
+    pyEnv.withUser(pyEnv.publicUserId, () =>
+        env.services.rpc("/im_livechat/notify_typing", {
+            is_typing: true,
+            uuid: channel.uuid,
+        })
     );
     await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });
 });
@@ -120,7 +112,7 @@ QUnit.test('display canned response suggestions on typing ":"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-QUnit.test("use a canned response", async (assert) => {
+QUnit.test("use a canned response", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
@@ -145,7 +137,7 @@ QUnit.test("use a canned response", async (assert) => {
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
 
-QUnit.test("use a canned response some text", async (assert) => {
+QUnit.test("use a canned response some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
@@ -163,9 +155,9 @@ QUnit.test("use a canned response some text", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
+    await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
+    await contains(".o-mail-Composer-input", { value: "bluhbluh " });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
