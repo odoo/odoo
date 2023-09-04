@@ -381,7 +381,8 @@ class PosSession(models.Model):
                           self.cash_journal_id.name))
 
                 st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)") + (_(' - opening') if is_opening else _(' - closing'))
-                st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
+                if not is_opening:
+                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.loss_account_id.id
             else:
                 # self.cash_register_difference  > 0.0
                 if not self.cash_journal_id.profit_account_id:
@@ -390,7 +391,8 @@ class PosSession(models.Model):
                           self.cash_journal_id.name))
 
                 st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)") + (_(' - opening') if is_opening else _(' - closing'))
-                st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
+                if not is_opening:
+                    st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
             self.env['account.bank.statement.line'].create(st_line_vals)
 
