@@ -857,6 +857,29 @@ QUnit.module("Components", ({ beforeEach }) => {
         });
     });
 
+    QUnit.test("days of week narrow format", async (assert) => {
+        await mountPicker({ daysOfWeekFormat: "narrow" });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, 1],
+                        [2, 3, 4, 5, 6, 7, 8],
+                        [9, 10, 11, 12, 13, 14, 15],
+                        [16, 17, 18, 19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, 29],
+                        [30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "S", "M", "T", "W", "T", "F", "S"],
+                    weekNumbers: [13, 14, 15, 16, 17, 18],
+                },
+            ],
+            time: [[13, 0]],
+        });
+    });
+
     //-------------------------------------------------------------------------
     // Props and interactions
     //-------------------------------------------------------------------------
@@ -1202,7 +1225,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             setup() {
                 this.state = useState({
                     current: DateTime.now(),
-                })
+                });
             }
         }
 
@@ -1245,6 +1268,29 @@ QUnit.module("Components", ({ beforeEach }) => {
                 },
             ],
             time: [[17, 0]],
+        });
+    });
+
+    QUnit.test("disable show week numbers", async (assert) => {
+        await mountPicker({ showWeekNumbers: false });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, 1],
+                        [2, 3, 4, 5, 6, 7, 8],
+                        [9, 10, 11, 12, 13, 14, 15],
+                        [16, 17, 18, 19, 20, 21, 22],
+                        [23, 24, "25", 26, 27, 28, 29],
+                        [30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                    weekNumbers: [],
+                },
+            ],
+            time: [[13, 0]],
         });
     });
 });
