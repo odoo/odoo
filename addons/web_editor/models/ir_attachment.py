@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from werkzeug.urls import url_quote
 
 from odoo import api, models, fields, tools
@@ -79,25 +81,43 @@ class IrAttachment(models.Model):
         """
         return False
 
-    def _create_image_attachment(self, vals):
+    @api.model_create_multi
+    def _create_image_attachments(self, vals_list):
         """
         Check if an attachment for the same image does not already exists before
         creating a new one.
         TODO: write this to support batch, adapt mailing.py to use raw instead of datas
         / or support datas here as well 
         """
-        bin_data = vals.get('raw')
-        res_model = vals.get('res_model')
-        res_id = vals.get('res_id')
-        if bin_data and res_model and res_id:
-            checksum = self._compute_checksum(bin_data)
-            attachs = self.env['ir.attachment'].search([
-                ('res_model', '=', res_model),
-                ('res_id', '=', res_id),
-                ('checksum', '=', checksum),
-            ])
-            attachs = self._filter_attachment_access(attachs.mapped('id'))
-            if len(attachs):
-                return attachs[0]
+        recordset = self.env['ir.attachment']
+        if not vals_list:
+            return recordset
+        res_model, res_id = vals_list[0].get('res_model'), vals_list[0].get('res_id')
+        record_attachments = recordset.search([
+            ('res_model', '=', res_model),
+            ('res_id', '=', res_id),
+        ])
+        attachments = []
+        vals_for_new_attachs = []
+        for vals in vals_list:
+            existing_attach = None
+            raw, datas = vals.get('raw'), vals.get('datas')
+            if isinstance(raw, str):
+                raw = raw.encode()
+            bin_data = raw or base64.b64decode(datas or b'')
+            if bin_data:
+                checksum = self._compute_checksum(bin_data)
+                existing_attachs = [attach for attach in record_attachments
+                                            if attach.checksum == checksum]
+                if existing_attachs:
+                    existing_attach = existing_attachs[0]
+            attachments.append(existing_attach)
+            if not existing_attach:
+                vals_for_new_attachs.append(vals)
 
-        return self.create(vals)
+        new_attachs = list(self.create(vals_for_new_attachs))[::-1]
+
+        for attach in attachments:
+            recordset = recordset | (attach or new_attachs.pop())
+        return recordset
+
