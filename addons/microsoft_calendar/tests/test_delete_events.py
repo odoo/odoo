@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch, ANY, call
+from datetime import timedelta
 
+from odoo import fields
+
+from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
@@ -316,4 +320,20 @@ class TestDeleteEvents(TestCommon):
         self.assertFalse(self.organizer_user.microsoft_synchronization_stopped)
         self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
         self.assertFalse(self.simple_event.exists(), "Event must be deleted from Odoo even though sync configuration is off")
+        mock_delete.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_delete_recurrence_previously_synced(self, mock_delete):
+        # Arrange: select recurrent event and update token validity to simulate an active sync environment.
+        idx = 0
+        self.organizer_user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
+
+        # Act: try to delete a recurrent event that was already synced.
+        with self.assertRaises(UserError):
+            self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('all_events')
+            self.call_post_commit_hooks()
+
+        # Ensure that event remains undeleted after deletion attempt and delete method wasn't called.
+        self.assertTrue(self.recurrent_events[idx].with_user(self.organizer_user)._check_microsoft_sync_status())
+        self.assertTrue(self.recurrent_events[idx].active)
         mock_delete.assert_not_called()
