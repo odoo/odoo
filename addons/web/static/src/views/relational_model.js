@@ -3113,7 +3113,7 @@ export class StaticList extends DataPoint {
             if (DELETE_ALL === this._commands[0][0] && !allFields) {
                 for (const resId of this._serverIds) {
                     if (!this.currentIds.includes(resId)) {
-                        commands.push(x2ManyCommands.delete(resId));
+                        commands.push(x2ManyCommands.forget(resId));
                     }
                 }
             }
