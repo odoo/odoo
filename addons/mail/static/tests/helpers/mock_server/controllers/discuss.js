@@ -73,17 +73,19 @@ patch(MockServer.prototype, {
             return this._mockRouteMailLinkPreview(args.message_id, args.clear);
         }
         if (route === "/mail/link_preview/delete") {
-            const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
-                ["id", "=", args.link_preview_id],
+            const linkPreviews = this.pyEnv["mail.link.preview"].searchRead([
+                ["id", "in", args.link_preview_ids],
             ]);
-            this.pyEnv["bus.bus"]._sendone(
-                this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
-                "mail.link.preview/delete",
-                {
-                    id: linkPreview.id,
-                    message_id: linkPreview.message_id[0],
-                }
-            );
+            for (const linkPreview of linkPreviews) {
+                this.pyEnv["bus.bus"]._sendone(
+                    this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
+                    "mail.link.preview/delete",
+                    {
+                        id: linkPreview.id,
+                        message_id: linkPreview.message_id[0],
+                    }
+                );
+            }
             return args;
         }
         if (route === "/mail/load_message_failures") {
@@ -287,11 +289,11 @@ patch(MockServer.prototype, {
                     ["message_id", "=", message_id],
                 ]);
                 this.pyEnv["bus.bus"]._sendone(
-                    this._mockMailMessage__busNotificationTarget(linkPreview.message_id[0]),
+                    this._mockMailMessage__busNotificationTarget(linkPreview.message_id),
                     "mail.link.preview/delete",
                     {
                         id: linkPreview.id,
-                        message_id: linkPreview.message_id[0],
+                        message_id: linkPreview.message_id,
                     }
                 );
             }
