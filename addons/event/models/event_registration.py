@@ -41,7 +41,6 @@ class EventRegistration(models.Model):
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
-    event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', related='event_id.company_id',
         store=True, readonly=False)
@@ -213,6 +212,12 @@ class EventRegistration(models.Model):
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
     # ------------------------------------------------------------
+
+    def action_previous_state(self):
+        if self.state == 'open':
+            self.write({'state': 'draft'})
+        elif self.state == 'done':
+            self.write({'state': 'open'})
 
     def action_set_draft(self):
         self.write({'state': 'draft'})
