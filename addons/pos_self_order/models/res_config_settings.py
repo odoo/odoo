@@ -25,6 +25,16 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_pay_after = fields.Selection(related="pos_config_id.self_order_pay_after", readonly=False)
     pos_self_order_image = fields.Image(related="pos_config_id.self_order_image", readonly=False)
     pos_self_order_image_name = fields.Char(related="pos_config_id.self_order_image_name", readonly=False)
+    pos_self_order_default_user_id = fields.Many2one(related="pos_config_id.self_order_default_user_id", readonly=False)
+
+    @api.onchange("pos_self_order_default_user_id")
+    def _onchange_default_user(self):
+        self.ensure_one()
+        if self.pos_self_order_default_user_id and self.pos_self_order_table_mode:
+            user_id = self.pos_self_order_default_user_id
+
+            if not user_id.has_group("point_of_sale.group_pos_user") and not user_id.has_group("point_of_sale.group_pos_manager"):
+                raise UserError(_("The user must be a POS user"))
 
     @api.onchange("pos_self_order_kiosk_default_language", "pos_self_order_kiosk_available_language_ids")
     def _onchange_pos_self_order_kiosk_default_language(self):
@@ -34,7 +44,7 @@ class ResConfigSettings(models.TransientModel):
             self.pos_self_order_kiosk_default_language = self.pos_self_order_kiosk_available_language_ids[0]
 
     @api.onchange("pos_self_order_kiosk")
-    def _self_order_kiosk_change(self):
+    def _onchange_pos_self_order_kiosk(self):
         for record in self:
             record.is_kiosk_mode = record.pos_self_order_kiosk
 

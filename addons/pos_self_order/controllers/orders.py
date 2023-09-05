@@ -4,7 +4,6 @@ import uuid
 from datetime import timedelta
 from odoo import http, fields
 from odoo.http import request
-from odoo.addons.pos_self_order.controllers.utils import reduce_privilege
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 
 class PosSelfOrderController(http.Controller):
@@ -309,8 +308,8 @@ class PosSelfOrderController(http.Controller):
         if not pos_config_sudo or (not pos_config_sudo.self_order_table_mode and not pos_config_sudo.self_order_kiosk) or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
-        user = pos_config_sudo.current_session_id.user_id
-        return reduce_privilege(pos_config_sudo, company, user)
+        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_order_default_user_id
+        return pos_config_sudo.sudo(False).with_company(company).with_user(user)
 
     def _verify_authorization(self, access_token, table_identifier):
         """
@@ -324,6 +323,6 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized("Table not found")
 
         company = pos_config.company_id
-        user = pos_config.current_session_id.user_id
-        table = reduce_privilege(table_sudo, company, user)
+        user = pos_config.current_session_id.user_id or pos_config.self_order_default_user_id
+        table = table_sudo.sudo(False).with_company(company).with_user(user)
         return pos_config, table

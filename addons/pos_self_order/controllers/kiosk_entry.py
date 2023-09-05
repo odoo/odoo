@@ -3,7 +3,6 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.pos_self_order.controllers.utils import reduce_privilege
 
 
 class PosSelfKiosk(http.Controller):
@@ -22,8 +21,12 @@ class PosSelfKiosk(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         company = pos_config_sudo.company_id
-        user = pos_config_sudo.current_session_id.user_id
-        pos_config = reduce_privilege(pos_config_sudo, company, user)
+        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_order_default_user_id
+        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user)
+
+        if not pos_config:
+            raise werkzeug.exceptions.NotFound()
+
         session_info = request.env["ir.http"].get_frontend_session_info()
 
         return request.render(

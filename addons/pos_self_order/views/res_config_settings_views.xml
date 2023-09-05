@@ -26,8 +26,12 @@
                 </setting>
                 <setting string="Self Order" help="Allow customers to order from their phones" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
                     <field name="pos_self_order_table_mode"/>
-                    <div class="content-group" invisible="not pos_self_order_table_mode">
-                        <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
+                    <div class="content-group row" invisible="not pos_self_order_table_mode">
+                        <label for="pos_self_order_default_user_id" class="col-lg-4" string="Default User"/>
+                        <field name="pos_self_order_default_user_id" required="1" />
+                    </div>
+                    <div class="content-group row" invisible="not pos_self_order_table_mode">
+                        <label string="Pay after" for="pos_self_order_pay_after" class="col-lg-4"/>
                         <field name="pos_self_order_pay_after" widget="upgrade_selection"/>
                     </div>
                 </setting>
@@ -41,7 +45,8 @@
                 <block title="Kiosk Mode" id="self_order_section">
                     <setting string="Is a Kiosk" help="Allow customers to order from a kiosk">
                         <field name="pos_self_order_kiosk"/>
-                        <div class="content-group" invisible="not is_kiosk_mode">
+                        <div class="content-group row" invisible="not is_kiosk_mode">
+                            <label for="pos_self_order_kiosk_mode" class="col-lg-3" string="Mode"/>
                             <field name="pos_self_order_kiosk_mode" />
                         </div>
                     </setting>
