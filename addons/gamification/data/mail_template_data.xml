@@ -327,7 +327,7 @@
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="description">Sent automatically when user reaches a new rank</field>
             <field name="body_html" type="html">
-<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<div style="color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
     <tbody>
         <tr>
@@ -357,9 +357,12 @@
                 </p>
             </td>
         </tr>
-        <tr t-if="user.signature">
-            <td style="padding:15px 20px 10px 20px;">
+        <tr>
+            <td t-if="not user.share and user.active" style="padding:15px 20px 10px 20px;">
                 <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+            </td>
+            <td t-else="" style="padding:15px 20px 10px 20px;">
+                <t t-out="user.company_id.name or ''"/>
             </td>
         </tr>
     </tbody>
