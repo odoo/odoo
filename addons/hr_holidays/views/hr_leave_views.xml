@@ -305,9 +305,9 @@
 
                             <label for="number_of_days_display" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}" />
                             <div name="duration_display" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}">
-                                <div attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
+                                <div attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
                                     <field name="number_of_days_display" class="oe_inline" />
-                                    <span>Days</span>
+                                    <span class="ms-3">Days</span>
                                 </div>
                                 <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
                                     <field name="number_of_hours_text" />
