@@ -4217,7 +4217,13 @@ class AccountMove(models.Model):
                 if today.year > invoice_date.year:
                     return date(invoice_date.year, 12, 31)
                 else:
-                    return max(invoice_date, today)
+                    end_of_month = date_utils.end_of(invoice_date, 'month')
+                    date_to_return = min(end_of_month, today)
+                    rec = self.env['account.move'].search_fetch([('name', '=', highest_name)], ['date'], limit=1)
+                    if not rec:
+                        return date_to_return
+                    latest_invoice_date = rec.date
+                    return max(date_to_return, latest_invoice_date)
         return invoice_date
 
     def _get_violated_lock_dates(self, invoice_date, has_tax):
