@@ -237,6 +237,14 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async (assert) 
         "123"
     );
     assert.containsNone($, ".o-mail-DiscussCategoryItem");
+
+    // search should work in case-insensitive
+    await editInput(
+        document.body,
+        ".o-mail-DiscussSidebar input[placeholder='Quick search...']",
+        "C"
+    );
+    assert.containsN($, ".o-mail-DiscussCategoryItem", 20);
 });
 
 QUnit.test("sidebar: basic chat rendering", async (assert) => {
