@@ -978,6 +978,9 @@ class SaleOrderLine(models.Model):
                 vals['product_uom_qty'] = 0.0
 
         lines = super().create(vals_list)
+        if self.env.context.get('sale_no_log_for_new_lines'):
+            return lines
+
         for line in lines:
             if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
@@ -985,6 +988,7 @@ class SaleOrderLine(models.Model):
                 # create an analytic account if at least an expense product
                 if line.product_id.expense_policy not in [False, 'no'] and not line.order_id.analytic_account_id:
                     line.order_id._create_analytic_account()
+
         return lines
 
     def write(self, values):
