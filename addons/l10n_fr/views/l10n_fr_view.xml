@@ -23,7 +23,7 @@
             <field name="arch" type="xml">
             <data>
                  <xpath expr="//field[@name='ref']" position="after">
-                    <field name="siret" invisible="'FR'.lower() not in (fiscal_country_codes or '').lower() or not is_company"/>
+                    <field name="siret" invisible="'FR' not in fiscal_country_codes or not is_company"/>
                  </xpath>
             </data>
             </field>
