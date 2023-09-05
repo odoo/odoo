@@ -30,11 +30,13 @@
                         </div>
                     </button>
                 </div>
-                <group name="main_fields" class="o_label_nowrap">
-                    <label for="name" string="Attribute Name"/>
-                    <field name="name" nolabel="1"/>
-                    <field name="display_type" widget="radio"/>
-                    <field name="create_variant" widget="radio" readonly="number_related_products != 0"/>
+                <group name="main_fields">
+                    <group name="sale_main_fields">
+                        <label for="name" string="Attribute Name"/>
+                        <field name="name" nolabel="1"/>
+                        <field name="display_type" widget="radio"/>
+                        <field name="create_variant" widget="radio" readonly="number_related_products != 0"/>
+                    </group>
                 </group>
                 <notebook>
                     <page string="Attribute Values" name="attribute_values">
@@ -43,8 +45,9 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="is_custom" groups="product.group_product_variant"/>
+                                <field name="is_custom" groups="product.group_product_variant" column_invisible="parent.display_type == 'multi'"/>
                                 <field name="html_color" column_invisible="parent.display_type != 'color'" widget="color"/>
+                                <field name="default_extra_price"/>
                             </tree>
                         </field>
                     </page>

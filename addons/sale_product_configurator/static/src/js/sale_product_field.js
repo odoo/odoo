@@ -12,7 +12,7 @@ async function applyProduct(record, product) {
     const contextRecords = [];
     for (const ptal of product.attribute_lines) {
         const selectedCustomPTAV = ptal.attribute_values.find(
-            ptav => ptav.is_custom && ptav.id === ptal.selected_attribute_value_id
+            ptav => ptav.is_custom && ptal.selected_attribute_value_ids.includes(ptav.id)
         );
         if (selectedCustomPTAV) {
             contextRecords.push({
@@ -27,7 +27,7 @@ async function applyProduct(record, product) {
 
     const noVariantPTAVIds = product.attribute_lines.filter(
         ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
-    ).map(ptal => ptal.selected_attribute_value_id);
+    ).flatMap(ptal => ptal.selected_attribute_value_ids);
 
     await Promise.all(proms);
     await record.update({
