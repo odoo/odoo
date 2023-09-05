@@ -65,5 +65,17 @@
             <field name="code">model._send_notifications_cron()</field>
             <field name="state">code</field>
         </record>
+        
+        <record id="ir_cron_compress_messages" model="ir.cron">
+            <field name="name">Compress messages older than 1 year</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_compress_messages(365, 25000)</field>
+            <field name="state">code</field>
+            <field name="active" eval="False"/>  <!-- opt-in for the user -->
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>
