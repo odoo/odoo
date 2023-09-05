@@ -5754,7 +5754,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("custom delete confirmation dialog", async (assert) => {
-
         const listView = registry.category("views").get("list");
         class CautiousController extends listView.Controller {
             get deleteConfirmationDialogProps() {
@@ -5794,7 +5793,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(document, "body .modal footer button.btn-secondary");
-        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
+        assert.containsN(
+            target,
+            "tbody td.o_list_record_selector",
+            4,
+            "nothing deleted, 4 records remain"
+        );
     });
 
     QUnit.test(
@@ -8513,10 +8517,10 @@ QUnit.module("Views", (hooks) => {
             "the entire content should be selected on initial click"
         );
 
-        Object.assign(
-            target.querySelector("[name=text] textarea"),
-            { selectionStart: 0, selectionEnd: 1 }
-        );
+        Object.assign(target.querySelector("[name=text] textarea"), {
+            selectionStart: 0,
+            selectionEnd: 1,
+        });
 
         await click(target, "[name=text] textarea");
 
@@ -13522,7 +13526,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("grouped lists with groups_limit attribute", async function (assert) {
+    QUnit.test("grouped list with groups_limit attribute", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -13546,6 +13550,105 @@ QUnit.module("Views", (hooks) => {
             "get_views",
             "web_read_group", // read_group page 1
             "web_read_group", // read_group page 2
+        ]);
+    });
+
+    QUnit.test("ungrouped list with groups_limit attribute, then group", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            searchViewArch: `
+                <search>
+                    <filter name="int_field" string="GroupBy IntField" context="{'group_by': 'int_field'}"/>
+                </search>`,
+        });
+
+        assert.containsN(target, ".o_data_row", 4);
+
+        // add a custom group in searchview groupby
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "GroupBy IntField");
+
+        assert.containsN(target, ".o_group_header", 3);
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").innerText,
+            "1-3",
+            "pager should be correct"
+        );
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+    });
+
+    QUnit.test("grouped list with groups_limit attribute, then ungroup", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            irFilters: [
+                {
+                    context: "{'group_by': ['int_field']}",
+                    domain: "[]",
+                    id: 8,
+                    is_default: true,
+                    name: "GroupBy IntField",
+                    sort: "[]",
+                    user_id: [2, "Mitchell Admin"],
+                },
+            ],
+        });
+
+        assert.containsN(target, ".o_group_header", 3);
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").innerText,
+            "1-3",
+            "pager should be correct"
+        );
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+
+        // remove groupby
+        await removeFacet(target);
+
+        assert.containsN(target, ".o_data_row", 4);
+    });
+
+    QUnit.test("multi level grouped list with groups_limit attribute", async function (assert) {
+        for (let i = 50; i < 55; i++) {
+            serverData.models.foo.records.push({ id: i, foo: "foo", int_field: i });
+        }
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree groups_limit="3"><field name="foo"/></tree>',
+            groupBy: ["foo", "int_field"],
+        });
+
+        assert.containsN(target, ".o_group_header", 3);
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").innerText,
+            "1-3",
+            "pager should be correct"
+        );
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_group_header")), [
+            "blip (2) ",
+            "foo (5) ",
+            "gnap (1) ",
+        ]);
+
+        // open foo group
+        await click(target.querySelectorAll(".o_group_header")[1]);
+
+        assert.containsN(target, ".o_group_header", 6);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_group_header")), [
+            "blip (2) ",
+            "foo (5) 1-3 / 5",
+            "50 (1) ",
+            "51 (1) ",
+            "52 (1) ",
+            "gnap (1) ",
         ]);
     });
 
@@ -14319,12 +14422,7 @@ QUnit.module("Views", (hooks) => {
                 secondDataRow.querySelector(".o_selected_row [name=foo] input")
             );
 
-            assert.verifySteps([
-                "get_views",
-                "web_read_group",
-                "web_search_read",
-                "web_save",
-            ]);
+            assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_save"]);
         }
     );
 
@@ -17892,19 +17990,22 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
-    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
-        serverData.models.foo.fields.qux.digits = [16, 3];
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: '<tree><field name="qux"/></tree>',
-            groupBy: ["bar"],
-        });
-        const [td1, td2] = target.querySelectorAll("td.o_list_number");
-        assert.strictEqual(td1.textContent, "9.000");
-        assert.strictEqual(td2.textContent, "10.400");
-    });
+    QUnit.test(
+        "Formatted group operator with digit precision on the field definition",
+        async function (assert) {
+            serverData.models.foo.fields.qux.digits = [16, 3];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="qux"/></tree>',
+                groupBy: ["bar"],
+            });
+            const [td1, td2] = target.querySelectorAll("td.o_list_number");
+            assert.strictEqual(td1.textContent, "9.000");
+            assert.strictEqual(td2.textContent, "10.400");
+        }
+    );
 
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
@@ -19440,7 +19541,7 @@ QUnit.module("Views", (hooks) => {
             fields: {
                 foo: { string: "Foo", type: "one2many", relation: "foo" },
             },
-        },
+        };
         await makeView({
             type: "form",
             resModel: "parent",
@@ -19460,23 +19561,23 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
+        await triggerEvent(document.querySelector(".o_field_x2many_list_row_add a"), null, "click");
 
         const input = document.activeElement;
-        input.value = 'alu';
-        triggerEvent(document.activeElement, null, "input"),
+        input.value = "alu";
+        triggerEvent(document.activeElement, null, "input");
         await nextTick();
 
-        input.value = 'alue';
-        triggerEvent(document.activeElement, null, "input"),
-        triggerHotkey("Enter"),
+        input.value = "alue";
+        triggerEvent(document.activeElement, null, "input");
+        triggerHotkey("Enter");
         await nextTick();
 
         deferred.resolve();
         await nextTick();
 
         assert.strictEqual(input, document.activeElement);
-        assert.strictEqual(input.value, 'Value 1');
+        assert.strictEqual(input.value, "Value 1");
     });
 
     QUnit.test("monetary field display for rtl languages", async function (assert) {
