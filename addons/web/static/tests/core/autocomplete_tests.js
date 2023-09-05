@@ -103,6 +103,49 @@ QUnit.module("Components", (hooks) => {
         assert.verifySteps(["Hello"]);
     });
 
+    QUnit.test("autocomplete with resetOnSelect='true'", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({
+                    value: "Hello",
+                });
+            }
+            get sources() {
+                return [
+                    {
+                        options: [{ label: "World" }, { label: "Hello" }],
+                    },
+                ];
+            }
+            onSelect(option) {
+                this.state.value = option.label;
+                assert.step(option.label);
+            }
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <div>
+                <div class= "test_value" t-esc="state.value"/>
+                <AutoComplete
+                    value="''"
+                    sources="sources"
+                    onSelect="(option) => this.onSelect(option)"
+                    resetOnSelect="true"
+                />
+            </div>
+        `;
+
+        await mount(Parent, target, { env });
+        assert.strictEqual(target.querySelector(".test_value").textContent, "Hello");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "");
+
+        await editInput(target, ".o-autocomplete--input", "Blip");
+        await click(target.querySelectorAll(".o-autocomplete--dropdown-item")[1]);
+        assert.strictEqual(target.querySelector(".test_value").textContent, "Hello");
+        assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "");
+        assert.verifySteps(["Hello"]);
+    });
+
     QUnit.test("open dropdown on input", async (assert) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };

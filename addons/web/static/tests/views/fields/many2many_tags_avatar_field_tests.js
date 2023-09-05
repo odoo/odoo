@@ -3,12 +3,15 @@
 import {
     click,
     clickSave,
+    editInput,
     getFixture,
+    patchWithCleanup,
     selectDropdownItem,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { triggerHotkey } from "../../helpers/utils";
+import { browser } from "@web/core/browser/browser";
 
 let serverData;
 let target;
@@ -604,4 +607,57 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("widget many2many_tags_avatar", async function (assert) {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+        await makeView({
+            type: "form",
+            resModel: "turtle",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="partner_ids" widget="many2many_tags_avatar"/>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='partner_ids'] .o_tag")].map((el) => el.textContent),
+            []
+        );
+        assert.strictEqual(
+            target.querySelector("[name='partner_ids'] .o_input_dropdown input").value,
+            ""
+        );
+
+        await editInput(target, "[name='partner_ids'] .o_input_dropdown input", "first record");
+        await triggerEvent(target, "[name='partner_ids'] .o_input_dropdown input", "keydown", {
+            key: "Enter",
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='partner_ids'] .o_tag")].map((el) => el.textContent),
+            ["first record"]
+        );
+        assert.strictEqual(
+            target.querySelector("[name='partner_ids'] .o_input_dropdown input").value,
+            ""
+        );
+
+        await editInput(target, "[name='partner_ids'] .o_input_dropdown input", "abc");
+        await triggerEvent(target, "[name='partner_ids'] .o_input_dropdown input", "keydown", {
+            key: "Enter",
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll("[name='partner_ids'] .o_tag")].map((el) => el.textContent),
+            ["first record", "abc"]
+        );
+        assert.strictEqual(
+            target.querySelector("[name='partner_ids'] .o_input_dropdown input").value,
+            ""
+        );
+    });
 });
