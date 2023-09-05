@@ -3,6 +3,8 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+
+from datetime import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -631,3 +633,21 @@ class TestTraceability(TestMrpCommon):
         mo.action_generate_serial()
         lot_2 = mo.lot_producing_id.name
         self.assertEqual(lot_2, str(int(lot_1) + 1).zfill(7))
+
+    def test_generate_serial_button_sequence(self):
+        """Test if serial in form "00000dd" is manually created, the generate serial
+        correctly create new serial from sequence.
+        """
+        seq = self.env['ir.sequence'].search([('code', '=', 'stock.lot.serial')])
+        seq.prefix = 'xx%(doy)sxx'
+        mo, _bom, p_final, _p1, _p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+
+        # manually create lot_1
+        self.env['stock.lot'].create({
+            'name': "test_000",
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        })
+        # generate serial lot_2 from the MO
+        mo.action_generate_serial()
+        self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_id.name)
