@@ -16,6 +16,14 @@ export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, Message>} */
     static records = {};
+    /** @returns {Message} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Message} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {Message}

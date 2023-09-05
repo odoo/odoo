@@ -37,7 +37,14 @@ export class Activity extends Record {
     static id = "id";
     /** @type {Object.<number, Activity>} */
     static records = {};
-
+    /** @returns {Activity} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Activity} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Data} data
      * @param {Object} [param1]

@@ -16,6 +16,14 @@ export class Persona extends Record {
     static id = AND("type", "id");
     /** @type {Object.<number, Persona>} */
     static records = {};
+    /** @returns {Persona} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Persona} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Data} data
      * @returns {Persona}

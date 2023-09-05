@@ -25,6 +25,14 @@ export class Thread extends Record {
     static id = AND("model", "id");
     /** @type {Object.<string, Thread>} */
     static records = {};
+    /** @returns {Thread} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Thread} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Thread.localId} localId
      * @returns {string}

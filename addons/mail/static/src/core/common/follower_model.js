@@ -14,6 +14,14 @@ export class Follower extends Record {
     static id = "id";
     /** @type {Object.<number, Follower>} */
     static records = {};
+    /** @returns {Follower} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Follower} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Data} data
      * @returns {Follower}
