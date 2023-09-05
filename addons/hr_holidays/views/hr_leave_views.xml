@@ -300,9 +300,9 @@
 
                             <label for="number_of_days_display" string="Duration" invisible="request_unit_half and leave_type_request_unit != 'hour'" />
                             <div name="duration_display" invisible="request_unit_half and leave_type_request_unit != 'hour'">
-                                <div invisible="request_unit_half or request_unit_hours" class="o_row">
+                                <div invisible="request_unit_half or request_unit_hours">
                                     <field name="number_of_days_display" class="oe_inline" />
-                                    <span>Days</span>
+                                    <span class="ms-3">Days</span>
                                 </div>
                                 <div invisible="leave_type_request_unit != 'hour'" class="o_row">
                                     <field name="number_of_hours_text" />
