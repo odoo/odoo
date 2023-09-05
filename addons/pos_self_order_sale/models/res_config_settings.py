@@ -7,8 +7,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     @api.onchange("pos_self_order_kiosk")
-    def _self_order_kiosk_change(self):
-        super()._self_order_kiosk_change()
+    def _onchange_pos_self_order_kiosk(self):
+        super()._onchange_pos_self_order_kiosk()
 
         for record in self:
             if record.pos_config_id.self_order_kiosk:
