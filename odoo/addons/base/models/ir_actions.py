@@ -392,7 +392,7 @@ class IrActionsActUrl(models.Model):
 
     type = fields.Char(default='ir.actions.act_url')
     url = fields.Text(string='Action URL', required=True)
-    target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
+    target = fields.Selection([('new', 'New Window'), ('self', 'This Window'), ('download', 'Download')],
                               string='Action Target', default='new', required=True)
 
     def _get_readable_fields(self):
