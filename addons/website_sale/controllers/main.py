@@ -1552,6 +1552,7 @@ class WebsiteSale(http.Controller):
             if has_storable_products:
                 if order.carrier_id and not order.delivery_rating_success:
                     order._remove_delivery_line()
+                    order._check_carrier_quotation()
                 values['deliveries'] = order._get_delivery_methods().sudo()
 
             values['delivery_has_storable'] = has_storable_products
