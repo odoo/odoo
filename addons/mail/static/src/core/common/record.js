@@ -105,7 +105,7 @@ export class Record {
     Model;
 
     delete() {
-        delete this.Model.records[this.localId];
+        delete this.Model?.records[this.localId];
         this.Model = null;
     }
 
