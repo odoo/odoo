@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('account_tour', {
     }, {
         trigger: "button.o_form_button_save",
         extra_trigger: "a.o_onboarding_step_action[data-method=action_open_step_company_data]",
-        content: _t("Looks good. Let's continue."),
+        content: _t("Fill your company data and let's continue."),
         position: "bottom",
         skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
     }, {
@@ -34,13 +34,13 @@ registry.category("web_tour.tours").add('account_tour', {
         position: "top",
         skip_trigger: 'a[data-method=action_open_step_base_document_layout].o_onboarding_step_action__done',
     }, {
-        trigger: "a[data-method=action_open_step_create_invoice]",
+        trigger: "a.o_onboarding_step_action[data-method=action_open_step_create_invoice]",
         content: _t("Now, we'll create your first invoice."),
         position: "bottom",
     }, {
         trigger: "div[name=partner_id] .o_input_dropdown",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
-        content: markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
+        content: markup(_t("Write a customer name to <b>create one</b> or <b>see suggestions</b>.")),
         position: "right",
     }, {
         trigger: "div[name=partner_id] input",
@@ -75,11 +75,13 @@ registry.category("web_tour.tours").add('account_tour', {
     {
         trigger: "button[name=action_post]",
         extra_trigger: "button.o_form_button_create",
-        content: _t("Once your invoice is ready, press CONFIRM."),
+        content: _t("Once your invoice is ready, confirm it."),
+        position: "bottom",
     }, {
         trigger: "button[name=action_invoice_sent]",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
-        content: _t("Send the invoice and check what the customer will receive."),
+        content: _t("Send the invoice to the customer and check what he'll receive."),
+        position: "bottom",
     }, {
         trigger: ".o_field_widget[name=email] input, input[name=email]",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
@@ -95,14 +97,11 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "button[name=action_send_and_print]",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Let's send the invoice."),
-        position: "top"
-    }, {
-        trigger: "button[name=action_invoice_sent].btn-secondary",
-        content: _t("The invoice having been sent, the button has changed priority."),
-        run() {},
+        position: "top",
     }, {
         trigger: "button[name=action_register_payment]",
-        content: _t("The next step is payment registration."),
+        content: _t("The button priority shifted since the invoice has been sent. Let's register the payment now."),
+        position: "bottom",
         run() {},
     }
 ]});

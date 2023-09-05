@@ -41,6 +41,13 @@ class TestUi(odoo.tests.HttpCase):
             'tax_ids': [Command.clear()],
         })
 
+        # Remove all posted invoices to enable 'create first invoice' button
+        invoices = self.env['account.move'].search([('company_id', '=', self.env.company.id), ('move_type', '=', 'out_invoice')])
+        for invoice in invoices:
+            if invoice.state in ('cancel', 'posted'):
+                invoice.button_draft()
+        invoices.unlink()
+
         self.start_tour("/web", 'account_tour', login="admin")
 
     def test_01_account_tax_groups_tour(self):
