@@ -2467,12 +2467,18 @@ class Task(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            email_normalized = tools.email_normalize(self.email_from)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (email_normalized and partner.email_normalized == email_normalized)
+            )
             if new_partner:
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_from', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('is_closed', '=', False)]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
+                ]).write({'partner_id': new_partner[0].id})
         # use the sanitized body of the email from the message thread to populate the task's description
         if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
             self.description = message.body
