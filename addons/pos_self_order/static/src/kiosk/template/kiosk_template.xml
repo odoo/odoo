@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.KioskTemplate" owl="1">
         <div class="o_kiosk-template h-100">
-            <section class="header-section" t-attf-style="height: {{ isHeaderBanner ? props.headerHeight : '0' }}%;">
+            <section class="header-section" t-attf-style="height: {{ props.headerHeight }}%;">
                 <t t-slot="header" />
             </section>
-            <section class="content-section position-relative z-index-0" t-attf-style="height: {{ isHeaderBanner ? props.contentHeight : props.contentHeight + props.headerHeight }}%;">
+            <section class="content-section position-relative z-index-0" t-attf-style="height: {{ props.contentHeight }}%;">
                 <t t-slot="content" />
             </section>
             <section t-attf-class="position-relative p-3 bg-transparent z-index-1 {{ showShadow ? 'o_footer_shadow' : '' }}" t-attf-style="height: {{ props.footerHeight }}%;">
