@@ -39,6 +39,6 @@ class GiftCard(models.Model):
                 )
             record.balance = balance
 
-    def can_be_used_in_pos(self):
+    def can_be_used_in_pos(self, sale_order_origin_id=False):
         # expired state are computed once a day, so can be not synchro
         return self.state == 'valid' and self.balance > 0 and (not self.expired_date or self.expired_date >= fields.Date.today())

@@ -17,12 +17,7 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
 
                         for (let line of this.currentOrder.orderlines) {
                             if(line.product.id === giftProduct.id && line.price <= 0) {
-                                let is_valid = await this.rpc({
-                                    model: "gift.card",
-                                    method: 'can_be_used_in_pos',
-                                    args: [line.gift_card_id],
-                                  });
-
+                                let is_valid = await this.isGiftCardValid(line);
                                 if(!is_valid) {
                                     await this.showPopup('ErrorPopup', {
                                         'title': _t("Gift Card Error"),
@@ -73,6 +68,15 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                 }
             }
             return super._postPushOrderResolve(order, server_ids);
+        }
+
+        async isGiftCardValid(line) {
+            let is_valid = await this.rpc({
+                model: "gift.card",
+                method: 'can_be_used_in_pos',
+                args: [line.gift_card_id],
+              });
+            return is_valid;
         }
     };
 
