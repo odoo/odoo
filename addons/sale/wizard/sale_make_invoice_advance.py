@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from markupsafe import escape
+
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools import format_date, frozendict
@@ -209,12 +211,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 self._compute_product_id()
 
             # Create down payment section if necessary
+            SaleOrderline = self.env['sale.order.line'].with_context(sale_no_log_for_new_lines=True)
             if not any(line.display_type and line.is_downpayment for line in order.order_line):
-                self.env['sale.order.line'].create(
+                SaleOrderline.create(
                     self._prepare_down_payment_section_values(order)
                 )
 
-            down_payment_lines = self.env['sale.order.line'].create(
+            down_payment_lines = SaleOrderline.create(
                 self._prepare_down_payment_lines_values(order)
             )
 
@@ -245,10 +248,17 @@ class SaleAdvancePaymentInv(models.TransientModel):
                             }),
                         ]
 
-            invoice.message_post_with_source(
+            poster = self.env.user._is_internal() and self.env.user.id or SUPERUSER_ID
+            invoice.with_user(poster).message_post_with_source(
                 'mail.message_origin_link',
                 render_values={'self': invoice, 'origin': order},
                 subtype_xmlid='mail.mt_note',
+            )
+
+            order.with_user(poster).message_post(
+                body=escape(_(
+                    "%s has been created",
+                )) % invoice._get_html_link(title=_("Down payment invoice")),
             )
 
             return invoice
