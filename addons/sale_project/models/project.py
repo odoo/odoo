@@ -8,11 +8,10 @@ from datetime import date
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.tools import Query
-
-from functools import reduce
+from odoo.tools import Query, SQL
 
 from odoo.addons.project.models.project_task import CLOSED_STATES
+
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -296,7 +295,7 @@ class Project(models.Model):
             ])
         project_query = self.env['project.project']._where_calc(project_domain)
         self._apply_ir_rules(project_query, 'read')
-        project_query_str, project_params = project_query.select('id', 'sale_line_id')
+        project_sql = project_query.select('id', 'sale_line_id')
 
         Task = self.env['project.task']
         task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
@@ -307,7 +306,7 @@ class Project(models.Model):
             ])
         task_query = Task._where_calc(task_domain)
         Task._apply_ir_rules(task_query, 'read')
-        task_query_str, task_params = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
+        task_sql = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
 
         ProjectMilestone = self.env['project.milestone']
         milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True), ('sale_line_id', '!=', False)]
@@ -319,7 +318,7 @@ class Project(models.Model):
             ])
         milestone_query = ProjectMilestone._where_calc(milestone_domain)
         ProjectMilestone._apply_ir_rules(milestone_query)
-        milestone_query_str, milestone_params = milestone_query.select(
+        milestone_sql = milestone_query.select(
             f'{ProjectMilestone._table}.project_id AS id',
             f'{ProjectMilestone._table}.sale_line_id',
         )
@@ -327,13 +326,14 @@ class Project(models.Model):
         SaleOrderLine = self.env['sale.order.line']
         sale_order_line_domain = [('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)])]
         sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
-        sale_order_line_query_str, sale_order_line_query_params = sale_order_line_query.select(
+        sale_order_line_sql = sale_order_line_query.select(
             f'{SaleOrderLine._table}.project_id AS id',
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
-        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str, sale_order_line_query_str]))
-        query._where_params = project_params + task_params + milestone_params + sale_order_line_query_params
+        query = Query(self._cr, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
+            project_sql, task_sql, milestone_sql, sale_order_line_sql,
+        ])))
         return query
 
     def get_panel_data(self):

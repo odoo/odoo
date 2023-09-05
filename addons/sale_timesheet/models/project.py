@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, _lt
 from odoo.osv import expression
+from odoo.tools import SQL
 from odoo.exceptions import ValidationError, UserError
 
 # YTI PLEASE SPLIT ME
@@ -327,7 +328,7 @@ class Project(models.Model):
             ])
         timesheet_query = Timesheet._where_calc(timesheet_domain)
         Timesheet._apply_ir_rules(timesheet_query, 'read')
-        timesheet_query_str, timesheet_params = timesheet_query.select(
+        timesheet_sql = timesheet_query.select(
             f'{Timesheet._table}.project_id AS id',
             f'{Timesheet._table}.so_line AS sale_line_id',
         )
@@ -341,17 +342,16 @@ class Project(models.Model):
             ])
         employee_mapping_query = EmployeeMapping._where_calc(employee_mapping_domain)
         EmployeeMapping._apply_ir_rules(employee_mapping_query, 'read')
-        employee_mapping_query_str, employee_mapping_params = employee_mapping_query.select(
+        employee_mapping_sql = employee_mapping_query.select(
             f'{EmployeeMapping._table}.project_id AS id',
             f'{EmployeeMapping._table}.sale_line_id',
         )
 
-        query._tables['project_sale_order_item'] = ' UNION '.join([
+        query._tables['project_sale_order_item'] = SQL('(%s)', SQL(' UNION ').join([
             query._tables['project_sale_order_item'],
-            timesheet_query_str,
-            employee_mapping_query_str,
-        ])
-        query._where_params += timesheet_params + employee_mapping_params
+            timesheet_sql,
+            employee_mapping_sql,
+        ]))
         return query
 
     def _get_profitability_labels(self):
