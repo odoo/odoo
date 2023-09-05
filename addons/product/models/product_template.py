@@ -1257,7 +1257,9 @@ class ProductTemplate(models.Model):
 
         necessary_values = necessary_values or self.env['product.template.attribute.value']
         necessary_attribute_lines = necessary_values.mapped('attribute_line_id')
-        attribute_lines = self.valid_product_template_attribute_line_ids.filtered(lambda ptal: ptal not in necessary_attribute_lines)
+        attribute_lines = self.valid_product_template_attribute_line_ids.filtered(
+            lambda ptal: ptal not in necessary_attribute_lines and (
+                ptal.attribute_id.display_type != 'multi'))
 
         if not attribute_lines and self._is_combination_possible(necessary_values, parent_combination):
             yield necessary_values

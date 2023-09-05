@@ -34,6 +34,7 @@ class ProductAttributeValue(models.Model):
     is_used_on_products = fields.Boolean(
         string="Used on Products", compute='_compute_is_used_on_products')
 
+    default_extra_price = fields.Float()
     is_custom = fields.Boolean(
         string="Is custom value",
         help="Allow users to input custom values for this attribute value")

@@ -6,9 +6,11 @@
         <field name="model">product.attribute</field>
         <field name="inherit_id" ref="product.product_attribute_view_form"/>
         <field name="arch" type="xml">
-            <field name="create_variant" position="after">
-                <field name="visibility" string="eCommerce Filter Visibility" widget="radio"/>
-            </field>
+            <group name="main_fields" position="inside">
+                <group name="ecommerce_main_fields">
+                    <field name="visibility" string="eCommerce Filter Visibility" widget="radio"/>
+                </group>
+            </group>
         </field>
     </record>
 

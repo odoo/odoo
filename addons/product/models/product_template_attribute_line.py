@@ -235,7 +235,8 @@ class ProductTemplateAttributeLine(models.Model):
                     # create values that didn't exist yet
                     ptav_to_create.append({
                         'product_attribute_value_id': pav.id,
-                        'attribute_line_id': ptal.id
+                        'attribute_line_id': ptal.id,
+                        'price_extra': pav.default_extra_price,
                     })
             # Handle active at each step in case a following line might want to
             # re-use a value that was archived at a previous step.

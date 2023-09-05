@@ -29,7 +29,7 @@
                 t-as="ptav"
                 t-key="ptav.id"
                 t-att-value="ptav.id"
-                t-att-selected="ptav.id === this.props.selected_attribute_value_id"
+                t-att-selected="this.props.selected_attribute_value_ids.includes(ptav.id)"
                 t-out="getPTAVSelectName(ptav)"
                 t-att-class="{ 'css_not_available': ptav.excluded }"/>
         </select>
@@ -54,7 +54,7 @@
                         class="form-check-input"
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
-                        t-att-checked="ptav.id === this.props.selected_attribute_value_id"
+                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-att-name="'ptal-' + this.props.id"
                         t-on-change="updateSelectedPTAV"/>
                 </div>
@@ -64,7 +64,7 @@
     <t t-name="saleProductConfigurator.ptav-pills">
          <ul t-attf-class="list-inline list-unstyled">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
-                t-att-class="{'active': ptav.id === this.props.selected_attribute_value_id}"
+                t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
                 class="o_sale_product_configurator_ptav_pills btn btn-primary list-inline-item mb-3">
                 <div class="form-check">
                     <label
@@ -82,7 +82,7 @@
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
-                        t-att-checked="ptav.id === this.props.selected_attribute_value_id"
+                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-on-change="updateSelectedPTAV"/>
                 </div>
             </li>
@@ -95,15 +95,45 @@
                 <label
                     t-att-title="ptav.name"
                     t-attf-style="background-color:#{ptav.is_custom ? '' : ptav.html_color}"
-                    t-att-class="{'o_sale_product_configurator_ptav_color': true, 'active': ptav.id === this.props.selected_attribute_value_id, 'custom_value': ptav.is_custom, 'transparent': !ptav.is_custom and !ptav.html_color, 'css_not_available': ptav.excluded }">
+                    t-att-class="{'o_sale_product_configurator_ptav_color': true,
+                                  'active': this.props.selected_attribute_value_ids.includes(ptav.id),
+                                  'custom_value': ptav.is_custom,
+                                  'transparent': !ptav.is_custom and !ptav.html_color,
+                                  'css_not_available': ptav.excluded }">
                     <input
                         type="radio"
                         t-att-id="ptav.id"
                         t-att-value="ptav.id"
                         t-att-name="'ptal-' + this.props.id"
-                        t-att-checked="ptav.id === this.props.selected_attribute_value_id"
+                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-on-change="updateSelectedPTAV"/>
                 </label>
+            </li>
+        </ul>
+    </t>
+    <t t-name="saleProductConfigurator.ptav-multi" owl="1">
+         <ul t-attf-class="list-inline list-unstyled">
+            <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
+                class="list-inline-item mb-3">
+                <div class="form-check">
+                    <input
+                        type="checkbox"
+                        class="me-1"
+                        t-att-id="ptav.id"
+                        t-att-value="ptav.id"
+                        t-att-name="'ptal-' + this.props.id"
+                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                        t-on-change="updateSelectedPTAV"/>
+                    <label
+                        class="col-form-label"
+                        t-att-for="ptav.id">
+                        <span t-out="ptav.name"/>
+                        <BadgeExtraPrice
+                            t-if="ptav.price_extra"
+                            price="ptav.price_extra"
+                            currencyId="this.env.currencyId"/>
+                    </label>
+                </div>
             </li>
         </ul>
     </t>
