@@ -3,7 +3,7 @@
 
 from odoo import Command
 from .common import TestCommonSaleTimesheet
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -123,3 +123,7 @@ class TestProject(TestCommonSaleTimesheet):
         employee_mapping.cost = self.employee_user.timesheet_cost
         employee_mapping.employee_id = self.employee_company_B
         self.assertEqual(employee_mapping.cost, self.employee_company_B.timesheet_cost)
+
+    def test_open_product_form_with_default_service_policy(self):
+        form = Form(self.env['product.product'].with_context(default_detailed_type='service', default_service_policy='delivered_timesheet'))
+        self.assertEqual('delivered_timesheet', form.service_policy)
