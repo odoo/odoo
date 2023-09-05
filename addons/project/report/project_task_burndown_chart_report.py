@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
@@ -66,10 +67,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         project_task_query = self.env['project.task']._where_calc(task_specific_domain)
         project_task_from_clause, project_task_where_clause, project_task_where_clause_params = project_task_query.get_sql()
 
-        # Insert `WHERE` clause parameter that apply on `project_task` prior to the one that apply on
-        # `project_task_burndown_chart_report` as the `project_task` CTE is placed at the beginning of the `SQL`.
-        main_query._where_params = project_task_where_clause_params + main_query._where_params
-
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.
         IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
@@ -87,6 +84,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
 
         burndown_chart_query = """
+            (
               WITH task_ids AS (
                  SELECT id
                  FROM %(task_query_from)s
@@ -180,6 +178,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                 FROM all_stage_task_moves t
                          JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', '%(interval)s')
                             AS date ON TRUE
+            )
         """ % {
             'task_query_from': project_task_from_clause,
             'task_query_where': f'WHERE {project_task_where_clause}' if project_task_where_clause else '',
@@ -189,7 +188,10 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
             'field_id': field_id,
         }
 
-        main_query._tables['project_task_burndown_chart_report'] = burndown_chart_query
+        # hardcode 'project_task_burndown_chart_report' as the query above
+        # (with its own parameters)
+        burndown_chart_sql = SQL(burndown_chart_query, *project_task_where_clause_params)
+        main_query._tables['project_task_burndown_chart_report'] = burndown_chart_sql
 
         return main_query
 
