@@ -196,6 +196,7 @@ class ProductTemplate(models.Model):
                 base_price = template.compare_list_price
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
+<<<<<<< HEAD
 
                 if template.currency_id != pricelist.currency_id:
                     base_price = template.currency_id._convert(
@@ -206,6 +207,19 @@ class ProductTemplate(models.Model):
                         round=False
                     )
 
+||||||| parent of 38eef45cf6f (temp)
+                    template_price_vals.update(price_reduce=price_reduce)
+=======
+                    template_price_vals.update(price_reduce=price_reduce)
+                if template.currency_id != pricelist.currency_id:
+                    base_price = template.currency_id._convert(
+                        base_price,
+                        pricelist.currency_id,
+                        self.env.company,
+                        fields.Datetime.now(),
+                        round=False
+                    )
+>>>>>>> 38eef45cf6f (temp)
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
