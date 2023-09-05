@@ -74,7 +74,7 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     }
 
     async _saveUpdate() {
-        await this.props.record.save({ noReload: true });
+        await this.props.record.save({ reload: false });
         // manual render to dirty record
         this.render();
         // update dropdown

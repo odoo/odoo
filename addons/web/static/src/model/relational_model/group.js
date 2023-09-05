@@ -80,7 +80,7 @@ export class Group extends DataPoint {
         } else {
             await this.list.load({ domain: this.config.initialDomain });
         }
-        this.model._updateConfig(this.config, { extraDomain: filter }, { noReload: true });
+        this.model._updateConfig(this.config, { extraDomain: filter }, { reload: false });
     }
 
     deleteRecords(records) {
@@ -94,7 +94,7 @@ export class Group extends DataPoint {
         this.model._updateConfig(
             this.config,
             { isFolded: !this.config.isFolded },
-            { noReload: true }
+            { reload: false }
         );
     }
 

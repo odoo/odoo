@@ -604,21 +604,21 @@ export class RelationalModel extends Model {
      * @param {Config} config
      * @param {Partial<Config>} patch
      * @param {Object} [options]
-     * @param {boolean} [options.noReload=false]
+     * @param {boolean} [options.reload=true]
      * @param {Function} [options.commit] Function to call once the data has been loaded
      */
-    async _updateConfig(config, patch, options = {}) {
+    async _updateConfig(config, patch, { reload = true, commit } = {}) {
         const tmpConfig = { ...config, ...patch };
         markRaw(tmpConfig.activeFields);
         markRaw(tmpConfig.fields);
 
         let data;
-        if (!options.noReload) {
+        if (reload) {
             data = await this._loadData(tmpConfig);
         }
         Object.assign(config, tmpConfig);
-        if (data && options.commit) {
-            options.commit(data);
+        if (data && commit) {
+            commit(data);
         }
     }
 

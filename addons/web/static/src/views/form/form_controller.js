@@ -331,7 +331,7 @@ export class FormController extends Component {
     async beforeLeave() {
         if (this.model.root.dirty) {
             return this.model.root.save({
-                noReload: true,
+                reload: false,
                 onError: this.onSaveError.bind(this),
             });
         }
@@ -479,7 +479,7 @@ export class FormController extends Component {
             if (clickParams.special === "save" && this.props.saveRecord) {
                 saved = await this.props.saveRecord(record, clickParams);
             } else {
-                const params = { noReload: this.env.inDialog && clickParams.close };
+                const params = { reload: !(this.env.inDialog && clickParams.close) };
                 if (!this.env.inDialog) {
                     params.onError = this.onSaveError.bind(this);
                 }
