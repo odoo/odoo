@@ -29,9 +29,9 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="l10n_it_pec_email" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
-                <field name="l10n_it_codice_fiscale" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
-                <field name="l10n_it_pa_index" invisible="'IT'.lower() not in (fiscal_country_codes or '').lower() or parent_id"/>
+                <field name="l10n_it_pec_email" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+                <field name="l10n_it_codice_fiscale" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+                <field name="l10n_it_pa_index" invisible="'IT' not in fiscal_country_codes or parent_id"/>
             </xpath>
         </data>
         </field>

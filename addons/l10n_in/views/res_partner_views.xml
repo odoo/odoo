@@ -11,7 +11,7 @@
                 <attribute name="required">l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']</attribute>
             </xpath>
             <xpath expr="//field[@name='vat']" position="before">
-                <field name="l10n_in_gst_treatment" invisible="'IN'.lower() not in (fiscal_country_codes or '').lower()" readonly="parent_id"/>
+                <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" />

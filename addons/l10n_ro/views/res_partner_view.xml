@@ -6,7 +6,7 @@
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
 				<field name="vat" position="after">
-					<field name="nrc" placeholder="e.g. J12/1234/2012" class="oe_inline" invisible="'RO'.lower() not in (fiscal_country_codes or '').lower()"/>
+					<field name="nrc" placeholder="e.g. J12/1234/2012" class="oe_inline" invisible="'RO' not in fiscal_country_codes"/>
                 </field>
 			</field>
 		</record>
