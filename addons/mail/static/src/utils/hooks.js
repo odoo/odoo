@@ -92,19 +92,26 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     const ref = useRef(refName);
     let el = null;
     let isScrolled = true;
+    let lastSetValue;
     const observer = new ResizeObserver(applyScroll);
 
     function onScroll() {
         isScrolled = Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < 1;
     }
     function applyScroll() {
-        if (isScrolled && shouldScrollPredicate()) {
+        if (isScrolled && shouldScrollPredicate() && lastSetValue !== ref.el.scrollHeight) {
+            /**
+             * Avoid setting the same value 2 times in a row. This is not supposed to have an
+             * effect, unless the value was changed from outside in the meantime, in which case
+             * resetting the value would incorrectly override the other change.
+             */
+            lastSetValue = ref.el.scrollHeight;
             ref.el.scrollTop = ref.el.scrollHeight;
         }
     }
     onMounted(() => {
         el = ref.el;
-        el.scrollTop = el.scrollHeight;
+        applyScroll();
         observer.observe(el);
         el.addEventListener("scroll", onScroll);
     });
