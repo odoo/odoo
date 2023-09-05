@@ -5,6 +5,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/web/discuss_sidebar";
 import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
 import { onExternalClick } from "@mail/utils/common/hooks";
+import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -84,7 +85,8 @@ export class DiscussSidebarCategories extends Component {
             const thread = this.store.Thread.records[threadLocalId];
             return (
                 (thread.is_pinned || thread.group_based_subscription) &&
-                (!this.state.quickSearchVal || thread.name.includes(this.state.quickSearchVal))
+                (!this.state.quickSearchVal ||
+                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
