@@ -78,12 +78,23 @@
         </field>
     </record>
 
+    <record id="event_registration_view_kanban" model="ir.ui.view">
+        <field name="name">event.registration.kanban.inherit.online</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.event_registration_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='event_ticket_id']" position="before">
+                <field name="registration_answer_choice_ids" class="mt-1" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="event_registration_view_search" model="ir.ui.view">
         <field name="name">event.registration.view.search.inherit.online</field>
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.view_registration_search"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after">
+            <field name="partner_id" position="after">
                 <field name="registration_answer_ids" string="Selected Answers"/>
             </field>
         </field>
