@@ -10,6 +10,14 @@ from odoo.addons.sale_project.tests.test_project_profitability import TestProjec
 
 @tagged('-at_install', 'post_install')
 class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestProjectHrExpenseProfitabilityCommon, TestSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product_c.write({
+            'expense_policy': 'sales_price',
+        })
+
     def test_project_profitability(self):
         project = self.env['project.project'].create({'name': 'new project'})
         project._create_analytic_account()
@@ -31,7 +39,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         expense = self.env['hr.expense'].create({
             'name': 'expense',
             'product_id': self.company_data['product_order_sales_price'].id,
-            'unit_amount': self.company_data['product_order_sales_price'].list_price,
+            'total_amount': self.company_data['product_order_sales_price'].list_price,
             'employee_id': self.expense_employee.id,
             'analytic_distribution': {account.id: 100},
             'sale_order_id': self.sale_order.id,
@@ -55,8 +63,8 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         expense_foreign = self.env['hr.expense'].create({
             'name': 'Expense foreign',
             'employee_id': foreign_employee.id,
-            'product_id': self.company_data['product_order_sales_price'].id,
-            'unit_amount': 350.00,
+            'product_id': self.product_c.id, # Foreign currency product must have no cost
+            'total_amount': 350.00 * 0.5,  # 0.5 is the exchange rate
             'company_id': foreign_company.id,
             'analytic_distribution': {account.id: 100},
             'currency_id': self.foreign_currency.id,
@@ -74,6 +82,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         sequence_per_invoice_type = project._get_profitability_sequence_per_invoice_type()
         self.assertIn('expenses', sequence_per_invoice_type)
         expense_sequence = sequence_per_invoice_type['expenses']
+        billed = -expense.untaxed_amount - expense_foreign.untaxed_amount * 0.2  # 280 + 350 * 0.2 = 350
 
         self.assertDictEqual(
             expense_profitability.get('revenues', {}),
@@ -81,7 +90,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': -280.0 - expense_foreign.untaxed_amount * 0.2, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
         )
 
         expense_sheet.action_sheet_move_create()
@@ -109,7 +118,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': -280.0 - expense_foreign.untaxed_amount * 0.2, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
         )
 
         self.assertDictEqual(
@@ -135,7 +144,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': -280.0 - expense_foreign.untaxed_amount * 0.2, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
         )
 
         self.assertDictEqual(
@@ -183,7 +192,7 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         )
         self.assertDictEqual(
             expense_profitability['costs'],
-            {'id': 'expenses', 'sequence': expense_sequence, 'billed': -280.0 - expense_foreign.untaxed_amount * 0.2, 'to_bill': 0.0},
+            {'id': 'expenses', 'sequence': expense_sequence, 'billed': billed, 'to_bill': 0.0},
         )
 
         expense_sheet._do_refuse('Test Cancel Expense')
