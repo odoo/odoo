@@ -8,6 +8,7 @@ import { numberBufferService } from "@point_of_sale/app/number_buffer_service";
 import { barcodeReaderService } from "@point_of_sale/app/barcode_reader_service";
 import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
+import { popupService } from "@point_of_sale/app/popup/popup_service";
 
 QUnit.module("Chrome", {
     beforeEach() {
@@ -17,20 +18,14 @@ QUnit.module("Chrome", {
             .add("number_buffer", numberBufferService)
             .add("barcode_reader", barcodeReaderService)
             .add("ui", uiService)
+            .add("popup", popupService)
             .add("barcode", {
                 start() {
                     return { bus: new EventBus() };
                 },
             });
 
-        for (const service of [
-            "popup",
-            "hardware_proxy",
-            "debug",
-            "pos_notification",
-            "sound",
-            "action",
-        ]) {
+        for (const service of ["hardware_proxy", "debug", "pos_notification", "sound", "action"]) {
             registry.category("services").add(service, {
                 start() {
                     return {};
