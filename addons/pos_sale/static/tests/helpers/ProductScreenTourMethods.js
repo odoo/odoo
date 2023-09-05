@@ -47,6 +47,15 @@ odoo.define('pos_sale.tour.ProductScreenTourMethods', function (require) {
                 }
             ];
         }
+
+        acceptNewProduct() {
+            return [
+                {
+                    content: `click on accept button`,
+                    trigger: `.button.confirm`,
+                }
+            ];
+        }
     }
     return createTourMethods('ProductScreen', DoExt, Check, Execute);
 });
