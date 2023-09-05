@@ -200,6 +200,14 @@ class ProductTemplate(models.Model):
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
                     template_price_vals.update(price_reduce=price_reduce)
+                if template.currency_id != pricelist.currency_id:
+                    base_price = template.currency_id._convert(
+                        base_price,
+                        pricelist.currency_id,
+                        self.env.company,
+                        fields.Datetime.now(),
+                        round=False
+                    )
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
