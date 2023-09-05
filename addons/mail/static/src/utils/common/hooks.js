@@ -133,6 +133,7 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     function onScroll() {
         isScrolled = Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < 1;
     }
+<<<<<<< HEAD:addons/mail/static/src/utils/common/hooks.js
     async function applyScroll() {
         if (isScrolled && shouldScrollPredicate() && lastSetValue !== ref.el.scrollHeight) {
             /**
@@ -141,6 +142,19 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
              * resetting the value would incorrectly override the other change.
              */
             lastSetValue = ref.el.scrollHeight;
+||||||| parent of 79c75be6fa5 (temp):addons/mail/static/src/utils/hooks.js
+    function applyScroll() {
+        if (isScrolled && shouldScrollPredicate()) {
+=======
+    function applyScroll() {
+        if (isScrolled && shouldScrollPredicate() && lastSetValue !== ref.el.scrollHeight) {
+            /**
+             * Avoid setting the same value 2 times in a row. This is not supposed to have an
+             * effect, unless the value was changed from outside in the meantime, in which case
+             * resetting the value would incorrectly override the other change.
+             */
+            lastSetValue = ref.el.scrollHeight;
+>>>>>>> 79c75be6fa5 (temp):addons/mail/static/src/utils/hooks.js
             ref.el.scrollTop = ref.el.scrollHeight;
         }
     }
