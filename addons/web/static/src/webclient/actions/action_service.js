@@ -879,7 +879,9 @@ function makeActionManager(env) {
         if (url && !(url.startsWith("http") || url.startsWith("/"))) {
             url = "/" + url;
         }
-        if (action.target === "self") {
+        if (action.target === "download") {
+            browser.location.assign(url);
+        } else if (action.target === "self") {
             let willUnload = false;
             const onUnload = () => {
                 willUnload = true;
