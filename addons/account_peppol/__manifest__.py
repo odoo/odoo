@@ -23,6 +23,9 @@
         'views/res_config_settings_views.xml',
         'wizard/account_move_send_views.xml',
     ],
+    'demo': [
+        'demo/account_peppol_demo.xml',
+    ],
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [
