@@ -9,6 +9,7 @@ from . import onboarding_onboarding
 from . import onboarding_onboarding_step
 from . import payment_provider
 from . import payment_transaction
+from . import product_document
 from . import product_product
 from . import product_template
 from . import res_company

@@ -21,7 +21,9 @@ class MrpDocumentRoute(http.Controller):
         for ufile in files:
             try:
                 mimetype = ufile.content_type
-                request.env['mrp.document'].create({
+                request.env['mrp.document'].with_context(
+                    disable_product_documents_creation=True
+                ).create({
                     'name': ufile.filename,
                     'res_model': kwargs.get('res_model'),
                     'res_id': int(kwargs.get('res_id')),

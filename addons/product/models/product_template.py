@@ -133,6 +133,14 @@ class ProductTemplate(models.Model):
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")
 
+    product_document_ids = fields.One2many(
+        string="Documents",
+        comodel_name='product.document',
+        inverse_name='res_id',
+        domain=lambda self: [('res_model', '=', self._name)])
+    product_document_count = fields.Integer(
+        string="Documents Count", compute='_compute_product_document_count')
+
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
     has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
@@ -156,6 +164,13 @@ class ProductTemplate(models.Model):
                 '&',
                 '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
                 ('pricelist_id.active', '=', True),
+            ])
+
+    def _compute_product_document_count(self):
+        for template in self:
+            template.product_document_count = template.env['product.document'].search_count([
+                ('res_model', '=', 'product.template'),
+                ('res_id', '=', template.id),
             ])
 
     @api.depends('image_1920', 'image_1024')
@@ -536,6 +551,8 @@ class ProductTemplate(models.Model):
         domain = [('id', 'in', list(searched_ids))]
         return super()._name_search('', domain, 'ilike', limit, order)
 
+    #=== ACTION METHODS ===#
+
     def action_open_label_layout(self):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_tmpl_ids': self.ids}
@@ -561,6 +578,37 @@ class ProductTemplate(models.Model):
                 'search_default_visible': True,
             },
         }
+
+    def action_open_documents(self):
+        self.ensure_one()
+        return {
+            'name': _('Documents'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.document',
+            'view_mode': 'kanban,tree,form',
+            'context': {
+                'default_res_model': self._name,
+                'default_res_id': self.id,
+                'default_company_id': self.company_id.id,
+            },
+            'domain': [('res_id', 'in', self.ids), ('res_model', '=', self._name)],
+            'target': 'current',
+            'help': """
+                <p class="o_view_nocontent_smiling_face">
+                    %s
+                </p><p>
+                    %s
+                    <br/>
+                    %s
+                </p>
+            """ % (
+                _("Upload files to your product"),
+                _("Use this feature to store any files you would like to share with your customers."),
+                _("E.G: product description, ebook, legal notice, ..."),
+            )
+        }
+
+    #=== BUSINESS METHODS ===#
 
     def _get_product_price_context(self, combination):
         self.ensure_one()

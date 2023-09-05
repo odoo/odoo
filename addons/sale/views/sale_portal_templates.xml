@@ -465,6 +465,28 @@
             </div>
 
             <section id="details" style="page-break-inside: auto;" class="mt32">
+                <t t-if="product_documents">
+                    <h3 id="details">Documents</h3>
+                    <hr class="mt-0 mb-1"/>
+
+                    <div class="row">
+                        <t t-foreach="product_documents" t-as="document_sudo">
+                            <div class="col-lg-2 col-md-3 col-sm-6">
+                                <div class="mb-2 position-relative text-center">
+                                    <t t-set="attachment_sudo" t-value="document_sudo.ir_attachment_id"/>
+                                    <t t-set="target" t-value="attachment_sudo.type == 'url' and '_blank' or '_self'"/>
+                                    <a t-att-href="sale_order.get_portal_url('/document/' + str(document_sudo.id))" t-att-target="target">
+                                        <div class="o_image"
+                                                t-att-title="attachment_sudo.name"
+                                                t-att-data-mimetype="attachment_sudo.mimetype"
+                                                t-attf-data-src="/web/image/#{attachment_sudo.id}/100x80?access_token=#{attachment_sudo.access_token}"/>
+                                        <div class="o_portal_product_document" t-out="attachment_sudo.name"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
                 <h3 id="details">Pricing</h3>
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
