@@ -43,26 +43,6 @@ export function useErrorHandlers() {
                     error.data.debug ||
                     _t("The server encountered an error while receiving your order."),
             });
-        } else if (error.code === 700) {
-            // Sweden Fiscal module errors
-            await popup.add(ErrorPopup, {
-                title: _t("Fiscal data module error"),
-                body:
-                    error.data.error.status ||
-                    _t("The fiscal data module encountered an error while receiving your order."),
-            });
-        } else if (error.code === 701) {
-            // Belgian Fiscal module errors
-            let bodyMessage = "";
-            if (error.error.errorCode) {
-                bodyMessage = "'" + error.error.errorCode + "': " + error.error.errorMessage;
-            } else {
-                bodyMessage = "Fiscal data module is not on.";
-            }
-            await popup.add(ErrorPopup, {
-                title: _t("Fiscal data module error"),
-                body: bodyMessage,
-            });
         } else {
             // ???
             await popup.add(ErrorPopup, {
