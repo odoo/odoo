@@ -2,7 +2,6 @@
 
 import { Mutex } from "@web/core/utils/concurrency";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
 import { _t } from "@web/core/l10n/translation";
@@ -26,7 +25,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this._super.apply(this, arguments);
 
         this.product_data = {};
-        this.comparelist_product_ids = JSON.parse(getCookie('comparelist_product_ids') || '[]');
+        this.comparelist_product_ids = JSON.parse(this.call("cookie", "getCookie", "comparelist_product_ids") || '[]');
         this.product_compare_limit = 4;
         this.guard = new Mutex();
     },
@@ -139,7 +138,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             route: '/shop/get_product_data',
             params: {
                 product_ids: product_ids,
-                cookies: JSON.parse(getCookie('comparelist_product_ids') || '[]'),
+                cookies: JSON.parse(this.call("cookie", "getCookie", "comparelist_product_ids") || '[]'),
             },
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
@@ -225,7 +224,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateCookie: function () {
-        setCookie('comparelist_product_ids', JSON.stringify(this.comparelist_product_ids), 24 * 60 * 60 * 365, 'required');
+        this.call("cookie", "setCookie", "comparelist_product_ids", JSON.stringify(this.comparelist_product_ids), 24 * 60 * 60 * 365, 'required');
         this._updateComparelistView();
     },
     /**

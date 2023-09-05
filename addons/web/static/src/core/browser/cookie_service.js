@@ -34,10 +34,18 @@ function makeCookieService() {
     function getCurrent() {
         return parseCookieString(document.cookie);
     }
+    /**
+     * Check if cookie can be written.
+     *
+     * @param {String} type the type of the cookie
+     * @returns {boolean}
+     */
+    function isAllowedCookie(type) {
+        return true;
+    }
     let cookie = getCurrent();
-    function setCookie(key, value, ttl) {
-        // TODO When this will be used from website pages, recover the
-        // optional cookie mechanism.
+    function setCookie(key, value, ttl = 24 * 60 * 60 * 365, type = "required") {
+        ttl = isAllowedCookie(type) ? ttl : -1;
         document.cookie = cookieToString(key, value, ttl);
         cookie = getCurrent();
     }
@@ -45,10 +53,12 @@ function makeCookieService() {
         get current() {
             return cookie;
         },
+        getCookie: (key) => cookie[key],
         setCookie,
         deleteCookie(key) {
             setCookie(key, "kill", 0);
         },
+        isAllowedCookie,
     };
 }
 

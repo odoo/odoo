@@ -2,7 +2,6 @@
 
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import {getCookie, setCookie} from "@web/legacy/js/core/cookie_utils";
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',
@@ -34,7 +33,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if (! parseInt(this.el.dataset.viewTrack, 10)) {
             return; // Is not tracked
         }
-        if (getCookie(cookieName)) {
+        if (!this.call("cookie", "getCookie", cookieName)) {
             return; // Already tracked in the last 30min
         }
         if ($(this.el).find('.js_product.css_not_available').length) {
@@ -46,7 +45,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
                 product_id: productId,
             }
         }).then(function (res) {
-            setCookie(cookieName, productId, 30 * 60, 'optional');
+            this.call("cookie", "setCookie", cookieName, productId, 30 * 60, 'optional');
         });
     },
 
