@@ -49,10 +49,11 @@ export class ImageField extends Component {
         acceptedFileExtensions: { type: String, optional: true },
         width: { type: Number, optional: true },
         height: { type: Number, optional: true },
-        noReload: { type: Boolean, optional: true },
+        reload: { type: Boolean, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
+        reload: true,
     };
 
     setup() {
@@ -98,7 +99,7 @@ export class ImageField extends Component {
     }
 
     getUrl(previewFieldName) {
-        if (this.props.noReload && this.lastURL) {
+        if (!this.props.reload && this.lastURL) {
             return this.lastURL;
         }
         if (this.state.isValid && this.props.record.data[this.props.name]) {
@@ -241,7 +242,7 @@ export const imageField = {
         acceptedFileExtensions: options.accepted_file_extensions,
         width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
         height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
-        noReload: Boolean(options.no_reload),
+        reload: "reload" in options ? Boolean(options.reload) : true,
     }),
 };
 

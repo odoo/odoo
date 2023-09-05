@@ -77,7 +77,7 @@ export class DynamicList extends DataPoint {
         }
         const canProceed = await this.leaveEditMode();
         if (canProceed) {
-            this.model._updateConfig(record.config, { mode: "edit" }, { noReload: true });
+            this.model._updateConfig(record.config, { mode: "edit" }, { reload: false });
         }
         return canProceed;
     }
@@ -129,7 +129,7 @@ export class DynamicList extends DataPoint {
                 this.model._updateConfig(
                     this.editedRecord.config,
                     { mode: "readonly" },
-                    { noReload: true }
+                    { reload: false }
                 );
             } else {
                 return canProceed;
@@ -249,7 +249,7 @@ export class DynamicList extends DataPoint {
                 await this.model.orm.write(this.resModel, resIds, changes, { context });
             } catch (e) {
                 record._discard();
-                this.model._updateConfig(record.config, { mode: "readonly" }, { noReload: true });
+                this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
                 throw e;
             }
             const records = await this.model._loadRecords({ ...this.config, resIds });
@@ -259,7 +259,7 @@ export class DynamicList extends DataPoint {
                 this.model._updateSimilarRecords(record, serverValues);
             }
             record._discard();
-            this.model._updateConfig(record.config, { mode: "readonly" }, { noReload: true });
+            this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });
         }
         this.model.hooks.onSavedMulti(validSelection);
         return true;

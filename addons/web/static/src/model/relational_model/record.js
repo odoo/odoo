@@ -170,7 +170,7 @@ export class Record extends DataPoint {
             if (resId) {
                 await this.model.load({ resId, resIds });
             } else {
-                this.model._updateConfig(this.config, { resId: false }, { noReload: true });
+                this.model._updateConfig(this.config, { resId: false }, { reload: false });
                 this.dirty = false;
                 this._changes = this._parseServerValues(this._getDefaultValues());
                 this._values = markRaw({});
@@ -261,7 +261,7 @@ export class Record extends DataPoint {
     urgentSave() {
         this.model._urgentSave = true;
         this.model.bus.trigger("WILL_SAVE_URGENTLY");
-        this._save({ noReload: true });
+        this._save({ reload: false });
         return this.isValid;
     }
 
@@ -821,14 +821,14 @@ export class Record extends DataPoint {
             {
                 activeFields: { ...this._activeFieldsToRestore },
             },
-            { noReload: true }
+            { reload: false }
         );
         this._activeFieldsToRestore = undefined;
     }
 
-    async _save({ noReload, onError, nextId } = {}) {
+    async _save({ reload = true, onError, nextId } = {}) {
         if (nextId) {
-            noReload = false;
+            reload = true;
         }
         // before saving, abandon new invalid, untouched records in x2manys
         for (const fieldName in this.activeFields) {
@@ -851,7 +851,7 @@ export class Record extends DataPoint {
             return false;
         }
         let fieldSpec = {};
-        if (!noReload) {
+        if (reload) {
             fieldSpec = getFieldsSpec(
                 this.activeFields,
                 this.fields,
@@ -883,9 +883,9 @@ export class Record extends DataPoint {
         if ((creation || nextId) && records.length) {
             const resId = records[0].id;
             const resIds = resId in this.resIds ? this.resIds : this.resIds.concat([resId]);
-            this.model._updateConfig(this.config, { resId, resIds }, { noReload: true });
+            this.model._updateConfig(this.config, { resId, resIds }, { reload: false });
         }
-        if (!noReload) {
+        if (reload) {
             if (!records.length) {
                 throw new FetchRecordError(records.map((r) => r.id));
             }
@@ -946,7 +946,7 @@ export class Record extends DataPoint {
     }
 
     _switchMode(mode) {
-        this.model._updateConfig(this.config, { mode }, { noReload: true });
+        this.model._updateConfig(this.config, { mode }, { reload: false });
         if (mode === "readonly") {
             this._invalidFields.clear();
         }
