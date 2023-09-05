@@ -10,6 +10,14 @@ export class NotificationGroup extends Record {
     static id = "id";
     /** @type {NotificationGroup[]} */
     static records = [];
+    /** @returns {NotificationGroup} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {NotificationGroup} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {NotificationGroup}

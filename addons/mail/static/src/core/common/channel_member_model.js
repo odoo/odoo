@@ -13,6 +13,14 @@ export class ChannelMember extends Record {
     static id = "id";
     /** @type {Object.<number, ChannelMember>} */
     static records = {};
+    /** @returns {ChannelMember} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {ChannelMember} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object|Array} data
      * @returns {ChannelMember}

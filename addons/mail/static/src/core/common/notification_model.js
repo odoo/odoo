@@ -8,6 +8,14 @@ export class Notification extends Record {
     static id = "id";
     /** @type {Object.<number, Notification>} */
     static records = {};
+    /** @returns {Notification} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Notification} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {Notification}

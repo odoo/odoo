@@ -4,6 +4,14 @@ import { Record } from "@mail/core/common/record";
 
 export class LinkPreview extends Record {
     static id = "id";
+    /** @returns {LinkPreview} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {LinkPreview} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {LinkPreview}

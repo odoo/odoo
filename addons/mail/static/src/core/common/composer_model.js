@@ -8,6 +8,14 @@ import { OR, Record } from "@mail/core/common/record";
 
 export class Composer extends Record {
     static id = OR("threadLocalId", "messageLocalId");
+    /** @returns {Composer} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Composer} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {Composer}

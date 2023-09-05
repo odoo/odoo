@@ -4,6 +4,14 @@ import { AND, Record } from "@mail/core/common/record";
 
 export class MessageReactions extends Record {
     static id = AND("messageId", "content");
+    /** @returns {MessageReactions} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {MessageReactions} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {MessageReactions}

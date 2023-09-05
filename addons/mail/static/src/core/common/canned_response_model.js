@@ -6,6 +6,14 @@ export class CannedResponse extends Record {
     static id = "id";
     /** @type {Object.<number, CannedResponse>} */
     static records = {};
+    /** @returns {CannedResponse} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {CannedResponse} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {CannedResponse}
