@@ -3795,7 +3795,7 @@ class AccountMove(models.Model):
                 wrong_lines.write({'partner_id': invoice.commercial_partner_id.id})
 
         # reconcile if state is in draft and move has reversal_entry_id set
-        draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id)
+        draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id and move.reversed_entry_id.state == 'posted')
 
         to_post.write({
             'state': 'posted',
