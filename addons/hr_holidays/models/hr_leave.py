@@ -1621,7 +1621,7 @@ class HolidaysRequest(models.Model):
 
     def _get_start_or_end_from_attendance(self, hour, date, employee):
         hour = float_to_time(float(hour))
-        holiday_tz = timezone(employee.tz or self.env.user.tz)
+        holiday_tz = timezone(employee.tz or self.env.user.tz or 'UTC')
         return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
     def _get_attendances(self, employee, request_date_from, request_date_to):
