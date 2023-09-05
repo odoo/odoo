@@ -275,9 +275,31 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
                 Survey Session Specific Style
  **********************************************************/
 
+.o_survey_session_open {
+
+    @include media-breakpoint-down(md) {
+        @include o-position-absolute($top:0, $bottom: 0);
+    }
+
+    .o_survey_session_open_header {
+        backdrop-filter: blur(10px);
+        --o_survey_session_title_font-size: 3rem;
+        --o_survey_session_qrcode_width: 200px;
+
+        .o_survey_session_open_description {
+            max-height: calc(var(--o_survey_session_qrcode_width) - (var(--o_survey_session_title_font-size) * #{$headings-line-height}));
+        }
+
+        .o_survey_session_qrcode {
+            border: 10px solid $white;
+            width: var(--o_survey_session_qrcode_width);
+        }
+    }
+}
+
 .o_survey_session_manage {
-    h1 {
-        font-size: 3rem;
+    h1, .o_survey_session_attendees_count {
+        font-size: 3rem;  // --o_survey_session_title_font-size
     }
 
     h2 {

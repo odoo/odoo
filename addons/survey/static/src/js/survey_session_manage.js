@@ -113,7 +113,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             }
         });
 
-        await browser.navigator.clipboard.writeText(this.$('.o_survey_session_copy_url').val());
+        await browser.navigator.clipboard.writeText(this.target.querySelector('.o_survey_session_copy_url').textContent);
         $clipboardBtn.popover('show');
         setTimeout(() => $clipboardBtn.popover('dispose'), 800);
     },
