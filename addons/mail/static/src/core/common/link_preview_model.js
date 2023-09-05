@@ -9,7 +9,7 @@ export class LinkPreview extends Record {
      * @returns {LinkPreview}
      */
     static insert(data) {
-        const message = this.store.Message.get(data.message.id);
+        const message = this.store.Message.get(data.message_id);
         let linkPreview = message?.linkPreviews.find((lp) => lp.id === data.id);
         if (linkPreview) {
             return Object.assign(linkPreview, data);
@@ -22,8 +22,8 @@ export class LinkPreview extends Record {
 
     /** @type {number} */
     id;
-    /** @type {Object} */
-    message;
+    /** @type {number} */
+    message_id;
     /** @type {string} */
     image_mimetype;
     /** @type {string} */
