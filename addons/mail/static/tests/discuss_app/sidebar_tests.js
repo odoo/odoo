@@ -210,6 +210,12 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel span", { count: 0 });
+
+    // search should work in case-insensitive
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "C", {
+        replace: true,
+    });
+    await contains(".o-mail-DiscussSidebarChannel span", { count: 20 });
 });
 
 QUnit.test("sidebar: basic chat rendering", async () => {
