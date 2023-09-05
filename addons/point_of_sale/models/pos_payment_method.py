@@ -13,19 +13,22 @@ class PosPaymentMethod(models.Model):
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
+        check_company=True,
         ondelete='restrict',
         help='Leave empty to use the default account from the company setting.\n'
              'Account used as outstanding account when creating accounting payment records for bank payments.')
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
+        check_company=True,
         ondelete='restrict',
-        domain=[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable')],
+        domain="[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable'), ('company_id', '=', company_id)]",
         help="Leave empty to use the default account from the company setting.\n"
              "Overrides the company's receivable account (for Point of Sale) used in the journal entries.")
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
     journal_id = fields.Many2one('account.journal',
         string='Journal',
-        domain=[('type', 'in', ('cash', 'bank'))],
+        check_company=True,
+        domain="[('type', 'in', ('cash', 'bank')), ('company_id', '=', company_id)]",
         ondelete='restrict',
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
@@ -38,7 +41,7 @@ class PosPaymentMethod(models.Model):
         help='Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.')
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
     config_ids = fields.Many2many('pos.config', string='Point of Sale Configurations')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True)
     use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
                                                'hide use_payment_terminal when no payment interfaces are installed.')
