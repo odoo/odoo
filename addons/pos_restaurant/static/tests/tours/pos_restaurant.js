@@ -75,6 +75,8 @@ registry
             Chrome.do.clickTicketButton();
             TicketScreen.do.deleteOrder("-0001");
             Chrome.do.confirmPopup();
+            Chrome.check.isSyncStatusPending();
+            Chrome.check.isSyncStatusConnected();
             TicketScreen.do.selectOrder("-0003");
             Chrome.do.backToFloor();
             
