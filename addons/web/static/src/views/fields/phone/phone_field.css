@@ -1,0 +1,11 @@
+body:not(.o_touch_device) .o_field_phone {
+  word-break: keep-all !important;
+}
+body:not(.o_touch_device) .o_field_phone:not(:hover):not(:focus-within) input:not(:hover) ~ a {
+  display: none !important;
+}
+
+.o_phone_content small {
+  overflow-wrap: normal;
+  word-break: normal;
+}

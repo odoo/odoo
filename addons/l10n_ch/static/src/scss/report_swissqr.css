@@ -1,0 +1,171 @@
+@font-face {
+  font-family: LiberationSans;
+  src: url("../font/LiberationSans-Bold.woff") format("woff");
+  font-weight: bold;
+}
+@font-face {
+  font-family: LiberationSans;
+  src: url("../font/LiberationSans-Regular.woff") format("woff");
+}
+body.l10n_ch_qr {
+  padding: 0;
+  /* Disable custom bakground */
+}
+body.l10n_ch_qr span {
+  padding-left: 10mm;
+  white-space: nowrap;
+}
+body.l10n_ch_qr .o_report_layout_striped {
+  background-color: white;
+  min-height: 0;
+}
+
+.swissqr_page_title {
+  color: black;
+  font-weight: bold;
+  height: 8.75mm;
+  padding: 15px;
+  padding-top: 150px;
+}
+.swissqr_page_title h1 {
+  padding-left: 20mm;
+  white-space: nowrap;
+}
+
+.swissqr_content_v2 {
+  /* New QR Bill code */
+  background-color: white !important;
+  /* Disable custom font-family */
+}
+.swissqr_content_v2 .o_company_2_layout {
+  font-family: revert;
+}
+.swissqr_content_v2 .title {
+  font-family: LiberationSans;
+  color: black;
+  font-weight: bold;
+}
+.swissqr_content_v2 .swissqr_text {
+  font-family: LiberationSans;
+  color: black;
+}
+.swissqr_content_v2 .swissqr_section_title {
+  font-family: LiberationSans;
+  color: black;
+  font-weight: bold;
+  width: 65mm;
+  height: 8.75mm;
+  font-size: 13.75pt;
+  line-height: 11.25pt;
+}
+.swissqr_content_v2 .swissqr_receipt {
+  background-color: white !important;
+  position: absolute;
+  left: 0mm;
+  top: 240mm;
+  width: 77.5mm;
+  height: 131mm;
+  border-top: 0.9375pt dashed black;
+  padding: 6.25mm;
+}
+.swissqr_content_v2 .swissqr_receipt .title {
+  font-size: 7.5pt;
+  line-height: 11.25pt;
+}
+.swissqr_content_v2 .swissqr_receipt .content {
+  font-size: 10pt;
+  line-height: 11.25pt;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_indication_zone {
+  width: 65mm;
+  height: 70mm;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_amount_zone {
+  width: 65mm;
+  height: 17.5mm;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_amount_zone .column {
+  float: left;
+  margin-right: 5mm;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_amount_zone .content {
+  font-size: 10pt;
+  line-height: 13.75pt;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_acceptance_point_zone {
+  width: 65mm;
+  height: 22.5mm;
+}
+.swissqr_content_v2 .swissqr_receipt .receipt_acceptance_point_zone .content {
+  float: right;
+  padding-right: 2.5mm;
+  font-size: 7.5pt;
+  line-height: 10pt;
+}
+.swissqr_content_v2 .swissqr_body {
+  background-color: white !important;
+  position: absolute;
+  top: 240mm;
+  left: 77.5mm;
+  width: 185mm;
+  height: 131mm;
+  border: 0.9375pt dashed black;
+  border-bottom: none;
+  border-right: none;
+  padding: 6.25mm;
+}
+.swissqr_content_v2 .swissqr_body .title {
+  font-size: 10pt;
+  line-height: 13.75pt;
+}
+.swissqr_content_v2 .swissqr_body .content {
+  font-size: 12.5pt;
+  line-height: 13.75pt;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left {
+  float: left;
+  width: 57.5mm;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .swissqr_section_title {
+  height: 8.75mm;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .swissqr {
+  margin-top: 6.25mm;
+  margin-bottom: 6.25mm;
+  height: 57.5mm;
+  width: 57.5mm;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .amount_zone {
+  width: 57.5mm;
+  height: 27.5mm;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .amount_zone .column {
+  margin-right: 3mm;
+  float: left;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .amount_zone .title {
+  font-size: 10pt;
+  line-height: 13.75pt;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_left .amount_zone .content {
+  font-size: 12.5pt;
+  line-height: 16.25pt;
+}
+.swissqr_content_v2 .swissqr_body .swissqr_column_right {
+  float: right;
+  width: 108.75mm;
+}
+.swissqr_content_v2 .scissors {
+  width: 16px;
+  height: 16px;
+}
+.swissqr_content_v2 .vertical_scissors {
+  position: absolute;
+  top: 6.25mm;
+  left: -2.25mm;
+}
+.swissqr_content_v2 .horizontal_scissors {
+  position: absolute;
+  top: -2.5mm;
+  left: 7.5mm;
+}

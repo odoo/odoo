@@ -1,0 +1,72 @@
+.o_image {
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  background-image: url("/web/static/img/mimetypes/unknown.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.o_image[data-mimetype^=image] {
+  background-image: url("/web/static/img/mimetypes/image.svg");
+}
+.o_image[data-mimetype^=audio] {
+  background-image: url("/web/static/img/mimetypes/audio.svg");
+}
+.o_image[data-mimetype^=text], .o_image[data-mimetype$=rtf] {
+  background-image: url("/web/static/img/mimetypes/text.svg");
+}
+.o_image[data-mimetype*=octet-stream], .o_image[data-mimetype*=download], .o_image[data-mimetype*=python] {
+  background-image: url("/web/static/img/mimetypes/binary.svg");
+}
+.o_image[data-mimetype^=video], .o_image[title$=".mp4"], .o_image[title$=".avi"] {
+  background-image: url("/web/static/img/mimetypes/video.svg");
+}
+.o_image[data-mimetype$=archive], .o_image[data-mimetype$=compressed], .o_image[data-mimetype*=zip], .o_image[data-mimetype$=tar], .o_image[data-mimetype*=package] {
+  background-image: url("/web/static/img/mimetypes/archive.svg");
+}
+.o_image[data-mimetype="application/pdf"] {
+  background-image: url("/web/static/img/mimetypes/pdf.svg");
+}
+.o_image[data-mimetype^=text-master], .o_image[data-mimetype*=document], .o_image[data-mimetype*=msword], .o_image[data-mimetype*=wordprocessing] {
+  background-image: url("/web/static/img/mimetypes/document.svg");
+}
+.o_image[data-mimetype*="application/xml"], .o_image[data-mimetype$=html] {
+  background-image: url("/web/static/img/mimetypes/web_code.svg");
+}
+.o_image[data-mimetype$=css], .o_image[data-mimetype$=less], .o_image[data-ext$=less] {
+  background-image: url("/web/static/img/mimetypes/web_style.svg");
+}
+.o_image[data-mimetype*=-image], .o_image[data-mimetype*=diskimage], .o_image[data-ext$=dmg] {
+  background-image: url("/web/static/img/mimetypes/disk.svg");
+}
+.o_image[data-mimetype$=csv], .o_image[data-mimetype*=vc], .o_image[data-mimetype*=excel], .o_image[data-mimetype$=numbers], .o_image[data-mimetype$=calc], .o_image[data-mimetype*=mods], .o_image[data-mimetype*=spreadsheet] {
+  background-image: url("/web/static/img/mimetypes/spreadsheet.svg");
+}
+.o_image[data-mimetype^=key] {
+  background-image: url("/web/static/img/mimetypes/certificate.svg");
+}
+.o_image[data-mimetype*=presentation], .o_image[data-mimetype*=keynote], .o_image[data-mimetype*=teacher], .o_image[data-mimetype*=slideshow], .o_image[data-mimetype*=powerpoint] {
+  background-image: url("/web/static/img/mimetypes/presentation.svg");
+}
+.o_image[data-mimetype*=cert], .o_image[data-mimetype*=rules], .o_image[data-mimetype*=pkcs], .o_image[data-mimetype$=stl], .o_image[data-mimetype$=crl] {
+  background-image: url("/web/static/img/mimetypes/certificate.svg");
+}
+.o_image[data-mimetype*=-font], .o_image[data-mimetype*=font-], .o_image[data-ext$=ttf] {
+  background-image: url("/web/static/img/mimetypes/font.svg");
+}
+.o_image[data-mimetype*=-dvi] {
+  background-image: url("/web/static/img/mimetypes/print.svg");
+}
+.o_image[data-mimetype*=script], .o_image[data-mimetype*=x-sh], .o_image[data-ext*=bat], .o_image[data-mimetype$=bat], .o_image[data-mimetype$=cgi], .o_image[data-mimetype$=-c], .o_image[data-mimetype*=java], .o_image[data-mimetype*=ruby] {
+  background-image: url("/web/static/img/mimetypes/script.svg");
+}
+.o_image[data-mimetype*=javascript] {
+  background-image: url("/web/static/img/mimetypes/javascript.svg");
+}
+.o_image[data-mimetype*=calendar], .o_image[data-mimetype$=ldif] {
+  background-image: url("/web/static/img/mimetypes/calendar.svg");
+}
+.o_image[data-mimetype$=postscript], .o_image[data-mimetype$=cdr], .o_image[data-mimetype$=xara], .o_image[data-mimetype$=cgm], .o_image[data-mimetype$=graphics], .o_image[data-mimetype$=draw], .o_image[data-mimetype*=svg] {
+  background-image: url("/web/static/img/mimetypes/vector.svg");
+}

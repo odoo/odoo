@@ -1,0 +1,23 @@
+html, body, #wrapwrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#wrapwrap {
+  z-index: 0;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: auto;
+}
+#wrapwrap > * {
+  flex: 0 0 auto;
+}
+#wrapwrap > main {
+  flex: 1 0 auto;
+}
+
+.modal-open #wrapwrap {
+  overflow: hidden;
+}
