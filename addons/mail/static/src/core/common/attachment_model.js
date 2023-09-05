@@ -10,7 +10,14 @@ export class Attachment extends Record {
     static id = "id";
     /** @type {Object.<number, Attachment>} */
     static records = {};
-
+    /** @returns {Attachment} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {Attachment} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {Attachment}

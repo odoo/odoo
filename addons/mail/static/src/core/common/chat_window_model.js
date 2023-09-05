@@ -11,6 +11,14 @@ export class ChatWindow extends Record {
     static id = "threadLocalId";
     /** @type {ChatWindow[]} */
     static records = [];
+    /** @returns {ChatWindow} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {ChatWindow} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {ChatWindowData} [data]
      * @returns {ChatWindow}

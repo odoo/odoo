@@ -6,6 +6,14 @@ export class RtcSession extends Record {
     static id = "id";
     /** @type {Object.<number, RtcSession>} */
     static records = {};
+    /** @returns {RtcSession} */
+    static new(data) {
+        return super.new(data);
+    }
+    /** @returns {RtcSession} */
+    static get(data) {
+        return super.get(data);
+    }
     /**
      * @param {Object} data
      * @returns {number, RtcSession}
