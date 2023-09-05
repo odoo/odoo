@@ -12,6 +12,7 @@ import { markEventHandled } from "@mail/utils/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { useRtc } from "@mail/rtc/rtc_hook";
+import { cleanTerm } from "@mail/utils/format";
 
 /**
  * @typedef {Object} Props
@@ -134,7 +135,8 @@ export class Sidebar extends Component {
             const thread = this.store.threads[threadLocalId];
             return (
                 (thread.is_pinned || thread.group_based_subscription) &&
-                (!this.state.quickSearchVal || thread.name.includes(this.state.quickSearchVal))
+                (!this.state.quickSearchVal ||
+                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
