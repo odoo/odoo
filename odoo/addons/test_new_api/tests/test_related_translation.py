@@ -37,10 +37,10 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'Spoon 2': 'Cuiller 2',
         }})
         cls.test2 = cls.env['test_new_api.related_translation_2'].with_context(lang='en_US').create({
-            'parent_id': cls.test1.id,
+            'related_id': cls.test1.id,
         })
         cls.test3 = cls.env['test_new_api.related_translation_3'].with_context(lang='en_US').create({
-            'parent_id': cls.test2.id,
+            'related_id': cls.test2.id,
         })
 
     def test_read(self):
@@ -230,7 +230,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
     def test_translate_change_many2one(self):
         self.assertEqual(self.test2.with_context(lang='en_US').name, 'Knife')
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Couteau')
-        self.test2.with_context(lang='fr_FR').parent_id = self.test12
+        self.test2.with_context(lang='fr_FR').related_id = self.test12
         self.assertEqual(self.test2.with_context(lang='en_US').name, 'Knife 2')
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Couteau 2')
         self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Knife 2</p><p>Fork 2</p><p>Spoon 2</p>')
@@ -240,3 +240,28 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self.assertEqual(self.test2.with_context(lang='fr_FR').name, 'Couteau 2')
         self.assertEqual(self.test3.with_context(lang='en_US').html, '<p>Knife 2</p><p>Fork 2</p><p>Spoon 2</p>')
         self.assertEqual(self.test3.with_context(lang='fr_FR').html, '<p>Couteau 2</p><p>Fourchette 2</p><p>Cuiller 2</p>')
+
+    def test_translate_mapped(self):
+        self.assertEqual(self.test2.with_context(lang='en_US').mapped('name'), ['Knife'])
+        self.test1.with_context(lang='en_US').name = 'New knife'
+        self.assertEqual(self.test1.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test1.with_context(lang='fr_FR').mapped('name'), ['Couteau'])
+        self.assertEqual(self.test2.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test2.with_context(lang='en_US').mapped('related_id.name'), ['New knife'])
+        self.assertEqual(self.test2.with_context(lang='fr_FR').mapped('name'), ['Couteau'])
+        self.assertEqual(self.test2.with_context(lang='fr_FR').mapped('related_id.name'), ['Couteau'])
+        self.assertEqual(self.test3.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test3.with_context(lang='fr_FR').mapped('related_id.name'), ['Couteau'])
+        self.assertEqual(self.test3.with_context(lang='fr_FR').mapped('name'), ['Couteau'])
+        self.assertEqual(self.test3.with_context(lang='fr_FR').mapped('related_id.name'), ['Couteau'])
+        self.test1.with_context(lang='fr_FR').name = 'Nouveau couteau'
+        self.assertEqual(self.test1.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test1.with_context(lang='fr_FR').mapped('name'), ['Nouveau couteau'])
+        self.assertEqual(self.test2.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test2.with_context(lang='en_US').mapped('related_id.name'), ['New knife'])
+        self.assertEqual(self.test2.with_context(lang='fr_FR').mapped('name'), ['Nouveau couteau'])
+        self.assertEqual(self.test2.with_context(lang='fr_FR').mapped('related_id.name'), ['Nouveau couteau'])
+        self.assertEqual(self.test3.with_context(lang='en_US').mapped('name'), ['New knife'])
+        self.assertEqual(self.test3.with_context(lang='en_US').mapped('related_id.name'), ['New knife'])
+        self.assertEqual(self.test3.with_context(lang='fr_FR').mapped('name'), ['Nouveau couteau'])
+        self.assertEqual(self.test3.with_context(lang='fr_FR').mapped('related_id.name'), ['Nouveau couteau'])
