@@ -204,6 +204,11 @@ $-seen-urls: ();
             }
         }
     }
+
+    // The colors of the snippet must not impact the popup/snippet
+    .modal-content {
+        @include o-apply-colors(1);
+    }
 }
 
 .navbar {
@@ -284,10 +289,6 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright', $background: $-footer-color);
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
-    }
-    .s_popup {
-        // The colors of the footer must not impact the "all pages" popup.
-        @include o-apply-colors(1);
     }
 }
 
