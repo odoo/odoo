@@ -32,7 +32,7 @@ class MrpBomLine(models.Model):
     def _get_cost_share(self):
         self.ensure_one()
         if self.cost_share:
-            return fields.Float.round(self.cost_share / 100, 2)
+            return self.cost_share / 100
         bom = self.bom_id
         bom_lines_without_cost_share = bom.bom_line_ids.filtered(lambda bl: not bl.cost_share)
-        return fields.Float.round(1 / len(bom_lines_without_cost_share), 2)
+        return 1 / len(bom_lines_without_cost_share)

@@ -215,6 +215,34 @@ class TestPurchaseMrpFlow(TransactionCase):
             move_line.qty_done = qty_to_process[comp][0]
             move._action_done()
 
+    def test_kit_component_cost(self):
+        # Set kit and componnet product to automated FIFO
+        self.kit_1.categ_id.property_cost_method = 'fifo'
+        self.kit_1.categ_id.property_valuation = 'real_time'
+
+        self.kit_1.bom_ids.product_qty = 3
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.env['res.partner'].create({'name': 'Testy'})
+        with po.order_line.new() as line:
+            line.product_id = self.kit_1
+            line.product_qty = 120
+            line.price_unit = 1260
+        po = po.save()
+        po.button_confirm()
+        po.picking_ids.action_set_quantities_to_reservation()
+        po.picking_ids.button_validate()
+
+        # Unit price equaly dived among bom lines (cost share not set)
+        # # price further divided by product qty of each component
+        components = [
+            self.component_a,
+            self.component_b,
+            self.component_c,
+        ]
+
+        self.assertEqual(sum([k.standard_price * k.qty_available for k in components]), 120 * 1260)
+
     def test_01_sale_mrp_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
         a kit with subkits is ordered with multiple backorders and returns

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
 from odoo import _, models
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.exceptions import UserError
 
 
@@ -22,7 +21,8 @@ class StockMove(models.Model):
         line = self.purchase_line_id
         kit_price_unit = line._get_gross_price_unit()
         cost_share = self.bom_line_id._get_cost_share()
-        return kit_price_unit * cost_share
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        return float_round(kit_price_unit * cost_share * line.product_qty / self.product_qty, precision_digits=price_unit_prec)
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
