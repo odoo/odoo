@@ -140,7 +140,7 @@ class Task(models.Model):
         ('04_waiting_normal', 'Waiting'),
     ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
 
-    create_date = fields.Datetime("Created On", readonly=True)
+    create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
