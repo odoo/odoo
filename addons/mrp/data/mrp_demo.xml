@@ -766,6 +766,12 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
 
+        <record id="lot_product_product_computer_desk_1" model="stock.lot">
+            <field name="name">T0001</field>
+            <field name="product_id" ref="product_product_computer_desk"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
 
         <record id="mrp_inventory_1" model="stock.quant">
             <field name="product_id" ref="mrp.product_product_computer_desk_head"/>
@@ -797,6 +803,12 @@
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
             <field name="lot_id" ref="lot_product_product_computer_desk_head_5"/>
         </record>
+        <record id="mrp_inventory_6" model="stock.quant">
+            <field name="product_id" ref="mrp.product_product_computer_desk"/>
+            <field name="inventory_quantity">1</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_product_computer_desk_1"/>
+        </record>
 
         <function model="stock.quant" name="action_apply_inventory">
             <function eval="[[('id', 'in', [ref('mrp_inventory_1'),
@@ -804,6 +816,7 @@
                                              ref('mrp_inventory_3'),
                                              ref('mrp_inventory_4'),
                                              ref('mrp_inventory_5'),
+                                             ref('mrp_inventory_6'),
                 ])]]" model="stock.quant" name="search"/>
         </function>
     </data>
