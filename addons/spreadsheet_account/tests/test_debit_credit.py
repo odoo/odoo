@@ -919,7 +919,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     "&",
                     "&",
                     "&",
-                    ("account_id.code", "=like", "sp1234566%"),
+                    ("account_id", "in", [self.account_revenue_c1.id]),
                     "|",
                     "&",
                     ("account_id.include_initial_balance", "=", True),
