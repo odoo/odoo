@@ -17,12 +17,11 @@ import { negate } from "@point_of_sale/../tests/tours/helpers/utils";
 
 /**
  * @param {LineOptions} options
- * @returns {import("@web_tour/tour_service/tour_service").TourStep[]}
+ * @returns {string}
  */
-export function hasLine({
+export function computeLineSelector({
     withClass = "",
     withoutClass = "",
-    run = () => {},
     productName,
     quantity,
     price,
@@ -48,11 +47,20 @@ export function hasLine({
     if (comboParent) {
         trigger += `:has(.info-list .combo-parent-name:contains("${comboParent}"))`;
     }
+    return trigger;
+}
+
+/**
+ * @param {{run, ...LineOptions}} options
+ * @returns {import("@web_tour/tour_service/tour_service").TourStep[]}
+ */
+export function hasLine({ run = () => {}, ...options } = {}) {
+    const trigger = computeLineSelector(options);
     const args = JSON.stringify(arguments[0]);
     return [
         {
             content: `Check orderline with attributes: ${args}`,
-            trigger,
+            trigger: computeLineSelector(options),
             run: typeof run === "string" ? run : () => run(trigger),
         },
     ];

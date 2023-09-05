@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { PosSelf, descriptionHelper } from "./tour_utils";
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
 registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
     test: true,
@@ -60,7 +61,7 @@ registry.category("web_tour.tours").add("self_order_after_meal_cart_tour", {
         ...PosSelf.action.addProduct("Funghi", 1),
         PosSelf.action.clickPrimaryBtn("Review"),
         ...PosSelf.action.editOrderline("Funghi", "8.05", "", -1),
-        PosSelf.check.isNotOrderline("Funghi", "8.05", ""),
+        ...Order.doesNotHaveLine({ productName: "Funghi", price: "8.05" }),
 
         // Here we're looking at whether adding a product with the same description
         // as the same product already in the basket merges the two products.

@@ -46,6 +46,7 @@
             "web/static/lib/odoo_ui_icons/*",
             'web/static/src/legacy/scss/ui.scss',
             "point_of_sale/static/src/utils.js",
+            "point_of_sale/static/src/app/generic_components/**/*",
             'bus/static/src/services/bus_service.js',
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
@@ -76,6 +77,7 @@
         "pos_self_order.assets_mobile_tests": [
             ('include', 'pos_self_order.assets_common_tests'),
             "pos_self_order/static/tests/tours/**/*",
+            "point_of_sale/static/tests/tours/helpers/**/*",
         ],
     },
     "license": "LGPL-3",

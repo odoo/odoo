@@ -3,14 +3,14 @@
 import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/mobile/self_order_mobile_service";
 import { ProductCard } from "@pos_self_order/mobile/components/product_card/product_card";
-import { Lines } from "@pos_self_order/mobile/components/lines/lines";
-import { PriceDetails } from "@pos_self_order/mobile/components/price_details/price_details";
 import { NavBar } from "@pos_self_order/mobile/components/navbar/navbar";
+import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 
 export class OrdersHistory extends Component {
     static template = "pos_self_order.OrdersHistory";
-    static components = { NavBar, ProductCard, Lines, PriceDetails };
+    static components = { NavBar, ProductCard, OrderWidget, Orderline };
     static props = [];
 
     async setup() {

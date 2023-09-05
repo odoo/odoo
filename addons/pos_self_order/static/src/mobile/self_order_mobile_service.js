@@ -80,6 +80,33 @@ export class SelfOrder extends selfOrderCommon {
         return this.editedOrder;
     }
 
+    getLinePrice(line) {
+        return this.show_prices_with_tax_included ? line.price_subtotal_incl : line.price_subtotal;
+    }
+    getLineDisplayData(line) {
+        return {
+            productName: line.extractProductNameAndAttributes().productName,
+            price: this.formatMonetary(this.getLinePrice(line)),
+            qty: line.qty.toString(),
+            unitPrice: this.formatMonetary(this.getLinePrice(line) / line.qty),
+            comboParent:
+                line.combo_parent_uuid &&
+                this.currentOrder.lines.find((l) => l.uuid === line.combo_parent_uuid)
+                    .full_product_name,
+            customerNote: line.customer_note,
+        };
+    }
+    onLineClick(line, order) {
+        this.editedLine = line;
+        if (order.state === "draft") {
+            this.editedOrder = order;
+            this.router.navigate("product", { id: line.product_id });
+        } else {
+            this.notification.add(_t("You cannot edit an posted order!"), {
+                type: "danger",
+            });
+        }
+    }
     cancelOrder() {
         const changes = this.currentOrder.lastChangesSent;
         const lines = this.currentOrder.lines;
