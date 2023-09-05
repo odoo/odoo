@@ -325,10 +325,7 @@ export class Wysiwyg extends Component {
         const powerboxOptions = this._getPowerboxOptions();
 
         let editorCollaborationOptions;
-        if (
-            options.collaborationChannel &&
-            this._hasICEServers()
-        ) {
+        if (this._isCollaborationEnabled(options)) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             if (this.options.collaborativeTrigger === 'start') {
                 this._joinPeerToPeer();
@@ -2878,7 +2875,7 @@ export class Wysiwyg extends Component {
         this._stopPeerToPeer();
         this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
-        if (!collaborationChannel || !collaborationChannel.collaborationResId) {
+        if (!this._isCollaborationEnabled(this.options)) {
             this.setValue(value);
             this.odooEditor.historyReset();
             return;
@@ -2930,6 +2927,9 @@ export class Wysiwyg extends Component {
     _hasICEServers() {
         // Hack: check if mail module is installed.
         return session.notification_type;
+    }
+    _isCollaborationEnabled(options) {
+        return options.collaborationChannel && options.collaborationChannel.collaborationResId && this._hasICEServers() && this.busService;
     }
 
     /**
