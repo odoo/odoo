@@ -38,7 +38,6 @@ class ResConfigSettings(models.TransientModel):
     )
     primary_color = fields.Char(related='company_id.primary_color', string="Header Color", readonly=False)
     secondary_color = fields.Char(related='company_id.secondary_color', string="Button Color", readonly=False)
-    module_whatsapp = fields.Boolean('WhatsApp Integration')
 
     def _compute_fail_counter(self):
         previous_date = fields.Datetime.now() - datetime.timedelta(days=30)
