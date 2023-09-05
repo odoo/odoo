@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from typing import Optional
 import werkzeug
 
 from odoo import http
 from odoo.http import request
-
-from odoo.addons.pos_self_order.controllers.utils import (
-    get_any_pos_config_sudo,
-    reduce_privilege,
-)
 
 
 class PosQRMenuController(http.Controller):
@@ -57,12 +51,12 @@ class PosQRMenuController(http.Controller):
             pos_config_sudo = request.env["pos.config"].sudo().search([
                 ("id", "=", config_id), ("self_order_view_mode", "=", True)], limit=1)
         else:
-            pos_config_sudo = get_any_pos_config_sudo()
+            pos_config_sudo = self.get_any_pos_config_sudo()
 
         company = pos_config_sudo.company_id
-        user = pos_config_sudo.current_session_id.user_id
-        pos_config = reduce_privilege(pos_config_sudo, company, user)
-        table = reduce_privilege(table_sudo, company, user)
+        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_order_default_user_id
+        pos_config = pos_config_sudo.sudo(False).with_company(company).with_user(user)
+        table = table_sudo.sudo(False).with_company(company).with_user(user) if table_sudo else False
 
         if not pos_config:
             raise werkzeug.exceptions.NotFound()
@@ -96,8 +90,7 @@ class PosQRMenuController(http.Controller):
     def pos_self_order_get_image(self, product_id, image_size=128, **kw):
         # This controller is public and does not require an access code (access_token) because the user
         # needs to see the product image in "menu" mode. In this mode, the user has no access_token.
-        if not get_any_pos_config_sudo():
-            raise werkzeug.exceptions.Unauthorized()
+        self.get_any_pos_config_sudo()
 
         return (
             request.env["ir.binary"]
@@ -107,3 +100,14 @@ class PosQRMenuController(http.Controller):
             )
             .get_response()
         )
+
+    def get_any_pos_config_sudo(self):
+        pos_config_sudo = request.env["pos.config"].sudo().search([
+            ('|'),
+            ("self_order_view_mode", "=", True),
+            ("self_order_kiosk", "=", True)], limit=1)
+
+        if not pos_config_sudo:
+            raise werkzeug.exceptions.NotFound()
+
+        return pos_config_sudo

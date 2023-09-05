@@ -7,6 +7,7 @@ import base64
 from PIL import Image
 from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
+from odoo.exceptions import UserError
 from odoo.tools import image_to_base64
 
 from odoo import api, fields, models, modules, _, service
@@ -27,6 +28,12 @@ class PosConfig(models.Model):
 
     def _self_order_kiosk_default_languages(self):
         return self.env["res.lang"].get_installed()
+
+    def _self_order_default_user(self):
+        user_ids = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        for user_id in user_ids:
+            if user_id.has_group("point_of_sale.group_pos_user") or user_id.has_group("point_of_sale.group_pos_manager"):
+                return user_id
 
     status = fields.Selection(
         [("inactive", "Inactive"), ("active", "Active")],
@@ -95,6 +102,12 @@ class PosConfig(models.Model):
     self_order_kiosk_image_brand_name = fields.Char(
         string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
+    )
+    self_order_default_user_id = fields.Many2one(
+        "res.users",
+        string="Default User",
+        help="Access rights of this user will be used when visiting self order website when no session is open.",
+        default=_self_order_default_user,
     )
     self_order_view_mode = fields.Boolean(
         string="QR Code Menu",
@@ -189,6 +202,12 @@ class PosConfig(models.Model):
         if version_info[-1] == '':
             selection[0] = (selection[0][0], selection[0][1] + ' (require Odoo Enterprise)')
         return selection
+
+    @api.constrains('self_order_default_user_id')
+    def _check_default_user(self):
+        for record in self:
+            if record.self_order_table_mode and not record.self_order_default_user_id.has_group("point_of_sale.group_pos_user") and not record.self_order_default_user_id.has_group("point_of_sale.group_pos_manager"):
+                raise UserError(_("The Self-Order default user must be a POS user"))
 
     def _get_qr_code_data(self):
         self.ensure_one()
