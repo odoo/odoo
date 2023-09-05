@@ -655,16 +655,18 @@ QUnit.module(
             const pyEnv = await startServer();
             const env = await makeTestEnv({ activateMockServer: true });
             env.services["bus_service"].start();
+            const messageReceivedDeferred = makeDeferred();
             env.services["bus_service"].subscribe("message", (payload) => {
                 assert.deepEqual({ body: "hello", id: 1 }, payload);
                 assert.step("message");
+                messageReceivedDeferred.resolve();
             });
             await waitUntilSubscribe();
             pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "message", {
                 body: "hello",
                 id: 1,
             });
-            await nextTick();
+            await messageReceivedDeferred;
             assert.verifySteps(["message"]);
         });
     }
