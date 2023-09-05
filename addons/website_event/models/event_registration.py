@@ -10,6 +10,8 @@ class EventRegistration(models.Model):
 
     visitor_id = fields.Many2one('website.visitor', string='Visitor', ondelete='set null')
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
+    registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
+        domain=[('question_type', '=', 'simple_choice')])
 
     def _get_website_registration_allowed_fields(self):
         return {'name', 'phone', 'email', 'mobile', 'company_name', 'event_id', 'partner_id', 'event_ticket_id'}
