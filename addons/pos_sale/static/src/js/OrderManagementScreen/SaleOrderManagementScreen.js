@@ -169,6 +169,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         customer_note: line.customer_note,
                     });
 
+                    this.env.pos.get_order().set_orderline_options(new_line, line);
+
                     if (
                         new_line.get_product().tracking !== 'none' &&
                         (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots) &&
