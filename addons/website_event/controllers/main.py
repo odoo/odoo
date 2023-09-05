@@ -167,8 +167,14 @@ class WebsiteEventController(http.Controller):
             target_url = event.menu_id.child_id[0].url
         else:
             target_url = '/event/%s/register' % str(event.id)
+
+        unique_id = datetime.now().strftime('%H%M%S%f')
+        separator = '&' if '?' in target_url else '?'
+        target_url += '{}cache_bust={}'.format(separator, unique_id)
+
         if post.get('enable_editor') == '1':
-            target_url += '?enable_editor=1'
+            target_url += '&enable_editor=1'
+
         return request.redirect(target_url)
 
     @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
