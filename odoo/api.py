@@ -687,7 +687,7 @@ def guess(method):
         return method
 
     # introspection on argument names to determine api style
-    args, vname, kwname, defaults = getargspec(method)
+    args, vname, kwname, defaults, kwonlyargs, kwonlydefaults, annotations = getfullargspec(method)
     names = tuple(args) + (None,) * 4
 
     if names[0] == 'self':
