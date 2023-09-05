@@ -282,7 +282,10 @@ export class MessageService {
             assignDefined(message.originThread, {
                 modelName: res_model_name || undefined,
                 module_icon: module_icon || undefined,
-                name: record_name || undefined,
+                name:
+                    message.originThread.model === "discuss.channel"
+                        ? undefined
+                        : record_name || undefined,
             });
         }
         replaceArrayWithCompare(
