@@ -165,7 +165,7 @@ QUnit.test("Remove link preview Gif", async () => {
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
-    await click(".modal-footer button", { text: "Ok" });
+    await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
@@ -189,7 +189,7 @@ QUnit.test("Remove link preview card", async () => {
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
-    await click(".modal-footer button", { text: "Ok" });
+    await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
 });
 
@@ -214,7 +214,7 @@ QUnit.test("Remove link preview video", async () => {
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
-    await click(".modal-footer button", { text: "Ok" });
+    await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewVideo", { count: 0 });
 });
 
@@ -237,7 +237,7 @@ QUnit.test("Remove link preview image", async () => {
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
     await contains("p", { text: "Do you really want to delete this preview?" });
-    await click(".modal-footer button", { text: "Ok" });
+    await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
 
@@ -260,7 +260,7 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
     openDiscuss();
     env.services.rpc("/mail/link_preview", { message_id: messageId });
     assert.ok(true);
-    env.services.rpc("/mail/link_preview/delete", { link_preview_id: linkPreviewId });
+    env.services.rpc("/mail/link_preview/delete", { link_preview_ids: [linkPreviewId] });
     assert.ok(true);
 });
 
@@ -343,4 +343,35 @@ QUnit.test("Sending message with link preview URL should show a link preview car
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
     await click("button:not([disabled])", { text: "Send" });
     await contains(".o-mail-LinkPreviewCard");
+});
+
+QUnit.test("Delete all link previews at once", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewIds = pyEnv["mail.link.preview"].create([
+        {
+            og_description: "Description",
+            og_title: "Article title 1",
+            og_type: "article",
+            source_url: "https://www.odoo.com",
+        },
+        {
+            image_mimetype: "image/jpg",
+            source_url:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+        },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        link_preview_ids: linkPreviewIds,
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
+    await click(".modal-footer button", { text: "Delete all previews" });
+    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+    await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });
