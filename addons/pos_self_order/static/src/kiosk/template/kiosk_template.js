@@ -39,10 +39,6 @@ export class KioskTemplate extends Component {
         });
     }
 
-    get isHeaderBanner() {
-        return this.selfOrder.kiosk_image_home;
-    }
-
     idleDetector() {
         clearTimeout(this.idleTimer);
         this.idleTimer = setTimeout(() => this.router.navigate("default"), 3 * 60 * 1000); // 5 minutes
