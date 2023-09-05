@@ -217,7 +217,7 @@ export class DynamicGroupList extends DynamicList {
                 orderBy: this.orderBy,
             },
         };
-        this.model._updateConfig(this.config, { groups: nextConfigGroups }, { noReload: true });
+        this.model._updateConfig(this.config, { groups: nextConfigGroups }, { reload: false });
 
         const data = {
             count: 0,

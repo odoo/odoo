@@ -227,7 +227,7 @@ export class StaticList extends DataPoint {
                 if (this._extendedRecords.has(record.id)) {
                     // case 1.1: the record has already been extended
                     // -> simply store a savepoint
-                    this.model._updateConfig(record.config, config, { noReload: true });
+                    this.model._updateConfig(record.config, config, { reload: false });
                     record._addSavePoint();
                     return record;
                 }
@@ -247,7 +247,7 @@ export class StaticList extends DataPoint {
                     const resIds = [record.resId];
                     [data] = await this.model._loadRecords({ ...config, resIds }, evalContext);
                 }
-                this.model._updateConfig(record.config, config, { noReload: true });
+                this.model._updateConfig(record.config, config, { reload: false });
                 record._applyDefaultValues();
                 for (const fieldName in record.activeFields) {
                     if (["one2many", "many2many"].includes(record.fields[fieldName].type)) {
@@ -258,10 +258,10 @@ export class StaticList extends DataPoint {
                         };
                         for (const subRecord of Object.values(list._cache)) {
                             this.model._updateConfig(subRecord.config, patch, {
-                                noReload: true,
+                                reload: false,
                             });
                         }
-                        this.model._updateConfig(list.config, patch, { noReload: true });
+                        this.model._updateConfig(list.config, patch, { reload: false });
                     }
                 }
                 record._applyValues(data);
@@ -409,7 +409,7 @@ export class StaticList extends DataPoint {
                     this.model._updateConfig(
                         this.config,
                         { limit: this.limit - 1 },
-                        { noReload: true }
+                        { reload: false }
                     );
                     this._tmpIncreaseLimit--;
                 }
@@ -432,7 +432,7 @@ export class StaticList extends DataPoint {
             if (this.records.length > this.limit) {
                 this._tmpIncreaseLimit++;
                 const nextLimit = this.limit + 1;
-                this.model._updateConfig(this.config, { limit: nextLimit }, { noReload: true });
+                this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
             }
             this._commands.push(command);
         } else {
@@ -736,7 +736,7 @@ export class StaticList extends DataPoint {
         this._unknownRecordCommands = [];
         const limit = this.limit - this._tmpIncreaseLimit;
         this._tmpIncreaseLimit = 0;
-        this.model._updateConfig(this.config, { limit }, { noReload: true });
+        this.model._updateConfig(this.config, { limit }, { reload: false });
         this.records = this._currentIds
             .slice(this.offset, this.limit)
             .map((resId) => this._cache[resId]);
@@ -806,7 +806,7 @@ export class StaticList extends DataPoint {
         }
         this.records = currentIds.map((id) => this._cache[id]);
         this._currentIds = nextCurrentIds;
-        await this.model._updateConfig(this.config, { limit, offset, orderBy }, { noReload: true });
+        await this.model._updateConfig(this.config, { limit, offset, orderBy }, { reload: false });
     }
 
     async _replaceWith(ids, { reload = false } = {}) {

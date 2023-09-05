@@ -47,7 +47,7 @@ class PeppolSettingsButtons extends Component {
     }
 
     async _save () {
-        this.env.model.root.save({ noReload: true });
+        this.env.model.root.save({ reload: false });
     }
 
     showConfirmation(warning, methodName) {

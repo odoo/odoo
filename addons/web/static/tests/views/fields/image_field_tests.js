@@ -727,7 +727,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "unique in url does not change on record change if no_reload option is set",
+        "unique in url does not change on record change if reload option is set to false",
         async (assert) => {
             const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
             rec.document = "3 kb";
@@ -741,7 +741,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                     <form>
-                        <field name="document" widget="image" required="1" options="{'no_reload': true}" />
+                        <field name="document" widget="image" required="1" options="{'reload': false}" />
                         <field name="write_date" />
                     </form>`,
             });
