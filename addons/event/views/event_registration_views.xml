@@ -54,7 +54,8 @@
                             attrs="{'invisible': ['|', ('active', '=', False), '&amp;', ('state', '!=', 'cancel'), ('state', '!=', 'done')]}"/>
                     <button name="action_cancel" string="Cancel Registration" type="object"
                             attrs="{'invisible': ['|', ('active', '=', False), '&amp;', ('state', '!=', 'open'), ('state', '!=', 'draft')]}"/>
-                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
+                    <field name="state" nolabel="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"
+                            readonly="false" options="{'clickable': '1'}"/>
                 </header>
                 <sheet string="Registration">
                     <div class="oe_button_box" name="button_box"/>
@@ -108,36 +109,46 @@
                 <templates>
                     <t t-name="event_attendees_kanban_icons_desktop">
                         <div class="d-none d-md-block h-100">
-                            <div id="event_attendees_kanban_icons_desktop" class="h-100 float-end p-2 d-flex align-items-end flex-column">
+                            <div id="event_attendees_kanban_icons_desktop" class="h-100 float-end p-2 d-flex align-items-end flex-column gap-1">
                                 <t t-if="record.active.raw_value">
-                                    <a class="btn btn-md btn-primary" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
+                                    <a class="btn btn-md btn-secondary" string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
                                         <i class="fa fa-check" role="img" aria-label="Confirm button" title="Confirm Registration"/>
                                     </a>
                                     <a class="btn btn-md btn-primary" string="Confirm Attendance" name="action_set_done" type="object" states="open" role="button">
-                                        <i class="fa fa-user-plus" role="img" aria-label="Attended button" title="Confirm Attendance"/>
+                                        <i class="fa fa-check" role="img" aria-label="Attended button" title="Confirm Attendance"/>
                                     </a>
                                     <span class="text-muted" states="done">Attended</span>
                                     <span class="text-muted" states="cancel">Canceled</span>
                                 </t>
+                                <a class="btn btn-md btn-secondary" string="Previous state" name="action_set_previous_state" type="object" role="button"
+                                    attrs="{'invisible': [('state', 'in', ['cancel', 'draft'])]}">
+                                    <i class="fa fa-undo" role="img" aria-label="Previous state button" title="Previous state"/>
+                                </a>
                             </div>
                         </div>
                     </t>
                     <t t-name="event_attendees_kanban_icons_mobile">
-                        <div id="event_attendees_kanban_icons_mobile" class="d-md-none h-100 ps-4">
+                        <div id="event_attendees_kanban_icons_mobile" class="d-md-none d-flex align-items-end flex-column gap-1 h-100 ps-4">
                             <t t-if="record.active.raw_value">
-                                <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100"
+                                <a class="btn btn-secondary d-flex justify-content-center align-items-center h-100 w-100"
                                     string="Confirm Registration" name="action_confirm" type="object" states="draft" role="button">
                                     <i class="fa fa-check fa-3x" role="img" aria-label="Confirm button" title="Confirm Registration"/>
                                 </a>
                                 <a class="btn btn-primary d-flex justify-content-center align-items-center h-100 w-100"
                                     string="Confirm Attendance" name="action_set_done" type="object" states="open" role="button">
-                                    <i class="fa fa-user-plus fa-3x" role="img" aria-label="Attended button" title="Confirm Attendance"/>
+                                    <i class="fa fa-check fa-3x" role="img" aria-label="Attended button" title="Confirm Attendance"/>
                                 </a>
-                                <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                                <div class="d-flex justify-content-center align-items-center h-100 w-100"
+                                    attrs="{'invisible': [('state', 'in', ['open', 'draft'])]}">
                                     <span class="text-muted" states="done" >Attended</span>
                                     <span class="text-muted" states="cancel" >Canceled</span>
                                 </div>
                             </t>
+                            <a class="btn btn-secondary d-flex justify-content-center align-items-center h-100 w-100"
+                                string="Previous state" name="action_set_previous_state" type="object" role="button"
+                                attrs="{'invisible': [('state', 'in', ['cancel', 'draft'])]}">
+                                <i class="fa fa-undo fa-3x" role="img" aria-label="Previous state button" title="Previous state"/>
+                            </a>
                         </div>
                     </t>
                     <t t-name="kanban-box">
@@ -146,23 +157,25 @@
                                 <span class="text-bg-danger">Archived</span>
                             </div>
                             <div class="row g-0 h-100">
-                                <div class="col-9">
+                                <div class="col-8 col-md-9">
                                     <div class="oe_kanban_content h-100">
                                         <div class="o_kanban_record_body h-100 d-flex flex-column">
                                             <b class="o_kanban_record_title"><field name="name"/></b>
-                                            <field class="o_text_overflow" name="event_id" invisible="context.get('default_event_id')" />
+                                            <field class="o_text_overflow text-primary" name="event_id" invisible="context.get('default_event_id')" />
+                                            <span class="o_text_overflow" attrs="{'invisible': [('company_name', '=', False)]}">
+                                                <i class="fa fa-building" title="Attendee Company"/> <field name="company_name"/>
+                                            </span>
                                             <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
-                                            <div id="event_ticket_id" class="o_field_many2manytags o_field_widget d-flex mt-auto">
+                                            <div id="event_ticket_id" class="o_field_many2many_tags o_field_widget d-flex mt-auto align-items-center">
                                                 <t t-if="record.event_ticket_id.raw_value">
-                                                    <div t-attf-class="badge rounded-pill o_tag_color_#{(record.event_ticket_id.raw_value % 11) + 1}" >
-                                                        <b><span class="o_badge_text o_text_overflow"><t t-out="record.event_ticket_id.value"/></span></b>
-                                                    </div>
+                                                    <i class="fa fa-ticket" title="Ticket type"/>
+                                                    <b><span class="o_badge_text o_text_overflow ms-1"><t t-out="record.event_ticket_id.value"/></span></b>
                                                 </t>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="event_attendees_kanban_icons" class="col-3">
+                                <div id="event_attendees_kanban_icons" class="col-4 col-md-3">
                                     <t t-call="event_attendees_kanban_icons_desktop"/>
                                     <t t-call="event_attendees_kanban_icons_mobile"/>
                                 </div>
@@ -212,10 +225,13 @@
         <field name="arch" type="xml">
             <search string="Event Registration">
                 <field name="id" string="Registration ID"/>
+                <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('company_name', 'ilike', self)]"/>
+                <field name="company_id"/>
+                <field name="partner_id"/>
+                <field name="event_ticket_id" string="Ticket"/>
                 <field name="event_id"/>
-                <field name="event_user_id" string="Responsible"/>
-                <field name="event_organizer_id" string="Organizer"/>
-                <field name="name" string="Participant" filter_domain="['|', ('name', 'ilike', self), ('email', 'ilike', self)]"/>
+                <field name="event_user_id" string="Responsible" invisible="1"/>
+                <field name="event_organizer_id" string="Organizer" invisible="1"/>
                 <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
                 <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                 <separator/>
@@ -226,8 +242,6 @@
                 <filter string="Registration Date" name="filter_create_date" date="create_date"/>
                 <filter string="Event Start Date" name="filter_event_begin_date" date="event_begin_date"/>
                 <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
-                <field name="partner_id"/>
-                <field name="company_id"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -268,8 +282,6 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='event_id']" position="replace"/>
-            <xpath expr="//search/field[@name='event_user_id']" position="replace"/>
-            <xpath expr="//search/field[@name='event_organizer_id']" position="replace"/>
             <xpath expr="//search/filter[@name='filter_is_ongoing']" position="replace"/>
             <xpath expr="//search/group/filter[@name='group_event']" position="replace"/>
         </field>
