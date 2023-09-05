@@ -17,7 +17,7 @@ export class ProductTemplateAttributeLine extends Component {
                 name: String,
                 display_type: {
                     type: String,
-                    validate: type => ["color", "pills", "radio", "select"].includes(type),
+                    validate: type => ["color", "multi", "pills", "radio", "select"].includes(type),
                 },
             },
         },
@@ -35,7 +35,7 @@ export class ProductTemplateAttributeLine extends Component {
                 },
             },
         },
-        selected_attribute_value_id: Number,
+        selected_attribute_value_ids: { type: Array, element: Number },
         create_variant: {
             type: String,
             validate: type => ["always", "dynamic", "no_variant"].includes(type),
@@ -54,7 +54,7 @@ export class ProductTemplateAttributeLine extends Component {
      */
     updateSelectedPTAV(event) {
         this.env.updateProductTemplateSelectedPTAV(
-            this.props.productTmplId, this.props.id, event.target.value
+            this.props.productTmplId, this.props.id, event.target.value, this.props.attribute.display_type == 'multi'
         );
     }
 
@@ -65,7 +65,7 @@ export class ProductTemplateAttributeLine extends Component {
      */
     updateCustomValue(event) {
         this.env.updatePTAVCustomValue(
-            this.props.productTmplId, this.props.selected_attribute_value_id, event.target.value
+            this.props.productTmplId, this.props.selected_attribute_value_ids[0], event.target.value
         );
     }
 
@@ -76,11 +76,12 @@ export class ProductTemplateAttributeLine extends Component {
     /**
      * Return template name to use by checking the display type in the props.
      *
-     * Each attribute line can have one of this four display types:
+     * Each attribute line can have one of this five display types:
      *      - 'Color'  : Display each attribute as a circle filled with said color.
      *      - 'Pills'  : Display each attribute as a rectangle-shaped element.
      *      - 'Radio'  : Display each attribute as a radio element.
      *      - 'Select' : Display each attribute in a selection tag.
+     *      - 'Multi'  : Display each attribute in a multi-checkbox tag.
      *
      * @return {String} - The template name to use.
      */
@@ -88,6 +89,8 @@ export class ProductTemplateAttributeLine extends Component {
         switch(this.props.attribute.display_type) {
             case 'color':
                 return 'saleProductConfigurator.ptav-color';
+            case 'multi':
+                return 'saleProductConfigurator.ptav-multi';
             case 'pills':
                 return 'saleProductConfigurator.ptav-pills';
             case 'radio':
@@ -126,7 +129,7 @@ export class ProductTemplateAttributeLine extends Component {
      */
     isSelectedPTAVCustom() {
         return this.props.attribute_values.find(
-            ptav => this.props.selected_attribute_value_id === ptav.id
-        ).is_custom;
+            ptav => this.props.selected_attribute_value_ids.includes(ptav.id)
+        )?.is_custom;
     }
  }

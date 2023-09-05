@@ -206,17 +206,28 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     /**
-     * Change the value of `selected_attribute_value_id` on the given PTAL in the product.
+     * Change the value of `selected_attribute_value_ids` on the given PTAL in the product.
      *
      * @param {Number} productTmplId - The product template id, as a `product.template` id.
      * @param {Number} ptalId - The PTAL id, as a `product.template.attribute.line` id.
      * @param {Number} ptavId - The PTAV id, as a `product.template.attribute.value` id.
+     * @param {Boolean} multiIdsAllowed - Whether multiple `product.template.attribute.value` can be selected.
      */
-    async _updateProductTemplateSelectedPTAV(productTmplId, ptalId, ptavId) {
+    async _updateProductTemplateSelectedPTAV(productTmplId, ptalId, ptavId, multiIdsAllowed) {
         const product = this._findProduct(productTmplId);
-        product.attribute_lines.find(
-            ptal => ptal.id === ptalId
-        ).selected_attribute_value_id = parseInt(ptavId);
+        let selectedIds = product.attribute_lines.find(ptal => ptal.id === ptalId).selected_attribute_value_ids;
+        if (multiIdsAllowed) {
+            const ptavID = parseInt(ptavId);
+            if (!selectedIds.includes(ptavID)){
+                selectedIds.push(ptavID);
+            } else {
+                selectedIds = selectedIds.filter(ptav => ptav !== ptavID);
+            }
+
+        } else {
+            selectedIds = [parseInt(ptavId)];
+        }
+        product.attribute_lines.find(ptal => ptal.id === ptalId).selected_attribute_value_ids = selectedIds;
         this._checkExclusions(product);
         if (this._isPossibleCombination(product)) {
             const updatedValues = await this._updateCombination(product, product.quantity);
@@ -234,7 +245,7 @@ export class ProductConfiguratorDialog extends Component {
     _updatePTAVCustomValue(productTmplId, ptavId, customValue) {
         const product = this._findProduct(productTmplId);
         product.attribute_lines.find(
-            ptal => ptal.selected_attribute_value_id === ptavId
+            ptal => ptal.selected_attribute_value_ids.includes(ptavId)
         ).customValue = customValue;
     }
 
@@ -328,7 +339,7 @@ export class ProductConfiguratorDialog extends Component {
      * @return {Array} - The combination of the product.
      */
     _getCombination(product) {
-        return product.attribute_lines.map(ptal => ptal.selected_attribute_value_id);
+        return product.attribute_lines.flatMap(ptal => ptal.selected_attribute_value_ids);
     }
 
     /**
@@ -354,8 +365,8 @@ export class ProductConfiguratorDialog extends Component {
      */
     _isPossibleCombination(product) {
         return product.attribute_lines.every(ptal => !ptal.attribute_values.find(
-            ptav => ptav.id === ptal.selected_attribute_value_id
-        ).excluded);
+            ptav => ptal.selected_attribute_value_ids.includes(ptav.id)
+        )?.excluded);
     }
 
     /**

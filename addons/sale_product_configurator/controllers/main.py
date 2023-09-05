@@ -280,9 +280,9 @@ class ProductConfiguratorController(Controller):
                     ) for ptav in ptal.product_template_value_ids
                     if ptav.ptav_active
                 ],
-                selected_attribute_value_id=combination.filtered(
+                selected_attribute_value_ids=combination.filtered(
                     lambda c: ptal in c.attribute_line_id
-                ).id,
+                ).ids,
                 create_variant=ptal.attribute_id.create_variant,
             ) for ptal in product_template.attribute_line_ids],
             exclusions=attribute_exclusions['exclusions'],

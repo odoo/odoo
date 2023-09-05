@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round, format_date
+from odoo.tools import float_is_zero, float_compare, float_round, format_date, groupby
 
 
 class SaleOrderLine(models.Model):
@@ -365,11 +365,20 @@ class SaleOrderLine(models.Model):
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
+        multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
 
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
-        for ptav in (no_variant_ptavs - custom_ptavs):
+        for ptav in (no_variant_ptavs - multi_ptavs - custom_ptavs):
             name += "\n" + ptav.display_name
+
+        # display the selected values per attribute on a single for a multi checkbox
+        for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
+            name += "\n" + _(
+                "%(attribute)s: %(values)s",
+                attribute=pta.name,
+                values=", ".join(ptav.name for ptav in ptavs)
+            )
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
         sorted_custom_ptav = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id.sorted()
