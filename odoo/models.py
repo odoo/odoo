@@ -6507,6 +6507,16 @@ class BaseModel(metaclass=MetaModel):
         # this is for tests using `Form`
         self.env.flush_all()
 
+        # Because webclient send the context of the current field modify, when it is
+        # a many2one to res.partner, the context to handle display_name will be send too (even if
+        # this field will be reloaded just after). Now (remove of name_get), display_name of 
+        # res_partner depends of the context, it returns the same display_name for each field 
+        # targeting the same records (even if the context is different on the other fields)
+        context = dict(self.env.context)
+        context.pop('show_address', None)
+        self = self.with_context(context)
+        # TODO: Doesn't make sense to send view context of the field during the onchange ???
+
         env = self.env
         if isinstance(field_name, list):
             names = field_name
