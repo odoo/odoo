@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="uom.product_uom_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="l10n_in_code" invisible="'IN'.lower() not in (fiscal_country_codes or '').lower()"/>
+                <field name="l10n_in_code" invisible="'IN' not in fiscal_country_codes"/>
             </xpath>
         </field>
     </record>
