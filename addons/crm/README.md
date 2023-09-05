@@ -58,7 +58,7 @@ Lead Automation and Marketing Campaigns
 Drive performance by automating tasks with Odoo <a href="https://www.odoo.com/app/crm">CRM</a>.
 
 Use our marketing campaigns to automate lead acquisition, follow ups and
-promotions. Define automated actions (e.g. ask a salesperson to call, send an
+promotions. Define automation rules (e.g. ask a salesperson to call, send an
 email, ...) based on triggers (no activity since 20 days, answered a
 promotional email, etc.)
 

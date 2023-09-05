@@ -15,9 +15,8 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-
 import { getFixture, mount, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { BaseAutomationErrorDialog } from "../src/js/base_automation_error_dialog";
+import { BaseAutomationErrorDialog } from "@base_automation/base_automation_error_dialog";
 
 const { toRaw } = owl;
 
@@ -54,7 +53,7 @@ QUnit.module("base_automation", {}, function () {
         },
     });
 
-    QUnit.test("Error due to an automated action", async function (assert) {
+    QUnit.test("Error due to an automation rule", async function (assert) {
         assert.expect(4);
 
         const errorContext = {
@@ -102,7 +101,7 @@ QUnit.module("base_automation", {}, function () {
         assert.containsOnce(target, ".modal .o_edit_action_button");
     });
 
-    QUnit.test("Error not due to an automated action", async function (assert) {
+    QUnit.test("Error not due to an automation rule", async function (assert) {
         assert.expect(3);
 
         const error = makeServerError({

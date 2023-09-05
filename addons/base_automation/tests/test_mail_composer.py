@@ -25,15 +25,21 @@ class TestMailFullComposer(HttpCase):
             'password': 'testuser',
         })
 
-        automated_action = self.env['base.automation'].create({
+        automation = self.env['base.automation'].create({
             'name': 'Test',
             'active': True,
             'trigger': 'on_change',
             'on_change_field_ids': (4, self.ref('mail.field_mail_compose_message__template_id'),),
+            'model_id': self.env.ref('mail.model_mail_compose_message').id,
+        })
+        server_action = self.env['ir.actions.server'].create({
+            'name': 'Test',
+            'base_automation_id': automation.id,
             'state': 'code',
             'model_id': self.env.ref('mail.model_mail_compose_message').id,
         })
+        automation.write({'action_server_ids': [(4, server_action.id)]})
 
         self.start_tour("/web#id=%d&model=res.partner" % test_user.partner_id, 'mail/static/tests/tours/mail_full_composer_test_tour.js', login='testuser')
 
-        automated_action.unlink()
+        automation.unlink()

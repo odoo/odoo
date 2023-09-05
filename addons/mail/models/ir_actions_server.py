@@ -16,17 +16,17 @@ class ServerActions(models.Model):
     state = fields.Selection(
         selection_add=[('mail_post', 'Send Email'),
                        ('followers', 'Add Followers'),
+                       ('remove_followers', 'Remove Followers'),
                        ('next_activity', 'Create Next Activity'),
         ],
         ondelete={'mail_post': 'cascade',
                   'followers': 'cascade',
+                  'remove_followers': 'cascade',
                   'next_activity': 'cascade',
         }
     )
     # Followers
-    partner_ids = fields.Many2many(
-        'res.partner', string='Add Followers',
-        compute='_compute_partner_ids', readonly=False, store=True)
+    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', readonly=False, store=True)
     # Message Post / Email
     template_id = fields.Many2one(
         'mail.template', 'Email Template',
@@ -39,19 +39,19 @@ class ServerActions(models.Model):
         'Subscribe Recipients', compute='_compute_mail_post_autofollow',
         readonly=False, store=True)
     mail_post_method = fields.Selection(
-        selection=[('email', 'Email'), ('comment', 'Post as Message'), ('note', 'Post as Note')],
-        string='Send as',
+        selection=[('email', 'Email'), ('comment', 'Message'), ('note', 'Note')],
+        string='Send Email As',
         compute='_compute_mail_post_method',
-        readonly=False, store=True,
-        help='Choose method for email sending:\nEMail: send directly emails\nPost as Message: post on document and notify followers\nPost as Note: log a note on document')
+        readonly=False, store=True)
+
     # Next Activity
     activity_type_id = fields.Many2one(
-        'mail.activity.type', string='Activity',
+        'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
         compute='_compute_activity_type_id', readonly=False, store=True,
         ondelete='restrict')
     activity_summary = fields.Char(
-        'Summary',
+        'Title',
         compute='_compute_activity_info', readonly=False, store=True)
     activity_note = fields.Html(
         'Note',
@@ -67,15 +67,33 @@ class ServerActions(models.Model):
         compute='_compute_activity_info', readonly=False, store=True)
     activity_user_type = fields.Selection(
         [('specific', 'Specific User'),
-         ('generic', 'Generic User From Record')],
+         ('generic', 'Dynamic User (based on record)')],
+         string='User Type',
         compute='_compute_activity_info', readonly=False, store=True,
-        help="Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record.")
+        help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.")
     activity_user_id = fields.Many2one(
         'res.users', string='Responsible',
         compute='_compute_activity_info', readonly=False, store=True)
     activity_user_field_name = fields.Char(
-        'User field name',
+        'User Field',
         compute='_compute_activity_info', readonly=False, store=True)
+
+
+    @api.depends('state', 'template_id', 'partner_ids', 'activity_summary')
+    def _compute_name(self):
+        for action in self:
+            if not action.state or not self.env.context.get('automatic_action_name'):
+                continue
+            if action.state == 'mail_post':
+                action.name = 'Send email: %s' % action.template_id.name
+            elif action.state == 'followers':
+                action.name = 'Add followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+            elif action.state == 'remove_followers':
+                action.name = 'Remove followers: %s' % ', '.join(action.partner_ids.mapped('name'))
+            elif action.state == 'next_activity':
+                action.name = 'Next activity: %s' % action.activity_summary
+            else:
+                super(ServerActions, action)._compute_name()
 
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
@@ -102,7 +120,7 @@ class ServerActions(models.Model):
             to_reset.mail_post_method = False
         other = self - to_reset
         if other:
-            other.mail_post_method = 'email'
+            other.mail_post_method = 'comment'
 
     @api.depends('state')
     def _compute_partner_ids(self):
@@ -159,6 +177,13 @@ class ServerActions(models.Model):
         if self.partner_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
             records.message_subscribe(partner_ids=self.partner_ids.ids)
+        return False
+
+    def _run_action_remove_followers_multi(self, eval_context=None):
+        Model = self.env[self.model_name]
+        if self.partner_ids and hasattr(Model, 'message_unsubscribe'):
+            records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
+            records.message_unsubscribe(partner_ids=self.partner_ids.ids)
         return False
 
     def _is_recompute(self):
