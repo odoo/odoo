@@ -11,6 +11,7 @@ import { Component, useState } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { cleanTerm } from "@mail/utils/common/format";
 
 /**
  * @typedef {Object} Props
@@ -132,7 +133,8 @@ export class Sidebar extends Component {
             const thread = this.store.threads[threadLocalId];
             return (
                 (thread.is_pinned || thread.group_based_subscription) &&
-                (!this.state.quickSearchVal || thread.name.includes(this.state.quickSearchVal))
+                (!this.state.quickSearchVal ||
+                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
