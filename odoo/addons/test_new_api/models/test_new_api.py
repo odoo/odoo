@@ -1754,32 +1754,32 @@ class RelatedTranslation2(models.Model):
     _name = 'test_new_api.related_translation_2'
     _description = 'A model to test translation for related fields'
 
-    parent_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
-    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
-    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    related_id = fields.Many2one('test_new_api.related_translation_1', string='Parent Model')
+    name = fields.Char('Name Related', related='related_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='related_id.html', readonly=False)
     computed_name = fields.Char('Name Computed', compute='_compute_name')
     computed_html = fields.Char('HTML Computed', compute='_compute_html')
 
     @api.depends_context('lang')
-    @api.depends('parent_id.name')
+    @api.depends('related_id.name')
     def _compute_name(self):
         for record in self:
-            record.computed_name = record.parent_id.name
+            record.computed_name = record.related_id.name
 
     @api.depends_context('lang')
-    @api.depends('parent_id.html')
+    @api.depends('related_id.html')
     def _compute_html(self):
         for record in self:
-            record.computed_html = record.parent_id.html
+            record.computed_html = record.related_id.html
 
 
 class RelatedTranslation3(models.Model):
     _name = 'test_new_api.related_translation_3'
     _description = 'A model to test translation for related fields'
 
-    parent_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
-    name = fields.Char('Name Related', related='parent_id.name', readonly=False)
-    html = fields.Html('HTML Related', related='parent_id.html', readonly=False)
+    related_id = fields.Many2one('test_new_api.related_translation_2', string='Parent Model')
+    name = fields.Char('Name Related', related='related_id.name', readonly=False)
+    html = fields.Html('HTML Related', related='related_id.html', readonly=False)
 
 
 class IndexedTranslation(models.Model):
