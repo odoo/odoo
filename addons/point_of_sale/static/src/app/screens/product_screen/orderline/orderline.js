@@ -38,7 +38,7 @@ export class Orderline extends Component {
             selected: this.props.line.selected,
             "has-change ps-2 text-success border-start border-success border-4":
                 this.props.line.hasChange && this.pos.config.module_pos_restaurant,
-            "skip-change ps-2 text-secondary border-start border-secondary border-4":
+            "skip-change ps-2 border-start border-secondary border-4":
                 this.props.line.skipChange && this.pos.config.module_pos_restaurant,
         };
     }
