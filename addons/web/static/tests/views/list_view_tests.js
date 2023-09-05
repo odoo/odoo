@@ -2961,15 +2961,17 @@ QUnit.module("Views", (hooks) => {
                     name: "Partners Action 11",
                     res_model: "foo",
                     type: "ir.actions.act_window",
-                    views: [[3, "list"], [4, "form"]],
+                    views: [
+                        [3, "list"],
+                        [4, "form"],
+                    ],
                     search_view_id: [9, "search"],
-                }
+                },
             };
             serverData.views = {
                 "foo,3,list":
                     '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
-                "foo,4,form":
-                    '<form><field name="display_name"/><field name="foo"/></form>',
+                "foo,4,form": '<form><field name="display_name"/><field name="foo"/></form>',
                 "foo,9,search": `
                     <search>
                         <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
@@ -5551,12 +5553,13 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("custom delete confirmation dialog", async (assert) => {
-
         const listView = registry.category("views").get("list");
         class CautiousController extends listView.Controller {
             get deleteConfirmationDialogProps() {
                 const props = super.deleteConfirmationDialogProps;
-                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                props.body = markup(
+                    `<span class="text-danger">These are the consequences</span><br/>${props.body}`
+                );
                 return props;
             }
         }
@@ -5589,7 +5592,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(document, "body .modal footer button.btn-secondary");
-        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
+        assert.containsN(
+            target,
+            "tbody td.o_list_record_selector",
+            4,
+            "nothing deleted, 4 records remain"
+        );
     });
 
     QUnit.test(
@@ -8334,10 +8342,10 @@ QUnit.module("Views", (hooks) => {
             "the entire content should be selected on initial click"
         );
 
-        Object.assign(
-            target.querySelector("[name=text] textarea"),
-            { selectionStart: 0, selectionEnd: 1 }
-        );
+        Object.assign(target.querySelector("[name=text] textarea"), {
+            selectionStart: 0,
+            selectionEnd: 1,
+        });
 
         await click(target, "[name=text] textarea");
 
@@ -8361,7 +8369,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        // Need to set the line in edition. 
+        // Need to set the line in edition.
         await click(target, "td[name=foo]");
         assert.strictEqual(window.getSelection().toString(), "bar");
 
@@ -17776,19 +17784,22 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
-    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
-        serverData.models.foo.fields.qux.digits = [16, 3];
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: '<tree><field name="qux"/></tree>',
-            groupBy: ["bar"],
-        });
-        const [td1, td2] = target.querySelectorAll("td.o_list_number");
-        assert.strictEqual(td1.textContent, "9.000");
-        assert.strictEqual(td2.textContent, "10.400");
-    });
+    QUnit.test(
+        "Formatted group operator with digit precision on the field definition",
+        async function (assert) {
+            serverData.models.foo.fields.qux.digits = [16, 3];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="qux"/></tree>',
+                groupBy: ["bar"],
+            });
+            const [td1, td2] = target.querySelectorAll("td.o_list_number");
+            assert.strictEqual(td1.textContent, "9.000");
+            assert.strictEqual(td2.textContent, "10.400");
+        }
+    );
 
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
@@ -19101,13 +19112,13 @@ QUnit.module("Views", (hooks) => {
                 </tree>
                 `,
             mockRPC(route, args) {
-                if (args.method === 'onchange') {
+                if (args.method === "onchange") {
                     assert.step("onchange");
-                    const changes_name = Object.keys(args.args[1])
-                    assert.ok(changes_name.includes('properties'))
-                    assert.notOk(changes_name.includes('properties.property_integer'))
+                    const changes_name = Object.keys(args.args[1]);
+                    assert.ok(changes_name.includes("properties"));
+                    assert.notOk(changes_name.includes("properties.property_integer"));
                 }
-            }
+            },
         });
         await click(target.querySelector(".o_data_cell"));
         assert.hasClass(target.querySelectorAll(".o_data_row")[0], "o_selected_row");
@@ -19244,32 +19255,40 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("list view: prevent record selection when editable list in edit mode", async function (assert) {
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "list view: prevent record selection when editable list in edit mode",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree editable="top">
                     <field name="foo" />
                 </tree>`,
-        });
+            });
 
-        //  When we try to select new record in edit mode
-        await click(target.querySelector(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"));
-        await click(target.querySelector('.o_data_row .o_list_record_selector'));
-        assert.strictEqual(
-            target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]').checked,
-            false
-        );
+            //  When we try to select new record in edit mode
+            await click(
+                target.querySelector(
+                    ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+                )
+            );
+            await click(target.querySelector(".o_data_row .o_list_record_selector"));
+            assert.strictEqual(
+                target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
+                    .checked,
+                false
+            );
 
-        //  When we try to select all records in edit mode
-        await click(target.querySelector('th.o_list_record_selector.o_list_controller'));
-        assert.strictEqual(
-            target.querySelector('.o_list_controller input[type="checkbox"]').checked,
-            false
-        );
-    });
+            //  When we try to select all records in edit mode
+            await click(target.querySelector("th.o_list_record_selector.o_list_controller"));
+            assert.strictEqual(
+                target.querySelector('.o_list_controller input[type="checkbox"]').checked,
+                false
+            );
+        }
+    );
 
     QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
         patchWithCleanup(AutoComplete, {
@@ -19351,7 +19370,7 @@ QUnit.module("Views", (hooks) => {
             fields: {
                 foo: { string: "Foo", type: "one2many", relation: "foo" },
             },
-        },
+        };
         await makeView({
             type: "form",
             resModel: "parent",
@@ -19371,25 +19390,26 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
+        await triggerEvent(document.querySelector(".o_field_x2many_list_row_add a"), null, "click");
 
         const input = document.activeElement;
-        input.value = 'alu';
-        triggerEvent(document.activeElement, null, "input"),
+        input.value = "alu";
+        triggerEvent(document.activeElement, null, "input");
         await nextTick();
 
-        input.value = 'alue';
-        triggerEvent(document.activeElement, null, "input"),
-        triggerHotkey("Enter"),
+        input.value = "alue";
+        triggerEvent(document.activeElement, null, "input");
+        triggerHotkey("Enter");
         await nextTick();
 
         deferred.resolve();
         await nextTick();
 
         assert.strictEqual(input, document.activeElement);
-        assert.strictEqual(input.value, 'Value 1');
+        assert.strictEqual(input.value, "Value 1");
     });
-    QUnit.test("monetary field display for rtl languages", async function (assert){
+
+    QUnit.test("monetary field display for rtl languages", async function (assert) {
         patchWithCleanup(localization, {
             direction: "rtl",
         });
@@ -19423,41 +19443,48 @@ QUnit.module("Views", (hooks) => {
             "ltr",
             "Monetary cells should have ltr direction"
         );
-    })
-
-    QUnit.test("multisave take changes into account when there is only one record selected", async function (assert) {
-        const listView = registry.category("views").get("list");
-
-        class CustomListRenderer extends listView.Renderer {
-            onGlobalClick(ev) {
-                const record = this.props.list.selection[0];
-                record.model.root._multiSave(record, {
-                    m2m: [x2ManyCommands.linkTo(1)],
-                });
-            }
-        }
-
-        registry.category("views").add("custom_list", {
-            ...listView,
-            Renderer: CustomListRenderer,
-        }, { force: true });
-
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            resId: 3,
-            arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
-            mockRPC: (route, { method, args }) => {
-                if (method === "write") {
-                    assert.deepEqual(args[1], { m2m: [[x2ManyCommands.LINK_TO, 1, false]] });
-                }
-            },
-        });
-
-        await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
-        await click(target.querySelectorAll(".o_data_row [name=foo]")[0]);
     });
+
+    QUnit.test(
+        "multisave take changes into account when there is only one record selected",
+        async function (assert) {
+            const listView = registry.category("views").get("list");
+
+            class CustomListRenderer extends listView.Renderer {
+                onGlobalClick(ev) {
+                    const record = this.props.list.selection[0];
+                    record.model.root._multiSave(record, {
+                        m2m: [x2ManyCommands.linkTo(1)],
+                    });
+                }
+            }
+
+            registry.category("views").add(
+                "custom_list",
+                {
+                    ...listView,
+                    Renderer: CustomListRenderer,
+                },
+                { force: true }
+            );
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                resId: 3,
+                arch: '<tree js_class="custom_list"><field name="foo"/></tree>',
+                mockRPC: (route, { method, args }) => {
+                    if (method === "write") {
+                        assert.deepEqual(args[1], { m2m: [[x2ManyCommands.LINK_TO, 1, false]] });
+                    }
+                },
+            });
+
+            await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
+            await click(target.querySelectorAll(".o_data_row [name=foo]")[0]);
+        }
+    );
 
     QUnit.test("multisave passes the fieldInfo", async function (assert) {
         await makeView({
@@ -19476,5 +19503,45 @@ QUnit.module("Views", (hooks) => {
             changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
             "Field:FooUpdate to:****"
         );
+    });
+
+    QUnit.test("edit record with onchange on x2many field (command 5)", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.foo.onchanges = {
+            foo: (obj) => {
+                obj.m2m = [[5]];
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                        foo: "new value",
+                        m2m: [
+                            [3, 1, false],
+                            [3, 2, false],
+                        ],
+                    });
+                }
+            },
+        });
+
+        assert.containsN(target.querySelector(".o_data_row"), ".o_tag", 2);
+
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_field_widget[name=foo] input", "new value");
+
+        assert.containsNone(target.querySelector(".o_data_row"), ".o_tag");
+
+        await clickSave(target);
     });
 });
