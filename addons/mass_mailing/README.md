@@ -79,7 +79,7 @@ gives you a direct overview of your campaign performance.
 Fully Integrated With Others Apps
 ---------------------------------
 
-Define automated actions (e.g. ask a salesperson to call, send an email, ...)
+Define automation rules (e.g. ask a salesperson to call, send an email, ...)
 based on triggers (no activity since 20 days, answered a promotional email,
 etc.)
 

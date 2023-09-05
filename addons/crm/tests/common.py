@@ -51,7 +51,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
         'title', 'city', 'contact_name', 'mobile', 'partner_name',
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
-        'create_date', 'date_action_last', 'email_from', 'email_cc', 'website'
+        'create_date', 'date_automation_last', 'email_from', 'email_cc', 'website'
     ]
     merge_fields = ['description', 'type', 'priority']
 
