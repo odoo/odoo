@@ -18,10 +18,11 @@ class TestProcurement(TestMrpCommon):
         # Update route
         self.warehouse = self.env.ref('stock.warehouse0')
         self.warehouse.mto_pull_id.route_id.active = True
+        self.warehouse.mto_pull_id.procure_method = "make_to_order"
+        self.warehouse.manufacture_mto_pull_id.procure_method = "make_to_order"
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
-
         # Create production order
         # -------------------------
         # Product6 Unit 24
@@ -553,6 +554,7 @@ class TestProcurement(TestMrpCommon):
         # This needs to be tried with MTO route activated
         mto_route = self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))
         mto_route.action_unarchive()
+        mto_route.rule_ids.procure_method = "make_to_order"
         # Setup for the secondary test
         routes_count = self.env['stock.route'].search_count([])
         mto_route.rule_ids.search([('company_id', 'not in', (False, self.env.company.id))]).unlink()

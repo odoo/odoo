@@ -11,6 +11,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
     def setUpClass(cls):
         super(TestSalePurchaseStockFlow, cls).setUpClass()
         cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        cls.mto_route.rule_ids.procure_method = "make_to_order"
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
         cls.mto_route.active = True
 

@@ -30,6 +30,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         """
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        mto_route.rule_ids.procure_method = "make_to_order"
         mto_route.active = True
 
         vendor = self.env['res.partner'].create({'name': 'vendor'})
