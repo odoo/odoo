@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { applyProperties, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -27,7 +27,7 @@ export class CalendarModel extends Model {
         const { activeFields, fields } = extractFieldsFromArchInfo({ fieldNodes }, params.fields);
         this.meta = {
             ...params,
-            popoverFields: activeFields,
+            activeFields,
             fields,
             firstDayOfWeek: localization.weekStart,
             formViewId: params.formViewId || formViewIdFromConfig,
@@ -118,8 +118,8 @@ export class CalendarModel extends Model {
     get popoverFieldNodes() {
         return this.meta.popoverFieldNodes;
     }
-    get popoverFields() {
-        return this.meta.popoverFields;
+    get activeFields() {
+        return this.meta.activeFields;
     }
     get rangeEnd() {
         return this.data.range.end;
@@ -485,6 +485,7 @@ export class CalendarModel extends Model {
      */
     async loadRecords(data) {
         const rawRecords = await this.fetchRecords(data);
+        applyProperties(rawRecords, this.meta.activeFields, this.meta.fields);
         const records = {};
         for (const rawRecord of rawRecords) {
             records[rawRecord.id] = this.normalizeRecord(rawRecord);

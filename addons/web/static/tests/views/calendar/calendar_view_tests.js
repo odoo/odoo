@@ -960,12 +960,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event-container .fc-event", 10, "should display 10 events");
         // move to next month
         await navigate(target, "next");
-        assert.containsN(
-            target,
-            ".fc-event-container .fc-event",
-            0,
-            "should display 0 events"
-        );
+        assert.containsN(target, ".fc-event-container .fc-event", 0, "should display 0 events");
         await pickDate(target, "2017-01-01");
         assert.containsN(
             target,
@@ -4812,6 +4807,70 @@ QUnit.module("Views", ({ beforeEach }) => {
             target.querySelector(".modal-title").textContent,
             "Test Display",
             "The text in the title should be Test Display"
+        );
+    });
+
+    QUnit.test(`calendar render properties`, async (assert) => {
+        serverData.models.event.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "event_type_id",
+            definition_record_field: "definitions",
+        };
+        serverData.models.event_type.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+        serverData.models.event_type.records[0].definitions = [
+            { name: "event_prop_1", string: "My Char", type: "char" },
+            { name: "event_prop_2", string: "My Selection", type: "selection" },
+        ];
+
+        serverData.models.event.records[0].event_type_id = 1;
+        serverData.models.event.records[0].properties = [
+            {
+                name: "property_1",
+                string: "My Char",
+                type: "char",
+                value: "hello",
+            },
+            {
+                name: "property_2",
+                string: "My Selection",
+                type: "selection",
+                selection: [
+                    ["a", "A"],
+                    ["b", "B"],
+                    ["c", "C"],
+                ],
+                value: "b",
+                default: "c",
+            },
+        ];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="allday" mode="week" attendee="partner_ids" color="partner_id" date_delay="duration">
+                    <field name="event_type_id" />
+                    <field name="properties" />
+                </calendar>
+            `,
+            async mockRPC(route, args) {
+                if (args.method === "check_access_rights") {
+                    return true;
+                }
+            },
+        });
+
+        await clickEvent(target, 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_popover [name='properties'] .o_property_field")].map(
+                (el) => el.textContent
+            ),
+            ["My Charhello", "My SelectionB"]
         );
     });
 });

@@ -234,7 +234,7 @@ function makeFakeModelState() {
         popoverFieldNodes: {
             name: Field.parseFieldNode(fakeFieldNode, fakeModels, "event", "calendar"),
         },
-        popoverFields: {
+        activeFields: {
             name: {
                 context: "{}",
                 invisible: false,
