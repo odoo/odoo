@@ -25,6 +25,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         warehouse_form.name = 'Test'
         warehouse_form.code = 'Test'
         cls.warehouse = warehouse_form.save()
+        cls.warehouse.mto_pull_id.route_id.rule_ids.procure_method = "make_to_order"
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 

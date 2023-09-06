@@ -431,7 +431,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         mo_form = Form(mnf_product_d)
         mo_form.qty_producing = 20
         mnf_product_d = mo_form.save()
-        mnf_product_d._post_inventory()
+        mnf_product_d.button_mark_done()
 
         # Check state of manufacturing order.
         self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should still be in progress state.')
@@ -1526,15 +1526,16 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         Cancel the delivery and the production order. Then duplicate
         the delivery. Another production order should be created."""
-        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id
-        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id.id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "make_to_order"
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [(4, route_mto), (4, route_manufacture)],
+            'route_ids': [(4, route_mto.id), (4, route_manufacture.id)],
         })
 
         product_raw = self.env['product.product'].create({
@@ -1580,15 +1581,16 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         Cancel the production order and the delivery. Then duplicate
         the delivery. Another production order should be created."""
-        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id.id
-        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id.id
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "make_to_order"
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [(4, route_mto), (4, route_manufacture)],
+            'route_ids': [(4, route_mto.id), (4, route_manufacture.id)],
         })
 
         product_raw = self.env['product.product'].create({

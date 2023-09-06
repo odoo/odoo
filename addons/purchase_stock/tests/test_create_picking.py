@@ -554,6 +554,7 @@ class TestCreatePicking(common.TestProductCommon):
         })
         # This needs to be tried with MTO route activated
         self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
+        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).rule_ids.procure_method = "make_to_order"
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,

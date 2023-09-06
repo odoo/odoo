@@ -3164,7 +3164,7 @@ class TestMrpOrder(TestMrpCommon):
         none_production = self.env['mrp.production']
         for steps, case_description, in [('mrp_one_step', '1-step Manufacturing'), ('pbm', '2-steps Manufacturing'), ('pbm_sam', '3-steps Manufacturing')]:
             warehouse.manufacture_steps = steps
-
+            warehouse.manufacture_mto_pull_id.procure_method = "make_to_order"
             grandparent_production_form = Form(self.env['mrp.production'])
             grandparent_production_form.product_id = grandparent
             grandparent_production = grandparent_production_form.save()
