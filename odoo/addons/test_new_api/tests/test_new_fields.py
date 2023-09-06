@@ -789,6 +789,11 @@ class TestFields(TransactionCaseWithUserDemo):
         # make sure that assertRaises() does not leave fields to recompute
         self.assertFalse(self.env.fields_to_compute())
 
+        # make sure that assertRaisesRegex() does not leave fields to recompute
+        with self.assertRaisesRegex(ValidationError, "must be among"):
+            self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
+        self.assertFalse(self.env.fields_to_compute())
+
         # put back oneself into discussion participants: now we can create
         # messages in discussion
         discussion.participants += self.env.user

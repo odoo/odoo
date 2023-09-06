@@ -419,7 +419,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             yield
 
     @contextmanager
-    def _assertRaises(self, exception, *, msg=None):
+    def _assertRaises(self, exception, *, regex=None, msg=None):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:
             if hasattr(self, 'env'):
@@ -432,7 +432,10 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                     self.env.cr.clear()
 
             with ExitStack() as inner:
-                cm = inner.enter_context(super().assertRaises(exception, msg=msg))
+                if regex is not None:
+                    cm = inner.enter_context(super().assertRaisesRegex(exception, regex, msg=msg))
+                else:
+                    cm = inner.enter_context(super().assertRaises(exception, msg=msg))
                 # *moves* the cleanups from init to inner, this ensures the
                 # savepoint gets rolled back when `yield` raises `exception`,
                 # but still allows the initialisation to be protected *and* not
@@ -441,12 +444,21 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
                 yield cm
 
-    def assertRaises(self, exception, func=None, *args, **kwargs):
-        if func:
+    def assertRaises(self, exception, *args, **kwargs):
+        if args:
+            func = args[0]
             with self._assertRaises(exception):
-                func(*args, **kwargs)
+                func(*args[1:], **kwargs)
         else:
             return self._assertRaises(exception, **kwargs)
+
+    def assertRaisesRegex(self, exception, regex, *args, **kwargs):
+        if args:
+            func = args[0]
+            with self._assertRaises(exception, regex=regex):
+                func(*args[1:], **kwargs)
+        else:
+            return self._assertRaises(exception, regex=regex, **kwargs)
 
     @contextmanager
     def assertQueries(self, expected, flush=True):
