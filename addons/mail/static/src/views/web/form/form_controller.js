@@ -5,6 +5,7 @@ import { FormController } from "@web/views/form/form_controller";
 
 patch(FormController.prototype, {
     onWillLoadRoot(nextConfiguration) {
+        super.onWillLoadRoot(...arguments);
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;

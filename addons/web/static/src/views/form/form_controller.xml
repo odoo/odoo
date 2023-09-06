@@ -32,7 +32,7 @@
                         <CogMenu
                             getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
                             context="props.context"
-                            items="props.info.actionMenus ? actionMenuItems : {}"
+                            items="props.info.actionMenus ? this.actionMenuItems : {}"
                             isDomainSelected="model.root.isDomainSelected"
                             resModel="model.root.resModel"
                             domain="props.domain"
