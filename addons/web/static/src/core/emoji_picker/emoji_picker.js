@@ -131,6 +131,7 @@ export class EmojiPicker extends Component {
     categories = null;
     emojis = null;
     shouldScrollElem = null;
+    lastSearchStr;
 
     setup() {
         this.inputRef = useRef("input");
@@ -199,10 +200,15 @@ export class EmojiPicker extends Component {
         useEffect(
             () => {
                 if (this.state.searchStr) {
+                    this.gridRef.el.scrollTop = 0;
                     this.state.categoryId = null;
                 } else {
+                    if (this.lastSearchStr) {
+                        this.gridRef.el.scrollTop = 0;
+                    }
                     this.highlightActiveCategory();
                 }
+                this.lastSearchStr = this.state.searchStr;
             },
             () => [this.state.searchStr]
         );
