@@ -5,30 +5,6 @@ import { click, nextAnimationFrame, start, startServer } from "@mail/../tests/he
 
 QUnit.module("attachment box");
 
-QUnit.test("base empty rendering", async (assert) => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const views = {
-        "res.partner,false,form": `
-            <form>
-                <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>
-        `,
-    };
-    const { openView } = await start({ serverData: { views } });
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
-    assert.containsOnce($, ".o-mail-AttachmentBox");
-    assert.containsOnce($, "button:contains('Attach files')");
-    assert.containsNone($, ".o-mail-Chatter .o-mail-AttachmentImage");
-});
-
 QUnit.test("base non-empty rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -197,4 +173,37 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     assert.containsOnce($, ".o-mail-AttachmentCard:eq(0):contains(C.txt)");
     assert.containsOnce($, ".o-mail-AttachmentCard:eq(1):contains(B.txt)");
     assert.containsOnce($, ".o-mail-AttachmentCard:eq(2):contains(A.txt)");
+});
+
+QUnit.test("attachment box auto-closed on switch to record wih no attachments", async (assert) => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "first partner" },
+        { display_name: "second partner" },
+    ]);
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                <sheet></sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>
+        `,
+    };
+    const { openFormView } = await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId_1, {
+        props: { resIds: [partnerId_1, partnerId_2] },
+    });
+    assert.containsOnce($, ".o-mail-AttachmentBox");
+    await click(".o_pager_next");
+    assert.containsNone($, ".o-mail-AttachmentBox");
 });
