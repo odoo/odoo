@@ -36,7 +36,7 @@ class PosConfig(models.Model):
     )
     self_order_kiosk_url = fields.Char(compute="_compute_self_order_kiosk_url")
     self_order_kiosk = fields.Boolean(
-        string="Kiosk",
+        string="Is a Kiosk",
         help="Enable the kiosk mode for the Point of Sale",
     )
     self_order_kiosk_takeaway = fields.Boolean(

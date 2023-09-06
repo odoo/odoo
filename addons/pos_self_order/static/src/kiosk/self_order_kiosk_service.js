@@ -31,8 +31,7 @@ export class selfOrder extends selfOrderCommon {
         }
 
         this.cookie.setCookie("frontend_lang", this.currentLanguage.code);
-
-        this.currentCategory = this.pos_category.length > 0 ? this.pos_category[0].name : null;
+        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0].name : null;
         // required information to send an order
         this.paymentError = false;
         this.tablePadNumber = null;

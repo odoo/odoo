@@ -888,7 +888,7 @@
     <record id="chairs_combo" model="pos.combo">
         <field name="name">Chairs Combo</field>
         <field name="combo_line_ids" eval="[(6, 0, [ref('product_11_combo_line'), ref('product_11b_combo_line'), ref('product_12_combo_line')])]"/>
-    </record> 
+    </record>
 
     <record id="office_combo" model="product.product">
       <field name="available_in_pos">True</field>
@@ -898,7 +898,7 @@
       <field name="categ_id" ref="product.product_category_1"/>
       <field name="uom_id" ref="uom.product_uom_unit"/>
       <field name="uom_po_id" ref="uom.product_uom_unit"/>
-      <field name="image_1920" type="base64" file="point_of_sale/static/img/office_combo.png"/>
+      <field name="image_1920" type="base64" file="point_of_sale/static/img/office_combo.jpg"/>
       <field name="combo_ids" eval="[(6, 0, [ref('desks_combo'), ref('chairs_combo'), ref('desk_accessories_combo')])]"/>
       <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
       <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
