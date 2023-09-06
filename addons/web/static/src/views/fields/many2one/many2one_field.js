@@ -329,24 +329,33 @@ export const many2OneField = {
     displayName: _t("Many2one"),
     supportedOptions: [
         {
-            label: _t("Disable creation"),
-            name: "no_create",
-            type: "boolean",
-        },
-        {
             label: _t("Disable opening"),
             name: "no_open",
             type: "boolean",
         },
         {
-            label: _t("No quick create"),
-            name: "no_quick_create",
+            label: _t("Disable creation"),
+            name: "no_create",
             type: "boolean",
+            help: _t(
+                "If checked, users won't be able to create records through the autocomplete dropdown at all."
+            ),
         },
         {
-            label: _t("No create edit"),
+            label: _t("Disable 'Create' option"),
+            name: "no_quick_create",
+            type: "boolean",
+            help: _t(
+                "If checked, users will not be able to create records based on the text input; they will still be able to create records via a popup form."
+            ),
+        },
+        {
+            label: _t("Disable 'Create and Edit' option"),
             name: "no_create_edit",
             type: "boolean",
+            help: _t(
+                "If checked, users will not be able to create records based through a popup form; they will still be able to create records based on the text input."
+            ),
         },
     ],
     supportedTypes: ["many2one"],

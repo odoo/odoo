@@ -168,6 +168,21 @@ FieldMany2OneMailingFilter.defaultProps = {
 export const fieldMany2OneMailingFilter = {
     ...many2OneField,
     component: FieldMany2OneMailingFilter,
+    supportedOptions: [
+        ...many2OneField.supportedOptions,
+        {
+            label: _t("Domain field"),
+            name: "domain_field",
+            type: "field",
+            supportedTypes: ["char"]
+        },
+        {
+            label: _t("Model field"),
+            name: "model_field",
+            type: "field",
+            supportedTypes: ["char"]
+        }
+    ],
     extractProps({ options }) {
         const props = many2OneField.extractProps(...arguments);
         props.domain_field = options.domain_field;

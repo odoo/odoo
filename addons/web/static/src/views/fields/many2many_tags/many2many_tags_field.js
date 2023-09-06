@@ -264,11 +264,38 @@ export const many2ManyTagsField = {
             label: _t("Disable creation"),
             name: "no_create",
             type: "boolean",
+            help: _t(
+                "If checked, users won't be able to create records through the autocomplete dropdown at all."
+            ),
         },
         {
-            label: _t("Use colors"),
-            name: "color_field",
+            label: _t("Disable 'Create' option"),
+            name: "no_quick_create",
             type: "boolean",
+            help: _t(
+                "If checked, users will not be able to create records based on the text input; they will still be able to create records via a popup form."
+            ),
+        },
+        {
+            label: _t("Disable 'Create and Edit' option"),
+            name: "no_create_edit",
+            type: "boolean",
+            help: _t(
+                "If checked, users will not be able to create records based through a popup form; they will still be able to create records based on the text input."
+            ),
+        },
+        {
+            label: _t("Can create"),
+            name: "create",
+            type: "string",
+            help: _t("Write a domain to allow the creation of records conditionnally."),
+        },
+        {
+            label: _t("Color field"),
+            name: "color_field",
+            type: "field",
+            availableTypes: ["integer"],
+            help: _t("Set an integer field to use colors with the tags."),
         },
     ],
     supportedTypes: ["many2many"],

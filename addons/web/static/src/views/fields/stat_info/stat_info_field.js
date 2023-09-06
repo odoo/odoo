@@ -36,6 +36,14 @@ export class StatInfoField extends Component {
 export const statInfoField = {
     component: StatInfoField,
     displayName: _t("Stat Info"),
+    supportedOptions: [
+        {
+            label: _t("Label field"),
+            name: "label_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+    ],
     supportedTypes: ["float", "integer", "monetary"],
     isEmpty: () => false,
     extractProps: ({ attrs, options, string }) => {

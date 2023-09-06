@@ -43,9 +43,15 @@ export const floatTimeField = {
     displayName: _t("Time"),
     supportedOptions: [
         {
+            label: _t("Display seconds"),
+            name: "display_seconds",
+            type: "boolean",
+        },
+        {
             label: _t("Type"),
             name: "type",
             type: "string",
+            default: "text",
         },
     ],
     supportedTypes: ["float"],

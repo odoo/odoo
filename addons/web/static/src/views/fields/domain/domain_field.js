@@ -248,6 +248,12 @@ export const domainField = {
             type: "boolean",
         },
         {
+            label: _t("Foldable"),
+            name: "foldable",
+            type: "boolean",
+            help: _t("Display the domain using facets"),
+        },
+        {
             label: _t("Model"),
             name: "model",
             type: "string",

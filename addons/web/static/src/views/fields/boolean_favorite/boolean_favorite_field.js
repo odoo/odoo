@@ -29,6 +29,17 @@ export const booleanFavoriteField = {
     displayName: _t("Favorite"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
+    supportedOptions: [
+        {
+            label: _t("Autosave"),
+            name: "autosave",
+            type: "boolean",
+            default: true,
+            help: _t(
+                "If checked, the record will be saved immediately when the field is modified."
+            ),
+        },
+    ],
     extractProps: ({ attrs, options }) => ({
         noLabel: archParseBoolean(attrs.nolabel),
         autosave: "autosave" in options ? Boolean(options.autosave) : true,

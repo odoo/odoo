@@ -4,20 +4,21 @@ import { CharField, charField } from "@web/views/fields/char/char_field";
 import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 
-import { DynamicModelFieldSelector }  from "./dynamic_model_field_selector";
+import { DynamicModelFieldSelector } from "./dynamic_model_field_selector";
+import { _t } from "@web/core/l10n/translation";
 
 export class DynamicModelFieldSelectorChar extends CharField {
     static components = {
         ...CharField.components,
-        DynamicModelFieldSelector
+        DynamicModelFieldSelector,
     };
 
     static props = {
         ...CharField.props,
-        resModel : { type: String, optional: true },
+        resModel: { type: String, optional: true },
         onlySearchable: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
-    }
+    };
 
     /**
      * Update record
@@ -26,7 +27,7 @@ export class DynamicModelFieldSelectorChar extends CharField {
      * @private
      */
     async _onRecordUpdate(value) {
-        await this.props.record.update({[this.props.name]: value});
+        await this.props.record.update({ [this.props.name]: value });
     }
 
     //---- Getters ----
@@ -62,6 +63,24 @@ DynamicModelFieldSelectorChar.template = "web.DynamicModelFieldSelectorChar";
 export const dynamicModelFieldSelectorChar = {
     ...charField,
     component: DynamicModelFieldSelectorChar,
+    supportedOptions: [
+        {
+            label: _t("Follow relations"),
+            name: "follow_relations",
+            type: "boolean",
+            default: true,
+        },
+        {
+            label: _t("Model"),
+            name: "model",
+            type: "string",
+        },
+        {
+            label: _t("Only searchable"),
+            name: "only_searchable",
+            type: "string",
+        },
+    ],
     extractProps({ options }, dynamicInfo) {
         return {
             followRelations: options.follow_relations ?? true,

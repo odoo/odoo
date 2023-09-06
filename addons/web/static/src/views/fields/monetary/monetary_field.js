@@ -31,12 +31,12 @@ export class MonetaryField extends Component {
         useNumpadDecimal();
     }
 
-    get inputOptions(){
+    get inputOptions() {
         return {
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
             parse: parseMonetary,
-        }
+        };
     }
 
     get currencyId() {
@@ -73,11 +73,7 @@ export class MonetaryField extends Component {
     }
 
     get formattedValue() {
-        if (
-            this.props.inputType === "number" &&
-            !this.props.readonly &&
-            this.value
-        ) {
+        if (this.props.inputType === "number" && !this.props.readonly && this.value) {
             return this.value;
         }
         return formatMonetary(this.value, {
@@ -92,8 +88,13 @@ export const monetaryField = {
     component: MonetaryField,
     supportedOptions: [
         {
-            name: "currency_field",
+            label: _t("Hide symbol"),
+            name: "no_symbol",
+            type: "boolean",
+        },
+        {
             label: _t("Currency"),
+            name: "currency_field",
             type: "field",
             availableTypes: ["many2one"],
         },

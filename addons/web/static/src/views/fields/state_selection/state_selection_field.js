@@ -78,6 +78,23 @@ export class StateSelectionField extends Component {
 export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _t("Label Selection"),
+    supportedOptions: [
+        {
+            label: _t("Autosave"),
+            name: "autosave",
+            type: "boolean",
+            default: true,
+            help: _t(
+                "If checked, the record will be saved immediately when the field is modified."
+            ),
+        },
+        {
+            label: _t("Hide label"),
+            name: "hide_label",
+            type: "boolean",
+            viewTypes: ["list"],
+        },
+    ],
     supportedTypes: ["selection"],
     extractProps({ options, viewType }, dynamicInfo) {
         return {

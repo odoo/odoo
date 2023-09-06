@@ -6,6 +6,7 @@ import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
+import { _t } from '@web/core/l10n/translation';
 
 const {Component, useState} = owl;
 
@@ -98,6 +99,14 @@ ImageRadioField.props = {
 
 export const imageRadioField = {
     component: ImageRadioField,
+    supportedOptions: [
+        {
+            label: _t("Images"),
+            name: "images",
+            type: "string",
+            help: _t("Use an array to list the images to use in the radio selection.")
+        }
+    ],
     supportedTypes: ['selection'],
     extractProps: ({ options }) => ({
         images: options.images,

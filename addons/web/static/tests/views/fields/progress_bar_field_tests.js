@@ -367,15 +367,15 @@ QUnit.module("Fields", (hooks) => {
             type: "kanban",
             resModel: "partner",
             arch: /* xml */ `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'readonly': True}" />
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div>
+                                        <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'readonly': True}" />
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>`,
             resId: 1,
             mockRPC(route, { method, args }) {
                 if (method === "web_save") {

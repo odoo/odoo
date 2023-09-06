@@ -68,6 +68,20 @@ export const charField = {
     component: CharField,
     displayName: _t("Text"),
     supportedTypes: ["char"],
+    supportedOptions: [
+        {
+            label: _t("Dynamic placeholder"),
+            name: "dynamic_placeholder",
+            type: "boolean",
+            help: _t("Enable this option to allow the input to display a dynamic placeholder."),
+        },
+        {
+            label: _t("Model reference field"),
+            name: "dynamic_placeholder_model_reference_field",
+            type: "field",
+            supportedTypes: ["char"],
+        },
+    ],
     extractProps: ({ attrs, options }) => ({
         isPassword: archParseBoolean(attrs.password),
         dynamicPlaceholder: options.dynamic_placeholder || false,

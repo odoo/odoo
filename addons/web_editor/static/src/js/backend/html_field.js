@@ -639,17 +639,29 @@ export const htmlField = {
         name: "resizable",
         type: "boolean",
     }, {
-        label: _t("Dynamic placeholder"),
-        name: "dynamic_placeholder",
+        label: _t("Sandboxed preview"),
+        name: "sandboxedPreview",
         type: "boolean",
+        help: _t("With the option enabled, all content can only be viewed in a sandboxed iframe or in the code editor."),
     }, {
-        label: _t("Collaborative"),
+        label: _t("Collaborative edition"),
         name: "collaborative",
         type: "boolean",
+    },{
+        label: _t("Collaborative trigger"),
+        name: "collaborative_trigger",
+        type: "selection",
+        choices: [
+            { label: _t("Focus"), value: "focus" },
+            { label: _t("Start"), value: "start" },
+        ],
+        default: "focus",
+        help: _t("Specify when the collaboration starts. 'Focus' will start the collaboration session when the user clicks inside the text field (default), 'Start' when the record is loaded (could impact performance if set)."),
     }, {
         label: _t("Codeview"),
         name: "codeview",
         type: "boolean",
+        help: _t("Allow users to view and edit the field in HTML.")
     }],
     supportedTypes: ["html"],
     extractProps({ attrs, options }, dynamicInfo) {
