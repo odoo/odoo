@@ -43,6 +43,18 @@ QUnit.test("search emoji from keywords with special regex character", async (ass
     assert.containsOnce($, ".o-mail-Emoji:contains(🆎)");
 });
 
+QUnit.test("updating search emoji should scroll top", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 0);
+    $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+    await insertText("input[placeholder='Search for an emoji']", "m");
+    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 0);
+});
+
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
