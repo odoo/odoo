@@ -9,7 +9,7 @@
                         acceptedFileExtensions="props.acceptedFileExtensions"
                         onUploaded.bind="update"
                     >
-                        <t t-if="props.record.resId">
+                        <t t-if="props.record.resId and !props.record.isDirty">
                             <button
                                 class="btn btn-secondary fa fa-download"
                                 data-tooltip="Download"
