@@ -74,7 +74,10 @@ Model({
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
             const f = (k, name) => (k ? name : "");
-            return `${f(ctrlKey, "Ctrl + ")}${f(altKey, "Alt + ")}${f(shiftKey, "Shift + ")}${key === " " ? "Space" : key}`;
+            const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
+                Boolean
+            );
+            return keys.join(" + ");
         },
         /**
          * @param {String} audioInputDeviceId
@@ -102,9 +105,13 @@ Model({
          * @param {event} ev
          */
         async setPushToTalkKey(ev) {
-            const pushToTalkKey = `${ev.shiftKey || ""}.${ev.ctrlKey || ev.metaKey || ""}.${
+            const nonElligibleKeys = new Set(["Shift", "Control", "Alt", "Meta"]);
+            let pushToTalkKey = `${ev.shiftKey || ""}.${ev.ctrlKey || ev.metaKey || ""}.${
                 ev.altKey || ""
-            }.${ev.key}`;
+            }`;
+            if (!nonElligibleKeys.has(ev.key)) {
+                pushToTalkKey += `.${ev.key === " " ? "Space" : ev.key}`;
+            }
             this.update({ localPushToTalkKey: pushToTalkKey });
             if (this.messaging.currentUser) {
                 this._saveSettings();
