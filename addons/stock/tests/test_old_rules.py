@@ -68,7 +68,6 @@ class TestOldRules(TestStockCommon):
             ),
         ])
         ship, pack, pick = self.env['stock.move'].search([('product_id', '=', self.productA.id)])
-
         # by default they all the same `date`
         self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
 
@@ -125,9 +124,10 @@ class TestOldRules(TestStockCommon):
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
-    def test_mtso_mto(self):
+    def test_mtso(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
-        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
+        check that MTS is applied on the moves when the rule is set to 'mts_else_mto'
+        Also ensure the whole stock is emptied and only the needed quantity is propagated.
         """
         partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
@@ -139,9 +139,9 @@ class TestOldRules(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_3_steps.lot_stock_id, 4.0)
 
         # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': self.warehouse_3_steps}
-        rule = self.env['procurement.group']._get_rule(self.productA, final_location, values)
-        rule.procure_method = 'mts_else_mto'
+        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == "make_to_order").write({
+            'procure_method': 'mts_else_mto',
+        })
 
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
 
@@ -167,55 +167,14 @@ class TestOldRules(TestStockCommon):
         picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
-            # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == self.warehouse_3_steps.lot_stock_id:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-            else:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
-
+            self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
             self.assertEqual(len(picking.move_ids), 1)
-            self.assertEqual(picking.move_ids.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
-        self.assertEqual(qty_available, 4, 'The 4 products should still be available')
-
-    def test_mtso_mts(self):
-        """ Run a procurement for 4 products when there are 4 in stock then
-        check that MTS is applied on the moves when the rule is set to 'mts_else_mto'
-        """
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-
-        self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_3_steps.wh_output_stock_loc_id, 4.0)
-
-        # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': self.warehouse_3_steps}
-        rule = self.env['procurement.group']._get_rule(self.productA, final_location, values)
-        rule.procure_method = 'mts_else_mto'
-
-        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts'})
-
-        self.env['procurement.group'].run([
-            pg.Procurement(
-                self.productA,
-                4.0,
-                self.productA.uom_id,
-                final_location,
-                'test_mtso_mts',
-                'test_mtso_mts',
-                self.warehouse_3_steps.company_id,
-                {
-                    'warehouse_id': self.warehouse_3_steps,
-                    'group_id': pg
-                }
-            )
+        self.assertRecordValues(picking_ids.move_ids, [
+            {'product_qty': 5, 'procure_method': 'make_to_stock'},
+            {'product_qty': 1, 'procure_method': 'make_to_stock'},
+            {'product_qty': 1, 'procure_method': 'make_to_stock'},
         ])
-
-        # A picking should be created with its move having MTS as procure method.
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
-        self.assertEqual(len(picking_ids), 1)
-        picking = picking_ids
-        self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-        self.assertEqual(len(picking.move_ids), 1)
-        self.assertEqual(picking.move_ids.product_uom_qty, 4)
+        self.assertEqual(qty_available, 0, 'The 4 products should still be available')
 
     def test_mtso_multi_pg(self):
         """ Run 3 procurements for 2 products at the same times when there are 4 in stock then
@@ -232,9 +191,11 @@ class TestOldRules(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
 
         # We alter one rule and we set it to 'mts_else_mto'
-        values = {'warehouse_id': warehouse}
-        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
-        rule.procure_method = 'mts_else_mto'
+        self.warehouse_3_steps.delivery_route_id.rule_ids.filtered(
+            lambda r: r.procure_method == "make_to_order"
+        ).write({
+            'procure_method': 'mts_else_mto',
+        })
 
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
         pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
@@ -297,10 +258,7 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(len(pickings_pg3), 3)
         for picking in pickings_pg3:
             # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == warehouse.lot_stock_id:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
-            else:
-                self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
+            self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
 
             # All the moves should be should have the same quantity as it is on each procurements
             self.assertEqual(len(picking.move_ids), 1)

@@ -46,3 +46,9 @@ class MrpProduction(models.Model):
                     lambda m: m.product_id == production.product_id
                 ).sale_line_id = production.sale_line_id
         return res
+
+    def _post_run_manufacture(self, procurements):
+        for production, procurement in zip(self, procurements):
+            if procurement.values.get('group_id'):
+                production.procurement_group_id.sale_id = procurement.values['group_id'].sale_id
+        return super()._post_run_manufacture(procurements)

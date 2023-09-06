@@ -10,7 +10,7 @@ from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, SUPERUSER_ID
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -2866,3 +2866,28 @@ class MrpProduction(models.Model):
 
     def _get_product_catalog_domain(self):
         return expression.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])
+
+    def _post_run_manufacture(self, post_production_values):
+        note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        for production in self:
+            orderpoint = production.orderpoint_id
+            origin_production = production.move_dest_ids.raw_material_production_id
+            if orderpoint and orderpoint.create_uid.id == SUPERUSER_ID and orderpoint.trigger == 'manual':
+                production.message_post(
+                    body=_('This production order has been created from Replenishment Report.'),
+                    message_type='comment',
+                    subtype_id=note_subtype_id
+                )
+            elif orderpoint:
+                production.message_post_with_source(
+                    'mail.message_origin_link',
+                    render_values={'self': production, 'origin': orderpoint},
+                    subtype_id=note_subtype_id,
+                )
+            elif origin_production:
+                production.message_post_with_source(
+                    'mail.message_origin_link',
+                    render_values={'self': production, 'origin': origin_production},
+                    subtype_id=note_subtype_id,
+                )
+        return True

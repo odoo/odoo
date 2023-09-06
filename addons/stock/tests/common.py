@@ -174,6 +174,7 @@ class TestStockCommon(TestProductCommon):
         # Existing data
         cls.existing_inventories = cls.env['stock.quant'].search([('inventory_quantity', '!=', 0.0)])
         cls.existing_quants = cls.env['stock.quant'].search([])
+        cls.env.ref('stock.route_warehouse0_mto').rule_ids.procure_method = "make_to_order"
 
 
     def url_extract_rec_id_and_model(self, url):

@@ -1124,15 +1124,16 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.warehouse.reception_steps = 'two_steps'
         # Enable MTO route for Component
         self.env.ref('stock.route_warehouse0_mto').active = True
-        route_buy = self.warehouse.buy_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
+        route_buy = self.warehouse.buy_pull_id.route_id
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "make_to_order"
         self.component_a.write({
             'seller_ids': [
                 Command.create({'partner_id': self.partner_a.id},
             )],
             'route_ids': [
-                Command.link(route_buy),
-                Command.link(route_mto),
+                Command.link(route_buy.id),
+                Command.link(route_mto.id),
             ],
         })
 
