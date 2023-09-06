@@ -22,7 +22,7 @@ class ResPartner(models.Model):
              '2 - Fees Receipt Issuer (Applies to suppliers who issue fees receipt)\n'
              '3 - End consumer (only receipts)\n'
              '4 - Foreigner')
-    l10n_cl_activity_description = fields.Char(string='Activity Description')
+    l10n_cl_activity_description = fields.Char(string='Activity Description', help="Chile: Economic activity.")
 
     @api.model
     def _commercial_fields(self):
