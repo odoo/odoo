@@ -30,13 +30,13 @@
                         <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="selectedStatusInfo.text"></span>
                     </t>
                     <DropdownItem onSelected="() => this.changeAttendeeStatus('accepted')">
-                        <i class="fa fa-circle text-success"/> Accept
+                        <i class="fa fa-circle text-success"/> Yes
                     </DropdownItem>
                     <DropdownItem onSelected="() => this.changeAttendeeStatus('declined')">
-                        <i class="fa fa-circle text-danger"/> Decline
+                        <i class="fa fa-circle text-danger"/> No
                     </DropdownItem>
                     <DropdownItem onSelected="() => this.changeAttendeeStatus('tentative')">
-                        <i class="fa fa-circle text-muted"/> Uncertain
+                        <i class="fa fa-circle text-muted"/> Maybe
                     </DropdownItem>
                 </Dropdown>
             </div>
