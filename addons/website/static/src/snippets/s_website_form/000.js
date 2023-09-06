@@ -35,7 +35,7 @@ const { DateTime } = luxon;
                         el.closest(".s_website_form_field").dataset.type === "date"
                             ? formatDate
                             : formatDateTime;
-                        el.value = format(DateTime.fromSeconds(value));
+                        el.value = format(DateTime.fromSeconds(parseInt(value)));
                     }
                 });
             }
@@ -223,7 +223,7 @@ const { DateTime } = luxon;
                             el.closest(".s_website_form_field").dataset.type === "date"
                                 ? formatDate
                                 : formatDateTime;
-                        value = format(DateTime.fromSeconds(value));
+                        value = format(DateTime.fromSeconds(parseInt(value)));
                     }
                     el.value = value;
                 }
