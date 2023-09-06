@@ -61,6 +61,7 @@
             ('include', 'spreadsheet.dependencies'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
+            'spreadsheet/static/src/o_spreadsheet/icons.xml',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_extended.scss',
             'spreadsheet/static/src/o_spreadsheet/migration.js',
             'spreadsheet/static/src/o_spreadsheet/odoo_module.js',
