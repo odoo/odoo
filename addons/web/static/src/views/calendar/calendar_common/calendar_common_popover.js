@@ -21,7 +21,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     get activeFields() {
-        return this.props.model.popoverFields;
+        return this.props.model.activeFields;
     }
     get isEventEditable() {
         return true;
