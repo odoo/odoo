@@ -13,6 +13,7 @@ registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
     name: _t("Download"),
     execute: (env) => env.downloadExcel(),
     isReadonlyAllowed: true,
+    icon: "o-spreadsheet-Icon.DOWNLOAD",
 });
 
 export class PublicReadonlySpreadsheet extends Component {
