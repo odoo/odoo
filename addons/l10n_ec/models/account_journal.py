@@ -9,12 +9,22 @@ class AccountJournal(models.Model):
         compute='_compute_l10n_ec_require_emission',
         help='True if an entity and emission point must be set on the journal'
     )
-    l10n_ec_entity = fields.Char(string="Emission Entity", size=3, copy=False)
-    l10n_ec_emission = fields.Char(string="Emission Point", size=3, copy=False)
+    l10n_ec_entity = fields.Char(
+        string="Emission Entity",
+        size=3,
+        copy=False,
+        help="Ecuador: Emission entity number that is given by the SRI."
+    )
+    l10n_ec_emission = fields.Char(
+        string="Emission Point",
+        size=3, copy=False,
+        help="Ecuador: Emission point number that is given by the SRI."
+    )
     l10n_ec_emission_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Emission address",
         domain="['|', ('id', '=', company_partner_id), '&', ('id', 'child_of', company_partner_id), ('type', '!=', 'contact')]",
+        help="Ecuador: Address for electronic invoicing.",
     )
 
     @api.depends('type', 'country_code', 'l10n_latam_use_documents')

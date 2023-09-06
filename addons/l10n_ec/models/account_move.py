@@ -133,6 +133,7 @@ class AccountMove(models.Model):
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",
         string="Payment Method (SRI)",
+        help="Ecuador: Payment Methods Defined by the SRI.",
     )
 
     @api.model
