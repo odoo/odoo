@@ -16,6 +16,10 @@ export class EmojisCharField extends EmojisFieldCommon(CharField) {
         this.targetEditElement = useRef("input");
         this._setupOverride();
     }
+
+    get shouldTrim() {
+        return false;
+    }
 }
 
 EmojisCharField.template = "mail.EmojisCharField";
