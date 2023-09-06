@@ -19,4 +19,9 @@
             </form>
         </t>
     </template>
+    <template id="mail_plugin.app_error" name="Accept app">
+        <t t-call="web.login_layout">
+            <div class="alert alert-danger" role="alert" t-out="error"/>
+        </t>
+    </template>
 </odoo>
