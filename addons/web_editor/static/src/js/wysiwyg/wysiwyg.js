@@ -856,7 +856,10 @@ const Wysiwyg = Widget.extend({
      */
     saveModifiedImages: function ($editable = this.$editable) {
         const defs = _.map($editable, async editableEl => {
-            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            let { oeModel: resModel, oeId: resId } = editableEl.dataset;
+            if (!resModel) {
+                ({ res_model: resModel, res_id: resId } = this.options.recordInfo);
+            }
             const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
                 const dirtyEditable = el.closest(".o_dirty");
