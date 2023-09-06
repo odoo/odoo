@@ -169,6 +169,9 @@ export class ReceiptScreen extends Component {
             ticketImage,
         ]);
     }
+    getTaxLetter(taxes) {
+        return "";
+    }
 }
 
 registry.category("pos_screens").add("ReceiptScreen", ReceiptScreen);
