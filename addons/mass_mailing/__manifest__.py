@@ -96,7 +96,7 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_variables.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'web_editor.backend_assets_wysiwyg'),
             ('include', 'web_editor.assets_legacy_wysiwyg'),
 
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
@@ -115,7 +115,7 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
-        'web_editor.assets_wysiwyg': [
+        'web_editor.backend_assets_wysiwyg': [
             'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
             'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],

@@ -7,18 +7,19 @@
     <div t-if="state.showWysiwyg"
         t-ref="wysiwyg-adapter"
         t-att-class="{ o_w_wysiwyg_transition: !this.state.reloading, o_w_wysiwyg: this.websiteContext.snippetsLoaded }">
-        <WysiwygAdapterComponent
-            editingValue="this.wysiwygOptions.value"
-            options="this.wysiwygOptions"
-            snippetSelector="this.reloadSelector"
-            willReload.bind="this.willReload"
-            reloadCallback.bind="this.reload"
-            quitCallback.bind="this.quit"
-            wysiwygReady.bind="this.wysiwygReady"
-            editableElements="this.editableElements"
-            savableSelector="this.savableSelector"
-            beforeEditorActive="this.beforeEditorActive"
-            removeWelcomeMessage="this.props.removeWelcomeMessage"/>
+        <t t-component="this.WysiwygAdapterComponent" t-props="{
+            'editingValue': this.wysiwygOptions.value,
+            'options': this.wysiwygOptions,
+            'snippetSelector': this.reloadSelector,
+            'willReload': this.willReload.bind(this),
+            'reloadCallback': this.reload.bind(this),
+            'quitCallback': this.quit.bind(this),
+            'wysiwygReady': this.wysiwygReady.bind(this),
+            'editableElements': this.editableElements,
+            'savableSelector': this.savableSelector,
+            'beforeEditorActive': this.beforeEditorActive,
+            'removeWelcomeMessage': this.props.removeWelcomeMessage,
+        }" />
     </div>
 </t>
 </templates>

@@ -258,6 +258,12 @@
             ('include', 'web_editor.assets_legacy_wysiwyg'),
             ('include', 'website.assets_wysiwyg'),
         ],
+        'website.backend_assets_all_wysiwyg': [
+            ('include', 'web_editor.backend_assets_wysiwyg'),
+            ('include', 'web_editor.assets_legacy_wysiwyg'),
+            ('include', 'website.assets_wysiwyg'),
+            'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
+        ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',
         ],
@@ -279,7 +285,6 @@
             'website/static/src/components/burger_menu/burger_menu.js',
             'website/static/src/components/switch/switch.js',
             'website/static/src/components/switch/switch.scss',
-            'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/components/wysiwyg_adapter/page_options.js',
             'website/static/src/components/translator/translator.js',
             'website/static/src/components/translator/translator.scss',
@@ -288,7 +293,6 @@
             'website/static/src/services/website_custom_menus.js',
             'website/static/src/js/tours/homepage.js',
             'website/static/src/systray_items/*',
-            'web_editor/static/src/xml/editor.xml',
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/components/website_loader/*.xml',
             'website/static/src/js/backend/**/*',
