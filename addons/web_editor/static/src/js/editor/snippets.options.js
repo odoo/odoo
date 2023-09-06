@@ -5879,7 +5879,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async _loadImageInfo(attachmentSrc = '') {
         const img = this._getImg();
         const editableEl = this.$target[0].closest("[data-oe-field]");
-        await loadImageInfo(img, this.rpc, attachmentSrc, editableEl.dataset.oeField);
+        await loadImageInfo(img, this.rpc, this.options.wysiwyg.odooEditor, attachmentSrc,
+            editableEl.dataset.oeField);
         if (!img.dataset.originalId) {
             this.originalId = null;
             this.originalSrc = null;
@@ -6057,6 +6058,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            odooEditor: this.options.wysiwyg.odooEditor,
         });
 
         await new Promise(resolve => {
@@ -6120,6 +6122,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            odooEditor: this.options.wysiwyg.odooEditor,
         });
         await imageCropWrapper.component.mountedPromise;
         await imageCropWrapper.component.reset();

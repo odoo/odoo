@@ -134,6 +134,7 @@ export class Wysiwyg extends Component {
         showCount: 0,
         media: undefined,
         mimetype: undefined,
+        odooEditor: undefined,
     });
     state = useState({
         linkToolProps: false,
@@ -1782,6 +1783,7 @@ export class Wysiwyg extends Component {
             if (!this.lastMediaClicked) {
                 return;
             }
+            this.imageCropProps.odooEditor = this.odooEditor;
             this.imageCropProps.media = this.lastMediaClicked;
             this.imageCropProps.showCount++;
             this.odooEditor.toolbarHide();

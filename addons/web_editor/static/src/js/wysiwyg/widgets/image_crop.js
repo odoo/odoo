@@ -22,6 +22,7 @@ export class ImageCrop extends Component {
         activeOnStart: { type: Boolean, optional: true },
         media: { optional: true },
         mimetype: { type: String, optional: true },
+        odooEditor: {type: Object, optional: true},
     };
     static defaultProps = {
         activeOnStart: false,
@@ -124,7 +125,7 @@ export class ImageCrop extends Component {
                 'image/jpeg';
         this.mimetype = this.props.mimetype || mimetype;
 
-        await loadImageInfo(this.media, this.props.rpc);
+        await loadImageInfo(this.media, this.props.rpc, props.odooEditor);
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
         this.uncroppable = false;
         if (this.media.dataset.originalSrc && !isIllustration) {

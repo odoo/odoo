@@ -437,12 +437,15 @@ export async function activateCropper(image, aspectRatio, dataset) {
  * @param {HTMLImageElement} img the image whose attachment data should be found
  * @param {Function} rpc a function that can be used to make the RPC. Typically
  *   this would be passed as 'this._rpc.bind(this)' from widgets.
+ * @param {Object} odooEditor the editor needed to pause the observer during the
+ * loading of the image information. Indeed, we do not want this process to be
+ * responsible of marking an editable element as "dirty".
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  * @param {string} resField the field name of the image if it is linked to a
  * model.
  */
-export async function loadImageInfo(img, rpc, attachmentSrc = "", resField = "") {
+export async function loadImageInfo(img, rpc, odooEditor, attachmentSrc = "", resField = "") {
     const src = attachmentSrc || img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
     // If the image does not have the "mimetypeBeforeConversion" attribute, it
@@ -472,6 +475,7 @@ export async function loadImageInfo(img, rpc, attachmentSrc = "", resField = "")
     // The "redirect" check is for when it is a redirect image attachment due to
     // an external URL upload.
     if (original && original.image_src && !/\/web\/image\/\d+-redirect\//.test(original.image_src)) {
+        odooEditor.observerUnactive("loadImageInfo");
         if (!img.dataset.mimetype) {
             // The mimetype has to be added only if it is not already present as
             // we want to avoid to reset a mimetype set by the user.
@@ -514,6 +518,7 @@ export async function loadImageInfo(img, rpc, attachmentSrc = "", resField = "")
                 }
             }
         }
+        odooEditor.observerActive("loadImageInfo");
     }
 }
 
