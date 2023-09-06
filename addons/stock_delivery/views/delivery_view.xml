@@ -103,11 +103,9 @@
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
                 <form string="Trackers URL">
-                    <group>
-                        <div class="alert alert-info" role="status">
-                            <p>You have multiple tracker links, they are available in the chatter.</p>
-                        </div>
-                    </group>
+                    <div class="alert alert-info" role="status">
+                        <p>You have multiple tracker links, they are available in the chatter.</p>
+                    </div>
                     <footer>
                         <button string="OK" special="cancel" data-hotkey="x" class="oe_highlight"/>
                     </footer>
