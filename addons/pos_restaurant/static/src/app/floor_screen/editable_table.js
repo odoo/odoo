@@ -137,8 +137,8 @@ export class EditableTable extends Component {
             const position_h =
                 widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
             const position_v =
-                widthTable * Math.floor(index / nbrHorizontal) +
-                5 +
+                (widthTable + 25) * Math.floor(index / nbrHorizontal) +
+                10 +
                 Math.floor(index / nbrHorizontal) * 10;
 
             Object.assign(this.root.el.style, {
