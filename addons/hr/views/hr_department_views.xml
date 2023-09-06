@@ -25,6 +25,7 @@
                                 <field name="parent_id"/>
                                 <field name="child_ids" invisible="1"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="color" widget="color_picker" string="Color"/>
                             </group>
                             <div invisible="not id or id and not child_ids and not parent_id">
                                 <widget name="hr_department_chart"/>
@@ -43,12 +44,14 @@
             <field name="name">hr.department.tree</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <tree string="Companies" sample="1">
-                    <field name="display_name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                <tree string="Companies" sample="1" editable="bottom">
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="manager_id" widget="many2one_avatar_user"/>
                     <field name="total_employee" string="Employees"/>
                     <field name="parent_id"/>
+                    <field name="color" widget="color_picker" string="Color"/>
                 </tree>
             </field>
         </record>
