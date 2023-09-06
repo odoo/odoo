@@ -131,9 +131,9 @@
                             <field name="stop_date" invisible="1" />
                             <field name="stop" invisible="1" />
                             <div class="d-flex gap-2" colspan="2">
-                                <div invisible="allday">
+                                <div class="d-flex align-items-start" invisible="allday">
                                     <label for="duration" class="pe-2 fw-bold text-900" invisible="allday"/>
-                                    <field name="duration" widget="float_time" string="Duration" class="oe_inline" readonly="(id and recurrency) or not user_can_edit"/>
+                                    <field name="duration" widget="float_time" string="Duration" class="oe_inline pe-2" readonly="(id and recurrency) or not user_can_edit"/>
                                     <span> hours</span>
                                 </div>
                                 <div>
@@ -190,7 +190,7 @@
                             <label for="videocall_location" class="opacity-100"/>
                             <div col="2">
                                 <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>
-                                <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                <button name="clear_videocall_location" type="object" class="btn btn-link ps-0"
                                     invisible="not videocall_location" context="{'recurrence_update': recurrence_update}">
                                     <span class="fa fa-times"></span><span> Clear meeting</span>
                                 </button>
@@ -211,11 +211,11 @@
                                         <field name="privacy" readonly="not user_can_edit" nolabel="1"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
-                                    <field name="description" options="{'height': 100}"/>
-
-
+                                    <field name="description" options="{'height': 100}" placeholder="Add description"/>
                         </group>
                         <group>
+                            <field name="should_show_status" invisible="1"/>
+                            <field name="current_status" class="w-auto" required="should_show_status" invisible="not should_show_status"/>
                             <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             <div class="o_row" colspan="2">
                                 <div colspan="1">
