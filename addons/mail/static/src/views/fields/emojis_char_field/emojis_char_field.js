@@ -17,6 +17,10 @@ export class EmojisCharField extends CharField {
         this.targetEditElement = useRef("input");
         this._setupOverride();
     }
+
+    get shouldTrim() {
+        return false;
+    }
 }
 
 patch(EmojisCharField.prototype, "emojis_char_field_mail_mixin", MailEmojisMixin);
