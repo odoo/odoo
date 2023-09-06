@@ -77,7 +77,19 @@ export function useActiveElement(refName) {
                 return () => {
                     uiService.deactivateElement(el);
                     el.removeEventListener("keydown", trapFocus);
-                    if (el.contains(document.activeElement)) {
+
+                    /**
+                     * In some cases, the current active element is not
+                     * anymore in el (e.g. with ConfirmationDialog, the
+                     * confirm button is disabled when clicked, so the
+                     * focus is lost). In that case, we also want to restore
+                     * the focus to the previous active element so we
+                     * check if the current active element is the body
+                     */
+                    if (
+                        el.contains(document.activeElement) ||
+                        document.activeElement === document.body
+                    ) {
                         oldActiveElement.focus();
                     }
                 };

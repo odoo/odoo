@@ -5,8 +5,17 @@ import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeDialogTestEnv } from "../helpers/mock_env";
-import { click, getFixture, makeDeferred, mount, nextTick, triggerHotkey } from "../helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+    triggerHotkey,
+} from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
+import { Component, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 let target;
@@ -192,5 +201,42 @@ QUnit.module("Components", (hooks) => {
         def.resolve();
         await nextTick();
         assert.verifySteps(["close"]);
+    });
+
+    QUnit.test("Focus is correctly restored after confirmation", async function (assert) {
+        const env = await makeDialogTestEnv();
+
+        class MyComp extends Component {}
+        MyComp.template = xml`<div class="my-comp"><input type="text" class="my-input"/></div>`;
+
+        await mount(MyComp, target, { env });
+        target.querySelector(".my-input").focus();
+        assert.strictEqual(document.activeElement, target.querySelector(".my-input"));
+
+        const comp = await mount(ConfirmationDialog, target, {
+            env,
+            props: {
+                body: "Some content",
+                title: "Confirmation",
+                confirm: () => {},
+                close: () => {},
+            },
+        });
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".modal-footer .btn-primary")
+        );
+        await click(target, ".modal-footer .btn-primary");
+        assert.strictEqual(
+            document.activeElement,
+            document.body,
+            "As the button is disabled, the focus is now on the body"
+        );
+        destroy(comp);
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".my-input"),
+            "After destruction of the dialog, the focus is restored to the input"
+        );
     });
 });
