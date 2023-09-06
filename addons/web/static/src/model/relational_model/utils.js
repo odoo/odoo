@@ -340,7 +340,7 @@ export function getFieldsSpec(
         // M2O
         if (fields[fieldName].type === "many2one") {
             fieldsSpec[fieldName].fields = {};
-            if (invisible !== "True" && invisible !== "1") {
+            if ((invisible !== "True" && invisible !== "1") || evalContext.studio) {
                 fieldsSpec[fieldName].fields.display_name = {};
             }
         }
