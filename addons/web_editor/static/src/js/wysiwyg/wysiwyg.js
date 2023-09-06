@@ -41,7 +41,6 @@ import {
     markup,
     status,
 } from "@odoo/owl";
-import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
 
@@ -273,6 +272,7 @@ export class Wysiwyg extends Component {
         onHistoryResetFromSteps: () => {},
         autostart: true,
         dropImageAsAttachment: true,
+        editorPlugins: [],
     }
     init() {
         this.id = ++id;
@@ -1651,7 +1651,7 @@ export class Wysiwyg extends Component {
      * @returns {widget}
      */
     async _createSnippetsMenuInstance(options={}) {
-        const snippetsEditor = await requireWysiwygLegacyModule('@web_editor/js/editor/snippets.editor');
+        const snippetsEditor = await odoo.loader.modules.get('@web_editor/js/editor/snippets.editor')[Symbol.for('default')];
         const { SnippetsMenu } = snippetsEditor;
         return new SnippetsMenu(this, Object.assign({
             wysiwyg: this,

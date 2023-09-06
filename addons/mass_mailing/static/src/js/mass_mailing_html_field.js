@@ -12,7 +12,6 @@ import { useService } from "@web/core/utils/hooks";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
-import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { useSubEnv, status } from "@odoo/owl";
 
@@ -23,10 +22,6 @@ export class MassMailingHtmlField extends HtmlField {
         filterTemplates: { type: Boolean, optional: true },
         inlineField: { type: String, optional: true },
         iframeHtmlClass: { type: String, optional: true },
-    }
-    static components = {
-        ...HtmlField.components,
-        Wysiwyg: MassMailingWysiwyg,
     }
 
     setup() {
@@ -615,6 +610,11 @@ export class MassMailingHtmlField extends HtmlField {
             this.props.record.data[this.props.name] = this.props.record.data.body_html;
         }
         await super._setupReadonlyIframe();
+    }
+    async _lazyloadWysiwyg() {
+        await super._lazyloadWysiwyg(...arguments);
+        const wysiwygModule = await odoo.loader.modules.get('@mass_mailing/js/mass_mailing_wysiwyg');
+        this.Wysiwyg = wysiwygModule.MassMailingWysiwyg;
     }
 }
 

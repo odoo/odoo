@@ -6,7 +6,6 @@ import legacyEnv from '@web/legacy/js/common_env';
 import { useService, useBus } from "@web/core/utils/hooks";
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
-import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
 import weUtils from '@web_editor/js/common/utils';
 import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
@@ -324,10 +323,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // destroy, options will have wrong social media values).
         // It would also survive (multi) website switch, not fetching the values
         // from the accessed website.
-        const mod = await requireWysiwygLegacyModule('@website/snippets/s_social_media/options');
+        const mod = await odoo.loader.modules.get('@website/snippets/s_social_media/options')[Symbol.for('default')];
         mod.clearDbSocialValuesCache();
 
-        const formOptionsMod = await requireWysiwygLegacyModule('@website/snippets/s_website_form/options');
+        const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options')[Symbol.for('default')];
         formOptionsMod.clearAllFormsInfo();
 
         this._restoreMegaMenus();
@@ -853,7 +852,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @override
      */
     async _createSnippetsMenuInstance(options = {}) {
-        const snippetsEditor = await requireWysiwygLegacyModule('@website/js/editor/snippets.editor');
+        const snippetsEditor = await odoo.loader.modules.get('@website/js/editor/snippets.editor')[Symbol.for('default')];
         const { SnippetsMenu } = snippetsEditor;
         return new SnippetsMenu(this, Object.assign({
             wysiwyg: this,

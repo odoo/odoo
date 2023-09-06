@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
-import { MoveNodePlugin } from '@web_editor/js/wysiwyg/MoveNodePlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { useDynamicPlaceholder } from "@web/views/fields/dynamic_placeholder_hook";
 import {
@@ -18,7 +17,7 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from '@web_editor/js/backend/convert_inline';
-import { getBundle } from '@web/core/assets';
+import { getBundle, loadBundle } from '@web/core/assets';
 import {
     Component,
     useRef,
@@ -31,13 +30,16 @@ import {
     status,
 } from "@odoo/owl";
 import { uniqueId } from '@web/core/utils/functions';
-import { Wysiwyg, stripHistoryIds } from '../wysiwyg/wysiwyg';
+// Ensure `@web/views/fields/html/html_field` is loaded first as this module
+// must override the html field in the registry.
+import '@web/views/fields/html/html_field';
+
+let stripHistoryIds;
 
 export class HtmlField extends Component {
     static template = "web_editor.HtmlField";
     static components = {
         TranslationButton,
-        Wysiwyg,
     };
     static defaultProps = { dynamicPlaceholder: false };
     static props = {
@@ -92,6 +94,7 @@ export class HtmlField extends Component {
             if (this.props.cssReadonlyAssetId) {
                 this.cssReadonlyAsset = await getBundle(this.props.cssReadonlyAssetId);
             }
+            await this._lazyloadWysiwyg();
         });
         this._lastRecordInfo = {
             res_model: this.props.record.resModel,
@@ -239,6 +242,7 @@ export class HtmlField extends Component {
                 res_id: this.props.record.resId,
             },
             fieldId: this.props.id,
+            editorPlugins: [...(wysiwygOptions.editorPlugins || []), QWebPlugin, this.MoveNodePlugin],
         };
     }
     /**
@@ -392,6 +396,19 @@ export class HtmlField extends Component {
                 await this.updateValue();
             }
         }
+    }
+    async _lazyloadWysiwyg() {
+        // In some bundle (eg. `web.qunit_suite_tests`), the following module is already included.
+        let wysiwygModule = await odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
+        this.MoveNodePlugin = (await odoo.loader.modules.get('@web_editor/js/wysiwyg/MoveNodePlugin'))?.MoveNodePlugin;
+        // Otherwise, load the module.
+        if (!wysiwygModule) {
+            await loadBundle('web_editor.backend_assets_wysiwyg');
+            wysiwygModule = await odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
+            this.MoveNodePlugin = (await odoo.loader.modules.get('@web_editor/js/wysiwyg/MoveNodePlugin')).MoveNodePlugin;
+        }
+        stripHistoryIds = wysiwygModule.stripHistoryIds;
+        this.Wysiwyg = wysiwygModule.Wysiwyg;
     }
     _isDirty() {
         const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
@@ -685,7 +702,6 @@ export const htmlField = {
             minHeight: options.minHeight,
             maxHeight: options.maxHeight,
             resizable: 'resizable' in options ? options.resizable : false,
-            editorPlugins: [QWebPlugin, MoveNodePlugin],
         };
         if ('collaborative' in options) {
             wysiwygOptions.collaborative = options.collaborative;

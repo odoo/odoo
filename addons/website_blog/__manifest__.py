@@ -35,9 +35,11 @@
             'website_blog/static/src/snippets/s_blog_posts/options.js',
         ],
         'website.assets_editor': [
-            'website_blog/static/src/js/wysiwyg_adapter.js',
             'website_blog/static/src/js/tours/website_blog.js',
             'website_blog/static/src/js/systray_items/*.js',
+        ],
+        'website.backend_assets_all_wysiwyg': [
+            'website_blog/static/src/js/wysiwyg_adapter.js',
         ],
         'web.assets_tests': [
             'website_blog/static/tests/**/*',
