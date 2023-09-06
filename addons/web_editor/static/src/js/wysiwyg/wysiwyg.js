@@ -859,7 +859,8 @@ const Wysiwyg = Widget.extend({
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
             const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
-                if (el.closest(".o_dirty") !== editableEl) {
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
                     // Do nothing as there is an editableEl closer to the image
                     // that will perform the rpc call with the correct model and
                     // id parameters.
