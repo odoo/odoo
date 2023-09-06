@@ -15,6 +15,9 @@ function _newRandomRewardCode() {
 }
 
 let nextId = -1;
+
+let pointsForProgramsCountedRules = {};
+
 export class PosLoyaltyCard {
     /**
      * @param {string} code coupon code
@@ -508,6 +511,7 @@ patch(Order.prototype, {
                         program_id: program.id,
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
+                        appliedRules: pointsForProgramsCountedRules[program.id],
                     };
                 }
             }
@@ -707,6 +711,7 @@ patch(Order.prototype, {
      * @returns {Object} Containing the points gained per program
      */
     pointsForPrograms(programs) {
+        pointsForProgramsCountedRules = {};
         const totalTaxed = this.get_total_with_tax();
         const totalUntaxed = this.get_total_without_tax();
         const totalsPerProgram = Object.fromEntries(
@@ -791,6 +796,10 @@ patch(Order.prototype, {
                     // For example, when refunding an ewallet payment. See TicketScreen override in this addon.
                     continue;
                 }
+                if (!(program.id in pointsForProgramsCountedRules)) {
+                    pointsForProgramsCountedRules[program.id] = [];
+                }
+                pointsForProgramsCountedRules[program.id].push(rule.id);
                 if (
                     program.applies_on === "future" &&
                     rule.reward_point_split &&
@@ -1348,21 +1357,26 @@ patch(Order.prototype, {
             if (this._isRewardProductPartOfRules(reward, product)) {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
-                const factor = reward.program_id.rules.reduce((result, rule) => {
+                const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
+                const appliedRules = appliedRulesIds !== undefined
+                    ? reward.program_id.rules.filter(rule => appliedRulesIds.includes(rule.id))
+                    : reward.program_id.rules;
+                let factor = 0;
+                let orderPoints = 0;
+                for (const rule of appliedRules) {
                     if (rule.any_product || rule.valid_product_ids.has(product.id)) {
                         if (rule.reward_point_mode === "order") {
-                            result += rule.reward_point_amount;
+                            orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
-                            result += roundPrecision(
+                            factor += roundPrecision(
                                 rule.reward_point_amount * product.lst_price,
                                 0.01
                             );
                         } else if (rule.reward_point_mode === "unit") {
-                            result += rule.reward_point_amount;
+                            factor += rule.reward_point_amount;
                         }
                     }
-                    return result;
-                }, 0);
+                }
                 if (factor === 0) {
                     freeQty = Math.floor(
                         (remainingPoints / reward.required_points) * reward.reward_product_qty
@@ -1372,9 +1386,12 @@ patch(Order.prototype, {
                         ? this._getPointsCorrection(reward.program_id)
                         : 0;
                     freeQty = computeFreeQuantity(
-                        (remainingPoints - correction) / factor,
+                        (remainingPoints - correction - orderPoints) / factor,
                         reward.required_points / factor,
                         reward.reward_product_qty
+                    );
+                    freeQty += Math.floor(
+                        (orderPoints / reward.required_points) * reward.reward_product_qty
                     );
                 }
             } else {
