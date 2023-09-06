@@ -1013,7 +1013,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 if (this.options.questionsLayout === 'page_per_question') {
                     var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
                     var completedQuestions = [];
-                    subQuestionsIds.forEach(function (id) {
+                    subQuestionsIds.forEach((id) => {
                         if (this.$('tr#' + id).find('input:checked').length !== 0) {
                             completedQuestions.push(id);
                         }
