@@ -864,6 +864,13 @@ const Wysiwyg = Widget.extend({
         const defs = Array.from($editable).map(async (editableEl) => {
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
+                    // Do nothing as there is an editableEl closer to the image
+                    // that will perform the rpc call with the correct model and
+                    // id parameters.
+                    return;
+                }
                 const attachment = await this._rpc({
                     route: '/web_editor/attachment/add_data',
                     params: {
