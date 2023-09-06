@@ -3075,30 +3075,28 @@ class AccountMove(models.Model):
         """
         success = False
 
-        for file_data in attachments._unwrap_edi_attachments(): # sorted by priority
-
-            decoder = self._get_edi_decoder(file_data, new=new)
-
-            try:
-                if decoder and not success:
-                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
-                        # pylint: disable=not-callable
-                        success = decoder(invoice, file_data, new)
+        # sorted by priority
+        for file_data in attachments._unwrap_edi_attachments():
+            if not success and (decoder := self._get_edi_decoder(file_data, new=new)):
+                try:
+                    with self.env.cr.savepoint():
+                        with self._get_edi_creation() as invoice:
+                            # pylint: disable=not-callable
+                            success = decoder(invoice, file_data, new)
                         if success:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
-            except RedirectWarning as rw:
-                raise rw
-            except Exception as e:
-                _logger.exception(
-                    "Error importing attachment '%s' as invoice: %s",
-                    file_data['filename'],
-                    str(e),
-                )
-
-            finally:
-                if file_data.get('on_close'):
-                    file_data['on_close']()
+                except RedirectWarning:
+                    raise
+                except Exception:
+                    _logger.exception(
+                        "Error importing attachment '%s' as invoice (decoder=%s)",
+                        file_data['filename'],
+                        decoder.__name__
+                    )
+                finally:
+                    if file_data.get('on_close'):
+                        file_data['on_close']()
 
         return success
 
