@@ -3650,8 +3650,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
                     const hoverEffectWidget = hoverEffectOverlayWidget.getParent();
                     const imageToolsOpt = hoverEffectWidget.getParent();
                     return (
-                        !imageToolsOpt._isDeviceShape()
-                        && !imageToolsOpt._isAnimatedShape()
+                        imageToolsOpt._canHaveHoverEffect()
                         && !await isImageCorsProtected(this.$target[0])
                     );
                 }
