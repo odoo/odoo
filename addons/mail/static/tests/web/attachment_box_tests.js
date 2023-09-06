@@ -5,30 +5,6 @@ import { click, contains, scroll, start, startServer } from "@mail/../tests/help
 
 QUnit.module("attachment box");
 
-QUnit.test("base empty rendering", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const views = {
-        "res.partner,false,form": `
-            <form>
-                <sheet></sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"  options="{'open_attachments': True}"/>
-                </div>
-            </form>
-        `,
-    };
-    const { openView } = await start({ serverData: { views } });
-    openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
-    await contains(".o-mail-AttachmentBox");
-    await contains("button", { text: "Attach files" });
-    await contains(".o-mail-Chatter .o-mail-AttachmentImage", { count: 0 });
-});
-
 QUnit.test("base non-empty rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -199,4 +175,37 @@ QUnit.test("attachment box should order attachments from newest to oldest", asyn
     await contains(".o-mail-AttachmentCard:eq(0) div", { text: "C.txt" });
     await contains(".o-mail-AttachmentCard:eq(1) div", { text: "B.txt" });
     await contains(".o-mail-AttachmentCard:eq(2) div", { text: "A.txt" });
+});
+
+QUnit.test("attachment box auto-closed on switch to record wih no attachments", async (assert) => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "first partner" },
+        { display_name: "second partner" },
+    ]);
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                <sheet></sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'open_attachments': True}"/>
+                </div>
+            </form>
+        `,
+    };
+    const { openFormView } = await start({ serverData: { views } });
+    await openFormView("res.partner", partnerId_1, {
+        props: { resIds: [partnerId_1, partnerId_2] },
+    });
+    await contains(".o-mail-AttachmentBox");
+    await click(".o_pager_next");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
 });
