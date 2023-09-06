@@ -29,8 +29,10 @@ class GoogleCalendarService():
         self.google_service = google_service
 
     @requires_auth_token
-    def get_events(self, sync_token=None, token=None, timeout=TIMEOUT):
+    def get_events(self, sync_token=None, token=None, event_id=None, timeout=TIMEOUT):
         url = "/calendar/v3/calendars/primary/events"
+        if event_id:
+            url += f"/{event_id}"
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
         if sync_token:
@@ -50,6 +52,11 @@ class GoogleCalendarService():
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content):
                 raise InvalidSyncToken("Invalid sync token. Full sync required")
             raise e
+
+        if event_id:
+            next_sync_token = None
+            default_reminders = ()
+            return GoogleEvent([data]), next_sync_token, default_reminders
 
         events = data.get('items', [])
         next_page_token = data.get('nextPageToken')
