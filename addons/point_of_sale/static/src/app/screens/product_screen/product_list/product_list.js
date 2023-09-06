@@ -57,6 +57,15 @@ export class ProductsWidget extends Component {
                 };
             });
     }
+    get categoriesHasImages() {
+        const categories = this.getCategories();
+        for (const category of categories) {
+            if (category.imageUrl) {
+                return true;
+            }
+        }
+        return false;
+    }
     get posHasValidProduct() {
         return this.pos.posHasValidProduct();
     }
