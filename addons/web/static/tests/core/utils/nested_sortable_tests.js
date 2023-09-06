@@ -924,11 +924,67 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             });
             assert.verifySteps(
                 ["Initiation of the drag sequence"],
-                "A drag sequence should have been initiated",
+                "A drag sequence should have been initiated"
             );
             await drop();
-        },
+        }
     );
+
+    QUnit.test("shouldn't drag above max level", async (assert) => {
+        assert.expect(6);
+        class NestedSortable extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li class="item" id="parent">
+                            <span>parent</span>
+                        </li>
+                        <li class="item" id="dragged">
+                            <span>dragged</span>
+                            <ul>
+                                <li class="item" id="child">
+                                    <span>child</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            `;
+
+            setup() {
+                useNestedSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    nest: true,
+                    maxLevels: 2,
+                    onDragStart() {
+                        assert.step("start");
+                    },
+                    onMove() {
+                        assert.step("move");
+                    },
+                    onDrop() {
+                        assert.step("drop");
+                    },
+                    onDragEnd({ element }) {
+                        assert.step("end");
+                        assert.strictEqual(element.id, "dragged");
+                        assert.notOk(element.parentElement.closest("#parent"));
+                        assert.containsOnce(target, ".o_nested_sortable_placeholder.d-none");
+                    },
+                });
+            }
+        }
+
+        await mount(NestedSortable, target);
+
+        // cant move draggable under parent
+        const draggedNode = target.querySelector(".item#dragged");
+        const { drop, moveTo } = await drag(draggedNode);
+        await moveTo("#parent", "right");
+        await drop();
+        assert.verifySteps(["start", "end"]);
+    });
 
     QUnit.test("Ignore specified elements", async (assert) => {
         assert.expect(6);
