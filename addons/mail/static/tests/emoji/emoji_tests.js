@@ -43,6 +43,18 @@ QUnit.test("search emoji from keywords with special regex character", async (ass
     assert.containsOnce($, ".o-Emoji:contains(🆎)");
 });
 
+QUnit.test("updating search emoji should scroll top", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 0);
+    $(".o-EmojiPicker-content")[0].scrollTop = 150;
+    await insertText("input[placeholder='Search for an emoji']", "m");
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 0);
+});
+
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
@@ -68,15 +80,10 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
         `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW + 1}].bg-200`
     );
     await afterNextRender(() => triggerHotkey("ArrowLeft"));
-    assert.containsOnce(
-        $,
-        `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`
-    );
+    assert.containsOnce($, `.o-EmojiPicker-content .o-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`);
     await afterNextRender(() => triggerHotkey("ArrowUp"));
     assert.containsOnce($, ".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200");
-    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data(
-        "codepoints"
-    );
+    const codepoints = $(".o-EmojiPicker-content .o-Emoji[data-index=0].bg-200").data("codepoints");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.strictEqual($(".o-mail-Composer-input").val(), codepoints);
 });
