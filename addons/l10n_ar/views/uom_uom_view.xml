@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="uom.product_uom_tree_view"/>
         <field name="arch" type="xml">
             <tree>
-                <field name="l10n_ar_afip_code"/>
+                <field name="l10n_ar_afip_code" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -29,7 +29,7 @@
         <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
         <field name="arch" type="xml">
             <field name="rounding" position="after">
-                <field name="l10n_ar_afip_code"/>
+                <field name="l10n_ar_afip_code" optional="hide"/>
             </field>
         </field>
     </record>

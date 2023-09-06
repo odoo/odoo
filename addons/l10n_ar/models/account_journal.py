@@ -10,7 +10,9 @@ class AccountJournal(models.Model):
 
     l10n_ar_afip_pos_system = fields.Selection(
         selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',
-        compute='_compute_l10n_ar_afip_pos_system', store=True, readonly=False)
+        compute='_compute_l10n_ar_afip_pos_system', store=True, readonly=False,
+        help="Argentina: Specify which type of system will be used to create the electronic invoice. This will depend on the type of invoice to be created.",
+    )
     l10n_ar_afip_pos_number = fields.Integer(
         'AFIP POS Number', help='This is the point of sale number assigned by AFIP in order to generate invoices')
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
@@ -19,7 +21,10 @@ class AccountJournal(models.Model):
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
     l10n_ar_is_pos = fields.Boolean(
-        compute="_compute_l10n_ar_is_pos", store=True, readonly=False, string="Is AFIP POS?")
+        compute="_compute_l10n_ar_is_pos", store=True, readonly=False,
+        string="Is AFIP POS?",
+        help="Argentina: Specify if this Journal will be used to send electronic invoices to AFIP.",
+    )
 
     @api.depends('country_code', 'type', 'l10n_latam_use_documents')
     def _compute_l10n_ar_is_pos(self):
