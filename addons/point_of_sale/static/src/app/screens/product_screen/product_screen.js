@@ -363,6 +363,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
      */
     get animationKey() {
         return [
+            this.currentOrder.get_selected_orderline()?.uuid,
             this.selectedOrderlineQuantity,
             this.selectedOrderlineDisplayName,
             this.selectedOrderlineTotal,
