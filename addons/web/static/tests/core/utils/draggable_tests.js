@@ -215,6 +215,71 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test("Ignore specific elements in a nested draggable", async (assert) => {
+        assert.expect(7);
+
+        class List extends Component {
+            static components = { List };
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li t-foreach="[0, 1]" t-as="i" t-key="i"
+                            t-attf-class="item parent #{ i % 2 ? 'ignored' : 'not-ignored' }">
+                            <span t-esc="'parent' + i" />
+                            <ul class="list">
+                                <li t-foreach="[0, 1]" t-as="j" t-key="j"
+                                    t-attf-class="item child #{ j % 2 ? 'ignored' : 'not-ignored' }">
+                                    <span t-esc="'child' + j" />
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>`;
+            setup() {
+                useDraggable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    preventDrag: (el) => el.classList.contains('ignored'),
+                    onDragStart() {
+                        assert.step("drag");
+                    },
+                });
+            }
+        }
+
+        await mount(List, target);
+
+        assert.verifySteps([]);
+
+        // Drag ignored under non-ignored -> block
+        await dragAndDrop(
+            ".not-ignored.parent .ignored.child",
+            ".not-ignored.parent .not-ignored.child"
+        );
+        assert.verifySteps([]);
+
+        // Drag not-ignored-under not-ignored -> succeed
+        await dragAndDrop(
+            ".not-ignored.parent .not-ignored.child",
+            ".not-ignored.parent .ignored.child"
+        );
+        assert.verifySteps(["drag"]);
+
+        // Drag ignored under ignored -> block
+        await dragAndDrop(
+            ".ignored.parent .ignored.child",
+            ".ignored.parent .not-ignored.child"
+        );
+        assert.verifySteps([]);
+
+        // Drag not-ignored under ignored -> succeed
+        await dragAndDrop(
+            ".ignored.parent .not-ignored.child",
+            ".ignored.parent .ignored.child"
+        );
+        assert.verifySteps(["drag"]);
+    });
+
     QUnit.test("Dragging element with touch event", async (assert) => {
         assert.expect(10);
 

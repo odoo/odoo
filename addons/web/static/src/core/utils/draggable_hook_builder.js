@@ -34,6 +34,7 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * @property {boolean} [followCursor=true]
  * @property {string | null} [cursor=null]
  * @property {() => boolean} [enable=() => false]
+ * @property {(HTMLElement) => boolean} [preventDrag=(el) => false]
  * @property {Position} [pointer={ x: 0, y: 0 }]
  * @property {EdgeScrollingOptions} [edgeScrolling]
  * @property {number} [delay]
@@ -77,6 +78,7 @@ const DRAGGED_CLASS = "o_dragged";
 
 const DEFAULT_ACCEPTED_PARAMS = {
     enable: [Boolean, Function],
+    preventDrag: [Function],
     ref: [Object],
     elements: [String],
     handle: [String, Function],
@@ -89,6 +91,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
 const DEFAULT_DEFAULT_PARAMS = {
     elements: `.${DRAGGABLE_CLASS}`,
     enable: true,
+    preventDrag: () => false,
     edgeScrolling: {
         speed: 10,
         threshold: 30,
@@ -658,11 +661,13 @@ export function makeDraggableHook(hookParams) {
                 // outside of the window.
                 dragEnd(null);
 
+                const fullSelectorEl = ev.target.closest(ctx.fullSelector);
                 if (
                     ev.button !== LEFT_CLICK ||
                     !ctx.enable() ||
-                    !ev.target.closest(ctx.fullSelector) ||
-                    (ctx.ignoreSelector && ev.target.closest(ctx.ignoreSelector))
+                    !fullSelectorEl ||
+                    (ctx.ignoreSelector && ev.target.closest(ctx.ignoreSelector)) ||
+                    ctx.preventDrag(fullSelectorEl)
                 ) {
                     return;
                 }
@@ -886,6 +891,7 @@ export function makeDraggableHook(hookParams) {
             /** @type {DraggableHookContext} */
             const ctx = {
                 enable: () => false,
+                preventDrag: () => false,
                 ref: params.ref,
                 ignoreSelector: null,
                 fullSelector: null,
@@ -910,6 +916,11 @@ export function makeDraggableHook(hookParams) {
 
                     // Enable getter
                     ctx.enable = actualParams.enable;
+
+                    // Dragging constraint
+                    if (actualParams.preventDrag) {
+                        ctx.preventDrag = actualParams.preventDrag;
+                    }
 
                     // Selectors
                     ctx.elementSelector = actualParams.elements;

@@ -22,7 +22,11 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  * @property {string | () => string} [handle] additional selector for when the dragging
  *  sequence must be initiated when dragging on a certain part of the element.
  * @property {string | () => string} [ignore] selector targeting elements that must
- *  initiate a drag.
+ *  initiate a drag (recursive in depth: all draggable elements under an
+ *  ignored element will be locked in place)
+ * @property {(HTMLElement) => boolean} [preventDrag] function receiving a
+ *  the current target for dragging (element) and returning a boolean, whether
+ *  the element can be effectively dragged or not.
  * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
  *  across different parent groups. Note that it requires a `groups` param to work.
  * @property {string | () => string} [cursor] cursor style during the dragging sequence.
