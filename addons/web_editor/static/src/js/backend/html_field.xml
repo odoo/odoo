@@ -16,10 +16,11 @@
                 <textarea t-ref="codeView" class="o_codeview" t-att-value="markupValue"/>
             </t>
             <t t-else="">
-                <Wysiwyg
-                    options="this.wysiwygOptions"
-                    startWysiwyg.bind="this.startWysiwyg"
-                    editingValue="this.currentEditingValue" />
+                <t t-component="this.Wysiwyg" t-props="{
+                    'options': this.wysiwygOptions,
+                    'startWysiwyg': this.startWysiwyg.bind(this),
+                    'editingValue': this.currentEditingValue,
+                }" />
             </t>
             <t t-if="isTranslatable">
                 <span t-attf-style="font-size: 15px; position: absolute; right: {{this.props.codeview ? '40px' : '5px'}}; top: 5px;">

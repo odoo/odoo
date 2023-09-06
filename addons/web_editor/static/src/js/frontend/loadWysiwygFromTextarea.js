@@ -2,7 +2,6 @@
 
 import { loadBundle } from "@web/core/assets";
 import { useWowlService, attachComponent } from '@web/legacy/utils';
-import { requireLegacyModule } from '@web_editor/js/frontend/loader';
 
 export async function loadWysiwygFromTextarea(parent, textarea, options) {
     var loading = textarea.nextElementSibling;
@@ -16,9 +15,8 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
         currentOptions.value = '<p><br></p>';
     }
 
-    const { Wysiwyg } = await requireLegacyModule('@web_editor/js/wysiwyg/wysiwyg', async () => {
-        await loadBundle("web_editor.assets_wysiwyg");
-    });
+    await loadBundle("web_editor.assets_wysiwyg");
+    const { Wysiwyg } = await odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
     let wysiwyg;
     class LegacyWysiwyg extends Wysiwyg {
         constructor(...args) {

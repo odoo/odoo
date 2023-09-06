@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
-import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
 import { useActiveElement } from '@web/core/ui/ui_service';
 import {
     markup,
@@ -39,6 +38,8 @@ export class WebsiteEditorComponent extends Component {
 
         onWillStart(async () => {
             await this.websiteService.loadWysiwyg();
+            const adapterModule = await odoo.loader.modules.get('@website/components/wysiwyg_adapter/wysiwyg_adapter');
+            this.WysiwygAdapterComponent = adapterModule.WysiwygAdapterComponent;
         });
 
         useEffect(isPublicRootReady => {
@@ -149,5 +150,4 @@ export class WebsiteEditorComponent extends Component {
         this.websiteContext.edition = false;
     }
 }
-WebsiteEditorComponent.components = { WysiwygAdapterComponent };
 WebsiteEditorComponent.template = 'website.WebsiteEditorComponent';

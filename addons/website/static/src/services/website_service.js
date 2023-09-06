@@ -219,7 +219,7 @@ export const websiteService = {
                 websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
-                await loadBundle("website.assets_all_wysiwyg");
+                await loadBundle('website.backend_assets_all_wysiwyg');
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {
