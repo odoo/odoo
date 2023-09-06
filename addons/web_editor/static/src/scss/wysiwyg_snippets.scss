@@ -906,8 +906,10 @@
                     margin-bottom: 2px; // Not sure why but not really centered otherwise
                 }
             }
-            &.fa > div {
-                display: none;
+            &.fa, &.oi {
+                > div {
+                    display: none;
+                }
             }
         }
 
@@ -917,7 +919,7 @@
                 flex: 0 0 auto;
             }
             // Buttons being `fa-fw`, prevent font-awesome hardcoded width
-            &.fa-fw {
+            &.fa-fw, &.oi-fw {
                 padding: 0 .5em;
                 width: 2.29em; // .fa-fw = 1.28571429em (font-awesome.css)
                 justify-content: center;
