@@ -310,6 +310,7 @@ class AccountReportLine(models.Model):
     domain_formula = fields.Char(string="Domain Formula Shortcut", help="Internal field to shorten expression_ids creation for the domain engine", inverse='_inverse_domain_formula', store=False)
     account_codes_formula = fields.Char(string="Account Codes Formula Shortcut", help="Internal field to shorten expression_ids creation for the account_codes engine", inverse='_inverse_account_codes_formula', store=False)
     aggregation_formula = fields.Char(string="Aggregation Formula Shortcut", help="Internal field to shorten expression_ids creation for the aggregation engine", inverse='_inverse_aggregation_formula', store=False)
+    external_formula = fields.Char(string="External Formula Shortcut", help="Internal field to shorten expression_ids creation for the external engine", inverse='_inverse_external_formula', store=False)
 
     _sql_constraints = [
         ('code_uniq', 'unique (report_id, code)', "A report line with the same code already exists."),
@@ -410,6 +411,9 @@ class AccountReportLine(models.Model):
     def _inverse_account_codes_formula(self):
         self._create_report_expression(engine='account_codes')
 
+    def _inverse_external_formula(self):
+        self._create_report_expression(engine='external')
+
     def _create_report_expression(self, engine):
         # create account.report.expression for each report line based on the formula provided to each
         # engine-related field. This makes xmls a bit shorter
@@ -424,6 +428,12 @@ class AccountReportLine(models.Model):
                 subformula, formula = None, report_line.account_codes_formula
             elif engine == 'aggregation' and report_line.aggregation_formula:
                 subformula, formula = None, report_line.aggregation_formula
+            elif engine == 'external' and report_line.external_formula:
+                subformula, formula = 'editable', 'most_recent'
+                if report_line.external_formula == 'percentage':
+                    subformula = 'editable;rounding=0'
+                elif report_line.external_formula == 'monetary':
+                    formula = 'sum'
             else:
                 # If we want to replace a formula shortcut with a full-syntax expression, we need to make the formula field falsy
                 # We can't simply remove it from the xml because it won't be updated
@@ -438,6 +448,9 @@ class AccountReportLine(models.Model):
                 'formula': formula.lstrip(' \t\n'),  # Avoid IndentationError in evals
                 'subformula': subformula
             }
+            if engine == 'external' and report_line.external_formula:
+                vals['figure_type'] = report_line.external_formula
+
             if report_line.expression_ids:
                 # expressions already exists, update the first expression with the right engine
                 # since syntactic sugar aren't meant to be used with multiple expressions
