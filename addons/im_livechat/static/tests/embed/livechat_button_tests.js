@@ -17,7 +17,7 @@ QUnit.test("open/close temporary channel", async () => {
     await contains(".o-livechat-LivechatButton", { count: 0 });
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await contains(".o-livechat-LivechatButton", { count: 0 });
+    await contains(".o-livechat-LivechatButton", { count: 1 });
 });
 
 QUnit.test("open/close persisted channel", async () => {
@@ -34,7 +34,7 @@ QUnit.test("open/close persisted channel", async () => {
     });
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await contains(".o-livechat-LivechatButton", { count: 0 });
+    await contains(".o-livechat-LivechatButton", { count: 1 });
 });
 
 QUnit.test("livechat not available", async () => {

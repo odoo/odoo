@@ -24,7 +24,6 @@ export const SESSION_STATE = Object.freeze({
     NONE: "NONE",
     CREATED: "CREATED",
     PERSISTED: "PERSISTED",
-    CLOSED: "CLOSED",
 });
 
 export class LivechatService {
@@ -134,7 +133,7 @@ export class LivechatService {
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
         this.cookie.deleteCookie(this.SESSION_COOKIE);
-        this.state = SESSION_STATE.CLOSED;
+        this.state = SESSION_STATE.NONE;
         if (!session?.uuid || !notifyServer) {
             return;
         }
