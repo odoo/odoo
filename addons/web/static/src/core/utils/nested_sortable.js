@@ -34,6 +34,8 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  * @property {string | () => string} [listTagName] type of lists ("ul" or "ol").
  * @property {number | () => number} [nestInterval] Horizontal distance needed to trigger
  * a change in the list hierarchy (i.e. changing parent when moving horizontally)
+ * @property {number | () => number} [maxLevels] The maximum depth of nested items
+ * the list can accept. If set to '0' the levels are unlimited. Default: 0
  *
  * HANDLERS (also optional)
  *
@@ -78,6 +80,7 @@ export const useNestedSortable = makeDraggableHook({
         nest: [Boolean],
         listTagName: [String],
         nestInterval: [Number],
+        maxLevels: [Number],
     },
     defaultParams: {
         connectGroups: false,
@@ -89,6 +92,7 @@ export const useNestedSortable = makeDraggableHook({
         nest: false,
         listTagName: "ul",
         nestInterval: 15,
+        maxLevels: 0,
     },
 
     // Set the parameters.
@@ -108,6 +112,7 @@ export const useNestedSortable = makeDraggableHook({
         // (i.e. changing parent when moving horizontally)
         ctx.nestInterval = params.nestInterval;
         ctx.isRTL = localization.direction === "rtl";
+        ctx.maxLevels = params.maxLevels || 0;
     },
 
     // Set the current group and create the placeholder row that will take the
@@ -164,10 +169,38 @@ export const useNestedSortable = makeDraggableHook({
             group: ctx.currentGroup,
         };
     },
+    _getDeepestChildLevel(ctx, node, depth = 0) {
+        let result = 0;
+        const childSelector = `${ctx.listTagName} ${ctx.elementSelector}`;
+        for (const childNode of node.querySelectorAll(childSelector)) {
+            result = Math.max(this._getDeepestChildLevel(ctx, childNode, depth + 1), result);
+        }
+        return depth ? result + 1 : result;
+    },
+    _hasReachMaxAllowedLevel(ctx) {
+        if (!ctx.nest || ctx.maxLevels < 1) {
+            return false;
+        }
+        let level = this._getDeepestChildLevel(ctx, ctx.current.element);
+        let list = ctx.current.placeHolder.closest(ctx.listTagName);
+        while (list) {
+            level++;
+            list = list.parentNode.closest(ctx.listTagName);
+        }
+        return level > ctx.maxLevels;
+    },
+    _isAllowedNodeMove(ctx) {
+        return !this._hasReachMaxAllowedLevel(ctx);
+    },
     // Check if the cursor moved enough to trigger a move. If it did, move the
     // placeholder accordingly.
     onDrag({ ctx, callHandler }) {
         const onMove = (prevPos) => {
+            if (!this._isAllowedNodeMove(ctx)) {
+                ctx.current.placeHolder.classList.add("d-none");
+                return;
+            }
+            ctx.current.placeHolder.classList.remove("d-none");
             callHandler("onMove", {
                 element: ctx.current.element,
                 previous: ctx.current.placeHolder.previousElementSibling,
@@ -351,6 +384,9 @@ export const useNestedSortable = makeDraggableHook({
     // If the drop position is different from the starting position, run the
     // onDrop handler from the parameters.
     onDrop({ ctx }) {
+        if (!this._isAllowedNodeMove(ctx)) {
+            return;
+        }
         const previous = ctx.current.placeHolder.previousElementSibling;
         const next = ctx.current.placeHolder.nextElementSibling;
         if (previous !== ctx.current.element && next !== ctx.current.element) {
