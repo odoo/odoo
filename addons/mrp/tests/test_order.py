@@ -3298,3 +3298,50 @@ class TestMrpOrder(TestMrpCommon):
         consumption.action_set_qty()
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 30)
         self.assertEqual(mo.move_raw_ids[0].quantity_done, 30)
+
+    def test_validation_mo_with_tracked_component(self):
+        """
+        check that the verification of SN for tracked component is ignored when the quantity to consume is 0.
+        """
+        self.product_2.tracking = 'serial'
+        bom = self.env["mrp.bom"].create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_qty': 1.0,
+            }), (0, 0, {
+                'product_id': self.product_3.id,
+                'product_qty': 1.0,
+            })]
+        })
+        # create the MO and confirm it
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        # set the qty to consume of the tracked product to 0
+        mo.move_raw_ids[0].write({
+            'product_uom_qty': 0,
+            'quantity_done': 0,
+        })
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.state, 'to_close')
+        consumption_issues = mo._get_consumption_issues()
+        action = mo._action_generate_consumption_wizard(consumption_issues)
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
+        warning = warning.save()
+
+        self.assertEqual(len(warning.mrp_consumption_warning_line_ids), 1)
+        self.assertEqual(warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 0)
+        self.assertEqual(warning.mrp_consumption_warning_line_ids[0].product_expected_qty_uom, 1)
+        # Force the warning
+        warning.action_confirm()
+        self.assertEqual(mo.state, 'done')
