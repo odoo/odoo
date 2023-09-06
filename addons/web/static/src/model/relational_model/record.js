@@ -3,15 +3,16 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Domain } from "@web/core/domain";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
     FetchRecordError,
+    applyProperties,
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
@@ -889,7 +890,7 @@ export class Record extends DataPoint {
             if (!records.length) {
                 throw new FetchRecordError(records.map((r) => r.id));
             }
-            this.model._applyProperties(records, this.config);
+            applyProperties(records, this.config.activeFields, this.config.fields);
             if (this.resId) {
                 this.model._updateSimilarRecords(this, records[0]);
             }

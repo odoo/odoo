@@ -16,12 +16,12 @@ import { Group } from "./group";
 import { Record } from "./record";
 import { StaticList } from "./static_list";
 import {
-    getFieldsSpec,
-    createPropertyActiveField,
-    extractInfoFromGroupData,
-    isRelational,
     FetchRecordError,
+    applyProperties,
+    extractInfoFromGroupData,
     getBasicEvalContext,
+    getFieldsSpec,
+    isRelational,
 } from "./utils";
 
 /**
@@ -185,40 +185,6 @@ export class RelationalModel extends Model {
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
-
-    _applyProperties(records, config) {
-        for (const record of records) {
-            for (const fieldName in record) {
-                const field = config.fields[fieldName];
-                if (fieldName !== "id" && field.type === "properties" && record[fieldName]) {
-                    const parent = record[field.definition_record];
-                    const relatedPropertyField = {
-                        fieldName,
-                    };
-                    if (parent) {
-                        relatedPropertyField.id = parent.id;
-                        relatedPropertyField.displayName = parent.display_name;
-                    }
-                    for (const property of record[fieldName]) {
-                        const propertyFieldName = `${fieldName}.${property.name}`;
-                        if (!config.fields[propertyFieldName]) {
-                            config.fields[propertyFieldName] = {
-                                ...property,
-                                name: propertyFieldName,
-                                relatedPropertyField,
-                                propertyName: property.name,
-                                relation: property.comodel,
-                            };
-                        }
-                        if (!config.activeFields[propertyFieldName]) {
-                            config.activeFields[propertyFieldName] =
-                                createPropertyActiveField(property);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     _askChanges() {
         const proms = [];
@@ -533,7 +499,7 @@ export class RelationalModel extends Model {
                 throw new FetchRecordError(resIds);
             }
 
-            this._applyProperties(records, config);
+            applyProperties(records, config.activeFields, config.fields);
             return records;
         } else {
             return resIds.map((resId) => {
@@ -561,7 +527,7 @@ export class RelationalModel extends Model {
         };
         const response = await this.orm.webSearchRead(config.resModel, config.domain, kwargs);
 
-        this._applyProperties(response.records, config);
+        applyProperties(response.records, config.activeFields, config.fields);
         return response;
     }
 
