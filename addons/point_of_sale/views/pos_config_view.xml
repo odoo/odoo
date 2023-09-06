@@ -31,7 +31,7 @@
                     </div>
 
                     <!-- SHOW this div in create_mode (when '+ New Shop' is clicked in the general settings.) -->
-                    <div class="row mt16 o_settings_container" invisible="not context.get('pos_config_create_mode', False)">
+                    <div id="restaurant_on_create" class="row mt16 o_settings_container" invisible="not context.get('pos_config_create_mode', False)">
                         <setting>
                                 <field name="module_pos_restaurant" />
                         </setting>

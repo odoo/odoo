@@ -37,11 +37,17 @@ export class SelfOrderBus {
     dispatch(message) {
         if (message.type === "ORDER_STATE_CHANGED") {
             this.ws_changeOrderState(message.payload.access_token, message.payload.state);
+        } else if (message.type === "ORDER_CHANGED") {
+            this.ws_syncOrder(message.payload.order);
         }
     }
 
     ws_changeOrderState(access_token, state) {
         this.selfOrder.changeOrderState(access_token, state);
+    }
+
+    ws_syncOrder(order, state) {
+        this.selfOrder.updateOrdersFromServer([order], [order.access_token]);
     }
 }
 

@@ -29,12 +29,15 @@ export class LandingPage extends Component {
         });
 
         onMounted(() => {
-            // used to init carousel after components mount / unmount
-            const carousel = new Carousel(this.carouselRef.el);
+            if (this.selfOrder.kiosk_image_home.length > 1) {
+                // used to init carousel after components mount / unmount
+                const carousel = new Carousel(this.carouselRef.el);
 
-            this.carouselInterval = setInterval(() => {
-                carousel.next();
-            }, 5000);
+                // prevent traceback when no image is set
+                this.carouselInterval = setInterval(() => {
+                    carousel.next();
+                }, 5000);
+            }
         });
 
         onWillUnmount(() => {

@@ -54,7 +54,10 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         orders = super().create_from_ui(orders, draft)
         order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
-        self._send_notification(order_ids)
+
+        if self.env.context.get('from_self') is not True:
+            self._send_notification(order_ids)
+
         return orders
 
     @api.model
@@ -79,6 +82,10 @@ class PosOrder(models.Model):
                 self.env['bus.bus']._sendone(f'self_order-{order.access_token}', 'ORDER_STATE_CHANGED', {
                     'access_token': order.access_token,
                     'state': order.state
+                })
+            else:
+                self.env['bus.bus']._sendone(f'self_order-{order.access_token}', 'ORDER_CHANGED', {
+                    'order': order._export_for_self_order()
                 })
 
     def _export_for_self_order(self) -> Dict:

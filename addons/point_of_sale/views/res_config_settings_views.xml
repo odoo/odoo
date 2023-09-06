@@ -60,7 +60,7 @@
                             <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
                                 <field name="pos_auto_validate_terminal_payment"/>
                             </setting>
-                            <setting string="Cash Rounding" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
+                            <setting string="Cash Rounding" invisible="is_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
                                 <field name="pos_cash_rounding"/>
                                 <div class="content-group mt16" invisible="not pos_cash_rounding">
                                     <div class="row mt16">
@@ -128,13 +128,13 @@
                                     <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
                                 </div>
                             </setting>
-                            <setting help="Improve navigation for imprecise industrial touchscreens">
+                            <setting invisible="is_kiosk_mode" help="Improve navigation for imprecise industrial touchscreens">
                                 <field name="pos_iface_big_scrollbars"/>
                             </setting>
                             <setting id="margin_and_cost" string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
                                 <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
-                            <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant">
+                            <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant or is_kiosk_mode">
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label string="Trusted POS" for="pos_trusted_config_ids" class="col-lg-3 o_light_label" />

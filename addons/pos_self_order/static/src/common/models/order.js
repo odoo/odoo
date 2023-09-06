@@ -103,12 +103,24 @@ export class Order extends Reactive {
             }
         }
 
+        const foundLines = [];
         for (const lines of this.lines) {
             const lineFound = data.lines.find((line) => line.uuid === lines.uuid);
 
             if (lineFound) {
                 lines.updateDataFromServer(lineFound);
+                foundLines.push(lines);
             }
         }
+
+        for (const lines of data.lines) {
+            const lineFound = foundLines.find((line) => line.uuid === lines.uuid);
+
+            if (!lineFound) {
+                foundLines.push(new Line(lines));
+            }
+        }
+
+        this.lines = foundLines;
     }
 }

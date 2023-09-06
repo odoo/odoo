@@ -50,7 +50,7 @@ class PosSelfOrderController(http.Controller):
         }
 
         # Save the order in the database to get the id
-        posted_order_id = pos_config.env['pos.order'].create_from_ui([order], draft=True)[0].get('id')
+        posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).create_from_ui([order], draft=True)[0].get('id')
 
         # Process the lines and get their prices computed
         lines = self._process_lines(lines, pos_config, posted_order_id, order.get('take_away'))
@@ -199,8 +199,9 @@ class PosSelfOrderController(http.Controller):
             config_fiscal_pos = pos_config.default_fiscal_position_id
 
         for line in lines:
-            if line.get('uuid') in appended_uuid:
+            if line.get('uuid') in appended_uuid or not line.get('product_id'):
                 continue
+
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
             # todo take into account the price extra
             price_unit = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price

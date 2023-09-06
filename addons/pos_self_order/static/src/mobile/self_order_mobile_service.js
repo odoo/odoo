@@ -155,13 +155,15 @@ export class SelfOrder extends selfOrderCommon {
         }
     }
 
-    updateOrdersFromServer(orders, localAccessToken) {
+    updateOrdersFromServer(ordersFromServer, localAccessToken) {
         //FIXME, if the user refresh the page with not sent, we will lost this data.
-        const accessTokensFromServer = orders.map((order) => order.access_token);
+        const accessTokensFromServer = ordersFromServer.map((order) => order.access_token);
 
         for (const order of this.orders) {
             if (order.access_token) {
-                const orderFromServer = orders.find((o) => o.access_token === order.access_token);
+                const orderFromServer = ordersFromServer.find(
+                    (o) => o.access_token === order.access_token
+                );
                 if (orderFromServer) {
                     order.updateDataFromServer(orderFromServer);
                 }
