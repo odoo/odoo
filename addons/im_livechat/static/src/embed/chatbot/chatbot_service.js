@@ -107,11 +107,16 @@ export class ChatBotService {
     }
 
     /**
-     * Stop the chatbot script.
+     * Stop the chatbot script and reset its state.
      */
     stop() {
         this.clear();
         clearTimeout(this.nextStepTimeout);
+        this.currentStep = null;
+        this.isTyping = false;
+        if (this.livechatService.rule?.chatbot) {
+            this.chatbot = new Chatbot(this.livechatService.rule.chatbot);
+        }
     }
 
     /**
@@ -168,6 +173,9 @@ export class ChatBotService {
         this.isTyping = true;
         this.nextStepTimeout = browser.setTimeout(async () => {
             const { step, stepMessage } = await this._getNextStep();
+            if (!this.active) {
+                return;
+            }
             this.isTyping = false;
             if (!step && this.currentStep) {
                 this.currentStep.isLast = true;
@@ -369,11 +377,7 @@ export class ChatBotService {
     }
 
     get canRestart() {
-        return (
-            this.livechatService.state !== SESSION_STATE.CLOSED &&
-            this.completed &&
-            !this.currentStep?.operatorFound
-        );
+        return this.completed && !this.currentStep?.operatorFound;
     }
 
     get inputEnabled() {

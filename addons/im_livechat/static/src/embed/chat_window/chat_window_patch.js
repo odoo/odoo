@@ -30,6 +30,7 @@ patch(ChatWindow.prototype, {
             this.livechatState.hasFeedbackPanel = true;
             this.chatWindowService.show(this.props.chatWindow);
         } else {
+            this.thread?.delete();
             super.close();
         }
         this.livechatService.leaveSession();
