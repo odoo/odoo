@@ -10,13 +10,13 @@ class AccountTax(models.Model):
 
     l10n_ec_code_base = fields.Char(
         string="Code base",
-        help="Tax declaration code of the base amount prior to the calculation of the tax",
+        help="Ecuador: Tax declaration code of the base amount prior to the calculation of the tax.",
     )
     l10n_ec_code_applied = fields.Char(
         string="Code applied",
-        help="Tax declaration code of the resulting amount after the calculation of the tax",
+        help="Ecuador: Tax declaration code of the resulting amount after the calculation of the tax.",
     )
     l10n_ec_code_ats = fields.Char(
         string="Code ATS",
-        help="Tax Identification Code for the Simplified Transactional Annex",
+        help="Ecuador: Indicates if the purchase invoice supports tax credit or cost or expenses, conforming table 5 of ATS.",
     )
