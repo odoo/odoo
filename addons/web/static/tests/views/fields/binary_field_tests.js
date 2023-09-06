@@ -254,6 +254,36 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("BinaryField is correctly rendered (isDirty)", async function (assert) {
+        assert.expect(2);
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                    <field name="foo"/>
+                </form>`,
+            resId: 1,
+        });
+        // Simulate a file upload
+        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+        await editInput(target, ".o_field_binary .o_input_file", file);
+        assert.containsNone(
+            target,
+            '.o_field_widget[name="document"] .fa-download',
+            "the binary field should not be rendered as a downloadable since the record is dirty"
+        );
+        await clickSave(target);
+        assert.containsOnce(
+            target,
+            '.o_field_widget[name="document"] .fa-download',
+            "the binary field should render as a downloadable link since the record is not dirty"
+        );
+    });
+
     QUnit.test("file name field is not defined", async (assert) => {
         await makeView({
             serverData,
