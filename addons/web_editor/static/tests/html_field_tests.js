@@ -418,7 +418,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Replace the empty paragraph with a paragrah containing an unsaved
         // modified image
-        editor.editable.classList.add("o_dirty");
         const imageContainerElement = parseHTML(imageContainerHTML).firstChild;
         let paragraph = editor.editable.querySelector(".test_target");
         editor.editable.replaceChild(imageContainerElement, paragraph);
