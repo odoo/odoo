@@ -33,7 +33,7 @@ patch(Thread, {
                 });
             }
             onChange(thread, ["state", "seen_message_id", "message_unread_counter"], () => {
-                if (![SESSION_STATE.CLOSED, SESSION_STATE.NONE].includes(livechatService.state)) {
+                if (livechatService.state !== SESSION_STATE.NONE) {
                     livechatService.updateSession({
                         state: thread.state,
                         seen_message_id: thread.seen_message_id,

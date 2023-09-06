@@ -1,11 +1,33 @@
 /* @odoo-module */
 
-import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
-
-import { Component, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
 
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
+
+const LIVECHAT_BUTTON_SIZE = 56;
+
+const useMovable = makeDraggableHook({
+    name: "useMovable",
+    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
+        const { height } = getRect(ctx.current.element);
+        ctx.current.container = document.createElement("div");
+        addStyle(ctx.current.container, {
+            position: "fixed",
+            top: 0,
+            bottom: `${height}px`,
+            left: 0,
+            right: 0,
+        });
+        ctx.current.element.after(ctx.current.container);
+        addCleanup(() => ctx.current.container.remove());
+    },
+    onDrop({ ctx, getRect }) {
+        const { top, left } = getRect(ctx.current.element);
+        return { top, left };
+    },
+});
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";
@@ -20,6 +42,21 @@ export class LivechatButton extends Component {
         this.onClick = debounce(this.onClick.bind(this), LivechatButton.DEBOUNCE_DELAY, {
             leading: true,
         });
+        this.ref = useRef("button");
+        this.size = LIVECHAT_BUTTON_SIZE;
+        this.position = useState({
+            left: `calc(97% - ${LIVECHAT_BUTTON_SIZE}px)`,
+            top: `calc(97% - ${LIVECHAT_BUTTON_SIZE}px)`,
+        });
+        useMovable({
+            cursor: "grabbing",
+            ref: this.ref,
+            elements: ".o-livechat-LivechatButton",
+            onDrop: ({ top, left }) => {
+                this.position.left = `${left}px`;
+                this.position.top = `${top}px`;
+            },
+        });
     }
 
     onClick() {
@@ -31,12 +68,7 @@ export class LivechatButton extends Component {
             this.livechatService.initialized &&
             this.livechatService.available &&
             !this.livechatService.shouldRestoreSession &&
-            this.livechatService.state !== SESSION_STATE.CLOSED &&
             this.store.ChatWindow.records.length === 0
         );
-    }
-
-    get text() {
-        return this.livechatService.options.button_text;
     }
 }
