@@ -7,6 +7,7 @@ import { PopoverController } from "./popover_controller";
 /**
  * @typedef {{
  *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
+ *   closeOnHoverAway?: boolean;
  *   onClose?: () => void;
  *   popoverClass?: string;
  *   position?: import("@web/core/position_hook").Options["position"];
@@ -31,12 +32,14 @@ export const popoverService = {
                 typeof options.closeOnClickAway === "function"
                     ? options.closeOnClickAway
                     : () => options.closeOnClickAway ?? true;
+            const closeOnHoverAway = options.closeOnHoverAway || false;
             const remove = overlay.add(
                 PopoverController,
                 {
                     target,
                     close: () => remove(),
                     closeOnClickAway,
+                    closeOnHoverAway,
                     component,
                     componentProps: markRaw(props),
                     popoverProps: {

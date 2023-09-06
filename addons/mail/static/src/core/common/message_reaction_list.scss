@@ -1,0 +1,19 @@
+.o-mail-MessageReactionList {
+    max-width: 250px;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.o-mail-MessageReaction-Summary {
+    cursor: pointer;
+
+    &.active {
+        > .o-mail-MessageReaction-Summary-Highlight {
+            text-decoration: underline #017e84;
+        }
+    }
+
+    &-Highlight {
+        color: #017e84;
+    }
+}

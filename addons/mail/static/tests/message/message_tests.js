@@ -13,9 +13,7 @@ import {
     makeDeferred,
     patchWithCleanup,
     triggerHotkey,
-    getFixture,
     triggerEvent,
-    nextTick,
 } from "@web/../tests/helpers/utils";
 
 const { DateTime } = luxon;
@@ -505,7 +503,7 @@ QUnit.test("Can remove a reaction", async () => {
     openDiscuss(channelId);
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
-    await click(".o-mail-MessageReaction-btn");
+    await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { count: 0 });
 });
 
@@ -537,7 +535,7 @@ QUnit.test("Two users reacting with the same emoji", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-MessageReaction", { text: "😅2" });
-    await click(".o-mail-MessageReaction-btn");
+    await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { text: "😅1" });
     await click(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction", { text: "😅2" });
@@ -560,20 +558,21 @@ QUnit.test("Reaction summary", async () => {
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob"];
     const expectedSummaries = [
         "Foo has reacted with 😅",
-        "Foo and Bar has reacted with 😅",
-        "Foo, Bar and FooBar has reacted with 😅",
-        "Foo, Bar, FooBar and 1 other people has reacted with 😅",
+        "Foo and Bar have reacted with 😅",
+        "Foo, Bar, FooBar have reacted with 😅",
+        "Foo, Bar, FooBar and 1 other persons have reacted with 😅",
     ];
     for (const [idx, name] of partnerNames.entries()) {
         const userId = pyEnv["res.users"].create({ name });
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await pyEnv.withUser(userId, async () => {
             await click("[title='Add a Reaction']");
-            await click(".o-Emoji:contains(😅):eq(0)");
-            const target = getFixture();
-            await nextTick();
-            await triggerEvent(target, ".o-mail-MessageReaction-btn", "mouseover");
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await click(".o-Emoji", {
+                after: ["span", { textContent: "Smileys & Emotion" }],
+                text: "😅",
+            });
+            await contains(".o-mail-MessageReaction", { text: `😅${idx + 1}` });
+            await triggerEvent(document, ".o-mail-MessageReaction", "mouseover");
             await contains(".o-mail-MessageReactionList", { text: expectedSummaries[idx] });
         });
     }

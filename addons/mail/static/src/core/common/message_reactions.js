@@ -44,7 +44,7 @@ export class MessageReactions extends Component {
         }
     }
 
-    openCard(params) {
+    openReactions(params) {
         const target = params.ev.currentTarget;
         const reaction = params.reaction;
         this.reactionOpened = browser.setTimeout(() => {
@@ -53,7 +53,7 @@ export class MessageReactions extends Component {
                 (this.lastOpenedId && reaction.messageId !== this.lastOpenedId)
             ) {
                 this.reactionPopover.open(target, {
-                    id: reaction.messageId,
+                    id: reaction.message.id,
                     reaction: params.reaction,
                     openReactionMenu: this.props.openReactionMenu,
                 });
