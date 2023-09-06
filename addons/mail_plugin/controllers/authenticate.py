@@ -9,7 +9,7 @@ import logging
 import odoo
 import werkzeug
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from werkzeug.exceptions import NotFound
 
@@ -27,6 +27,8 @@ class Authenticate(http.Controller):
          old route name "/mail_client_extension/auth is deprecated as of saas-14.3,it is not needed for newer
          versions of the mail plugin but necessary for supporting older versions
          """
+        if not request.env.user._is_internal():
+            return request.render('mail_plugin.app_error', {'error': _('Access Error: Only Internal Users can link their inboxes to this database.')})
         return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
