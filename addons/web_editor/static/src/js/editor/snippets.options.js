@@ -6620,8 +6620,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             // When a shape is removed and there is a hover effect on the
             // image, we then place the "Square" shape as the default because a
             // shape is required for the hover effects to work.
-            const shapeImgShapeWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            widgetValue = shapeImgShapeWidget.getActiveValue("setImgShape");
+            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+            widgetValue = shapeImgSquareWidget.getActiveValue("setImgShape");
         }
         if (widgetValue) {
             await this._loadShape(widgetValue);
@@ -6644,7 +6644,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                         delete img.dataset.shapeFlip;
                         delete img.dataset.shapeRotate;
                     }
-                    if (params.animated || this._isDeviceShape()) {
+                    if (!this._canHaveHoverEffect()) {
                         delete img.dataset.hoverEffect;
                         delete img.dataset.hoverEffectColor;
                         delete img.dataset.hoverEffectStrokeWidth;
@@ -6774,10 +6774,6 @@ registry.ImageTools = ImageHandlerOption.extend({
     notify(name) {
         if (name === "enable_hover_effect") {
             this.trigger_up("snippet_edition_request", {exec: () => {
-                // Add the "Overlay" hover effect to the shape.
-                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
-                hoverEffectOverlayWidget.enable();
-                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
                 // Add the "square" shape to the image if it has no shape
                 // because the "hover effects" need a shape to work.
                 const imgEl = this._getImg();
@@ -6787,6 +6783,10 @@ registry.ImageTools = ImageHandlerOption.extend({
                     shapeImgSquareWidget.enable();
                     shapeImgSquareWidget.getParent().close(); // FIXME remove this ugly hack asap
                 }
+                // Add the "Overlay" hover effect to the shape.
+                const hoverEffectOverlayWidget = this._requestUserValueWidgets("hover_effect_overlay_opt")[0];
+                hoverEffectOverlayWidget.enable();
+                hoverEffectOverlayWidget.getParent().close(); // FIXME remove this ugly hack asap
             }});
         } else if (name === "disable_hover_effect") {
             this._disableHoverEffect();
@@ -6931,7 +6931,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
 
         // Add shape animations on hover.
-        if (img.dataset.hoverEffect && !this._isDeviceShape() && !this._isAnimatedShape()) {
+        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
             this._addImageShapeHoverEffect(svg, img);
             // The "ImageShapeHoverEffet" public widget needs to restart
             // (e.g. image replacement).
@@ -6977,7 +6977,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         img.dataset.fileName = `${imgFilename}.svg`;
         const loadedImg = await loadImage(dataURL, img);
         if (needToRefreshPublicWidgets) {
-            this._refreshPublicWidgets();
+            await this._refreshPublicWidgets();
         }
         return loadedImg;
     },
@@ -7065,12 +7065,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         if (params.optionsPossibleValues.setImgShapeHoverEffect) {
             const imgEl = this._getImg();
-            return imgEl.classList.contains("o_animate_on_hover") && !this._isDeviceShape() && !this._isAnimatedShape();
+            return imgEl.classList.contains("o_animate_on_hover") && this._canHaveHoverEffect();
         }
         // If "Description" or "Tooltip" options.
         if (["alt", "title"].includes(params.attributeName)) {
-            const imgEl = this._getImg();
-            return !imgEl.matches("[data-oe-type='image'] > img, [data-oe-xpath]");
+            return isImageSupportedForStyle(this._getImg());
         }
         // The "Square" shape is only used for hover effects. It is
         // automatically set when there is an hover effect and no shape is
@@ -7082,8 +7081,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             // Do not show the "remove shape" button when the "square" shape is
             // enable. The "square" shape is only enable when there is a hover
             // effect and it is always hidden in the shape select.
-            const shapeImgShareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
-            return !shapeImgShareWidget.isActive();
+            const shapeImgSquareWidget = this._requestUserValueWidgets("shape_img_square_opt")[0];
+            return !shapeImgSquareWidget.isActive();
         }
         return this._super(...arguments);
     },
@@ -7352,7 +7351,16 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     _isAnimatedShape() {
         const shapeImgWidget = this._requestUserValueWidgets("shape_img_opt")[0];
-        return shapeImgWidget && shapeImgWidget.getMethodsParams().animated;
+        return shapeImgWidget?.getMethodsParams().animated;
+    },
+    /**
+     * Checks if the shape can have a hover effect.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _canHaveHoverEffect() {
+        return !this._isDeviceShape() && !this._isAnimatedShape();
     },
     /**
      * Adds hover effect to the SVG.
@@ -7466,7 +7474,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(text, "text/xml");
                 return xmlDoc.getElementsByTagName("svg")[0];
-        });
+            });
     },
     /**
      * Disables the hover effect on the image.
