@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from functools import wraps
 import pytz
 from dateutil.parser import parse
+from datetime import timedelta
 
 from odoo import api, fields, models, registry
 from odoo.exceptions import UserError
@@ -519,4 +520,8 @@ class MicrosoftSync(models.AbstractModel):
                 '&', ('ms_universal_event_id', '=', False), is_active_clause,
                 ('need_sync_m', '=', True),
             ]])
+        # Sync only events created/updated after last sync date (with 5 min of time acceptance).
+        if self.env.user.microsoft_last_sync_date:
+            time_offset = timedelta(minutes=5)
+            domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
         return domain
