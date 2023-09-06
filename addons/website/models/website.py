@@ -592,28 +592,27 @@ class Website(models.Model):
                 try:
                     IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
                     render = IrQweb._render('website.' + snippet, cta_data)
-                    if render:
-                        el = html.fromstring(render)
+                    el = html.fromstring(render)
 
-                        # Add the data-snippet attribute to identify the snippet
-                        # for compatibility code
-                        el.attrib['data-snippet'] = snippet
+                    # Add the data-snippet attribute to identify the snippet
+                    # for compatibility code
+                    el.attrib['data-snippet'] = snippet
 
-                        # Tweak the shape of the first snippet to connect it
-                        # properly with the header color in some themes
-                        if i == 1:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+                    # Tweak the shape of the first snippet to connect it
+                    # properly with the header color in some themes
+                    if i == 1:
+                        shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                        if shape_el:
+                            shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
 
-                        # Tweak the shape of the last snippet to connect it
-                        # properly with the footer color in some themes
-                        if i == nb_snippets:
-                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                            if shape_el:
-                                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-                        rendered_snippet = pycompat.to_text(etree.tostring(el))
-                        rendered_snippets.append(rendered_snippet)
+                    # Tweak the shape of the last snippet to connect it
+                    # properly with the footer color in some themes
+                    if i == nb_snippets:
+                        shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                        if shape_el:
+                            shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+                    rendered_snippet = pycompat.to_text(etree.tostring(el))
+                    rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
             page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
