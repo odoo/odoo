@@ -36,6 +36,18 @@ FilterableSelectionField.props = {
 export const filterableSelectionField = {
     ...selectionField,
     component: FilterableSelectionField,
+    supportedOptions: [
+        {
+            label: "Whitelisted Values",
+            name: "whitelisted_values",
+            type: "string",
+        },
+        {
+            label: "Blacklisted Values",
+            name: "blacklisted_values",
+            type: "string",
+        }
+    ],
     extractProps({ options }) {
         const props = selectionField.extractProps(...arguments);
         props.whitelisted_values = options.whitelisted_values;

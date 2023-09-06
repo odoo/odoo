@@ -309,11 +309,13 @@ export const dateTimeField = {
     supportedOptions: [
         ...dateField.supportedOptions,
         {
-            label: _t("Rounding"),
+            label: _t("Time interval"),
             name: "rounding",
             type: "number",
             default: 5,
-            help: _t(`Increment used in the minutes selection dropdown.`),
+            help: _t(
+                `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
+            ),
         },
     ],
     supportedTypes: ["datetime"],

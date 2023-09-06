@@ -233,6 +233,19 @@ export class ReferenceField extends Component {
 export const referenceField = {
     component: ReferenceField,
     displayName: _t("Reference"),
+    supportedOptions: [
+        {
+            label: _t("Hide model"),
+            name: "hide_model",
+            type: "boolean",
+        },
+        {
+            label: _t("Model field"),
+            name: "model_field",
+            type: "field",
+            availableTypes: ["many2one"],
+        },
+    ],
     supportedTypes: ["reference", "char"],
     extractProps({ options }) {
         /*

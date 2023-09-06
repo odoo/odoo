@@ -638,6 +638,10 @@ export const massMailingHtmlField = {
         label: _t("Filter templates"),
         name: "filterTemplates",
         type: "boolean"
+    }, {
+        label: _t("Inline field"),
+        name: "inline-field",
+        type: "field"
     }],
     extractProps({ attrs, options }) {
         const props = htmlField.extractProps(...arguments);

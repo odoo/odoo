@@ -177,11 +177,17 @@ ProjectTaskStateSelection.props = {
     viewType: { type: String },
 }
 
-
 export const projectTaskStateSelection = {
     ...stateSelectionField,
     component: ProjectTaskStateSelection,
     fieldDependencies: [{ name: "project_id", type: "many2one" }],
+    supportedOptions: [
+        ...stateSelectionField.supportedOptions, {
+            label: _t("Is toggle mode"),
+            name: "is_toggle_mode",
+            type: "boolean"
+        }
+    ],
     extractProps({ options, viewType }) {
         const props = stateSelectionField.extractProps(...arguments);
         props.isToggleMode = Boolean(options.is_toggle_mode);

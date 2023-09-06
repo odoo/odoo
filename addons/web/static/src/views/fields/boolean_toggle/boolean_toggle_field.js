@@ -21,6 +21,17 @@ export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _t("Toggle"),
+    supportedOptions: [
+        {
+            label: _t("Autosave"),
+            name: "autosave",
+            type: "boolean",
+            default: true,
+            help: _t(
+                "If checked, the record will be saved immediately when the field is modified."
+            ),
+        },
+    ],
     extractProps({ options }, dynamicInfo) {
         return {
             autosave: "autosave" in options ? Boolean(options.autosave) : true,

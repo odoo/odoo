@@ -39,6 +39,14 @@ export class UrlField extends Component {
 export const urlField = {
     component: UrlField,
     displayName: _t("URL"),
+    supportedOptions: [
+        {
+            label: _t("Is a website path"),
+            name: "website_path",
+            type: "boolean",
+            help: _t("If True, the url will be used as it is, without any prefix added to it."),
+        },
+    ],
     supportedTypes: ["char"],
     extractProps: ({ attrs, options }) => ({
         text: attrs.text,
