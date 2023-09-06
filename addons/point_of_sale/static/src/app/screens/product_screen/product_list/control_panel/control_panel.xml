@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ProductsWidgetControlPanel">
-        <div class="products-widget-control d-flex bg-view shadow-sm" t-ref="products-widget-control">
+        <div class="products-widget-control d-flex bg-view shadow-sm" t-att-class="{'h-12': categoriesHasImages}" t-ref="products-widget-control">
             <CategorySelector
                 categories="getCategories()"
                 onClick="(id) => this.pos.setSelectedCategoryId(id)"
@@ -14,8 +14,8 @@
                     <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-right' : 'fa-search'}}"/>
                 </button>
                 <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
-                    <div class="input-group h-100">
-                        <div class="pos-search-bar form-control d-flex align-items-center py-1 bg-view border-0 rounded-0 border-start">
+                    <div class="input-group border-bottom p-2 m-2" t-att-class="{'h-50': categoriesHasImages}">
+                        <div class="pos-search-bar form-control d-flex align-items-center py-1 bg-view border-0 rounded-0">
                             <i class="oi oi-search me-2"/>
                             <input class="flex-grow-1 w-auto h-100 border-0 px-2 me-4" t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
                             <i t-if="this.pos.searchProductWord" class="fa fa-times position-absolute end-0 me-2 pe-1 cursor-pointer" t-on-click="_clearSearch"/>
