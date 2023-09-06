@@ -540,31 +540,4 @@ QUnit.module("Search", () => {
             "Quarter term should be translated and notation should be right to left"
         );
     });
-
-    QUnit.skip(
-        "Moment.js localization does not affect formatted domain dates",
-        async function (assert) {
-            patchDate(2020, 5, 1, 13, 0, 0);
-            const initialLocale = moment.locale();
-            moment.defineLocale("addoneForTest", {
-                postformat: function (string) {
-                    return string.replace(/\d/g, (match) => (1 + parseInt(match)) % 10);
-                },
-            });
-            const referenceMoment = moment().locale("addoneForTest");
-            assert.deepEqual(
-                constructDateDomain(referenceMoment, "date_field", "date", [
-                    "this_month",
-                    "this_year",
-                ]),
-                {
-                    domain: `["&", ["date_field", ">=", "2020-06-01"], ["date_field", "<=", "2020-06-30"]]`,
-                    description: "June 3131",
-                },
-                "Numbers in domain should not use addoneForTest locale"
-            );
-            moment.locale(initialLocale);
-            moment.updateLocale("addoneForTest", null);
-        }
-    );
 });
