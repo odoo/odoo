@@ -1890,7 +1890,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      */
     async setValue() {
         await this._super(...arguments);
-        let dateTime = "";
+        let dateTime = null;
         if (this._value) {
             dateTime = DateTime.fromSeconds(parseInt(this._value))
             if (!dateTime.isValid) {
