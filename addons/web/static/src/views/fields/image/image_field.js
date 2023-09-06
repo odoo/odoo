@@ -200,6 +200,12 @@ export const imageField = {
     displayName: _t("Image"),
     supportedOptions: [
         {
+            label: _t("Reload"),
+            name: "reload",
+            type: "boolean",
+            default: true,
+        },
+        {
             label: _t("Enable zoom"),
             name: "zoom",
             type: "boolean",

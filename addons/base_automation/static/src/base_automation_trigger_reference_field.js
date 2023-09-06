@@ -48,6 +48,7 @@ export class TriggerReferenceField extends Component {
 export const triggerReferenceField = {
     supportedTypes: ["char"],
     component: TriggerReferenceField,
+    supportedOptions: many2OneField.supportedOptions,
     extractProps: many2OneField.extractProps,
 };
 registry.category("fields").add("base_automation_trigger_reference", triggerReferenceField);

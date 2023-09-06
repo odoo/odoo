@@ -25,13 +25,13 @@ export class IntegerField extends Component {
         formatNumber: true,
         humanReadable: false,
         inputType: "text",
-        decimals: 0, 
+        decimals: 0,
     };
 
     setup() {
         this.state = useState({
-            hasFocus: false, 
-        })
+            hasFocus: false,
+        });
         useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
@@ -41,11 +41,11 @@ export class IntegerField extends Component {
     }
 
     onFocusIn() {
-        this.state.hasFocus = true
+        this.state.hasFocus = true;
     }
 
     onFocusOut() {
-        this.state.hasFocus = false
+        this.state.hasFocus = false;
     }
 
     get formattedValue() {
@@ -56,9 +56,12 @@ export class IntegerField extends Component {
             return this.value;
         }
         if (this.props.humanReadable && !this.state.hasFocus) {
-            return formatInteger(this.value, { humanReadable: true, decimals: this.props.decimals });
+            return formatInteger(this.value, {
+                humanReadable: true,
+                decimals: this.props.decimals,
+            });
         } else {
-            return formatInteger(this.value, { humanReadable: false});
+            return formatInteger(this.value, { humanReadable: false });
         }
     }
 
@@ -75,7 +78,9 @@ export const integerField = {
             label: _t("Format number"),
             name: "enable_formatting",
             type: "boolean",
-            help: _t("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
+            help: _t(
+                "Format the value according to your language setup - e.g. thousand separators, rounding, etc."
+            ),
             default: true,
         },
         {
@@ -87,6 +92,19 @@ export const integerField = {
             label: _t("Step"),
             name: "step",
             type: "number",
+        },
+        {
+            label: _t("User-friendly format"),
+            name: "human_readable",
+            type: "boolean",
+            help: _t("Use a human readable format (e.g.: 500G instead of 500,000,000,000)."),
+        },
+        {
+            label: _t("Decimals"),
+            name: "decimals",
+            type: "number",
+            default: 0,
+            help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
     ],
     supportedTypes: ["integer"],

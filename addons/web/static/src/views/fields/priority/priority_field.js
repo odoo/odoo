@@ -89,6 +89,17 @@ export class PriorityField extends Component {
 export const priorityField = {
     component: PriorityField,
     displayName: _t("Priority"),
+    supportedOptions: [
+        {
+            label: _t("Autosave"),
+            name: "autosave",
+            type: "boolean",
+            default: true,
+            help: _t(
+                "If checked, the record will be saved immediately when the field is modified."
+            ),
+        },
+    ],
     supportedTypes: ["selection"],
     extractProps({ options, viewType }, dynamicInfo) {
         return {

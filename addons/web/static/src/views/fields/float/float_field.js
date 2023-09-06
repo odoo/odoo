@@ -26,13 +26,13 @@ export class FloatField extends Component {
         formatNumber: true,
         inputType: "text",
         humanReadable: false,
-        decimals:0,
+        decimals: 0,
     };
 
     setup() {
         this.state = useState({
             hasFocus: false,
-        })
+        });
         this.inputRef = useInputField({
             getValue: () => this.formattedValue,
             refName: "numpadDecimal",
@@ -42,11 +42,11 @@ export class FloatField extends Component {
     }
 
     onFocusIn() {
-        this.state.hasFocus = true
+        this.state.hasFocus = true;
     }
 
     onFocusOut() {
-        this.state.hasFocus = false
+        this.state.hasFocus = false;
     }
 
     parse(value) {
@@ -65,9 +65,13 @@ export class FloatField extends Component {
             return this.value;
         }
         if (this.props.humanReadable && !this.state.hasFocus) {
-            return formatFloat(this.value, { digits: this.digits, humanReadable: true, decimals: this.props.decimals });
+            return formatFloat(this.value, {
+                digits: this.digits,
+                humanReadable: true,
+                decimals: this.props.decimals,
+            });
         } else {
-            return formatFloat(this.value, { digits: this.digits, humanReadable: false});
+            return formatFloat(this.value, { digits: this.digits, humanReadable: false });
         }
     }
 
@@ -84,7 +88,9 @@ export const floatField = {
             label: _t("Format number"),
             name: "enable_formatting",
             type: "boolean",
-            help: _t("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
+            help: _t(
+                "Format the value according to your language setup - e.g. thousand separators, rounding, etc."
+            ),
             default: true,
         },
         {
@@ -101,6 +107,19 @@ export const floatField = {
             label: _t("Step"),
             name: "step",
             type: "number",
+        },
+        {
+            label: _t("User-friendly format"),
+            name: "human_readable",
+            type: "boolean",
+            help: _t("Use a human readable format (e.g.: 500G instead of 500,000,000,000)."),
+        },
+        {
+            label: _t("Decimals"),
+            name: "decimals",
+            type: "number",
+            default: 0,
+            help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
     ],
     supportedTypes: ["float"],

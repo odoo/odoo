@@ -686,6 +686,35 @@ export const analyticDistribution = {
     component: AnalyticDistribution,
     supportedTypes: ["char", "text"],
     fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
+    supportedOptions: [
+        {
+            label: _t("Disable save"),
+            name: "disable_save",
+            type: "boolean",
+        },
+        {
+            label: _t("Force applicability"),
+            name: "force_applicability",
+            type: "boolean",
+        },
+        {
+            label: _t("Business domain"),
+            name: "business_domain",
+            type: "string",
+        },
+        {
+            label: _t("Product field"),
+            name: "product_field",
+            type: "field",
+            availableTypes: ["many2one"],
+        },
+        {
+            label: _t("Account field"),
+            name: "account_field",
+            type: "field",
+            availableTypes: ["many2one"],
+        }
+    ],
     extractProps: ({ attrs, options }) => ({
         business_domain: options.business_domain,
         account_field: options.account_field,

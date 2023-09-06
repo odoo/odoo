@@ -30,6 +30,13 @@ export class LabelSelectionField extends Component {
 export const labelSelectionField = {
     component: LabelSelectionField,
     displayName: _t("Label Selection"),
+    supportedOptions: [
+        {
+            label: _t("Classes"),
+            name: "classes",
+            type: "string",
+        },
+    ],
     supportedTypes: ["selection"],
     extractProps: ({ options }) => ({
         classesObj: options.classes,

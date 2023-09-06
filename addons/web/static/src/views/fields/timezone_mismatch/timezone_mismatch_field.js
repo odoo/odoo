@@ -78,6 +78,20 @@ export const timezoneMismatchField = {
     ...selectionField,
     component: TimezoneMismatchField,
     additionalClasses: ["d-flex"],
+    supportedOptions: [
+        ...(selectionField.supportedOptions || []),
+        {
+            label: _t("Mismatch title"),
+            name: "mismatch_title",
+            type: "string",
+        },
+        {
+            label: _t("Timezone offset field"),
+            name: "tz_offset_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+    ],
     extractProps({ options }) {
         const props = selectionField.extractProps(...arguments);
         props.tzOffsetField = options.tz_offset_field;

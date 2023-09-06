@@ -102,12 +102,12 @@ export const progressBarField = {
     displayName: _t("Progress Bar"),
     supportedOptions: [
         {
-            label: _t("Editable"),
+            label: _t("Can edit value"),
             name: "editable",
             type: "boolean",
         },
         {
-            label: _t("Edit max value"),
+            label: _t("Can edit max value"),
             name: "edit_max_value",
             type: "boolean",
         },
@@ -116,12 +116,18 @@ export const progressBarField = {
             name: "current_value",
             type: "field",
             availableTypes: ["integer", "float"],
+            help: _t(
+                "Use to override the display value (e.g. if your progress bar is a computed percentage but you want to display the actual field value instead)."
+            ),
         },
         {
             label: _t("Max value field"),
             name: "max_value",
             type: "field",
             availableTypes: ["integer", "float"],
+            help: _t(
+                "Field that holds the maximum value of the progress bar. If set, will be displayed next to the progress bar (e.g. 10 / 200)."
+            ),
         },
         {
             label: _t("Overflow style"),
