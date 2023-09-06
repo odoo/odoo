@@ -295,6 +295,54 @@ class TestKitPicking(common.TestMrpCommon):
             component_g: 6
         }
 
+    def test_kit_immediate_transfer_tracked_component(self):
+        """ Make sure tracked components are reserved in case of an immediate transfer.
+        """
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+        } for n in ['compo01', 'compo02', 'super kit']])
+        bom_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        for p in [compo01, compo02]:
+            kit.tracking = 'lot'
+            self.env['mrp.bom.line'].create({
+                'product_id': p.id,
+                'product_qty': 1.0,
+                'bom_id': bom_kit.id,
+            })
+            lot = self.env['stock.lot'].create({
+                'name': p.name,
+                'product_id': p.id,
+                'company_id': self.env.company.id,
+            })
+            self.env['stock.quant']._update_available_quantity(p, self.env.ref('stock.stock_location_stock'), 1, lot_id=lot)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.test_supplier.id,
+            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'partner_id': self.test_partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'immediate_transfer': True,
+        })
+        self.env['stock.move'].create({
+            'name': kit.name,
+            'product_id': kit.id,
+            'quantity_done': 1,
+            'product_uom': kit.uom_id.id,
+            'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id':  self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+        })
+        picking.button_validate()
+
+        for move_line in picking.move_ids:
+            self.assertTrue(move_line.lot_ids)
+
     def test_kit_immediate_transfer(self):
         """ Make sure a kit is split in the corrects quantity_done by components in case of an
         immediate transfer.

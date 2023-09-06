@@ -395,6 +395,7 @@ class StockMove(models.Model):
             if len(moves) > 1:
                 return
             if move.reserved_availability < move.quantity_done and move.state not in ['done', 'cancel']:
+                move.product_uom_qty = move.quantity_done
                 move._action_assign(force_qty=move.quantity_done)
             move._set_quantity_done(quantity)
 
