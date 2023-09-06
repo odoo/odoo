@@ -92,7 +92,7 @@ class StockPicking(models.Model):
             product = move.product_id
             so_line_vals = {
                 'move_ids': [(4, move.id, 0)],
-                'name': product.display_name,
+                'name': move.purchase_line_id and move.purchase_line_id.name or product.display_name,
                 'order_id': sale_order.id,
                 'product_id': product.id,
                 'product_uom_qty': 0,
