@@ -223,7 +223,7 @@ class PosSelfOrderController(http.Controller):
                     )
                     unit_price_by_id[child['uuid']] = pricelist._get_product_price(product, quantity=line.get('qty')) if pricelist else product.lst_price
                     total_price += tax_results.get('total_included') if pos_config.iface_tax_included == 'total' else tax_results.get('total_excluded')
-                ratio = (price_unit / total_price)
+                ratio = (price_unit * line.get('qty') / total_price)
                 for child in children:
                     child_line_combo = pos_config.env['pos.combo'].browse(int(child.get('combo_id')))
                     child_line_combo_line = child_line_combo.combo_line_ids.filtered(lambda l: l.product_id.id == child.get('product_id'))[0]
