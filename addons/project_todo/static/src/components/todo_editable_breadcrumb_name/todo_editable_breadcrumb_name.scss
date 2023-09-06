@@ -4,7 +4,13 @@
     overflow: hidden;
     border: none;
     padding: 0px 5px 0px 2px;
-    color: $o-brand-secondary;
+    color: $o-gray-700;
+    border-bottom: $input-border-width solid transparent;
+    transition: border-color 0.3s;
+
+    &:hover {
+        border-bottom-color: $o-brand-primary;
+    }
 
     &:focus {
         outline: 1px solid #ccc;
@@ -25,6 +31,3 @@
     }
 }
 
-.o_todo_breadcrumb_name_input:hover {
-    border-bottom: $input-border-width solid $o-brand-primary;
-}
