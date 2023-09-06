@@ -170,6 +170,14 @@ export class Chatter extends Component {
             }
         });
         useEffect(
+            () => {
+                if (this.attachments.length === 0) {
+                    this.state.isAttachmentBoxOpened = false;
+                }
+            },
+            () => [this.attachments]
+        );
+        useEffect(
             (opened) => {
                 if (opened) {
                     this.attachmentBox.el.scrollIntoView({ block: "center" });
