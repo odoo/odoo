@@ -1429,7 +1429,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.move_orig_ids:
                 move_waiting.add(move.id)
             else:
-                if move.procure_method == 'make_to_order':
+                if move.procure_method == 'make_to_order' or (move.rule_id and move.rule_id.procure_method == 'mts_else_mto'):
                     move_create_proc.add(move.id)
                 else:
                     move_to_confirm.add(move.id)
@@ -1441,11 +1441,12 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         # create procurements for make to order moves
         procurement_requests = []
-        for move in move_create_proc:
+        procurement_quantities = move_create_proc._prepare_procurement_qty()
+        for move, quantity in zip(move_create_proc, procurement_quantities):
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
-                move.product_id, move.product_uom_qty, move.product_uom,
+                move.product_id, quantity, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
@@ -1512,6 +1513,32 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.ensure_one()
         return self.group_id and self.group_id.name or (self.origin or self.picking_id.name or "/")
 
+    def _prepare_procurement_qty(self):
+        quantities = []
+        mtso_products_by_locations = defaultdict(list)
+        mtso_moves = self.env['stock.move']
+        for move in self:
+            if move.rule_id and move.rule_id.procure_method == 'mts_else_mto':
+                mtso_moves |= move
+                mtso_products_by_locations[move.location_id].append(move.product_id.id)
+
+        # Get the forecasted quantity for the `mts_else_mto` procurement.
+        forecasted_qties_by_loc = {}
+        for location, product_ids in mtso_products_by_locations.items():
+            products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
+            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}
+
+        for move in self:
+            if move not in mtso_moves or float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0:
+                quantities.append(move.product_uom_qty)
+                continue
+            free_qty = forecasted_qties_by_loc[move.location_id][move.product_id.id]
+            quantity = max(move.product_qty - free_qty, 0)
+            product_uom_qty = move.product_uom._compute_quantity(quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+            quantities.append(product_uom_qty)
+            forecasted_qties_by_loc[move.location_id][move.product_id.id] -= quantity
+        return quantities
+
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule
         comming from a stock move. This method could be override in order to add other custom key that could
@@ -1524,6 +1551,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 group_id = self.rule_id.group_id
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
+
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}
         if self.location_id.warehouse_id and self.location_id.warehouse_id.lot_stock_id.parent_path in self.location_id.parent_path:
