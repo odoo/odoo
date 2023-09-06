@@ -4,7 +4,7 @@
 import logging
 import pytz
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
@@ -12,6 +12,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import is_html_empty, email_normalize
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
+from odoo.osv import expression
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -53,7 +54,14 @@ class Meeting(models.Model):
 
     @api.model
     def _restart_microsoft_sync(self):
-        self.env['calendar.event'].search(self._get_microsoft_sync_domain()).write({
+        domain = self._get_microsoft_sync_domain()
+
+        # Sync only events created/updated after last sync date (with 5 min of time acceptance).
+        if self.env.user.microsoft_last_sync_date:
+            time_offset = timedelta(minutes=5)
+            domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
+
+        self.env['calendar.event'].search(domain).write({
             'need_sync_m': True,
         })
 

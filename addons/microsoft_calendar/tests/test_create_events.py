@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta
 from unittest.mock import patch
+from datetime import timedelta, datetime
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -299,3 +299,83 @@ class TestCreateEvents(TestCommon):
         self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
         self.assertTrue(record.need_sync_m, "Sync variable must be true for updating event when sync re-activates")
         mock_insert.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_sync_create_update_single_event(self, mock_insert, mock_get_events):
+        """
+        If the synchronization with Outlook is stopped, then records (events and recurrences) created or updated
+        should not be synced. They must be synced only when created or updated having the synchronization active.
+        In this test, the synchronization is stopped and an event is created locally. After this, the synchronization
+        is restarted and the event is updated (this way, syncing it with Outlook Calendar).
+        """
+        # Stop the synchronization for clearing the last_sync_date.
+        self.organizer_user.with_user(self.organizer_user).sudo().stop_microsoft_synchronization()
+        self.assertEqual(self.organizer_user.microsoft_last_sync_date, False,
+                         "Variable last_sync_date must be False due to sync stop.")
+
+        # Create a not synced event (local).
+        simple_event_values_updated = self.simple_event_values
+        for date_field in ['start', 'stop']:
+            simple_event_values_updated[date_field] = simple_event_values_updated[date_field].replace(year=datetime.now().year)
+        event = self.env["calendar.event"].with_user(self.organizer_user).create(simple_event_values_updated)
+
+        # Assert that insert was not called and prepare mock for the synchronization restart.
+        mock_insert.assert_not_called()
+        mock_get_events.return_value = ([], None)
+
+        # Restart the synchronization with Outlook Calendar.
+        self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
+        # Last_sync_date is manually updated here due to simulate real use in the test environment.
+        self.organizer_user.microsoft_calendar_account_id.last_sync_date = event.write_date + timedelta(minutes=10)
+        # Sync microsoft calendar, considering that ten minutes were passed after the event creation.
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+
+        # Assert that insert function was not called and check last_sync_date variable value.
+        mock_insert.assert_not_called()
+
+        self.assertNotEqual(self.organizer_user.microsoft_last_sync_date, False,
+                            "Variable last_sync_date must not be empty after sync.")
+        self.assertLessEqual(event.write_date, self.organizer_user.microsoft_last_sync_date,
+                             "Event creation must happen before last_sync_date")
+
+        # Assert that the local event did not get synced after synchronization restart.
+        self.assertEqual(event.ms_organizer_event_id, False,
+                         "Event should not be synchronized while sync is paused.")
+        self.assertEqual(event.ms_universal_event_id, False,
+                         "Event should not be synchronized while sync is paused.")
+
+        # Synchronize after updating last_sync_date and assert that insert was not called.
+        # Last_sync_date is manually updated here due to simulate real use in the test environment.
+        self.organizer_user.microsoft_calendar_account_id.last_sync_date = event.write_date + timedelta(minutes=10)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        mock_insert.assert_not_called()
+
+        # Update local event information.
+        event.write({
+            "name": "New event name"
+        })
+        self.call_post_commit_hooks()
+
+        # Prepare mock for new synchronization.
+        event_id = "123"
+        event_iCalUId = "456"
+        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_get_events.return_value = ([], None)
+
+        # Synchronize local event with Outlook after updating it locally.
+        # Last_sync_date is manually updated here due to simulate real use in the test environment.
+        self.organizer_user.microsoft_calendar_account_id.last_sync_date = event.write_date - timedelta(minutes=10)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+
+        # Assert that the event got synchronized with Microsoft (through mock).
+        self.assertEqual(event.ms_organizer_event_id, "123")
+        self.assertEqual(event.ms_universal_event_id, "456")
+
+        # Assert that the Microsoft Insert was called once.
+        mock_insert.assert_called_once()
