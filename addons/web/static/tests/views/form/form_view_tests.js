@@ -68,7 +68,7 @@ QUnit.module("Views", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        display_name: { string: "Displayed name", type: "char" },
+                        display_name: { string: "Displayed name", type: "char", translate: true },
                         foo: { string: "Foo", type: "char", default: "My little Foo Value" },
                         bar: { string: "Bar", type: "boolean" },
                         int_field: { string: "int_field", type: "integer", sortable: true },
@@ -4636,6 +4636,49 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["web_save"]);
     });
+
+    QUnit.test(
+        "editing a translatable field in a duplicate record overrides translations",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="display_name"/></form>',
+                resId: 1,
+                actionMenus: {},
+                async mockRPC(route, args) {
+                    if (args.method === "web_save") {
+                        assert.step("web_save");
+                    }
+                    if (args.method === "web_override_translations") {
+                        assert.deepEqual(args.args[1], { display_name: "first record (test)" });
+                        assert.step("web_override_translations");
+                        return true;
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_breadcrumb").textContent,
+                "first record",
+                "should have the display name of the record as title"
+            );
+
+            await toggleActionMenu(target);
+            await toggleMenuItem(target, "Duplicate");
+
+            assert.strictEqual(
+                target.querySelector(".o_control_panel .o_breadcrumb").textContent,
+                "first record (copy)",
+                "should have duplicated the record"
+            );
+            assert.containsOnce(target, ".o_form_editable");
+            await editInput(target, ".o_field_char input", "first record (test)");
+            await click(target, ".o_form_button_save");
+            assert.verifySteps(["web_save", "web_override_translations"]);
+        }
+    );
 
     QUnit.test("clicking on stat buttons in edit mode", async function (assert) {
         let count = 0;

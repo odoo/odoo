@@ -833,7 +833,11 @@ export class Record extends DataPoint {
     }
 
     async _save({ reload = true, onError, nextId } = {}) {
+        const creation = !this.resId;
         if (nextId) {
+            if (creation) {
+                throw new Error("Cannot set nextId on a new record");
+            }
             reload = true;
         }
         // before saving, abandon new invalid, untouched records in x2manys
@@ -847,7 +851,6 @@ export class Record extends DataPoint {
             return false;
         }
         const changes = this._getChanges();
-        const creation = !this.resId;
         delete changes.id; // id never changes, and should not be written
         if (!creation && !Object.keys(changes).length) {
             return true;
@@ -886,18 +889,22 @@ export class Record extends DataPoint {
             }
             throw e;
         }
-        if ((creation || nextId) && records.length) {
+        if (reload && !records.length) {
+            throw new FetchRecordError(nextId || this.resId);
+        }
+        if (creation) {
             const resId = records[0].id;
-            const resIds = this.resIds.includes(resId) ? this.resIds : this.resIds.concat([resId]);
+            const resIds = this.resIds.concat([resId]);
             this.model._updateConfig(this.config, { resId, resIds }, { reload: false });
         }
+        await this.model.hooks.onRecordSaved(this, changes);
         if (reload) {
-            if (!records.length) {
-                throw new FetchRecordError(records.map((r) => r.id));
-            }
             applyProperties(records, this.config.activeFields, this.config.fields);
             if (this.resId) {
                 this.model._updateSimilarRecords(this, records[0]);
+            }
+            if (nextId) {
+                this.model._updateConfig(this.config, { resId: nextId }, { reload: false });
             }
             if (this.config.isRoot) {
                 this.model.hooks.onWillLoadRoot(this.config);
@@ -912,7 +919,6 @@ export class Record extends DataPoint {
             this.data = { ...this._values };
             this.dirty = false;
         }
-        await this.model.hooks.onRecordSaved(this, changes);
         return true;
     }
 

@@ -114,6 +114,7 @@ export class FormController extends Component {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.dialogService = useService("dialog");
         this.router = useService("router");
+        this.orm = useService("orm");
         this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
@@ -123,6 +124,7 @@ export class FormController extends Component {
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
+        this.duplicateId = false;
 
         this.display = { ...this.props.display };
         if (this.env.inDialog) {
@@ -280,7 +282,9 @@ export class FormController extends Component {
      * data necessary for the root record datapoint. Note that this.model.root
      * may not exist yet at this point, if this is the first load.
      */
-    onWillLoadRoot() {}
+    onWillLoadRoot() {
+        this.duplicateId = undefined;
+    }
 
     /**
      * onRecordSaved is a callBack that will be executed after the save
@@ -288,7 +292,22 @@ export class FormController extends Component {
      * is invalid or if a server error is thrown.
      * @param {Record} record
      */
-    async onRecordSaved(record) {}
+    async onRecordSaved(record, changes) {
+        if (this.duplicateId === record.id) {
+            const translationChanges = {};
+            for (const fieldName in changes) {
+                if (record.fields[fieldName].translate) {
+                    translationChanges[fieldName] = changes[fieldName];
+                }
+            }
+            if (Object.keys(translationChanges).length) {
+                await this.orm.call(this.model.root.resModel, "web_override_translations", [
+                    [this.model.root.resId],
+                    translationChanges,
+                ]);
+            }
+        }
+    }
 
     /**
      * onWillSaveRecord is a callBack that will be executed before the
@@ -296,7 +315,7 @@ export class FormController extends Component {
      * If it returns false, it will prevent the save.
      * @param {Record} record
      */
-    async onWillSaveRecord(record) {}
+    async onWillSaveRecord() {}
 
     async onSaveError(error, { discard }) {
         const proceed = await new Promise((resolve) => {
@@ -438,6 +457,7 @@ export class FormController extends Component {
 
     async duplicateRecord() {
         await this.model.root.duplicate();
+        this.duplicateId = this.model.root.id;
     }
 
     get deleteConfirmationDialogProps() {

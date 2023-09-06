@@ -1091,6 +1091,24 @@ class Base(models.AbstractModel):
 
         return result
 
+    def web_override_translations(self, values):
+        """
+        This method is used to override all the modal translations of the given fields
+        with the provided value for each field.
+
+        :param values: dictionary of the translations to apply for each field name
+        ex: { "field_name": "new_value" }
+        """
+        self.ensure_one()
+        for field_name in values:
+            field = self._fields[field_name]
+            if field.translate is True:
+                translations = {lang: False for lang, _ in self.env['res.lang'].get_installed()}
+                translations['en_US'] = values[field_name]
+                translations[self.env.lang or 'en_US'] = values[field_name]
+                self.update_field_translations(field_name, translations)
+
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
