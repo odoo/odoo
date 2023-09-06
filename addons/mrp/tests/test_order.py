@@ -3441,3 +3441,44 @@ class TestMrpOrder(TestMrpCommon):
         p03_raws = mo.move_raw_ids.filtered(lambda m: m.product_id == product03)
         self.assertEqual(sum(p02_raws.mapped('quantity_done')), 1.5)
         self.assertEqual(sum(p03_raws.mapped('quantity_done')), 2)
+
+    def test_validation_mo_with_tracked_component(self):
+        """
+        check that the verification of SN for tracked component is ignored when the quantity to consume is 0.
+        """
+        self.product_2.tracking = 'serial'
+        bom = self.env["mrp.bom"].create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+                'product_qty': 1.0,
+            }), (0, 0, {
+                'product_id': self.product_3.id,
+                'product_qty': 1.0,
+            })]
+        })
+        # create the MO and confirm it
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        # set the qty to consume of the tracked product to 0
+        mo.move_raw_ids[0].write({
+            'product_uom_qty': 0,
+            'quantity_done': 0,
+        })
+        mo.action_assign()
+        # Set MO Done and create backorder
+        action = mo.button_mark_done()
+        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+
+        self.assertEqual(len(consumption_warning.mrp_consumption_warning_line_ids), 1)
+        self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_consumed_qty_uom, 0)
+        self.assertEqual(consumption_warning.mrp_consumption_warning_line_ids[0].product_expected_qty_uom, 1)
+        # Force the warning
+        consumption_warning.action_confirm()
+        self.assertEqual(mo.state, 'done')
