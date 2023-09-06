@@ -2509,7 +2509,9 @@ class MrpProduction(models.Model):
             self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
 
-        for move in self.move_raw_ids.filtered(lambda m: m.state not in ['done', 'cancel']):
+        for move in self.move_raw_ids:
+            if move.state in ('done', 'cancel') or not move.product_uom_qty:
+                continue
             rounding = move.product_uom.rounding
             if move.manual_consumption:
                 if move.has_tracking in ('serial', 'lot') and float_is_zero(move.quantity_done, precision_rounding=rounding):
