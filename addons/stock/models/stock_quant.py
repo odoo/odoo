@@ -551,10 +551,21 @@ class StockQuant(models.Model):
 
     @api.constrains('quantity')
     def check_quantity(self):
-        for quant in self:
-            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
-                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
+        sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
+        if not sn_quants:
+            return
+        domain = expression.OR([
+            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
+            for q in sn_quants
+        ])
+        groups = self._read_group(
+            domain,
+            ['product_id', 'location_id', 'lot_id'],
+            ['quantity:sum'],
+        )
+        for product, _location, lot, qty in groups:
+            if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (product.display_name, lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
