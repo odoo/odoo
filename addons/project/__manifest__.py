@@ -214,7 +214,6 @@
             'web/static/src/legacy/legacy_setup.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/core/dates.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 

@@ -150,7 +150,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/legacy_rpc_error_handler.js',
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/core/dates.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 
@@ -267,7 +266,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/pdfjs.js',
 
             'web/static/src/legacy/utils.js',
-            'web/static/src/legacy/js/core/dates.js',
             'web/static/src/legacy/js/owl_compatibility.js',
             'web/static/src/legacy/js/public/public_env.js',
             'web/static/src/legacy/js/public/public_root.js',
