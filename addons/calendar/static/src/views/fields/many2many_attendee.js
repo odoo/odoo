@@ -46,6 +46,8 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
     }
 }
 
+Many2ManyAttendee.template = "calendar.Many2ManyAttendee";
+
 export const many2ManyAttendee = {
     ...many2ManyTagsAvatarField,
     component: Many2ManyAttendee,
