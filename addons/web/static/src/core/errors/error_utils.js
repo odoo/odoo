@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _loadJS } from "../assets"; // use the real, non patched (in tests), loadJS
+import { loadJS } from "../assets"; // use the real, non patched (in tests), loadJS
 import { isBrowserChrome } from "../browser/feature_detection";
 
 /** @typedef {import("./error_service").UncaughtError} UncaughtError */
@@ -147,7 +147,7 @@ export function formatTraceback(error) {
 export async function annotateTraceback(error) {
     const traceback = formatTraceback(error);
     try {
-        await _loadJS("/web/static/lib/stacktracejs/stacktrace.js");
+        await loadJS("/web/static/lib/stacktracejs/stacktrace.js");
     } catch {
         return traceback;
     }

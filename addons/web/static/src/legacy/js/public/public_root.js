@@ -17,7 +17,7 @@ import {
 import { standaloneAdapter } from "@web/legacy/js/owl_compatibility";
 
 import { makeEnv, startServices } from "@web/env";
-import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
+import { loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
@@ -405,7 +405,6 @@ export async function createPublicRoot(RootWidget) {
         translatableAttributes: ["data-tooltip"],
     });
     renderToString.app = app;
-    setLoadXmlDefaultApp(app);
     const language = lang || browser.navigator.language;
     const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
     Settings.defaultLocale = locale;
