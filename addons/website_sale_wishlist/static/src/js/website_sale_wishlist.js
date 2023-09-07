@@ -192,7 +192,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         }
         return this._rpc({
             route: "/shop/cart/update_json",
-            params: this._getCartUpdateJsonParams(productID, qty),
+            params: {
+                ...this._getCartUpdateJsonParams(productID, qty),
+                display: false,
+            },
         }).then(function (data) {
             sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
             wSaleUtils.updateCartNavBar(data);

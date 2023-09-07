@@ -136,7 +136,8 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
             route: "/shop/cart/update_json",
             params: {
                 product_id: $card.find('input[data-product-id]').data('product-id'),
-                add_qty: 1
+                add_qty: 1,
+                display: false,
             },
         });
         const $navButton = $('header .o_wsale_my_cart').first();

@@ -207,7 +207,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             params: {
                 line_id: line_id,
                 product_id: parseInt($input.data('product-id'), 10),
-                set_qty: value
+                set_qty: value,
+                display: true,
             },
         }).then(function (data) {
             $input.data('update_change', false);

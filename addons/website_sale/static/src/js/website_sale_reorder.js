@@ -149,6 +149,7 @@ export class ReorderDialog extends Component {
                 add_qty: product.qty,
                 no_variant_attribute_values: JSON.stringify(product.no_variant_attribute_values),
                 product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
+                display: false,
             });
         }
     }
