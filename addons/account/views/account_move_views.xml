@@ -1122,7 +1122,8 @@
                                                column_invisible="context.get('view_no_maturity')"/>
                                         <field name="amount_currency"
                                                groups="base.group_multi_currency"
-                                               optional="hide"/>
+                                               optional="hide"
+                                               column_invisible="parent.currency_id == parent.company_currency_id"/>
                                         <field name="currency_id" options="{'no_create': True}"
                                                optional="hide" groups="base.group_multi_currency"
                                                column_invisible="parent.move_type != 'entry'"/>
