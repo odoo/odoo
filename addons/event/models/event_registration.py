@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime, email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
+from odoo.http import request
 
 
 class EventRegistration(models.Model):
@@ -148,11 +149,53 @@ class EventRegistration(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            vals['utm_campaign_id'] = self.default_get(['utm_campaign_id']).get('utm_campaign_id')
+            vals['utm_source_id'] = self.default_get(['utm_source_id']).get('utm_source_id')
+            vals['utm_medium_id'] = self.default_get(['utm_medium_id']).get('utm_medium_id')
+
         registrations = super(EventRegistration, self).create(vals_list)
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
 
         return registrations
+
+    def default_get(self, fields):
+        # this method is emulating the default_get method from utm.mixin
+        values = {}
+
+        # We ignore UTM for salesmen, except some requests that could be done as superuser_id to bypass access rights.
+        if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
+            return values
+
+        for _, field_name, cookie_name in self.utm_tracking_fields():
+            if field_name in fields:
+                field = self._fields[field_name]
+                value = False
+                if request:
+                    # ir_http dispatch saves the url params in a cookie
+                    value = request.httprequest.cookies.get(cookie_name)
+                # if we receive a string for a many2one, we search/create the id
+                if field.type == 'many2one' and isinstance(value, str) and value:
+                    Model = self.env[field.comodel_name]
+                    records = Model.search([('name', '=', value)], limit=1)
+                    if not records:
+                        if 'is_website' in records._fields:
+                            records = Model.create({'name': value, 'is_website': True})
+                        else:
+                            records = Model.create({'name': value})
+                    value = records.id
+                if value:
+                    values[field_name] = value
+        return values
+
+    def utm_tracking_fields(self):
+        return [
+            # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
+            ('utm_campaign', 'utm_campaign_id', 'odoo_utm_campaign'),
+            ('utm_source', 'utm_source_id', 'odoo_utm_source'),
+            ('utm_medium', 'utm_medium_id', 'odoo_utm_medium'),
+        ]
 
     def write(self, vals):
         ret = super(EventRegistration, self).write(vals)
