@@ -13,6 +13,8 @@ import {
     getTimePickers,
     useTwelveHourClockFormat,
 } from "./datetime_test_helpers";
+import { Component, useState, xml } from "@odoo/owl";
+import { nextTick } from "../../helpers/utils";
 
 const { DateTime } = luxon;
 
@@ -1047,5 +1049,58 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(getPickerCell("27").at(1));
 
         assert.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
+    });
+
+    QUnit.test("focus proper month when changing props out of current month", async (assert) => {
+        class Parent extends Component {
+            static template = xml`<DateTimePicker value="state.current"/>`;
+            static components = { DateTimePicker };
+            setup() {
+                this.state = useState({
+                    current: DateTime.now(),
+                })
+            }
+        }
+
+        const parent = await mount(Parent, getFixture(), { env });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, 1],
+                        [2, 3, 4, 5, 6, 7, 8],
+                        [9, 10, 11, 12, 13, 14, 15],
+                        [16, 17, 18, 19, 20, 21, 22],
+                        [23, 24, ["25"], 26, 27, 28, 29],
+                        [30, -1, -2, -3, -4, -5, -6],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                },
+            ],
+            time: [[13, 45]],
+        });
+
+        parent.state.current = DateTime.fromObject({ month: 5, day: 1, hour: 17, minute: 16 });
+        await nextTick();
+
+        assertDateTimePicker({
+            title: "May 2023",
+            date: [
+                {
+                    cells: [
+                        [-30, [1], 2, 3, 4, 5, 6],
+                        [7, 8, 9, 10, 11, 12, 13],
+                        [14, 15, 16, 17, 18, 19, 20],
+                        [21, 22, 23, 24, 25, 26, 27],
+                        [28, 29, 30, 31, -1, -2, -3],
+                        [-4, -5, -6, -7, -8, -9, -10],
+                    ],
+                    daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                },
+            ],
+            time: [[17, 0]],
+        });
     });
 });
