@@ -111,11 +111,5 @@ Master Data:
         'demo/account_supplier_refund_demo.xml',
     ],
     'installable': True,
-    'assets': {
-        'web.assets_backend': [
-            'l10n_ar/static/src/**/*',
-        ],
-    }
-,
     'license': 'LGPL-3',
 }
