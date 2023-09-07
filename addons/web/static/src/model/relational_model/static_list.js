@@ -336,6 +336,13 @@ export class StaticList extends DataPoint {
         });
     }
 
+    unlinkFrom(resId, serverData) {
+        return this.model.mutex.exec(async () => {
+            await this._applyCommands([[x2ManyCommands.UNLINK, resId, serverData]]);
+            await this._onUpdate();
+        });
+    }
+
     load({ limit, offset, orderBy } = {}) {
         return this.model.mutex.exec(async () => {
             if (this.editedRecord && !(await this.editedRecord.checkValidity())) {

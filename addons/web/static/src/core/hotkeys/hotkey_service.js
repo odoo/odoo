@@ -174,7 +174,8 @@ export const hotkeyService = {
             // NB: except for ESC, which is always allowed as hotkey in editables.
             const targetIsEditable =
                 event.target instanceof HTMLElement &&
-                (/input|textarea/i.test(event.target.tagName) || event.target.isContentEditable);
+                (/input|textarea/i.test(event.target.tagName) || event.target.isContentEditable) &&
+                !event.target.matches("input[type=checkbox], input[type=radio]");
             const shouldProtectEditable =
                 targetIsEditable && !event.target.dataset.allowHotkeys && singleKey !== "escape";
 

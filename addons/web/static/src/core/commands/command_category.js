@@ -7,7 +7,7 @@ commandCategoryRegistry
     .add("app", {}, { sequence: 10 })
     .add("smart_action", {}, { sequence: 15 })
     .add("actions", {}, { sequence: 30 })
-    .add("navbar", {}, { sequence: 40 })
-    .add("view_switcher", {}, { sequence: 50 })
-    .add("default", {}, { sequence: 100 })
-    .add("debug", {}, { sequence: 110 });
+    .add("default", {}, { sequence: 50 })
+    .add("view_switcher", {}, { sequence: 100 })
+    .add("debug", {}, { sequence: 110 })
+    .add("disabled", {});

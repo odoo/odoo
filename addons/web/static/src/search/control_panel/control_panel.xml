@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ControlPanel">
-        <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root">
+        <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">

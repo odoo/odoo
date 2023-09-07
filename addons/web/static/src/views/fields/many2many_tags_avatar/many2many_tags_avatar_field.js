@@ -33,7 +33,7 @@ export const many2ManyTagsAvatarField = {
     component: Many2ManyTagsAvatarField,
     extractProps({ viewType }, dynamicInfo) {
         const props = many2ManyTagsField.extractProps(...arguments);
-        props.withCommand = viewType === "form";
+        props.withCommand = viewType === "form" || viewType === "list";
         props.domain = dynamicInfo.domain;
         return props;
     },

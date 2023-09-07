@@ -574,7 +574,11 @@ export class ListController extends Component {
                 const dialogProps = {
                     confirm: () => resolve(true),
                     cancel: () => {
-                        this.model.root.leaveEditMode({ discard: true });
+                        if (this.model.root.editedRecord) {
+                            this.model.root.leaveEditMode({ discard: true });
+                        } else {
+                            editedRecord.discard();
+                        }
                         resolve(false);
                     },
                     isDomainSelected,

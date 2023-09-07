@@ -170,8 +170,24 @@ export const commandService = {
             if (!command.name || !command.action || typeof command.action !== "function") {
                 throw new Error("A Command must have a name and an action function.");
             }
-
             const registration = Object.assign({}, command, options);
+            if (registration.identifier) {
+                const commandsArray = Array.from(registeredCommands.values());
+                const sameName = commandsArray.find((com) => com.name === registration.name);
+                if (sameName) {
+                    if (registration.identifier !== sameName.identifier) {
+                        registration.name += ` (${registration.identifier})`;
+                        sameName.name += ` (${sameName.identifier})`;
+                    }
+                } else {
+                    const sameFullName = commandsArray.find(
+                        (com) => com.name === registration.name + `(${registration.identifier})`
+                    );
+                    if (sameFullName) {
+                        registration.name += ` (${registration.identifier})`;
+                    }
+                }
+            }
             if (registration.hotkey) {
                 const action = async () => {
                     const commandService = env.services.command;

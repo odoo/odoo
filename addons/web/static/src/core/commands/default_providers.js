@@ -47,8 +47,14 @@ commandProviderRegistry.add("command", {
                 return cmd;
             })
             .filter((command) => command.isAvailable === undefined || command.isAvailable());
-
-        return commands.map((command) => ({
+        // Filter out same category dupplicate commands
+        const uniqueCommands = commands.filter((obj, index) => {
+            return (
+                index ===
+                commands.findIndex((o) => obj.name === o.name && obj.category === o.category)
+            );
+        });
+        return uniqueCommands.map((command) => ({
             Component: command.hotkey ? HotkeyCommandItem : DefaultCommandItem,
             action: command.action,
             category: command.category,
@@ -72,6 +78,9 @@ commandProviderRegistry.add("data-hotkeys", {
         )) {
             const closest = el.closest("[data-command-category]");
             const category = closest ? closest.dataset.commandCategory : "default";
+            if (category === "disabled") {
+                continue;
+            }
 
             const description =
                 el.title ||
