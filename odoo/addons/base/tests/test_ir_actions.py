@@ -21,6 +21,7 @@ class TestServerActionsBase(common.TransactionCase):
             'name': 'TestingCountry',
             'code': 'TY',
             'address_format': 'SuperFormat',
+            'name_position': 'before',
         })
         self.test_partner = self.env['res.partner'].create({
             'city': 'OrigCity',
@@ -47,6 +48,7 @@ class TestServerActionsBase(common.TransactionCase):
         self.res_country_model = Model.search([('model', '=', 'res.country')])
         self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
         self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
+        self.res_country_name_position_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name_position')])
         self.res_partner_category_model = Model.search([('model', '=', 'res.partner.category')])
         self.res_partner_category_name_field = Fields.search([('model', '=', 'res.partner.category'), ('name', '=', 'name')])
 
@@ -184,7 +186,6 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertIn(category, self.test_partner.category_id)
 
     def test_30_crud_write(self):
-
         # Do: update partner name
         self.action.write({
             'state': 'object_write',
@@ -197,6 +198,30 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         partner = self.test_partner.search([('name', 'ilike', 'TestNew')])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
+
+    def test_35_crud_write_selection(self):
+        # Don't want to use res.partner because no 'normal selection field' exists there
+        # we'll use a speficic action for this test instead of the one from the test setup
+        # Do: update country name_position field
+        selection_value = self.res_country_name_position_field.selection_ids.filtered(lambda s: s.value == 'after')
+        action = self.env['ir.actions.server'].create({
+            'name': 'TestAction',
+            'model_id': self.res_country_model.id,
+            'model_name': 'res.country',
+            'state': 'object_write',
+            'update_field_id': self.res_country_name_position_field.id,
+            'selection_value': selection_value.id,
+        })
+        action._set_selection_value()  # manual onchange
+        self.assertEqual(action.value, selection_value.value)
+        context = {
+            'active_model': 'res.country',
+            'active_id': self.test_country.id,
+        }
+        run_res = action.with_context(context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: country updated
+        self.assertEqual(self.test_country.name_position, 'after')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
