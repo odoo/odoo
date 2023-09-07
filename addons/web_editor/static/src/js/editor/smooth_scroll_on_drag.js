@@ -1,13 +1,9 @@
 /** @odoo-module **/
 
-import Class from "@web/legacy/js/core/class";
-import mixins from "@web/legacy/js/core/mixins";
-
 /**
  * Provides a helper for SmoothScrollOnDrag options.offsetElements
  */
-const OffsetElementsHelper = Class.extend({
-
+class OffsetElementsHelper {
     /**
      * @constructor
      * @param {Object} offsetElements
@@ -16,39 +12,39 @@ const OffsetElementsHelper = Class.extend({
      * @param {jQuery} [offsetElements.$bottom] bottom offset element
      * @param {jQuery} [offsetElements.$left] left offset element
      */
-    init: function (offsetElements) {
+    constructor(offsetElements) {
         this.offsetElements = offsetElements;
-    },
-    top: function () {
+    }
+    top () {
         if (!this.offsetElements.$top || !this.offsetElements.$top.length) {
             return 0;
         }
         return this.offsetElements.$top.get(0).getBoundingClientRect().bottom;
-    },
-    right: function () {
+    }
+    right () {
         if (!this.offsetElements.$right || !this.offsetElements.$right.length) {
             return 0;
         }
         return this.offsetElements.$right.get(0).getBoundingClientRect().left;
-    },
-    bottom: function () {
+    }
+    bottom () {
         if (!this.offsetElements.$bottom || !this.offsetElements.$bottom.length) {
             return 0;
         }
         return this.offsetElements.$bottom.get(0).getBoundingClientRect().top;
-    },
-    left: function () {
+    }
+    left () {
         if (!this.offsetElements.$left || !this.offsetElements.$left.length) {
             return 0;
         }
         return this.offsetElements.$left.get(0).getBoundingClientRect().right;
-    },
-});
+    }
+}
 
 /**
  * Provides smooth scroll behaviour on drag.
  */
-const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
+export class SmoothScrollOnDrag {
 
     /**
      * @constructor
@@ -91,10 +87,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      *        $scrollTarget.
      * @param {boolean} [options.disableHorizontalScroll = false] Disable horizontal scroll if not needed.
      */
-    init(parent, $element, $scrollTarget, options = {}) {
-        mixins.ParentedMixin.init.call(this);
-        this.setParent(parent);
-
+    constructor($element, $scrollTarget, options = {}) {
         this.$element = $element;
         this.$scrollTarget = $scrollTarget;
         this.options = options;
@@ -146,15 +139,14 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
             }
         });
         this.$element.draggable(draggableOptions);
-    },
+    }
     /**
      * @override
      */
-    destroy: function () {
-        mixins.ParentedMixin.destroy.call(this);
+    destroy() {
         this.$element.off('.smooth_scroll');
         this._stopSmoothScroll();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -230,7 +222,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
             },
             this.options.scrollTimerInterval
         );
-    },
+    }
     /**
      * Stops the scroll process if any is running.
      *
@@ -240,7 +232,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         clearInterval(this.autoScrollHandler);
 
         this.$scrollTarget[0].style.scrollBehavior = this._initialScrollBehavior || '';
-    },
+    }
     /**
      * Updates the options depending on the offset position of the draggable
      * helper. In the same time options are used by an interval to trigger
@@ -343,7 +335,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this.horizontalDelta = Math.ceil(scrollStepDirection.horizontal *
             this.options.scrollStep *
             (1 - Math.sqrt(scrollDecelerator.horizontal)));
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -362,7 +354,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
             top: ev.pageY - elementOffset.top,
             left: ev.pageX - elementOffset.left,
         };
-    },
+    }
     /**
      * Called when dragging the element.
      * Updates the position options and call the provided callback if any.
@@ -377,7 +369,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         if (typeof onDragCallback === 'function') {
             onDragCallback.call(ui.helper, ev, ui);
         }
-    },
+    }
     /**
      * Called when starting to drag the element.
      * Updates the position params, starts smooth scrolling process and call the
@@ -397,7 +389,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         if (typeof onDragStartCallBack === 'function') {
             onDragStartCallBack.call(ui.helper, ev, ui);
         }
-    },
+    }
     /**
      * Called when stopping to drag the element.
      * Stops the smooth scrolling process and call the provided callback if any.
@@ -412,7 +404,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         if (typeof onDragEndCallBack === 'function') {
             onDragEndCallBack.call(ui.helper, ev, ui);
         }
-    },
+    }
     /**
      * Called when the mouse is released outside the page iframe (e.g. the
      * editor panel in Website). This is only useful in Chrome, where the 'stop'
@@ -423,7 +415,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      */
     _onParentWindowMouseup() {
         this.targetWindow.document.dispatchEvent(new Event('mouseup'));
-    },
-});
+    }
+}
 
-export default SmoothScrollOnDrag;
