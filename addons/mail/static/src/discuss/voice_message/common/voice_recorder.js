@@ -57,7 +57,7 @@ export class VoiceRecorder extends Component {
                 this.notification.add(_t("Voice recording stopped"), { type: "warning" });
                 this.stopRecording();
             } else {
-                this.cleanUp();
+                this.cleanUp({unmounting: true});
             }
         });
     }
