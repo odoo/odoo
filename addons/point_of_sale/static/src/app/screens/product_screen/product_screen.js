@@ -377,11 +377,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     get showProductReminder() {
         return this.currentOrder.get_selected_orderline() && this.selectedOrderlineQuantity;
     }
-    primaryPayButton() {
+    get primaryPayButton() {
         return !this.currentOrder.is_empty();
-    }
-    primaryReviewButton() {
-        return !this.primaryPayButton() && !this.currentOrder.is_empty();
     }
     // FIXME POSREF this is dead code, check if we need the business logic that's left in here
     // If we do it should be in the model.

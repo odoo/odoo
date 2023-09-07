@@ -27,7 +27,7 @@ patch(PosBus.prototype, {
     dispatch(message) {
         super.dispatch(...arguments);
 
-        if (message.type === "TABLE_ORDER_COUNT") {
+        if (message.type === "TABLE_ORDER_COUNT" && this.pos.config.module_pos_restaurant) {
             this.ws_syncTableCount(message.payload);
         }
     },

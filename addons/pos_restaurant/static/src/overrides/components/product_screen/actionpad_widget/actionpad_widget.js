@@ -46,18 +46,25 @@ patch(ActionpadWidget.prototype, {
         );
     },
     get categoryCount() {
-        const categories = {};
         const orderChange = this.currentOrder.getOrderChanges().orderlines;
-        for (const idx in orderChange) {
-            const orderline = orderChange[idx];
-            const categoryId = this.pos.db.get_product_by_id(orderline.product_id).pos_categ_ids[0];
-            if (!categoryId || !this.pos.db.category_by_id[categoryId]) {
-                continue;
+
+        const categories = Object.values(orderChange).reduce((acc, curr) => {
+            const categoryId = this.pos.db.product_by_id[curr.product_id].pos_categ_ids[0];
+            const category = this.pos.db.category_by_id[categoryId];
+
+            if (!acc[category.id]) {
+                acc[category.id] = { count: curr.quantity, name: category.name };
+            } else {
+                acc[category.id].count += curr.quantity;
             }
-            const category = this.pos.db.category_by_id[categoryId].name;
-            const numProd = orderline.quantity;
-            categories[category] = categories[category] ?? 0 + numProd;
-        }
-        return Object.entries(categories);
+
+            return acc;
+        }, {});
+
+        return Object.values(categories)
+            .map((value) => {
+                return `${value.name} ${value.count}`;
+            })
+            .join(" | ");
     },
 });

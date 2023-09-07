@@ -13,7 +13,7 @@ function add_product_to_order(product_name) {
         },
         {
             content: "click review button",
-            trigger: ".btn-switchpane:contains('Review')",
+            trigger: ".btn-switchpane.review-button",
             mobile: true,
         },
         ...Order.hasLine({ productName: product_name }),
@@ -29,7 +29,7 @@ function set_fiscal_position_on_order(fp_name) {
     return [
         {
             content: "click review button",
-            trigger: ".btn-switchpane:contains('Review')",
+            trigger: ".btn-switchpane.review-button",
             mobile: true,
         },
         {
@@ -96,7 +96,7 @@ function press_product_numpad(val) {
     return [
         {
             content: "click review button",
-            trigger: ".btn-switchpane:contains('Review')",
+            trigger: ".btn-switchpane.review-button",
             mobile: true,
         },
         Numpad.click(val),
@@ -123,7 +123,7 @@ function selected_orderline_has({ product, price = null, quantity = null }) {
     const result = [
         {
             content: "click review button",
-            trigger: ".btn-switchpane:contains('Review')",
+            trigger: ".btn-switchpane.review-button",
             mobile: true,
         },
     ];
@@ -140,7 +140,7 @@ function verify_order_total(total_str) {
     return [
         {
             content: "click review button",
-            trigger: ".btn-switchpane:contains('Review')",
+            trigger: ".btn-switchpane.review-button",
             mobile: true,
         },
         Order.hasTotal(total_str),

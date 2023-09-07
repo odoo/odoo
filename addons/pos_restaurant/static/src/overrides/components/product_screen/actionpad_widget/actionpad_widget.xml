@@ -15,9 +15,7 @@
                 <i class="fa fa-cutlery"></i>
                 Order
                 <div class="break-line">
-                    <t t-foreach="categoryCount" t-as="category" t-key="category[0]">
-                        <t t-esc="category[1]"/> <t t-esc="category[0]"/> | 
-                    </t>
+                    <t t-esc="categoryCount" />
                 </div>
             </button>
         </xpath>

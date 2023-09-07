@@ -1763,6 +1763,7 @@ export class Order extends PosModel {
         const oldChanges = this.lastOrderPrepaChange;
         const changes = {};
         let changesCount = 0;
+        let changeAbsCount = 0;
 
         // Compares the orderlines of the order with the last ones sent.
         // When one of them has changed, we add the change.
@@ -1790,6 +1791,7 @@ export class Order extends PosModel {
                         note: note,
                     };
                     changesCount += quantityDiff;
+                    changeAbsCount += Math.abs(quantityDiff);
 
                     if (!orderline.skipChange) {
                         orderline.setHasChange(true);
@@ -1821,6 +1823,7 @@ export class Order extends PosModel {
         }
 
         return {
+            nbrOfChanges: changeAbsCount,
             orderlines: changes,
             count: changesCount,
         };

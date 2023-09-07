@@ -27,17 +27,26 @@ patch(ProductScreen.prototype, {
             this.pos.get_order().get_selected_orderline().get_display_price()
         );
     },
+    get nbrOfChanges() {
+        return this.currentOrder.getOrderChanges().nbrOfChanges;
+    },
     get swapButton() {
         return this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size;
     },
     submitOrder() {
         this.pos.sendOrderInPreparation(this.pos.get_order());
     },
-    primaryPayButton() {
+    get primaryReviewButton() {
         return (
-            !this.currentOrder.is_empty() &&
-            ((!this.swapButton && super.primaryPayButton(...arguments)) ||
-                (this.swapButton && this.pos.get_order().getOrderChanges().count > 0))
+            !this.primaryOrderButton &&
+            !this.pos.get_order().is_empty() &&
+            this.pos.config.module_pos_restaurant
+        );
+    },
+    get primaryOrderButton() {
+        return (
+            this.pos.get_order().getOrderChanges().nbrOfChanges !== 0 &&
+            this.pos.config.module_pos_restaurant
         );
     },
 });
