@@ -498,8 +498,8 @@ export class WebsitePreview extends Component {
         }
         ev.preventDefault();
         const path = this.websiteService.contentWindow.location;
-        const debugMode = this.env.debug ? `?debug=${odoo.debug}` : "";
-        this.router.redirect(
+        const debugMode = this.env.debug ? `?debug=${this.env.debug}` : "";
+        browser.location.assign(
             `/web${debugMode}#action=website.website_preview&path=${encodeURIComponent(path)}`
         );
     }
