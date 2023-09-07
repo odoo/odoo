@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import users, tagged
 from odoo.tools import mute_logger
+from odoo.tests.common import Form
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -192,3 +194,11 @@ class TestMailingABTesting(MassMailCommon):
             ab_testing.action_send_mail()
         self.assertEqual(ab_testing.state, 'done')
         self.assertEqual(len(self._mails), 1)
+
+    def test_mailing_ab_testing_duplicate_date(self):
+        """ Test that "Send final on" date value should be copied in new mass_mailing """
+        ab_testing_mail_1 = Form(self.ab_testing_mailing_1)
+        ab_testing_mail_1.ab_testing_schedule_datetime = datetime.now() + timedelta(days=10)
+        action = ab_testing_mail_1.save().action_duplicate()
+        ab_testing_mailing_2 = self.env[action['res_model']].browse(action['res_id'])
+        self.assertEqual(fields.Datetime.to_string(ab_testing_mailing_2.ab_testing_schedule_datetime), ab_testing_mail_1.ab_testing_schedule_datetime)
