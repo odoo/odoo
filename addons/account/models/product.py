@@ -210,13 +210,14 @@ class ProductProduct(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
-    def _retrieve_product(self, name=None, default_code=None, barcode=None, company=None):
+    def _retrieve_product(self, name=None, default_code=None, barcode=None, company=None, extra_domain=None):
         '''Search all products and find one that matches one of the parameters.
 
         :param name:            The name of the product.
         :param default_code:    The default_code of the product.
         :param barcode:         The barcode of the product.
         :param company:         The company of the product.
+        :param extra_domain:    Any extra domain to add to the search.
         :returns:               A product or an empty recordset if not found.
         '''
         if name and '\n' in name:
@@ -234,5 +235,6 @@ class ProductProduct(models.Model):
         domain = expression.AND([
             expression.OR(domains),
             self.env['product.product']._check_company_domain(company),
+            extra_domain,
         ])
         return self.env['product.product'].search(domain, limit=1)
