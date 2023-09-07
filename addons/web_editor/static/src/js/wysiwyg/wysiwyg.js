@@ -862,7 +862,10 @@ const Wysiwyg = Widget.extend({
      */
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
-            const {oeModel: resModel, oeId: resId} = editableEl.dataset;
+            let { oeModel: resModel, oeId: resId } = editableEl.dataset;
+            if (!resModel) {
+                ({ res_model: resModel, res_id: resId } = this.options.recordInfo);
+            }
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
                 const dirtyEditable = el.closest(".o_dirty");
                 if (dirtyEditable && dirtyEditable !== editableEl) {
@@ -877,7 +880,8 @@ const Wysiwyg = Widget.extend({
                         name: el.dataset.fileName || '',
                         data: el.getAttribute('src').split(',')[1],
                         is_image: true,
-                        ...this.options.recordInfo,
+                        res_model: resModel,
+                        res_id: parseInt(resId),
                     },
                 });
                 let src = attachment.image_src;
