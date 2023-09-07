@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class AccountMove(models.Model):
@@ -33,9 +33,9 @@ class AccountMove(models.Model):
             move.l10n_it_partner_pa = (move.country_code == 'IT' and move.commercial_partner_id.l10n_it_pa_index and
                                        len(move.commercial_partner_id.l10n_it_pa_index) == 6)
 
-    def _prepare_fatturapa_export_values(self):
+    def _l10n_it_edi_get_values(self, pdf_values=None):
         """Add origin document features."""
-        template_values = super()._prepare_fatturapa_export_values()
+        template_values = super()._l10n_it_edi_get_values(pdf_values=pdf_values)
         template_values.update({
             'origin_document_type': self.l10n_it_origin_document_type,
             'origin_document_name': self.l10n_it_origin_document_name,
@@ -44,3 +44,13 @@ class AccountMove(models.Model):
             'cup': self.l10n_it_cup,
         })
         return template_values
+
+    def _l10n_it_edi_base_export_data_check(self):
+        errors = super()._l10n_it_edi_base_export_data_check()
+        if self.l10n_it_partner_pa:
+            if not self.l10n_it_origin_document_type:
+                errors.append(_("This invoice targets the Public Administration, please fill out"
+                                " Origin Document Type field in the Electronic Invoicing tab."))
+            if self.l10n_it_origin_document_date and self.l10n_it_origin_document_date > fields.Date.today():
+                errors.append(_("The Origin Document Date cannot be in the future."))
+        return errors
