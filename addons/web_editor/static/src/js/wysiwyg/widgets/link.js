@@ -562,7 +562,7 @@ export class Link extends Component {
         const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
         const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
-        const btnMarginBottom = /(?<!\S)mb-2(?!\S)/i;
+        const btnMarginBottom = /(^|\s+)mb-2(\s+|$)/i;
         this.state.className = this.state.iniClassName
             .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
