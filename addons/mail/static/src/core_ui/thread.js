@@ -192,7 +192,11 @@ export class Thread extends Component {
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(
-                this.store.messages[Number(oeId)],
+                this.env.services["mail.message"].insert({
+                    id: Number(oeId),
+                    resId: this.props.thread.id,
+                    resModel: this.props.thread.model,
+                }),
                 this.props.thread
             );
         } else if (oeType === "pin-menu") {
