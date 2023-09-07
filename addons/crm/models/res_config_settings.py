@@ -61,7 +61,8 @@ class ResConfigSettings(models.TransientModel):
                 setting.crm_auto_assignment_run_datetime = assign_cron.nextcall
             else:
                 setting.crm_auto_assignment_action = 'manual'
-                setting.crm_auto_assignment_interval_type = setting.crm_auto_assignment_run_datetime = False
+                setting.crm_auto_assignment_interval_type = 'days'
+                setting.crm_auto_assignment_run_datetime = False
                 setting.crm_auto_assignment_interval_number = 1
 
     @api.onchange('crm_auto_assignment_interval_type', 'crm_auto_assignment_interval_number')
