@@ -14,7 +14,6 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
     base_amount = fields.Monetary(required=True, compute='_compute_base_amount', store=True, readonly=False)
     amount = fields.Monetary(required=True, compute='_compute_amount', store=True, readonly=False)
         
-
     @api.depends('tax_id', 'payment_register_id.line_ids', 'payment_register_id.amount')
     def _compute_base_amount(self):
         base_lines = self.payment_register_id.line_ids.move_id.invoice_line_ids
