@@ -3372,8 +3372,18 @@ options.registry.WebsiteAnimate = options.Class.extend({
     async selectClass(previewMode, widgetValue, params) {
         await this._super(...arguments);
         if (params.isAnimationTypeSelection) {
-            this._forceAnimation();
-            this.$target.toggleClass('o_animate_preview o_animate', !!widgetValue);
+            if (params.name !== "no_animation_opt") {
+                this._forceAnimation();
+                this.$target[0].classList.add("o_animate_preview", "o_animate");
+            } else {
+                this.$target[0].classList.remove("o_animate_preview", "o_animate", "o_animating",
+                    "o_animated", "o_animate_in_dropdown", "o_animate_both_scroll");
+                this.$target[0].style.animationName = "";
+                this.$target[0].style.animationPlayState = "";
+                this.$target[0].style.animationDuration = "";
+                this.$target[0].style.animationDelay = "";
+                this.$target[0].style.visibility = "";
+            }
         }
     },
 
