@@ -5,6 +5,7 @@ import json
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_round, format_date, float_is_zero
 from datetime import timedelta
+from collections import defaultdict
 
 class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
@@ -23,11 +24,14 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_current_production_capacity(self, bom_data):
         # Get the maximum amount producible product of the selected bom given each component's stock levels.
-        stockable_components = filter(
-            lambda c: c['product'].detailed_type == 'product'
-            and not float_is_zero(c['base_bom_line_qty'], precision_digits=c['uom'].rounding),
-            bom_data.get('components', []))
-        producibles = [float_round(comp['quantity_available'] / comp['base_bom_line_qty'], precision_digits=0, rounding_method='DOWN') for comp in stockable_components]
+        components_qty_to_produce = defaultdict(lambda: 0)
+        components_qty_available = {}
+        for comp in bom_data.get('components', []):
+            if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_digits=comp['uom'].rounding):
+                continue
+            components_qty_to_produce[comp['product_id']] += comp['base_bom_line_qty']
+            components_qty_available[comp['product_id']] = comp['quantity_available']
+        producibles = [float_round(components_qty_available[p_id] / qty, precision_digits=0, rounding_method='DOWN') for p_id, qty in components_qty_to_produce.items()]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
     @api.model
