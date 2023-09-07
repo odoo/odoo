@@ -859,39 +859,6 @@ class Partner(models.Model):
 
             partner.display_name = name.strip()
 
-    def _parse_partner_name(self, text):
-        """ Parse partner name (given by text) in order to find a name and an
-        email. Supported syntax:
-
-          * Raoul <raoul@grosbedon.fr>
-          * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
-
-        Otherwise: default, everything is set as the name. Starting from 13.3
-        returned email will be normalized to have a coherent encoding.
-
-        :return: name, email (normalized if possible)
-        """
-        if not text or not text.strip():
-            return '', ''
-        name, email = '', ''
-        split_results = tools.email_split_tuples(text)
-        if split_results:
-            name, email = split_results[0]
-
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
-
-        if email:
-            email = tools.email_normalize(email)
-        else:
-            name, email = text, ''
-
-        return name, email
-
     @api.model
     def name_create(self, name):
         """ Override of orm's name_create method for partners. The purpose is
@@ -905,13 +872,13 @@ class Partner(models.Model):
             context = dict(self._context)
             context.pop('default_type')
             self = self.with_context(context)
-        name, email = self._parse_partner_name(name)
-        if self._context.get('force_email') and not email:
+        name, email_normalized = tools.parse_contact_from_email(name)
+        if self._context.get('force_email') and not email_normalized:
             raise ValidationError(_("Couldn't create contact without email address!"))
 
-        create_values = {self._rec_name: name or email}
-        if email:  # keep default_email in context
-            create_values['email'] = email
+        create_values = {self._rec_name: name or email_normalized}
+        if email_normalized:  # keep default_email in context
+            create_values['email'] = email_normalized
         partner = self.create(create_values)
         return partner.id, partner.display_name
 
@@ -929,17 +896,17 @@ class Partner(models.Model):
         if not email:
             raise ValueError(_('An email is required for find_or_create to work'))
 
-        parsed_name, parsed_email = self._parse_partner_name(email)
-        if not parsed_email and assert_valid_email:
+        parsed_name, parsed_email_normalized = tools.parse_contact_from_email(email)
+        if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('A valid email is required for find_or_create to work properly.'))
 
-        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
         if partners:
             return partners
 
-        create_values = {self._rec_name: parsed_name or parsed_email}
-        if parsed_email:  # keep default_email in context
-            create_values['email'] = parsed_email
+        create_values = {self._rec_name: parsed_name or parsed_email_normalized}
+        if parsed_email_normalized:  # keep default_email in context
+            create_values['email'] = parsed_email_normalized
         return self.create(create_values)
 
     def _get_gravatar_image(self, email):

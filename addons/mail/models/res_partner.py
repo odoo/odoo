@@ -90,23 +90,21 @@ class Partner(models.Model):
         if not email:
             raise ValueError(_('An email is required for find_or_create to work'))
 
-        parsed_name, parsed_email = self._parse_partner_name(email)
-        if not parsed_email and assert_valid_email:
+        parsed_name, parsed_email_normalized = tools.parse_contact_from_email(email)
+        if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
-        if parsed_email:
-            email_normalized = tools.email_normalize(parsed_email)
-            if email_normalized:
-                partners = self.search([('email_normalized', '=', email_normalized)], limit=1)
-                if partners:
-                    return partners
+        if parsed_email_normalized:
+            partners = self.search([('email_normalized', '=', parsed_email_normalized)], limit=1)
+            if partners:
+                return partners
 
         # We don't want to call `super()` to avoid searching twice on the email
         # Especially when the search `email =ilike` cannot be as efficient as
         # a search on email_normalized with a btree index
         # If you want to override `find_or_create()` your module should depend on `mail`
-        create_values = {self._rec_name: parsed_name or parsed_email}
-        if parsed_email:  # otherwise keep default_email in context
-            create_values['email'] = parsed_email
+        create_values = {self._rec_name: parsed_name or parsed_email_normalized}
+        if parsed_email_normalized:  # otherwise keep default_email in context
+            create_values['email'] = parsed_email_normalized
         return self.create(create_values)
 
     @api.model
@@ -139,7 +137,7 @@ class Partner(models.Model):
         """
         additional_values = additional_values if additional_values else {}
         partners, tocreate_vals_list = self.env['res.partner'], []
-        name_emails = [self._parse_partner_name(email) for email in emails]
+        name_emails = [tools.parse_contact_from_email(email) for email in emails]
 
         # find valid emails_normalized, filtering out false / void values, and search
         # for existing partners based on those emails

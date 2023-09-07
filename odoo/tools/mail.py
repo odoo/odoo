@@ -695,3 +695,36 @@ def encapsulate_email(old_email, new_email):
         name_part,
         new_email_split[0][1],
     ))
+
+def parse_contact_from_email(text):
+    """ Parse contact name and email (given by text) in order to find contact
+    information, able to populate records like partners, leads, ...
+    Supported syntax:
+
+      * Raoul <raoul@grosbedon.fr>
+      * "Raoul le Grand" <raoul@grosbedon.fr>
+      * Raoul raoul@grosbedon.fr (strange fault tolerant support from
+        df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
+        in 'email_split_tuples';
+
+    Otherwise: default, text is set as name.
+
+    :return: name, email (normalized if possible)
+    """
+    if not text or not text.strip():
+        return '', ''
+    split_results = email_split_tuples(text)
+    name, email = split_results[0] if split_results else ('', '')
+
+    if email and not name:
+        fallback_emails = email_split(text.replace(' ', ','))
+        if fallback_emails:
+            email = fallback_emails[0]
+            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
+
+    if email:
+        email_normalized = email_normalize(email, strict=False) or email
+    else:
+        name, email_normalized = text, ''
+
+    return name, email_normalized

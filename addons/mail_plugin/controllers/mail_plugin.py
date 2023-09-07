@@ -384,9 +384,8 @@ class MailPluginController(http.Controller):
 
         if not partner_values['name']:
             # Always ensure that the partner has a name
-            name, email = request.env['res.partner']._parse_partner_name(
-                partner_values['email'])
-            partner_values['name'] = name or email
+            name, email_normalized = tools.parse_contact_from_email(partner_values['email'])
+            partner_values['name'] = name or email_normalized
 
         return partner_values
 
