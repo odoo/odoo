@@ -6484,6 +6484,16 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (hoverEffectsOptionsEl && animationEffectWidget) {
             animationEffectWidget.getParent().$el[0].append(hoverEffectsOptionsEl);
         }
+
+        const img = this._getImg();
+        const shapeName = img.dataset.shape;
+        if (shapeName) {
+            await this._loadShape(shapeName);
+            await this._applyShapeAndColors(true);
+            // Optionally, you can also refresh public widgets or perform any other
+            // necessary tasks
+            this._refreshPublicWidgets();
+        }
     },
 
     //--------------------------------------------------------------------------
