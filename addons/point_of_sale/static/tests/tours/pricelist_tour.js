@@ -106,7 +106,7 @@ steps = steps.concat([
     ...ProductScreen.do.clickHomeCategory(),
     {
         content: "click review button",
-        trigger: ".btn-switchpane:contains('Review')",
+        trigger: ".btn-switchpane.review-button",
         mobile: true,
     },
     {
@@ -190,7 +190,7 @@ steps = steps.concat([
     },
     {
         content: "click review button",
-        trigger: ".btn-switchpane:contains('Review')",
+        trigger: ".btn-switchpane.review-button",
         mobile: true,
     },
     ...Order.hasLine({ productName: "Wall Shelf", quantity: "1.0", withClass: ".selected" }),
@@ -222,7 +222,7 @@ steps = steps.concat([
     },
     {
         content: "click review button",
-        trigger: ".btn-switchpane:contains('Review')",
+        trigger: ".btn-switchpane.review-button",
         mobile: true,
     },
     ...Order.hasLine({ productName: "Small Shelf", quantity: "1.0", withClass: ".selected" }),

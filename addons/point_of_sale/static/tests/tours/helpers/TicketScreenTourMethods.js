@@ -29,7 +29,7 @@ class Do {
         return [
             {
                 content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
+                trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
         ];
@@ -53,7 +53,7 @@ class Do {
         return [
             {
                 content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
+                trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
             {
@@ -125,7 +125,7 @@ class Do {
         return [
             {
                 content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
+                trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
             {
@@ -149,7 +149,7 @@ class Do {
         return [
             {
                 content: "click review button",
-                trigger: ".btn-switchpane:contains('Review')",
+                trigger: ".btn-switchpane.review-button",
                 mobile: true,
             },
             {

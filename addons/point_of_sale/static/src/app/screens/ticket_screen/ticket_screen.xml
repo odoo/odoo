@@ -114,7 +114,7 @@
                         <button class="btn-switchpane load-order-button primary btn btn-primary rounded-0 w-50 fw-bolder py-3" t-if="!isOrderSynced" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
                             <span class="fs-1 d-block">Load Order</span>
                         </button>
-                        <button class="btn-switchpane flex-fill btn rounded-0 fw-bolder secondary" t-att-class="{'btn-primary': isOrderSynced, 'btn-secondary': !isOrderSynced}" t-on-click="switchPane">
+                        <button class="btn-switchpane flex-fill btn rounded-0 fw-bolder secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-secondary': !isOrderSynced}" t-on-click="switchPane">
                             <span class="fs-1 d-block">Review</span>
                         </button>
                     </div>
