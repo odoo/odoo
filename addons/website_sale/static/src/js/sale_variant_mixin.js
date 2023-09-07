@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { KeepLast } from "@web/core/utils/concurrency";
-import utils from "@web/legacy/js/core/utils";
 import ajax from "@web/legacy/js/core/ajax";
 import { memoize, uniqueId } from "@web/core/utils/functions";
 import { throttleForAnimation } from "@web/core/utils/timing";
+import { insertThousandsSep } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 
@@ -620,8 +620,9 @@ var VariantMixin = {
             precision = parseInt($('.decimal_precision').last().data('precision'));
         }
         var formatted = price.toFixed(precision).split(".");
-        formatted[0] = utils.insert_thousand_seps(formatted[0]);
-        return formatted.join(localization.decimalPoint);
+        const { thousandsSep, decimalPoint, grouping } = localization;
+        formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
+        return formatted.join(decimalPoint);
     },
     /**
      * Returns a throttled `_getCombinationInfo` with a leading and a trailing

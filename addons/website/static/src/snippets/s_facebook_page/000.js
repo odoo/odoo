@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { pick } from "@web/core/utils/objects";
+import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import utils from "@web/legacy/js/core/utils";
 
 const FacebookPageWidget = publicWidget.Widget.extend({
     selector: '.o_facebook_page',
@@ -24,7 +24,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             params.href = `https://www.facebook.com/${params.id}`;
         }
         delete params.id;
-        params.width = utils.confine(Math.floor(this.$el.width()), 180, 500);
+        params.width = clamp(Math.floor(this.$el.width()), 180, 500);
 
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { delay } from "@web/core/utils/concurrency";
-import utils from '@web/legacy/js/core/utils';
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
 import {svgToPNG} from '@website/js/utils';
@@ -267,7 +267,7 @@ class PaletteSelectionScreen extends Component {
         const logoSelectInput = this.logoInputRef.el;
         if (logoSelectInput.files.length === 1) {
             const file = logoSelectInput.files[0];
-            const data = await utils.getDataURLFromFile(file);
+            const data = await getDataURLFromFile(file);
             const attachment = await this.rpc('/web_editor/attachment/add_data', {
                 'name': 'logo',
                 'data': data.split(',')[1],
