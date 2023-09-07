@@ -260,14 +260,8 @@ function removeUnwantedAttrsFromTemplates(attrs) {
 }
 
 function patchAssets() {
-    const { loadXML, getBundle, loadJS, loadCSS } = assets;
+    const { getBundle, loadJS, loadCSS } = assets;
     patch(assets, {
-        loadXML: function (templates) {
-            console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
-            // Clean up new templates that might be added later.
-            loadXML(templates);
-            removeUnwantedAttrsFromTemplates(["alt", "src"]);
-        },
         getBundle: memoize(async function (xmlID) {
             console.log(
                 "%c[assets] fetch libs from xmlID: " + xmlID,

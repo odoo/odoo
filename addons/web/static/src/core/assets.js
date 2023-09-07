@@ -26,7 +26,7 @@ class AssetsLoadingError extends Error {}
  * @param {string} url the url of the script
  * @returns {Promise<true>} resolved when the script has been loaded
  */
-export const _loadJS = (assets.loadJS = memoize(function loadJS(url) {
+assets.loadJS = memoize(function loadJS(url) {
     if (document.querySelector(`script[src="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a script has loaded
@@ -45,7 +45,7 @@ export const _loadJS = (assets.loadJS = memoize(function loadJS(url) {
             reject(new AssetsLoadingError(`The loading of ${url} failed`));
         });
     });
-}));
+});
 
 /**
  * Loads the given url as a stylesheet.
@@ -53,7 +53,7 @@ export const _loadJS = (assets.loadJS = memoize(function loadJS(url) {
  * @param {string} url the url of the stylesheet
  * @returns {Promise<true>} resolved when the stylesheet has been loaded
  */
-export const _loadCSS = (assets.loadCSS = memoize(function loadCSS(url, retryCount = 0) {
+assets.loadCSS = memoize(function loadCSS(url, retryCount = 0) {
     if (document.querySelector(`link[href="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a link has loaded
@@ -86,45 +86,7 @@ export const _loadCSS = (assets.loadCSS = memoize(function loadCSS(url, retryCou
     });
     document.head.appendChild(linkEl);
     return promise;
-}));
-
-/**
- * Container dom containing all the owl templates that have been loaded.
- * This can be imported by the modules in order to use it when loading the
- * application and the components.
- */
-export const templates = new DOMParser().parseFromString("<odoo/>", "text/xml");
-
-let defaultApp;
-/**
- * Loads the given xml template.
- *
- * @param {string} xml the string defining the templates
- * @param {App} [app=defaultApp] optional owl App instance (default value
- *      can be changed with setLoadXmlDefaultApp method)
- * @returns {Promise<true>} resolved when the template xml has been loaded
- */
-export const _loadXML = (assets.loadXML = function loadXML(xml, app = defaultApp) {
-    const doc = new DOMParser().parseFromString(xml, "text/xml");
-    if (doc.querySelector("parsererror")) {
-        // The generated error XML is non-standard so we log the full content to
-        // ensure that the relevant info is actually logged.
-        throw new Error(doc.querySelector("parsererror").textContent.trim());
-    }
-
-    for (const element of doc.querySelectorAll("templates > [t-name]")) {
-        templates.documentElement.appendChild(element);
-    }
-    app?.addTemplates(templates, app);
 });
-/**
- * Update the default app to load templates.
- *
- * @param {App} app owl App instance
- */
-export function setLoadXmlDefaultApp(app) {
-    defaultApp = app;
-}
 
 /**
  * Get the files information as descriptor object from a public asset template.
@@ -132,7 +94,7 @@ export function setLoadXmlDefaultApp(app) {
  * @param {string} bundleName Name of the bundle containing the list of files
  * @returns {Promise<{cssLibs, cssContents, jsLibs, jsContents}>}
  */
-export const _getBundle = (assets.getBundle = memoize(async function getBundle(bundleName) {
+assets.getBundle = memoize(async function getBundle(bundleName) {
     const url = new URL(`/web/bundle/${bundleName}`, location.origin);
     for (const [key, value] of Object.entries(session.bundle_params || {})) {
         url.searchParams.set(key, value);
@@ -160,13 +122,13 @@ export const _getBundle = (assets.getBundle = memoize(async function getBundle(b
         }
     }
     return assets;
-}));
+});
 
 /**
  * Loads the given js/css libraries and asset bundles. Note that no library or
  * asset will be loaded if it was already done before.
  *
- * @param {Object} desc
+ * @param {Object|string} desc
  * @param {Array<string|string[]>} [desc.assetLibs=[]]
  *      The list of assets to load. Each list item may be a string (the xmlID
  *      of the asset to load) or a list of strings. The first level is loaded
@@ -190,7 +152,10 @@ export const _getBundle = (assets.getBundle = memoize(async function getBundle(b
  *
  * @returns {Promise}
  */
-export const _loadBundle = (assets.loadBundle = async function loadBundle(desc) {
+assets.loadBundle = async function loadBundle(desc) {
+    if (typeof desc === "string") {
+        desc = await assets.getBundle(desc);
+    }
     // Load css in parallel
     const promiseCSS = Promise.all((desc.cssLibs || []).map(assets.loadCSS)).then(() => {
         if (desc.cssContents && desc.cssContents.length) {
@@ -227,28 +192,23 @@ export const _loadBundle = (assets.loadBundle = async function loadBundle(desc) 
     for (const bundleName of desc.assetLibs || []) {
         if (typeof bundleName === "string") {
             // serial loading
-            const desc = await assets.getBundle(bundleName);
-            await assets.loadBundle(desc);
+            await assets.loadBundle(bundleName);
         } else {
             // parallel loading
             await Promise.all(
                 bundleName.map(async (bundleName) => {
-                    const desc = await assets.getBundle(bundleName);
-                    return assets.loadBundle(desc);
+                    return assets.loadBundle(bundleName);
                 })
             );
         }
     }
-});
+};
 
 export const loadJS = function (url) {
     return assets.loadJS(url);
 };
 export const loadCSS = function (url) {
     return assets.loadCSS(url);
-};
-export const loadXML = function (xml, app = defaultApp) {
-    return assets.loadXML(xml, app);
 };
 export const getBundle = function (bundleName) {
     return assets.getBundle(bundleName);
@@ -257,6 +217,37 @@ export const loadBundle = function (desc) {
     return assets.loadBundle(desc);
 };
 
+/**
+ * Container dom containing all the owl templates that have been loaded.
+ * This can be imported by the modules in order to use it when loading the
+ * application and the components.
+ */
+export const templates = new DOMParser().parseFromString("<odoo/>", "text/xml");
+/**
+ * Each template is registered in xml_templates registry.
+ * When a new template is added in the registry, it's also added to each owl App.
+ */
+registry.category("xml_templates").addEventListener("UPDATE", (ev) => {
+    const { operation, value } = ev.detail;
+    if (operation === "add") {
+        const doc = new DOMParser().parseFromString(value, "text/xml");
+        if (doc.querySelector("parsererror")) {
+            // The generated error XML is non-standard so we log the full content to
+            // ensure that the relevant info is actually logged.
+            throw new Error(doc.querySelector("parsererror").textContent.trim());
+        }
+
+        for (const element of doc.querySelectorAll("templates > [t-name]")) {
+            templates.documentElement.appendChild(element);
+        }
+        // eslint-disable-next-line no-undef
+        const apps = __OWL_DEVTOOLS__.apps;
+        for (const app of apps) {
+            app.addTemplates(templates, app);
+        }
+    }
+});
+
 import { Component, xml, onWillStart } from "@odoo/owl";
 /**
  * Utility component that loads an asset bundle before instanciating a component
@@ -264,8 +255,7 @@ import { Component, xml, onWillStart } from "@odoo/owl";
 export class LazyComponent extends Component {
     setup() {
         onWillStart(async () => {
-            const bundle = await getBundle(this.props.bundle);
-            await loadBundle(bundle);
+            await loadBundle(this.props.bundle);
             this.Component = registry.category("lazy_components").get(this.props.Component);
         });
     }

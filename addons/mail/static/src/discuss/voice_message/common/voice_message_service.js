@@ -1,11 +1,11 @@
 /* @odoo-module */
 
-import { getBundle, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 
 const loader = {
-    loadLamejs: memoize(() => getBundle("mail.assets_lamejs").then(loadBundle)),
+    loadLamejs: memoize(() => loadBundle("mail.assets_lamejs")),
 };
 
 export async function loadLamejs() {

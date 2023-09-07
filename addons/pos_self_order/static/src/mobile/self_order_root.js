@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { Component, whenReady, App } from "@odoo/owl";
 import { makeEnv, startServices } from "@web/env";
-import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
+import { templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { LandingPage } from "@pos_self_order/mobile/pages/landing_page/landing_page";
 import { NavBar } from "@pos_self_order/mobile/components/navbar/navbar";
@@ -54,7 +54,6 @@ export async function createPublicRoot() {
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
-    setLoadXmlDefaultApp(app);
     return app.mount(document.body);
 }
 createPublicRoot();

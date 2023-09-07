@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { getBundle, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { sprintf } from "@web/core/utils/strings";
 import { loadSpreadsheetDependencies } from "./helpers";
 
@@ -16,8 +16,7 @@ const actionRegistry = registry.category("actions");
  */
 export async function loadSpreadsheetAction(env, actionName, actionLazyLoader) {
     await loadSpreadsheetDependencies();
-    const desc = await getBundle("spreadsheet.o_spreadsheet");
-    await loadBundle(desc);
+    await loadBundle("spreadsheet.o_spreadsheet");
 
     if (actionRegistry.get(actionName) === actionLazyLoader) {
         // At this point, the real spreadsheet client action should be loaded and have
