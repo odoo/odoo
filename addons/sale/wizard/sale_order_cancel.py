@@ -3,7 +3,6 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 
 class SaleOrderCancel(models.TransientModel):
