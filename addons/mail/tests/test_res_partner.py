@@ -212,7 +212,7 @@ class TestPartner(MailCommon):
                     self.assertEqual(partner.email, email_input)
                 partner.unlink()  # do not mess with subsequent tests
 
-        # now input is multi email -> '_parse_partner_name' used in 'find_or_create'
+        # now input is multi email -> 'parse_contact_from_email' used in 'find_or_create'
         # before trying to normalize is quite tolerant, allowing positive checks
         for email_input, match_partner, exp_email_partner in [
             ('classic.format@test.example.com,another.email@test.example.com',
@@ -475,7 +475,7 @@ class TestPartner(MailCommon):
     def test_name_create_corner_cases(self):
         """ Test parsing (and fallback) or name given to name_create that should
         try to correctly find name and email, even with malformed input. Relies
-        on '_parse_partner_name' and 'email_normalize'. """
+        on 'parse_contact_from_email' and 'email_normalize'. """
         samples = [
             'Raoul raoul@grosbedon.fr',
             'Raoul chirurgiens-dentistes.fr',
