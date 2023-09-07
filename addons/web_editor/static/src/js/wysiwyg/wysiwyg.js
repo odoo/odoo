@@ -1031,6 +1031,7 @@ export class Wysiwyg extends Component {
      */
     _replaceElement($el) {
         this.el.replaceWith($el[0]);
+        this.el = $el[0];
         this.$el = $el;
     }
     //--------------------------------------------------------------------------
