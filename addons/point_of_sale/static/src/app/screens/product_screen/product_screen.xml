@@ -50,11 +50,11 @@
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
                     <div class="switchpane d-flex">
-                        <button class="btn-switchpane pay-button btn btn-primary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryPayButton(), 'secondary': !primaryPayButton()}" t-on-click="() => currentOrder.pay()">
+                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ primaryPayButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="() => currentOrder.pay()">
                             <span class="fs-1 d-block">Pay</span>
                             <span><t t-esc="total" /></span>
                         </button>
-                        <button class="btn-switchpane btn btn-secondary w-50 rounded-0 fw-bolder" t-att-class="{'primary': primaryReviewButton(), 'secondary': !primaryReviewButton()}" t-on-click="switchPane">
+                        <button class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder review-button" t-on-click="switchPane">
                             <span class="fs-1 d-block">Review</span>
                             <span><t t-esc="items"/> items</span>
                         </button>
