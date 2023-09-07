@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.3alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-22 13:03+0000\n"
-"PO-Revision-Date: 2020-03-30 18:37+0000\n"
+"POT-Creation-Date: 2023-09-07 06:58+0000\n"
+"PO-Revision-Date: 2023-09-07 06:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,7 +23,7 @@ msgstr "- Inicio actividades:"
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
 msgid "- CUIT:"
-msgstr "- CUIT:"
+msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__account_tax_group__l10n_ar_tribute_afip_code__01
@@ -93,6 +92,15 @@ msgstr "99 - Otros"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid ""
+"<br/>\n"
+"                        <strong>Incoterm:</strong>"
+msgstr ""
+"<br/>\n"
+"                        <strong>Incoterm:</strong>"
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<br/><strong>CBU for payment: </strong>"
 msgstr "<br/><strong>CBU de pago: </strong>"
 
@@ -105,11 +113,6 @@ msgstr "<br/><strong>Moneda: </strong>"
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<br/><strong>Exchange rate: </strong>"
 msgstr "<br/><strong>Tipo de cambio: </strong>"
-
-#. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "<br/><strong>Incoterm:</strong>"
-msgstr "<br/><strong>Incoterm:</strong>"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
@@ -170,8 +173,12 @@ msgstr "<strong>Cond. IVA: </strong>"
 #: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_concept
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_concept
 #: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_concept
-msgid "A concept is suggested regarding the type of the products on the invoice but it is allowed to force a different type if required."
-msgstr "Un concepto es sugerido tomando en cuenta el tipo de productos en la factura, pero es permitido forzar un concepto diferente si es requerido."
+msgid ""
+"A concept is suggested regarding the type of the products on the invoice but"
+" it is allowed to force a different type if required."
+msgstr ""
+"Un concepto es sugerido tomando en cuenta el tipo de productos en la "
+"factura, pero es permitido forzar un concepto diferente si es requerido."
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_ac_dis_cf
@@ -195,7 +202,6 @@ msgstr "AJUSTES CONTABLES QUE DISMINUYEN EL DEBITO FISCAL"
 
 #. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.menu_afip_config
-#: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "AFIP"
 msgstr "AFIP"
 
@@ -203,7 +209,6 @@ msgstr "AFIP"
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_currency__l10n_ar_afip_code
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__l10n_ar_afip_code
 msgid "AFIP Code"
 msgstr "Código AFIP"
 
@@ -228,11 +233,6 @@ msgstr "Número PdV AFIP"
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
 msgid "AFIP POS System"
 msgstr "Sistema PdV AFIP"
-
-#. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.base_view_partner_form
-msgid "AFIP Responsibility"
-msgstr "Responsabilidad AFIP"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_l10n_ar_afip_responsibility_type
@@ -328,6 +328,11 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_afip_start_date
 msgid "Activities Start"
 msgstr "Inicio actividades"
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_uom_uom__l10n_ar_afip_code
+msgid "Argentina: This code will be used on electronic invoice"
+msgstr "Este código será utilizado en facturación electrónica"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_document_type_filter
@@ -675,7 +680,8 @@ msgstr "NOTA DE CREDITO"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_sp_nc
 msgid "CREDIT NOTE PUBLIC SERVICES/TAX CONTROLLERS"
-msgstr "NOTA DE CREDITO SERVICIOS PUBLICOS NOTA DE CREDITO CONTROLADORES FISCALES"
+msgstr ""
+"NOTA DE CREDITO SERVICIOS PUBLICOS NOTA DE CREDITO CONTROLADORES FISCALES"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_nc_liq_uci_c
@@ -749,7 +755,8 @@ msgstr "NOTAS DE CREDITO M"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_nc_rg1415
 msgid "CREDIT NOTES OR EQUIVALENT DOCUMENT COMPLYING WITH G.R. NO. 1415"
-msgstr "NOTAS DE CREDITO O DOCUMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. Nº 1415"
+msgstr ""
+"NOTAS DE CREDITO O DOCUMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. Nº 1415"
 
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CUIL
@@ -770,8 +777,12 @@ msgstr "DOCUMENTO ADUANERO"
 #. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
-msgid "Can not create chart of account until you configure your company AFIP Responsibility and VAT."
-msgstr "No puede crear el plan de cuentas hasta que configure la Responsabilidad AFIP y CUIT en su compañía."
+msgid ""
+"Can not create chart of account until you configure your company AFIP "
+"Responsibility and VAT."
+msgstr ""
+"No puede crear el plan de cuentas hasta que configure la Responsabilidad "
+"AFIP y CUIT en su compañía."
 
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CdM
@@ -780,6 +791,7 @@ msgstr "CdM"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__code
+#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__l10n_ar_afip_code
 msgid "Code"
 msgstr "Código"
 
@@ -801,14 +813,22 @@ msgstr "Compañía requiere IVA?"
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_vat
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_vat
-msgid "Computed field that returns VAT or nothing if this one is not set for the partner"
-msgstr "Campo computado que retorna el CUIT o nada si este no esta definido en el contacto"
+msgid ""
+"Computed field that returns VAT or nothing if this one is not set for the "
+"partner"
+msgstr ""
+"Campo computado que retorna el CUIT o nada si este no esta definido en el "
+"contacto"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_formatted_vat
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_formatted_vat
-msgid "Computed field that will convert the given VAT number to the format {person_category:2}-{number:10}-{validation_number:1}"
-msgstr "Campo computado que convertirá el número CUIT al formato {categoria_persona:2}-{número:10}-{número_validación:1}"
+msgid ""
+"Computed field that will convert the given VAT number to the format "
+"{person_category:2}-{number:10}-{validation_number:1}"
+msgstr ""
+"Campo computado que convertirá el número CUIT al formato "
+"{categoria_persona:2}-{número:10}-{número_validación:1}"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner
@@ -819,8 +839,12 @@ msgstr "Contacto"
 #. odoo-python
 #: code:addons/l10n_ar/models/res_company.py:0
 #, python-format
-msgid "Could not change the AFIP Responsibility of this company because there are already accounting entries."
-msgstr "No se puede cambiar la responsabilidad AFIP de esta compañía porque ya existen movimientos contables."
+msgid ""
+"Could not change the AFIP Responsibility of this company because there are "
+"already accounting entries."
+msgstr ""
+"No se puede cambiar la responsabilidad AFIP de esta compañía porque ya "
+"existen movimientos contables."
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_country
@@ -939,7 +963,8 @@ msgstr "NOTAS DE DEBITO POR OPERACIONES CON EL EXTERIOR"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_nd_rg1415
 msgid "DEBIT NOTES OR EQUIVALENT DOCUMENT COMPLYING WITH G.R. NO. 1415"
-msgstr "NOTAS DE DEBITO O DOCUMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. Nº 1415"
+msgstr ""
+"NOTAS DE DEBITO O DOCUMENTO EQUIVALENTE QUE CUMPLAN CON LA R.G. Nº 1415"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_liq_cd_sp_a
@@ -988,8 +1013,14 @@ msgstr "Fecha:"
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_afip_responsibility_type_id
-msgid "Defined by AFIP to identify the type of responsibilities that a person or a legal entity could have and that impacts in the type of operations and requirements they need."
-msgstr "Definido por AFIP para identificar el tipo de responsabilidad que puede tener una persona física o jurídica y que impacta en el tipo de operaciones y requerimientos que dicha persona necesita."
+msgid ""
+"Defined by AFIP to identify the type of responsibilities that a person or a "
+"legal entity could have and that impacts in the type of operations and "
+"requirements they need."
+msgstr ""
+"Definido por AFIP para identificar el tipo de responsabilidad que puede "
+"tener una persona física o jurídica y que impacta en el tipo de operaciones "
+"y requerimientos que dicha persona necesita."
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__l10n_ar_state_id
@@ -1165,18 +1196,30 @@ msgstr "CUIT Formateado"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_legal_entity_vat
-msgid "Generic VAT number defined by AFIP in order to recognize partners from this country that are legal entity"
-msgstr "Número de CUIT genérico definido por AFIP para reconocer los contactos de este país que son personas jurídicas"
+msgid ""
+"Generic VAT number defined by AFIP in order to recognize partners from this "
+"country that are legal entity"
+msgstr ""
+"Número de CUIT genérico definido por AFIP para reconocer los contactos de "
+"este país que son personas jurídicas"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_natural_vat
-msgid "Generic VAT number defined by AFIP in order to recognize partners from this country that are natural persons"
-msgstr "Número de CUIT genérico definido por AFIP para reconocer los contactos de este país que son personas fìsicas"
+msgid ""
+"Generic VAT number defined by AFIP in order to recognize partners from this "
+"country that are natural persons"
+msgstr ""
+"Número de CUIT genérico definido por AFIP para reconocer los contactos de "
+"este país que son personas fìsicas"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_other_vat
-msgid "Generic VAT number defined by AFIP in order to recognize partners from this country that are not natural persons or legal entities"
-msgstr "Número de CUIT genérico definido por AFIP para reconocer los contactos de este país que son personas físicas"
+msgid ""
+"Generic VAT number defined by AFIP in order to recognize partners from this "
+"country that are not natural persons or legal entities"
+msgstr ""
+"Número de CUIT genérico definido por AFIP para reconocer los contactos de "
+"este país que son personas físicas"
 
 #. module: l10n_ar
 #. odoo-python
@@ -1305,8 +1348,12 @@ msgstr "Tipos de Identificación"
 #. odoo-python
 #: code:addons/l10n_ar/models/account_fiscal_position.py:0
 #, python-format
-msgid "If use AFIP Responsibility then the country / zip codes will be not take into account"
-msgstr "Si utiliza Responsabilidad AFIP entonces no se tomará en cuenta el pais / códigos zip "
+msgid ""
+"If use AFIP Responsibility then the country / zip codes will be not take "
+"into account"
+msgstr ""
+"Si utiliza Responsabilidad AFIP entonces no se tomará en cuenta el pais / "
+"códigos zip "
 
 #. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_quote_despacho_product_template
@@ -1315,6 +1362,7 @@ msgstr "Despacho de importación"
 
 #. module: l10n_ar
 #. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
 #: code:addons/l10n_ar/models/res_partner_bank.py:0
 #, python-format
 msgid "Invalid Checksum"
@@ -1349,7 +1397,7 @@ msgstr "Estadísticas de facturas"
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_is_pos
 msgid "Is AFIP POS?"
-msgstr "Is AFIP POS?"
+msgstr "Es AFIP POS?"
 
 #. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_account_journal
@@ -1499,13 +1547,23 @@ msgstr "Letras"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__l10n_ar_letter
-msgid "Letters defined by the AFIP that can be used to identify the documents presented to the government and that depends on the operation type, the responsibility of both the issuer and the receptor of the document"
-msgstr "Letras definidas por la AFIP de pueden ser usadas para identificar los documentos presentados al gobierno y que depende del tipo de operación, la responsabilidad de ambos tanto del emisor como el receptor del documento"
+msgid ""
+"Letters defined by the AFIP that can be used to identify the documents "
+"presented to the government and that depends on the operation type, the "
+"responsibility of both the issuer and the receptor of the document"
+msgstr ""
+"Letras definidas por la AFIP de pueden ser usadas para identificar los "
+"documentos presentados al gobierno y que depende del tipo de operación, la "
+"responsabilidad de ambos tanto del emisor como el receptor del documento"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_fiscal_position__l10n_ar_afip_responsibility_type_ids
-msgid "List of AFIP responsibilities where this fiscal position should be auto-detected"
-msgstr "Lista de responsabilidades AFIP donde esta posición fiscal debe ser auto-detectada"
+msgid ""
+"List of AFIP responsibilities where this fiscal position should be auto-"
+"detected"
+msgstr ""
+"Lista de responsabilidades AFIP donde esta posición fiscal debe ser auto-"
+"detectada"
 
 #. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__res_partner__l10n_ar_gross_income_type__local
@@ -1639,8 +1697,12 @@ msgstr "OTROS COMPROBANTES - SERVICIOS DEL EXTERIOR"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_oc_ncrg3419
-msgid "OTHER VOUCHERS THAT DO NOT COMPLY WITH OR ARE EXEMPT FROM G.R. NO. 1415 AND AMENDMENTS THERETO"
-msgstr "OTROS COMPROBANTES QUE NO CUMPLEN O ESTAN EXCEPTUADOS DE LA R.G. Nº 1415 Y SUS MODIF"
+msgid ""
+"OTHER VOUCHERS THAT DO NOT COMPLY WITH OR ARE EXEMPT FROM G.R. NO. 1415 AND "
+"AMENDMENTS THERETO"
+msgstr ""
+"OTROS COMPROBANTES QUE NO CUMPLEN O ESTAN EXCEPTUADOS DE LA R.G. Nº 1415 Y "
+"SUS MODIF"
 
 #. module: l10n_ar
 #. odoo-python
@@ -1653,8 +1715,12 @@ msgstr "En la factura con id \"%s\" debe usar IVA NO Corresponde en cada línea.
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "On invoice id \"%s\" you must use VAT taxes different than VAT Not Applicable."
-msgstr "En la factura con id \"%s\" debes usar impuestos de IVA diferentes de IVA No Corresponde."
+msgid ""
+"On invoice id \"%s\" you must use VAT taxes different than VAT Not "
+"Applicable."
+msgstr ""
+"En la factura con id \"%s\" debes usar impuestos de IVA diferentes de IVA No"
+" Corresponde."
 
 #. module: l10n_ar
 #. odoo-python
@@ -1677,14 +1743,6 @@ msgid "Other Purchase Documents"
 msgstr "Otros Documentos de Compra"
 
 #. module: l10n_ar
-#: model:account.tax,description:l10n_ar.ri_tax_other_taxes_compras
-#: model:account.tax,description:l10n_ar.ri_tax_other_taxes_ventas
-#: model:account.tax,name:l10n_ar.ri_tax_other_taxes_compras
-#: model:account.tax,name:l10n_ar.ri_tax_other_taxes_ventas
-msgid "Other Tax"
-msgstr "Otros impuestos"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_other_vat
 msgid "Other VAT"
 msgstr "CUIT Otros"
@@ -1692,12 +1750,14 @@ msgstr "CUIT Otros"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_con_a_m
 msgid "PRIMARY CONSIGNMENT \"A\" VOUCHERS FOR THE MARINE FISHING SECTOR"
-msgstr "COMPROBANTES \"A\" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO"
+msgstr ""
+"COMPROBANTES \"A\" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_con_b_m
 msgid "PRIMARY CONSIGNMENT \"B\" VOUCHERS FOR THE MARINE FISHING SECTOR"
-msgstr "COMPROBANTES \"B\" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO"
+msgstr ""
+"COMPROBANTES \"B\" DE CONSIGNACION PRIMARIA PARA EL SECTOR PESQUERO MARITIMO"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_liq_prim_gr
@@ -1722,7 +1782,8 @@ msgstr "LIQUIDACIÓN DE COMPRA PRIMARIA PARA EL SECTOR TABACALERO B"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_nc
 msgid "PROOF CREDIT NOTES WITH CODE. 34, 39, 58, 59, 60, 63, 96, 97,"
-msgstr "NOTAS DE CREDITO DE COMPROBANTES CON COD. 34, 39, 58, 59, 60, 63, 96, 97,"
+msgstr ""
+"NOTAS DE CREDITO DE COMPROBANTES CON COD. 34, 39, 58, 59, 60, 63, 96, 97,"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_usados
@@ -1732,7 +1793,8 @@ msgstr "COMPROBANTES DE COMPRA DE BIENES USADOS"
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_bs_no_reg
 msgid "PROOFS OF PURCHASE OF NON-REGISTRABLE GOODS TO FINAL CONSUMERS"
-msgstr "COMPROBANTES DE COMPRA DE BIENES NO REGISTRABLES A CONSUMIDORES FINALES"
+msgstr ""
+"COMPROBANTES DE COMPRA DE BIENES NO REGISTRABLES A CONSUMIDORES FINALES"
 
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_liq_c_sp_a
@@ -1769,7 +1831,8 @@ msgstr "Empresa"
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
-msgstr "Por favor configure la Responsabilidad AFIP de \"%s\" para poder continuar"
+msgstr ""
+"Por favor configure la Responsabilidad AFIP de \"%s\" para poder continuar"
 
 #. module: l10n_ar
 #. odoo-python
@@ -1849,8 +1912,15 @@ msgstr "RECIBOS M"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
-msgid "Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT taxes are required for the invoices related to this document type, and those with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
-msgstr "Lanze un error si la factura de vendedor esta mal cargada. \"No Cero\" significa que los impuestos de IVA son requeridos en las facturas relacionadas a este Tipo  de Documento, y aquellas con \"Cero\" significa que solo  \"IVA No Corresponde\" esta permitido."
+msgid ""
+"Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT "
+"taxes are required for the invoices related to this document type, and those"
+" with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
+msgstr ""
+"Lanze un error si la factura de vendedor esta mal cargada. \"No Cero\" "
+"significa que los impuestos de IVA son requeridos en las facturas "
+"relacionadas a este Tipo  de Documento, y aquellas con \"Cero\" significa "
+"que solo  \"IVA No Corresponde\" esta permitido."
 
 #. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.menu_afip_responsibility_type
@@ -1916,13 +1986,32 @@ msgstr "Fecha del Servicio"
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_special_purchase_document_type_ids
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_special_purchase_document_type_ids
-msgid "Set here if this partner can issue other documents further than invoices, credit notes and debit notes"
-msgstr "Defina acá si la empresa puede emitir otros documentos más alla que facturas, notas de crédito o notas de débito"
+msgid ""
+"Set here if this partner can issue other documents further than invoices, "
+"credit notes and debit notes"
+msgstr ""
+"Defina acá si la empresa puede emitir otros documentos más alla que "
+"facturas, notas de crédito o notas de débito"
 
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_Sigd
 msgid "Sigd"
 msgstr "Sigd"
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_is_pos
+msgid ""
+"Specify if this Journal will be used to send electronic invoices to AFIP"
+msgstr "Especifique si este Diario será utilizado para el envío de facturas electrónicas a la AFIP"
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
+msgid ""
+"Specify which type of system will be used to create the electronic invoice. "
+"This will depend on the type of invoice to be created"
+msgstr ""
+"Especifique qué tipo de sistema se utilizará para crear la factura electrónica. "
+"Dependerá del tipo de factura que se vaya a crear"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
@@ -1984,8 +2073,13 @@ msgstr "Servicio Telefónico (IVA 27)"
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "The document number can not be changed for this journal, you can only modify the POS number if there is not posted (or posted before) invoices"
-msgstr "El número de documento no puede ser modificado para este diario, sólo puedes modificar el número de AFIP POS si no tiene facturas validadas o que hayan sido validadas previamente"
+msgid ""
+"The document number can not be changed for this journal, you can only modify"
+" the POS number if there is not posted (or posted before) invoices"
+msgstr ""
+"El número de documento no puede ser modificado para este diario, sólo puedes"
+" modificar el número de AFIP POS si no tiene facturas validadas o que hayan "
+"sido validadas previamente"
 
 #. module: l10n_ar
 #. odoo-python
@@ -2020,13 +2114,23 @@ msgstr "El sistema pos %s no puede utilizarse en un diario de compras (id %s)"
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."
-msgstr "El Diario seleccionado no se puede usar en esta transacción, por favor seleccione uno que no use documentos, ya que estos son solo para Facturas."
+msgid ""
+"The selected Journal can't be used in this transaction, please select one "
+"that doesn't use documents as these are just for Invoices."
+msgstr ""
+"El Diario seleccionado no se puede usar en esta transacción, por favor "
+"seleccione uno que no use documentos, ya que estos son solo para Facturas."
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
-msgid "The tax credit specified in this voucher may only be computed for purposes of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. 27,618."
-msgstr "El crédito fiscal discriminado en el presente comprobante, sólo podrá ser computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para Pequeños Contribuyentes de la Ley Nº 27.618."
+msgid ""
+"The tax credit specified in this voucher may only be computed for purposes "
+"of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. "
+"27,618."
+msgstr ""
+"El crédito fiscal discriminado en el presente comprobante, sólo podrá ser "
+"computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para "
+"Pequeños Contribuyentes de la Ley Nº 27.618."
 
 #. module: l10n_ar
 #. odoo-python
@@ -2039,13 +2143,19 @@ msgstr "El dígito de validación no es válido para \"%s\""
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "There should be a single tax from the \"VAT\" tax group per line, add it to \"%s\". If you already have it, please check the tax configuration, in advanced options, in the corresponding field \"Tax Group\"."
-msgstr "Debe haber un único impuesto del grupo de impuestos \"IVA\" por línea, agréguelo a \"%s\". En caso de tenerlo, revise la configuración del impuesto, en opciones avanzadas, en el campo correspondiente \"Grupo de Impuestos\"."
+msgid ""
+"There should be a single tax from the \"VAT\" tax group per line, add it to "
+"\"%s\". If you already have it, please check the tax configuration, in "
+"advanced options, in the corresponding field \"Tax Group\"."
+msgstr ""
+"Debe haber un único impuesto del grupo de impuestos \"IVA\" por línea, "
+"agréguelo a \"%s\". En caso de tenerlo, revise la configuración del "
+"impuesto, en opciones avanzadas, en el campo correspondiente \"Grupo de "
+"Impuestos\"."
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_afip_code
 #: model:ir.model.fields,help:l10n_ar.field_res_currency__l10n_ar_afip_code
-#: model:ir.model.fields,help:l10n_ar.field_uom_uom__l10n_ar_afip_code
 msgid "This code will be used on electronic invoice"
 msgstr "Este código será utilizado en facturación electrónica"
 
@@ -2053,17 +2163,22 @@ msgstr "Este código será utilizado en facturación electrónica"
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_gross_income_number
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_gross_income_type
 msgid "This field is required in order to print the invoice report properly"
-msgstr "Este campo es requerido para poder imprimir las facturas correctamente"
+msgstr ""
+"Este campo es requerido para poder imprimir las facturas correctamente"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "This is the address used for invoice reports of this POS"
-msgstr "Esta dirección es la usada para los reportes de facturación de este PdV"
+msgstr ""
+"Esta dirección es la usada para los reportes de facturación de este PdV"
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
-msgid "This is the point of sale number assigned by AFIP in order to generate invoices"
-msgstr "Este es el número de PdV asignado por la AFIP para poder generar facturas"
+msgid ""
+"This is the point of sale number assigned by AFIP in order to generate "
+"invoices"
+msgstr ""
+"Este es el número de PdV asignado por la AFIP para poder generar facturas"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_tribute_afip_code
@@ -2178,22 +2293,33 @@ msgstr "Con Documento"
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "You are trying to create an invoice for domestic partner but you don't have a domestic market journal"
-msgstr "Estas intentando crear una factura para un cliente local pero no tienes un diario de tipo mercado interno"
+msgid ""
+"You are trying to create an invoice for domestic partner but you don't have "
+"a domestic market journal"
+msgstr ""
+"Estas intentando crear una factura para un cliente local pero no tienes un "
+"diario de tipo mercado interno"
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "You are trying to create an invoice for foreign partner but you don't have an exportation journal"
-msgstr "Estas intentando crear una factura para un cliente del exterior pero no tienes un diario de tipo exportación"
+msgid ""
+"You are trying to create an invoice for foreign partner but you don't have "
+"an exportation journal"
+msgstr ""
+"Estas intentando crear una factura para un cliente del exterior pero no "
+"tienes un diario de tipo exportación"
 
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
-msgid "You can not change the journal's configuration if it already has validated invoices"
-msgstr "No puedes cambiar la configuración del diario si ya tiene facturas validadas"
+msgid ""
+"You can not change the journal's configuration if it already has validated "
+"invoices"
+msgstr ""
+"No puedes cambiar la configuración del diario si ya tiene facturas validadas"
 
 #. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__l10n_latam_document_type__purchase_aliquots__zero
