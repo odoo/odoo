@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getBundle, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { useWowlService } from '@web/legacy/utils';
 import { requireLegacyModule } from '@web_editor/js/frontend/loader';
 
@@ -18,8 +18,7 @@ export async function loadWysiwygFromTextarea(parent, textarea, options) {
 
     const { ComponentWrapper } = await requireLegacyModule('@web/legacy/js/owl_compatibility')
     const { Wysiwyg } = await requireLegacyModule('@web_editor/js/wysiwyg/wysiwyg', async () => {
-        const bundle = await getBundle('web_editor.assets_wysiwyg');
-        await loadBundle(bundle);
+        await loadBundle("web_editor.assets_wysiwyg");
     });
     let wysiwyg;
     class LegacyWysiwyg extends Wysiwyg {

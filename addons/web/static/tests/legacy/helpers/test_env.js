@@ -2,7 +2,7 @@
 
     import Bus from "@web/legacy/js/core/bus";
     import { buildQuery } from "@web/legacy/js/core/rpc";
-    import { templates, setLoadXmlDefaultApp } from "@web/core/assets";
+    import { templates } from "@web/core/assets";
     import { renderToString } from "@web/core/utils/render";
     const { App, Component } = owl;
 
@@ -21,7 +21,6 @@
         if (!app) {
             app = new App(null, { templates, test: true });
             renderToString.app = app;
-            setLoadXmlDefaultApp(app);
         }
 
         function rpc(route, params, options) {

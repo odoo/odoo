@@ -2,7 +2,7 @@
 
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { Loader } from "@point_of_sale/app/loader/loader";
-import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
+import { templates } from "@web/core/assets";
 import { App, mount, reactive, whenReady, Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -55,7 +55,6 @@ whenReady(() => {
         props: { disableLoader: () => (loader.isShown = false) },
     });
     renderToString.app = app;
-    setLoadXmlDefaultApp(app);
     const root = await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {

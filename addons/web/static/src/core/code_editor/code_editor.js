@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { Component, onWillDestroy, onWillStart, useEffect, useRef } from "@odoo/owl";
-import { getBundle, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { useDebounced } from "@web/core/utils/timing";
 
 function onResized(ref, callback) {
@@ -59,7 +59,7 @@ export class CodeEditor extends Component {
     setup() {
         this.editorRef = useRef("editorRef");
 
-        onWillStart(async () => loadBundle(await getBundle("web.ace_lib")));
+        onWillStart(async () => await loadBundle("web.ace_lib"));
 
         const sessions = {};
         useEffect(
