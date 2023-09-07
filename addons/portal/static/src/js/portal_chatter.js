@@ -5,8 +5,9 @@ import { renderToElement } from "@web/core/utils/render";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import portalComposer from "@portal/js/portal_composer";
-import { Markup } from "@web/legacy/js/core/utils";
 import { range } from "@web/core/utils/numbers";
+
+import { markup } from "@odoo/owl";
 
 /**
  * Widget PortalChatter
@@ -99,7 +100,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     preprocessMessages(messages) {
         messages.forEach((m) => {
-            m['body'] = Markup(m.body);
+            m['body'] = markup(m.body);
         });
         return messages;
     },

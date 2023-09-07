@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('hr_expense_tour' , {
     url: "/web",
@@ -38,11 +39,11 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 }, {
     trigger: '.o_form_status_indicator_dirty .o_form_button_save',
     extra_trigger: '.o_hr_expense_form_view_view',
-    content: Markup(_t("Ready? You can save it manually or discard modifications from here. You don't <em>need to save</em> - Odoo will save eveyrthing for you when you navigate.")),
+    content: markup(_t("Ready? You can save it manually or discard modifications from here. You don't <em>need to save</em> - Odoo will save eveyrthing for you when you navigate.")),
     position: 'bottom',
 }, ...stepUtils.statusbarButtonsSteps(_t("Attach Receipt"), _t("Attach a receipt - usually an image or a PDF file.")),
 ...stepUtils.statusbarButtonsSteps(_t("Create Report"), _t("Create a report to submit one or more expenses to your manager.")),
-...stepUtils.statusbarButtonsSteps(_t("Submit to Manager"), Markup(_t('Once your <b>Expense Report</b> is ready, you can submit it to your manager and wait for approval.'))),
+...stepUtils.statusbarButtonsSteps(_t("Submit to Manager"), markup(_t('Once your <b>Expense Report</b> is ready, you can submit it to your manager and wait for approval.'))),
 ...stepUtils.goBackBreadcrumbsMobile(
     _t("Use the breadcrumbs to go back to the list of expenses."),
     undefined,

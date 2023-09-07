@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
     import { _t } from "@web/core/l10n/translation";
-    import { Markup } from "@web/legacy/js/core/utils";
     import wTourUtils from "@website/js/tours/tour_utils";
+
+    import { markup } from "@odoo/owl";
 
     wTourUtils.registerWebsitePreviewTour("website_event_tour", {
         test: true,
@@ -18,7 +19,7 @@
         position: "bottom",
     }, {
         trigger: '.modal-dialog div[name="name"] input',
-        content: Markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
+        content: markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
         run: 'text Technical Training',
         position: "left",
     }, {
@@ -32,7 +33,7 @@
     }, {
         trigger: '.modal-footer button.btn-primary',
         extra_trigger: '.modal-dialog input[type=text][value!=""]',
-        content: Markup(_t("Click <em>Continue</em> to create the event.")),
+        content: markup(_t("Click <em>Continue</em> to create the event.")),
         position: "right",
     }, {
         trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",

@@ -2,7 +2,6 @@
 
 import { loadBundle, loadCSS } from "@web/core/assets";
 import Dialog from "@web/legacy/js/core/dialog";
-import { Markup } from "@web/legacy/js/core/utils";
 import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
@@ -20,6 +19,8 @@ import {
     convertHslToRgb,
  } from '@web/core/utils/colors';
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
+
+import { markup } from "@odoo/owl";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -2802,7 +2803,7 @@ options.registry.anchor = options.Class.extend({
     _buildClipboard(buttonEl) {
         const clipboard = new ClipboardJS(buttonEl, {text: () => this._getAnchorLink()});
         clipboard.on("success", () => {
-            const message = Markup(_t("Anchor copied to clipboard<br>Link: %s", this._getAnchorLink()));
+            const message = markup(_t("Anchor copied to clipboard<br>Link: %s", this._getAnchorLink()));
             this.displayNotification({
                 type: "success",
                 message: message,

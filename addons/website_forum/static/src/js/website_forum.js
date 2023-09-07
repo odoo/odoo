@@ -6,7 +6,6 @@ import dom from "@web/legacy/js/core/dom";
 import {setCookie} from "@web/legacy/js/core/cookie_utils";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { Markup } from '@web/legacy/js/core/utils';
 import { session } from "@web/session";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
@@ -264,22 +263,22 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         ev.preventDefault();
         if (session.is_website_user) {
             this._displayAccessDeniedNotification(
-                Markup`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`
+                markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
             );
             return;
         }
         const forumId = parseInt(document.getElementById('wrapwrap').dataset.forum_id);
         const additionalInfoWithForumID = forumId
-            ? Markup`<br/>
+            ? markup(`<br/>
                 <a class="alert-link" href="/forum/${forumId}/faq">
                     ${_t("Read the guidelines to know how to gain karma.")}
-                </a>`
+                </a>`)
             : "";
         this.displayNotification({
             type: "warning",
             sticky: false,
             title: _t("Karma Error"),
-            message: Markup`${karma} ${_t("karma is required to perform this action. ")}${additionalInfoWithForumID}`
+            message: markup(`${karma} ${_t("karma is required to perform this action. ")}${additionalInfoWithForumID}`)
         });
     },
     /**
@@ -373,7 +372,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const message = data.error === 'own_post'
                     ? _t('Sorry, you cannot vote for your own posts')
                     : data.error === 'anonymous_user'
-                        ? Markup`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`
+                        ? markup(`<p>${_t('Oh no! Please <a href="%s">sign in</a> to vote', "/web/login")}</p>`)
                         : data.error;
                 this._displayAccessDeniedNotification(message);
             } else {

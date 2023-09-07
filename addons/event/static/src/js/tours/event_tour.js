@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import EventAdditionalTourSteps from "@event/js/tours/event_steps";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('event_tour', {
     url: '/web',
@@ -13,22 +14,22 @@ registry.category("web_tour.tours").add('event_tour', {
     sequence: 210,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
-    content: Markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
+    content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     position: 'bottom',
     edition: 'enterprise',
 }, {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
-    content: Markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
+    content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     edition: 'community',
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_event_kanban_view',
-    content: Markup(_t("Let's create your first <b>event</b>.")),
+    content: markup(_t("Let's create your first <b>event</b>.")),
     position: 'bottom',
     width: 175,
 }, {
     trigger: '.o_event_form_view input[id="name"]',
-    content: Markup(_t("This is the <b>name</b> your guests will see when registering.")),
+    content: markup(_t("This is the <b>name</b> your guests will see when registering.")),
     run: 'text Odoo Experience 2020',
 }, {
     trigger: '.o_event_form_view div[name="date_end"]',
@@ -44,7 +45,7 @@ registry.category("web_tour.tours").add('event_tour', {
     in_modal: false,
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
-    content: Markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
+    content: markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
 }, stepUtils.autoExpandMoreButtons(),
 ...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
@@ -53,7 +54,7 @@ registry.category("web_tour.tours").add('event_tour', {
 }, {
     trigger: 'ol.breadcrumb li.breadcrumb-item:first',
     extra_trigger: '.o_event_form_view div[name="stage_id"]',
-    content: Markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
+    content: markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
     position: 'bottom',
     run: 'click',
 }].filter(Boolean)});
