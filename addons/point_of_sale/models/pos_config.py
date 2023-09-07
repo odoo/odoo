@@ -663,7 +663,7 @@ class PosConfig(models.Model):
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
-        if self.iface_available_categ_ids:
+        if self.limit_categories and self.iface_available_categ_ids:
             domain.append(('pos_categ_ids', 'in', self.iface_available_categ_ids.ids))
         if self.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
