@@ -141,6 +141,8 @@ class Base(models.AbstractModel):
                         for index, co_record in enumerate(co_records)
                     }
                     for values in values_list:
+                        # filter out inaccessible corecords in case of "cache pollution"
+                        values[field_name] = [id_ for id_ in values[field_name] if id_ in order_key]
                         values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
 
                 if 'context' in field_spec:
