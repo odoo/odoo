@@ -1025,6 +1025,28 @@ class TestBoM(TestMrpCommon):
         # So with 4 of the second product available, we can produce 4 items
         self.assertEqual(report_values["lines"]["producible_qty"], 4)
 
+    def test_bom_report_capacity_with_duplicate_components(self):
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.product_2, location, 2.0)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_3.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        # Total quantity of components is 4, so shouldn't be able to produce a single one.
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
     def test_validate_no_bom_line_with_same_product(self):
         """
         Cannot set a BOM line on a BOM with the same product as the BOM itself
