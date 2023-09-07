@@ -216,6 +216,9 @@ export const multiTabService = {
             removeSharedValue(key) {
                 browser.localStorage.removeItem(generateLocalStorageKey(key));
             },
+            forceElection() {
+                return startElection();
+            },
         };
     },
 };

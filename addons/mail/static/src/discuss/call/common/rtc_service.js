@@ -117,8 +117,16 @@ export class Rtc {
      */
     constructor(env, services) {
         rpc = rpcWithEnv(env);
+        try {
+            this.broadcastChannel = new browser.BroadcastChannel("discuss.channel.rtc");
+            this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
+        } catch {
+            // BroadcastChannel API is not supported.
+            this.broadcastChannel = null;
+        }
         this.env = env;
         this.store = services["mail.store"];
+        this.multiTab = services["multi_tab"];
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
@@ -216,8 +224,14 @@ export class Rtc {
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
+                const payload = { channel_id: this.state.channel.id, video: this.state.sendCamera };
+                this.broadcastChannel?.postMessage({
+                    type: "sync",
+                    payload,
+                });
+
                 const data = JSON.stringify({
-                    params: { channel_id: this.state.channel.id },
+                    params: payload,
                 });
                 const blob = new Blob([data], { type: "application/json" });
                 // using sendBeacon allows sending a post request even when the
@@ -1821,6 +1835,19 @@ export class Rtc {
             this.soundEffectsService.play("member-leave");
         }
     }
+
+    async _onBroadcastChannelMessage({ data }) {
+        this.multiTab.forceElection();
+        if (this.multiTab.isOnMainTab() && !this.state.channel && data.type == "sync") {
+            const channel = this.store.Thread.get({
+                model: "discuss.channel",
+                id: data.payload.channel_id,
+            });
+            if (channel) {
+                await this.joinCall(channel, { video: data.payload.video });
+            }
+        }
+    }
 }
 
 export const rtcService = {
@@ -1830,6 +1857,7 @@ export const rtcService = {
         "mail.sound_effects",
         "mail.store",
         "notification",
+        "multi_tab",
     ],
     /**
      * @param {import("@web/env").OdooEnv} env
