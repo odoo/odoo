@@ -253,6 +253,7 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, compute_child
         '''
+        Location = self.env['stock.location']
         Warehouse = self.env['stock.warehouse']
 
         def _search_ids(model, values):
@@ -281,7 +282,14 @@ class Product(models.Model):
             w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
-                location_ids = w_ids & l_ids
+                parents = Location.browse(w_ids).mapped("parent_path")
+                location_ids = {
+                    loc.id
+                    for loc in Location.browse(l_ids)
+                    if any(loc.parent_path.startswith(parent) for parent in parents)
+                }
+                if not location_ids:
+                    return [[expression.FALSE_LEAF]] * 3
             else:
                 location_ids = w_ids
         else:
