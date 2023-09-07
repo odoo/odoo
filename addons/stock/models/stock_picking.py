@@ -36,12 +36,12 @@ class PickingType(models.Model):
         check_company=True, copy=True)
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
-        'stock.location', 'Default Source Location',
-        check_company=True,
+        'stock.location', 'Default Source Location', compute='_compute_default_location_src_id',
+        check_company=True, store=True, readonly=False, precompute=True,
         help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
     default_location_dest_id = fields.Many2one(
-        'stock.location', 'Default Destination Location',
-        check_company=True,
+        'stock.location', 'Default Destination Location', compute='_compute_default_location_dest_id',
+        check_company=True, store=True, readonly=False, precompute=True,
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
     default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",
@@ -69,6 +69,7 @@ class PickingType(models.Model):
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     show_reserved = fields.Boolean(
         'Pre-fill Detailed Operations', default=True,
+        compute='_compute_show_reserved', store=True,
         help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
         "operations with the corresponding products, locations and lot/serial numbers. "
         "For moves that are returns, the detailed operations will always be prefilled, regardless of this option.")
@@ -182,46 +183,66 @@ class PickingType(models.Model):
             return self._search(expression.AND([name_domain, domain]), limit=limit, order=order)
         return super()._name_search(name, domain, operator, limit, order)
 
+    @api.depends('code')
+    def _compute_default_location_src_id(self):
+        for picking_type in self:
+            stock_location = picking_type.warehouse_id.lot_stock_id
+            if picking_type.code == 'incoming':
+                picking_type.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
+            elif picking_type.code == 'outgoing':
+                picking_type.default_location_src_id = stock_location.id
+
+    @api.depends('code')
+    def _compute_default_location_dest_id(self):
+        for picking_type in self:
+            stock_location = picking_type.warehouse_id.lot_stock_id
+            if picking_type.code == 'incoming':
+                picking_type.default_location_dest_id = stock_location.id
+            elif picking_type.code == 'outgoing':
+                picking_type.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
+
+    @api.depends('code')
+    def _compute_print_label(self):
+        for picking_type in self:
+            if picking_type.code in ('incoming', 'internal'):
+                picking_type.print_label = False
+            elif picking_type.code == 'outgoing':
+                picking_type.print_label = True
+
+    @api.depends('code')
+    def _compute_show_operations(self):
+        for picking_type in self:
+            picking_type.show_operations = picking_type.code != 'incoming' and picking_type.user_has_groups(
+                'stock.group_production_lot,'
+                'stock.group_stock_multi_locations,'
+                'stock.group_tracking_lot'
+            )
+
     @api.onchange('code')
     def _onchange_picking_code(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-        stock_location = warehouse.lot_stock_id
-        self.show_operations = self.code != 'incoming' and self.user_has_groups(
-            'stock.group_production_lot,'
-            'stock.group_stock_multi_locations,'
-            'stock.group_tracking_lot'
-        )
-        if self.code == 'incoming':
-            self.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
-            self.default_location_dest_id = stock_location.id
-            self.print_label = False
-        elif self.code == 'outgoing':
-            self.default_location_src_id = stock_location.id
-            self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
-            self.print_label = True
-        elif self.code == 'internal':
-            self.print_label = False
-            if not self.user_has_groups('stock.group_stock_multi_locations'):
-                return {
-                    'warning': {
-                        'message': _('You need to activate storage locations to be able to do internal operation types.')
-                    }
+        if self.code == 'internal' and not self.user_has_groups('stock.group_stock_multi_locations'):
+            return {
+                'warning': {
+                    'message': _('You need to activate storage locations to be able to do internal operation types.')
                 }
+            }
 
     @api.depends('company_id')
     def _compute_warehouse_id(self):
-        if self.warehouse_id:
-            return
-        if self.company_id:
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            self.warehouse_id = warehouse
-        else:
-            self.warehouse_id = False
+        for picking_type in self:
+            if picking_type.warehouse_id:
+                continue
+            if picking_type.company_id:
+                warehouse = self.env['stock.warehouse'].search([('company_id', '=', picking_type.company_id.id)], limit=1)
+                picking_type.warehouse_id = warehouse
+            else:
+                picking_type.warehouse_id = False
 
-    @api.onchange('show_operations')
-    def _onchange_show_operations(self):
-        if self.show_operations and self.code != 'incoming':
-            self.show_reserved = True
+    @api.depends('show_operations', 'code')
+    def _compute_show_reserved(self):
+        for picking_type in self:
+            if picking_type.show_operations and picking_type.code != 'incoming':
+                picking_type.show_reserved = True
 
     @api.constrains('default_location_dest_id')
     def _check_default_location(self):
