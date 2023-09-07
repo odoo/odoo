@@ -249,3 +249,59 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
     await contains(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-suggestion strong", { text: "My Test Partner" });
 });
+
+QUnit.test("Internal user should be displayed first", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ share: true });
+    const partnerIds = pyEnv["res.partner"].create([
+        {
+            email: "partner@example.com",
+            name: "Trigger A simple partner",
+        },
+        {
+            email: "follower@example.com",
+            name: "Trigger B follower",
+        },
+        {
+            email: "Internal@example.com",
+            name: "Trigger C internal user",
+            user_ids: [userId],
+        },
+        {
+            email: "Internal+Follower@example.com",
+            name: "Trigger D internal + follower",
+            user_ids: [userId],
+        },
+        {
+            email: "partner@example.com",
+            name: "Trigger Y simple partner",
+        },
+        {
+            email: "partner@example.com",
+            name: "Trigger X simple partner",
+        },
+        {
+            email: "apartner@example.com",
+            name: "Trigger X simple partner",
+        },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: partnerIds[1],
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerIds[3],
+            res_id: pyEnv.currentPartnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const { openFormView } = await start();
+    openFormView("res.partner", pyEnv.currentPartnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@Trigger ");
+    await contains(".o-mail-Composer-suggestion", { count: 7 });
+});
