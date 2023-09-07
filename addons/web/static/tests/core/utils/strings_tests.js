@@ -4,6 +4,7 @@ import {
     escapeHTML,
     escapeRegExp,
     intersperse,
+    isEmail,
     sprintf,
     unaccent,
     unescapeHTML,
@@ -133,5 +134,15 @@ QUnit.module("utils", () => {
             unescapeHTML(escapeHTML`<a href="https://www.odoo.com">Odoo<a>`),
             `<a href="https://www.odoo.com">Odoo<a>`
         );
+    });
+
+    QUnit.test("isEmail", (assert) => {
+        assert.notOk(isEmail(""));
+        assert.notOk(isEmail("test"));
+        assert.notOk(isEmail("test@odoo"));
+        assert.notOk(isEmail("test@odoo@odoo.com"));
+        assert.notOk(isEmail("te st@odoo.com"));
+
+        assert.ok(isEmail("test@odoo.com"));
     });
 });

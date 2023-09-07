@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { Mutex } from "@web/core/utils/concurrency";
+import { clamp } from "@web/core/utils/numbers";
 import core from "@web/legacy/js/services/core";
 import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
-import { Markup, confine } from "@web/legacy/js/core/utils";
+import { Markup } from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import options from "@web_editor/js/editor/snippets.options";
 import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag";
@@ -1609,7 +1610,7 @@ var SnippetEditor = Widget.extend({
         let left = ev.pageX - rowElLeft - columnMiddle;
 
         // Horizontal overflow.
-        left = confine(left, 0, rowEl.clientWidth - columnWidth);
+        left = clamp(left, 0, rowEl.clientWidth - columnWidth);
 
         columnEl.style.top = top + 'px';
         columnEl.style.left = left + 'px';

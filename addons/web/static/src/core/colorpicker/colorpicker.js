@@ -5,7 +5,10 @@ import {
     convertRgbaToCSSColor,
     convertRgbToHsl,
     convertHslToRgb,
-} from '@web/core/utils/colors';
+} from "@web/core/utils/colors";
+import { uniqueId } from "@web/core/utils/functions";
+import { clamp } from "@web/core/utils/numbers";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -15,25 +18,9 @@ import {
     onWillUpdateProps,
     onWillDestroy,
 } from "@odoo/owl";
-import { uniqueId } from "@web/core/utils/functions";
-import { throttleForAnimation } from "@web/core/utils/timing";
-
-
-/**
- * Confines a value inside an interval
- *
- * @param {number} [val] the value to confine
- * @param {number} [min] the minimum of the interval
- * @param {number} [max] the maximum of the interval
- * @return {number} val if val is in [min, max], min if val < min and max
- *   otherwise
- */
-function confine(val, min, max) {
-    return Math.max(min, Math.min(max, val));
-}
 
 export class Colorpicker extends Component {
-    static template = 'web.Colorpicker';
+    static template = "web.Colorpicker";
     static props = {
         document: { type: true, optional: true },
         defaultColor: { type: String, optional: true },
@@ -47,7 +34,7 @@ export class Colorpicker extends Component {
     };
     static defaultProps = {
         document: window.document,
-        defaultColor: '#FF0000',
+        defaultColor: "#FF0000",
         noTransparency: false,
         colorPreview: false,
         stopClickPropagation: false,
@@ -56,7 +43,7 @@ export class Colorpicker extends Component {
         onInputEnter: () => {},
     };
 
-    elRef = useRef('el');
+    elRef = useRef("el");
 
     setup() {
         onWillStart(() => {
@@ -71,7 +58,7 @@ export class Colorpicker extends Component {
                 // `inOwnerDocument`).
                 // Todo: this workaround should be removed when the snippet menu is
                 // converted to owl.
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     const observer = new MutationObserver(() => {
                         if (this.elRef.el) {
                             observer.disconnect();
@@ -84,12 +71,16 @@ export class Colorpicker extends Component {
             this.el = this.elRef.el;
             this.$el = $(this.el);
 
-            this.$el.on('click', this._onClick.bind(this));
-            this.$el.on('keypress', this._onKeypress.bind(this));
-            this.$el.on('mousedown', '.o_color_pick_area', this._onMouseDownPicker.bind(this));
-            this.$el.on('mousedown', '.o_color_slider', this._onMouseDownSlider.bind(this));
-            this.$el.on('mousedown', '.o_opacity_slider', this._onMouseDownOpacitySlider.bind(this));
-            this.$el.on('change', '.o_color_picker_inputs', this._onChangeInputs.bind(this));
+            this.$el.on("click", this._onClick.bind(this));
+            this.$el.on("keypress", this._onKeypress.bind(this));
+            this.$el.on("mousedown", ".o_color_pick_area", this._onMouseDownPicker.bind(this));
+            this.$el.on("mousedown", ".o_color_slider", this._onMouseDownSlider.bind(this));
+            this.$el.on(
+                "mousedown",
+                ".o_opacity_slider",
+                this._onMouseDownOpacitySlider.bind(this)
+            );
+            this.$el.on("change", ".o_color_picker_inputs", this._onChangeInputs.bind(this));
 
             this.start();
         });
@@ -109,18 +100,18 @@ export class Colorpicker extends Component {
         this.opacitySliderFlag = false;
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
-        this.selectedHexValue = '';
+        this.selectedHexValue = "";
     }
     /**
      * @override
      */
     start() {
-        this.$colorpickerArea = this.$el.find('.o_color_pick_area');
-        this.$colorpickerPointer = this.$el.find('.o_picker_pointer');
-        this.$colorSlider = this.$el.find('.o_color_slider');
-        this.$colorSliderPointer = this.$el.find('.o_slider_pointer');
-        this.$opacitySlider = this.$el.find('.o_opacity_slider');
-        this.$opacitySliderPointer = this.$el.find('.o_opacity_pointer');
+        this.$colorpickerArea = this.$el.find(".o_color_pick_area");
+        this.$colorpickerPointer = this.$el.find(".o_picker_pointer");
+        this.$colorSlider = this.$el.find(".o_color_slider");
+        this.$colorSliderPointer = this.$el.find(".o_slider_pointer");
+        this.$opacitySlider = this.$el.find(".o_opacity_slider");
+        this.$opacitySliderPointer = this.$el.find(".o_opacity_pointer");
 
         const rgba = convertCSSColorToRgba(this.props.defaultColor);
         if (rgba) {
@@ -150,15 +141,20 @@ export class Colorpicker extends Component {
         // Need to be bound on all documents to work in all possible cases (we
         // have to be able to start dragging/moving from the colorpicker to
         // anywhere on the screen, crossing iframes).
-        this.$documents = $([window.top, ...Array.from(window.top.frames).filter(frame => {
-            try {
-                const document = frame.document;
-                return !!document;
-            } catch {
-                // We cannot access the document (cross origin).
-                return false;
-            }
-        })].map(w => w.document));
+        this.$documents = $(
+            [
+                window.top,
+                ...Array.from(window.top.frames).filter((frame) => {
+                    try {
+                        const document = frame.document;
+                        return !!document;
+                    } catch {
+                        // We cannot access the document (cross origin).
+                        return false;
+                    }
+                }),
+            ].map((w) => w.document)
+        );
         this.throttleOnMouseMove = throttleForAnimation((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
@@ -217,33 +213,36 @@ export class Colorpicker extends Component {
         }
 
         // Update preview
-        this.$el.find('.o_color_preview').css('background-color', this.colorComponents.cssColor);
+        this.$el.find(".o_color_preview").css("background-color", this.colorComponents.cssColor);
 
         // Update picker area and picker pointer position
         this.$colorpickerArea.css(
             "background-color",
             `hsl(${this.colorComponents.hue}, 100%, 50%)`
         );
-        const top = (100 - this.colorComponents.lightness) * this.$colorpickerArea.height() / 100;
-        const left = this.colorComponents.saturation * this.$colorpickerArea.width() / 100;
+        const top = ((100 - this.colorComponents.lightness) * this.$colorpickerArea.height()) / 100;
+        const left = (this.colorComponents.saturation * this.$colorpickerArea.width()) / 100;
         this.$colorpickerPointer.css({
-            top: (top - 5) + 'px',
-            left: (left - 5) + 'px',
+            top: top - 5 + "px",
+            left: left - 5 + "px",
         });
 
         // Update color slider position
         const height = this.$colorSlider.height();
-        const y = this.colorComponents.hue * height / 360;
-        this.$colorSliderPointer.css('top', Math.round(y - 2));
+        const y = (this.colorComponents.hue * height) / 360;
+        this.$colorSliderPointer.css("top", Math.round(y - 2));
 
         if (!this.props.noTransparency) {
             // Update opacity slider position
             const heightOpacity = this.$opacitySlider.height();
             const z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
-            this.$opacitySliderPointer.css('top', Math.round(z - 2));
+            this.$opacitySliderPointer.css("top", Math.round(z - 2));
 
             // Add gradient color on opacity slider
-            this.$opacitySlider.css('background', 'linear-gradient(' + this.colorComponents.hex + ' 0%, transparent 100%)');
+            this.$opacitySlider.css(
+                "background",
+                "linear-gradient(" + this.colorComponents.hex + " 0%, transparent 100%)"
+            );
         }
     }
     /**
@@ -257,8 +256,9 @@ export class Colorpicker extends Component {
         if (!rgb) {
             return;
         }
-        Object.assign(this.colorComponents,
-            {hex: hex},
+        Object.assign(
+            this.colorComponents,
+            { hex: hex },
             rgb,
             convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
         );
@@ -287,10 +287,11 @@ export class Colorpicker extends Component {
         if (!hex) {
             return;
         }
-        Object.assign(this.colorComponents,
-            {red: r, green: g, blue: b},
-            a === undefined ? {} : {opacity: a},
-            {hex: hex},
+        Object.assign(
+            this.colorComponents,
+            { red: r, green: g, blue: b },
+            a === undefined ? {} : { opacity: a },
+            { hex: hex },
             convertRgbToHsl(r, g, b)
         );
         this._updateCssColor();
@@ -316,11 +317,12 @@ export class Colorpicker extends Component {
         }
         // We receive an hexa as we ignore the opacity
         const hex = convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
-        Object.assign(this.colorComponents,
-            {hue: h, saturation: s, lightness: l},
+        Object.assign(
+            this.colorComponents,
+            { hue: h, saturation: s, lightness: l },
             rgb,
-            {hex: hex},
-            {opacity: a},
+            { hex: hex },
+            { opacity: a }
         );
         this._updateCssColor();
     }
@@ -334,9 +336,7 @@ export class Colorpicker extends Component {
         if (a < 0 || a > 100) {
             return;
         }
-        Object.assign(this.colorComponents,
-            {opacity: a}
-        );
+        Object.assign(this.colorComponents, { opacity: a });
         this._updateCssColor();
     }
     /**
@@ -357,9 +357,7 @@ export class Colorpicker extends Component {
         const g = this.colorComponents.green;
         const b = this.colorComponents.blue;
         const a = this.colorComponents.opacity;
-        Object.assign(this.colorComponents,
-            {cssColor: convertRgbaToCSSColor(r, g, b, a)}
-        );
+        Object.assign(this.colorComponents, { cssColor: convertRgbaToCSSColor(r, g, b, a) });
         if (this.previewActive) {
             this.props.onColorPreview(this.colorComponents);
         }
@@ -375,7 +373,7 @@ export class Colorpicker extends Component {
      */
     _onKeypress(ev) {
         if (ev.charCode === $.ui.keyCode.ENTER) {
-            if (ev.target.tagName === 'INPUT') {
+            if (ev.target.tagName === "INPUT") {
                 this._onChangeInputs(ev);
             }
             ev.preventDefault();
@@ -390,13 +388,16 @@ export class Colorpicker extends Component {
             ev.stopPropagation();
         }
         ev.originalEvent.__isColorpickerClick = true;
-        $(ev.target).find('> .o_opacity_pointer, > .o_slider_pointer, > .o_picker_pointer').addBack('.o_opacity_pointer, .o_slider_pointer, .o_picker_pointer').focus();
-        if (ev.target.dataset.colorMethod === 'hex' && !this.selectedHexValue) {
+        $(ev.target)
+            .find("> .o_opacity_pointer, > .o_slider_pointer, > .o_picker_pointer")
+            .addBack(".o_opacity_pointer, .o_slider_pointer, .o_picker_pointer")
+            .focus();
+        if (ev.target.dataset.colorMethod === "hex" && !this.selectedHexValue) {
             ev.target.select();
             this.selectedHexValue = ev.target.value;
             return;
         }
-        this.selectedHexValue = '';
+        this.selectedHexValue = "";
     }
     /**
      * Updates color when the user starts clicking on the picker.
@@ -423,10 +424,12 @@ export class Colorpicker extends Component {
         const offset = this.$colorpickerArea.offset();
         const top = ev.pageY - offset.top;
         const left = ev.pageX - offset.left;
-        let saturation = Math.round(100 * left / this.$colorpickerArea.width());
-        let lightness = Math.round(100 * (this.$colorpickerArea.height() - top) / this.$colorpickerArea.height());
-        saturation = confine(saturation, 0, 100);
-        lightness = confine(lightness, 0, 100);
+        let saturation = Math.round((100 * left) / this.$colorpickerArea.width());
+        let lightness = Math.round(
+            (100 * (this.$colorpickerArea.height() - top)) / this.$colorpickerArea.height()
+        );
+        saturation = clamp(saturation, 0, 100);
+        lightness = clamp(lightness, 0, 100);
 
         this._updateHsl(this.colorComponents.hue, saturation, lightness);
         this._updateUI();
@@ -454,8 +457,8 @@ export class Colorpicker extends Component {
         }
 
         const y = ev.pageY - this.$colorSlider.offset().top;
-        let hue = Math.round(360 * y / this.$colorSlider.height());
-        hue = confine(hue, 0, 360);
+        let hue = Math.round((360 * y) / this.$colorSlider.height());
+        hue = clamp(hue, 0, 360);
 
         this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
         this._updateUI();
@@ -484,7 +487,7 @@ export class Colorpicker extends Component {
 
         const y = ev.pageY - this.$opacitySlider.offset().top;
         let opacity = Math.round(100 * (1 - y / this.$opacitySlider.height()));
-        opacity = confine(opacity, 0, 100);
+        opacity = clamp(opacity, 0, 100);
 
         this._updateOpacity(opacity);
         this._updateUI();
@@ -497,26 +500,26 @@ export class Colorpicker extends Component {
      * @param {Event} ev
      */
     _onChangeInputs(ev) {
-        switch ($(ev.target).data('colorMethod')) {
-            case 'hex':
-                this._updateHex(this.$el.find('.o_hex_input').val());
+        switch ($(ev.target).data("colorMethod")) {
+            case "hex":
+                this._updateHex(this.$el.find(".o_hex_input").val());
                 break;
-            case 'rgb':
+            case "rgb":
                 this._updateRgba(
-                    parseInt(this.$el.find('.o_red_input').val()),
-                    parseInt(this.$el.find('.o_green_input').val()),
-                    parseInt(this.$el.find('.o_blue_input').val())
+                    parseInt(this.$el.find(".o_red_input").val()),
+                    parseInt(this.$el.find(".o_green_input").val()),
+                    parseInt(this.$el.find(".o_blue_input").val())
                 );
                 break;
-            case 'hsl':
+            case "hsl":
                 this._updateHsl(
-                    parseInt(this.$el.find('.o_hue_input').val()),
-                    parseInt(this.$el.find('.o_saturation_input').val()),
-                    parseInt(this.$el.find('.o_lightness_input').val())
+                    parseInt(this.$el.find(".o_hue_input").val()),
+                    parseInt(this.$el.find(".o_saturation_input").val()),
+                    parseInt(this.$el.find(".o_lightness_input").val())
                 );
                 break;
-            case 'opacity':
-                this._updateOpacity(parseInt(this.$el.find('.o_opacity_input').val()));
+            case "opacity":
+                this._updateOpacity(parseInt(this.$el.find(".o_opacity_input").val()));
                 break;
         }
         this._updateUI();

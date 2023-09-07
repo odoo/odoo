@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import Class from "@web/legacy/js/core/class";
-import utils from "@web/legacy/js/core/utils";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 /**
  * Mixin to structure objects' life-cycles folowing a parent-children
@@ -391,7 +391,7 @@ var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
             if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
                 var digits = self.field.digits;
                 if (Array.isArray(digits)) {
-                    if (utils.float_is_zero(tmp - val, digits[1])) {
+                    if (floatIsZero(tmp - val, digits[1])) {
                         return;
                     }
                 }

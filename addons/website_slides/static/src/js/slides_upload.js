@@ -2,9 +2,9 @@
 
 import { uniqueId } from '@web/core/utils/functions';
 import { renderToElement } from "@web/core/utils/render";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
-import utils from '@web/legacy/js/core/utils';
 import wUtils from '@website/js/utils';
 import { _t } from "@web/core/l10n/translation";
 
@@ -577,7 +577,7 @@ var SlideUploadDialog = Dialog.extend({
 
         const preview = document.getElementById("slide-image");
         if (file.type !== 'application/pdf') {
-            utils.getDataURLFromFile(file).then(dataURL => {
+            getDataURLFromFile(file).then(dataURL => {
                 if (isImage) {
                     preview.src = dataURL;
                 }
@@ -586,7 +586,7 @@ var SlideUploadDialog = Dialog.extend({
             });
         } else {
             this.set('can_submit_form', false);
-            utils.getDataURLFromFile(file).then(async dataURL => {
+            getDataURLFromFile(file).then(async dataURL => {
                 this.file.data = dataURL.split(',', 2)[1];
                 /**
                  * The following line fixes pdfjsLib 'Util' global variable.
