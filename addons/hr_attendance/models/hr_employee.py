@@ -12,32 +12,32 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     attendance_ids = fields.One2many(
-        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     last_attendance_id = fields.Many2one(
         'hr.attendance', compute='_compute_last_attendance_id', store=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_coach")
     last_check_in = fields.Datetime(
         related='last_attendance_id.check_in', store=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     last_check_out = fields.Datetime(
         related='last_attendance_id.check_out', store=True,
-        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     attendance_state = fields.Selection(
         string="Attendance Status", compute='_compute_attendance_state',
         selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_coach")
     hours_last_month = fields.Float(
-        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     hours_today = fields.Float(
         compute='_compute_hours_today',
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_coach")
     hours_last_month_display = fields.Char(
-        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     overtime_ids = fields.One2many(
-        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_user")
+        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_user,hr.group_hr_coach")
     total_overtime = fields.Float(
         compute='_compute_total_overtime', compute_sudo=True,
-        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
+        groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_coach")
 
     @api.depends('overtime_ids.duration', 'attendance_ids')
     def _compute_total_overtime(self):

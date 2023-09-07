@@ -87,14 +87,26 @@ class Employee(models.AbstractModel):
         _logger.info("Employees presence checked by: %s" % self.env.user.name)
 
         self._check_presence()
+        if self.env.user.has_group('hr.group_hr_user'):
+            name = _("Employee's Presence to Define")
+            domain = []
+        else:
+            name = _("My Employees' Presence to Define")
+            domain = [
+                '|',
+                    '|',
+                        ('id', 'child_of', self.env.user.employee_id.id),
+                        ('id', '=', self.env.user.employee_id.id),
+                    ('coach_id', '=', self.env.user.employee_id.id),
+                ]
 
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.employee",
             "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
             'view_mode': 'kanban,tree,form',
-            "domain": [],
-            "name": _("Employee's Presence to Define"),
+            "domain": domain,
+            "name": name,
             "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],
             "context": {'search_default_group_hr_presence_state': 1,
                         'searchpanel_default_hr_presence_state_display': 'to_define'},

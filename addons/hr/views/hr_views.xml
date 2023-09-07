@@ -37,6 +37,14 @@
             sequence="4"/>
 
         <menuitem
+            id="menu_hr_employee_my_employees"
+            name="My Employees"
+            action="hr_employee_get_my_employee_action"
+            parent="menu_hr_root"
+            groups="group_hr_coach"
+            sequence="90"/>
+
+        <menuitem
             id="hr_menu_hr_reports"
             name="Reporting"
             parent="menu_hr_root"
@@ -46,21 +54,21 @@
            id="menu_hr_reporting_timesheet"
            name="Reporting"
            parent="menu_hr_root"
-           groups="group_hr_manager,group_hr_user"
+           groups="group_hr_manager"
            sequence="99"/>
 
         <menuitem
             id="menu_human_resources_configuration"
             name="Configuration"
             parent="menu_hr_root"
-            groups="hr.group_hr_user"
+            groups="group_hr_manager"
             sequence="100"/>
 
             <menuitem
                 id="menu_config_employee"
                 name="Employee"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
+                groups="group_hr_manager"
                 sequence="10"/>
 
             <menuitem
@@ -68,20 +76,20 @@
                 action="hr_department_tree_action"
                 parent="menu_config_employee"
                 sequence="4"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_hr_department_kanban"
                 action="hr_department_kanban_action"
                 parent="menu_hr_root"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_hr_work_location_tree"
                 action="hr_work_location_action"
                 parent="menu_config_employee"
                 sequence="5"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_resource_calendar_view"
@@ -89,14 +97,14 @@
                 parent="menu_config_employee"
                 name="Working Schedules"
                 sequence="6"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_hr_departure_reason_tree"
                 action="hr_departure_reason_action"
                 parent="menu_config_employee"
                 sequence="7"
-                groups="group_hr_user"/>
+                groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_view_employee_category_form"
@@ -110,13 +118,13 @@
                 id="menu_config_recruitment"
                 name="Recruitment"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
+                groups="group_hr_manager"
                 sequence="20"/>
 
                 <menuitem
                     id="menu_view_hr_job"
                     action="action_hr_job"
-                    parent="menu_config_recruitment"
+                    parent="group_hr_manager"
                     sequence="1"/>
 
                 <menuitem
@@ -124,13 +132,13 @@
                     action="hr_contract_type_action"
                     parent="menu_config_recruitment"
                     sequence="2"
-                    groups="group_hr_user"/>
+                    groups="group_hr_manager"/>
 
             <menuitem
                 id="menu_config_plan"
                 name="Activity Planning"
                 parent="menu_human_resources_configuration"
-                groups="group_hr_user"
+                groups="group_hr_manager"
                 sequence="100"/>
 
                 <menuitem
@@ -138,7 +146,7 @@
                     name="On/Offboarding Plans"
                     action="hr_plan_action"
                     parent="menu_config_plan"
-                    groups="group_hr_user"
+                    groups="group_hr_manager"
                     sequence="100"/>
 
     </data>

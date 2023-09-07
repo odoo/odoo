@@ -19,7 +19,7 @@ from odoo.tools import format_date, Query
 class HrEmployeePrivate(models.Model):
     """
     NB: Any field only available on the model hr.employee (i.e. not on the
-    hr.employee.public model) should have `groups="hr.group_hr_user"` on its
+    hr.employee.public model) should have `groups="hr.group_hr_coach"` on its
     definition to avoid being prefetched when the user hasn't access to the
     hr.employee model. Indeed, the prefetch loads the data for all the fields
     that are available according to the group defined on them.
@@ -46,75 +46,75 @@ class HrEmployeePrivate(models.Model):
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     # private info
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user")
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user")
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user")
+    private_street = fields.Char(string="Private Street", groups="hr.group_hr_coach")
+    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_coach")
+    private_city = fields.Char(string="Private City", groups="hr.group_hr_coach")
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
         domain="[('country_id', '=?', private_country_id)]",
-        groups="hr.group_hr_user")
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user")
-    private_country_id = fields.Many2one("res.country", string="Private Country", groups="hr.group_hr_user")
-    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
-    private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
-    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
+        groups="hr.group_hr_coach")
+    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_coach")
+    private_country_id = fields.Many2one("res.country", string="Private Country", groups="hr.group_hr_coach")
+    private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_coach")
+    private_email = fields.Char(string="Private Email", groups="hr.group_hr_coach")
+    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_coach")
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_coach", tracking=True)
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", tracking=True)
+    ], groups="hr.group_hr_coach", tracking=True)
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
         ('cohabitant', 'Legal Cohabitant'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
-    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
-    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
-    children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
-    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
-    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
-    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
-    passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
+    ], string='Marital Status', groups="hr.group_hr_coach", default='single', tracking=True)
+    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_coach", tracking=True)
+    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_coach", tracking=True)
+    children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_coach", tracking=True)
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_coach", tracking=True)
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_coach", tracking=True)
+    birthday = fields.Date('Date of Birth', groups="hr.group_hr_coach", tracking=True)
+    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_coach", tracking=True)
+    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_coach", tracking=True)
+    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_coach", tracking=True)
+    passport_id = fields.Char('Passport No', groups="hr.group_hr_coach", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_coach",
         tracking=True,
         help='Employee bank account to pay salaries')
-    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
-    visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
-    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
-    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
-    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
-    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_coach", tracking=True)
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_coach", tracking=True)
+    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_coach", tracking=True)
+    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_coach", tracking=True)
+    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_coach")
+    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_coach")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name')
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_coach", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
         ('doctor', 'Doctor'),
         ('other', 'Other'),
-    ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
-    study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
-    study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
-    emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
-    emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
+    ], 'Certificate Level', default='other', groups="hr.group_hr_coach", tracking=True)
+    study_field = fields.Char("Field of Study", groups="hr.group_hr_coach", tracking=True)
+    study_school = fields.Char("School", groups="hr.group_hr_coach", tracking=True)
+    emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_coach", tracking=True)
+    emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_coach", tracking=True)
+    km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_coach", tracking=True)
     employee_type = fields.Selection([
             ('employee', 'Employee'),
             ('student', 'Student'),
             ('trainee', 'Trainee'),
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
-        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
+        ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_coach",
         help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
 
     job_id = fields.Many2one(tracking=True)
@@ -122,28 +122,49 @@ class HrEmployeePrivate(models.Model):
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
-        'emp_id', 'category_id', groups="hr.group_hr_user",
+        'emp_id', 'category_id', groups="hr.group_hr_coach",
         string='Tags')
     # misc
-    notes = fields.Text('Notes', groups="hr.group_hr_user")
+    notes = fields.Text('Notes', groups="hr.group_hr_coach")
     color = fields.Integer('Color Index', default=0)
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
-    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_coach", copy=False)
+    pin = fields.Char(string="PIN", groups="hr.group_hr_coach", copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-    departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
+    departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_coach",
                                           copy=False, tracking=True, ondelete='restrict')
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
-    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
-    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
-    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
-    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
-    private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_coach", copy=False, tracking=True)
+    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_coach", copy=False, tracking=True)
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_coach")
+    id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_coach")
+    driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_coach")
+    private_car_plate = fields.Char(groups="hr.group_hr_coach", help="If you have more than one car, just separate the plates by a space.")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
+    is_responsible = fields.Boolean(compute='_compute_is_responsible', search='_search_is_responsible', groups="hr.group_hr_coach")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        if not self.env.user.has_group('hr.group_hr_user'):
+            current_user_employee = self.env.user.employee_id
+            current_parent_id = self._origin.parent_id
+            new_parent_id = self.parent_id
+            if new_parent_id or \
+               (not new_parent_id and current_parent_id != current_user_employee):
+                raise ValidationError(_("You are not allowed to change the manager of this employee, you can only remove yourself if you're the coach. Please contact an HR manager."))
+
+    @api.onchange('coach_id')
+    def _onchange_coach_id(self):
+        if not self.env.user.has_group('hr.group_hr_user'):
+            current_user_employee = self.env.user.employee_id
+            current_coach_id = self._origin.coach_id
+            new_coach_id = self.coach_id
+            if new_coach_id or \
+               (not new_coach_id and current_coach_id != current_user_employee):
+                raise ValidationError(_("You are not allowed to change the coach of this employee, you can only remove yourself if you're the coach. Please contact an HR manager."))
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):
@@ -164,6 +185,47 @@ class HrEmployeePrivate(models.Model):
     @api.depends('name', 'user_id.avatar_128', 'image_128')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
+
+    def _compute_is_responsible(self):
+        for employee in self:
+            if self.env.user.has_group('hr.group_hr_coach'):
+                employee.is_responsible = True
+                continue
+            subordinates_of_uid = self.env['hr.employee.public'].search(
+                ['|',
+                    '|',
+                        ('id', 'child_of', self.env.user.employee_id.id),
+                        ('id', '=', self.env.user.employee_id.id),
+                    ('coach_id', '=', self.env.user.employee_id.id),
+                 ]
+            ).ids
+            if employee.id in subordinates_of_uid:
+                employee.is_responsible = True
+            else:
+                employee.is_responsible = False
+                raise AccessError("You're not allow to have access to the private data of this employee.")
+
+    def _search_is_responsible(self, operator, value):
+        if not isinstance(value, bool):
+            raise TypeError("Invalid search comparison value for is_responsible, It should be a boolean.")
+
+        if operator not in ['=', '!=']:
+            raise ValueError("Unsupported operator in is_responsible only '=' and '!=' are available for this field.")
+
+        if value ^ (operator == '!='):
+            return [
+                '|',
+                    '|',
+                        ('id', 'child_of', self.env.user.employee_id.id),
+                        ('id', '=', self.env.user.employee_id.id),
+                    ('coach_id', '=', self.env.user.employee_id.id),
+            ]
+
+        return [
+            ('id', 'not child_of', self.env.user.employee_id.id),
+            ('coach_id', '!=', self.env.user.employee_id.id),
+            ('id', '!=', self.env.user.employee_id.id),
+        ]
 
     def _compute_avatar(self, avatar_field, image_field):
         employee_wo_user_or_image_ids = []
@@ -276,10 +338,32 @@ class HrEmployeePrivate(models.Model):
                     user_id=responsible_user_id)
         employees_scheduled.write({'work_permit_scheduled_activity': True})
 
+    def _inject_arch(self, arch_id):
+        """ get the arch to inject"""
+        view_id = self.env.ref(arch_id).id
+        return self.env['ir.ui.view'].browse(view_id).arch
+
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
+        # To be consistent with the global module behavior, we need
+        # to display the employee public view to the hr_coach group
+        # to make them able to see the full employee list
+        if self.env.user.has_group('hr.group_hr_coach') and \
+           not self.env.user.has_group('hr.group_hr_user') and \
+           view_type == 'form':
+
+            if options['action_id'] == self.env.ref('hr.open_view_employee_list_my').id:
+                return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
+
+            if options['action_id'] == self.env.ref('hr.hr_employee_get_my_employee_action').id:
+                # HACK : we inject the private employee view in the view dict
+                view = super().get_view(view_id, view_type, **options)
+                view['arch'] = self._inject_arch('hr.view_employee_form')
+                return view
+
         if self.check_access_rights('read', raise_exception=False):
             return super().get_view(view_id, view_type, **options)
+
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
