@@ -164,9 +164,19 @@ QUnit.test("Remove link preview Gif", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
+<<<<<<< HEAD
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
+||||||| parent of bec1c11ce90 (temp)
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Ok)");
+    assert.containsNone($, ".o-mail-LinkPreviewImage");
+=======
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Delete)");
+    assert.containsNone($, ".o-mail-LinkPreviewImage");
+>>>>>>> bec1c11ce90 (temp)
 });
 
 QUnit.test("Remove link preview card", async () => {
@@ -188,9 +198,19 @@ QUnit.test("Remove link preview card", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
+<<<<<<< HEAD
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewCard", { count: 0 });
+||||||| parent of bec1c11ce90 (temp)
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Ok)");
+    assert.containsNone($, ".o-mail-LinkPreviewCard");
+=======
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Delete)");
+    assert.containsNone($, ".o-mail-LinkPreviewCard");
+>>>>>>> bec1c11ce90 (temp)
 });
 
 QUnit.test("Remove link preview video", async () => {
@@ -213,9 +233,19 @@ QUnit.test("Remove link preview video", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
+<<<<<<< HEAD
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewVideo", { count: 0 });
+||||||| parent of bec1c11ce90 (temp)
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Ok)");
+    assert.containsNone($, ".o-mail-LinkPreviewVideo");
+=======
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Delete)");
+    assert.containsNone($, ".o-mail-LinkPreviewVideo");
+>>>>>>> bec1c11ce90 (temp)
 });
 
 QUnit.test("Remove link preview image", async () => {
@@ -236,9 +266,19 @@ QUnit.test("Remove link preview image", async () => {
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
+<<<<<<< HEAD
     await contains("p", { text: "Do you really want to delete this preview?" });
     await click(".modal-footer button", { text: "Delete" });
     await contains(".o-mail-LinkPreviewImage", { count: 0 });
+||||||| parent of bec1c11ce90 (temp)
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Ok)");
+    assert.containsNone($, ".o-mail-LinkPreviewImage");
+=======
+    assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
+    await click(".modal-footer button:contains(Delete)");
+    assert.containsNone($, ".o-mail-LinkPreviewImage");
+>>>>>>> bec1c11ce90 (temp)
 });
 
 QUnit.test("No crash on receiving link preview of non-known message", async (assert) => {

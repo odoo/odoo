@@ -4,9 +4,18 @@
         <Dialog size="'md'" title="'Confirmation'" modalRef="modalRef">
             <p class="mx-3 mb-3">Do you really want to delete this preview?</p>
             <t t-component="props.LinkPreview" linkPreview="props.linkPreview" deletable="false"/>
+<<<<<<< HEAD
             <t t-set-slot="footer">
                 <button class="btn btn-danger me-2" t-on-click="onClickOk">Delete</button>
                 <button t-if="message.linkPreviews.length > 1" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
+||||||| parent of bec1c11ce90 (temp)
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary me-2" t-on-click="onClickOk">Ok</button>
+=======
+            <t t-set-slot="footer" owl="1">
+                <button class="btn btn-primary me-2" t-on-click="onClickOk">Delete</button>
+                <button t-if="message.linkPreviews.length > 1" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
+>>>>>>> bec1c11ce90 (temp)
                 <button class="btn btn-secondary me-2" t-on-click="onClickCancel">Cancel</button>
             </t>
         </Dialog>
