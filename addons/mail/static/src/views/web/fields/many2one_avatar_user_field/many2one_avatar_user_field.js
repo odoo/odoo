@@ -15,48 +15,49 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { browser } from "@web/core/browser/browser";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
-const WithUserChatter = (T) => class extends T {
-    setup() {
-        super.setup(...arguments);
-        this.openChat = useOpenChat(this.relation);
-        if (this.props.withCommand) {
-            useAssignUserCommand();
-        }
-        this.avatarCard = usePopover(AvatarCardPopover, {
-            closeOnHoverAway: true,
-        });
-        this.openTimeout = false;
-    }
-
-    onClickAvatar() {
-        const id = this.props.record.data[this.props.name][0] ?? false;
-        if (id !== false) {
-            this.openChat(id);
-        }
-    }
-
-    openCard(ev) {
-        if (this.env.isSmall || this.relation !== "res.users") {
-            return;
-        }
-        const target = ev.currentTarget;
-        if (!target.querySelector(":scope > img")) {
-            return;
-        }
-        this.openTimeout = browser.setTimeout(() => {
-            if (!this.avatarCard.isOpen) {
-                this.avatarCard.open(target, {
-                    id: this.props.record.data[this.props.name][0],
-                });
+const WithUserChatter = (T) =>
+    class extends T {
+        setup() {
+            super.setup(...arguments);
+            this.openChat = useOpenChat(this.relation);
+            if (this.props.withCommand) {
+                useAssignUserCommand();
             }
-        }, 350);
-    }
+            this.avatarCard = usePopover(AvatarCardPopover, {
+                closeOnHoverAway: true,
+            });
+            this.openTimeout = false;
+        }
 
-    clearTimeout() {
-        browser.clearTimeout(this.openTimeout);
-        delete this.openTimeout;
-    }
-};
+        onClickAvatar() {
+            const id = this.props.record.data[this.props.name][0] ?? false;
+            if (id !== false) {
+                this.openChat(id);
+            }
+        }
+
+        openCard(ev) {
+            if (this.env.isSmall || this.relation !== "res.users") {
+                return;
+            }
+            const target = ev.currentTarget;
+            if (!target.querySelector(":scope > img")) {
+                return;
+            }
+            this.openTimeout = browser.setTimeout(() => {
+                if (!this.avatarCard.isOpen) {
+                    this.avatarCard.open(target, {
+                        id: this.props.record.data[this.props.name][0],
+                    });
+                }
+            }, 350);
+        }
+
+        clearTimeout() {
+            browser.clearTimeout(this.openTimeout);
+            delete this.openTimeout;
+        }
+    };
 
 export class Many2OneAvatarUserField extends WithUserChatter(Many2OneAvatarField) {
     static template = "mail.Many2OneAvatarUserField";
@@ -76,7 +77,7 @@ export const many2OneAvatarUserField = {
         const props = many2OneAvatarField.extractProps(...arguments);
         props.context = fieldInfo.context;
         props.domain = dynamicInfo.domain;
-        props.withCommand = fieldInfo.viewType === "form";
+        props.withCommand = fieldInfo.viewType === "form" || fieldInfo.viewType === "list";
         return props;
     },
 };

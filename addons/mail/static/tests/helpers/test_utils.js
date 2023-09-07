@@ -215,6 +215,7 @@ async function start(param0 = {}) {
             uid: pyEnv.currentUserId,
         },
         uid: pyEnv.currentUserId,
+        name: pyEnv.currentUser?.name,
         partner_id: pyEnv.currentPartnerId,
     });
     if (browser.Notification && !browser.Notification.isPatched) {

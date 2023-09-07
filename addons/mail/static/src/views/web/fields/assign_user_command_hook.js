@@ -33,20 +33,17 @@ export function useAssignUserCommand() {
         if (type === "many2one") {
             component.props.record.update({ [component.props.name]: record });
         } else if (type === "many2many") {
-            component.props.record.data[component.props.name].replaceWith([
-                ...getCurrentIds(),
-                record[0],
-            ]);
+            component.props.record.data[component.props.name].linkTo(record[0], {
+                display_name: record[1],
+            });
         }
     };
 
     const remove = async (record) => {
         if (type === "many2one") {
-            component.props.record.update({ [component.props.name]: [] });
+            component.props.record.update({ [component.props.name]: false });
         } else if (type === "many2many") {
-            component.props.record.data[component.props.name].replaceWith(
-                getCurrentIds().filter((id) => id !== record[0])
-            );
+            component.props.record.data[component.props.name].unlinkFrom(record[0]);
         }
     };
 
@@ -75,7 +72,18 @@ export function useAssignUserCommand() {
             action: add.bind(null, record),
         }));
     };
-
+    const options = {
+        category: "smart_action",
+        global: true,
+        identifier: component.props.string,
+    };
+    if (component.props.record.id !== component.props.record.model.root.id) {
+        // Only List View
+        options.isAvailable = () =>
+            component.props.record.model.multiEdit && component.props.record.selected;
+    } else {
+        options.isAvailable = () => true;
+    }
     useCommand(
         _t("Assign to ..."),
         () => ({
@@ -92,26 +100,61 @@ export function useAssignUserCommand() {
             ],
         }),
         {
-            category: "smart_action",
+            ...options,
             hotkey: "alt+i",
-            global: true,
         }
     );
 
     useCommand(
-        _t("Assign/Unassign to me"),
+        _t("Assign to me"),
         () => {
-            const record = [user.userId, user.name];
-            if (getCurrentIds().includes(user.userId)) {
-                remove(record);
-            } else {
-                add(record);
-            }
+            add([user.userId, user.name]);
         },
         {
-            category: "smart_action",
+            ...options,
+            isAvailable: () => options.isAvailable() && !getCurrentIds().includes(user.userId),
             hotkey: "alt+shift+i",
-            global: true,
         }
     );
+    if (component.props.record.id === component.props.record.model.root.id) {
+        // Only Form View
+        useCommand(
+            _t("Unassign from me"),
+            () => {
+                remove([user.userId, user.name]);
+            },
+            {
+                ...options,
+                isAvailable: () => options.isAvailable() && getCurrentIds().includes(user.userId),
+                hotkey: "alt+shift+i",
+            }
+        );
+    } else {
+        if (type === "many2one") {
+            useCommand(
+                _t("Unassign"),
+                () => {
+                    remove([user.userId, user.name]);
+                },
+                {
+                    ...options,
+                    isAvailable: () => options.isAvailable() && getCurrentIds().length > 0,
+                    hotkey: "alt+shift+u",
+                }
+            );
+        } else {
+            useCommand(
+                _t("Unassign from me"),
+                () => {
+                    remove([user.userId, user.name]);
+                },
+                {
+                    ...options,
+                    isAvailable: () =>
+                        options.isAvailable() && getCurrentIds().includes(user.userId),
+                    hotkey: "alt+shift+u",
+                }
+            );
+        }
+    }
 }
