@@ -81,7 +81,7 @@ const dateCache = new WeakMap();
 /** @type {WeakMap<DateTime, string>} */
 const dateTimeCache = new WeakMap();
 
-class ConversionError extends Error {
+export class ConversionError extends Error {
     name = "ConversionError";
 }
 

@@ -1002,6 +1002,53 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
     );
 
+    QUnit.test("custom invalidity function", async (assert) => {
+        await mountPicker({
+            type: "date",
+            // make weekends invalid
+            isDateValid: (date) => date.weekday <= 5,
+        });
+
+        assertDateTimePicker({
+            title: "April 2023",
+            date: [
+                {
+                    cells: [
+                        [-26, -27, -28, -29, -30, -31, -1],
+                        [-2, 3, 4, 5, 6, 7, -8],
+                        [-9, 10, 11, 12, 13, 14, -15],
+                        [-16, 17, 18, 19, 20, 21, -22],
+                        [-23, 24, "25", 26, 27, 28, -29],
+                        [-30, -1, -2, -3, -4, -5, -6],
+                    ],
+                },
+            ],
+        });
+    });
+
+    QUnit.test("custom date cell class function", async (assert) => {
+        await mountPicker({
+            type: "date",
+            // give special class to weekends
+            dayCellClass: (date) => (date.weekday >= 6 ? "o_weekend" : ""),
+        });
+
+        assert.deepEqual(getTexts(".o_weekend"), [
+            "26",
+            "1",
+            "2",
+            "8",
+            "9",
+            "15",
+            "16",
+            "22",
+            "23",
+            "29",
+            "30",
+            "6",
+        ]);
+    });
+
     QUnit.test("single value, select date", async (assert) => {
         await mountPicker({
             value: DateTime.fromObject({ day: 30, hour: 8, minute: 43 }),
