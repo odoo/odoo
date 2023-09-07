@@ -1,12 +1,11 @@
 /* @odoo-module */
 
 import { registry } from "@web/core/registry";
-
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeholder_tour.js", {
-    url: "/web",
+registry.category("web_tour.tours").add("dynamic_placeholder_tour", {
     test: true,
+    url: "/web",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -14,12 +13,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
             trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
         },
         {
-            content: "Open technical dropdown",
-            trigger: 'button[data-menu-xmlid="base.menu_custom"]',
-        },
-        {
-            content: "Select email templates",
-            trigger: 'a[data-menu-xmlid="mail.menu_email_templates"]',
+            content: "Open email templates",
+            trigger: 'button[name="open_mail_templates"]',
         },
         {
             content: "Create a new email template",
@@ -52,7 +47,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
                 if (
                     !notification ||
                     notification.textContent !==
-                        "You need to select a baseModel before opening the dynamic placeholder selector."
+                        "You need to select a model before opening the dynamic placeholder selector."
                 ) {
                     console.error(`Email template did not show correct notification.`);
                 }
@@ -64,8 +59,13 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
             run: "text Contact",
         },
         {
-            content: "Wait for model to load and click on contact",
-            trigger: 'div[name="model_id"] .ui-autocomplete .dropdown-item:not(:has(.fa-spin))',
+            content: "Wait for the autocomplete RPC",
+            trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
+            isCheck: true,
+        },
+        {
+            content: "Click on contact",
+            trigger: 'div[name="model_id"] .ui-autocomplete',
             run: async function () {
                 const contact = Array.from(
                     document.querySelectorAll(
@@ -78,7 +78,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
         {
             content: "Wait for the drop down to disappear",
             trigger: 'div[name="model_id"] .o-autocomplete:not(:has(.ui-autocomplete))',
-            run: function () {},
+            run: async () => {
+                // Ensure the system has registered a correct model value before
+                // we try to open the DPH.
+                // It seems that the autocomplete validation can be very slow.
+                await new Promise((r) => setTimeout(r, 200));
+            },
         },
         {
             content: 'Retry insert # inside "Subject" input',
@@ -93,11 +98,16 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
         {
             content: "Check if the dynamic placeholder popover is opened",
             trigger: "div.o_model_field_selector_popover",
-            run: function () {},
+            isCheck: true,
+        },
+        {
+            content: "filter the dph result",
+            trigger: "div.o_model_field_selector_popover_search input[type='text']",
+            run: "text name",
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
-            trigger: "div.o_model_field_selector_popover li:first-child",
+            trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
         },
         {
             content: "Enter a default value",
@@ -107,26 +117,78 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
         },
         {
             content: "Click on the the dynamic placeholder default value",
-            trigger: "div.o_model_field_selector_popover li:first-child",
+            trigger: "div.o_model_field_selector_popover li:first-child button",
         },
         {
             content: "Wait for the popover to disappear",
-            trigger: "div.o_popover_container:empty",
-            run: function () {},
+            trigger: "body:not(:has(.o_model_field_selector_popover))",
         },
         {
             content: "Check if subject value was correclty updated",
             trigger: 'div[name="subject"] input[type="text"]',
             run() {
                 const subjectValue = this.$anchor[0].value;
-                const correctValue =
-                    "yes_model_id {{object.activity_exception_decoration or '''defValue'''}}";
+                const correctValue = "yes_model_id {{object.name or '''defValue'''}}";
                 if (subjectValue !== correctValue) {
                     console.error(
                         `Email template should have "${correctValue}" in subject input (actual: ${subjectValue})`
                     );
                 }
             },
+        },
+        {
+            content: "Insert tesxt inside editable",
+            trigger: ".note-editable.odoo-editor-editable",
+            run(actions) {
+                actions.text(`/`, this.$anchor);
+                document.querySelector(".note-editable").dispatchEvent(
+                    new InputEvent("input", {
+                        inputType: "insertText",
+                        data: "/",
+                    })
+                );
+            },
+        },
+        {
+            content: "Click on the the dynamic placeholder commandBar options",
+            trigger: "div.oe-powerbox-commandWrapper:contains(Dynamic Placeholder)",
+        },
+        {
+            content: "Check if the dynamic placeholder popover is opened",
+            trigger: "div.o_model_field_selector_popover",
+        },
+        {
+            content: "filter the dph result",
+            trigger: "div.o_model_field_selector_popover_search input[type='text']",
+            run: "text name",
+        },
+        {
+            content: "Click on the first entry of the dynamic placeholder",
+            trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
+        },
+        {
+            content: "Enter a default value",
+            trigger:
+                'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
+            run: "text defValue",
+        },
+        {
+            content: "Click on the the dynamic placeholder default value",
+            trigger: "div.o_model_field_selector_popover li:first-child button",
+        },
+        {
+            content: "Ensure the editable contain the dynamic placeholder t tag",
+            trigger:
+                ".note-editable.odoo-editor-editable t[t-out=\"object.name or '''defValue'''\"]",
+        },
+        {
+            content: "Discard form changes",
+            trigger: "button.o_form_button_cancel",
+        },
+        {
+            content: "Wait for the form view to disappear",
+            trigger: "body:not(:has(.o_form_sheet))",
+            isCheck: true,
         },
     ],
 });
