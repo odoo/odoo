@@ -1918,6 +1918,7 @@ class Orderline extends PosModel {
             pack_lot_lines:      this.get_lot_lines(),
             customer_note:      this.get_customer_note(),
             taxed_lst_unit_price: this.get_taxed_lst_unit_price(),
+            unitDisplayPriceBeforeDiscount: this.getUnitDisplayPriceBeforeDiscount(),
         };
     }
     generate_wrapped_product_name() {
@@ -2308,7 +2309,7 @@ class Payment extends PosModel {
             payment_method_id: this.payment_method.id,
             amount: this.get_amount(),
             payment_status: this.payment_status,
-            can_be_reversed: this.can_be_resersed,
+            can_be_reversed: this.can_be_reversed,
             ticket: this.ticket,
             card_type: this.card_type,
             cardholder_name: this.cardholder_name,
@@ -2428,6 +2429,7 @@ class Order extends PosModel {
             if (fiscal_position) {
                 this.fiscal_position = fiscal_position;
             } else {
+                this.fiscal_position_not_found = true;
                 console.error('ERROR: trying to load a fiscal position not available in the pos');
             }
         }

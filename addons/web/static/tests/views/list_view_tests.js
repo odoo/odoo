@@ -2489,15 +2489,17 @@ QUnit.module("Views", (hooks) => {
                     name: "Partners Action 11",
                     res_model: "foo",
                     type: "ir.actions.act_window",
-                    views: [[3, "list"], [4, "form"]],
+                    views: [
+                        [3, "list"],
+                        [4, "form"],
+                    ],
                     search_view_id: [9, "search"],
-                }
+                },
             };
             serverData.views = {
                 "foo,3,list":
                     '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
-                "foo,4,form":
-                    '<form><field name="display_name"/><field name="foo"/></form>',
+                "foo,4,form": '<form><field name="display_name"/><field name="foo"/></form>',
                 "foo,9,search": `
                     <search>
                         <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
@@ -5160,6 +5162,44 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["notify"]);
     });
 
+    QUnit.test("delete all records matching the domain in groupBy", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["bar"],
+            allowSelectors: true,
+            mockRPC(route, args) {
+                if (args.method === "unlink") {
+                    assert.step(`unlink:${args.args[0]}`);
+                }
+            },
+            actionMenus: {},
+        });
+
+        // unfolding the first group
+        await click(target.querySelector(".o_group_header"));
+
+        // selecting all displayed elements
+        await click(target.querySelector("thead .o_list_record_selector input"));
+
+        // selecting the domain now
+        assert.containsOnce(target, ".o_list_selection_box .o_list_select_domain");
+        await click(target.querySelector(".o_list_selection_box .o_list_select_domain"));
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        assert.hasClass(
+            document.querySelector("body"),
+            "modal-open",
+            "body should have modal-open class"
+        );
+
+        await click(document, "body .modal footer button.btn-primary");
+        assert.verifySteps(["unlink:4", "unlink:1,2,3"]);
+    });
+
     QUnit.test("archiving one record", async function (assert) {
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
@@ -7606,7 +7646,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        // Need to set the line in edition. 
+        // Need to set the line in edition.
         await click(target, "td[name=foo]");
         assert.strictEqual(window.getSelection().toString(), "bar");
 
@@ -17341,32 +17381,36 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.test("list view: prevent record selection when editable list in edit mode", async function (assert) {
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "list view: prevent record selection when editable list in edit mode",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree editable="top">
                     <field name="foo" />
                 </tree>`,
-        });
+            });
 
-        //  When we try to select new record in edit mode
-        await click(target.querySelector('.o_list_buttons .o_list_button_add'));
-        await click(target.querySelector('.o_data_row .o_list_record_selector'));
-        assert.strictEqual(
-            target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]').checked,
-            false
-        );
+            //  When we try to select new record in edit mode
+            await click(target.querySelector(".o_list_buttons .o_list_button_add"));
+            await click(target.querySelector(".o_data_row .o_list_record_selector"));
+            assert.strictEqual(
+                target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
+                    .checked,
+                false
+            );
 
-        //  When we try to select all records in edit mode
-        await click(target.querySelector('th.o_list_record_selector.o_list_controller'));
-        assert.strictEqual(
-            target.querySelector('.o_list_controller input[type="checkbox"]').checked,
-            false
-        );
-    });
+            //  When we try to select all records in edit mode
+            await click(target.querySelector("th.o_list_record_selector.o_list_controller"));
+            assert.strictEqual(
+                target.querySelector('.o_list_controller input[type="checkbox"]').checked,
+                false
+            );
+        }
+    );
 
     QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
         patchWithCleanup(AutoComplete, {
@@ -17486,7 +17530,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, "Value 1");
     });
-    QUnit.test("monetary field display for rtl languages", async function (assert){
+
+    QUnit.test("monetary field display for rtl languages", async function (assert) {
         patchWithCleanup(localization, {
             direction: "rtl",
         });
@@ -17520,5 +17565,45 @@ QUnit.module("Views", (hooks) => {
             "ltr",
             "Monetary cells should have ltr direction"
         );
-    })
+    });
+
+    QUnit.test("edit record with onchange on x2many field (command 5)", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.foo.onchanges = {
+            foo: (obj) => {
+                obj.m2m = [[5]];
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                        foo: "new value",
+                        m2m: [
+                            [3, 1, false],
+                            [3, 2, false],
+                        ],
+                    });
+                }
+            },
+        });
+
+        assert.containsN(target.querySelector(".o_data_row"), ".o_tag", 2);
+
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_field_widget[name=foo] input", "new value");
+
+        assert.containsNone(target.querySelector(".o_data_row"), ".o_tag");
+
+        await clickSave(target);
+    });
 });

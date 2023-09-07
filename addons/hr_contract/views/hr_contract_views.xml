@@ -165,7 +165,7 @@
                                 <field name="active" invisible="1"/>
                                 <!-- employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]") -->
                                 <field name="company_id" invisible="1"/>
-                                <field name="employee_id"/>
+                                <field name="employee_id" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public'}"/>
                                 <field name="date_start" string="Contract Start Date"/>
                                 <field name="date_end" string="Contract End Date"/>
                                 <field name="company_country_id" invisible="1"/>

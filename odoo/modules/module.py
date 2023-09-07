@@ -314,7 +314,8 @@ def get_resource_from_path(path):
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
     resource = False
-    for adpath in odoo.addons.__path__:
+    sorted_paths = sorted(odoo.addons.__path__, key=len, reverse=True)
+    for adpath in sorted_paths:
         # force trailing separator
         adpath = os.path.join(adpath, "")
         if os.path.commonprefix([adpath, path]) == adpath:

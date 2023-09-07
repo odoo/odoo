@@ -195,6 +195,7 @@
                                                    options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
                                             <field name="force_tax_included"
                                                    widget="boolean_toggle"
+                                                   options="{'autosave': False}"
                                                    attrs="{'invisible': [('show_force_tax_included', '=', False)]}"
                                                    optional="hide"/>
                                             <field name="label"/>

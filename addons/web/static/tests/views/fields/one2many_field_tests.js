@@ -30,6 +30,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 let serverData;
 let target;
@@ -3012,6 +3013,50 @@ QUnit.module("Fields", (hooks) => {
         // FIXME: it would be nice to test that the view is re-rendered correctly,
         // but as the relational data isn't re-fetched, the rendering is ok even
         // if the changes haven't been saved
+    });
+
+    QUnit.test("one2many list: double click on delete record", async function (assert) {
+        // This test simulates a precise scenario: a one2many contains a record, and the user
+        // clicks on the trash icon to remove it. It clicks again, precisely when the model has
+        // been updated (so the record no longer exists there), but before the x2many field is
+        // re-rendered (so the icon is still present).
+        serverData.models.partner.records[0].p = [1];
+
+        let clickOnDeleteBeforeRender = false;
+        patchWithCleanup(X2ManyField.prototype, {
+            setup() {
+                this._super.apply(this, arguments);
+                owl.onWillRender(() => {
+                    if (clickOnDeleteBeforeRender) {
+                        assert.step("click a second time");
+                        click(target.querySelector("td.o_list_record_remove"));
+                    }
+                });
+            },
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_data_row");
+
+        click(target.querySelector("td.o_list_record_remove"));
+        clickOnDeleteBeforeRender = true;
+        await nextTick();
+        await nextTick();
+        assert.verifySteps(["click a second time"]);
+        assert.containsNone(target, ".o_data_row");
     });
 
     QUnit.test("one2many kanban: edition", async function (assert) {

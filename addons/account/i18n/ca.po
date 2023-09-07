@@ -13205,8 +13205,8 @@ msgstr "Compte pont"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Canviar a reemborsament/factura rectificativa"
+msgid "Switch into invoice/credit note"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13845,15 +13845,6 @@ msgid ""
 msgstr ""
 "La seqüència d'entrada del diari no s'ajusta al format actual. Només el "
 "comptable pot canviar-ho."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"Els mesos i dies de les línies de condicions de pagament han de ser "
-"positius."
 
 #. module: account
 #. odoo-python
@@ -17004,6 +16995,13 @@ msgid ""
 msgstr ""
 "No pots canviar un compte per evitar la reconciliació si algunes "
 "reconciliació parcial segueixen pendents."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr ""
 
 #. module: account
 #. odoo-python

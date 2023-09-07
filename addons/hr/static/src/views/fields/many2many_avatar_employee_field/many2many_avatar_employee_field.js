@@ -13,6 +13,7 @@ Many2ManyTagsAvatarEmployeeField.extractProps = ({ field, attrs }) => {
     return {
         ...Many2ManyTagsAvatarUserField.extractProps({ field, attrs }),
         canQuickCreate: false,
+        relation: (attrs.options && attrs.options.relation) || field.relation,
     }
 };
 

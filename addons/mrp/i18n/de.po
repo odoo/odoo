@@ -5024,6 +5024,16 @@ msgstr ""
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
+"Die aktuelle Konfiguration ist falsch, da sie einen Kreislauf zwischen "
+"diesen Produkten schaffen würde: %s."
+
+#. module: mrp
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5779,14 +5789,14 @@ msgstr ""
 #: model:ir.model,name:mrp.model_stock_warehouse
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__warehouse_id
 msgid "Warehouse"
-msgstr "Lager"
+msgstr "Lagerhaus"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
 msgid "Warehouse:"
-msgstr "Lager:"
+msgstr "Lagerhaus:"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
@@ -5855,7 +5865,7 @@ msgid ""
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "Wenn diese Option aktiviert ist, wird der Verbrauch für diese Komponente ausschließlich manuell erfasst.\n"
-"Wenn sie nicht aktiviert ist und der Verbrauch einer der Komponenten manuell auf dem Fertigungssauftrag bearbeitet wird, nimmt Odoo den manuellen Verbrauch ebenfalls an."
+"Wenn sie nicht aktiviert ist und der Verbrauch einer der Komponenten manuell auf dem Fertigungsauftrag bearbeitet wird, nimmt Odoo den manuellen Verbrauch ebenfalls an."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6411,9 +6421,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Sie müssen in der Kategorie „Leistung” wenigstens einen "
+"Sie müssen in der Kategorie „Leistung“ wenigstens einen "
 "Produktivitätsverlust definieren. Erstellen Sie einen über die Fertigungsapp"
-" im Menü „Konfiguration” > „Produktivitätsverluste”."
+" im Menü „Konfiguration“ > „Produktivitätsverluste“."
 
 #. module: mrp
 #. odoo-python
@@ -6424,9 +6434,9 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
-"Sie müssen in der Kategorie „Produktivität” wenigstens einen "
+"Sie müssen in der Kategorie „Produktivität“ wenigstens einen "
 "Produktivitätsverlust definieren. Erstellen Sie einen über die Fertigungsapp"
-" im Menü „Konfiguration” > „Produktivitätsverluste”."
+" im Menü „Konfiguration“ > „Produktivitätsverluste“."
 
 #. module: mrp
 #. odoo-python
@@ -6437,9 +6447,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Sie müssen in der Kategorie „Leistung” wenigstens einen inaktiven "
+"Sie müssen in der Kategorie „Leistung“ wenigstens einen inaktiven "
 "Produktivitätsverlust definieren. Erstellen Sie einen über die Fertigungsapp"
-" im Menü „Konfiguration” > „Produktivitätsverluste”."
+" im Menü „Konfiguration“ > „Produktivitätsverluste“."
 
 #. module: mrp
 #. odoo-python

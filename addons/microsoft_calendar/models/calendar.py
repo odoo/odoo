@@ -142,7 +142,8 @@ class Meeting(models.Model):
         # Forbid recurrence updates through Odoo and suggest user to update it in Outlook.
         if self._check_microsoft_sync_status():
             recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
-            if not notify_context and (recurrence_update_setting or 'recurrency' in values or recurrency_in_batch):
+            recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
+            if not notify_context and recurrence_update_attempt and not 'active' in values:
                 self._forbid_recurrence_update()
 
         # check a Outlook limitation in overlapping the actual recurrence
@@ -165,7 +166,8 @@ class Meeting(models.Model):
 
     def action_mass_archive(self, recurrence_update_setting):
         # Do not allow archiving if recurrence is synced with Outlook. Suggest updating directly from Outlook.
-        if self._check_microsoft_sync_status() and any(self.microsoft_id):
+        self.ensure_one()
+        if self._check_microsoft_sync_status() and self.microsoft_id:
             self._forbid_recurrence_update()
         super().action_mass_archive(recurrence_update_setting)
 

@@ -88,6 +88,7 @@ const Wysiwyg = Widget.extend({
         this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
+        this._onScroll = this._onScroll.bind(this);
         this.customizableLinksSelector = 'a'
             + ':not([data-bs-toggle="tab"])'
             + ':not([data-bs-toggle="collapse"])'
@@ -178,6 +179,12 @@ const Wysiwyg = Widget.extend({
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
+            getScrollContainerRect: () => {
+                if (!this.scrollContainer || !this.scrollContainer.getBoundingClientRect) {
+                    this.scrollContainer = document.querySelector('.o_action_manager');
+                }
+                return this.scrollContainer.getBoundingClientRect();
+            },
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
@@ -640,7 +647,7 @@ const Wysiwyg = Widget.extend({
             const clientsInfos = Object.values(this.ptp.clientsInfos);
             const couldBeDisconnected =
                 Boolean(clientsInfos.length) &&
-                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection.connectionState));
+                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection && x.peerConnection.connectionState));
 
             if (couldBeDisconnected) {
                 this._offlineTimeout = setTimeout(() => {
@@ -756,6 +763,7 @@ const Wysiwyg = Widget.extend({
             clearTimeout(timeout);
         }
         snippetsOptions.clearM2oRpcCache();
+        document.removeEventListener('scroll', this._onScroll, true);
         this._super();
     },
     /**
@@ -969,6 +977,12 @@ const Wysiwyg = Widget.extend({
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
             const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
+                if (el.closest(".o_dirty") !== editableEl) {
+                    // Do nothing as there is an editableEl closer to the image
+                    // that will perform the rpc call with the correct model and
+                    // id parameters.
+                    return;
+                }
                 // Modifying an image always creates a copy of the original, even if
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -1632,18 +1646,10 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
-        // we need the Timeout to be sure the editable content is loaded
-        // before calculating the scrollParent() element.
-        setTimeout(() => {
-            const scrollableContainer = this.$el.scrollParent();
-            if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                    scrollableContainer[0],
-                    'scroll',
-                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
-            }
-        }, 0);
+        if (!options.snippets) {
+            // Scroll event does not bubble.
+            document.addEventListener('scroll', this._onScroll, true);
+        }
     },
     /**
      * @private
@@ -2483,7 +2489,7 @@ const Wysiwyg = Widget.extend({
         }
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
         if (
-            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_buttons') ||
+            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_widget') ||
             (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
             this._shouldDelayBlur = true;
         } else {
@@ -2503,6 +2509,12 @@ const Wysiwyg = Widget.extend({
             // todo: to remove when removing the legacy field_html
             this.trigger_up('wysiwyg_blur');
             this.options.onWysiwygBlur && this.options.onWysiwygBlur();
+        }
+    },
+    _onScroll: function(ev) {
+        if (ev.target.contains(this.$editable[0])) {
+            this.scrollContainer = ev.target;
+            this.odooEditor.updateToolbarPosition();
         }
     },
     _signalOffline: function () {

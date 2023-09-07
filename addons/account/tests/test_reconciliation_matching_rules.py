@@ -1033,6 +1033,17 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 {},
             )
 
+        with self.subTest(rule_field='match_text_location_label', st_line_field='payment_ref'):
+            with rollback():
+                term_line.name = ''
+                st_line.payment_ref = '/?'
+
+                # No exact matching when the term line name is an empty string
+                self.assertDictEqual(
+                    rule._apply_rules(st_line, None),
+                    {},
+                )
+
         for rule_field, st_line_field in (
             ('match_text_location_label', 'payment_ref'),
             ('match_text_location_reference', 'ref'),

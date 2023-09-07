@@ -5434,7 +5434,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     async replaceMedia() {
-        this.options.wysiwyg.openMediaDialog({ node: this.$target[0] });
+        // TODO for now, this simulates a double click on the media,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
     },
     /**
      * Makes the image a clickable link by wrapping it in an <a>.
@@ -5456,7 +5458,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
                 this.$target[0].src = src;
             }
         } else {
-            parentEl.replaceWith(this.$target[0]);
+            const fragment = document.createDocumentFragment();
+            fragment.append(...parentEl.childNodes);
+            parentEl.replaceWith(fragment);
         }
     },
     /**
