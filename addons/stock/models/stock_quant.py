@@ -1277,9 +1277,9 @@ class StockQuant(models.Model):
             quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
                                                          ('lot_id', '=', lot_id.id),
                                                          ('quantity', '!=', 0),
+                                                         ('location_id.usage', 'in', ('internal', 'transit')),
                                                          '|', ('location_id.usage', '=', 'customer'),
-                                                              '&', ('company_id', '=', company_id.id),
-                                                                   ('location_id.usage', 'in', ('internal', 'transit'))])
+                                                              '|', ('company_id', '=', company_id.id), ('company_id', '=', False)])
             sn_locations = quants.mapped('location_id')
             if quants:
                 if not source_location_id:

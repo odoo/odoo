@@ -132,6 +132,7 @@ class MrpStockReport(models.TransientModel):
             'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
+            'company_id': move_line.company_id.name,
             'location_source': move_line.location_id.name,
             'location_destination': move_line.location_dest_id.name,
             'reference_id': ref,
@@ -161,7 +162,8 @@ class MrpStockReport(models.TransientModel):
                             data.get('lot_name', False),
                             data.get('location_source', False),
                             data.get('location_destination', False),
-                            data.get('product_qty_uom', 0)],
+                            data.get('product_qty_uom', 0),
+                            data.get('company_id', False)],
                 'level': level,
                 'unfoldable': data['unfoldable'],
             })

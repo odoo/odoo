@@ -291,10 +291,9 @@
                     <field name="lot_id" groups="stock.group_production_lot"
                         column_invisible="parent.has_tracking == 'none' or not parent.show_lots_m2o"
                         readonly="package_level_id and parent.picking_type_entire_packs"
-                        domain="[('product_id', '=', parent.product_id), ('company_id', '=', company_id)]"
+                        domain="[('product_id', '=', parent.product_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                         context="{
                             'active_picking_id': picking_id,
-                            'default_company_id': parent.company_id,
                             'default_product_id': parent.product_id,
                         }"/>
                     <field name="lot_name" string="Lot/Serial Number" groups="stock.group_production_lot"

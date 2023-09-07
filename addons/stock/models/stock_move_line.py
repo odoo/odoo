@@ -204,8 +204,7 @@ class StockMoveLine(models.Model):
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                     elif not self.lot_id:
                         lots = self.env['stock.lot'].search([('product_id', '=', self.product_id.id),
-                                                                        ('name', '=', self.lot_name),
-                                                                        ('company_id', '=', self.company_id.id)])
+                                                                        ('name', '=', self.lot_name)])
                         quants = lots.quant_ids.filtered(lambda q: q.quantity != 0 and q.location_id.usage in ['customer', 'internal', 'transit'])
                         if quants:
                             message = _('Serial number (%s) already exists in location(s): %s. Please correct the serial number encoded.', self.lot_name, ', '.join(quants.location_id.mapped('display_name')))
@@ -595,7 +594,6 @@ class StockMoveLine(models.Model):
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
                                 lot = self.env['stock.lot'].search([
-                                    ('company_id', '=', ml.company_id.id),
                                     ('product_id', '=', ml.product_id.id),
                                     ('name', '=', ml.lot_name),
                                 ], limit=1)

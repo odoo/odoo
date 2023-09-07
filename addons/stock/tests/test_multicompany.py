@@ -187,11 +187,13 @@ class TestMultiCompany(TransactionCase):
         """Validate a picking of Company A receiving lot1 while being logged into Company B. Check
         the lot is created in Company A.
         """
-        product = self.env['product.product'].create({
-            'type': 'product',
-            'tracking': 'serial',
-            'name': 'product',
-        })
+        product_form = Form(self.env['product.product'])
+        product_form.detailed_type = 'product'
+        product_form.tracking = 'serial'
+        product_form.name = 'product'
+        product_form.company_id = self.company_a
+        product = product_form.save()
+
         picking = self.env['stock.picking'].with_user(self.user_a).create({
             'picking_type_id': self.warehouse_a.in_type_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
@@ -506,10 +508,8 @@ class TestMultiCompany(TransactionCase):
         move_line_3.qty_done = 1.0
         picking_receipt.button_validate()
         lot_2 = move_line_3.lot_id
-        self.assertEqual(lot_1.company_id, self.company_a)
         self.assertEqual(lot_1.name, 'lot 1')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 1.0)
-        self.assertEqual(lot_2.company_id, self.company_b)
         self.assertEqual(lot_2.name, 'lot 2')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 1.0)
 
@@ -615,7 +615,5 @@ class TestMultiCompany(TransactionCase):
         wizard.process()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
 
-        self.assertEqual(lot_a.company_id, self.company_a)
         self.assertEqual(lot_a.name, 'lot a')
-        self.assertEqual(lot_b.company_id, self.company_b)
         self.assertEqual(lot_b.name, 'lot b')

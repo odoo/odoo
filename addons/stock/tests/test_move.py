@@ -5902,7 +5902,6 @@ class StockMove(TransactionCase):
         lot1 = self.env['stock.lot'].create({
             'name': 'serial1',
             'product_id': self.product_serial.id,
-            'company_id': self.env.company.id,
         })
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.pack_location, 1, lot1)

@@ -828,7 +828,6 @@ class StockQuant(TransactionCase):
         stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         picking_type_in = self.env.ref('stock.picking_type_in')
-
         receipt01 = self.env['stock.picking'].create({
             'picking_type_id': picking_type_in.id,
             'location_id': supplier_location.id,

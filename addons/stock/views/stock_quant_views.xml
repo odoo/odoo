@@ -75,7 +75,7 @@
                             <field name="lot_id" groups="stock.group_production_lot"
                                 readonly="tracking not in ['serial', 'lot']"
                                 required="tracking != 'none'"
-                                context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                                context="{'default_product_id': product_id}"/>
                             <field name="package_id" readonly="0" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" readonly="0" groups="stock.group_tracking_owner" options="{'no_create': True}"/>
                             <field name='company_id' groups="base.group_multi_company"/>
@@ -138,7 +138,7 @@
                 <field name="lot_id" groups="stock.group_production_lot"
                        column_invisible="context.get('hide_lot', False)"
                        readonly="id or tracking not in ['serial', 'lot']"
-                       context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                       context="{'default_product_id': product_id}"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"
                        readonly="id"
                        options="{'no_create': True}"/>
@@ -393,7 +393,7 @@ in this location. That leads to a negative stock.
                         <field name="product_id" force_save="1" invisible="1"/>
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
                             groups="stock.group_production_lot" readonly="context.get('readonly_form')"
-                            context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                            context="{'default_product_id': product_id}"/>
                         <field name="location_id" groups="stock.group_stock_multi_locations" readonly="context.get('readonly_form')"/>
                         <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('readonly_form')"/>
                         <field name="owner_id" groups="stock.group_tracking_owner" invisible="context.get('readonly_form')"/>
@@ -437,7 +437,7 @@ in this location. That leads to a negative stock.
                 <field name="lot_id" groups="stock.group_production_lot"
                     column_invisible="context.get('hide_lot', False)"
                     readonly="tracking not in ['serial', 'lot'] or (id and (lot_id or quantity != 0))"
-                    context="{'default_product_id': product_id, 'default_company_id': company_id}"
+                    context="{'default_product_id': product_id}"
                     decoration-warning="sn_duplicated"
                     force_save="1"/>
                 <field name="package_id" groups="stock.group_tracking_lot" readonly="id"/>

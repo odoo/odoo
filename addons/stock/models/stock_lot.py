@@ -36,7 +36,7 @@ class StockLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', 'Company', index=True, compute='_compute_company_id', store=True)
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
@@ -44,6 +44,11 @@ class StockLot(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
         inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
+
+    @api.depends('product_id')
+    def _compute_company_id(self):
+        for record in self:
+            record.company_id = record.product_id.product_tmpl_id.company_id
 
     @api.model
     def generate_lot_names(self, first_lot, count):

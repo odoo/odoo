@@ -111,7 +111,7 @@
     <record model="ir.rule" id="stock_production_lot_rule">
         <field name="name">Stock Production Lot multi-company</field>
         <field name="model_id" search="[('model','=','stock.lot')]" model="ir.model"/>
-        <field name="domain_force">[('company_id','in', company_ids)]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="stock_warehouse_comp_rule">
@@ -123,7 +123,7 @@
     <record model="ir.rule" id="stock_location_comp_rule">
         <field name="name">Location multi-company</field>
         <field name="model_id" ref="model_stock_location"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
     </record>
 
      <record model="ir.rule" id="stock_move_rule">

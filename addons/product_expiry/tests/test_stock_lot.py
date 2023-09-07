@@ -257,7 +257,6 @@ class TestStockLot(TestStockCommon):
         lot_form = Form(self.LotObj)
         lot_form.name = 'Apple Box #1'
         lot_form.product_id = self.apple_product
-        lot_form.company_id = self.env.company
         apple_lot = lot_form.save()
         # ...then checks date fields have the expected values.
         check_expiration_dates(self.apple_product, apple_lot, today_date, time_gap)
@@ -394,13 +393,11 @@ class TestStockLot(TestStockCommon):
         lot_form = Form(self.LotObj)  # Creates the lot.
         lot_form.name = 'good-apple-lot'
         lot_form.product_id = self.apple_product
-        lot_form.company_id = self.env.company
         good_lot = lot_form.save()
 
         lot_form = Form(self.LotObj)  # Creates the lot.
         lot_form.name = 'expired-apple-lot-01'
         lot_form.product_id = self.apple_product
-        lot_form.company_id = self.env.company
         expired_lot_1 = lot_form.save()
         lot_form = Form(expired_lot_1)  # Edits the lot to make it expired.
         lot_form.expiration_date = datetime.today() - timedelta(days=10)
@@ -503,7 +500,6 @@ class TestStockLot(TestStockCommon):
         lot_form = Form(self.LotObj)
         lot_form.name = 'LOT001'
         lot_form.product_id = self.apple_product
-        lot_form.company_id = self.env.company
         apple_lot = lot_form.save()
 
         quant = self.StockQuantObj.with_context(inventory_mode=True).create({

@@ -84,7 +84,7 @@ class Repair(models.Model):
         'stock.lot', 'Lot/Serial',
         default=False,
         compute="compute_lot_id", store=True,
-        domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True,
+        domain="[('product_id','=', product_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Products repaired are all belonging to this lot")
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
 

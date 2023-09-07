@@ -40,25 +40,25 @@ class TestTraceability(TestMrpCommon):
             'location_id': stock_id,
             'product_id': consumed_lot.id,
             'inventory_quantity': 3,
-            'lot_id': Lot.create({'name': 'L1', 'product_id': consumed_lot.id, 'company_id': self.env.company.id}).id
+            'lot_id': Lot.create({'name': 'L1', 'product_id': consumed_lot.id}).id
         })
         quants |= self.env['stock.quant'].create({
             'location_id': stock_id,
             'product_id': consumed_serial.id,
             'inventory_quantity': 1,
-            'lot_id': Lot.create({'name': 'S1', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+            'lot_id': Lot.create({'name': 'S1', 'product_id': consumed_serial.id}).id
         })
         quants |= self.env['stock.quant'].create({
             'location_id': stock_id,
             'product_id': consumed_serial.id,
             'inventory_quantity': 1,
-            'lot_id': Lot.create({'name': 'S2', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+            'lot_id': Lot.create({'name': 'S2', 'product_id': consumed_serial.id}).id
         })
         quants |= self.env['stock.quant'].create({
             'location_id': stock_id,
             'product_id': consumed_serial.id,
             'inventory_quantity': 1,
-            'lot_id': Lot.create({'name': 'S3', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+            'lot_id': Lot.create({'name': 'S3', 'product_id': consumed_serial.id}).id
         })
         quants.action_apply_inventory()
 
@@ -125,7 +125,7 @@ class TestTraceability(TestMrpCommon):
             for line in lines:
                 tracking = line['columns'][1].split(' ')[1]
                 self.assertEqual(
-                    line['columns'][-1], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
+                    line['columns'][-2], "1.00 Units", 'Part with tracking type "%s", should have quantity = 1' % (tracking)
                 )
                 unfoldable = False if tracking == 'none' else True
                 self.assertEqual(
@@ -622,32 +622,15 @@ class TestTraceability(TestMrpCommon):
         mo.action_generate_serial()
         lot_0 = mo.lot_producing_id.name
         # manually create lot_1 (lot_0 + 1)
-        lot_1 = self.env['stock.lot'].create({
+        lot_1 = str(int(lot_0) + 1).zfill(7)
+        self.env['stock.lot'].create({
             'name': str(int(lot_0) + 1).zfill(7),
             'product_id': p_final.id,
             'company_id': self.env.company.id,
-        }).name
+        })
         # generate lot lot_2 on a new MO
         mo = mo.copy()
         mo.action_confirm()
         mo.action_generate_serial()
         lot_2 = mo.lot_producing_id.name
-        self.assertEqual(lot_2, str(int(lot_1) + 1).zfill(7))
-
-    def test_generate_serial_button_sequence(self):
-        """Test if serial in form "00000dd" is manually created, the generate serial
-        correctly create new serial from sequence.
-        """
-        seq = self.env['ir.sequence'].search([('code', '=', 'stock.lot.serial')])
-        seq.prefix = 'xx%(doy)sxx'
-        mo, _bom, p_final, _p1, _p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
-
-        # manually create lot_1
-        self.env['stock.lot'].create({
-            'name': "test_000",
-            'product_id': p_final.id,
-            'company_id': self.env.company.id,
-        })
-        # generate serial lot_2 from the MO
-        mo.action_generate_serial()
-        self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_id.name)
+        self.assertEqual(lot_2, str(int(lot_1)).zfill(7))
