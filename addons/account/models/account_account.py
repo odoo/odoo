@@ -802,6 +802,9 @@ class AccountAccount(models.Model):
             'template': '/account/static/xls/coa_import_template.xlsx'
         }]
 
+    def _merge_method(self, destination, source):
+        raise UserError(_("You cannot merge accounts."))
+
 
 class AccountGroup(models.Model):
     _name = "account.group"
