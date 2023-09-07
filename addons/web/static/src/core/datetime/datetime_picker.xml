@@ -36,9 +36,10 @@
                                     o_highlight_end: arInfo.isHighlightEnd,
                                     o_current: arInfo.isCurrent,
                                     o_today: itemInfo.includesToday,
-                                    o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
+                                    o_out_of_range: itemInfo.isOutOfRange or !itemInfo.isValid,
+                                    [itemInfo.extraClass]: true,
                                 }"
-                                t-att-disabled="itemInfo.isInvalid"
+                                t-att-disabled="!itemInfo.isValid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
                             >
@@ -104,9 +105,9 @@
                         o_highlight_start: arInfo.isHighlightStart,
                         o_highlight_end: arInfo.isHighlightEnd,
                         o_today: itemInfo.includesToday,
-                        o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
+                        o_out_of_range: itemInfo.isOutOfRange or !itemInfo.isValid,
                     }"
-                    t-att-disabled="itemInfo.isInvalid"
+                    t-att-disabled="!itemInfo.isValid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
                 >
                     <span t-esc="itemInfo.label" class="z-index-1" />

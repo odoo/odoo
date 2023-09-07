@@ -315,6 +315,9 @@ export const datetimePickerService = {
                  * @param {DateTime} value
                  */
                 const updateInput = (el, value) => {
+                    if (!el) {
+                        return;
+                    }
                     const [formattedValue] = safeConvert("format", value);
                     el.value = formattedValue || "";
                 };
@@ -443,17 +446,16 @@ export const datetimePickerService = {
                             ensureArray(pickerProps.value),
                             true
                         )) {
+                            updateInput(el, value);
                             if (el && !el.disabled && !el.readOnly) {
                                 cleanups.push(addListener(el, "change", onInputChange));
                                 cleanups.push(addListener(el, "click", onInputClick));
                                 cleanups.push(addListener(el, "focus", onInputFocus));
                                 cleanups.push(addListener(el, "keydown", onInputKeydown));
-
-                                updateInput(el, value);
                                 editableInputs++;
                             }
                         }
-                        if (!editableInputs) {
+                        if (!editableInputs && popover.isOpen) {
                             saveAndClose();
                         }
                         return () => cleanups.forEach((cleanup) => cleanup());
