@@ -25,7 +25,6 @@ Odoo Web Editor widget.
         'web_editor.assets_legacy_wysiwyg': [
             'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/snippets.options.js',
-            'web_editor/static/src/js/editor/smooth_scroll_on_drag.js',
         ],
         'web_editor.wysiwyg_iframe_editor_assets': [
             ('include', 'web._assets_helpers'),
@@ -144,6 +143,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/commands/toggleList.js',
 
             # utils
+            'web_editor/static/src/js/editor/smooth_scroll_on_drag.js',
             'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
             'web_editor/static/src/js/wysiwyg/conflict_dialog.js',

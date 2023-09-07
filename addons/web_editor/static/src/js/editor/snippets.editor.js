@@ -7,7 +7,7 @@ import dom from "@web/legacy/js/core/dom";
 import { Markup, confine } from "@web/legacy/js/core/utils";
 import Widget from "@web/legacy/js/core/widget";
 import options from "@web_editor/js/editor/snippets.options";
-import SmoothScrollOnDrag from "@web_editor/js/editor/smooth_scroll_on_drag";
+import { SmoothScrollOnDrag } from "@web_editor/js/editor/smooth_scroll_on_drag";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { escape } from "@web/core/utils/strings";
@@ -142,7 +142,7 @@ var SnippetEditor = Widget.extend({
                 || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
                 || (this.$scrollingElement.length && this.$scrollingElement)
                 || $().getScrollingElement(this.ownerDocument);
-            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $scrollable, smoothScrollOptions);
+            this.draggableComponent = new SmoothScrollOnDrag(this.$el, $scrollable, smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -192,6 +192,7 @@ var SnippetEditor = Widget.extend({
         // Before actually destroying a snippet editor, notify the parent
         // about it so that it can update its list of alived snippet editors.
         this.trigger_up('snippet_editor_destroyed');
+        this.draggableComponent && this.draggableComponent.destroy();
         if (this.$optionsSection) {
             this.$optionsSection.remove();
         }
@@ -2008,6 +2009,7 @@ var SnippetsMenu = Widget.extend({
         document.removeEventListener("touchstart", this.__onTouchEvent, true);
         document.removeEventListener("touchmove", this.__onTouchEvent, true);
         document.removeEventListener("touchend", this.__onTouchEvent, true);
+        this.draggableComponent && this.draggableComponent.destroy();
         if (this.$window) {
             if (this.$snippetEditorArea) {
                 this.$snippetEditorArea.remove();
@@ -3424,7 +3426,7 @@ var SnippetsMenu = Widget.extend({
                 },
             },
         });
-        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $scrollingElement, smoothScrollOptions);
+        this.draggableComponent = new SmoothScrollOnDrag($snippets, $scrollingElement, smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
