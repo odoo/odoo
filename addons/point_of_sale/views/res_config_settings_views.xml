@@ -15,7 +15,6 @@
                     <field name="pos_cash_control" invisible="1"/>
                     <field name="pos_iface_print_via_proxy" invisible="1"/>
                     <field name="pos_company_has_template" invisible="1"/>
-                    <field name="is_default_pricelist_displayed" invisible="1"/>
                     <field name="group_cash_rounding" invisible="1"/>
                 </t>
 
@@ -213,7 +212,7 @@
                                         <label string="Available" for="pos_available_pricelist_ids" class="col-lg-3 o_light_label"/>
                                         <field name="pos_available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]" readonly="pos_has_active_session"/>
                                     </div>
-                                    <div class="row mt16" invisible="not is_default_pricelist_displayed">
+                                    <div class="row mt16">
                                         <label string="Default" for="pos_pricelist_id" class="col-lg-3 o_light_label"/>
                                         <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>
                                     </div>
