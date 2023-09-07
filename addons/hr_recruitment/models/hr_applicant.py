@@ -76,7 +76,7 @@ class Applicant(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
     day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
     day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
-    delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
+    delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", help="Employee linked to the applicant.", copy=False)
     user_email = fields.Char(related='user_id.email', string="User Email", readonly=True)
@@ -130,9 +130,15 @@ class Applicant(models.Model):
                 date_create = applicant.create_date
                 date_closed = applicant.date_closed
                 applicant.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
-                applicant.delay_close = applicant.day_close - applicant.day_open
             else:
                 applicant.day_close = False
+
+    @api.depends('day_open', 'day_close')
+    def _compute_delay(self):
+        for applicant in self:
+            if applicant.date_open and applicant.day_close:
+                applicant.delay_close = applicant.day_close - applicant.day_open
+            else:
                 applicant.delay_close = False
 
     @api.depends('email_from', 'partner_phone', 'partner_mobile')

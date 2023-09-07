@@ -1355,8 +1355,8 @@ class QuantPackage(models.Model):
         'res.company', 'Company', compute='_compute_package_info',
         index=True, readonly=True, store=True)
     owner_id = fields.Many2one(
-        'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
-        index='btree_not_null', readonly=True, compute_sudo=True)
+        'res.partner', 'Owner', compute='_compute_owner_id', search='_search_owner',
+        readonly=True, compute_sudo=True)
     package_use = fields.Selection([
         ('disposable', 'Disposable Box'),
         ('reusable', 'Reusable Box'),
@@ -1366,19 +1366,24 @@ class QuantPackage(models.Model):
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
     pack_date = fields.Date('Pack Date', default=fields.Date.today)
 
-    @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
+    @api.depends('quant_ids.location_id', 'quant_ids.company_id')
     def _compute_package_info(self):
         for package in self:
-            values = {'location_id': False, 'owner_id': False}
+            package.location_id = False
+            package.company_id = False
             if package.quant_ids:
-                values['location_id'] = package.quant_ids[0].location_id
-                if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
-                    values['owner_id'] = package.quant_ids[0].owner_id
+                package.location_id = package.quant_ids[0].location_id
                 if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
-                    values['company_id'] = package.quant_ids[0].company_id
-            package.location_id = values['location_id']
-            package.company_id = values.get('company_id')
-            package.owner_id = values['owner_id']
+                    package.company_id = package.quant_ids[0].company_id
+
+    @api.depends('quant_ids.owner_id')
+    def _compute_owner_id(self):
+        for package in self:
+            package.owner_id = False
+            if package.quant_ids and all(
+                q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids
+            ):
+                package.owner_id = package.quant_ids[0].owner_id
 
     @api.depends('name')
     def _compute_valid_sscc(self):

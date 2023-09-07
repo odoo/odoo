@@ -51,10 +51,10 @@ class SendSMS(models.TransientModel):
     # recipients
     recipient_valid_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
     recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
-    recipient_single_description = fields.Text('Recipients (Partners)', compute='_compute_recipient_single', compute_sudo=False)
-    recipient_single_number = fields.Char('Stored Recipient Number', compute='_compute_recipient_single', compute_sudo=False)
+    recipient_single_description = fields.Text('Recipients (Partners)', compute='_compute_recipient_single_non_stored', compute_sudo=False)
+    recipient_single_number = fields.Char('Stored Recipient Number', compute='_compute_recipient_single_non_stored', compute_sudo=False)
     recipient_single_number_itf = fields.Char(
-        'Recipient Number', compute='_compute_recipient_single',
+        'Recipient Number', compute='_compute_recipient_single_stored',
         readonly=False, compute_sudo=False, store=True,
         help='Phone number of the recipient. If changed, it will be recorded on recipient\'s profile.')
     recipient_single_valid = fields.Boolean("Is valid", compute='_compute_recipient_single_valid', compute_sudo=False)
@@ -113,22 +113,31 @@ class SendSMS(models.TransientModel):
                 ) else 1
 
     @api.depends('res_model', 'number_field_name')
-    def _compute_recipient_single(self):
+    def _compute_recipient_single_stored(self):
+        for composer in self:
+            records = composer._get_records()
+            if not records or not issubclass(type(records), self.pool['mail.thread']) or not composer.comment_single_recipient:
+                composer.recipient_single_number_itf = ''
+                continue
+            records.ensure_one()
+            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
+            if not composer.recipient_single_number_itf:
+                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+            if not composer.number_field_name:
+                composer.number_field_name = res[records.id]['field_store']
+
+    @api.depends('res_model', 'number_field_name')
+    def _compute_recipient_single_non_stored(self):
         for composer in self:
             records = composer._get_records()
             if not records or not issubclass(type(records), self.pool['mail.thread']) or not composer.comment_single_recipient:
                 composer.recipient_single_description = False
                 composer.recipient_single_number = ''
-                composer.recipient_single_number_itf = ''
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
             composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
             composer.recipient_single_number = res[records.id]['number'] or ''
-            if not composer.recipient_single_number_itf:
-                composer.recipient_single_number_itf = res[records.id]['number'] or ''
-            if not composer.number_field_name:
-                composer.number_field_name = res[records.id]['field_store']
 
     @api.depends('recipient_single_number', 'recipient_single_number_itf')
     def _compute_recipient_single_valid(self):
