@@ -74,5 +74,6 @@
             "pos_self_order/static/tests/tours/**/*",
         ],
     },
+    'post_init_hook': '_post_self_order_post_init',
     "license": "LGPL-3",
 }
