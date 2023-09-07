@@ -93,3 +93,21 @@ QUnit.test("multi tab triggers become_master", async function (assert) {
     await nextTick();
     assert.verifySteps(["become_main_tab"]);
 });
+
+QUnit.test("BroadcastChannel correctly notifies subscribers", async function (assert) {
+    assert.expect(2);
+    addBusServicesToRegistry();
+    const firstTabEnv = await makeTestEnv();
+    const secondTabEnv = await makeTestEnv();
+    secondTabEnv.services["multi_tab"].bus.addEventListener("bus/notify", ({ detail }) => {
+        assert.step(detail.notification);
+    });
+    firstTabEnv.services["multi_tab"].broadcast("bus/notify", {
+        notification: "notification",
+    });
+    firstTabEnv.services["multi_tab"].broadcast("bus/do_not_notify", {
+        notification: "notification",
+    });
+    await nextTick();
+    assert.verifySteps(["notification"]);
+});

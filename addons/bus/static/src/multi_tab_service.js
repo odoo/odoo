@@ -26,6 +26,11 @@ let multiTabId = 0;
 export const multiTabService = {
     start() {
         const bus = new EventBus();
+        let broadcastChannel = null;
+        if (browser.BroadcastChannel) {
+            broadcastChannel = new browser.BroadcastChannel("multi.tab.service");
+            broadcastChannel.onmessage = ({ data }) => bus.trigger(data.type, data.payload);
+        }
 
         // CONSTANTS
         const TAB_HEARTBEAT_PERIOD = 10000; // 10 seconds
@@ -178,6 +183,7 @@ export const multiTabService = {
             get currentTabId() {
                 return tabId;
             },
+            startElection,
             /**
              * Determine whether or not this tab is the main one.
              *
@@ -216,8 +222,8 @@ export const multiTabService = {
             removeSharedValue(key) {
                 browser.localStorage.removeItem(generateLocalStorageKey(key));
             },
-            forceElection() {
-                return startElection();
+            broadcast(type, payload) {
+                broadcastChannel?.postMessage({ type, payload });
             },
         };
     },

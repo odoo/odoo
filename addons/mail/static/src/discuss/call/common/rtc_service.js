@@ -117,22 +117,15 @@ export class Rtc {
      */
     constructor(env, services) {
         rpc = rpcWithEnv(env);
-        try {
-            this.broadcastChannel = new browser.BroadcastChannel("discuss.channel.rtc");
-            this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
-        } catch {
-            // BroadcastChannel API is not supported.
-            this.broadcastChannel = null;
-        }
         this.env = env;
         this.store = services["mail.store"];
-        this.multiTab = services["multi_tab"];
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         this._handleSfuClientUpdates = this._handleSfuClientUpdates.bind(this);
         this._handleSfuClientStateChange = this._handleSfuClientStateChange.bind(this);
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
+        this.multiTab = services["multi_tab"];
         this.state = reactive({
             connectionType: undefined,
             hasPendingRequest: false,
@@ -224,14 +217,12 @@ export class Rtc {
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
-                const payload = { channel_id: this.state.channel.id, video: this.state.sendCamera };
-                this.broadcastChannel?.postMessage({
-                    type: "sync",
-                    payload,
+                this.multiTab.broadcast("discuss.rtc/recover", {
+                    channelId: this.state.channel.id,
+                    video: this.state.sendCamera,
                 });
-
                 const data = JSON.stringify({
-                    params: payload,
+                    params: { channel_id: this.state.channel.id },
                 });
                 const blob = new Blob([data], { type: "application/json" });
                 // using sendBeacon allows sending a post request even when the
@@ -259,6 +250,21 @@ export class Rtc {
             }
             this.call();
         }, 30_000);
+
+        this.multiTab.bus.addEventListener("discuss.rtc/recover", async ({ detail }) => {
+            this.multiTab.startElection();
+            const channel = this.store.Thread.get({
+                model: "discuss.channel",
+                id: detail.channelId,
+            });
+            if (
+                this.multiTab.isOnMainTab() &&
+                !this.state.channel &&
+                Object.keys(channel.rtcSessions).length > 1
+            ) {
+                await this.joinCall(channel, { video: detail.video });
+            }
+        });
     }
 
     setPttReleaseTimeout(duration = 200) {
@@ -1833,19 +1839,6 @@ export class Rtc {
             this.soundEffectsService.play("channel-join");
         } else if (channel.rtcSessions.length < oldCount) {
             this.soundEffectsService.play("member-leave");
-        }
-    }
-
-    async _onBroadcastChannelMessage({ data }) {
-        this.multiTab.forceElection();
-        if (this.multiTab.isOnMainTab() && !this.state.channel && data.type == "sync") {
-            const channel = this.store.Thread.get({
-                model: "discuss.channel",
-                id: data.payload.channel_id,
-            });
-            if (channel) {
-                await this.joinCall(channel, { video: data.payload.video });
-            }
         }
     }
 }
