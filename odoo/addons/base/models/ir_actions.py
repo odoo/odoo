@@ -801,7 +801,7 @@ class IrActionsServer(models.Model):
     def _set_selection_value(self):
         for action in self.filtered(lambda action: action.value_field_to_show == 'selection_value'):
             if action.selection_value:
-                action.value = action.selection_value.name
+                action.value = action.selection_value.value
 
     def _eval_value(self, eval_context=None):
         result = {}
