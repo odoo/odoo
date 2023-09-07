@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import utils from "@web/legacy/js/core/utils";
+import { clamp } from "@web/core/utils/numbers";
 import options from "@web_editor/js/editor/snippets.options";
 
 options.registry.progress = options.Class.extend({
@@ -43,7 +43,7 @@ options.registry.progress = options.Class.extend({
      */
     progressBarValue: function (previewMode, widgetValue, params) {
         let value = parseInt(widgetValue);
-        value = utils.confine(value, 0, 100);
+        value = clamp(value, 0, 100);
         const $progressBar = this.$target.find('.progress-bar');
         const $progressBarText = this.$target.find('.s_progress_bar_text');
         // Target precisely the XX% not only XX to not replace wrong element

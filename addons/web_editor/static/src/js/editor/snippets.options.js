@@ -6,7 +6,7 @@ import Dialog from "@web/legacy/js/core/dialog";
 import dom from "@web/legacy/js/core/dom";
 import rpc from "@web/legacy/js/core/rpc";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
-import utils from "@web/legacy/js/core/utils";
+import { clamp } from "@web/core/utils/numbers";
 import Widget from "@web/legacy/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
@@ -6498,7 +6498,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         } else if (img.closest('.container, .o_container_small')) {
             const mdContainerMaxWidth = parseFloat(computedStyles.getPropertyValue('--o-md-container-max-width')) || 720;
             const mdContainerInnerWidth = mdContainerMaxWidth - gutterWidth;
-            return Math.round(utils.confine(displayWidth, mdContainerInnerWidth, this.MAX_SUGGESTED_WIDTH));
+            return Math.round(clamp(displayWidth, mdContainerInnerWidth, this.MAX_SUGGESTED_WIDTH));
         // If the image is displayed in a container-fluid, it might also get
         // bigger on smaller screens. The same way, we suggest the width of the
         // current image unless it is smaller than the max size of the container
@@ -6507,7 +6507,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         } else if (img.closest('.container-fluid')) {
             const lgBp = parseFloat(computedStyles.getPropertyValue('--breakpoint-lg')) || 992;
             const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
-            return Math.round(utils.confine(displayWidth, mdContainerFluidMaxInnerWidth, this.MAX_SUGGESTED_WIDTH));
+            return Math.round(clamp(displayWidth, mdContainerFluidMaxInnerWidth, this.MAX_SUGGESTED_WIDTH));
         }
         // If it's not in a container, it's probably not going to change size
         // depending on breakpoints. We still keep a margin safety.

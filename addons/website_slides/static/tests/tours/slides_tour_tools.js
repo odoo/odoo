@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import utils from '@web/legacy/js/core/utils';
+import { getDataURLFromFile } from "@web/core/utils/urls";
 
 /*
  * Constant
@@ -107,7 +107,7 @@ const fillInFileInput = async (input, name, type, content) => {
 const compareBase64Content = async (url, name, type, expectedContent) => {
     const blob = await (await fetch(url)).blob();
     const file = new File([blob], name, { type: type});
-    const actualContent = await utils.getDataURLFromFile(file).then(dataURL => dataURL.split(',', 2)[1]);
+    const actualContent = await getDataURLFromFile(file).then(dataURL => dataURL.split(',', 2)[1]);
     return expectedContent === actualContent;
 };
 

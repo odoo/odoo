@@ -1,11 +1,31 @@
 /** @odoo-module **/
 
 import { localization } from "@web/core/l10n/localization";
-import utils from "@web/legacy/js/core/utils";
 import { _t } from "@web/core/l10n/translation";
 
-var lpad = utils.lpad;
-var rpad = utils.rpad;
+/**
+ * Left-pad provided arg 1 with zeroes until reaching size provided by second
+ * argument.
+ *
+ * @param {number|string} str value to pad
+ * @param {number} size size to reach on the final padded value
+ * @returns {string} padded string
+ */
+function lpad(str, size) {
+    str = "" + str;
+    return new Array(size - str.length + 1).join('0') + str;
+}
+/**
+ * @see lpad
+ *
+ * @param {string} str
+ * @param {number} size
+ * @returns {string}
+ */
+function rpad(str, size) {
+    str = "" + str;
+    return str + new Array(size - str.length + 1).join('0');
+}
 
 /**
  * Replacer function for JSON.stringify, serializes Date objects to UTC
@@ -57,7 +77,7 @@ export function str_to_datetime (str) {
     tmp.setUTCMinutes(parseFloat(res[5]));
     tmp.setUTCSeconds(parseFloat(res[6]));
     tmp.setUTCSeconds(parseFloat(res[6]));
-    tmp.setUTCMilliseconds(parseFloat(utils.rpad((res[7] || "").slice(0, 3), 3)));
+    tmp.setUTCMilliseconds(parseFloat(rpad((res[7] || "").slice(0, 3), 3)));
     return tmp;
 }
 

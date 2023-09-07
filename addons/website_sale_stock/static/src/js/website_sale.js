@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { WebsiteSale } from '@website_sale/js/website_sale';
-import { is_email } from '@web/legacy/js/core/utils';
+import { isEmail } from '@web/core/utils/strings';
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {
@@ -34,7 +34,7 @@ WebsiteSale.include({
         const formEl = stockNotificationEl.querySelector('#stock_notification_form');
         const email = stockNotificationEl.querySelector('#stock_notification_input').value.trim();
 
-        if (!is_email(email)) {
+        if (!isEmail(email)) {
             return this._displayEmailIncorrectMessage(stockNotificationEl);
         }
 
