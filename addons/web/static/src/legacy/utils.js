@@ -4,6 +4,11 @@ import { browser } from "../core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useComponent, xml } from "@odoo/owl";
 import { loadJS } from "@web/core/assets";
+import {
+    ConnectionAbortedError,
+    ConnectionLostError,
+    RPCError,
+} from "@web/core/network/rpc_service";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
@@ -186,9 +191,17 @@ export function makeLegacyRPC(wowlRPC) {
                         resolve(result);
                     }
                 })
-                .guardedCatch(function (reason) {
+                .catch(function (reason) {
                     if (!target.isDestroyed()) {
-                        reject(reason);
+                        if (reason instanceof RPCError || reason instanceof ConnectionLostError) {
+                            // we do not reject an error here because we want to pass through
+                            // the legacy guardedCatch code
+                            reject({ message: reason, event: $.Event(), legacy: true });
+                        } else if (reason instanceof ConnectionAbortedError) {
+                            reject({ message: reason.message, event: $.Event("abort") });
+                        } else {
+                            reject(reason);
+                        }
                     }
                 });
         });
