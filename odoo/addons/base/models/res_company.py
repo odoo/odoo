@@ -5,7 +5,7 @@ import base64
 import logging
 import warnings
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import html2plaintext, file_open, ormcache
 
@@ -266,7 +266,7 @@ class Company(models.Model):
 
         # The write is made on the user to set it automatically in the multi company group.
         if companies:
-            self.env.user.write({
+            (self.env.user | self.env['res.users'].browse(SUPERUSER_ID)).write({
                 'company_ids': [Command.link(company.id) for company in companies],
             })
 
