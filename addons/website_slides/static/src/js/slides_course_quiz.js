@@ -4,7 +4,6 @@
     import Dialog from '@web/legacy/js/core/dialog';
     import { renderToElement } from "@web/core/utils/render";
     import { session } from "@web/session";
-    import { Markup } from "@web/legacy/js/core/utils";
     import CourseJoin from '@website_slides/js/slides_course_join';
     import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
     import SlideQuizFinishModal from '@website_slides/js/slides_course_quiz_finish';
@@ -12,6 +11,8 @@
 
     import SlideEnroll from '@website_slides/js/slides_course_enroll_email';
     import { _t } from "@web/core/l10n/translation";
+
+    import { markup } from "@odoo/owl";
 
     const CourseJoinWidget = CourseJoin.courseJoinWidget;
     const SlideEnrollDialog = SlideEnroll.slideEnrollDialog;
@@ -199,7 +200,7 @@
             }).then(function (quiz_data) {
                 self.slide.sessionAnswers = quiz_data.session_answers;
                 self.quiz = {
-                    description_safe: Markup(quiz_data.slide_description),
+                    description_safe: markup(quiz_data.slide_description),
                     questions: quiz_data.slide_questions || [],
                     questionsCount: quiz_data.slide_questions.length,
                     quizAttemptsCount: quiz_data.quiz_attempts_count || 0,
@@ -376,9 +377,9 @@
             const {rankProgress, completed, channel_completion: completion} = this.quiz;
             // two of the rankProgress properties are HTML messages, mark if set
             if ('description' in rankProgress) {
-                rankProgress['description'] = Markup(rankProgress['description'] || '');
+                rankProgress['description'] = markup(rankProgress['description'] || '');
                 rankProgress['previous_rank']['motivational'] =
-                    Markup(rankProgress['previous_rank']['motivational'] || '');
+                    markup(rankProgress['previous_rank']['motivational'] || '');
             }
             if (completed) {
                 this._disableAnswers();

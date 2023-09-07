@@ -4,8 +4,9 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
-import { Markup } from '@web/legacy/js/core/utils';
 import { debounce } from '@web/core/utils/timing';
+
+import { markup } from "@odoo/owl";
 
 publicWidget.registry.searchBar = publicWidget.Widget.extend({
     selector: '.o_searchbar_form',
@@ -125,7 +126,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         res.results.forEach(record => {
             for (const fieldName of fieldNames) {
                 if (record[fieldName]) {
-                    record[fieldName] = Markup(record[fieldName]);
+                    record[fieldName] = markup(record[fieldName]);
                 }
             }
         });

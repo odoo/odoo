@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { Markup } from "@web/legacy/js/core/utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToString } from "@web/core/utils/render";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
+
+import { markup } from "@odoo/owl";
+
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
@@ -125,7 +127,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
                     'with_sample': this.editableMode,
                 }, this._getRpcParameters()),
             });
-            this.data = filterFragments.map(Markup);
+            this.data = filterFragments.map(markup);
         } else {
             this.data = [];
         }

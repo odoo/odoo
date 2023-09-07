@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import { Markup } from "@web/legacy/js/core/utils";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToFragment } from "@web/core/utils/render";
 
 import "@website_sale/js/website_sale";
+
+import { markup } from "@odoo/owl";
 
 /**
  * Addition to the variant_mixin._onChangeCombination
@@ -64,7 +65,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         .find('.availability_message_' + combination.product_template)
         .remove();
     combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
-    combination.out_of_stock_message = Markup(combination.out_of_stock_message);
+    combination.out_of_stock_message = markup(combination.out_of_stock_message);
     $('div.availability_messages').append(renderToFragment(
         'website_sale_stock.product_availability',
         combination

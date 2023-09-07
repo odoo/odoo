@@ -2,7 +2,8 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Markup } from "@web/legacy/js/core/utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add("mail_tour", {
     url: "/web#action=mail.action_discuss",
@@ -10,7 +11,7 @@ registry.category("web_tour.tours").add("mail_tour", {
     steps: () => [
         {
             trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
-            content: Markup(
+            content: markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
                 )
@@ -19,7 +20,7 @@ registry.category("web_tour.tours").add("mail_tour", {
         },
         {
             trigger: ".o-discuss-ChannelSelector input",
-            content: Markup(_t("<p>Create a channel here.</p>")),
+            content: markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
             run: function (actions) {
@@ -30,7 +31,7 @@ registry.category("web_tour.tours").add("mail_tour", {
         {
             trigger: ".o-discuss-ChannelSelector-list",
             extra_trigger: ".o-discuss-ChannelSelector-suggestion",
-            content: Markup(_t("<p>Create a public or private channel.</p>")),
+            content: markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
             run() {
                 document.querySelector(".o-discuss-ChannelSelector-suggestion").click();
@@ -38,7 +39,7 @@ registry.category("web_tour.tours").add("mail_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            content: Markup(
+            content: markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
                 )
@@ -67,7 +68,7 @@ registry.category("web_tour.tours").add("mail_tour", {
         },
         {
             trigger: ".o-mail-Message [title='Mark as Todo']",
-            content: Markup(
+            content: markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
             position: "bottom",
@@ -81,7 +82,7 @@ registry.category("web_tour.tours").add("mail_tour", {
         },
         {
             trigger: ".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add",
-            content: Markup(
+            content: markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
                 )
@@ -92,6 +93,6 @@ registry.category("web_tour.tours").add("mail_tour", {
             trigger: ".o-discuss-ChannelSelector",
             auto: true,
             isCheck: true,
-        }
+        },
     ],
 });

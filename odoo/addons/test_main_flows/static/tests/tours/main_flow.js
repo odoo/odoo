@@ -1,15 +1,16 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
     url: "/web",
     steps: () => [
-...stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
+...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 {
 // Add Stockable product
@@ -429,15 +430,15 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t('Go back to the home menu'),
     position: 'bottom',
 },
-...stepUtils.goToAppSteps('crm.crm_menu_root', Markup(_t('Organize your sales activities with the <b>CRM app</b>.'))),
+...stepUtils.goToAppSteps('crm.crm_menu_root', markup(_t('Organize your sales activities with the <b>CRM app</b>.'))),
 {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
-    content: Markup(_t("Click here to <b>create your first opportunity</b> and add it to your pipeline.")),
+    content: markup(_t("Click here to <b>create your first opportunity</b> and add it to your pipeline.")),
     position: "bottom"
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name=name] input",
-    content: Markup(_t("<b>Choose a name</b> for your opportunity.")),
+    content: markup(_t("<b>Choose a name</b> for your opportunity.")),
     position: "right",
     run: "text the_flow.opportunity",
 }, {
@@ -477,12 +478,12 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] .o_external_button", // Wait name_create
-    content: Markup(_t("Click here to <b>add your opportunity</b>.")),
+    content: markup(_t("Click here to <b>add your opportunity</b>.")),
     position: "right",
 }, {
     mobile: false,
     trigger: ".o_kanban_group:first .o_kanban_record span:contains('the_flow.opportunity')",
-    content: Markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
+    content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
     run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
@@ -507,7 +508,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     position: "bottom",
 },
 // Create a quotation
-...stepUtils.statusbarButtonsSteps('New Quotation', Markup(_t('<p><b>Create a quotation</p>'))),
+...stepUtils.statusbarButtonsSteps('New Quotation', markup(_t('<p><b>Create a quotation</p>'))),
 {
     mobile: false,
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
@@ -608,7 +609,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t("Try to send it to email"),
     position: "bottom",
 },
-...stepUtils.statusbarButtonsSteps('Confirm', Markup(_t("<p>Confirm this quotation</p>"))),
+...stepUtils.statusbarButtonsSteps('Confirm', markup(_t("<p>Confirm this quotation</p>"))),
 {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
@@ -669,12 +670,12 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')")
 }, {
     mobile: false,
     trigger: ".o_list_button_save",
-    content: Markup(_t("<p>Save this reordering rule</p>")),
+    content: markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
 }, {
     mobile: true,
     trigger: ".o_form_button_save",
-    content: Markup(_t("<p>Save this reordering rule</p>")),
+    content: markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
 },
 stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('OP/')"),
@@ -776,7 +777,7 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Manufacturing Orders')
     content: _t('Go back to the home menu'),
     position: 'bottom',
 },
-...stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
+...stepUtils.goToAppSteps('sale.sale_menu_root', markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
 stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 {
     mobile: false,

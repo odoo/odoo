@@ -1,19 +1,20 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('survey_tour', {
     url: "/web",
     rainbowManMessage: _t("Congratulations! You are now ready to collect feedback like a pro :-)"),
     sequence: 225,
     steps: () => [
-    ...stepUtils.goToAppSteps('survey.menu_surveys', Markup(_t("Ready to change the way you <b>gather data</b>?"))),
+    ...stepUtils.goToAppSteps('survey.menu_surveys', markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
     trigger: '.btn-outline-primary.o_survey_load_sample',
-    content: Markup(_t("Load a <b>sample Survey</b> to get started quickly.")),
+    content: markup(_t("Load a <b>sample Survey</b> to get started quickly.")),
     position: 'left',
 }, {
     trigger: 'button[name=action_test_survey]',

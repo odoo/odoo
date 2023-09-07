@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import publicWidget from "@web/legacy/js/public/public_widget";
+
+import { markup } from "@odoo/owl";
 
 publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
     selector: '.o_wevent_register_toaster',
@@ -17,7 +18,7 @@ publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
         if (message && message.length) {
             this.displayNotification({
                 title: _t("Register"),
-                message: Markup(message),
+                message: markup(message),
                 type: 'info',
             });
         }

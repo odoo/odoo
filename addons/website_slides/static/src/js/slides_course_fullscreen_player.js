@@ -5,7 +5,6 @@
     import publicWidget from '@web/legacy/js/public/public_widget';
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
-    import { Markup } from "@web/legacy/js/core/utils";
     import { session } from "@web/session";
     import { Quiz } from '@website_slides/js/slides_course_quiz';
     import { SlideCoursePage } from '@website_slides/js/slides_course_page';
@@ -13,6 +12,8 @@
     import Dialog from '@web/legacy/js/core/dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+
+    import { markup } from "@odoo/owl";
 
     /**
      * Helper: Get the slide dict matching the given criteria
@@ -607,7 +608,7 @@
                     }
                     slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
-                    slideData.embedCode = Markup(slideData.embedCode);
+                    slideData.embedCode = markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {

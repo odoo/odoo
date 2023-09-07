@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Markup } from "@web/legacy/js/core/utils";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -129,14 +128,14 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
     }, {
         trigger: ".o_field_widget[name='price_unit'] input",
         extra_trigger: ".oi-arrow-right",  // Wait for product creation
-        content: Markup(_t("<b>Set a price</b>.")),
+        content: markup(_t("<b>Set a price</b>.")),
         position: "right",
         run: "text 10.0"
     }, {
         trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
         auto: true,
     },
-    ...stepUtils.statusbarButtonsSteps("Send by Email", Markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")), ".o_statusbar_buttons button[name='action_quotation_send']"),
+    ...stepUtils.statusbarButtonsSteps("Send by Email", markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
         trigger: ".modal-footer button[name='action_send_mail']",
         extra_trigger: ".modal-footer button[name='action_send_mail']",
