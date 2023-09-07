@@ -190,6 +190,22 @@
                ])]"/>
     </record>
 
+    <record id="payment_provider_razorpay_auto" model="payment.provider">
+        <field name="name">Razorpay Auto</field>
+        <field name="display_as">Credit &amp; Debit Card, UPI Reccuring Payment (Powered by Razorpay)</field>
+        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_razorpay"/>
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_method_maestro'),
+                   ref('payment.payment_method_mastercard'),
+                   ref('payment.payment_method_rupay'),
+                   ref('payment.payment_method_diners_club_intl'),
+                   ref('payment.payment_method_american_express'),
+                   ref('payment.payment_method_visa')
+               ])]"/>
+    </record>
+
     <record id="payment_provider_sepa_direct_debit" model="payment.provider">
         <field name="name">SEPA Direct Debit</field>
         <field name="sequence">20</field>

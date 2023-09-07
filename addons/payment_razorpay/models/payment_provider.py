@@ -21,7 +21,7 @@ class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('razorpay', "Razorpay")], ondelete={'razorpay': 'set default'}
+        selection_add=[('razorpay', "Razorpay"), ('razorpay_auto', "Razorpay Auto")], ondelete={'razorpay': 'set default', 'razorpay_auto': 'set default'}
     )
     razorpay_key_id = fields.Char(
         string="Razorpay Key Id",
@@ -49,12 +49,18 @@ class PaymentProvider(models.Model):
             'support_refund': 'partial',
         })
 
+        self.filtered(lambda p: p.code == 'razorpay_auto').update({
+            'support_manual_capture': 'partial',
+            'support_refund': 'partial',
+            'support_tokenization': True,
+        })
+
     # === BUSINESS METHODS ===#
 
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
         supported_currencies = super()._get_supported_currencies()
-        if self.code == 'razorpay':
+        if self.code in ['razorpay', 'razorpay_auto']:
             supported_currencies = supported_currencies.filtered(
                 lambda c: c.name in SUPPORTED_CURRENCIES
             )
@@ -119,3 +125,8 @@ class PaymentProvider(models.Model):
         else:  # Notification data.
             secret = self.razorpay_webhook_secret
             return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
+
+    def _get_validation_amount(self):
+        if self.code == 'razorpay_auto':
+            return 1.0
+        return super()._get_validation_amount()

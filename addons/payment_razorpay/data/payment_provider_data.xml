@@ -6,4 +6,9 @@
         <field name="redirect_form_view_id" ref="redirect_form"/>
     </record>
 
+    <record id="payment.payment_provider_razorpay_auto" model="payment.provider">
+        <field name="code">razorpay_auto</field>
+        <field name="allow_tokenization">True</field>
+    </record>
+
 </odoo>
