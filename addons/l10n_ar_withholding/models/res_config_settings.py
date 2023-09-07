@@ -12,5 +12,5 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_ar_tax_base_account_id',
         readonly=False,
         domain=[('deprecated', '=', False)],
-        string="Base Tax Account",
+        string="Tax Base Account",
         help="Account that will be set on lines created to represent the tax base amounts.")
