@@ -127,7 +127,7 @@ class ProductTemplate(models.Model):
 
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
-    product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
+    product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id', store=True)
 
     product_variant_count = fields.Integer(
         '# Product Variants', compute='_compute_product_variant_count')
