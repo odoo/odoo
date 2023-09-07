@@ -96,7 +96,7 @@ export class AccountDropZone extends Component {
     }
 
     onDrop(ev) {
-        const selector = '.account_file_uploader.o_input_file.o_hidden';
+        const selector = '.account_file_uploader.o_input_file';
         // look for the closest uploader Input as it may have a context
         let uploadInput = ev.target.closest('.o_drop_area').parentElement.querySelector(selector) || document.querySelector(selector);
         let files = ev.dataTransfer ? ev.dataTransfer.files : false;
